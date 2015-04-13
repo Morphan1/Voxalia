@@ -15,6 +15,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         /// </summary>
         public DiscreteDynamicsWorld PhysicsWorld;
 
+        public CollisionUtil Collision;
+
         /// <summary>
         /// Builds the physics world.
         /// </summary>
@@ -34,6 +36,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             PhysicsWorld = new DiscreteDynamicsWorld(dispatcher, broadphase, solver, collision_configuration);
             // Set the world's general default gravity
             PhysicsWorld.Gravity = new Vector3(0, 0, -9.8f);
+            // Load a CollisionUtil instance
+            Collision = new CollisionUtil(PhysicsWorld);
         }
 
         /// <summary>

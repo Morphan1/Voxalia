@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BulletSharp;
 
 namespace ShadowOperations.Shared
 {
@@ -10,6 +11,30 @@ namespace ShadowOperations.Shared
     /// </summary>
     public class CollisionUtil
     {
+        public DiscreteDynamicsWorld World;
+
+        public CollisionUtil(DiscreteDynamicsWorld world)
+        {
+            World = world;
+        }
+
+        /// <summary>
+        /// Returns whether there is a solid object along a line with a cuboid shape.
+        /// </summary>
+        /// <param name="halfsize">Half the size of the cuboid</param>
+        /// <param name="start">The start of the line</param>
+        /// <param name="end">The end of the line</param>
+        /// <returns>Whether there is an object</returns>
+        public bool CuboidLineIsSolid(Location halfsize, Location start, Location end)
+        {
+            Vector3 s = new Vector3((float)start.X, (float)start.Y, (float)start.Z);
+            Vector3 e = new Vector3((float)end.X, (float)end.Y, (float)end.Z);
+            BoxShape shape = new BoxShape((float)halfsize.X, (float)halfsize.Y, (float)halfsize.Z);
+            CollisionWorld.ClosestConvexResultCallback crc = new CollisionWorld.ClosestConvexResultCallback(s, e);
+            World.ConvexSweepTest(shape, Matrix.Translation(s), Matrix.Translation(e), crc);
+            return crc.HasHit;
+        }
+
         /// <summary>
         /// Returns whether a box contains (intersects with) another box.
         /// </summary>

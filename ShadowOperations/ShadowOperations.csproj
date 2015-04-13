@@ -63,6 +63,8 @@
     <Compile Include="ClientGame\CommandSystem\ClientOutputter.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\QuitCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\DownwardCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\UpwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\RightwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\LeftwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\ForwardCommand.cs" />
