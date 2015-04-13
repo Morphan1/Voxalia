@@ -49,13 +49,41 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Window.Run();
         }
 
+        public TextureEngine Textures;
+        public ShaderEngine Shaders;
+        public GLFontEngine Fonts;
+        public FontSetEngine FontSets;
+        public Renderer Rendering;
+
+        public PlayerEntity Player;
+
         void Window_Load(object sender, EventArgs e)
         {
+            SysConsole.Output(OutputType.INIT, "Loading textures...");
+            Textures = new TextureEngine();
+            Textures.InitTextureSystem();
+            SysConsole.Output(OutputType.INIT, "Loading shaders...");
+            Shaders = new ShaderEngine();
+            Shaders.InitShaderSystem();
+            SysConsole.Output(OutputType.INIT, "Loading fonts...");
+            Fonts = new GLFontEngine(Shaders);
+            Fonts.Init();
+            FontSets = new FontSetEngine(Fonts);
+            FontSets.Init();
+            SysConsole.Output(OutputType.INIT, "Loading rendering helper...");
+            Rendering = new Renderer(Textures);
+            SysConsole.Output(OutputType.INIT, "Preparing rendering engine...");
+            InitRendering();
+            SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
+            SysConsole.Output(OutputType.INIT, "Spawning a cuboid entity and the player...");
             CubeEntity ce = new CubeEntity(this, new Location(50, 50, 5));
             ce.SetPosition(new Location(0, 0, -5));
             ce.SetMass(0);
             SpawnEntity(ce);
+            Player = new PlayerEntity(this);
+            Player.SetPosition(new Location(0, 0, 10));
+            SpawnEntity(Player);
         }
     }
 }

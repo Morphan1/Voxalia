@@ -8,6 +8,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using BulletSharp;
 using ShadowOperations.ClientGame.ClientMainSystem;
+using ShadowOperations.ClientGame.GraphicsSystems;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -18,6 +19,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             HalfSize = halfsize;
             Shape = new BoxShape(HalfSize.ToBVector());
+            Recalculate();
         }
 
         /// <summary>
@@ -29,6 +31,53 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             Matrix4 mat = Matrix4.CreateScale((float)HalfSize.X, (float)HalfSize.Y, (float)HalfSize.Z) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
+            TheClient.Rendering.SetMinimumLight(0.0f);
+            for (int i = 0; i < VBOs.Count; i++)
+            {
+                VBOs[i].Render(true); // TODO: TheClient.RenderTextures
+            }
+        }
+
+        public string[] Textures = new string[] { "top", "bottom", "xp", "xm", "yp", "ym" };
+        
+        public TextureCoordinates[] Coords = new TextureCoordinates[] { new TextureCoordinates(), new TextureCoordinates(),
+            new TextureCoordinates(), new TextureCoordinates(), new TextureCoordinates(), new TextureCoordinates() };
+
+        public List<VBO> VBOs = new List<VBO>();
+
+        public void Recalculate()
+        {
+            for (int i = 0; i < VBOs.Count; i++)
+            {
+                VBOs[i].Destroy();
+            }
+            VBOs.Clear();
+            GetVBOFor(TheClient.Textures.GetTexture(Textures[0])).AddSide(new Location(0, 0, 1), Coords[0]);
+            GetVBOFor(TheClient.Textures.GetTexture(Textures[1])).AddSide(new Location(0, 0, -1), Coords[1]);
+            GetVBOFor(TheClient.Textures.GetTexture(Textures[2])).AddSide(new Location(1, 0, 0), Coords[2]);
+            GetVBOFor(TheClient.Textures.GetTexture(Textures[3])).AddSide(new Location(-1, 0, 0), Coords[3]);
+            GetVBOFor(TheClient.Textures.GetTexture(Textures[4])).AddSide(new Location(0, 1, 0), Coords[4]);
+            GetVBOFor(TheClient.Textures.GetTexture(Textures[5])).AddSide(new Location(0, -1, 0), Coords[5]);
+            for (int i = 0; i < VBOs.Count; i++)
+            {
+                VBOs[i].GenerateVBO();
+            }
+        }
+
+        VBO GetVBOFor(Texture tex)
+        {
+            for (int i = 0; i < VBOs.Count; i++)
+            {
+                if (VBOs[i].Tex.Original_InternalID == tex.Original_InternalID)
+                {
+                    return VBOs[i];
+                }
+            }
+            VBO vbo = new VBO();
+            vbo.Tex = tex;
+            vbo.Prepare();
+            VBOs.Add(vbo);
+            return vbo;
         }
     }
 }

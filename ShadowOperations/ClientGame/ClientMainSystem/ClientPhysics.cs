@@ -20,7 +20,6 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         /// </summary>
         public void BuildWorld()
         {
-            SysConsole.Output(OutputType.INIT, "Load physics engine...");
             // Choose which broadphase to use - Dbvt = ?
             BroadphaseInterface broadphase = new DbvtBroadphase();
             // Choose collision configuration - default = ?
@@ -43,16 +42,6 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public void TickWorld(double delta)
         {
             PhysicsWorld.StepSimulation((float)delta); // TODO: More specific settings?
-        }
-
-        /// <summary>
-        /// Spawns an entity in the world.
-        /// </summary>
-        /// <param name="e">The entity to spawn</param>
-        public void SpawnEntity(Entity e)
-        {
-            // TODO: Entity list
-            e.SpawnBody();
         }
     }
 }
