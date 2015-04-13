@@ -6,6 +6,7 @@ using ShadowOperations.Shared;
 using System.Diagnostics;
 using System.Threading;
 using ShadowOperations.ServerGame.CommandSystem;
+using ShadowOperations.ServerGame.NetworkSystem;
 
 namespace ShadowOperations.ServerGame.ServerMainSystem
 {
@@ -31,6 +32,8 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
         public ServerCommands Commands;
         public ServerCVar CVars;
 
+        public NetworkBase Networking;
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
@@ -47,6 +50,9 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             CVars.Init(Commands.Output);
             SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
+            SysConsole.Output(OutputType.INIT, "Preparing networking...");
+            Networking = new NetworkBase(this);
+            Networking.Init();
             SysConsole.Output(OutputType.INIT, "Ticking...");
             // Tick
             double TARGETFPS = 40d;

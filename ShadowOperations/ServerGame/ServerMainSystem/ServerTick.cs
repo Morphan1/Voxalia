@@ -21,6 +21,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             Delta = delta;
             try
             {
+                Networking.Tick();
                 ConsoleHandler.CheckInput();
                 Commands.Tick();
                 TickWorld(Delta);
