@@ -354,6 +354,11 @@ namespace ShadowOperations.Shared
             return new OpenTK.Vector3((float)X, (float)Y, (float)Z);
         }
 
+        public BulletSharp.Vector3 ToBVector()
+        {
+            return new BulletSharp.Vector3((float)X, (float)Y, (float)Z);
+        }
+
         /// <summary>
         /// Gets the location of the block this location is within.
         /// </summary>

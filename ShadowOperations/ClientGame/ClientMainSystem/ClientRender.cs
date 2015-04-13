@@ -14,6 +14,5 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         {
             Window.SwapBuffers();
         }
-
     }
 }
