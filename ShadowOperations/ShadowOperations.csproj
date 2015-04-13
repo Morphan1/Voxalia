@@ -46,6 +46,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,6 +58,9 @@
     <Compile Include="ClientGame\ClientMainSystem\ClientPhysics.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientRender.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientTick.cs" />
+    <Compile Include="ClientGame\CommandSystem\ClientCommands.cs" />
+    <Compile Include="ClientGame\CommandSystem\ClientCVar.cs" />
+    <Compile Include="ClientGame\CommandSystem\ClientOutputter.cs" />
     <Compile Include="ClientGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\Entity.cs" />
     <Compile Include="ClientGame\EntitySystem\PlayerEntity.cs" />
@@ -74,6 +78,9 @@
     <Compile Include="ClientGame\GraphicsSystems\TextureEngine.cs" />
     <Compile Include="ClientGame\GraphicsSystems\TextVBO.cs" />
     <Compile Include="ClientGame\GraphicsSystems\VBO.cs" />
+    <Compile Include="ClientGame\UISystem\KeyHandler.cs" />
+    <Compile Include="ClientGame\UISystem\MouseHandler.cs" />
+    <Compile Include="ClientGame\UISystem\UIConsole.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />

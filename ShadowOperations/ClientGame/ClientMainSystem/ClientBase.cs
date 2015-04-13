@@ -8,6 +8,9 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using ShadowOperations.ClientGame.EntitySystem;
 using ShadowOperations.ClientGame.GraphicsSystems;
+using ShadowOperations.ClientGame.UISystem;
+using OpenTK.Input;
+using ShadowOperations.ClientGame.CommandSystem;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -35,17 +38,35 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         /// </summary>
         public GameWindow Window;
 
+        public ClientCommands Commands;
+
+        public ClientCVar CVars;
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
         public void StartUp()
         {
             SysConsole.Output(OutputType.INIT, "Launching as new client, this is " + (this == Central ? "" : "NOT ") + "the Central client.");
+            SysConsole.Output(OutputType.INIT, "Loading command system...");
+            Commands = new ClientCommands();
+            Commands.Init(new ClientOutputter(this), this); // TODO: Actual outputter
+            SysConsole.Output(OutputType.INIT, "Loading CVar system...");
+            CVars = new ClientCVar();
+            CVars.Init(Commands.Output);
+            SysConsole.Output(OutputType.INIT, "Generating window...");
             Window = new GameWindow(800, 600, GraphicsMode.Default, Program.GameName + " v" + Program.GameVersion,
                 GameWindowFlags.Default, DisplayDevice.Default, 4, 3, GraphicsContextFlags.ForwardCompatible);
             Window.Load += new EventHandler<EventArgs>(Window_Load);
             Window.UpdateFrame += new EventHandler<FrameEventArgs>(Window_UpdateFrame);
             Window.RenderFrame += new EventHandler<FrameEventArgs>(Window_RenderFrame);
+            Window.Mouse.Move += new EventHandler<MouseMoveEventArgs>(MouseHandler.Window_MouseMove);
+            Window.KeyDown += new EventHandler<KeyboardKeyEventArgs>(KeyHandler.PrimaryGameWindow_KeyDown);
+            Window.KeyPress += new EventHandler<KeyPressEventArgs>(KeyHandler.PrimaryGameWindow_KeyPress);
+            Window.KeyUp += new EventHandler<KeyboardKeyEventArgs>(KeyHandler.PrimaryGameWindow_KeyUp);
+            Window.Mouse.WheelChanged += new EventHandler<MouseWheelEventArgs>(KeyHandler.Mouse_Wheel);
+            Window.Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonDown);
+            Window.Mouse.ButtonUp += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonUp);
             Window.Run();
         }
 
@@ -59,6 +80,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         void Window_Load(object sender, EventArgs e)
         {
+            SysConsole.Output(OutputType.INIT, "Window generated!");
             SysConsole.Output(OutputType.INIT, "Loading textures...");
             Textures = new TextureEngine();
             Textures.InitTextureSystem();

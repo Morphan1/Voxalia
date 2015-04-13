@@ -48,6 +48,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 bool render_lighting = false;
                 if (render_lighting)
                 {
+                    throw new NotImplementedException();
                 }
                 else
                 {
@@ -81,7 +82,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public void Render2D()
         {
-            FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta), new Location(0, 0, 0));
+            FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta) + "\n" + Player.GetPosition(), new Location(0, 0, 0));
+            // TODO: Render the console
         }
 
         public int vpw = 800;
