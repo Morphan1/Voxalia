@@ -15,14 +15,21 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public List<Entity> Entities = new List<Entity>();
 
+        public List<Entity> Tickers = new List<Entity>();
+
         void Window_UpdateFrame(object sender, FrameEventArgs e)
         {
             Delta = e.Time;
             try
             {
+                KeyHandler.Tick();
+                MouseHandler.Tick();
                 UIConsole.Tick();
                 TickWorld(Delta);
-                // TODO: Tickers
+                for (int i = 0; i < Tickers.Count; i++)
+                {
+                    Tickers[i].Tick();
+                }
             }
             catch (Exception ex)
             {
@@ -37,7 +44,10 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public void SpawnEntity(Entity e)
         {
             Entities.Add(e);
-            // TODO: Tickers
+            if (e.Ticks)
+            {
+                Tickers.Add(e);
+            }
             e.SpawnBody();
         }
     }

@@ -99,6 +99,9 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             UIConsole.InitConsole();
             SysConsole.Output(OutputType.INIT, "Preparing rendering engine...");
             InitRendering();
+            SysConsole.Output(OutputType.INIT, "Preparing mouse and keyboard handlers...");
+            MouseHandler.CaptureMouse();
+            KeyHandler.Init();
             SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
             SysConsole.Output(OutputType.INIT, "Spawning a cuboid entity and the player...");

@@ -5,6 +5,7 @@ using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ClientGame.ClientMainSystem;
 using BulletSharp;
+using ShadowOperations.ClientGame.UISystem;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -24,7 +25,24 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public override void Tick()
         {
-            // TODO
+            Direction.X += MouseHandler.MouseDelta.X;
+            Direction.Y += MouseHandler.MouseDelta.Y;
+            while (Direction.X < 0)
+            {
+                Direction.X += 360;
+            }
+            while (Direction.X > 360)
+            {
+                Direction.X -= 360;
+            }
+            if (Direction.Y > 89.9f)
+            {
+                Direction.Y = 89.9f;
+            }
+            if (Direction.Y < -89.9f)
+            {
+                Direction.Y = -89.9f;
+            }
         }
 
         public override Location GetAngles()
