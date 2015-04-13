@@ -4,32 +4,18 @@ using System.Linq;
 using System.Text;
 using BulletSharp;
 using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.ClientMainSystem;
+using ShadowOperations.ServerGame.ServerMainSystem;
 
-namespace ShadowOperations.ClientGame.EntitySystem
+namespace ShadowOperations.ServerGame.EntitySystem
 {
-    /// <summary>
-    /// Represents an object within the world.
-    /// </summary>
-    public abstract class Entity
+    public abstract class PhysicsEntity: Entity
     {
-        public Entity(Client tclient, bool tickme)
+        public PhysicsEntity(Server tserver, bool ticks)
+            : base(tserver, ticks)
         {
-            TheClient = tclient;
-            Ticks = tickme;
-            Vector3 grav = TheClient.PhysicsWorld.Gravity;
+            Vector3 grav = TheServer.PhysicsWorld.Gravity;
             Gravity = new Location(grav.X, grav.Y, grav.Z);
         }
-
-        /// <summary>
-        /// Whether this entity should tick.
-        /// </summary>
-        public readonly bool Ticks;
-
-        /// <summary>
-        /// The client that manages this entity.
-        /// </summary>
-        public Client TheClient = null; 
 
         /// <summary>
         /// All information on the physical version of this entity as it exists within the physics world.
@@ -77,18 +63,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public CollisionShape Shape = null;
 
         /// <summary>
-        /// Draw the entity in the 3D world.
-        /// </summary>
-        public abstract void Render();
-
-        /// <summary>
-        /// Tick the entity. Default implementation does nothing.
-        /// </summary>
-        public virtual void Tick()
-        {
-        }
-
-        /// <summary>
         /// Builds and spawns the body into the world.
         /// </summary>
         public virtual void SpawnBody()
@@ -113,7 +87,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Body.Gravity = Gravity.ToBVector();
             // TODO:  constraints
             // TODO: Does the world transform need a force-update here?
-            TheClient.PhysicsWorld.AddRigidBody(Body);
+            TheServer.PhysicsWorld.AddRigidBody(Body);
         }
 
         /// <summary>
@@ -125,7 +99,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             AVel = new Location(Body.AngularVelocity.X, Body.AngularVelocity.Y, Body.AngularVelocity.Z);
             Gravity = new Location(Body.Gravity.X, Body.Gravity.Y, Body.Gravity.Z);
             WorldTransform = Body.WorldTransform;
-            TheClient.PhysicsWorld.RemoveRigidBody(Body);
+            TheServer.PhysicsWorld.RemoveRigidBody(Body);
             Body = null;
         }
 

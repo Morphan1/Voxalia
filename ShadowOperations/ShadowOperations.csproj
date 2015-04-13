@@ -95,6 +95,8 @@
     <Compile Include="ServerGame\CommandSystem\ServerCVar.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerOutputter.cs" />
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
+    <Compile Include="ServerGame\EntitySystem\PhysicsEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />
     <Compile Include="ServerGame\NetworkSystem\Connection.cs" />
     <Compile Include="ServerGame\NetworkSystem\NetworkBase.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerPhysics.cs" />
