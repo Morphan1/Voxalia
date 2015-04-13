@@ -19,6 +19,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public bool Backward = false;
         public bool Leftward = false;
         public bool Rightward = false;
+        public bool Upward = false;
+        public bool Downward = false;
+
+        bool pup = false;
 
         public PlayerEntity(Client tclient):
             base (tclient, true)
@@ -48,6 +52,18 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 Direction.Y = -89.9f;
             }
+            bool fly = false;
+            bool on_ground = TheClient.Collision.CuboidLineIsSolid(new Location(0.2f, 0.2f, 0.1f), GetPosition() + new Location(0, 0, 0.1f), GetPosition());
+            if (Upward && !fly && !pup && on_ground)
+            {
+                Body.ApplyCentralForce((Location.UnitZ * GetMass() * 500).ToBVector()); // Why is so much force needed to lift us off the ground?
+                Body.Activate();
+                pup = true;
+            }
+            else if (!Upward)
+            {
+                pup = false;
+            }
             Location movement = new Location(0, 0, 0);
             if (Leftward)
             {
@@ -65,16 +81,16 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 movement.X = -1;
             }
-            bool fly = false;
             bool Slow = false;
             bool Down = false;
             if (movement.LengthSquared() > 0)
             {
-                movement = Utilities.RotateVector(movement, Direction.X * Utilities.PI180, fly ? Direction.Y * Utilities.PI180 : 0);
+                movement = Utilities.RotateVector(movement, Direction.X * Utilities.PI180, fly ? Direction.Y * Utilities.PI180 : 0).Normalize();
             }
-            Location pvel = (movement * GetMass() * (Slow || Down ? 5 : 10)) - (fly ? Location.Zero : GetVelocity() * GetMass());
+            Location intent_vel = movement * GetMass() * (Slow || Down ? 5 : 10);
+            Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity() * GetMass());
             pvel *= Slow || Down ? 5 : 10;
-            if (!fly)
+            if (!fly && on_ground)
             {
                 Body.ApplyCentralForce(new Vector3((float)pvel.X, (float)pvel.Y, 0));
                 Body.Activate();
