@@ -6,6 +6,8 @@ using ShadowOperations.Shared;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
+using ShadowOperations.ClientGame.EntitySystem;
+using ShadowOperations.ClientGame.GraphicsSystems;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -49,6 +51,11 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         void Window_Load(object sender, EventArgs e)
         {
+            BuildWorld();
+            CubeEntity ce = new CubeEntity(this, new Location(50, 50, 5));
+            ce.SetPosition(new Location(0, 0, -5));
+            ce.SetMass(0);
+            SpawnEntity(ce);
         }
     }
 }

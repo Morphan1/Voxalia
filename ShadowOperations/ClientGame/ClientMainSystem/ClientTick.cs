@@ -8,8 +8,12 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 {
     public partial class Client
     {
+        public double Delta;
+
         void Window_UpdateFrame(object sender, FrameEventArgs e)
         {
+            Delta = e.Time;
+            TickWorld(Delta);
         }
     }
 }
