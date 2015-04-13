@@ -100,7 +100,9 @@ namespace ShadowOperations.ClientGame.EntitySystem
             }
             rbci.Friction = Friction;
             Body = new RigidBody(rbci);
+            // TODO: Gravity, constraints
             // TODO: Does the world transform need a force-update here?
+            TheClient.PhysicsWorld.AddRigidBody(Body);
         }
 
         /// <summary>

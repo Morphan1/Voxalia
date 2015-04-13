@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ClientGame.ClientMainSystem;
+using BulletSharp;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -16,6 +17,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public PlayerEntity(Client tclient):
             base (tclient, true)
         {
+            SetMass(100);
+            Shape = new BoxShape(HalfSize.ToBVector());
             CanRotate = false;
         }
 
