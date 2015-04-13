@@ -61,6 +61,11 @@
     <Compile Include="ClientGame\CommandSystem\ClientCommands.cs" />
     <Compile Include="ClientGame\CommandSystem\ClientCVar.cs" />
     <Compile Include="ClientGame\CommandSystem\ClientOutputter.cs" />
+    <Compile Include="ClientGame\CommandSystem\CommonCommands\QuitCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\RightwardCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\LeftwardCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\ForwardCommand.cs" />
     <Compile Include="ClientGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\Entity.cs" />
     <Compile Include="ClientGame\EntitySystem\PlayerEntity.cs" />

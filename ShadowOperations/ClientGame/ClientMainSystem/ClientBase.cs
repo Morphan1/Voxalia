@@ -11,6 +11,7 @@ using ShadowOperations.ClientGame.GraphicsSystems;
 using ShadowOperations.ClientGame.UISystem;
 using OpenTK.Input;
 using ShadowOperations.ClientGame.CommandSystem;
+using System.Diagnostics;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -67,7 +68,13 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Window.Mouse.WheelChanged += new EventHandler<MouseWheelEventArgs>(KeyHandler.Mouse_Wheel);
             Window.Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonDown);
             Window.Mouse.ButtonUp += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonUp);
+            Window.Closed += new EventHandler<EventArgs>(Window_Closed);
             Window.Run();
+        }
+
+        void Window_Closed(object sender, EventArgs e)
+        {
+            Process.GetCurrentProcess().Kill();
         }
 
         public TextureEngine Textures;
@@ -105,7 +112,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
             SysConsole.Output(OutputType.INIT, "Spawning a cuboid entity and the player...");
-            CubeEntity ce = new CubeEntity(this, new Location(50, 50, 5));
+            CubeEntity ce = new CubeEntity(this, new Location(500, 500, 5));
             ce.SetPosition(new Location(0, 0, -5));
             ce.SetMass(0);
             SpawnEntity(ce);

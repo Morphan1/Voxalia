@@ -11,9 +11,14 @@ namespace ShadowOperations.ClientGame.EntitySystem
 {
     public class PlayerEntity: Entity
     {
-        public Location HalfSize = new Location(1.5f, 1.5f, 3);
+        public Location HalfSize = new Location(0.3f, 0.3f, 1);
 
         public Location Direction = new Location(0, 0, 0);
+
+        public bool Forward = false;
+        public bool Backward = false;
+        public bool Leftward = false;
+        public bool Rightward = false;
 
         public PlayerEntity(Client tclient):
             base (tclient, true)
@@ -43,6 +48,41 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 Direction.Y = -89.9f;
             }
+            Location movement = new Location(0, 0, 0);
+            if (Leftward)
+            {
+                movement.Y = -1;
+            }
+            if (Rightward)
+            {
+                movement.Y = 1;
+            }
+            if (Backward)
+            {
+                movement.X = 1;
+            }
+            if (Forward)
+            {
+                movement.X = -1;
+            }
+            bool fly = false;
+            bool Slow = false;
+            bool Down = false;
+            if (movement.LengthSquared() > 0)
+            {
+                movement = Utilities.RotateVector(movement, Direction.X * Utilities.PI180, fly ? Direction.Y * Utilities.PI180 : 0);
+            }
+            Location pvel = (movement * GetMass() * (Slow || Down ? 5 : 10)) - (fly ? Location.Zero : GetVelocity() * GetMass());
+            pvel *= Slow || Down ? 5 : 10;
+            if (!fly)
+            {
+                Body.ApplyCentralForce(new Vector3((float)pvel.X, (float)pvel.Y, 0));
+                Body.Activate();
+            }
+            if (fly)
+            {
+                SetPosition(GetPosition() + pvel / 200);
+            }
         }
 
         public override Location GetAngles()
@@ -53,6 +93,16 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public override void SetAngles(Location rot)
         {
             Direction = rot;
+        }
+
+        public override Location GetPosition()
+        {
+            return base.GetPosition() - new Location(0, 0, HalfSize.Z);
+        }
+
+        public override void SetPosition(Location pos)
+        {
+            base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
         }
 
         public override void Render()

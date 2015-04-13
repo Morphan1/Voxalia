@@ -5,6 +5,8 @@ using System.Text;
 using Frenetic;
 using Frenetic.CommandSystem;
 using ShadowOperations.ClientGame.ClientMainSystem;
+using ShadowOperations.ClientGame.CommandSystem.UICommands;
+using ShadowOperations.ClientGame.CommandSystem.CommonCommands;
 
 namespace ShadowOperations.ClientGame.CommandSystem
 {
@@ -40,7 +42,14 @@ namespace ShadowOperations.ClientGame.CommandSystem
             CommandSystem.Output = Output;
             CommandSystem.Init();
 
-            // TODO: Register commands
+            // UI Commands
+            CommandSystem.RegisterCommand(new BackwardCommand(TheClient));
+            CommandSystem.RegisterCommand(new ForwardCommand(TheClient));
+            CommandSystem.RegisterCommand(new LeftwardCommand(TheClient));
+            CommandSystem.RegisterCommand(new RightwardCommand(TheClient));
+
+            // Common Commands
+            CommandSystem.RegisterCommand(new QuitCommand(TheClient));
         }
 
         /// <summary>

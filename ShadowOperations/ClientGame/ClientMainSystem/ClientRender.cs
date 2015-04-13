@@ -86,7 +86,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public void Render2D()
         {
             GL.Disable(EnableCap.CullFace);
-            FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta) + "\n" + Player.GetPosition(), new Location(0, 0, 0));
+            FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta) + "\n" + Player.GetPosition()
+                + "\n" + Player.GetVelocity() + " == " + Player.GetVelocity().Length(), new Location(0, 0, 0));
             UIConsole.Draw();
         }
 
