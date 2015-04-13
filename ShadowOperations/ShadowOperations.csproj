@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,8 +56,25 @@
     <Compile Include="ClientGame\ClientMainSystem\Client.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientRender.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientTick.cs" />
+    <Compile Include="ClientGame\EntitySystem\CubeEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\Entity.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\FontSetEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\Frustum.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\GLFontEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\LightingSystem\Light.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\LightingSystem\LightObject.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\LightingSystem\PointLight.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\ModelEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\Plane.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\Renderer.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\RenderSurface4Part.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\ShaderEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\TextureEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\TextVBO.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\VBO.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerGame\EntitySystem\Entity.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerBase.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerTick.cs" />
     <Compile Include="Shared\CollisionUtil.cs" />

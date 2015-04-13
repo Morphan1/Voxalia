@@ -14,5 +14,12 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         {
             Window.SwapBuffers();
         }
+
+        public int vpw = 800;
+        public int vph = 600;
+
+        public bool RenderLights = false;
+
+        public Matrix4 Ortho;
     }
 }
