@@ -12,6 +12,7 @@ using ShadowOperations.ClientGame.UISystem;
 using OpenTK.Input;
 using ShadowOperations.ClientGame.CommandSystem;
 using System.Diagnostics;
+using ShadowOperations.ClientGame.NetworkSystem;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -42,6 +43,10 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public ClientCommands Commands;
 
         public ClientCVar CVars;
+
+        public NetworkBase Network;
+
+        public string Username = "PlayerOne";
 
         /// <summary>
         /// Start up and run the server.
@@ -123,6 +128,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Player = new PlayerEntity(this);
             Player.SetPosition(new Location(0, 0, 10));
             SpawnEntity(Player);
+            SysConsole.Output(OutputType.INIT, "Preparing networking...");
+            Network = new NetworkBase(this);
         }
     }
 }

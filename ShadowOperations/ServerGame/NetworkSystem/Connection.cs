@@ -6,6 +6,9 @@ using System.Net;
 using System.Net.Sockets;
 using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.ServerMainSystem;
+using ShadowOperations.ServerGame.EntitySystem;
+using ShadowOperations.ServerGame.NetworkSystem.PacketsIn;
+using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ServerGame.NetworkSystem
 {
@@ -31,11 +34,24 @@ namespace ShadowOperations.ServerGame.NetworkSystem
 
         bool GotBase = false;
 
-        public double Time;
+        public double Time = 0;
 
         public double MaxTime = 10; // Maximum connection time without GotBase
 
         public bool Alive = true;
+
+        PlayerEntity PE;
+
+        public void SendPacket(AbstractPacketOut packet)
+        {
+            byte id = packet.ID;
+            byte[] data = packet.Data;
+            byte[] fdata = new byte[data.Length + 5];
+            BitConverter.GetBytes(data.Length).CopyTo(fdata, 0);
+            fdata[4] = id;
+            data.CopyTo(fdata, 5);
+            PrimarySocket.Send(fdata);
+        }
 
         public void Tick()
         {
@@ -65,6 +81,42 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                 }
                 if (GotBase)
                 {
+                    while (true)
+                    {
+                        int len = BitConverter.ToInt32(recd, 0);
+                        if (len + 5 > MAX)
+                        {
+                            throw new Exception("Unreasonably huge packet!");
+                        }
+                        if (recdsofar < 5 + len)
+                        {
+                            return;
+                        }
+                        byte packetID = recd[4];
+                        byte[] data = new byte[len];
+                        Array.Copy(recd, 5, data, 0, len);
+                        byte[] rem_data = new byte[recdsofar - (len + 5)];
+                        if (rem_data.Length > 0)
+                        {
+                            Array.Copy(recd, len + 5, rem_data, 0, rem_data.Length);
+                            Array.Copy(rem_data, recd, rem_data.Length);
+                        }
+                        recdsofar -= len + 5;
+                        AbstractPacketIn packet;
+                        switch (packetID) // TODO: Packet registry?
+                        {
+                            case 0:
+                                packet = new PingPacketIn();
+                                break;
+                            default:
+                                throw new Exception("Invalid packet ID!");
+                        }
+                        packet.Player = PE;
+                        if (!packet.ParseBytesAndExecute(data))
+                        {
+                            throw new Exception("Imperfect packet data!");
+                        }
+                    }
                 }
                 else
                 {
@@ -85,6 +137,35 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                     }
                     else if (recd[0] == 'S' && recd[1] == 'O' && recd[2] == 'G' && recd[3] == '_' && recd[4] == '_')
                     {
+                        if (recd[recdsofar - 1] == '\n')
+                        {
+                            string data = FileHandler.encoding.GetString(recd, 6, recdsofar - 6);
+                            string[] datums = data.Split('\r');
+                            if (datums.Length != 4)
+                            {
+                                throw new Exception("Invalid SOG__ connection details!");
+                            }
+                            string name = datums[0];
+                            string key = datums[1];
+                            string host = datums[2];
+                            string port = datums[3];
+                            if (!Utilities.ValidateUsername(name))
+                            {
+                                throw new Exception("Invalid connection - unreasonable username!");
+                            }
+                            // TODO: Additional details?
+                            PlayerEntity player = new PlayerEntity(TheServer, this);
+                            player.Name = name;
+                            player.Host = host;
+                            player.Port = port;
+                            player.IP = PrimarySocket.RemoteEndPoint.ToString();
+                            player.LastPingByte = 0;
+                            PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
+                            SendPacket(new PingPacketOut(0));
+                            GotBase = true;
+                            PE = player;
+                            recdsofar = 0;
+                        }
                     }
                     else
                     {

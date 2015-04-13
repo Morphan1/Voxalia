@@ -26,6 +26,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 MouseHandler.Tick();
                 UIConsole.Tick();
                 Commands.Tick();
+                Network.Tick();
                 TickWorld(Delta);
                 for (int i = 0; i < Tickers.Count; i++)
                 {

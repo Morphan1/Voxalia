@@ -62,6 +62,7 @@
     <Compile Include="ClientGame\CommandSystem\ClientCVar.cs" />
     <Compile Include="ClientGame\CommandSystem\ClientOutputter.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\QuitCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\NetworkCommands\ConnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\DownwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\UpwardCommand.cs" />
@@ -86,6 +87,11 @@
     <Compile Include="ClientGame\GraphicsSystems\TextureEngine.cs" />
     <Compile Include="ClientGame\GraphicsSystems\TextVBO.cs" />
     <Compile Include="ClientGame\GraphicsSystems\VBO.cs" />
+    <Compile Include="ClientGame\NetworkSystem\AbstractPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\AbstractPacketOut.cs" />
+    <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ClientGame\UISystem\KeyHandler.cs" />
     <Compile Include="ClientGame\UISystem\MouseHandler.cs" />
     <Compile Include="ClientGame\UISystem\UIConsole.cs" />
@@ -97,8 +103,12 @@
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
     <Compile Include="ServerGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />
+    <Compile Include="ServerGame\NetworkSystem\AbstractPacketIn.cs" />
+    <Compile Include="ServerGame\NetworkSystem\AbstractPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\Connection.cs" />
     <Compile Include="ServerGame\NetworkSystem\NetworkBase.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerPhysics.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerBase.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerTick.cs" />

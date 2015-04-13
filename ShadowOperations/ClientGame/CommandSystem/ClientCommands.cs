@@ -7,6 +7,7 @@ using Frenetic.CommandSystem;
 using ShadowOperations.ClientGame.ClientMainSystem;
 using ShadowOperations.ClientGame.CommandSystem.UICommands;
 using ShadowOperations.ClientGame.CommandSystem.CommonCommands;
+using ShadowOperations.ClientGame.CommandSystem.NetworkCommands;
 
 namespace ShadowOperations.ClientGame.CommandSystem
 {
@@ -52,6 +53,9 @@ namespace ShadowOperations.ClientGame.CommandSystem
 
             // Common Commands
             CommandSystem.RegisterCommand(new QuitCommand(TheClient));
+
+            // Network Commands
+            CommandSystem.RegisterCommand(new ConnectCommand(TheClient));
         }
 
         /// <summary>
