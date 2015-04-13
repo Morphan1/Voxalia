@@ -6,6 +6,10 @@ using System.Threading;
 
 namespace ShadowOperations.Shared
 {
+    /// <summary>
+    /// Handles command line input.
+    /// TODO: Make non-static.
+    /// </summary>
     public class ConsoleHandler
     {
         static Object holder = new Object();
@@ -161,7 +165,7 @@ namespace ShadowOperations.Shared
             {
                 for (int i = 0; i < commandsinput.Count; i++)
                 {
-                    //ShadowOperations.ServerGame.CommandSystem.ServerCommands.ExecuteCommands(Utilities.CleanStringInput(commandsinput[i]));
+                    ShadowOperations.ServerGame.ServerMainSystem.Server.Central.Commands.ExecuteCommands(Utilities.CleanStringInput(commandsinput[i]));
                 }
             }
         }

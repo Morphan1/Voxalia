@@ -90,7 +90,11 @@
     <Compile Include="ClientGame\UISystem\UIConsole.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerGame\CommandSystem\ServerCommands.cs" />
+    <Compile Include="ServerGame\CommandSystem\ServerCVar.cs" />
+    <Compile Include="ServerGame\CommandSystem\ServerOutputter.cs" />
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
+    <Compile Include="ServerGame\ServerMainSystem\ServerPhysics.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerBase.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerTick.cs" />
     <Compile Include="Shared\CollisionUtil.cs" />

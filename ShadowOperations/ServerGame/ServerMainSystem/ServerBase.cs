@@ -5,6 +5,7 @@ using System.Text;
 using ShadowOperations.Shared;
 using System.Diagnostics;
 using System.Threading;
+using ShadowOperations.ServerGame.CommandSystem;
 
 namespace ShadowOperations.ServerGame.ServerMainSystem
 {
@@ -27,12 +28,26 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             Central.StartUp();
         }
 
+        public ServerCommands Commands;
+        public ServerCVar CVars;
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
         public void StartUp()
         {
             SysConsole.Output(OutputType.INIT, "Launching as new server, this is " + (this == Central ? "" : "NOT ") + "the Central server.");
+            SysConsole.Output(OutputType.INIT, "Building console input handler...");
+            ConsoleHandler.Init();
+            SysConsole.Output(OutputType.INIT, "Building command engine...");
+            Commands = new ServerCommands();
+            Commands.Init(new ServerOutputter(this), this);
+            SysConsole.Output(OutputType.INIT, "Building CVar engine...");
+            CVars = new ServerCVar();
+            CVars.Init(Commands.Output);
+            SysConsole.Output(OutputType.INIT, "Building physics world...");
+            BuildWorld();
+            SysConsole.Output(OutputType.INIT, "Ticking...");
             // Tick
             double TARGETFPS = 40d;
             Stopwatch Counter = new Stopwatch();
@@ -97,6 +112,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     Thread.Sleep(targettime);
                 }
             }
+            // TODO: Clean up?
         }
     }
 }

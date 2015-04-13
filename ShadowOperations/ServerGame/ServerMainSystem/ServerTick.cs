@@ -19,7 +19,16 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
         public void Tick(double delta)
         {
             Delta = delta;
-            SysConsole.Output(OutputType.INFO, "Tick: " + Delta); // TODO: Remove me!
+            try
+            {
+                ConsoleHandler.CheckInput();
+                Commands.Tick();
+                TickWorld(Delta);
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output(OutputType.ERROR, "Tick: " + ex.ToString());
+            }
         }
     }
 }
