@@ -94,6 +94,9 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             FontSets.Init();
             SysConsole.Output(OutputType.INIT, "Loading rendering helper...");
             Rendering = new Renderer(Textures);
+            Rendering.Init();
+            SysConsole.Output(OutputType.INIT, "Loading UI Console...");
+            UIConsole.InitConsole();
             SysConsole.Output(OutputType.INIT, "Preparing rendering engine...");
             InitRendering();
             SysConsole.Output(OutputType.INIT, "Building physics world...");

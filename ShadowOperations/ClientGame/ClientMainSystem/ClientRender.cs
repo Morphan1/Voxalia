@@ -6,6 +6,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using ShadowOperations.Shared;
+using ShadowOperations.ClientGame.UISystem;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -63,6 +64,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 GL.Disable(EnableCap.DepthTest);
                 Shaders.ColorMultShader.Bind();
                 Ortho = Matrix4.CreateOrthographicOffCenter(0, Window.Width, Window.Height, 0, -1, 1);
+                GL.UniformMatrix4(1, false, ref Ortho);
                 Render2D();
             }
             catch (Exception ex)
@@ -74,6 +76,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public void Render3D()
         {
+            GL.Enable(EnableCap.CullFace);
             for (int i = 0; i < Entities.Count; i++)
             {
                 Entities[i].Render();
@@ -82,8 +85,9 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public void Render2D()
         {
+            GL.Disable(EnableCap.CullFace);
             FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta) + "\n" + Player.GetPosition(), new Location(0, 0, 0));
-            // TODO: Render the console
+            UIConsole.Draw();
         }
 
         public int vpw = 800;

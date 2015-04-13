@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 using ShadowOperations.Shared;
+using ShadowOperations.ClientGame.UISystem;
 using ShadowOperations.ClientGame.EntitySystem;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
@@ -19,6 +20,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Delta = e.Time;
             try
             {
+                UIConsole.Tick();
                 TickWorld(Delta);
                 // TODO: Tickers
             }
