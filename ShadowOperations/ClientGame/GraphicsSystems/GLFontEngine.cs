@@ -166,7 +166,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         public int bwidth = 512;
         public int bheight = 512;
-        public int bdepth = 24;
+        public int bdepth = 48;
     }
 
     /// <summary>
@@ -266,7 +266,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             GL.TexSubImage3D(TextureTarget.Texture2DArray, 0, 0, 0, cZ, Engine.bwidth, Engine.bheight, 1, OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
             TexZ = cZ;
             cZ++;
-            cZ = cZ % 24;
+            cZ = cZ % 48;
             // TODO: Handle > 24 fonts more cleanly
             bmp.UnlockBits(data);
         }

@@ -105,7 +105,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 }
                 if (Math.Abs(dist) < radius)
                 {
-                    return true; // TODO: Is this part needed?
+                    return true;
                 }
             }
             return true;

@@ -19,7 +19,6 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsIn
             {
                 return false;
             }
-            SysConsole.Output(OutputType.INFO, "PING! From " + Player.Name);
             Player.LastPingByte = (byte)Utilities.UtilRandom.Next(1, 255);
             Player.Network.SendPacket(new PingPacketOut(Player.LastPingByte));
             return true;

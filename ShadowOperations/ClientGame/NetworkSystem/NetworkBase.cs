@@ -39,7 +39,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                 ConnectionThread.Abort();
                 ConnectionThread = null;
             }
-            // TODO: Send 
+            // TODO: Send disconnect packet
             if (ConnectionSocket != null)
             {
                 ConnectionSocket.Close(2);
@@ -122,7 +122,6 @@ namespace ShadowOperations.ClientGame.NetworkSystem
             catch (Exception ex)
             {
                 SysConsole.Output(OutputType.WARNING, "Forcibly disconnected from server: " + ex.GetType().Name + ": " + ex.Message);
-                SysConsole.Output(OutputType.ERROR, ex.ToString()); // TODO: Debug mode only?
                 Disconnect();
             }
         }

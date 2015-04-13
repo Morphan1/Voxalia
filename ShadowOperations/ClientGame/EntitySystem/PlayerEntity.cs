@@ -123,7 +123,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public override void Render()
         {
-            // TODO: Render only when calculation shadowmap depth.
+            // TODO: Render only when calculating shadowmap depth.
         }
     }
 }

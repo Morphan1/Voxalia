@@ -56,7 +56,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Launching as new client, this is " + (this == Central ? "" : "NOT ") + "the Central client.");
             SysConsole.Output(OutputType.INIT, "Loading command system...");
             Commands = new ClientCommands();
-            Commands.Init(new ClientOutputter(this), this); // TODO: Actual outputter
+            Commands.Init(new ClientOutputter(this), this);
             SysConsole.Output(OutputType.INIT, "Loading CVar system...");
             CVars = new ClientCVar();
             CVars.Init(Commands.Output);

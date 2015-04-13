@@ -16,7 +16,6 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                 return false;
             }
             byte bit = data[0];
-            SysConsole.Output(OutputType.INFO, "PING FROM SERVER");
             TheClient.Network.SendPacket(new PingPacketOut(bit));
             return true;
         }
