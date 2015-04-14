@@ -9,7 +9,7 @@ using ShadowOperations.ClientGame.UISystem;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
-    public class PlayerEntity: Entity
+    public class PlayerEntity: PhysicsEntity
     {
         public Location HalfSize = new Location(0.3f, 0.3f, 1);
 

@@ -9,7 +9,7 @@ using ShadowOperations.ClientGame.GraphicsSystems.LightingSystem;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
-    public class PointLightEntity: Entity
+    public class PointLightEntity: PrimitiveEntity
     {
         public PointLight Internal = null;
 
@@ -18,19 +18,17 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public int texturesize = 256;
 
         public PointLightEntity(Client tclient)
-            : base(tclient, false)
+            : base(tclient)
         {
         }
 
-        public override void SpawnBody()
+        public override void Spawn()
         {
-            // No body, lights instead
             Generate();
         }
 
-        public override void DestroyBody()
+        public override void Destroy()
         {
-            // No body, lights instead
             Internal.Destroy();
             TheClient.Lights.Remove(Internal);
         }

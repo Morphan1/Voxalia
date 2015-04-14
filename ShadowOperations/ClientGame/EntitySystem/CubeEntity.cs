@@ -12,7 +12,7 @@ using ShadowOperations.ClientGame.GraphicsSystems;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
-    public class CubeEntity: Entity
+    public class CubeEntity : PhysicsEntity
     {
         public CubeEntity(Client tclient, Location halfsize)
             : base(tclient, false)

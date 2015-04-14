@@ -71,8 +71,10 @@
     <Compile Include="ClientGame\CommandSystem\UICommands\ForwardCommand.cs" />
     <Compile Include="ClientGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\Entity.cs" />
+    <Compile Include="ClientGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PlayerEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PointLightEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\PrimitiveEntity.cs" />
     <Compile Include="ClientGame\GraphicsSystems\FontSetEngine.cs" />
     <Compile Include="ClientGame\GraphicsSystems\Frustum.cs" />
     <Compile Include="ClientGame\GraphicsSystems\GLFontEngine.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="ServerGame\CommandSystem\ServerCommands.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerCVar.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerOutputter.cs" />
+    <Compile Include="ServerGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
     <Compile Include="ServerGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />

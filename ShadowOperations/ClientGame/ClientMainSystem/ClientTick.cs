@@ -50,7 +50,14 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             {
                 Tickers.Add(e);
             }
-            e.SpawnBody();
+            if (e is PhysicsEntity)
+            {
+                ((PhysicsEntity)e).SpawnBody();
+            }
+            else if (e is PrimitiveEntity)
+            {
+                ((PrimitiveEntity)e).Spawn();
+            }
         }
     }
 }
