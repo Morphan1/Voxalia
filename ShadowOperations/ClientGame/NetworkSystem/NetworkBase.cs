@@ -84,7 +84,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                 }
                 while (true)
                 {
-                    int len = BitConverter.ToInt32(recd, 0);
+                    byte[] len_bytes = new byte[4];
+                    Array.Copy(recd, len_bytes, 4);
+                    int len = Utilities.BytesToInt(len_bytes);
                     if (len + 5 > MAX)
                     {
                         throw new Exception("Unreasonably huge packet!");
@@ -128,10 +130,14 @@ namespace ShadowOperations.ClientGame.NetworkSystem
 
         public void SendPacket(AbstractPacketOut packet)
         {
+            if (!IsAlive)
+            {
+                return;
+            }
             byte id = packet.ID;
             byte[] data = packet.Data;
             byte[] fdata = new byte[data.Length + 5];
-            BitConverter.GetBytes(data.Length).CopyTo(fdata, 0);
+            Utilities.IntToBytes(data.Length).CopyTo(fdata, 0);
             fdata[4] = id;
             data.CopyTo(fdata, 5);
             ConnectionSocket.Send(fdata);

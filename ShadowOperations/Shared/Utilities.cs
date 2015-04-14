@@ -17,6 +17,26 @@ namespace ShadowOperations.Shared
         /// </summary>
         public static Random UtilRandom = new Random();
 
+        public static ushort BytesToUshort(byte[] bytes)
+        {
+            return BitConverter.ToUInt16(BitConverter.IsLittleEndian ? bytes.Reverse().ToArray() : bytes, 0);
+        }
+
+        public static byte[] UshortToBytes(ushort ush)
+        {
+            return BitConverter.IsLittleEndian ? BitConverter.GetBytes(ush).Reverse().ToArray() : BitConverter.GetBytes(ush);
+        }
+
+        public static int BytesToInt(byte[] bytes)
+        {
+            return BitConverter.ToInt32(BitConverter.IsLittleEndian ? bytes.Reverse().ToArray() : bytes, 0);
+        }
+
+        public static byte[] IntToBytes(int intty)
+        {
+            return BitConverter.IsLittleEndian ? BitConverter.GetBytes(intty).Reverse().ToArray() : BitConverter.GetBytes(intty);
+        }
+
         /// <summary>
         /// Converts a string to a float. Returns 0 if the string is not a valid float.
         /// </summary>

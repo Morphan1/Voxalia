@@ -47,7 +47,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem
             byte id = packet.ID;
             byte[] data = packet.Data;
             byte[] fdata = new byte[data.Length + 5];
-            BitConverter.GetBytes(data.Length).CopyTo(fdata, 0);
+            Utilities.IntToBytes(data.Length).CopyTo(fdata, 0);
             fdata[4] = id;
             data.CopyTo(fdata, 5);
             PrimarySocket.Send(fdata);
@@ -83,7 +83,9 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                 {
                     while (true)
                     {
-                        int len = BitConverter.ToInt32(recd, 0);
+                        byte[] len_bytes = new byte[4];
+                        Array.Copy(recd, len_bytes, 4);
+                        int len = Utilities.BytesToInt(len_bytes);
                         if (len + 5 > MAX)
                         {
                             throw new Exception("Unreasonably huge packet!");
@@ -107,6 +109,9 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                         {
                             case 0:
                                 packet = new PingPacketIn();
+                                break;
+                            case 1:
+                                packet = new KeysPacketIn();
                                 break;
                             default:
                                 throw new Exception("Invalid packet ID!");

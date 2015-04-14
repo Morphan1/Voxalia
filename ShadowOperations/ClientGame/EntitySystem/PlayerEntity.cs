@@ -6,6 +6,7 @@ using ShadowOperations.Shared;
 using ShadowOperations.ClientGame.ClientMainSystem;
 using BulletSharp;
 using ShadowOperations.ClientGame.UISystem;
+using ShadowOperations.ClientGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -82,14 +83,17 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 movement.X = -1;
             }
             bool Slow = false;
-            bool Down = false;
             if (movement.LengthSquared() > 0)
             {
                 movement = Utilities.RotateVector(movement, Direction.X * Utilities.PI180, fly ? Direction.Y * Utilities.PI180 : 0).Normalize();
             }
-            Location intent_vel = movement * GetMass() * (Slow || Down ? 5 : 10);
+            Location intent_vel = movement * GetMass() * MoveSpeed * (Slow || Downward ? 0.5f : 1f);
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity() * GetMass());
-            pvel *= Slow || Down ? 5 : 10;
+            if (pvel.LengthSquared() > GetMass() * GetMass() * 2)
+            {
+                pvel = pvel.Normalize() * GetMass() * 2;
+            }
+            pvel *= MoveSpeed * (Slow || Downward ? 0.5f : 1f);
             if (!fly && on_ground)
             {
                 Body.ApplyCentralForce(new Vector3((float)pvel.X, (float)pvel.Y, 0));
@@ -99,7 +103,13 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
+            KeysPacketData kpd = (Forward ? KeysPacketData.FORWARD : 0) | (Backward ? KeysPacketData.BACKWARD : 0)
+                 | (Leftward ? KeysPacketData.LEFTWARD : 0) | (Rightward ? KeysPacketData.RIGHTWARD : 0)
+                  | (Upward ? KeysPacketData.UPWARD : 0) | (Downward ? KeysPacketData.DOWNWARD : 0);
+            TheClient.Network.SendPacket(new KeysPacketOut(kpd));
         }
+
+        public float MoveSpeed = 10;
 
         public override Location GetAngles()
         {

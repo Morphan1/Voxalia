@@ -74,7 +74,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Window.Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonDown);
             Window.Mouse.ButtonUp += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonUp);
             Window.Closed += new EventHandler<EventArgs>(Window_Closed);
-            Window.Run();
+            Window.Run(60, 60);
         }
 
         void Window_Closed(object sender, EventArgs e)

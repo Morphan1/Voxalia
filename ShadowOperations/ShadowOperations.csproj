@@ -93,6 +93,7 @@
     <Compile Include="ClientGame\NetworkSystem\AbstractPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsOut\KeysPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ClientGame\UISystem\KeyHandler.cs" />
     <Compile Include="ClientGame\UISystem\MouseHandler.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="ServerGame\NetworkSystem\AbstractPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\Connection.cs" />
     <Compile Include="ServerGame\NetworkSystem\NetworkBase.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsIn\KeysPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerPhysics.cs" />

@@ -26,7 +26,14 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// <summary>
         /// The server that manages this entity.
         /// </summary>
-        public Server TheServer = null; 
+        public Server TheServer = null;
 
+        /// <summary>
+        /// Tick the entity. Default implementation throws exception.
+        /// </summary>
+        public virtual void Tick()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
