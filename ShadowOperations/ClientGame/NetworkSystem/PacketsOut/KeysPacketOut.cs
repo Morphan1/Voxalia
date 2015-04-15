@@ -8,10 +8,16 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsOut
 {
     public class KeysPacketOut: AbstractPacketOut
     {
-        public KeysPacketOut(KeysPacketData data)
+        public KeysPacketOut(KeysPacketData data, Location direction)
         {
             ID = 1;
-            Data = Utilities.UshortToBytes((ushort)data);
+            byte[] data1 = Utilities.UshortToBytes((ushort)data);
+            byte[] data2 = Utilities.FloatToBytes((float)direction.X);
+            byte[] data3 = Utilities.FloatToBytes((float)direction.Y);
+            Data = new byte[data1.Length + data2.Length + data3.Length];
+            data1.CopyTo(Data, 0);
+            data2.CopyTo(Data, data1.Length);
+            data3.CopyTo(Data, data1.Length + data2.Length);
         }
     }
 

@@ -87,6 +87,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public GLFontEngine Fonts;
         public FontSetEngine FontSets;
         public Renderer Rendering;
+        public ModelEngine Models;
 
         public PlayerEntity Player;
 
@@ -104,6 +105,9 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Fonts.Init();
             FontSets = new FontSetEngine(Fonts);
             FontSets.Init();
+            SysConsole.Output(OutputType.INIT, "Loading model engine...");
+            Models = new ModelEngine();
+            Models.Init();
             SysConsole.Output(OutputType.INIT, "Loading rendering helper...");
             Rendering = new Renderer(Textures);
             Rendering.Init();

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Threading;
 using ShadowOperations.ServerGame.CommandSystem;
 using ShadowOperations.ServerGame.NetworkSystem;
+using ShadowOperations.ServerGame.EntitySystem;
 
 namespace ShadowOperations.ServerGame.ServerMainSystem
 {
@@ -40,12 +41,12 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
         public void StartUp()
         {
             SysConsole.Output(OutputType.INIT, "Launching as new server, this is " + (this == Central ? "" : "NOT ") + "the Central server.");
-            SysConsole.Output(OutputType.INIT, "Building console input handler...");
+            SysConsole.Output(OutputType.INIT, "Loading console input handler...");
             ConsoleHandler.Init();
-            SysConsole.Output(OutputType.INIT, "Building command engine...");
+            SysConsole.Output(OutputType.INIT, "Loading command engine...");
             Commands = new ServerCommands();
             Commands.Init(new ServerOutputter(this), this);
-            SysConsole.Output(OutputType.INIT, "Building CVar engine...");
+            SysConsole.Output(OutputType.INIT, "Loading CVar engine...");
             CVars = new ServerCVar();
             CVars.Init(Commands.Output);
             SysConsole.Output(OutputType.INIT, "Building physics world...");
@@ -53,6 +54,11 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Preparing networking...");
             Networking = new NetworkBase(this);
             Networking.Init();
+            SysConsole.Output(OutputType.INIT, "Building an initial world...");
+            CubeEntity ce = new CubeEntity(new Location(500, 500, 5), this);
+            ce.SetPosition(new Location(0, 0, -5));
+            ce.SetMass(0);
+            SpawnEntity(ce);
             SysConsole.Output(OutputType.INIT, "Ticking...");
             // Tick
             double TARGETFPS = 40d;

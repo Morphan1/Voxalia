@@ -22,9 +22,19 @@ namespace ShadowOperations.Shared
             return BitConverter.ToUInt16(BitConverter.IsLittleEndian ? bytes.Reverse().ToArray() : bytes, 0);
         }
 
+        public static float BytesToFloat(byte[] bytes)
+        {
+            return BitConverter.ToSingle(BitConverter.IsLittleEndian ? bytes.Reverse().ToArray() : bytes, 0);
+        }
+
         public static byte[] UshortToBytes(ushort ush)
         {
             return BitConverter.IsLittleEndian ? BitConverter.GetBytes(ush).Reverse().ToArray() : BitConverter.GetBytes(ush);
+        }
+
+        public static byte[] FloatToBytes(float flt)
+        {
+            return BitConverter.IsLittleEndian ? BitConverter.GetBytes(flt).Reverse().ToArray() : BitConverter.GetBytes(flt);
         }
 
         public static int BytesToInt(byte[] bytes)
@@ -35,6 +45,13 @@ namespace ShadowOperations.Shared
         public static byte[] IntToBytes(int intty)
         {
             return BitConverter.IsLittleEndian ? BitConverter.GetBytes(intty).Reverse().ToArray() : BitConverter.GetBytes(intty);
+        }
+
+        public static byte[] BytesPartial(byte[] full, int start, int length)
+        {
+            byte[] data = new byte[length];
+            Array.Copy(full, start, data, 0, length);
+            return data;
         }
 
         /// <summary>

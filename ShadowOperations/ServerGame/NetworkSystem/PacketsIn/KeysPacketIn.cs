@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ShadowOperations.Shared;
+using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ServerGame.NetworkSystem.PacketsIn
 {
@@ -10,17 +11,20 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 2)
+            if (data.Length != 2 + 4 + 4)
             {
                 return false;
             }
-            KeysPacketData val = (KeysPacketData)Utilities.BytesToUshort(data);
+            KeysPacketData val = (KeysPacketData)Utilities.BytesToUshort(Utilities.BytesPartial(data, 0, 2));
             Player.Forward = val.HasFlag(KeysPacketData.FORWARD);
             Player.Backward = val.HasFlag(KeysPacketData.BACKWARD);
             Player.Leftward = val.HasFlag(KeysPacketData.LEFTWARD);
             Player.Rightward = val.HasFlag(KeysPacketData.RIGHTWARD);
             Player.Upward = val.HasFlag(KeysPacketData.UPWARD);
             Player.Downward = val.HasFlag(KeysPacketData.DOWNWARD);
+            Player.Network.SendPacket(new YourPositionPacketOut(Player.GetPosition()));
+            Player.Direction.X = Utilities.BytesToFloat(Utilities.BytesPartial(data, 2, 4));
+            Player.Direction.Y = Utilities.BytesToFloat(Utilities.BytesPartial(data, 2 + 4, 4));
             return true;
         }
     }

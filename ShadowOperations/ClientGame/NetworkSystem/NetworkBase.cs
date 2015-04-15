@@ -111,6 +111,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 0:
                             packet = new PingPacketIn();
                             break;
+                        case 1:
+                            packet = new YourPositionPacketIn();
+                            break;
                         default:
                             throw new Exception("Invalid packet ID!");
                     }

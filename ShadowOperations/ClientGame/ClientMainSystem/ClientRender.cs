@@ -259,7 +259,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             GL.Disable(EnableCap.CullFace);
             FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta) + "\n" + Player.GetPosition()
                 + "\n" + Player.GetVelocity() + " == " + Player.GetVelocity().Length()
-                + "\nLight source(s): " + Lights.Count, new Location(0, 0, 0));
+                + "\nLight source(s): " + Lights.Count
+                + "\nEntities: " + Entities.Count, new Location(0, 0, 0));
             UIConsole.Draw();
         }
 

@@ -164,6 +164,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                             player.Host = host;
                             player.Port = port;
                             player.IP = PrimarySocket.RemoteEndPoint.ToString();
+                            TheServer.SpawnEntity(player);
                             player.LastPingByte = 0;
                             PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
                             SendPacket(new PingPacketOut(0));
