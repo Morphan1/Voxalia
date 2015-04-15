@@ -74,9 +74,15 @@ namespace ShadowOperations.ClientGame.NetworkSystem
             try
             {
                 int avail = ConnectionSocket.Available;
-                byte[] newdata = new byte[avail];
-                ConnectionSocket.Receive(newdata, avail, SocketFlags.None);
-                Array.Copy(newdata, 0, recd, recdsofar, avail);
+                if (avail <= 0)
+                {
+                    return;
+                }
+                if (avail + recdsofar > MAX)
+                {
+                    throw new Exception("Received too much data!");
+                }
+                ConnectionSocket.Receive(recd, recdsofar, avail, SocketFlags.None);
                 recdsofar += avail;
                 if (recdsofar < 5)
                 {
@@ -214,6 +220,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                     ConnectionSocket.Close();
                     throw new Exception("Server did not accept connection");
                 }
+                ConnectionSocket.Blocking = false;
                 SysConsole.Output(OutputType.INFO, "Connected to " + address.ToString() + ":" + tport);
                 IsAlive = true;
             }

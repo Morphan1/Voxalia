@@ -71,9 +71,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                 {
                     throw new Exception("Received too much data!");
                 }
-                byte[] newdata = new byte[avail];
-                PrimarySocket.Receive(newdata, avail, SocketFlags.None);
-                Array.Copy(newdata, 0, recd, recdsofar, avail);
+                PrimarySocket.Receive(recd, recdsofar, avail, SocketFlags.None);
                 recdsofar += avail;
                 if (recdsofar < 5)
                 {
