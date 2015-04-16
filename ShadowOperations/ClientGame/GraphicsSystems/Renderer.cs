@@ -238,7 +238,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         {
             if (Client.Central.RenderLights) // TODO: Pass client reference!
             {
-                SysConsole.Output(OutputType.INFO, "Rendering light at a minimum strength of " + min);
                 GL.Uniform1(5, min);
             }
         }
