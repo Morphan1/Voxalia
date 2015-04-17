@@ -128,6 +128,14 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Player = new PlayerEntity(this);
             Player.SetPosition(new Location(0, 0, 10));
             SpawnEntity(Player);
+            CubeEntity ce = new CubeEntity(this, new Location(500, 500, 5));
+            ce.SetMass(0);
+            ce.SetPosition(Location.Zero);
+            SpawnEntity(ce);
+            CubeEntity ce2 = new CubeEntity(this, new Location(5, 5, 5));
+            ce2.SetMass(10);
+            ce2.SetPosition(new Location(10, 10, 10));
+            SpawnEntity(ce2);
             SysConsole.Output(OutputType.INIT, "Preparing networking...");
             Network = new NetworkBase(this);
         }

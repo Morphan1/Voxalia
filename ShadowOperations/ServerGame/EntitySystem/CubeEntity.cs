@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ShadowOperations.Shared;
-using BulletSharp;
 using ShadowOperations.ServerGame.ServerMainSystem;
 using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
+using BEPUphysics.Entities.Prefabs;
+using BEPUutilities;
+using BEPUphysics.EntityStateManagement;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -20,7 +22,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             : base(tserver, true)
         {
             HalfSize = half;
-            Shape = new BoxShape(HalfSize.ToBVector());
+            Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
             SetMass(mass);
         }
 
@@ -28,9 +30,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public override void Tick()
         {
-            if (Body.IsActive || (pActive && !Body.IsActive))
+            if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
             {
-                pActive = Body.IsActive;
+                pActive = Body.ActivityInformation.IsActive;
                 PhysicsEntityUpdatePacketOut peupo = new PhysicsEntityUpdatePacketOut(this);
                 for (int i = 0; i < TheServer.Players.Count; i++)
                 {

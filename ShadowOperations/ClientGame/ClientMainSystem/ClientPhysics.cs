@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BulletSharp;
 using ShadowOperations.Shared;
 using ShadowOperations.ClientGame.EntitySystem;
+using BEPUphysics;
+using BEPUutilities;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -13,7 +14,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         /// <summary>
         /// The physics world in which all physics-related activity takes place.
         /// </summary>
-        public DiscreteDynamicsWorld PhysicsWorld;
+        public Space PhysicsWorld;
 
         public CollisionUtil Collision;
 
@@ -22,20 +23,9 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         /// </summary>
         public void BuildWorld()
         {
-            // Choose which broadphase to use - Dbvt = ?
-            BroadphaseInterface broadphase = new DbvtBroadphase();
-            // Choose collision configuration - default = ?
-            DefaultCollisionConfiguration collision_configuration = new DefaultCollisionConfiguration();
-            // Set the dispatcher
-            CollisionDispatcher dispatcher = new CollisionDispatcher(collision_configuration);
-            // Register the dispatcher
-            GImpactCollisionAlgorithm.RegisterAlgorithm(dispatcher);
-            // Choose solver - SquentialImpulseConstract = ?
-            SequentialImpulseConstraintSolver solver = new SequentialImpulseConstraintSolver();
-            // Create the world for physics to happen in
-            PhysicsWorld = new DiscreteDynamicsWorld(dispatcher, broadphase, solver, collision_configuration);
-            // Set the world's general default gravity
-            PhysicsWorld.Gravity = new Vector3(0, 0, -9.8f);
+            PhysicsWorld = new Space();
+               // Set the world's general default gravity
+            PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f);
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
         }
@@ -45,7 +35,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         /// </summary>
         public void TickWorld(double delta)
         {
-            PhysicsWorld.StepSimulation((float)delta); // TODO: More specific settings?
+            PhysicsWorld.Update((float)delta); // TODO: More specific settings?
         }
     }
 }

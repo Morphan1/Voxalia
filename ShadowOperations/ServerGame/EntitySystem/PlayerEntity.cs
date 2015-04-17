@@ -5,7 +5,9 @@ using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.ServerMainSystem;
 using ShadowOperations.ServerGame.NetworkSystem;
-using BulletSharp;
+using BEPUphysics.Entities.Prefabs;
+using BEPUutilities;
+using BEPUphysics.EntityStateManagement;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -41,7 +43,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
         {
             Network = conn;
             SetMass(100);
-            Shape = new BoxShape(HalfSize.ToBVector());
+            Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
+            Shape.AngularDamping = 1;
             CanRotate = false;
         }
 
@@ -64,11 +67,13 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 Direction.Y = -89.9f;
             }
             bool fly = false;
-            bool on_ground = TheServer.Collision.CuboidLineIsSolid(new Location(0.2f, 0.2f, 0.1f), GetPosition() + new Location(0, 0, 0.1f), GetPosition());
+            TheServer.PhysicsWorld.Remove(Body);
+            bool on_ground = TheServer.Collision.CuboidLineIsSolid(new Location(0.2f, 0.2f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f));
+            TheServer.PhysicsWorld.Add(Body);
             if (Upward && !fly && !pup && on_ground)
             {
-                Body.ApplyCentralForce((Location.UnitZ * GetMass() * 500).ToBVector()); // Why is so much force needed to lift us off the ground?
-                Body.Activate();
+                Body.ApplyImpulse(new Vector3(0, 0, 0), (Location.UnitZ * 500f).ToBVector());
+                Body.ActivityInformation.Activate();
                 pup = true;
             }
             else if (!Upward)
@@ -97,17 +102,17 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 movement = Utilities.RotateVector(movement, Direction.X * Utilities.PI180, fly ? Direction.Y * Utilities.PI180 : 0).Normalize();
             }
-            Location intent_vel = movement * GetMass() * MoveSpeed * (Slow || Downward ? 0.5f : 1f);
-            Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity() * GetMass());
-            if (pvel.LengthSquared() > GetMass() * GetMass() * 4)
+            Location intent_vel = movement * MoveSpeed * (Slow || Downward ? 0.5f : 1f);
+            Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
+            if (pvel.LengthSquared() > 4)
             {
-                pvel = pvel.Normalize() * GetMass() * 2;
+                pvel = pvel.Normalize() * 2;
             }
             pvel *= MoveSpeed * (Slow || Downward ? 0.5f : 1f);
             if (!fly && on_ground)
             {
-                Body.ApplyCentralForce(new Vector3((float)pvel.X, (float)pvel.Y, 0));
-                Body.Activate();
+                Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0));
+                Body.ActivityInformation.Activate();
             }
             if (fly)
             {

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BulletSharp;
+using BEPUphysics;
+using BEPUutilities;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace ShadowOperations.Shared
 {
@@ -11,9 +13,9 @@ namespace ShadowOperations.Shared
     /// </summary>
     public class CollisionUtil
     {
-        public DiscreteDynamicsWorld World;
+        public Space World;
 
-        public CollisionUtil(DiscreteDynamicsWorld world)
+        public CollisionUtil(Space world)
         {
             World = world;
         }
@@ -27,12 +29,11 @@ namespace ShadowOperations.Shared
         /// <returns>Whether there is an object</returns>
         public bool CuboidLineIsSolid(Location halfsize, Location start, Location end)
         {
-            Vector3 s = new Vector3((float)start.X, (float)start.Y, (float)start.Z);
             Vector3 e = new Vector3((float)end.X, (float)end.Y, (float)end.Z);
-            BoxShape shape = new BoxShape((float)halfsize.X, (float)halfsize.Y, (float)halfsize.Z);
-            CollisionWorld.ClosestConvexResultCallback crc = new CollisionWorld.ClosestConvexResultCallback(s, e);
-            World.ConvexSweepTest(shape, Matrix.Translation(s), Matrix.Translation(e), crc);
-            return crc.HasHit;
+            BoxShape shape = new BoxShape((float)halfsize.X * 2f, (float)halfsize.Y * 2f, (float)halfsize.Z * 2f);
+            RigidTransform rt = new RigidTransform(new Vector3((float)start.X, (float)start.Y, (float)start.Z));
+            RayCastResult rcr;
+            return World.ConvexCast(shape, ref rt, ref e, out rcr);
         }
 
         /// <summary>

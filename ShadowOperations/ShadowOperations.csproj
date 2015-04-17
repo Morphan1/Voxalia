@@ -34,8 +34,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BulletSharp">
-      <HintPath>.\BulletSharp.dll</HintPath>
+    <Reference Include="BEPUphysics">
+      <HintPath>.\BEPUphysics.dll</HintPath>
+    </Reference>
+    <Reference Include="BEPUutilities">
+      <HintPath>.\BEPUutilities.dll</HintPath>
     </Reference>
     <Reference Include="Frenetic">
       <HintPath>.\Frenetic.dll</HintPath>

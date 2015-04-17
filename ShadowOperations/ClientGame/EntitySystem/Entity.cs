@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BulletSharp;
 using ShadowOperations.Shared;
 using ShadowOperations.ClientGame.ClientMainSystem;
 
@@ -33,11 +32,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
         /// The client that manages this entity.
         /// </summary>
         public Client TheClient = null; 
-
-        /// <summary>
-        /// All information on the physical version of this entity as it exists within the physics world.
-        /// </summary>
-        public RigidBody Body = null;
 
         /// <summary>
         /// Draw the entity in the 3D world.

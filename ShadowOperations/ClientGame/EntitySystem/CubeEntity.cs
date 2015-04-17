@@ -6,9 +6,11 @@ using ShadowOperations.Shared;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using BulletSharp;
 using ShadowOperations.ClientGame.ClientMainSystem;
 using ShadowOperations.ClientGame.GraphicsSystems;
+using BEPUphysics.Entities.Prefabs;
+using BEPUutilities;
+using BEPUphysics.EntityStateManagement;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -18,14 +20,14 @@ namespace ShadowOperations.ClientGame.EntitySystem
             : base(tclient, false)
         {
             HalfSize = halfsize;
-            Shape = new BoxShape(HalfSize.ToBVector());
+            Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
             Recalculate();
         }
 
         /// <summary>
         /// Half the size of the cuboid.
         /// </summary>
-        public Location HalfSize = new Location(1, 1, 1);
+        public Location HalfSize;
 
         public override void Render()
         {

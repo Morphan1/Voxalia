@@ -17,7 +17,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
             e.GetVelocity().ToBytes().CopyTo(Data, 12);
             e.GetAngles().ToBytes().CopyTo(Data, 12 + 12);
             e.GetAngularVelocity().ToBytes().CopyTo(Data, 12 + 12 + 12);
-            Data[12 + 12 + 12 + 12] = (byte)(e.Body.IsActive ? 1 : 0);
+            Data[12 + 12 + 12 + 12] = (byte)(e.Body.ActivityInformation.IsActive ? 1 : 0);
             Utilities.LongToBytes(e.EID).CopyTo(Data, 12 + 12 + 12 + 12 + 1);
         }
     }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ClientGame.EntitySystem;
-using BulletSharp;
 
 namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
 {
@@ -33,13 +32,13 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                         e.SetVelocity(vel);
                         e.SetAngles(ang);
                         e.SetAngularVelocity(angvel);
-                        if (e.Body.IsActive && !active)
+                        if (e.Body.ActivityInformation.IsActive && !active)
                         {
-                            e.Body.ForceActivationState(ActivationState.DisableSimulation); // TODO: is this right?
+                            // TODO: Deactivate
                         }
-                        else if (!e.Body.IsActive && active)
+                        else if (!e.Body.ActivityInformation.IsActive && active)
                         {
-                            e.Body.Activate();
+                            e.Body.ActivityInformation.Activate();
                         }
                     }
                 }

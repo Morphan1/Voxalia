@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ShadowOperations.ClientGame.ClientMainSystem;
-using BulletSharp;
 using ShadowOperations.Shared;
+using BEPUutilities;
+using BEPUphysics;
+using BEPUphysics.Entities;
+using BEPUphysics.Entities.Prefabs;
+using BEPUphysics.EntityStateManagement;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -13,9 +17,14 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public PhysicsEntity(Client tclient, bool ticks)
             : base(tclient, ticks)
         {
-            Vector3 grav = TheClient.PhysicsWorld.Gravity;
+            Vector3 grav = TheClient.PhysicsWorld.ForceUpdater.Gravity;
             Gravity = new Location(grav.X, grav.Y, grav.Z);
         }
+
+        /// <summary>
+        /// All information on the physical version of this entity as it exists within the physics world.
+        /// </summary>
+        public BEPUphysics.Entities.Entity Body = null;
 
         /// <summary>
         /// The mass of the entity.
@@ -55,7 +64,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         /// <summary>
         /// The shape of the entity.
         /// </summary>
-        public CollisionShape Shape = null;
+        public BEPUphysics.Entities.Entity Shape = null;
 
         /// <summary>
         /// Builds and spawns the body into the world.
@@ -66,23 +75,15 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 DestroyBody();
             }
-            DefaultMotionState dms = new DefaultMotionState(WorldTransform);
-            RigidBodyConstructionInfo rbci;
-            if (Mass > 0 && CanRotate)
-            {
-                BulletSharp.Vector3 inertia = Shape.CalculateLocalInertia(Mass);
-                rbci = new RigidBodyConstructionInfo(Mass, dms, Shape, inertia);
-            }
-            else
-            {
-                rbci = new RigidBodyConstructionInfo(Mass, dms, Shape);
-            }
-            rbci.Friction = Friction;
-            Body = new RigidBody(rbci);
-            Body.Gravity = Gravity.ToBVector();
-            // TODO:  constraints
-            // TODO: Does the world transform need a force-update here?
-            TheClient.PhysicsWorld.AddRigidBody(Body);
+            Shape.AngularVelocity = new Vector3((float)AVel.X, (float)AVel.Y, (float)AVel.Z);
+            Shape.LinearVelocity = new Vector3((float)LVel.X, (float)LVel.Y, (float)LVel.Z);
+            Shape.WorldTransform = WorldTransform;
+            Shape.Mass = Mass;
+            // TODO: Other settings
+            // TODO: Gravity
+            // TODO: Constraints
+            Body = Shape;
+            TheClient.PhysicsWorld.Add(Body);
         }
 
         /// <summary>
@@ -92,9 +93,9 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             LVel = new Location(Body.LinearVelocity.X, Body.LinearVelocity.Y, Body.LinearVelocity.Z);
             AVel = new Location(Body.AngularVelocity.X, Body.AngularVelocity.Y, Body.AngularVelocity.Z);
-            Gravity = new Location(Body.Gravity.X, Body.Gravity.Y, Body.Gravity.Z);
+            // TODO: Gravity = new Location(Body.Gravity.X, Body.Gravity.Y, Body.Gravity.Z);
             WorldTransform = Body.WorldTransform;
-            TheClient.PhysicsWorld.RemoveRigidBody(Body);
+            TheClient.PhysicsWorld.Remove(Body);
             Body = null;
         }
 
@@ -107,7 +108,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 return Friction;
             }
-            return Body.Friction;
+            return Body.Material.KineticFriction;
         }
 
         /// <summary>
@@ -119,7 +120,9 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Friction = fric;
             if (Body != null)
             {
-                Body.Friction = fric;
+                // TODO: Separate
+                Body.Material.StaticFriction = fric;
+                Body.Material.KineticFriction = fric;
             }
         }
 
@@ -128,7 +131,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         /// </summary>
         public virtual float GetMass()
         {
-            return Body == null ? Mass : 1 / Body.InvMass;
+            return Body == null ? Mass : Body.Mass;
         }
 
         /// <summary>
@@ -153,9 +156,9 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             if (Body == null)
             {
-                return new Location(WorldTransform.Origin.X, WorldTransform.Origin.Y, WorldTransform.Origin.Z);
+                return new Location(WorldTransform.Translation.X, WorldTransform.Translation.Y, WorldTransform.Translation.Z);
             }
-            Vector3 pos = Body.WorldTransform.Origin;
+            Vector3 pos = Body.WorldTransform.Translation;
             return new Location(pos.X, pos.Y, pos.Z);
         }
 
@@ -167,11 +170,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             if (Body != null)
             {
-                Body.Translate((pos - GetPosition()).ToBVector());
+                Body.Position = pos.ToBVector();
             }
             else
             {
-                WorldTransform.Origin = pos.ToBVector();
+                WorldTransform.Translation = pos.ToBVector();
             }
         }
 
@@ -270,10 +273,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 WorldTransform = Body.WorldTransform;
             }
-            Matrix SpawnMatrix = Matrix.RotationX((float)(rot.X * Utilities.PI180));
-            SpawnMatrix *= Matrix.RotationY((float)(rot.Y * Utilities.PI180));
-            SpawnMatrix *= Matrix.RotationZ((float)(rot.Z * Utilities.PI180));
-            SpawnMatrix *= Matrix.Translation(WorldTransform.Origin);
+            Matrix SpawnMatrix = Matrix.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(rot.X * Utilities.PI180));
+            SpawnMatrix *= Matrix.CreateFromAxisAngle(new Vector3(0, 1, 0), (float)(rot.Y * Utilities.PI180));
+            SpawnMatrix *= Matrix.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(rot.Z * Utilities.PI180));
+            SpawnMatrix *= Matrix.CreateTranslation(WorldTransform.Translation);
             WorldTransform = SpawnMatrix;
             if (Body != null)
             {
