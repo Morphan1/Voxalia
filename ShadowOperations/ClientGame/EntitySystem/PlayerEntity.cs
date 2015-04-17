@@ -89,7 +89,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             }
             Location intent_vel = movement * GetMass() * MoveSpeed * (Slow || Downward ? 0.5f : 1f);
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity() * GetMass());
-            if (pvel.LengthSquared() > GetMass() * GetMass() * 2)
+            if (pvel.LengthSquared() > GetMass() * GetMass() * 4)
             {
                 pvel = pvel.Normalize() * GetMass() * 2;
             }

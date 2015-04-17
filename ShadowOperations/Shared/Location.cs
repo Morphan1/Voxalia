@@ -214,9 +214,9 @@ namespace ShadowOperations.Shared
         public byte[] ToBytes()
         {
             byte[] toret = new byte[12];
-            BitConverter.GetBytes((float)X).CopyTo(toret, 0);
-            BitConverter.GetBytes((float)Y).CopyTo(toret, 4);
-            BitConverter.GetBytes((float)Z).CopyTo(toret, 8);
+            Utilities.FloatToBytes((float)X).CopyTo(toret, 0);
+            Utilities.FloatToBytes((float)Y).CopyTo(toret, 4);
+            Utilities.FloatToBytes((float)Z).CopyTo(toret, 8);
             return toret;
         }
 
