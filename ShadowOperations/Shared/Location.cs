@@ -339,9 +339,9 @@ namespace ShadowOperations.Shared
             {
                 return new Location(0);
             }
-            float X = BitConverter.ToSingle(bytes, index);
-            float Y = BitConverter.ToSingle(bytes, index + 4);
-            float Z = BitConverter.ToSingle(bytes, index + 8);
+            float X = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index, 4));
+            float Y = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index + 4, 4));
+            float Z = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index + 4 + 4, 4));
             return new Location(X, Y, Z);
         }
 

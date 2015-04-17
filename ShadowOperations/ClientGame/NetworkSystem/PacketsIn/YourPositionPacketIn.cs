@@ -11,12 +11,14 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 12)
+            if (data.Length != 12 + 12)
             {
                 return false;
             }
             Location pos = Location.FromBytes(data, 0);
             TheClient.Player.SetPosition(pos); // TODO: better prediction
+            Location vel = Location.FromBytes(data, 12);
+            TheClient.Player.SetVelocity(vel);
             return true;
         }
     }

@@ -22,7 +22,8 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsIn
             Player.Rightward = val.HasFlag(KeysPacketData.RIGHTWARD);
             Player.Upward = val.HasFlag(KeysPacketData.UPWARD);
             Player.Downward = val.HasFlag(KeysPacketData.DOWNWARD);
-            Player.Network.SendPacket(new YourPositionPacketOut(Player.GetPosition()));
+            SysConsole.Output(OutputType.INFO, "Pos: " + Player.GetPosition() + ", vel: " + Player.GetVelocity());
+            Player.Network.SendPacket(new YourPositionPacketOut(Player.GetPosition(), Player.GetVelocity()));
             Player.Direction.X = Utilities.BytesToFloat(Utilities.BytesPartial(data, 2, 4));
             Player.Direction.Y = Utilities.BytesToFloat(Utilities.BytesPartial(data, 2 + 4, 4));
             return true;
