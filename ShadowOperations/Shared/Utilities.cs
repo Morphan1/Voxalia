@@ -42,7 +42,17 @@ namespace ShadowOperations.Shared
             return BitConverter.ToInt32(BitConverter.IsLittleEndian ? bytes.Reverse().ToArray() : bytes, 0);
         }
 
+        public static long BytesToLong(byte[] bytes)
+        {
+            return BitConverter.ToInt64(BitConverter.IsLittleEndian ? bytes.Reverse().ToArray() : bytes, 0);
+        }
+
         public static byte[] IntToBytes(int intty)
+        {
+            return BitConverter.IsLittleEndian ? BitConverter.GetBytes(intty).Reverse().ToArray() : BitConverter.GetBytes(intty);
+        }
+
+        public static byte[] LongToBytes(long intty)
         {
             return BitConverter.IsLittleEndian ? BitConverter.GetBytes(intty).Reverse().ToArray() : BitConverter.GetBytes(intty);
         }

@@ -185,8 +185,15 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// </summary>
         public virtual Location GetVelocity()
         {
-            Vector3 vel = Body.LinearVelocity;
-            return new Location(vel.X, vel.Y, vel.Z);
+            if (Body != null)
+            {
+                Vector3 vel = Body.LinearVelocity;
+                return new Location(vel.X, vel.Y, vel.Z);
+            }
+            else
+            {
+                return LVel;
+            }
         }
 
         /// <summary>
@@ -195,7 +202,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// <param name="vel">The new velocity</param>
         public virtual void SetVelocity(Location vel)
         {
-            Body.LinearVelocity = vel.ToBVector();
+            LVel = vel;
+            if (Body != null)
+            {
+                Body.LinearVelocity = vel.ToBVector();
+            }
         }
 
         /// <summary>
@@ -203,8 +214,15 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// </summary>
         public virtual Location GetAngularVelocity()
         {
-            Vector3 vel = Body.AngularVelocity;
-            return new Location(vel.X, vel.Y, vel.Z);
+            if (Body != null)
+            {
+                Vector3 vel = Body.AngularVelocity;
+                return new Location(vel.X, vel.Y, vel.Z);
+            }
+            else
+            {
+                return AVel;
+            }
         }
 
         /// <summary>
@@ -213,7 +231,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// <param name="vel">The new velocity</param>
         public virtual void SetAngularVelocity(Location vel)
         {
-            Body.AngularVelocity = vel.ToBVector();
+            AVel = vel;
+            if (Body != null)
+            {
+                Body.AngularVelocity = vel.ToBVector();
+            }
         }
 
         /// <summary>
@@ -249,11 +271,19 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// <param name="rot">The new angles</param>
         public virtual void SetAngles(Location rot)
         {
+            if (Body != null)
+            {
+                WorldTransform = Body.WorldTransform;
+            }
             Matrix SpawnMatrix = Matrix.RotationX((float)(rot.X * Utilities.PI180));
             SpawnMatrix *= Matrix.RotationY((float)(rot.Y * Utilities.PI180));
             SpawnMatrix *= Matrix.RotationZ((float)(rot.Z * Utilities.PI180));
-            SpawnMatrix *= Matrix.Translation(Body.WorldTransform.Origin);
-            Body.WorldTransform = SpawnMatrix;
+            SpawnMatrix *= Matrix.Translation(WorldTransform.Origin);
+            WorldTransform = SpawnMatrix;
+            if (Body != null)
+            {
+                Body.WorldTransform = SpawnMatrix;
+            }
         }
     }
 }

@@ -15,11 +15,12 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public string Textures = "top|bottom|xp|xm|yp|ym";
         public string TexCoords = "1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f";
 
-        public CubeEntity(Location half, Server tserver)
+        public CubeEntity(Location half, Server tserver, float mass)
             : base(tserver, false)
         {
             HalfSize = half;
             Shape = new BoxShape(HalfSize.ToBVector());
+            SetMass(mass);
         }
     }
 }

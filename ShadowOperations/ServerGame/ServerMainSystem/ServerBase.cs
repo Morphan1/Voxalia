@@ -55,10 +55,12 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             Networking = new NetworkBase(this);
             Networking.Init();
             SysConsole.Output(OutputType.INIT, "Building an initial world...");
-            CubeEntity ce = new CubeEntity(new Location(500, 500, 5), this);
+            CubeEntity ce = new CubeEntity(new Location(500, 500, 5), this, 0);
             ce.SetPosition(new Location(0, 0, -5));
-            ce.SetMass(0);
             SpawnEntity(ce);
+            CubeEntity ce2 = new CubeEntity(new Location(5, 5, 5), this, 10);
+            ce2.SetPosition(new Location(10, 10, 5));
+            SpawnEntity(ce2);
             SysConsole.Output(OutputType.INIT, "Ticking...");
             // Tick
             double TARGETFPS = 40d;

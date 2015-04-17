@@ -120,6 +120,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 1:
                             packet = new YourPositionPacketIn();
                             break;
+                        case 2:
+                            packet = new SpawnPhysicsEntityPacketIn();
+                            break;
                         default:
                             throw new Exception("Invalid packet ID!");
                     }
@@ -133,6 +136,8 @@ namespace ShadowOperations.ClientGame.NetworkSystem
             catch (Exception ex)
             {
                 SysConsole.Output(OutputType.WARNING, "Forcibly disconnected from server: " + ex.GetType().Name + ": " + ex.Message);
+                // TODO: Debug mode only
+                SysConsole.Output(OutputType.ERROR, ex.ToString());
                 Disconnect();
             }
         }

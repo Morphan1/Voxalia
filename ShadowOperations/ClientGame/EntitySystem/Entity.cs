@@ -20,6 +20,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
         }
 
         /// <summary>
+        /// The unique ID for this entity.
+        /// </summary>
+        public long EID;
+
+        /// <summary>
         /// Whether this entity should tick.
         /// </summary>
         public readonly bool Ticks;

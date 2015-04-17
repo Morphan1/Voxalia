@@ -120,12 +120,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             KeyHandler.Init();
             SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
-            SysConsole.Output(OutputType.INIT, "Spawning a cuboid entity, a light, and the player...");
+            SysConsole.Output(OutputType.INIT, "Spawning the player and a light...");
             // TODO: remove me. Spawn only the player.
-            CubeEntity ce = new CubeEntity(this, new Location(500, 500, 5));
-            ce.SetPosition(new Location(0, 0, -5));
-            ce.SetMass(0);
-            SpawnEntity(ce);
             PointLightEntity ple = new PointLightEntity(this);
             ple.SetPosition(new Location(0, 0, 50));
             SpawnEntity(ple);

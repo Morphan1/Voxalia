@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.EntitySystem;
+using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ServerGame.ServerMainSystem
 {
@@ -47,9 +48,12 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             }
         }
 
+        public long cID = 0;
+
         public void SpawnEntity(Entity e)
         {
             Entities.Add(e);
+            e.EID = cID++;
             if (e.Ticks)
             {
                 Tickers.Add(e);
@@ -57,6 +61,16 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             if (e is PhysicsEntity)
             {
                 ((PhysicsEntity)e).SpawnBody();
+            }
+            if (e is PlayerEntity)
+            {
+                for (int i = 0; i < Entities.Count - 1; i++)
+                {
+                    if (e is PhysicsEntity)
+                    {
+                        ((PlayerEntity)e).Network.SendPacket(new SpawnPhysicsEntityPacketOut((PhysicsEntity)Entities[i]));
+                    }
+                }
             }
         }
     }
