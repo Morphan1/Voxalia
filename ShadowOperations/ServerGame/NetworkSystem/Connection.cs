@@ -44,13 +44,21 @@ namespace ShadowOperations.ServerGame.NetworkSystem
 
         public void SendPacket(AbstractPacketOut packet)
         {
-            byte id = packet.ID;
-            byte[] data = packet.Data;
-            byte[] fdata = new byte[data.Length + 5];
-            Utilities.IntToBytes(data.Length).CopyTo(fdata, 0);
-            fdata[4] = id;
-            data.CopyTo(fdata, 5);
-            PrimarySocket.Send(fdata);
+            try
+            {
+                byte id = packet.ID;
+                byte[] data = packet.Data;
+                byte[] fdata = new byte[data.Length + 5];
+                Utilities.IntToBytes(data.Length).CopyTo(fdata, 0);
+                fdata[4] = id;
+                data.CopyTo(fdata, 5);
+                PrimarySocket.Send(fdata);
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output(OutputType.WARNING, "Disconnected " + PE + " -> " + ex.GetType().Name + ": " + ex.Message);
+                // TODO: Actually disconnect them
+            }
         }
 
         public void Tick()

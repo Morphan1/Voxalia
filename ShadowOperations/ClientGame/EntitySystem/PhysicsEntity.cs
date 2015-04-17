@@ -83,6 +83,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             // TODO: Gravity
             // TODO: Constraints
             Body = Shape;
+            SetFriction(Friction);
             TheClient.PhysicsWorld.Add(Body);
         }
 
@@ -93,6 +94,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             LVel = new Location(Body.LinearVelocity.X, Body.LinearVelocity.Y, Body.LinearVelocity.Z);
             AVel = new Location(Body.AngularVelocity.X, Body.AngularVelocity.Y, Body.AngularVelocity.Z);
+            Friction = GetFriction();
             // TODO: Gravity = new Location(Body.Gravity.X, Body.Gravity.Y, Body.Gravity.Z);
             WorldTransform = Body.WorldTransform;
             TheClient.PhysicsWorld.Remove(Body);

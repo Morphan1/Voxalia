@@ -104,9 +104,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             Location intent_vel = movement * MoveSpeed * (Slow || Downward ? 0.5f : 1f);
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
-            if (pvel.LengthSquared() > 4)
+            if (pvel.LengthSquared() > 4 * MoveSpeed * MoveSpeed)
             {
-                pvel = pvel.Normalize() * 2;
+                pvel = pvel.Normalize() * 2 * MoveSpeed;
             }
             pvel *= MoveSpeed * (Slow || Downward ? 0.5f : 1f);
             if (!fly && on_ground)
