@@ -5,6 +5,7 @@ using System.Text;
 using ShadowOperations.Shared;
 using BulletSharp;
 using ShadowOperations.ServerGame.ServerMainSystem;
+using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -16,11 +17,26 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public string TexCoords = "1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f";
 
         public CubeEntity(Location half, Server tserver, float mass)
-            : base(tserver, false)
+            : base(tserver, true)
         {
             HalfSize = half;
             Shape = new BoxShape(HalfSize.ToBVector());
             SetMass(mass);
+        }
+
+        bool pActive = false;
+
+        public override void Tick()
+        {
+            if (Body.IsActive || (pActive && !Body.IsActive))
+            {
+                pActive = Body.IsActive;
+                PhysicsEntityUpdatePacketOut peupo = new PhysicsEntityUpdatePacketOut(this);
+                for (int i = 0; i < TheServer.Players.Count; i++)
+                {
+                    TheServer.Players[i].Network.SendPacket(peupo);
+                }
+            }
         }
     }
 }

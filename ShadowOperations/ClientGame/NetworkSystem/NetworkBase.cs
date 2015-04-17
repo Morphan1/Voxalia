@@ -123,6 +123,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 2:
                             packet = new SpawnPhysicsEntityPacketIn();
                             break;
+                        case 3:
+                            packet = new PhysicsEntityUpdatePacketIn();
+                            break;
                         default:
                             throw new Exception("Invalid packet ID!");
                     }

@@ -26,6 +26,11 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
         public List<Entity> Tickers = new List<Entity>();
 
         /// <summary>
+        /// All player-type entities that exist on this server.
+        /// </summary>
+        public List<PlayerEntity> Players = new List<PlayerEntity>();
+
+        /// <summary>
         /// The server's primary tick function.
         /// </summary>
         public void Tick(double delta)
@@ -64,6 +69,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             }
             if (e is PlayerEntity)
             {
+                Players.Add((PlayerEntity)e);
                 for (int i = 0; i < Entities.Count - 1; i++)
                 {
                     if (e is PhysicsEntity)
