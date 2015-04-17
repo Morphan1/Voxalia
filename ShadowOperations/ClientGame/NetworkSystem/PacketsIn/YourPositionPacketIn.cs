@@ -16,9 +16,11 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                 return false;
             }
             Location pos = Location.FromBytes(data, 0);
-            TheClient.Player.SetPosition(pos); // TODO: better prediction
+            Location dir = pos - TheClient.Player.GetPosition();
+            TheClient.Player.SetPosition(TheClient.Player.GetPosition() + dir / 15f); // TODO: Replace '15f' with a CVar
             Location vel = Location.FromBytes(data, 12);
-            TheClient.Player.SetVelocity(vel);
+            Location veldir = vel - TheClient.Player.GetVelocity();
+            TheClient.Player.SetVelocity(TheClient.Player.GetVelocity() + veldir / 15f); // TODO: Replace '15f' with a CVar
             return true;
         }
     }
