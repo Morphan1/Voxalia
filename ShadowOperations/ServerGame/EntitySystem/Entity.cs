@@ -29,6 +29,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public readonly bool Ticks;
 
         /// <summary>
+        /// Whether the entity is spawned into the world.
+        /// </summary>
+        public bool IsSpawned = false;
+
+        /// <summary>
         /// The server that manages this entity.
         /// </summary>
         public Server TheServer = null;

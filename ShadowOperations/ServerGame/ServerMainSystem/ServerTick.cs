@@ -57,7 +57,12 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
 
         public void SpawnEntity(Entity e)
         {
+            if (e.IsSpawned)
+            {
+                return;
+            }
             Entities.Add(e);
+            e.IsSpawned = true;
             e.EID = cID++;
             if (e.Ticks)
             {
@@ -78,6 +83,31 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     }
                 }
             }
+            // TODO: Send spawn packet to all players
+        }
+
+        public void DespawnEntity(Entity e)
+        {
+            if (!e.IsSpawned)
+            {
+                return;
+            }
+            Entities.Remove(e);
+            e.IsSpawned = false;
+            if (e.Ticks)
+            {
+                Tickers.Remove(e);
+            }
+            if (e is PhysicsEntity)
+            {
+                ((PhysicsEntity)e).DestroyBody();
+            }
+            if (e is PlayerEntity)
+            {
+                Players.Remove((PlayerEntity)e);
+                //((PlayerEntity)e).Kick("Despawned.");
+            }
+            // TODO: Send despawn packet to all players
         }
     }
 }

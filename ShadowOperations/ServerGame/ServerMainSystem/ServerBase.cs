@@ -61,6 +61,9 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             CubeEntity ce2 = new CubeEntity(new Location(5, 5, 5), this, 10);
             ce2.SetPosition(new Location(10, 10, 5));
             SpawnEntity(ce2);
+            CubeEntity ce3 = new CubeEntity(new Location(0.4f, 0.4f, 0.4f), this, 10);
+            ce3.SetPosition(new Location(10, 10, 20));
+            SpawnEntity(ce3);
             SysConsole.Output(OutputType.INIT, "Ticking...");
             // Tick
             double TARGETFPS = 40d;

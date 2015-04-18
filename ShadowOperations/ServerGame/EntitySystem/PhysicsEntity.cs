@@ -76,6 +76,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Shape.LinearVelocity = new Vector3((float)LVel.X, (float)LVel.Y, (float)LVel.Z);
             Shape.WorldTransform = WorldTransform;
             Shape.Mass = Mass;
+            Shape.Tag = this;
             // TODO: Other settings
             // TODO: Gravity
             // TODO: Constraints

@@ -38,6 +38,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         bool pup = false;
 
+        public PhysicsEntity Grabbed = null;
+
         public PlayerEntity(Server tserver, Connection conn)
             : base(tserver, true)
         {
@@ -118,6 +120,18 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
+            if (Grabbed != null)
+            {
+                if (Grabbed.IsSpawned)
+                {
+                    Location pos = GetPosition() + new Location(0, 0, HalfSize.Z * 1.6f) + Utilities.ForwardVector_Deg(Direction.X, Direction.Y) * 2;
+                    Grabbed.Body.LinearVelocity = (pos - Grabbed.GetPosition()).ToBVector() * 10f;
+                }
+                else
+                {
+                    Grabbed = null;
+                }
+            }
         }
 
         public float MoveSpeed = 10;
@@ -140,6 +154,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public override void SetPosition(Location pos)
         {
             base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }
