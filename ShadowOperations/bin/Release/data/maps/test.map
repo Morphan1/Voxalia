@@ -5,13 +5,14 @@ general
 }
 cube
 {
-	position: (-0.254382312297821, 0, -5.5223970413208);
+	position: (-0.254379272460938, 0, -5.7611985206604);
 	angle: (0, 0, 0);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
 	mass: 0;
-	mins: (-80.2543823122978, -80, -10.5223970413208);
-	maxes: (79.7456176877022, 80, -0.522397041320801);
+	friction: 0.5;
+	mins: (-80.2543792724609, -80, -10.5223970413208);
+	maxes: (79.7456207275391, 80, -1);
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
@@ -22,19 +23,21 @@ point_light
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
 	mass: 0;
+	friction: 0.5;
 	radius: 100;
 	color: (1, 1, 1);
 	texture_size: 256;
 }
 cube
 {
-	position: (-3.18412468582392, -13, 8.25337326526642);
+	position: (-3.10877513885498, -13, 8);
 	angle: (0, 0, 0);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
 	mass: 0;
-	mins: (-10.2175501659513, -18, -0.493253469467163);
-	maxes: (3.84930079430342, -8, 17);
+	friction: 0.5;
+	mins: (-10.21755027771, -18, -1);
+	maxes: (4, -8, 17);
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
@@ -45,8 +48,48 @@ cube
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
 	mass: 0;
+	friction: 0.5;
 	mins: (4, -18, -1);
 	maxes: (21, 11, 9);
+	textures: top|bottom|xp|xm|yp|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (1, -4, 2);
+	angle: (0, 0, 0);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 50;
+	friction: 0.5;
+	mins: (-2, -8, -1);
+	maxes: (4, 0, 5);
+	textures: top|bottom|xp|xm|yp|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (-3.5, -6, 0.5);
+	angle: (0, 0, 0);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 10;
+	friction: 0.5;
+	mins: (-5, -8, -1);
+	maxes: (-2, -4, 2);
+	textures: top|bottom|xp|xm|yp|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (-5.5, -7.5, -0.5);
+	angle: (0, 0, 0);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 2;
+	friction: 0.5;
+	mins: (-6, -8, -1);
+	maxes: (-5, -7, 0);
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
