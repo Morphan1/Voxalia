@@ -123,9 +123,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             if (Grabbed != null)
             {
-                if (Grabbed.IsSpawned)
+                if (Grabbed.IsSpawned && (Grabbed.GetPosition() - GetPosition()).LengthSquared() < 5 * 5 + Grabbed.Widest * Grabbed.Widest)
                 {
-                    Location pos = GetPosition() + new Location(0, 0, HalfSize.Z * 1.6f) + Utilities.ForwardVector_Deg(Direction.X, Direction.Y) * 2;
+                    Location pos = GetPosition() + new Location(0, 0, HalfSize.Z * 1.6f) + Utilities.ForwardVector_Deg(Direction.X, Direction.Y) * (2 + Grabbed.Widest);
                     Grabbed.Body.LinearVelocity = (pos - Grabbed.GetPosition()).ToBVector() * 10f;
                 }
                 else
@@ -145,6 +145,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public override void SetAngles(Location rot)
         {
             Direction = rot;
+        }
+
+        public Location GetEyePosition()
+        {
+            return GetPosition() + new Location(0, 0, HalfSize.Z * 1.6f);
         }
 
         public override Location GetPosition()

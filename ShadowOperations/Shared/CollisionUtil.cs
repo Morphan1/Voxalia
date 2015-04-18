@@ -6,6 +6,7 @@ using BEPUphysics;
 using BEPUutilities;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.Entities;
+using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 
 namespace ShadowOperations.Shared
 {
@@ -30,7 +31,7 @@ namespace ShadowOperations.Shared
         /// <returns>Whether there is an object</returns>
         public bool CuboidLineIsSolid(Location halfsize, Location start, Location end)
         {
-            Vector3 e = new Vector3((float)end.X, (float)end.Y, (float)end.Z);
+            Vector3 e = new Vector3((float)(end.X), (float)(end.Y), (float)(end.Z));
             BoxShape shape = new BoxShape((float)halfsize.X * 2f, (float)halfsize.Y * 2f, (float)halfsize.Z * 2f);
             RigidTransform rt = new RigidTransform(new Vector3((float)start.X, (float)start.Y, (float)start.Z));
             RayCastResult rcr;
@@ -43,8 +44,11 @@ namespace ShadowOperations.Shared
             BoxShape shape = new BoxShape((float)halfsize.X * 2f, (float)halfsize.Y * 2f, (float)halfsize.Z * 2f);
             RigidTransform rt = new RigidTransform(new Vector3((float)start.X, (float)start.Y, (float)start.Z));
             RayCastResult rcr;
-            World.ConvexCast(shape, ref rt, ref e, out rcr);
-            return null; // TODO: ???
+            if (World.ConvexCast(shape, ref rt, ref e, out rcr))
+            {
+                return ((EntityCollidable)rcr.HitObject).Entity;
+            }
+            return null;
         }
 
         /// <summary>

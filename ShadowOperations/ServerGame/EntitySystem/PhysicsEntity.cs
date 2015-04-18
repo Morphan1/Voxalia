@@ -18,6 +18,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Gravity = new Location(grav.X, grav.Y, grav.Z);
         }
 
+        public float Widest = 1;
+
         /// <summary>
         /// All information on the physical version of this entity as it exists within the physics world.
         /// </summary>

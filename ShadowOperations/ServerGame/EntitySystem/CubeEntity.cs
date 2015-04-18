@@ -31,6 +31,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         void BuildShape()
         {
             Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
+            Widest = (float)HalfSize.Length();
         }
 
         bool pActive = false;
@@ -87,6 +88,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
             HalfSize = (maxes - mins) / 2;
             SetPosition(mins + HalfSize);
             BuildShape();
+        }
+
+        public override string ToString()
+        {
+            return "CUBEENTITY{mins=" + mins + ",maxes=" + maxes + ",mass=" + GetMass() + "}";
         }
     }
 }

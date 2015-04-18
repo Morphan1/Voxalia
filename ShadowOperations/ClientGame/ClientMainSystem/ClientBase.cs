@@ -63,6 +63,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Generating window...");
             Window = new GameWindow(800, 600, GraphicsMode.Default, Program.GameName + " v" + Program.GameVersion,
                 GameWindowFlags.Default, DisplayDevice.Default, 4, 3, GraphicsContextFlags.ForwardCompatible);
+            Window.WindowBorder = WindowBorder.Fixed;
             Window.Load += new EventHandler<EventArgs>(Window_Load);
             Window.UpdateFrame += new EventHandler<FrameEventArgs>(Window_UpdateFrame);
             Window.RenderFrame += new EventHandler<FrameEventArgs>(Window_RenderFrame);
