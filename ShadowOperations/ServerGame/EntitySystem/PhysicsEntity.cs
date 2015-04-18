@@ -77,6 +77,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Shape.WorldTransform = WorldTransform;
             Shape.Mass = Mass;
             Shape.Tag = this;
+            Shape.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Continuous;
             // TODO: Other settings
             // TODO: Gravity
             // TODO: Constraints

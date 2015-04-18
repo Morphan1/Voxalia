@@ -79,6 +79,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Shape.LinearVelocity = new Vector3((float)LVel.X, (float)LVel.Y, (float)LVel.Z);
             Shape.WorldTransform = WorldTransform;
             Shape.Mass = Mass;
+            Shape.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Continuous;
             // TODO: Other settings
             // TODO: Gravity
             // TODO: Constraints
