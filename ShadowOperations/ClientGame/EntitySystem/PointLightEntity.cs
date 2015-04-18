@@ -62,5 +62,9 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public float Radius = 100;
         public Location Color = new Location(1, 1, 1);
 
+        public override string ToString()
+        {
+            return "POINTLIGHTENTITY{location=" + Position + ";radius=" + Radius + ";color=" + Color + "}";
+        }
     }
 }

@@ -72,14 +72,22 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             {
                 ((PhysicsEntity)e).SpawnBody();
             }
+            else if (e is PrimitiveEntity)
+            {
+                ((PrimitiveEntity)e).Spawn();
+            }
             if (e is PlayerEntity)
             {
                 Players.Add((PlayerEntity)e);
                 for (int i = 0; i < Entities.Count - 1; i++)
                 {
-                    if (e is PhysicsEntity)
+                    if (Entities[i] is PhysicsEntity)
                     {
                         ((PlayerEntity)e).Network.SendPacket(new SpawnPhysicsEntityPacketOut((PhysicsEntity)Entities[i]));
+                    }
+                    else if (Entities[i] is PointLightEntity)
+                    {
+                        ((PlayerEntity)e).Network.SendPacket(new SpawnLightPacketOut((PointLightEntity)Entities[i]));
                     }
                 }
             }
@@ -101,6 +109,10 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             if (e is PhysicsEntity)
             {
                 ((PhysicsEntity)e).DestroyBody();
+            }
+            else if (e is PrimitiveEntity)
+            {
+                ((PrimitiveEntity)e).Destroy();
             }
             if (e is PlayerEntity)
             {
@@ -193,8 +205,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     e = new CubeEntity(new Location(1, 1, 1), this, 0f);
                     break;
                 case "point_light":
-                    // TODO: e = new PointLightEntity(new Location(0), 1, new Location(1), false);
-                    return;
+                    e = new PointLightEntity(this);
                     break;
                 case "spawn":
                     // TODO: e = new SpawnPointEntity(new Location(0));

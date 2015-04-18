@@ -46,14 +46,27 @@ namespace ShadowOperations.ServerGame.EntitySystem
             throw new NotImplementedException();
         }
 
+        public abstract Location GetPosition();
+
+        public abstract void SetPosition(Location pos);
+
         public virtual List<KeyValuePair<string, string>> GetVariables()
         {
-            return new List<KeyValuePair<string, string>>();
+            List<KeyValuePair<string, string>> vars = new List<KeyValuePair<string, string>>();
+            vars.Add(new KeyValuePair<string, string>("position", GetPosition().ToString()));
+            return vars;
         }
 
         public virtual bool ApplyVar(string var, string data)
         {
-            return false;
+            switch (var)
+            {
+                case "position":
+                    SetPosition(Location.FromString(data));
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         public virtual void Recalculate()

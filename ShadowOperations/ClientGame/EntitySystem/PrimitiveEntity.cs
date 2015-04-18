@@ -37,5 +37,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             Position = pos;
         }
+
+        public virtual void SetVelocity(Location vel)
+        {
+            Velocity = vel;
+        }
     }
 }

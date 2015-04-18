@@ -151,7 +151,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// <summary>
         /// Returns the position of this entity within the world.
         /// </summary>
-        public virtual Location GetPosition()
+        public override Location GetPosition()
         {
             if (Body == null)
             {
@@ -165,7 +165,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// Sets the position of this entity within the world.
         /// </summary>
         /// <param name="pos">The position to move the entity to</param>
-        public virtual void SetPosition(Location pos)
+        public override void SetPosition(Location pos)
         {
             if (Body != null)
             {
@@ -287,9 +287,6 @@ namespace ShadowOperations.ServerGame.EntitySystem
         {
             switch (var)
             {
-                case "position":
-                    SetPosition(Location.FromString(data));
-                    return true;
                 case "velocity":
                     SetVelocity(Location.FromString(data));
                     return true;
@@ -313,7 +310,6 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public override List<KeyValuePair<string, string>> GetVariables()
         {
             List<KeyValuePair<string, string>> vars = base.GetVariables();
-            vars.Add(new KeyValuePair<string, string>("position", GetPosition().ToString()));
             vars.Add(new KeyValuePair<string, string>("velocity", GetVelocity().ToString()));
             vars.Add(new KeyValuePair<string, string>("angle", GetAngles().ToString()));
             vars.Add(new KeyValuePair<string, string>("angular_velocity", GetAngularVelocity().ToString()));

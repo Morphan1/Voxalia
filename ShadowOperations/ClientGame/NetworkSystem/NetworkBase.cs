@@ -126,13 +126,16 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 3:
                             packet = new PhysicsEntityUpdatePacketIn();
                             break;
+                        case 4:
+                            packet = new SpawnLightPacketIn();
+                            break;
                         default:
-                            throw new Exception("Invalid packet ID!");
+                            throw new Exception("Invalid packet ID: " + packetID);
                     }
                     packet.TheClient = TheClient;
                     if (!packet.ParseBytesAndExecute(data))
                     {
-                        throw new Exception("Imperfect packet data!");
+                        throw new Exception("Imperfect packet data for packet " + packetID);
                     }
                 }
             }

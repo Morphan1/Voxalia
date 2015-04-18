@@ -120,11 +120,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             KeyHandler.Init();
             SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
-            SysConsole.Output(OutputType.INIT, "Spawning the player and a light...");
-            // TODO: remove me. Spawn only the player.
-            PointLightEntity ple = new PointLightEntity(this);
-            ple.SetPosition(new Location(0, 0, 50));
-            SpawnEntity(ple);
+            SysConsole.Output(OutputType.INIT, "Spawning the player...");
             Player = new PlayerEntity(this);
             Player.SetPosition(new Location(0, 0, 10));
             SpawnEntity(Player);

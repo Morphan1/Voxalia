@@ -98,6 +98,7 @@
     <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PhysicsEntityUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnLightPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPhysicsEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourPositionPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\KeysPacketOut.cs" />
@@ -115,6 +116,8 @@
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
     <Compile Include="ServerGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\PointLightEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\PrimitiveEntity.cs" />
     <Compile Include="ServerGame\NetworkSystem\AbstractPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\AbstractPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\Connection.cs" />
@@ -123,6 +126,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PhysicsEntityUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnLightPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPhysicsEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourPositionPacketOut.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerPhysics.cs" />
