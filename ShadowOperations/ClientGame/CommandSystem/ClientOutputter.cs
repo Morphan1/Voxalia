@@ -6,6 +6,7 @@ using Frenetic;
 using Frenetic.CommandSystem;
 using ShadowOperations.ClientGame.ClientMainSystem;
 using ShadowOperations.ClientGame.UISystem;
+using ShadowOperations.ClientGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ClientGame.CommandSystem
 {
@@ -35,21 +36,20 @@ namespace ShadowOperations.ClientGame.CommandSystem
             UIConsole.WriteLine(TextStyle.Color_Outbad + text);
         }
 
-        public override void UnknownCommand(string basecommand, string[] arguments)
+        public override void UnknownCommand(CommandQueue queue, string basecommand, string[] arguments)
         {
-            /*// TODO: Send command to network
-            if (ClientNetworkBase.Connected)
+            if (TheClient.Network.IsAlive)
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(basecommand);
                 for (int i = 0; i < arguments.Length; i++)
                 {
-                    sb.Append("\n").Append(TheClient.Commands.CommandSystem.TagSystem.ParseTags(arguments[i], TextStyle.Color_Simple, null, DebugMode.MINIMAL));
+                    sb.Append("\n").Append(queue.ParseTags ? TheClient.Commands.CommandSystem.TagSystem.ParseTags(arguments[i], TextStyle.Color_Simple, null, DebugMode.MINIMAL): arguments[i]);
                 }
                 CommandPacketOut packet = new CommandPacketOut(sb.ToString());
-                ClientNetworkBase.SendPacket(packet);
+                TheClient.Network.SendPacket(packet);
             }
-            else*/
+            else
             {
                 WriteLine(TextStyle.Color_Error + "Unknown command '" +
                     TextStyle.Color_Standout + basecommand + TextStyle.Color_Error + "'.");

@@ -35,7 +35,7 @@ namespace ShadowOperations.ServerGame.CommandSystem
             SysConsole.Output(OutputType.WARNING, TextStyle.Color_Outbad + text);
         }
 
-        public override void UnknownCommand(string basecommand, string[] arguments)
+        public override void UnknownCommand(CommandQueue queue, string basecommand, string[] arguments)
         {
             WriteLine(TextStyle.Color_Error + "Unknown command '" +
                 TextStyle.Color_Standout + basecommand + TextStyle.Color_Error + "'.");

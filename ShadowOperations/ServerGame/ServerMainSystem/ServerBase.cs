@@ -8,6 +8,7 @@ using System.Threading;
 using ShadowOperations.ServerGame.CommandSystem;
 using ShadowOperations.ServerGame.NetworkSystem;
 using ShadowOperations.ServerGame.EntitySystem;
+using ShadowOperations.ServerGame.PlayerCommandSystem;
 
 namespace ShadowOperations.ServerGame.ServerMainSystem
 {
@@ -33,6 +34,8 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
         public ServerCommands Commands;
         public ServerCVar CVars;
 
+        public PlayerCommandEngine PCEngine;
+
         public NetworkBase Networking;
 
         /// <summary>
@@ -49,6 +52,8 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Loading CVar engine...");
             CVars = new ServerCVar();
             CVars.Init(Commands.Output);
+            SysConsole.Output(OutputType.INIT, "Loading player command engine...");
+            PCEngine = new PlayerCommandEngine();
             SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
             SysConsole.Output(OutputType.INIT, "Preparing networking...");

@@ -42,6 +42,11 @@ namespace ShadowOperations.ServerGame.NetworkSystem
 
         PlayerEntity PE;
 
+        public void SendMessage(string message)
+        {
+            SendPacket(new MessagePacketOut(message));
+        }
+
         public void SendPacket(AbstractPacketOut packet)
         {
             try
@@ -118,6 +123,9 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                                 break;
                             case 1:
                                 packet = new KeysPacketIn();
+                                break;
+                            case 2:
+                                packet = new CommandPacketIn();
                                 break;
                             default:
                                 throw new Exception("Invalid packet ID!");

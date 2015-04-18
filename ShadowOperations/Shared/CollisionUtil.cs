@@ -5,6 +5,7 @@ using System.Text;
 using BEPUphysics;
 using BEPUutilities;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using BEPUphysics.Entities;
 
 namespace ShadowOperations.Shared
 {
@@ -34,6 +35,16 @@ namespace ShadowOperations.Shared
             RigidTransform rt = new RigidTransform(new Vector3((float)start.X, (float)start.Y, (float)start.Z));
             RayCastResult rcr;
             return World.ConvexCast(shape, ref rt, ref e, out rcr);
+        }
+
+        public Entity CuboidLineEntity(Location halfsize, Location start, Location end)
+        {
+            Vector3 e = new Vector3((float)end.X, (float)end.Y, (float)end.Z);
+            BoxShape shape = new BoxShape((float)halfsize.X * 2f, (float)halfsize.Y * 2f, (float)halfsize.Z * 2f);
+            RigidTransform rt = new RigidTransform(new Vector3((float)start.X, (float)start.Y, (float)start.Z));
+            RayCastResult rcr;
+            World.ConvexCast(shape, ref rt, ref e, out rcr);
+            return null; // TODO: ???
         }
 
         /// <summary>

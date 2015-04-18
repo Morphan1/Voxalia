@@ -67,6 +67,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     return true; // TODO
                 case "mass":
                     return true; // Ignore
+                case "friction":
+                    return true; // Ignore
                 case "velocity":
                     SetVelocity(Location.FromString(data));
                     return true;
