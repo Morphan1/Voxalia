@@ -5,6 +5,7 @@ using System.Text;
 using ShadowOperations.ServerGame.ServerMainSystem;
 using Frenetic;
 using Frenetic.CommandSystem;
+using ShadowOperations.ServerGame.CommandSystem.MapCommands;
 
 namespace ShadowOperations.ServerGame.CommandSystem
 {
@@ -40,7 +41,8 @@ namespace ShadowOperations.ServerGame.CommandSystem
             CommandSystem.Output = Output;
             CommandSystem.Init();
 
-            // TODO: Commands
+            // Map Commands
+            CommandSystem.RegisterCommand(new LoadCommand(TheServer));
         }
 
         /// <summary>

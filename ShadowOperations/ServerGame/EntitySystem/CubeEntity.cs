@@ -24,6 +24,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
             HalfSize = half;
             Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
             SetMass(mass);
+            mins = -HalfSize;
+            maxes = HalfSize;
         }
 
         bool pActive = false;
@@ -39,6 +41,46 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     TheServer.Players[i].Network.SendPacket(peupo);
                 }
             }
+        }
+
+        Location mins;
+        Location maxes;
+
+        public override bool ApplyVar(string var, string data)
+        {
+            switch (var)
+            {
+                case "mins":
+                    mins = Location.FromString(data);
+                    return true;
+                case "maxes":
+                    maxes = Location.FromString(data);
+                    return true;
+                case "textures":
+                    Textures = data;
+                    return true;
+                case "coords":
+                    TexCoords = data;
+                    return true;
+                default:
+                    return base.ApplyVar(var, data);
+            }
+        }
+
+        public override List<KeyValuePair<string, string>> GetVariables()
+        {
+            List<KeyValuePair<string, string>> vars = base.GetVariables();
+            vars.Add(new KeyValuePair<string, string>("mins", mins.ToString()));
+            vars.Add(new KeyValuePair<string, string>("maxes", maxes.ToString()));
+            vars.Add(new KeyValuePair<string, string>("textures", Textures));
+            vars.Add(new KeyValuePair<string, string>("coords", TexCoords));
+            return vars;
+        }
+
+        public override void Recalculate()
+        {
+            HalfSize = (maxes - mins) / 2;
+            SetPosition(mins + HalfSize);
         }
     }
 }

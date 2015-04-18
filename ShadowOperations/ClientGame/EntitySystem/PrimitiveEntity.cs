@@ -16,7 +16,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public override void Tick()
         {
-            Position += Velocity;
+            SetPosition(Position + Velocity);
             // TODO: Collision? Gravity?
         }
 

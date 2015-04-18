@@ -1,0 +1,52 @@
+general
+{
+	ambient: (0, 0, 0);
+	music: ;
+}
+cube
+{
+	position: (-0.254382312297821, 0, -5.5223970413208);
+	angle: (0, 0, 0);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	mins: (-80.2543823122978, -80, -10.5223970413208);
+	maxes: (79.7456176877022, 80, -0.522397041320801);
+	textures: top|bottom|xp|xm|yp|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+point_light
+{
+	position: (0, 0, 50);
+	angle: (0, 0, 0);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	radius: 100;
+	color: (1, 1, 1);
+	texture_size: 256;
+}
+cube
+{
+	position: (-3.18412468582392, -13, 8.25337326526642);
+	angle: (0, 0, 0);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	mins: (-10.2175501659513, -18, -0.493253469467163);
+	maxes: (3.84930079430342, -8, 17);
+	textures: top|bottom|xp|xm|yp|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (12.5, -3.5, 4);
+	angle: (0, 0, 0);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	mins: (4, -18, -1);
+	maxes: (21, 11, 9);
+	textures: top|bottom|xp|xm|yp|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}

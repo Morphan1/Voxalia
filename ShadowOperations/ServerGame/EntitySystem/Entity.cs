@@ -45,5 +45,19 @@ namespace ShadowOperations.ServerGame.EntitySystem
         {
             throw new NotImplementedException();
         }
+
+        public virtual List<KeyValuePair<string, string>> GetVariables()
+        {
+            return new List<KeyValuePair<string, string>>();
+        }
+
+        public virtual bool ApplyVar(string var, string data)
+        {
+            return false;
+        }
+
+        public virtual void Recalculate()
+        {
+        }
     }
 }

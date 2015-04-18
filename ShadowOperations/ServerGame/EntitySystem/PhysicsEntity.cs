@@ -136,7 +136,6 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         /// <summary>
         /// Sets the mass of this entity.
-        /// WARNING: This respawns the entity!
         /// </summary>
         /// <param name="mass">The new mass value</param>
         public virtual void SetMass(float mass)
@@ -144,8 +143,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Mass = mass;
             if (Body != null)
             {
-                DestroyBody();
-                SpawnBody();
+                Body.Mass = mass;
             }
         }
 
@@ -282,6 +280,45 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 Body.WorldTransform = SpawnMatrix;
             }
+        }
+
+        public override bool ApplyVar(string var, string data)
+        {
+            switch (var)
+            {
+                case "position":
+                    SetPosition(Location.FromString(data));
+                    return true;
+                case "velocity":
+                    SetVelocity(Location.FromString(data));
+                    return true;
+                case "angle":
+                    SetAngles(Location.FromString(data));
+                    return true;
+                case "angular_velocity":
+                    SetAngularVelocity(Location.FromString(data));
+                    return true;
+                case "mass":
+                    SetMass(Utilities.StringToFloat(data));
+                    return true;
+                case "friction":
+                    SetFriction(Utilities.StringToFloat(data));
+                    return true;
+                default:
+                    return base.ApplyVar(var, data);
+            }
+        }
+
+        public override List<KeyValuePair<string, string>> GetVariables()
+        {
+            List<KeyValuePair<string, string>> vars = base.GetVariables();
+            vars.Add(new KeyValuePair<string, string>("position", GetPosition().ToString()));
+            vars.Add(new KeyValuePair<string, string>("velocity", GetVelocity().ToString()));
+            vars.Add(new KeyValuePair<string, string>("angle", GetAngles().ToString()));
+            vars.Add(new KeyValuePair<string, string>("angular_velocity", GetAngularVelocity().ToString()));
+            vars.Add(new KeyValuePair<string, string>("mass", GetMass().ToString()));
+            vars.Add(new KeyValuePair<string, string>("friction", GetFriction().ToString()));
+            return vars;
         }
     }
 }
