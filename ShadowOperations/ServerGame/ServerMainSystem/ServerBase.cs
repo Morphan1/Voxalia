@@ -136,5 +136,32 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             }
             // TODO: Clean up?
         }
+
+        public PlayerEntity GetPlayerFor(string name)
+        {
+            string namelow = name.ToLower();
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].Name.ToLower() == namelow)
+                {
+                    return Players[i];
+                }
+            }
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].Name.ToLower().StartsWith(namelow))
+                {
+                    return Players[i];
+                }
+            }
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].Name.ToLower().Contains(namelow))
+                {
+                    return Players[i];
+                }
+            }
+            return null;
+        }
     }
 }

@@ -34,6 +34,25 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public bool Leftward = false;
         public bool Rightward = false;
 
+        bool pkick = false;
+
+        public void Kick(string message)
+        {
+            if (pkick)
+            {
+                return;
+            }
+            pkick = true;
+            Network.SendMessage("Kicking you: " + message);
+            SysConsole.Output(OutputType.INFO, "Kicking " + this + ": " + message);
+            if (Network.Alive)
+            {
+                Network.PrimarySocket.Close(5);
+            }
+            // TODO: Broadcast kick message
+            TheServer.DespawnEntity(this);
+        }
+
         public Location Direction;
 
         bool pup = false;

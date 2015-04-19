@@ -145,8 +145,6 @@ namespace ShadowOperations.ClientGame.NetworkSystem
             catch (Exception ex)
             {
                 SysConsole.Output(OutputType.WARNING, "Forcibly disconnected from server: " + ex.GetType().Name + ": " + ex.Message);
-                // TODO: Debug mode only
-                SysConsole.Output(OutputType.ERROR, ex.ToString());
                 Disconnect();
             }
         }
@@ -157,13 +155,21 @@ namespace ShadowOperations.ClientGame.NetworkSystem
             {
                 return;
             }
-            byte id = packet.ID;
-            byte[] data = packet.Data;
-            byte[] fdata = new byte[data.Length + 5];
-            Utilities.IntToBytes(data.Length).CopyTo(fdata, 0);
-            fdata[4] = id;
-            data.CopyTo(fdata, 5);
-            ConnectionSocket.Send(fdata);
+            try
+            {
+                byte id = packet.ID;
+                byte[] data = packet.Data;
+                byte[] fdata = new byte[data.Length + 5];
+                Utilities.IntToBytes(data.Length).CopyTo(fdata, 0);
+                fdata[4] = id;
+                data.CopyTo(fdata, 5);
+                ConnectionSocket.Send(fdata);
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output(OutputType.WARNING, "Forcibly disconnected from server: " + ex.GetType().Name + ": " + ex.Message);
+                Disconnect();
+            }
         }
 
         void ConnectInternal()
@@ -245,7 +251,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                     throw ex;
                 }
                 SysConsole.Output(OutputType.ERROR, "Networking / connect internal: " + ex.ToString());
-                // TODO: Schedule disconnect
+                ConnectionSocket.Close(5);
             }
         }
 

@@ -34,6 +34,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
             Shape.AngularDamping = 1;
             CanRotate = false;
+            EID = -1;
         }
 
         public override void Tick()

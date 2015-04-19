@@ -51,18 +51,21 @@ namespace ShadowOperations.ServerGame.NetworkSystem
         {
             try
             {
-                byte id = packet.ID;
-                byte[] data = packet.Data;
-                byte[] fdata = new byte[data.Length + 5];
-                Utilities.IntToBytes(data.Length).CopyTo(fdata, 0);
-                fdata[4] = id;
-                data.CopyTo(fdata, 5);
-                PrimarySocket.Send(fdata);
+                if (Alive)
+                {
+                    byte id = packet.ID;
+                    byte[] data = packet.Data;
+                    byte[] fdata = new byte[data.Length + 5];
+                    Utilities.IntToBytes(data.Length).CopyTo(fdata, 0);
+                    fdata[4] = id;
+                    data.CopyTo(fdata, 5);
+                    PrimarySocket.Send(fdata);
+                }
             }
             catch (Exception ex)
             {
                 SysConsole.Output(OutputType.WARNING, "Disconnected " + PE + " -> " + ex.GetType().Name + ": " + ex.Message);
-                // TODO: Actually disconnect them
+                PE.Kick("Internal exception.");
             }
         }
 
@@ -128,12 +131,12 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                                 packet = new CommandPacketIn();
                                 break;
                             default:
-                                throw new Exception("Invalid packet ID!");
+                                throw new Exception("Invalid packet ID: " + packetID);
                         }
                         packet.Player = PE;
                         if (!packet.ParseBytesAndExecute(data))
                         {
-                            throw new Exception("Imperfect packet data!");
+                            throw new Exception("Imperfect packet data for " + packetID);
                         }
                     }
                 }
@@ -210,6 +213,10 @@ namespace ShadowOperations.ServerGame.NetworkSystem
             catch (Exception ex)
             {
                 PrimarySocket.Close();
+                if (PE != null)
+                {
+                    PE.Kick("Internal exception.");
+                }
                 SysConsole.Output(OutputType.WARNING, "Forcibly disconnected client: " + ex.GetType().Name + ": " + ex.Message);
                 Alive = false;
             }

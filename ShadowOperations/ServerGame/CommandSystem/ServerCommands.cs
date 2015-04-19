@@ -6,6 +6,7 @@ using ShadowOperations.ServerGame.ServerMainSystem;
 using Frenetic;
 using Frenetic.CommandSystem;
 using ShadowOperations.ServerGame.CommandSystem.MapCommands;
+using ShadowOperations.ServerGame.CommandSystem.PlayerCommands;
 
 namespace ShadowOperations.ServerGame.CommandSystem
 {
@@ -43,6 +44,9 @@ namespace ShadowOperations.ServerGame.CommandSystem
 
             // Map Commands
             CommandSystem.RegisterCommand(new LoadCommand(TheServer));
+            
+            // Player Management Commands
+            CommandSystem.RegisterCommand(new KickCommand(TheServer));
         }
 
         /// <summary>
