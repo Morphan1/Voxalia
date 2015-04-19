@@ -26,7 +26,7 @@ point_light
 	friction: 0.5;
 	radius: 100;
 	color: (1, 1, 1);
-	texture_size: 256;
+	texture_size: 1024;
 }
 cube
 {
