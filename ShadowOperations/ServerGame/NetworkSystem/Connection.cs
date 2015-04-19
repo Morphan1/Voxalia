@@ -182,6 +182,20 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                             TheServer.SpawnEntity(player);
                             player.LastPingByte = 0;
                             SendPacket(new PingPacketOut(0));
+                            if (TheServer.SpawnPoints.Count == 0)
+                            {
+                                TheServer.SpawnEntity(new SpawnPointEntity(TheServer));
+                            }
+                            SpawnPointEntity spe = null;
+                            for (int i = 0; i < 10; i++)
+                            {
+                                spe = TheServer.SpawnPoints[Utilities.UtilRandom.Next(TheServer.SpawnPoints.Count)];
+                                if (!TheServer.Collision.CuboidLineIsSolid(player.HalfSize, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.1f)))
+                                {
+                                    break;
+                                }
+                            }
+                            player.SetPosition(spe.GetPosition());
                             GotBase = true;
                             PE = player;
                             recdsofar = 0;

@@ -39,7 +39,6 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
                     entry.Player.Network.SendMessage("Grabbed nothing."); // TODO: Language // TODO: Noise mode
                 }
             }
-
         }
     }
 }

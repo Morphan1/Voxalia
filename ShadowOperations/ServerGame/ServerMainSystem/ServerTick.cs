@@ -31,6 +31,11 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
         public List<PlayerEntity> Players = new List<PlayerEntity>();
 
         /// <summary>
+        /// All spawnpoint-type entities that exist on this server.
+        /// </summary>
+        public List<SpawnPointEntity> SpawnPoints = new List<SpawnPointEntity>();
+
+        /// <summary>
         /// The server's primary tick function.
         /// </summary>
         public void Tick(double delta)
@@ -76,7 +81,11 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             {
                 ((PrimitiveEntity)e).Spawn();
             }
-            if (e is PlayerEntity)
+            if (e is SpawnPointEntity)
+            {
+                SpawnPoints.Add((SpawnPointEntity)e);
+            }
+            else if (e is PlayerEntity)
             {
                 Players.Add((PlayerEntity)e);
                 for (int i = 0; i < Entities.Count - 1; i++)
@@ -114,7 +123,12 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             {
                 ((PrimitiveEntity)e).Destroy();
             }
-            if (e is PlayerEntity)
+
+            if (e is SpawnPointEntity)
+            {
+                SpawnPoints.Remove((SpawnPointEntity)e);
+            }
+            else if (e is PlayerEntity)
             {
                 Players.Remove((PlayerEntity)e);
                 //((PlayerEntity)e).Kick("Despawned.");
@@ -208,9 +222,8 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     e = new PointLightEntity(this);
                     break;
                 case "spawn":
-                    // TODO: e = new SpawnPointEntity(new Location(0));
+                    e = new SpawnPointEntity(this);
                     return;
-                    break;
                 default:
                     throw new Exception("Invalid entity type '" + name + "'!");
             }
