@@ -251,7 +251,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         }
 
         /// <summary>
-        /// Returns the yaw/pitch of an entity.
+        /// Returns the rotation angles of an entity.
         /// </summary>
         public virtual Location GetAngles()
         {
