@@ -9,7 +9,8 @@ using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using BEPUphysics.EntityStateManagement;
 using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
-
+using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using BEPUphysics.BroadPhaseEntries;
 namespace ShadowOperations.ServerGame.EntitySystem
 {
     public class PlayerEntity: PhysicsEntity
@@ -71,6 +72,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
             SetPosition(new Location(0, 0, 50));
         }
 
+        public bool IgnoreThis(BroadPhaseEntry entry)
+        {
+            return ((EntityCollidable)entry).Entity.Tag != this;
+        }
+
         public override void Tick()
         {
             while (Direction.X < 0)
@@ -90,9 +96,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 Direction.Y = -89.9f;
             }
             bool fly = false;
-            TheServer.PhysicsWorld.Remove(Body);
-            bool on_ground = TheServer.Collision.CuboidLineIsSolid(new Location(0.2f, 0.2f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f));
-            TheServer.PhysicsWorld.Add(Body);
+            bool on_ground = TheServer.Collision.CuboidLineIsSolid(new Location(0.2f, 0.2f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
             if (Upward && !fly && !pup && on_ground)
             {
                 Body.ApplyImpulse(new Vector3(0, 0, 0), (Location.UnitZ * 500f).ToBVector());

@@ -7,6 +7,7 @@ using BEPUutilities;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.Entities;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using BEPUphysics.BroadPhaseEntries;
 
 namespace ShadowOperations.Shared
 {
@@ -29,22 +30,33 @@ namespace ShadowOperations.Shared
         /// <param name="start">The start of the line</param>
         /// <param name="end">The end of the line</param>
         /// <returns>Whether there is an object</returns>
-        public bool CuboidLineIsSolid(Location halfsize, Location start, Location end)
+        public bool CuboidLineIsSolid(Location halfsize, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
         {
             Vector3 e = new Vector3((float)(end.X - start.X), (float)(end.Y - start.Y), (float)(end.Z - start.Z));
             BoxShape shape = new BoxShape((float)halfsize.X * 2f, (float)halfsize.Y * 2f, (float)halfsize.Z * 2f);
             RigidTransform rt = new RigidTransform(new Vector3((float)start.X, (float)start.Y, (float)start.Z));
             RayCastResult rcr;
-            return World.ConvexCast(shape, ref rt, ref e, out rcr);
+            if (filter == null)
+            {
+                return World.ConvexCast(shape, ref rt, ref e, out rcr);
+            }
+            else
+            {
+                return World.ConvexCast(shape, ref rt, ref e, filter, out rcr);
+            }
         }
 
-        public Entity CuboidLineEntity(Location halfsize, Location start, Location end)
+        public Entity CuboidLineEntity(Location halfsize, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
         {
             Vector3 e = new Vector3((float)(end.X - start.X), (float)(end.Y - start.Y), (float)(end.Z - start.Z));
             BoxShape shape = new BoxShape((float)halfsize.X * 2f, (float)halfsize.Y * 2f, (float)halfsize.Z * 2f);
             RigidTransform rt = new RigidTransform(new Vector3((float)start.X, (float)start.Y, (float)start.Z));
             RayCastResult rcr;
-            if (World.ConvexCast(shape, ref rt, ref e, out rcr))
+            if (filter == null && World.ConvexCast(shape, ref rt, ref e, out rcr))
+            {
+                return ((EntityCollidable)rcr.HitObject).Entity;
+            }
+            else if (filter != null && World.ConvexCast(shape, ref rt, ref e, filter, out rcr))
             {
                 return ((EntityCollidable)rcr.HitObject).Entity;
             }
