@@ -76,6 +76,11 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             if (e is PhysicsEntity)
             {
                 ((PhysicsEntity)e).SpawnBody();
+                SpawnPhysicsEntityPacketOut spepo = new SpawnPhysicsEntityPacketOut((PhysicsEntity)e);
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    Players[i].Network.SendPacket(spepo);
+                }
             }
             else if (e is PrimitiveEntity)
             {
@@ -100,7 +105,6 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     }
                 }
             }
-            // TODO: Send spawn packet to all players
         }
 
         public void DespawnEntity(Entity e)

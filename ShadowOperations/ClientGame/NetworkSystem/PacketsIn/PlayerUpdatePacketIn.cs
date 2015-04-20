@@ -1,0 +1,47 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using ShadowOperations.ClientGame.EntitySystem;
+using ShadowOperations.Shared;
+
+namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
+{
+    class PlayerUpdatePacketIn: AbstractPacketIn
+    {
+        public override bool ParseBytesAndExecute(byte[] data)
+        {
+            if (data.Length != 8 + 12 + 12 + 2 + 4 + 4)
+            {
+                return false;
+            }
+            long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 0, 8));
+            Location pos = Location.FromBytes(data, 8);
+            Location vel = Location.FromBytes(data, 8 + 12);
+            ushort keys = Utilities.BytesToUshort(Utilities.BytesPartial(data, 8 + 12 + 12, 2));
+            float dX = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 12 + 12 + 2, 4));
+            float dY = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 12 + 12 + 2 + 4, 4));
+            for (int i = 0; i < TheClient.Entities.Count; i++)
+            {
+                if (TheClient.Entities[i] is OtherPlayerEntity)
+                {
+                    OtherPlayerEntity e = (OtherPlayerEntity)TheClient.Entities[i];
+                    if (e.EID == eID)
+                    {
+                        e.SetPosition(pos);
+                        e.SetVelocity(vel);
+                        e.SetAngles(new Location(dX, dY, 0));
+                        e.Forward = (keys & 1) == 1;
+                        e.Backward = (keys & 2) == 2;
+                        e.Leftward = (keys & 4) == 4;
+                        e.Rightward = (keys & 8) == 8;
+                        e.Upward = (keys & 16) == 16;
+                        e.Downward = (keys & 32) == 32;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+}

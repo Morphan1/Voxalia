@@ -40,10 +40,11 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                         {
                             e.Body.ActivityInformation.Activate();
                         }
+                        return true;
                     }
                 }
             }
-            return true;
+            return false;
         }
     }
 }

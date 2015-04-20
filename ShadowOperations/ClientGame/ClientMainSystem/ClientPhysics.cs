@@ -6,6 +6,7 @@ using ShadowOperations.Shared;
 using ShadowOperations.ClientGame.EntitySystem;
 using BEPUphysics;
 using BEPUutilities;
+using BEPUphysics.Settings;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -26,6 +27,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             PhysicsWorld = new Space();
                // Set the world's general default gravity
             PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f);
+            // Minimize penetration
+            CollisionDetectionSettings.AllowedPenetration = 0.001f;
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
         }

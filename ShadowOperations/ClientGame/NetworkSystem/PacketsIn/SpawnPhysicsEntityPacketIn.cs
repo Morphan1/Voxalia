@@ -12,10 +12,11 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12)
+            if (data.Length != 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1)
             {
                 return false;
             }
+            byte type = data[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12];
             float mass = Utilities.BytesToFloat(Utilities.BytesPartial(data, 0, 4));
             Location pos = Location.FromBytes(data, 4);
             Location vel = Location.FromBytes(data, 4 + 12);
@@ -24,7 +25,19 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 4 + 12 + 12 + 12 + 12, 8));
             float fric = Utilities.BytesToFloat(Utilities.BytesPartial(data, 4 + 12 + 12 + 12 + 12 + 8, 4));
             Location halfsize = Location.FromBytes(data, 4 + 12 + 12 + 12 + 12 + 8 + 4);
-            CubeEntity ce = new CubeEntity(TheClient, halfsize);
+            PhysicsEntity ce;
+            if (type == 0)
+            {
+                ce = new CubeEntity(TheClient, halfsize);
+            }
+            else if (type == 1)
+            {
+                ce = new OtherPlayerEntity(TheClient, halfsize);
+            }
+            else
+            {
+                return false;
+            }
             ce.SetPosition(pos);
             ce.SetVelocity(vel);
             ce.SetAngles(ang);

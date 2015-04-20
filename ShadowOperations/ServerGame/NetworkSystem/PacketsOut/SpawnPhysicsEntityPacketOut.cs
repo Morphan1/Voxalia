@@ -12,7 +12,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
         public SpawnPhysicsEntityPacketOut(PhysicsEntity e)
         {
             ID = 2;
-            Data = new byte[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12];
+            Data = new byte[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
@@ -26,10 +26,15 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
             {
                 ((CubeEntity)e).HalfSize.ToBytes().CopyTo(Data, 4 + 12 + 12 + 12 + 12 + 8 + 4);
             }
+            else if (e is PlayerEntity)
+            {
+                ((PlayerEntity)e).HalfSize.ToBytes().CopyTo(Data, 4 + 12 + 12 + 12 + 12 + 8 + 4);
+            }
             else
             {
                 new Location(5, 5, 5).ToBytes().CopyTo(Data, 4 + 12 + 12 + 12 + 12 + 8 + 4);
             }
+            Data[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12] = (byte)(e is CubeEntity ? 0 : 1);
         }
     }
 }

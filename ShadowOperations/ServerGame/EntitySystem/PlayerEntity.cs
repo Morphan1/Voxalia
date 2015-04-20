@@ -8,6 +8,7 @@ using ShadowOperations.ServerGame.NetworkSystem;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using BEPUphysics.EntityStateManagement;
+using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -150,6 +151,14 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 else
                 {
                     Grabbed = null;
+                }
+            }
+            PlayerUpdatePacketOut pupo = new PlayerUpdatePacketOut(this);
+            for (int i = 0; i < TheServer.Players.Count; i++)
+            {
+                if (TheServer.Players[i] != this)
+                {
+                    TheServer.Players[i].Network.SendPacket(pupo);
                 }
             }
         }
