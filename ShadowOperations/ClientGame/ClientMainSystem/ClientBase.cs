@@ -46,7 +46,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public NetworkBase Network;
 
-        public string Username = "PlayerOne";
+        public string Username = "Player" + new Random().Next(1000);
 
         /// <summary>
         /// Start up and run the server.

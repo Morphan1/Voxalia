@@ -11,13 +11,10 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsOut
         public KeysPacketOut(KeysPacketData data, Location direction)
         {
             ID = 1;
-            byte[] data1 = Utilities.UshortToBytes((ushort)data);
-            byte[] data2 = Utilities.FloatToBytes((float)direction.X);
-            byte[] data3 = Utilities.FloatToBytes((float)direction.Y);
-            Data = new byte[data1.Length + data2.Length + data3.Length];
-            data1.CopyTo(Data, 0);
-            data2.CopyTo(Data, data1.Length);
-            data3.CopyTo(Data, data1.Length + data2.Length);
+            Data = new byte[2 + 4 + 4];
+            Utilities.UshortToBytes((ushort)data).CopyTo(Data, 0);
+            Utilities.FloatToBytes((float)direction.X).CopyTo(Data, 2);
+            Utilities.FloatToBytes((float)direction.Y).CopyTo(Data, 2 + 4);
         }
     }
 
