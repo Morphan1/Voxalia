@@ -108,6 +108,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             GL.Viewport(0, 0, vpw, vph);
         }
 
+        public bool RenderingShadows = false;
+
         void Window_RenderFrame(object sender, FrameEventArgs e)
         {
             gDelta = e.Time;
@@ -123,6 +125,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 if (CVars.r_lighting.ValueB)
                 {
                     s_shadow.Bind();
+                    RenderingShadows = true;
                     for (int i = 0; i < Lights.Count; i++)
                     {
                         for (int x = 0; x < Lights[i].InternalLights.Count; x++)
@@ -135,6 +138,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     }
                     SetViewport();
                     s_fbo.Bind();
+                    RenderingShadows = false;
                     Location CameraTarget = CameraPos + Utilities.ForwardVector_Deg(CameraYaw, CameraPitch);
                     Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CameraFOV), (float)Window.Width / (float)Window.Height, CameraZNear, CameraZFar);
                     Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());

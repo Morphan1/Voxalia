@@ -11,6 +11,8 @@ using BEPUutilities;
 using BEPUphysics.EntityStateManagement;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
+using ShadowOperations.ClientGame.GraphicsSystems;
+using OpenTK.Graphics.OpenGL4;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -141,10 +143,63 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
         }
+        public override void SpawnBody()
+        {
+            base.SpawnBody();
+            Recalculate();
+        }
+
+        public List<VBO> VBOs = new List<VBO>();
+
+        public void Recalculate()
+        {
+            for (int i = 0; i < VBOs.Count; i++)
+            {
+                VBOs[i].Destroy();
+            }
+            VBOs.Clear();
+            GetVBOFor(TheClient.Textures.GetTexture("top")).AddSide(new Location(0, 0, 1), new TextureCoordinates());
+            GetVBOFor(TheClient.Textures.GetTexture("top")).AddSide(new Location(0, 0, -1), new TextureCoordinates());
+            GetVBOFor(TheClient.Textures.GetTexture("top")).AddSide(new Location(1, 0, 0), new TextureCoordinates());
+            GetVBOFor(TheClient.Textures.GetTexture("top")).AddSide(new Location(-1, 0, 0), new TextureCoordinates());
+            GetVBOFor(TheClient.Textures.GetTexture("top")).AddSide(new Location(0, 1, 0), new TextureCoordinates());
+            GetVBOFor(TheClient.Textures.GetTexture("top")).AddSide(new Location(0, -1, 0), new TextureCoordinates());
+            for (int i = 0; i < VBOs.Count; i++)
+            {
+                VBOs[i].GenerateVBO();
+            }
+        }
+
+        VBO GetVBOFor(Texture tex)
+        {
+            for (int i = 0; i < VBOs.Count; i++)
+            {
+                if (VBOs[i].Tex.Original_InternalID == tex.Original_InternalID)
+                {
+                    return VBOs[i];
+                }
+            }
+            VBO vbo = new VBO();
+            vbo.Tex = tex;
+            vbo.Prepare();
+            VBOs.Add(vbo);
+            return vbo;
+        }
 
         public override void Render()
         {
-            // TODO: Render only when calculating shadowmap depth.
+            if (TheClient.RenderingShadows)
+            {
+                OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(HalfSize.ToOVector())
+                    * OpenTK.Matrix4.CreateRotationZ((float)(Direction.X * Utilities.PI180))
+                    * OpenTK.Matrix4.CreateTranslation(base.GetPosition().ToOVector());
+                GL.UniformMatrix4(2, false, ref mat);
+                TheClient.Rendering.SetMinimumLight(0.0f);
+                for (int i = 0; i < VBOs.Count; i++)
+                {
+                    VBOs[i].Render(true);
+                }
+            }
         }
     }
 }

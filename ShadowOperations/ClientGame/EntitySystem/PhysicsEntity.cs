@@ -250,6 +250,15 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 mat.M24, mat.M31, mat.M32, mat.M33, mat.M34, mat.M41, mat.M42, mat.M43, mat.M44);
         }
 
+        public OpenTK.Matrix4 GetOrientationMatrix()
+        {
+            Matrix3x3 omat = Body.OrientationMatrix;
+            omat.Transpose();
+            Matrix mat = Matrix3x3.ToMatrix4X4(omat);
+            return new OpenTK.Matrix4(mat.M11, mat.M12, mat.M13, mat.M14, mat.M21, mat.M22,
+                mat.M23, mat.M24, mat.M31, mat.M32, mat.M33, mat.M34, mat.M41, mat.M42, mat.M43, mat.M44);
+        }
+
         /// <summary>
         /// Returns the rotation angles of an entity.
         /// </summary>
