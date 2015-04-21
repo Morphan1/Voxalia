@@ -138,6 +138,8 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnLightPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPhysicsEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourPositionPacketOut.cs" />
+    <Compile Include="ServerGame\OtherSystems\ItemStack.cs" />
+    <Compile Include="Shared\ItemStackBase.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\AbstractPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\GrabPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\PlayerCommandEngine.cs" />
