@@ -27,7 +27,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         /// <summary>
         /// A default clear texture.
         /// </summary>
-        public static Texture Clear = null;
+        public Texture Clear = null;
 
         /// <summary>
         /// A default black texture.

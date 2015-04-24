@@ -64,7 +64,15 @@ namespace ShadowOperations.ClientGame.EntitySystem
             GetVBOFor(TheClient.Textures.GetTexture(Textures[5])).AddSide(new Location(0, -1, 0), Coords[5]);
             for (int i = 0; i < VBOs.Count; i++)
             {
-                VBOs[i].GenerateVBO();
+                if (VBOs[i].Tex == TheClient.Textures.Clear)
+                {
+                    VBOs.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    VBOs[i].GenerateVBO();
+                }
             }
         }
 
