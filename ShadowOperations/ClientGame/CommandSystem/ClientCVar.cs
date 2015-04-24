@@ -25,7 +25,7 @@ namespace ShadowOperations.ClientGame.CommandSystem
         public CVar n_first;
 
         // Renderer CVars
-        public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_lighting;
+        public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_lighting, r_renderwireframe;
 
         // UI CVars
         public CVar u_mouse_sensitivity;
@@ -47,6 +47,7 @@ namespace ShadowOperations.ClientGame.CommandSystem
             r_height = Register("r_height", "600", CVarFlag.Numeric | CVarFlag.Delayed); // What height the window should be.
             r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed); // What AA mode to use (0 = none).
             r_lighting = Register("r_lighting", "true", CVarFlag.Boolean); // Whether to enable 3D lighting (Otherwise, use FullBright).
+            r_renderwireframe = Register("r_renderwireframe", "false", CVarFlag.Boolean); // Whether to render a wireframe.
             // UI CVars
             u_mouse_sensitivity = Register("u_mouse_sensitivity", "1", CVarFlag.Numeric); // How sensitive the mouse is.
         }

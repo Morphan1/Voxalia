@@ -197,7 +197,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 TheClient.Rendering.SetMinimumLight(0.0f);
                 for (int i = 0; i < VBOs.Count; i++)
                 {
-                    VBOs[i].Render(true);
+                    VBOs[i].Render(TheClient.RenderTextures);
                 }
             }
         }

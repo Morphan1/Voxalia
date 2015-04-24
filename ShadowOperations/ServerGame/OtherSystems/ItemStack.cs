@@ -21,6 +21,11 @@ namespace ShadowOperations.ServerGame.OtherSystems
         {
         }
 
+        public override void SetName(string name)
+        {
+            base.SetName(name);
+        }
+
         /// <summary>
         /// The image used to render this item.
         /// </summary>

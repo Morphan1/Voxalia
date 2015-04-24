@@ -46,7 +46,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 TheClient.Lights.Remove(Internal);
             }
             generated = true;
-            Internal = new PointLight(GetPosition(), texturesize, Radius, Color);
+            Internal = new PointLight(GetPosition(), texturesize, Radius, LightColor);
             TheClient.Lights.Add(Internal);
         }
 
@@ -60,11 +60,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
         }
 
         public float Radius = 100;
-        public Location Color = new Location(1, 1, 1);
+        public Location LightColor = new Location(1, 1, 1);
 
         public override string ToString()
         {
-            return "POINTLIGHTENTITY{location=" + Position + ";radius=" + Radius + ";color=" + Color + "}";
+            return "POINTLIGHTENTITY{location=" + Position + ";radius=" + Radius + ";color=" + LightColor + "}";
         }
     }
 }

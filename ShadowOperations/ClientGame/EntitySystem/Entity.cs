@@ -12,10 +12,13 @@ namespace ShadowOperations.ClientGame.EntitySystem
     /// </summary>
     public abstract class Entity
     {
+        public OpenTK.Graphics.Color4 Color;
+
         public Entity(Client tclient, bool tickme)
         {
             TheClient = tclient;
             Ticks = tickme;
+            Color = new OpenTK.Graphics.Color4((float)Utilities.UtilRandom.NextDouble(), (float)Utilities.UtilRandom.NextDouble(), 0f, 1f);
         }
 
         /// <summary>

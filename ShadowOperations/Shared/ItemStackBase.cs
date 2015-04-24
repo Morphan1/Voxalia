@@ -53,9 +53,14 @@ namespace ShadowOperations.Shared
             return data;
         }
 
-        public ItemStackBase(string name)
+        public virtual void SetName(string name)
         {
             Name = name;
+        }
+
+        public ItemStackBase(string name)
+        {
+            SetName(name);
         }
 
         public ItemStackBase(byte[] data)
@@ -73,7 +78,7 @@ namespace ShadowOperations.Shared
             {
                 throw new Exception("Invalid item stack bytes!");
             }
-            Name = FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4, c_name);
+            SetName(FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4, c_name));
             DisplayName = FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4 + c_name, c_dname);
             Description = FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname, c_desc);
             SetTextureName(FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc, c_tex));

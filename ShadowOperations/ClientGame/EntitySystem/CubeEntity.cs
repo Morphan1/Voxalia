@@ -22,6 +22,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             HalfSize = halfsize;
             Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
             Recalculate();
+            Color = new OpenTK.Graphics.Color4(0f, (float)Utilities.UtilRandom.NextDouble(), (float)Utilities.UtilRandom.NextDouble(), 1f);
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             TheClient.Rendering.SetMinimumLight(0.0f);
             for (int i = 0; i < VBOs.Count; i++)
             {
-                VBOs[i].Render(true); // TODO: TheClient.RenderTextures
+                VBOs[i].Render(TheClient.RenderTextures);
             }
         }
 

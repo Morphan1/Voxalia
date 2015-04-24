@@ -115,6 +115,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             gDelta = e.Time;
             try
             {
+                RenderTextures = true;
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.1f, 0.1f, 0.1f, 1f });
                 GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
                 GL.Enable(EnableCap.DepthTest);
@@ -225,6 +226,10 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     Shaders.ColorMultShader.Bind();
                     GL.UniformMatrix4(1, false, ref combined);
                     GL.Enable(EnableCap.CullFace);
+                    if (CVars.r_renderwireframe.ValueB)
+                    {
+                        Render3DWires();
+                    }
                 }
                 else
                 {
@@ -235,6 +240,10 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     Matrix4 combined = view * proj;
                     GL.UniformMatrix4(1, false, ref combined);
                     Render3D();
+                    if (CVars.r_renderwireframe.ValueB)
+                    {
+                        Render3DWires();
+                    }
                 }
                 GL.Disable(EnableCap.DepthTest);
                 Shaders.ColorMultShader.Bind();
@@ -256,6 +265,28 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             {
                 Entities[i].Render();
             }
+        }
+
+        public bool RenderTextures = true;
+
+        public void Render3DWires()
+        {
+            RenderTextures = false;
+            Shaders.ColorMultShader.Bind();
+            GL.Disable(EnableCap.DepthTest);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+            Textures.White.Bind();
+            GL.Enable(EnableCap.CullFace);
+            for (int i = 0; i < Entities.Count; i++)
+            {
+                Rendering.SetColor(Entities[i].Color);
+                Entities[i].Render();
+            }
+            GL.Enable(EnableCap.DepthTest);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            GL.LineWidth(1);
+            Rendering.SetColor(Color4.White);
+            RenderTextures = false;
         }
 
         public void Render2D()
