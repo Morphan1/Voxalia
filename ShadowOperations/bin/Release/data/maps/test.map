@@ -93,3 +93,51 @@ cube
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
+cube
+{
+	position: (2.5, 22.5, 4.5);
+	angle: (0, 0, 0);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 200;
+	friction: 0.5;
+	mins: (0, 20, -1);
+	maxes: (5, 25, 10);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (-17.5, 22.5, 4.5);
+	angle: (0, 0, 0);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 200;
+	friction: 0.5;
+	mins: (-20, 20, -1);
+	maxes: (-15, 25, 10);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (-7.5, 22.5, 12.5);
+	angle: (0, 0, 0);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 200;
+	friction: 0.5;
+	mins: (-20, 20, 10);
+	maxes: (5, 25, 15);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+spawn
+{
+	position: (0, -4, 5);
+	angle: (0, 0, 0);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+}
