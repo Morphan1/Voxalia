@@ -15,12 +15,19 @@ namespace ShadowOperations.ServerGame.EntitySystem
     {
         public Location HalfSize = new Location(1);
 
-        public string Textures = "top|bottom|xp|xm|yp|ym";
-        public string TexCoords = "1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f";
+        public string[] Textures;
+        public string[] TexCoords;
+
+        void DefTexs()
+        {
+            Textures = "top|bottom|xp|xm|yp|ym".Split('|');
+            TexCoords = "1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f".Split('|');
+        }
 
         public CubeEntity(Location half, Server tserver, float mass)
             : base(tserver, true)
         {
+            DefTexs();
             HalfSize = half;
             SetMass(mass);
             BuildShape();
@@ -63,10 +70,18 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     maxes = Location.FromString(data);
                     return true;
                 case "textures":
-                    Textures = data;
+                    Textures = data.Split('|');
+                    if (Textures.Length != 6)
+                    {
+                        DefTexs();
+                    }
                     return true;
                 case "coords":
-                    TexCoords = data;
+                    TexCoords = data.Split('|');
+                    if (TexCoords.Length != 6)
+                    {
+                        DefTexs();
+                    }
                     return true;
                 default:
                     return base.ApplyVar(var, data);
@@ -78,9 +93,19 @@ namespace ShadowOperations.ServerGame.EntitySystem
             List<KeyValuePair<string, string>> vars = base.GetVariables();
             vars.Add(new KeyValuePair<string, string>("mins", mins.ToString()));
             vars.Add(new KeyValuePair<string, string>("maxes", maxes.ToString()));
-            vars.Add(new KeyValuePair<string, string>("textures", Textures));
-            vars.Add(new KeyValuePair<string, string>("coords", TexCoords));
+            vars.Add(new KeyValuePair<string, string>("textures", TexString()));
+            vars.Add(new KeyValuePair<string, string>("coords", TexCString()));
             return vars;
+        }
+
+        public string TexString()
+        {
+            return Textures[0] + "|" + Textures[1] + "|" + Textures[2] + "|" + Textures[3] + "|" + Textures[4] + "|" + Textures[5];
+        }
+
+        public string TexCString()
+        {
+            return TexCoords[0] + "|" + TexCoords[1] + "|" + TexCoords[2] + "|" + TexCoords[3] + "|" + TexCoords[4] + "|" + TexCoords[5];
         }
 
         public override void Recalculate()

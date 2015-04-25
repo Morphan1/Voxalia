@@ -27,7 +27,7 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
                 Location ang = entry.Player.GetAngles();
                 Location end = entry.Player.GetEyePosition() + Utilities.ForwardVector_Deg(ang.X, ang.Y) * 5;
                 entry.Player.TheServer.PhysicsWorld.Remove(entry.Player.Body);
-                BEPUphysics.Entities.Entity e = entry.Player.TheServer.Collision.CuboidLineEntity(new Location(0.1, 0.1, 0.1), entry.Player.GetEyePosition(), end);
+                BEPUphysics.Entities.Entity e = entry.Player.TheServer.Collision.CuboidLineTrace(new Location(0.1, 0.1, 0.1), entry.Player.GetEyePosition(), end).HitEnt;
                 entry.Player.TheServer.PhysicsWorld.Add(entry.Player.Body);
                 if (e != null && ((PhysicsEntity)e.Tag).GetMass() > 0)
                 {

@@ -195,7 +195,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                             for (int i = 0; i < 10; i++)
                             {
                                 spe = TheServer.SpawnPoints[Utilities.UtilRandom.Next(TheServer.SpawnPoints.Count)];
-                                if (!TheServer.Collision.CuboidLineIsSolid(player.HalfSize, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.1f)))
+                                if (!TheServer.Collision.CuboidLineTrace(player.HalfSize, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.1f)).Hit)
                                 {
                                     break;
                                 }

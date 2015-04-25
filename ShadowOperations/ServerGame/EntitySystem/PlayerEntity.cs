@@ -113,7 +113,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 Direction.Y = -89.9f;
             }
             bool fly = false;
-            bool on_ground = TheServer.Collision.CuboidLineIsSolid(new Location(0.2f, 0.2f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
+            bool on_ground = TheServer.Collision.CuboidLineTrace(new Location(0.2f, 0.2f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis).Hit;
             if (Upward && !fly && !pup && on_ground)
             {
                 Body.ApplyImpulse(new Vector3(0, 0, 0), (Location.UnitZ * 500f).ToBVector());
