@@ -18,11 +18,14 @@ namespace ShadowOperations.ServerGame.NetworkSystem
 
         public Socket ListenSocket;
 
+        public NetStringManager Strings;
+
         public List<Connection> Connections;
 
         public NetworkBase(Server tserver)
         {
             TheServer = tserver;
+            Strings = new NetStringManager(TheServer);
             Connections = new List<Connection>();
         }
 

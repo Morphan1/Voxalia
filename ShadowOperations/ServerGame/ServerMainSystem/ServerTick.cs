@@ -107,6 +107,10 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             if (e is PlayerEntity)
             {
                 Players.Add((PlayerEntity)e);
+                for (int i = 0; i < Networking.Strings.Strings.Count; i++)
+                {
+                    ((PlayerEntity)e).Network.SendPacket(new NetStringPacketOut(Networking.Strings.Strings[i]));
+                }
                 for (int i = 0; i < Entities.Count - 1; i++)
                 {
                     if (Entities[i] is PhysicsEntity)

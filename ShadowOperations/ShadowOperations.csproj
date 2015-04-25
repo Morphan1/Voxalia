@@ -99,9 +99,11 @@
     <Compile Include="ClientGame\GraphicsSystems\VBO.cs" />
     <Compile Include="ClientGame\NetworkSystem\AbstractPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\AbstractPacketOut.cs" />
+    <Compile Include="ClientGame\NetworkSystem\NetStringManager.cs" />
     <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\DespawnEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\MessagePacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\NetStringPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PhysicsEntityUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PlayerUpdatePacketIn.cs" />
@@ -138,12 +140,14 @@
     <Compile Include="ServerGame\NetworkSystem\AbstractPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\AbstractPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\Connection.cs" />
+    <Compile Include="ServerGame\NetworkSystem\NetStringManager.cs" />
     <Compile Include="ServerGame\NetworkSystem\NetworkBase.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\CommandPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\KeysPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\DespawnEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\MessagePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\NetStringPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PhysicsEntityUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PlayerUpdatePacketOut.cs" />

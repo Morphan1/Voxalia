@@ -19,8 +19,11 @@ namespace ShadowOperations.ClientGame.NetworkSystem
         public NetworkBase(Client tclient)
         {
             TheClient = tclient;
+            Strings = new NetStringManager();
             recd = new byte[MAX];
         }
+
+        public NetStringManager Strings;
 
         public Socket ConnectionSocket;
 
@@ -51,6 +54,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem
         public void Connect(string IP, string port)
         {
             Disconnect();
+            Strings.Strings.Clear();
             LastIP = IP;
             LastPort = port;
             ConnectionThread = new Thread(new ThreadStart(ConnectInternal));
@@ -140,6 +144,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                             break;
                         case 8:
                             packet = new DespawnEntityPacketIn();
+                            break;
+                        case 9:
+                            packet = new NetStringPacketIn();
                             break;
                         default:
                             throw new Exception("Invalid packet ID: " + packetID);

@@ -42,6 +42,12 @@ namespace ShadowOperations.ClientGame.EntitySystem
             }
         }
 
+        public override void SpawnBody()
+        {
+            Recalculate();
+            base.SpawnBody();
+        }
+
         public string[] Textures = new string[] { "top", "bottom", "xp", "xm", "yp", "ym" };
         
         public TextureCoordinates[] Coords = new TextureCoordinates[] { new TextureCoordinates(), new TextureCoordinates(),

@@ -5,6 +5,7 @@ using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ClientGame.ClientMainSystem;
 using ShadowOperations.ClientGame.EntitySystem;
+using ShadowOperations.ClientGame.GraphicsSystems;
 
 namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
 {
@@ -12,8 +13,11 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1)
+            int len = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1;
+            if (data.Length != len
+                && data.Length != len + 4 * 6 + 4 * 6)
             {
+                SysConsole.Output(OutputType.WARNING, "Expected " + (len) + " or " + (len + 4 * 6 + 4 * 6) + " but got " + data.Length);
                 return false;
             }
             byte type = data[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12];
@@ -28,7 +32,22 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             PhysicsEntity ce;
             if (type == 0)
             {
-                ce = new CubeEntity(TheClient, halfsize);
+                CubeEntity ce1 = new CubeEntity(TheClient, halfsize);
+                ce = ce1;
+                int start = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1;
+                NetStringManager strings = TheClient.Network.Strings;
+                ce1.Textures[0] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4)));
+                ce1.Textures[1] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4, 4)));
+                ce1.Textures[2] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 2, 4)));
+                ce1.Textures[3] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 3, 4)));
+                ce1.Textures[4] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 4, 4)));
+                ce1.Textures[5] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 5, 4)));
+                ce1.Coords[0] = TextureCoordinates.FromString(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 6, 4))));
+                ce1.Coords[1] = TextureCoordinates.FromString(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 6 + 4, 4))));
+                ce1.Coords[2] = TextureCoordinates.FromString(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 6 + 4 * 2, 4))));
+                ce1.Coords[3] = TextureCoordinates.FromString(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 6 + 4 * 3, 4))));
+                ce1.Coords[4] = TextureCoordinates.FromString(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 6 + 4 * 4, 4))));
+                ce1.Coords[5] = TextureCoordinates.FromString(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 6 + 4 * 5, 4))));
             }
             else if (type == 1)
             {
