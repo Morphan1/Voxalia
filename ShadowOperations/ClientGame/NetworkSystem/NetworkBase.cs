@@ -138,6 +138,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 7:
                             packet = new SpawnBulletPacketIn();
                             break;
+                        case 8:
+                            packet = new DespawnEntityPacketIn();
+                            break;
                         default:
                             throw new Exception("Invalid packet ID: " + packetID);
                     }

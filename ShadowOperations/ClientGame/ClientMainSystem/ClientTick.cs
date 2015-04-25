@@ -59,5 +59,34 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 ((PrimitiveEntity)e).Spawn();
             }
         }
+
+        public void Despawn(Entity e)
+        {
+            Entities.Remove(e);
+            if (e.Ticks)
+            {
+                Tickers.Remove(e);
+            }
+            if (e is PhysicsEntity)
+            {
+                ((PhysicsEntity)e).DestroyBody();
+            }
+            else if (e is PrimitiveEntity)
+            {
+                ((PrimitiveEntity)e).Destroy();
+            }
+        }
+
+        public Entity GetEntity(long EID)
+        {
+            for (int i = 0; i < Entities.Count; i++)
+            {
+                if (Entities[i].EID == EID)
+                {
+                    return Entities[i];
+                }
+            }
+            return null;
+        }
     }
 }

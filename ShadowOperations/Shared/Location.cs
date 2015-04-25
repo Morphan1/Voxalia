@@ -359,6 +359,11 @@ namespace ShadowOperations.Shared
             return new BEPUutilities.Vector3((float)X, (float)Y, (float)Z);
         }
 
+        public static Location FromBVector(BEPUutilities.Vector3 vec)
+        {
+            return new Location(vec.X, vec.Y, vec.Z);
+        }
+
         /// <summary>
         /// Gets the location of the block this location is within.
         /// </summary>

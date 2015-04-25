@@ -104,7 +104,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     Players[i].Network.SendPacket(packet);
                 }
             }
-            else if (e is PlayerEntity)
+            if (e is PlayerEntity)
             {
                 Players.Add((PlayerEntity)e);
                 for (int i = 0; i < Entities.Count - 1; i++)
@@ -155,7 +155,11 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 Players.Remove((PlayerEntity)e);
                 ((PlayerEntity)e).Kick("Despawned!");
             }
-            // TODO: Send despawn packet to all players
+            DespawnEntityPacketOut depo = new DespawnEntityPacketOut(e.EID);
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Players[i].Network.SendPacket(depo);
+            }
         }
 
         public void LoadMapFromString(string data)

@@ -4,9 +4,20 @@ using System.Linq;
 using System.Text;
 using ShadowOperations.ServerGame.ServerMainSystem;
 using ShadowOperations.Shared;
+using BEPUphysics;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
+    public class CollisionEventArgs : EventArgs
+    {
+        public CollisionEventArgs(CollisionResult cr)
+        {
+            Info = cr;
+        }
+
+        public CollisionResult Info;
+    }
+
     public abstract class PrimitiveEntity: Entity
     {
         public List<long> NoCollide = new List<long>();
@@ -16,11 +27,27 @@ namespace ShadowOperations.ServerGame.EntitySystem
         {
         }
 
+        public bool FilterHandle(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)
+        {
+            long eid = ((PhysicsEntity)((BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)entry).Entity.Tag).EID;
+            return !NoCollide.Contains(eid);
+        }
+
         public override void Tick()
         {
-            SetPosition(Position + Velocity * TheServer.Delta);
-            // TODO: Collision? Gravity?
+            CollisionResult cr = TheServer.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + GetVelocity() * TheServer.Delta, FilterHandle);
+            if (cr.Hit && Collide != null)
+            {
+                Collide(this, new CollisionEventArgs(cr));
+            }
+            if (IsSpawned)
+            {
+                SetPosition(cr.Position);
+                // TODO: Gravity?
+            }
         }
+
+        public EventHandler<CollisionEventArgs> Collide;
 
         public virtual void Spawn()
         {
@@ -35,6 +62,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public Location Position;
 
         public Location Velocity;
+
+        public Location Scale;
 
         public override Location GetPosition()
         {

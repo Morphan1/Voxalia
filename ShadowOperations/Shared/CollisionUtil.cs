@@ -11,6 +11,20 @@ using BEPUphysics.BroadPhaseEntries;
 
 namespace ShadowOperations.Shared
 {
+    public class CollisionResult
+    {
+        public bool Hit;
+
+        /// <summary>
+        /// The impact normal. Warning: not normalized!
+        /// </summary>
+        public Location Normal;
+
+        public Location Position;
+
+        public ShadowOperations.ServerGame.EntitySystem.PhysicsEntity HitEnt;
+    }
+
     /// <summary>
     /// Helper code for tracing collision.
     /// </summary>
@@ -44,6 +58,45 @@ namespace ShadowOperations.Shared
             {
                 return World.ConvexCast(shape, ref rt, ref e, filter, out rcr);
             }
+        }
+
+        /// <summary>
+        /// Returns whether there is a solid object along a line with a cuboid shape.
+        /// </summary>
+        /// <param name="halfsize">Half the size of the cuboid</param>
+        /// <param name="start">The start of the line</param>
+        /// <param name="end">The end of the line</param>
+        /// <returns>Whether there is an object</returns>
+        public CollisionResult CuboidLineTrace(Location halfsize, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
+        {
+            Vector3 e = new Vector3((float)(end.X - start.X), (float)(end.Y - start.Y), (float)(end.Z - start.Z));
+            BoxShape shape = new BoxShape((float)halfsize.X * 2f, (float)halfsize.Y * 2f, (float)halfsize.Z * 2f);
+            RigidTransform rt = new RigidTransform(new Vector3((float)start.X, (float)start.Y, (float)start.Z));
+            RayCastResult rcr;
+            bool hit;
+            if (filter == null)
+            {
+                hit = World.ConvexCast(shape, ref rt, ref e, out rcr);
+            }
+            else
+            {
+                hit = World.ConvexCast(shape, ref rt, ref e, filter, out rcr);
+            }
+            CollisionResult cr = new CollisionResult();
+            cr.Hit = hit;
+            if (hit)
+            {
+                cr.Normal = Location.FromBVector(rcr.HitData.Normal);
+                cr.Position = Location.FromBVector(rcr.HitData.Location);
+                cr.HitEnt = (ShadowOperations.ServerGame.EntitySystem.PhysicsEntity)((EntityCollidable)rcr.HitObject).Entity.Tag;
+            }
+            else
+            {
+                cr.Normal = Location.Zero;
+                cr.Position = end;
+                cr.HitEnt = null;
+            }
+            return cr;
         }
 
         public Entity CuboidLineEntity(Location halfsize, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)

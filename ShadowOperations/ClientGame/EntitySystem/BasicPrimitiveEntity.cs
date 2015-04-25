@@ -33,7 +33,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 TheClient.Textures.White.Bind();
             }
-            Matrix4 mat = Matrix4.CreateScale(scale.ToOVector()) * Matrix4.CreateTranslation(GetPosition().ToOVector()) * Matrix4.CreateTranslation((-scale * 0.5f).ToOVector());
+            Matrix4 mat = Matrix4.CreateScale(scale.ToOVector() * 2f) * Matrix4.CreateTranslation(GetPosition().ToOVector()) * Matrix4.CreateTranslation((-scale * 0.5f).ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Models.Cube.Draw();
         }
