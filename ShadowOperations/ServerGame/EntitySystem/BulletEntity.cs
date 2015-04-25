@@ -18,9 +18,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public void OnCollide(object sender, CollisionEventArgs args)
         {
-            Vector3 loc = (GetPosition() - args.Info.HitEnt.GetPosition()).ToBVector();
+            Vector3 loc = (GetPosition() - ((PhysicsEntity)args.Info.HitEnt.Tag).GetPosition()).ToBVector();
             Vector3 impulse = GetVelocity().ToBVector() * Damage / 1000f;
-            args.Info.HitEnt.Body.ApplyImpulse(ref loc, ref impulse);
+            ((PhysicsEntity)args.Info.HitEnt.Tag).Body.ApplyImpulse(ref loc, ref impulse);
             TheServer.DespawnEntity(this);
             // TODO: Apply Damage
             // TODO: Apply Splash Damage

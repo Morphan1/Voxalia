@@ -22,7 +22,7 @@ namespace ShadowOperations.Shared
 
         public Location Position;
 
-        public ShadowOperations.ServerGame.EntitySystem.PhysicsEntity HitEnt;
+        public Entity HitEnt;
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ namespace ShadowOperations.Shared
             {
                 cr.Normal = Location.FromBVector(rcr.HitData.Normal);
                 cr.Position = Location.FromBVector(rcr.HitData.Location);
-                cr.HitEnt = (ShadowOperations.ServerGame.EntitySystem.PhysicsEntity)((EntityCollidable)rcr.HitObject).Entity.Tag;
+                cr.HitEnt = ((EntityCollidable)rcr.HitObject).Entity;
             }
             else
             {

@@ -159,7 +159,7 @@
     <Compile Include="ServerGame\PlayerCommandSystem\PlayerCommandEntry.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerPhysics.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerBase.cs" />
-    <Compile Include="Shared\ServerTick.cs" />
+    <Compile Include="ServerGame\ServerMainSystem\ServerTick.cs" />
     <Compile Include="Shared\CollisionUtil.cs" />
     <Compile Include="Shared\ConsoleHandler.cs" />
     <Compile Include="Shared\DataStream.cs" />
