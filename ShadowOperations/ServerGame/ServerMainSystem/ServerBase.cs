@@ -9,6 +9,7 @@ using ShadowOperations.ServerGame.CommandSystem;
 using ShadowOperations.ServerGame.NetworkSystem;
 using ShadowOperations.ServerGame.EntitySystem;
 using ShadowOperations.ServerGame.PlayerCommandSystem;
+using ShadowOperations.ServerGame.ItemSystem;
 
 namespace ShadowOperations.ServerGame.ServerMainSystem
 {
@@ -38,6 +39,8 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
 
         public NetworkBase Networking;
 
+        public ItemRegistry Items;
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
@@ -54,6 +57,8 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             CVars.Init(Commands.Output);
             SysConsole.Output(OutputType.INIT, "Loading player command engine...");
             PCEngine = new PlayerCommandEngine();
+            SysConsole.Output(OutputType.INIT, "Loading item registry...");
+            Items = new ItemRegistry();
             SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
             SysConsole.Output(OutputType.INIT, "Preparing networking...");

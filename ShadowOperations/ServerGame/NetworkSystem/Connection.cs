@@ -65,6 +65,8 @@ namespace ShadowOperations.ServerGame.NetworkSystem
             catch (Exception ex)
             {
                 SysConsole.Output(OutputType.WARNING, "Disconnected " + PE + " -> " + ex.GetType().Name + ": " + ex.Message);
+                // TODO: Debug Only
+                SysConsole.Output(OutputType.ERROR, ex.ToString());
                 PE.Kick("Internal exception.");
             }
         }
@@ -218,6 +220,8 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                     PE.Kick("Internal exception.");
                 }
                 SysConsole.Output(OutputType.WARNING, "Forcibly disconnected client: " + ex.GetType().Name + ": " + ex.Message);
+                // TODO: Debug Only
+                SysConsole.Output(OutputType.ERROR, ex.ToString());
                 Alive = false;
             }
         }

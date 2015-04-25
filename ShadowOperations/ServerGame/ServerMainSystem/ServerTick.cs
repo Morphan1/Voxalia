@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.EntitySystem;
+using ShadowOperations.ServerGame.NetworkSystem;
+
 using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ServerGame.ServerMainSystem
@@ -73,14 +75,11 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             {
                 Tickers.Add(e);
             }
+            AbstractPacketOut packet = null;
             if (e is PhysicsEntity)
             {
                 ((PhysicsEntity)e).SpawnBody();
-                SpawnPhysicsEntityPacketOut spepo = new SpawnPhysicsEntityPacketOut((PhysicsEntity)e);
-                for (int i = 0; i < Players.Count; i++)
-                {
-                    Players[i].Network.SendPacket(spepo);
-                }
+                packet = new SpawnPhysicsEntityPacketOut((PhysicsEntity)e);
             }
             else if (e is PrimitiveEntity)
             {
@@ -89,6 +88,14 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             if (e is SpawnPointEntity)
             {
                 SpawnPoints.Add((SpawnPointEntity)e);
+            }
+            else if (e is PointLightEntity)
+            {
+                packet = new SpawnLightPacketOut((PointLightEntity)e);
+            }
+            else if (e is BulletEntity)
+            {
+                packet = new SpawnBulletPacketOut((BulletEntity)e);
             }
             else if (e is PlayerEntity)
             {
@@ -103,6 +110,17 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     {
                         ((PlayerEntity)e).Network.SendPacket(new SpawnLightPacketOut((PointLightEntity)Entities[i]));
                     }
+                    else if (Entities[i] is BulletEntity)
+                    {
+                        ((PlayerEntity)e).Network.SendPacket(new SpawnBulletPacketOut((BulletEntity)Entities[i]));
+                    }
+                }
+            }
+            if (packet != null)
+            {
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    Players[i].Network.SendPacket(packet);
                 }
             }
         }

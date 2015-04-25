@@ -11,6 +11,8 @@ using BEPUphysics.EntityStateManagement;
 using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
+using ShadowOperations.ServerGame.ItemSystem;
+
 namespace ShadowOperations.ServerGame.EntitySystem
 {
     public class PlayerEntity: PhysicsEntity
@@ -36,7 +38,14 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public bool Leftward = false;
         public bool Rightward = false;
 
+        public bool Click = false;
+        public bool AltClick = false;
+
         bool pkick = false;
+
+        public List<ItemStack> Items = new List<ItemStack>();
+
+        public int cItem = 0;
 
         public void Kick(string message)
         {
@@ -46,12 +55,12 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             pkick = true;
             Network.SendMessage("Kicking you: " + message);
+            // TODO: Broadcast kick message
             SysConsole.Output(OutputType.INFO, "Kicking " + this + ": " + message);
             if (Network.Alive)
             {
                 Network.PrimarySocket.Close(5);
             }
-            // TODO: Broadcast kick message
             TheServer.DespawnEntity(this);
         }
 
@@ -70,6 +79,14 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Shape.AngularDamping = 1;
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
+            GiveItem(new ItemStack("9mm_pistol_gun", TheServer));
+        }
+
+        public void GiveItem(ItemStack item)
+        {
+            // TODO: stacking
+            item.Info.PrepItem(this, item);
+            Items.Add(item);
         }
 
         public bool IgnoreThis(BroadPhaseEntry entry)
@@ -165,7 +182,17 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     TheServer.Players[i].Network.SendPacket(pupo);
                 }
             }
+            if (Click)
+            {
+                Items[cItem].Info.Click(this, Items[cItem]);
+            }
+            if (AltClick)
+            {
+                Items[cItem].Info.AltClick(this, Items[cItem]);
+            }
         }
+
+        public bool pclick = false;
 
         public float MoveSpeed = 10;
 

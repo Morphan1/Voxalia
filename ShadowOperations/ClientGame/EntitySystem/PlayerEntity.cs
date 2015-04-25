@@ -28,6 +28,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public bool Rightward = false;
         public bool Upward = false;
         public bool Downward = false;
+        public bool Click = false;
+        public bool AltClick = false;
 
         bool pup = false;
 
@@ -118,7 +120,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
             }
             KeysPacketData kpd = (Forward ? KeysPacketData.FORWARD : 0) | (Backward ? KeysPacketData.BACKWARD : 0)
                  | (Leftward ? KeysPacketData.LEFTWARD : 0) | (Rightward ? KeysPacketData.RIGHTWARD : 0)
-                  | (Upward ? KeysPacketData.UPWARD : 0) | (Downward ? KeysPacketData.DOWNWARD : 0);
+                  | (Upward ? KeysPacketData.UPWARD : 0) | (Downward ? KeysPacketData.DOWNWARD : 0)
+                  | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK: 0);
             TheClient.Network.SendPacket(new KeysPacketOut(kpd, Direction));
         }
 

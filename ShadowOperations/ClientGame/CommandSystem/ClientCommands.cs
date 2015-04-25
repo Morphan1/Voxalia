@@ -44,11 +44,13 @@ namespace ShadowOperations.ClientGame.CommandSystem
             CommandSystem.Init();
 
             // UI Commands
+            CommandSystem.RegisterCommand(new AttackCommand(TheClient));
             CommandSystem.RegisterCommand(new BackwardCommand(TheClient));
             CommandSystem.RegisterCommand(new DownwardCommand(TheClient));
             CommandSystem.RegisterCommand(new ForwardCommand(TheClient));
             CommandSystem.RegisterCommand(new LeftwardCommand(TheClient));
             CommandSystem.RegisterCommand(new RightwardCommand(TheClient));
+            CommandSystem.RegisterCommand(new SecondaryCommand(TheClient));
             CommandSystem.RegisterCommand(new UpwardCommand(TheClient));
 
             // Common Commands

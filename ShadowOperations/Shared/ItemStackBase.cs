@@ -26,6 +26,11 @@ namespace ShadowOperations.Shared
         public string Description;
 
         /// <summary>
+        /// A bit of data associated with this item stack, for free usage by the Item Info.
+        /// </summary>
+        public int Datum = 0;
+
+        /// <summary>
         /// How many of this item there are.
         /// </summary>
         public int Count;
@@ -40,7 +45,7 @@ namespace ShadowOperations.Shared
             byte[] b_dname = FileHandler.encoding.GetBytes(DisplayName);
             byte[] b_desc = FileHandler.encoding.GetBytes(Description);
             byte[] b_tex = FileHandler.encoding.GetBytes(GetTextureName());
-            byte[] data = new byte[4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length];
+            byte[] data = new byte[4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4];
             Utilities.IntToBytes(Count).CopyTo(data, 0);
             Utilities.IntToBytes(b_name.Length).CopyTo(data, 4);
             Utilities.IntToBytes(b_dname.Length).CopyTo(data, 4 + 4);
@@ -49,7 +54,8 @@ namespace ShadowOperations.Shared
             b_name.CopyTo(data, 4 + 4 + 4 + 4 + 4);
             b_dname.CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length);
             b_desc.CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length);
-            b_tex.CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length);
+            b_tex.CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length);
+            Utilities.IntToBytes(Datum).CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length);
             return data;
         }
 
@@ -58,12 +64,12 @@ namespace ShadowOperations.Shared
             Name = name;
         }
 
-        public ItemStackBase(string name)
+        public void Load(string name)
         {
             SetName(name);
         }
 
-        public ItemStackBase(byte[] data)
+        public void Load(byte[] data)
         {
             if (data.Length < 4 + 4 + 4 + 4 + 4)
             {
@@ -74,7 +80,7 @@ namespace ShadowOperations.Shared
             int c_dname = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4, 4));
             int c_desc = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4, 4));
             int c_tex = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4 + 4, 4));
-            if (data.Length < 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex)
+            if (data.Length < 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex + 4)
             {
                 throw new Exception("Invalid item stack bytes!");
             }
@@ -82,6 +88,7 @@ namespace ShadowOperations.Shared
             DisplayName = FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4 + c_name, c_dname);
             Description = FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname, c_desc);
             SetTextureName(FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc, c_tex));
+            Datum = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex, 4));
         }
     }
 }

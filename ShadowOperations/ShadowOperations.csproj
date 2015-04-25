@@ -67,11 +67,14 @@
     <Compile Include="ClientGame\CommandSystem\CommonCommands\QuitCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\ConnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\AttackCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\SecondaryCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\DownwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\UpwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\RightwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\LeftwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\ForwardCommand.cs" />
+    <Compile Include="ClientGame\EntitySystem\BasicPrimitiveEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\Entity.cs" />
     <Compile Include="ClientGame\EntitySystem\MarkerEntity.cs" />
@@ -101,6 +104,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PhysicsEntityUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PlayerUpdatePacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnBulletPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnLightPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPhysicsEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourPositionPacketIn.cs" />
@@ -117,6 +121,7 @@
     <Compile Include="ServerGame\CommandSystem\ServerCommands.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerCVar.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerOutputter.cs" />
+    <Compile Include="ServerGame\EntitySystem\BulletEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
     <Compile Include="ServerGame\EntitySystem\PhysicsEntity.cs" />
@@ -124,6 +129,11 @@
     <Compile Include="ServerGame\EntitySystem\PointLightEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PrimitiveEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\SpawnPointEntity.cs" />
+    <Compile Include="ServerGame\ItemSystem\BaseItemInfo.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\BaseGunItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\GenericItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\PistolGunItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\ItemRegistry.cs" />
     <Compile Include="ServerGame\NetworkSystem\AbstractPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\AbstractPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\Connection.cs" />
@@ -135,10 +145,11 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PhysicsEntityUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PlayerUpdatePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnBulletPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnLightPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPhysicsEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourPositionPacketOut.cs" />
-    <Compile Include="ServerGame\OtherSystems\ItemStack.cs" />
+    <Compile Include="ServerGame\ItemSystem\ItemStack.cs" />
     <Compile Include="Shared\ItemStackBase.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\AbstractPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\GrabPlayerCommand.cs" />

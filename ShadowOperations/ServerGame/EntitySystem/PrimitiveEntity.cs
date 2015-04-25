@@ -9,6 +9,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
 {
     public abstract class PrimitiveEntity: Entity
     {
+        public List<long> NoCollide = new List<long>();
+
         public PrimitiveEntity(Server tserver)
             : base(tserver, true)
         {
@@ -16,16 +18,18 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public override void Tick()
         {
-            SetPosition(Position + Velocity);
+            SetPosition(Position + Velocity * TheServer.Delta);
             // TODO: Collision? Gravity?
         }
 
         public virtual void Spawn()
         {
+            NoCollide.Add(EID);
         }
 
         public virtual void Destroy()
         {
+            NoCollide.Remove(EID);
         }
 
         public Location Position;

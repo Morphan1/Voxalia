@@ -3,26 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ShadowOperations.Shared;
+using ShadowOperations.ServerGame.ServerMainSystem;
 
-namespace ShadowOperations.ServerGame.OtherSystems
+namespace ShadowOperations.ServerGame.ItemSystem
 {
     /// <summary>
     /// Represents an item or stack of items on the server.
     /// </summary>
-    class ItemStack: ItemStackBase
+    public class ItemStack: ItemStackBase
     {
-        public ItemStack(string name)
-            : base(name)
+        public Server TheServer;
+
+        public ItemStack(string name, Server tserver)
         {
+            TheServer = tserver;
+            Load(name);
         }
 
-        public ItemStack(byte[] data)
-            : base(data)
+        public ItemStack(byte[] data, Server tserver)
         {
+            TheServer = tserver;
+            Load(data);
         }
+
+        public BaseItemInfo Info = null;
 
         public override void SetName(string name)
         {
+            Info = TheServer.Items.GetInfoFor(name);
             base.SetName(name);
         }
 
