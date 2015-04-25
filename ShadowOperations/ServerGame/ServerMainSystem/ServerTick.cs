@@ -97,6 +97,13 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             {
                 packet = new SpawnBulletPacketOut((BulletEntity)e);
             }
+            if (packet != null)
+            {
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    Players[i].Network.SendPacket(packet);
+                }
+            }
             else if (e is PlayerEntity)
             {
                 Players.Add((PlayerEntity)e);
@@ -114,13 +121,6 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     {
                         ((PlayerEntity)e).Network.SendPacket(new SpawnBulletPacketOut((BulletEntity)Entities[i]));
                     }
-                }
-            }
-            if (packet != null)
-            {
-                for (int i = 0; i < Players.Count; i++)
-                {
-                    Players[i].Network.SendPacket(packet);
                 }
             }
         }
@@ -153,7 +153,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             else if (e is PlayerEntity)
             {
                 Players.Remove((PlayerEntity)e);
-                //((PlayerEntity)e).Kick("Despawned.");
+                ((PlayerEntity)e).Kick("Despawned!");
             }
             // TODO: Send despawn packet to all players
         }
