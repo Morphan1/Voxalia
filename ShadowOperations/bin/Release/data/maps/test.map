@@ -141,3 +141,16 @@ spawn
 	mass: 0;
 	friction: 0.5;
 }
+cube
+{
+	position: (-13.5, 9, 0.5);
+	angle: (0, 0, 45);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	mins: (-15, 7, -1);
+	maxes: (-12, 11, 2);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}

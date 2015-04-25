@@ -38,35 +38,13 @@ namespace ShadowOperations.Shared
         }
 
         /// <summary>
-        /// Returns whether there is a solid object along a line with a cuboid shape.
+        /// Returns information on what a cuboid-shaped line trace would collide with, if anything.
         /// </summary>
         /// <param name="halfsize">Half the size of the cuboid</param>
         /// <param name="start">The start of the line</param>
         /// <param name="end">The end of the line</param>
-        /// <returns>Whether there is an object</returns>
-        public bool CuboidLineIsSolid(Location halfsize, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
-        {
-            Vector3 e = new Vector3((float)(end.X - start.X), (float)(end.Y - start.Y), (float)(end.Z - start.Z));
-            BoxShape shape = new BoxShape((float)halfsize.X * 2f, (float)halfsize.Y * 2f, (float)halfsize.Z * 2f);
-            RigidTransform rt = new RigidTransform(new Vector3((float)start.X, (float)start.Y, (float)start.Z));
-            RayCastResult rcr;
-            if (filter == null)
-            {
-                return World.ConvexCast(shape, ref rt, ref e, out rcr);
-            }
-            else
-            {
-                return World.ConvexCast(shape, ref rt, ref e, filter, out rcr);
-            }
-        }
-
-        /// <summary>
-        /// Returns whether there is a solid object along a line with a cuboid shape.
-        /// </summary>
-        /// <param name="halfsize">Half the size of the cuboid</param>
-        /// <param name="start">The start of the line</param>
-        /// <param name="end">The end of the line</param>
-        /// <returns>Whether there is an object</returns>
+        /// <param name="filter">The collision filter, input a BEPU BroadPhaseEntry and output whether collision should be allowed</param>
+        /// <returns>The collision details</returns>
         public CollisionResult CuboidLineTrace(Location halfsize, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
         {
             Vector3 e = new Vector3((float)(end.X - start.X), (float)(end.Y - start.Y), (float)(end.Z - start.Z));
@@ -97,23 +75,6 @@ namespace ShadowOperations.Shared
                 cr.HitEnt = null;
             }
             return cr;
-        }
-
-        public Entity CuboidLineEntity(Location halfsize, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
-        {
-            Vector3 e = new Vector3((float)(end.X - start.X), (float)(end.Y - start.Y), (float)(end.Z - start.Z));
-            BoxShape shape = new BoxShape((float)halfsize.X * 2f, (float)halfsize.Y * 2f, (float)halfsize.Z * 2f);
-            RigidTransform rt = new RigidTransform(new Vector3((float)start.X, (float)start.Y, (float)start.Z));
-            RayCastResult rcr;
-            if (filter == null && World.ConvexCast(shape, ref rt, ref e, out rcr))
-            {
-                return ((EntityCollidable)rcr.HitObject).Entity;
-            }
-            else if (filter != null && World.ConvexCast(shape, ref rt, ref e, filter, out rcr))
-            {
-                return ((EntityCollidable)rcr.HitObject).Entity;
-            }
-            return null;
         }
 
         /// <summary>
