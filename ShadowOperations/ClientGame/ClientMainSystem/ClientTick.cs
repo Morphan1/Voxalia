@@ -6,6 +6,8 @@ using OpenTK;
 using ShadowOperations.Shared;
 using ShadowOperations.ClientGame.UISystem;
 using ShadowOperations.ClientGame.EntitySystem;
+using ShadowOperations.ClientGame.OtherSystems;
+using System.Drawing;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -18,6 +20,44 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public List<Entity> Tickers = new List<Entity>();
 
         public List<Entity> ShadowCasters = new List<Entity>();
+
+        public List<ItemStack> Items = new List<ItemStack>();
+
+        public int QuickBarPos = 0;
+
+        /// <summary>
+        /// Returns an item in the quick bar.
+        /// Can return air.
+        /// </summary>
+        /// <param name="slot">The slot, any number is permitted</param>
+        /// <returns>A valid item</returns>
+        public ItemStack GetItemForSlot(int slot)
+        {
+            while (slot < 0)
+            {
+                slot += Items.Count + 1;
+            }
+            while (slot > Items.Count)
+            {
+                slot -= Items.Count + 1;
+            }
+            if (slot == 0)
+            {
+                return new ItemStack(this, "Air")
+                {
+                    DrawColor = Color.White.ToArgb(),
+                    Tex = Textures.Clear,
+                    Description = "An empty slot.",
+                    Count = 0,
+                    Datum = 0,
+                    DisplayName = "Air"
+                };
+            }
+            else
+            {
+                return Items[slot - 1];
+            }
+        }
 
         void Window_UpdateFrame(object sender, FrameEventArgs e)
         {
@@ -97,6 +137,19 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 }
             }
             return null;
+        }
+
+        public void ResetWorld()
+        {
+            Items.Clear();
+            QuickBarPos = 0;
+            for (int i = 0; i < Entities.Count; i++)
+            {
+                if (!(Entities[i] is PlayerEntity))
+                {
+                    Despawn(Entities[i]);
+                }
+            }
         }
     }
 }

@@ -48,6 +48,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public string Username = "Player" + new Random().Next(1000);
 
+        public Texture ItemFrame;
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
@@ -98,6 +100,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Loading textures...");
             Textures = new TextureEngine();
             Textures.InitTextureSystem();
+            ItemFrame = Textures.GetTexture("ui/item_frame");
             SysConsole.Output(OutputType.INIT, "Loading shaders...");
             Shaders = new ShaderEngine();
             Shaders.InitShaderSystem();

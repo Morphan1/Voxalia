@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.ServerMainSystem;
 using ShadowOperations.ServerGame.NetworkSystem;
@@ -47,6 +48,32 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public int cItem = 0;
 
+        /// <summary>
+        /// Returns an item in the quick bar.
+        /// Can return air.
+        /// </summary>
+        /// <param name="slot">The slot, any number is permitted</param>
+        /// <returns>A valid item</returns>
+        public ItemStack GetItemForSlot(int slot)
+        {
+            while (slot < 0)
+            {
+                slot += Items.Count + 1;
+            }
+            while (slot > Items.Count)
+            {
+                slot -= Items.Count + 1;
+            }
+            if (slot == 0)
+            {
+                return new ItemStack("Air", TheServer, 1, "clear", "Air", "An empty slot.", Color.White.ToArgb());
+            }
+            else
+            {
+                return Items[slot - 1];
+            }
+        }
+
         public void Kick(string message)
         {
             if (pkick)
@@ -79,7 +106,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Shape.AngularDamping = 1;
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
-            GiveItem(new ItemStack("9mm_pistol_gun", TheServer));
+            GiveItem(new ItemStack("9mm_pistol_gun", TheServer, 1, "items/9mm_pistol_gun", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb()));
         }
 
         public void GiveItem(ItemStack item)
@@ -87,6 +114,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             // TODO: stacking
             item.Info.PrepItem(this, item);
             Items.Add(item);
+            Network.SendPacket(new SpawnItemPacketOut(Items.Count - 1, item));
         }
 
         public bool IgnoreThis(BroadPhaseEntry entry)
@@ -182,13 +210,14 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     TheServer.Players[i].Network.SendPacket(pupo);
                 }
             }
+            ItemStack cit = GetItemForSlot(cItem);
             if (Click)
             {
-                Items[cItem].Info.Click(this, Items[cItem]);
+                cit.Info.Click(this, cit);
             }
             if (AltClick)
             {
-                Items[cItem].Info.AltClick(this, Items[cItem]);
+                cit.Info.AltClick(this, cit);
             }
         }
 

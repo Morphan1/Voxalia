@@ -178,12 +178,12 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                                 throw new Exception("Invalid connection - unreasonable username!");
                             }
                             // TODO: Additional details?
+                            PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
                             PlayerEntity player = new PlayerEntity(TheServer, this);
                             player.Name = name;
                             player.Host = host;
                             player.Port = port;
                             player.IP = PrimarySocket.RemoteEndPoint.ToString();
-                            PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
                             TheServer.SpawnEntity(player);
                             player.LastPingByte = 0;
                             SendPacket(new PingPacketOut(0));

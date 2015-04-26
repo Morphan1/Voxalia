@@ -9,6 +9,7 @@ using ShadowOperations.Shared;
 using ShadowOperations.ClientGame.UISystem;
 using ShadowOperations.ClientGame.GraphicsSystems;
 using ShadowOperations.ClientGame.GraphicsSystems.LightingSystem;
+using ShadowOperations.ClientGame.OtherSystems;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -307,7 +308,30 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 + "\n" + Player.GetVelocity() + " == " + Player.GetVelocity().Length()
                 + "\nLight source(s): " + Lights.Count
                 + "\nEntities: " + Entities.Count, new Location(0, 0, 0));
+            int center = Window.Width / 2;
+            RenderItem(GetItemForSlot(QuickBarPos - 2), new Location(center - (32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
+            RenderItem(GetItemForSlot(QuickBarPos - 1), new Location(center - (32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
+            RenderItem(GetItemForSlot(QuickBarPos + 1), new Location(center + (32 + 1), Window.Height - (32 + 16), 0), 32);
+            RenderItem(GetItemForSlot(QuickBarPos + 2), new Location(center + (32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
+            RenderItem(GetItemForSlot(QuickBarPos), new Location(center - (32 + 1), Window.Height - 64, 0), 64);
+            string it = "^%^e^7" + GetItemForSlot(QuickBarPos).DisplayName;
+            float size = FontSets.Standard.MeasureFancyText(it);
+            FontSets.Standard.DrawColoredText(it, new Location(center - size / 2f, Window.Height - 64 - FontSets.Standard.font_default.Height - 5, 0));
             UIConsole.Draw();
+        }
+
+        /// <summary>
+        /// Renders an item on the 2D screen.
+        /// </summary>
+        /// <param name="item">The item to render</param>
+        /// <param name="pos">Where to render it</param>
+        /// <param name="size">How big to render it, in pixels</param>
+        public void RenderItem(ItemStack item, Location pos, int size)
+        {
+            ItemFrame.Bind();
+            Rendering.SetColor(Color4.White);
+            Rendering.RenderRectangle((int)pos.X - 1, (int)pos.Y - 1, (int)(pos.X + size) + 1, (int)(pos.Y + size) + 1);
+            item.Render(pos, new Location(size, size, 0));
         }
 
         public int vpw = 800;

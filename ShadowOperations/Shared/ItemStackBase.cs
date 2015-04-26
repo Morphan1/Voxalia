@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 
 namespace ShadowOperations.Shared
 {
@@ -35,6 +36,11 @@ namespace ShadowOperations.Shared
         /// </summary>
         public int Count;
 
+        /// <summary>
+        /// What color to draw this item as.
+        /// </summary>
+        public int DrawColor = Color.White.ToArgb();
+
         public abstract string GetTextureName();
 
         public abstract void SetTextureName(string name);
@@ -45,7 +51,7 @@ namespace ShadowOperations.Shared
             byte[] b_dname = FileHandler.encoding.GetBytes(DisplayName);
             byte[] b_desc = FileHandler.encoding.GetBytes(Description);
             byte[] b_tex = FileHandler.encoding.GetBytes(GetTextureName());
-            byte[] data = new byte[4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4];
+            byte[] data = new byte[4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4 + 4];
             Utilities.IntToBytes(Count).CopyTo(data, 0);
             Utilities.IntToBytes(b_name.Length).CopyTo(data, 4);
             Utilities.IntToBytes(b_dname.Length).CopyTo(data, 4 + 4);
@@ -56,6 +62,7 @@ namespace ShadowOperations.Shared
             b_desc.CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length);
             b_tex.CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length);
             Utilities.IntToBytes(Datum).CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length);
+            Utilities.IntToBytes(DrawColor).CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4);
             return data;
         }
 
@@ -64,9 +71,14 @@ namespace ShadowOperations.Shared
             Name = name;
         }
 
-        public void Load(string name)
+        public void Load(string name, int count, string tex, string display, string descrip, int color)
         {
             SetName(name);
+            DisplayName = display;
+            Description = descrip;
+            SetTextureName(tex);
+            Datum = 0;
+            DrawColor = color;
         }
 
         public void Load(byte[] data)
@@ -89,6 +101,7 @@ namespace ShadowOperations.Shared
             Description = FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname, c_desc);
             SetTextureName(FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc, c_tex));
             Datum = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex, 4));
+            DrawColor = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex + 4, 4));
         }
     }
 }

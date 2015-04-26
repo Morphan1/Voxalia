@@ -14,10 +14,10 @@ namespace ShadowOperations.ServerGame.ItemSystem
     {
         public Server TheServer;
 
-        public ItemStack(string name, Server tserver)
+        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, int color)
         {
             TheServer = tserver;
-            Load(name);
+            Load(name, count, tex, display, descrip, color);
         }
 
         public ItemStack(byte[] data, Server tserver)

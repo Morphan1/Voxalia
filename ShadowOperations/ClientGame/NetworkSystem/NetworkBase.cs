@@ -149,6 +149,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 9:
                             packet = new NetStringPacketIn();
                             break;
+                        case 10:
+                            packet = new SpawnItemPacketIn();
+                            break;
                         default:
                             throw new Exception("Invalid packet ID: " + packetID);
                     }
