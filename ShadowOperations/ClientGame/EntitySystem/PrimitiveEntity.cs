@@ -9,8 +9,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
 {
     public abstract class PrimitiveEntity: Entity
     {
-        public PrimitiveEntity(Client tclient)
-            : base(tclient, true)
+        public PrimitiveEntity(Client tclient, bool cast_shadows)
+            : base(tclient, true, cast_shadows)
         {
         }
 

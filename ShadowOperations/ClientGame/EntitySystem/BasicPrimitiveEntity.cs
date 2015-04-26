@@ -12,8 +12,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
 {
     public class BasicPrimitiveEntity: PrimitiveEntity
     {
-        public BasicPrimitiveEntity(Client tclient)
-            : base(tclient)
+        public BasicPrimitiveEntity(Client tclient, bool cast_shadows)
+            : base(tclient, cast_shadows)
         {
         }
 

@@ -17,7 +17,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
     public class CubeEntity : PhysicsEntity
     {
         public CubeEntity(Client tclient, Location halfsize)
-            : base(tclient, false)
+            : base(tclient, false, true)
         {
             HalfSize = halfsize;
             Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);

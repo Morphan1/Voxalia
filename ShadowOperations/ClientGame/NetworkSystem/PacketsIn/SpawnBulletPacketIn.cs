@@ -15,7 +15,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             {
                 return false;
             }
-            BasicPrimitiveEntity bpe = new BasicPrimitiveEntity(TheClient);
+            BasicPrimitiveEntity bpe = new BasicPrimitiveEntity(TheClient, false);
             bpe.EID = Utilities.BytesToLong(Utilities.BytesPartial(data, 0, 8));
             bpe.scale = new Location(Utilities.BytesToFloat(Utilities.BytesPartial(data, 8, 4)));
             bpe.SetPosition(Location.FromBytes(data, 8 + 4));

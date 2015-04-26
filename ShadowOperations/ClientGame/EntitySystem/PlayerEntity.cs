@@ -34,7 +34,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         bool pup = false;
 
         public PlayerEntity(Client tclient):
-            base (tclient, true)
+            base (tclient, true, true)
         {
             SetMass(100);
             Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);

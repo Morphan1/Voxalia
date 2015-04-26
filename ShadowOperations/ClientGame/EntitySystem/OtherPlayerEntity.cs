@@ -33,7 +33,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         bool pup = false;
 
         public OtherPlayerEntity(Client tclient, Location half) :
-            base (tclient, true)
+            base (tclient, true, true)
         {
             HalfSize = half;
             SetMass(100);

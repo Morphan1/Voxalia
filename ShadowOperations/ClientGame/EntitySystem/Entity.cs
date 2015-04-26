@@ -14,11 +14,12 @@ namespace ShadowOperations.ClientGame.EntitySystem
     {
         public OpenTK.Graphics.Color4 Color;
 
-        public Entity(Client tclient, bool tickme)
+        public Entity(Client tclient, bool tickme, bool cast_shadows)
         {
             TheClient = tclient;
             Ticks = tickme;
             Color = new OpenTK.Graphics.Color4((float)Utilities.UtilRandom.NextDouble(), (float)Utilities.UtilRandom.NextDouble(), 0f, 1f);
+            CastShadows = cast_shadows;
         }
 
         /// <summary>
@@ -30,6 +31,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
         /// Whether this entity should tick.
         /// </summary>
         public readonly bool Ticks;
+
+        /// <summary>
+        /// Wether this entity should cast shadows.
+        /// </summary>
+        public readonly bool CastShadows;
 
         /// <summary>
         /// The client that manages this entity.

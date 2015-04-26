@@ -18,7 +18,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public int texturesize = 256;
 
         public PointLightEntity(Client tclient)
-            : base(tclient)
+            : base(tclient, false)
         {
         }
 

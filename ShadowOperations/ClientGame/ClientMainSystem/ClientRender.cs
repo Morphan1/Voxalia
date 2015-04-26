@@ -133,7 +133,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                         {
                             Lights[i].InternalLights[x].Attach();
                             // TODO: Render settings
-                            Render3D();
+                            Render3D(true);
                             Lights[i].InternalLights[x].Complete();
                         }
                     }
@@ -148,7 +148,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     GL.ActiveTexture(TextureUnit.Texture0);
                     RS4P.Bind();
                     // TODO: Render settings
-                    Render3D();
+                    Render3D(false);
                     RS4P.Unbind();
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
                     GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
@@ -239,7 +239,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
                     Matrix4 combined = view * proj;
                     GL.UniformMatrix4(1, false, ref combined);
-                    Render3D();
+                    Render3D(false);
                     if (CVars.r_renderwireframe.ValueB)
                     {
                         Render3DWires();
@@ -258,12 +258,22 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Window.SwapBuffers();
         }
 
-        public void Render3D()
+        public void Render3D(bool shadows_only)
         {
             GL.Enable(EnableCap.CullFace);
-            for (int i = 0; i < Entities.Count; i++)
+            if (shadows_only)
             {
-                Entities[i].Render();
+                for (int i = 0; i < ShadowCasters.Count; i++)
+                {
+                    ShadowCasters[i].Render();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Entities.Count; i++)
+                {
+                    Entities[i].Render();
+                }
             }
         }
 

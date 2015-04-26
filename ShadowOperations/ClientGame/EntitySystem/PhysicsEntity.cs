@@ -14,8 +14,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
 {
     public abstract class PhysicsEntity: Entity
     {
-        public PhysicsEntity(Client tclient, bool ticks)
-            : base(tclient, ticks)
+        public PhysicsEntity(Client tclient, bool ticks, bool cast_shadows)
+            : base(tclient, ticks, cast_shadows)
         {
             Vector3 grav = TheClient.PhysicsWorld.ForceUpdater.Gravity;
             Gravity = new Location(grav.X, grav.Y, grav.Z);

@@ -17,6 +17,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public List<Entity> Tickers = new List<Entity>();
 
+        public List<Entity> ShadowCasters = new List<Entity>();
+
         void Window_UpdateFrame(object sender, FrameEventArgs e)
         {
             Delta = e.Time;
@@ -50,6 +52,10 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             {
                 Tickers.Add(e);
             }
+            if (e.CastShadows)
+            {
+                ShadowCasters.Add(e);
+            }
             if (e is PhysicsEntity)
             {
                 ((PhysicsEntity)e).SpawnBody();
@@ -66,6 +72,10 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             if (e.Ticks)
             {
                 Tickers.Remove(e);
+            }
+            if (e.CastShadows)
+            {
+                ShadowCasters.Remove(e);
             }
             if (e is PhysicsEntity)
             {
