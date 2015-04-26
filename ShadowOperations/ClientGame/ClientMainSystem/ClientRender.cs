@@ -332,6 +332,10 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Rendering.SetColor(Color4.White);
             Rendering.RenderRectangle((int)pos.X - 1, (int)pos.Y - 1, (int)(pos.X + size) + 1, (int)(pos.Y + size) + 1);
             item.Render(pos, new Location(size, size, 0));
+            if (item.Count > 0)
+            {
+                FontSets.SlightlyBigger.DrawColoredText("^!^e^7^S" + item.Count, new Location(pos.X + 5, pos.Y + size - FontSets.SlightlyBigger.font_default.Height / 2f - 5, 0));
+            }
         }
 
         public int vpw = 800;

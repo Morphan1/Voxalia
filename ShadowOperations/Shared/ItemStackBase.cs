@@ -74,6 +74,7 @@ namespace ShadowOperations.Shared
         public void Load(string name, int count, string tex, string display, string descrip, int color)
         {
             SetName(name);
+            Count = count;
             DisplayName = display;
             Description = descrip;
             SetTextureName(tex);
