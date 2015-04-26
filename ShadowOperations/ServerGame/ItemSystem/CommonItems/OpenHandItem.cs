@@ -31,7 +31,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             player.TheServer.PhysicsWorld.Remove(player.Body);
             BEPUphysics.Entities.Entity e = player.TheServer.Collision.CuboidLineTrace(new Location(0.1, 0.1, 0.1), player.GetEyePosition(), end).HitEnt;
             player.TheServer.PhysicsWorld.Add(player.Body);
-            if (e != null && e.Tag is CubeEntity && ((PhysicsEntity)e.Tag).GetMass() > 0)
+            if (e != null && !(e.Tag is PlayerEntity) && ((PhysicsEntity)e.Tag).GetMass() > 0)
             {
                 player.Grabbed = (PhysicsEntity)e.Tag;
                 player.GrabForce = 100f;
