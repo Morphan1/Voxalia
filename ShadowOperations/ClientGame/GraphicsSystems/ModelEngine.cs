@@ -194,19 +194,19 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     Vecs.Add(new Vector3((float)vec1.X, (float)vec1.Y, (float)vec1.Z));
                     Inds.Add((uint)(Vecs.Count - 1));
                     Location tex1 = TextureCoords[Meshes[i].Faces[x].T1 - 1];
-                    Texs.Add(new Vector3((float)tex1.X, (float)tex1.Y, 0));
+                    Texs.Add(new Vector3((float)tex1.X, (float)tex1.Y, (float)tex1.Z));
                     Norms.Add(new Vector3((float)normal.X, (float)normal.Y, (float)normal.Z));
                     Location vec2 = Vertices[Meshes[i].Faces[x].L2 - 1];
                     Vecs.Add(new Vector3((float)vec2.X, (float)vec2.Y, (float)vec2.Z));
                     Inds.Add((uint)(Vecs.Count - 1));
                     Location tex2 = TextureCoords[Meshes[i].Faces[x].T2 - 1];
-                    Texs.Add(new Vector3((float)tex2.X, (float)tex2.Y, 0));
+                    Texs.Add(new Vector3((float)tex2.X, (float)tex2.Y, (float)tex2.Z));
                     Norms.Add(new Vector3((float)normal.X, (float)normal.Y, (float)normal.Z));
                     Location vec3 = Vertices[Meshes[i].Faces[x].L3 - 1];
                     Vecs.Add(new Vector3((float)vec3.X, (float)vec3.Y, (float)vec3.Z));
                     Inds.Add((uint)(Vecs.Count - 1));
                     Location tex3 = TextureCoords[Meshes[i].Faces[x].T3 - 1];
-                    Texs.Add(new Vector3((float)tex3.X, (float)tex3.Y, 0));
+                    Texs.Add(new Vector3((float)tex3.X, (float)tex3.Y, (float)tex3.Z));
                     Cols.Add(new Vector4(1, 1, 1, 1));
                     Cols.Add(new Vector4(1, 1, 1, 1));
                     Cols.Add(new Vector4(1, 1, 1, 1));
@@ -218,6 +218,19 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 Meshes[i].vbo.Colors = Cols;
                 Meshes[i].GenerateVBO();
             }
+        }
+
+        public ModelMesh MeshFor(string name)
+        {
+            name = name.ToLower();
+            for (int i = 0; i < Meshes.Count; i++)
+            {
+                if (Meshes[i].Name.StartsWith(name))
+                {
+                    return Meshes[i];
+                }
+            }
+            return null;
         }
         
         /// <summary>
@@ -251,7 +264,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         public ModelMesh(string _name)
         {
-            Name = _name;
+            Name = _name.ToLower();
             Faces = new List<ModelFace>();
             vbo = new VBO();
         }

@@ -18,7 +18,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
 {
     public class PlayerEntity: PhysicsEntity
     {
-        public Location HalfSize = new Location(0.3f, 0.3f, 1f);
+        public Location HalfSize = new Location(0.5f, 0.5f, 1f);
 
         public Connection Network;
 

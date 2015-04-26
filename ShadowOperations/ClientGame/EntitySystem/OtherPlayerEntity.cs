@@ -19,7 +19,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
 {
     class OtherPlayerEntity: PhysicsEntity
     {
-        public Location HalfSize = new Location(0.3f, 0.3f, 1);
+        public Location HalfSize = new Location(0.5f, 0.5f, 1);
 
         public Location Direction = new Location(0, 0, 0);
 
@@ -30,10 +30,12 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public bool Upward = false;
         public bool Downward = false;
 
+        public Model model;
+
         bool pup = false;
 
-        public OtherPlayerEntity(Client tclient, Location half) :
-            base (tclient, true, true)
+        public OtherPlayerEntity(Client tclient, Location half)
+            : base (tclient, true, true)
         {
             HalfSize = half;
             SetMass(100);
@@ -41,6 +43,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Shape.AngularDamping = 1;
             CanRotate = false;
             EID = -1;
+            model = TheClient.Models.GetModel("players/prototype/model");
         }
 
         public bool IgnoreThis(BroadPhaseEntry entry)
@@ -146,62 +149,17 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Recalculate();
         }
 
-        public List<VBO> VBOs = new List<VBO>();
-
         public void Recalculate()
         {
-            for (int i = 0; i < VBOs.Count; i++)
-            {
-                VBOs[i].Destroy();
-            }
-            VBOs.Clear();
-            GetVBOFor(TheClient.Textures.GetTexture("top")).AddSide(new Location(0, 0, 1), new TextureCoordinates());
-            GetVBOFor(TheClient.Textures.GetTexture("top")).AddSide(new Location(0, 0, -1), new TextureCoordinates());
-            GetVBOFor(TheClient.Textures.GetTexture("top")).AddSide(new Location(1, 0, 0), new TextureCoordinates());
-            GetVBOFor(TheClient.Textures.GetTexture("top")).AddSide(new Location(-1, 0, 0), new TextureCoordinates());
-            GetVBOFor(TheClient.Textures.GetTexture("top")).AddSide(new Location(0, 1, 0), new TextureCoordinates());
-            GetVBOFor(TheClient.Textures.GetTexture("top")).AddSide(new Location(0, -1, 0), new TextureCoordinates());
-            for (int i = 0; i < VBOs.Count; i++)
-            {
-                if (VBOs[i].Tex == TheClient.Textures.Clear)
-                {
-                    VBOs.RemoveAt(i);
-                    i--;
-                }
-                else
-                {
-                    VBOs[i].GenerateVBO();
-                }
-            }
-        }
-
-        VBO GetVBOFor(Texture tex)
-        {
-            for (int i = 0; i < VBOs.Count; i++)
-            {
-                if (VBOs[i].Tex.Original_InternalID == tex.Original_InternalID)
-                {
-                    return VBOs[i];
-                }
-            }
-            VBO vbo = new VBO();
-            vbo.Tex = tex;
-            vbo.Prepare();
-            VBOs.Add(vbo);
-            return vbo;
         }
 
         public override void Render()
         {
-            OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(HalfSize.ToOVector())
-                * OpenTK.Matrix4.CreateRotationZ((float)(Direction.X * Utilities.PI180))
-                * OpenTK.Matrix4.CreateTranslation(base.GetPosition().ToOVector());
+            OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateRotationZ((float)(Direction.X * Utilities.PI180))
+                * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
-            for (int i = 0; i < VBOs.Count; i++)
-            {
-                VBOs[i].Render(TheClient.RenderTextures);
-            }
+            model.Draw();
         }
     }
 }
