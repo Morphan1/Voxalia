@@ -177,28 +177,15 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         /// </summary>
         public List<ModelMesh> Meshes;
 
-        uint VBO;
-        uint VBONormals;
-        uint VBOTexCoords;
-        uint VBOIndices;
-        uint VBOColors;
-        uint VAO;
-        Vector3[] Positions;
-        Vector3[] Normals;
-        Vector2[] TexCoords;
-        uint[] Indices;
-        Vector3[] Colors;
-
         public void GenerateVBO()
         {
-            GL.BindVertexArray(0);
-            List<Vector3> Vecs = new List<Vector3>(100);
-            List<Vector3> Norms = new List<Vector3>(100);
-            List<Vector2> Texs = new List<Vector2>(100);
-            List<uint> Inds = new List<uint>(100);
-            List<Vector3> Cols = new List<Vector3>(100);
             for (int i = 0; i < Meshes.Count; i++)
             {
+                List<Vector3> Vecs = new List<Vector3>(10);
+                List<Vector3> Norms = new List<Vector3>(10);
+                List<Vector3> Texs = new List<Vector3>(10);
+                List<uint> Inds = new List<uint>(10);
+                List<Vector4> Cols = new List<Vector4>(10);
                 for (int x = 0; x < Meshes[i].Faces.Count; x++)
                 {
                     Location normal = Meshes[i].Faces[x].Normal;
@@ -207,102 +194,41 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     Vecs.Add(new Vector3((float)vec1.X, (float)vec1.Y, (float)vec1.Z));
                     Inds.Add((uint)(Vecs.Count - 1));
                     Location tex1 = TextureCoords[Meshes[i].Faces[x].T1 - 1];
-                    Texs.Add(new Vector2((float)tex1.X, (float)tex1.Y));
+                    Texs.Add(new Vector3((float)tex1.X, (float)tex1.Y, 0));
                     Norms.Add(new Vector3((float)normal.X, (float)normal.Y, (float)normal.Z));
                     Location vec2 = Vertices[Meshes[i].Faces[x].L2 - 1];
                     Vecs.Add(new Vector3((float)vec2.X, (float)vec2.Y, (float)vec2.Z));
                     Inds.Add((uint)(Vecs.Count - 1));
                     Location tex2 = TextureCoords[Meshes[i].Faces[x].T2 - 1];
-                    Texs.Add(new Vector2((float)tex2.X, (float)tex2.Y));
+                    Texs.Add(new Vector3((float)tex2.X, (float)tex2.Y, 0));
                     Norms.Add(new Vector3((float)normal.X, (float)normal.Y, (float)normal.Z));
                     Location vec3 = Vertices[Meshes[i].Faces[x].L3 - 1];
                     Vecs.Add(new Vector3((float)vec3.X, (float)vec3.Y, (float)vec3.Z));
                     Inds.Add((uint)(Vecs.Count - 1));
                     Location tex3 = TextureCoords[Meshes[i].Faces[x].T3 - 1];
-                    Texs.Add(new Vector2((float)tex3.X, (float)tex3.Y));
-                    Cols.Add(new Vector3(1, 1, 1));
-                    Cols.Add(new Vector3(1, 1, 1));
-                    Cols.Add(new Vector3(1, 1, 1));
+                    Texs.Add(new Vector3((float)tex3.X, (float)tex3.Y, 0));
+                    Cols.Add(new Vector4(1, 1, 1, 1));
+                    Cols.Add(new Vector4(1, 1, 1, 1));
+                    Cols.Add(new Vector4(1, 1, 1, 1));
                 }
+                Meshes[i].vbo.Vertices = Vecs;
+                Meshes[i].vbo.Normals = Norms;
+                Meshes[i].vbo.TexCoords = Texs;
+                Meshes[i].vbo.Indices = Inds;
+                Meshes[i].vbo.Colors = Cols;
+                Meshes[i].GenerateVBO();
             }
-            Positions = Vecs.ToArray();
-            Normals = Norms.ToArray();
-            TexCoords = Texs.ToArray();
-            Indices = Inds.ToArray();
-            Colors = Cols.ToArray();
-            // Vertex buffer
-            GL.GenBuffers(1, out VBO);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(Positions.Length * Vector3.SizeInBytes),
-                Positions, BufferUsageHint.StaticDraw);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            // Normal buffer
-            GL.GenBuffers(1, out VBONormals);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBONormals);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(Normals.Length * Vector3.SizeInBytes),
-                Normals, BufferUsageHint.StaticDraw);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            // TexCoord buffer
-            GL.GenBuffers(1, out VBOTexCoords);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBOTexCoords);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(TexCoords.Length * Vector2.SizeInBytes),
-                TexCoords, BufferUsageHint.StaticDraw);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            // Coolor buffer
-            GL.GenBuffers(1, out VBOColors);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBOColors);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(Colors.Length * Vector3.SizeInBytes),
-                Colors, BufferUsageHint.StaticDraw);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            // Index buffer
-            GL.GenBuffers(1, out VBOIndices);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, VBOIndices);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(Indices.Length * sizeof(uint)),
-                Indices, BufferUsageHint.StaticDraw);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
-            // VAO
-            GL.GenVertexArrays(1, out VAO);
-            GL.BindVertexArray(VAO);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBONormals);
-            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 0, 0);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBOTexCoords);
-            GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, 0, 0);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBOColors);
-            GL.VertexAttribPointer(3, 3, VertexAttribPointerType.Float, false, 0, 0);
-            GL.EnableVertexAttribArray(0);
-            GL.EnableVertexAttribArray(1);
-            GL.EnableVertexAttribArray(2);
-            GL.EnableVertexAttribArray(3);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, VBOIndices);
-            // Clean up
-            GL.BindVertexArray(0);
-            GL.DisableVertexAttribArray(0);
-            GL.DisableVertexAttribArray(1);
-            GL.DisableVertexAttribArray(2);
-            GL.DisableVertexAttribArray(3);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
         }
-
-        public void DeleteVBO()
-        {
-            GL.DeleteBuffer(VBO);
-            GL.DeleteBuffer(VBONormals);
-            GL.DeleteBuffer(VBOTexCoords);
-            GL.DeleteBuffer(VBOColors);
-            GL.DeleteVertexArray(VAO);
-        }
-
+        
         /// <summary>
         /// Draws the model.
         /// </summary>
         public void Draw()
         {
-            GL.BindVertexArray(VAO);
-            GL.DrawElements(PrimitiveType.Triangles, Indices.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
-            GL.BindVertexArray(0);
+            for (int i = 0; i < Meshes.Count; i++)
+            {
+                Meshes[i].Draw();
+            }
         }
 
         /// <summary>
@@ -327,12 +253,36 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         {
             Name = _name;
             Faces = new List<ModelFace>();
+            vbo = new VBO();
         }
 
         /// <summary>
         /// All the mesh's faces.
         /// </summary>
         public List<ModelFace> Faces;
+
+        /// <summary>
+        /// The VBO for this mesh.
+        /// </summary>
+        public VBO vbo;
+
+        public void DestroyVBO()
+        {
+            vbo.Destroy();
+        }
+
+        public void GenerateVBO()
+        {
+            vbo.GenerateVBO();
+        }
+
+        /// <summary>
+        /// Renders the mesh.
+        /// </summary>
+        public void Draw()
+        {
+            vbo.Render(false);
+        }
     }
 
     public class ModelFace
