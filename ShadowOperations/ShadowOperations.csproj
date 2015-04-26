@@ -66,6 +66,7 @@
     <Compile Include="ClientGame\CommandSystem\ClientOutputter.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\QuitCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\ConnectCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\NetworkCommands\DisconnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\AttackCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\SecondaryCommand.cs" />

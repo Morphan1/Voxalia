@@ -58,6 +58,7 @@ namespace ShadowOperations.ClientGame.CommandSystem
 
             // Network Commands
             CommandSystem.RegisterCommand(new ConnectCommand(TheClient));
+            CommandSystem.RegisterCommand(new DisconnectCommand(TheClient));
         }
 
         /// <summary>

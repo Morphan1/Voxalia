@@ -55,6 +55,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem
         {
             Disconnect();
             Strings.Strings.Clear();
+            TheClient.ResetWorld();
             LastIP = IP;
             LastPort = port;
             ConnectionThread = new Thread(new ThreadStart(ConnectInternal));
