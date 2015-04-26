@@ -8,7 +8,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
     public class PistolGunItem: BaseGunItem
     {
         public PistolGunItem()
-            : base("9mm_pistol_gun", 0.1f, 10f, 0f, 0f, 10f, 7, "9mm_ammo")
+            : base("pistol_gun", 0.1f, 10f, 0f, 0f, 10f, 7, "9mm_ammo")
         {
         }
     }

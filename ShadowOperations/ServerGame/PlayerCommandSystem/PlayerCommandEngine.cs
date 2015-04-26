@@ -34,6 +34,7 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem
             entry.Player = entity;
             entry.InputArguments = arguments;
             entry.Command = GetCommand(commandname);
+            // TODO: Permission
             // TODO: Fire command event
             if (entry.Command == null)
             {

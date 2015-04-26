@@ -97,6 +97,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public PhysicsEntity Grabbed = null;
 
+        public float GrabForce = 0;
+
         public PlayerEntity(Server tserver, Connection conn)
             : base(tserver, true)
         {
@@ -106,7 +108,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Shape.AngularDamping = 1;
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
-            GiveItem(new ItemStack("9mm_pistol_gun", TheServer, 1, "items/9mm_pistol_gun", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb()));
+            GiveItem(new ItemStack("open_hand", TheServer, 1, "items/open_hand", "Open Hand", "Grab things!", Color.White.ToArgb()));
+            GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/9mm_pistol_gun", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb()));
         }
 
         public void GiveItem(ItemStack item)
@@ -195,7 +198,23 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 if (Grabbed.IsSpawned && (Grabbed.GetPosition() - GetPosition()).LengthSquared() < 5 * 5 + Grabbed.Widest * Grabbed.Widest)
                 {
                     Location pos = GetPosition() + new Location(0, 0, HalfSize.Z * 1.6f) + Utilities.ForwardVector_Deg(Direction.X, Direction.Y) * (2 + Grabbed.Widest);
-                    Grabbed.Body.LinearVelocity = (pos - Grabbed.GetPosition()).ToBVector() * 10f;
+                    if (GrabForce >= Grabbed.GetMass())
+                    {
+                        Grabbed.Body.LinearVelocity = new Vector3(0, 0, 0);
+                    }
+                    Location tvec = (pos - Grabbed.GetPosition());
+                    double len = tvec.Length();
+                    if (len == 0)
+                    {
+                        len = 1;
+                    }
+                    Vector3 push = ((-Grabbed.GetVelocity()).Normalize() * GrabForce + (tvec / len) * GrabForce).ToBVector() * Grabbed.Body.InverseMass;
+                    if (push.LengthSquared() > len * len)
+                    {
+                        push /= (float)(push.Length() / len) / 10f;
+                    }
+                    Grabbed.Body.LinearVelocity += push;
+                    Grabbed.Body.ActivityInformation.Activate();
                 }
                 else
                 {

@@ -25,13 +25,14 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
             else
             {
                 Location ang = entry.Player.GetAngles();
-                Location end = entry.Player.GetEyePosition() + Utilities.ForwardVector_Deg(ang.X, ang.Y) * 5;
+                Location end = entry.Player.GetEyePosition() + Utilities.ForwardVector_Deg(ang.X, ang.Y) * 2;
                 entry.Player.TheServer.PhysicsWorld.Remove(entry.Player.Body);
                 BEPUphysics.Entities.Entity e = entry.Player.TheServer.Collision.CuboidLineTrace(new Location(0.1, 0.1, 0.1), entry.Player.GetEyePosition(), end).HitEnt;
                 entry.Player.TheServer.PhysicsWorld.Add(entry.Player.Body);
                 if (e != null && ((PhysicsEntity)e.Tag).GetMass() > 0)
                 {
                     entry.Player.Grabbed = (PhysicsEntity)e.Tag;
+                    entry.Player.GrabForce = ((PhysicsEntity)e.Tag).GetMass() * 100f;
                     entry.Player.Network.SendMessage("Grabbed " + entry.Player.Grabbed.EID); // TODO: Language // TODO: Noise mode
                 }
                 else

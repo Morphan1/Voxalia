@@ -54,5 +54,13 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
         public override void Use(PlayerEntity player, ItemStack item)
         {
         }
+
+        public override void SwitchFrom(PlayerEntity player, ItemStack item)
+        {
+        }
+
+        public override void SwitchTo(PlayerEntity player, ItemStack item)
+        {
+        }
     }
 }

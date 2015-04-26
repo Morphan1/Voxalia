@@ -17,5 +17,9 @@ namespace ShadowOperations.ServerGame.ItemSystem
         public abstract void AltClick(PlayerEntity player, ItemStack item);
 
         public abstract void Use(PlayerEntity player, ItemStack item);
+
+        public abstract void SwitchFrom(PlayerEntity player, ItemStack item);
+
+        public abstract void SwitchTo(PlayerEntity player, ItemStack item);
     }
 }

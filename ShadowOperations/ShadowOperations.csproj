@@ -140,6 +140,7 @@
     <Compile Include="ServerGame\ItemSystem\BaseItemInfo.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BaseGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\GenericItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\OpenHandItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\PistolGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\ItemRegistry.cs" />
     <Compile Include="ServerGame\NetworkSystem\AbstractPacketIn.cs" />
