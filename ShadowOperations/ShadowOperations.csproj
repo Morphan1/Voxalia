@@ -113,6 +113,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\CommandPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\KeysPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
+    <Compile Include="ClientGame\OtherSystems\ItemStack.cs" />
     <Compile Include="ClientGame\UISystem\KeyHandler.cs" />
     <Compile Include="ClientGame\UISystem\MouseHandler.cs" />
     <Compile Include="ClientGame\UISystem\UIConsole.cs" />

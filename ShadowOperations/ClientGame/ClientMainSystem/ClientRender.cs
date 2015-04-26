@@ -281,6 +281,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public void Render3DWires()
         {
+            bool rt = RenderTextures;
             RenderTextures = false;
             Shaders.ColorMultShader.Bind();
             GL.Disable(EnableCap.DepthTest);
@@ -296,7 +297,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.LineWidth(1);
             Rendering.SetColor(Color4.White);
-            RenderTextures = false;
+            RenderTextures = rt;
         }
 
         public void Render2D()
