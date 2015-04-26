@@ -132,6 +132,9 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                             case 2:
                                 packet = new CommandPacketIn();
                                 break;
+                            case 3:
+                                packet = new HoldItemPacketIn();
+                                break;
                             default:
                                 throw new Exception("Invalid packet ID: " + packetID);
                         }

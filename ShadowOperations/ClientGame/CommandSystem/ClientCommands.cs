@@ -54,6 +54,8 @@ namespace ShadowOperations.ClientGame.CommandSystem
             CommandSystem.RegisterCommand(new UpwardCommand(TheClient));
 
             // Common Commands
+            CommandSystem.RegisterCommand(new ItemnextCommand(TheClient));
+            CommandSystem.RegisterCommand(new ItemprevCommand(TheClient));
             CommandSystem.RegisterCommand(new QuitCommand(TheClient));
 
             // Network Commands

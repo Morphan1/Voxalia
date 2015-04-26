@@ -16,6 +16,7 @@ namespace ShadowOperations.ServerGame.ItemSystem
         {
             Infos = new Dictionary<string, BaseItemInfo>();
             Register(new PistolGunItem());
+            Generic = new GenericItem();
         }
 
         public void Register(BaseItemInfo info)
