@@ -7,6 +7,7 @@ using Frenetic;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
+using Assimp;
 
 namespace ShadowOperations.ClientGame.GraphicsSystems
 {
@@ -17,6 +18,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         /// </summary>
         public List<Model> LoadedModels;
 
+        public ModelHandler Handler;
+
         public Model Cube;
 
         /// <summary>
@@ -24,8 +27,9 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         /// </summary>
         public void Init()
         {
+            Handler = new ModelHandler();
             LoadedModels = new List<Model>();
-            Cube = FromString("cube", CubeData);
+            Cube = FromBytes("cube", FileHandler.encoding.GetBytes(CubeData));
             LoadedModels.Add(Cube);
         }
 
@@ -40,19 +44,19 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             try
             {
                 filename = FileHandler.CleanFileName(filename);
-                if (!FileHandler.Exists("models/" + filename + ".obj"))
+                if (!FileHandler.Exists("models/" + filename))
                 {
                     SysConsole.Output(OutputType.WARNING, "Cannot load model, file '" +
-                        TextStyle.Color_Standout + "models/" + filename + ".obj" + TextStyle.Color_Warning +
+                        TextStyle.Color_Standout + "models/" + filename  + TextStyle.Color_Warning +
                         "' does not exist.");
                     return null;
                 }
-                return FromString(filename, FileHandler.ReadText("models/" + filename + ".obj"));
+                return FromBytes(filename, FileHandler.ReadBytes("models/" + filename));
             }
             catch (Exception ex)
             {
                 SysConsole.Output(OutputType.ERROR, "Failed to load model from filename '" +
-                    TextStyle.Color_Standout + "models/" + filename + ".obj" + TextStyle.Color_Error + "'" + ex.ToString());
+                    TextStyle.Color_Standout + "models/" + filename + TextStyle.Color_Error + "'" + ex.ToString());
                 return null;
             }
         }
@@ -75,82 +79,73 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Model Loaded = LoadModel(modelname);
             if (Loaded == null)
             {
-                Loaded = FromString(modelname, CubeData);
+                Loaded = FromBytes(modelname, FileHandler.encoding.GetBytes(CubeData));
             }
             LoadedModels.Add(Loaded);
             return Loaded;
         }
 
         /// <summary>
-        /// loads a model from a .obj file string
+        /// loads a model from a file byte array.
         /// </summary>
         /// <param name="name">The name of the model</param>
         /// <param name="data">The .obj file string</param>
         /// <returns>A valid model</returns>
-        public Model FromString(string name, string data)
+        public Model FromBytes(string name, byte[] data)
         {
-            Model result = new Model(name);
-            ModelMesh currentMesh = null;
-            string[] lines = data.Replace("\r", "").Split('\n');
-            for (int i = 0; i < lines.Length; i++)
+            Scene scene = Handler.LoadModel(data, name.Substring(name.LastIndexOf('.') + 1));
+            if (!scene.HasMeshes)
             {
-                if (lines[i].Contains('#'))
-                {
-                    int index = lines[i].IndexOf('#');
-                    if (index == 0)
-                    {
-                        continue;
-                    }
-                    lines[i] = lines[i].Substring(0, index);
-                }
-                string[] args = lines[i].Split(' ');
-                if (args.Length <= 1)
-                {
-                    continue;
-                }
-                switch (args[0])
-                {
-                    case "mtllib":
-                        break; // TODO: Maybe calculate basic materials?
-                    case "usemtl":
-                        break;
-                    case "s": // Disregard, shading style is assumed by the engine, no need for the models to individually enable/disable it
-                        break;
-                    case "l": // Disregard, no need to render lines
-                        break;
-                    case "o":
-                        currentMesh = new ModelMesh(args[1]);
-                        result.Meshes.Add(currentMesh);
-                        break;
-                    case "v":
-                        result.Vertices.Add(new Location(Utilities.StringToDouble(args[1]),
-                            Utilities.StringToDouble(args[2]), Utilities.StringToDouble(args[3])));
-                        break;
-                    case "vt":
-                        result.TextureCoords.Add(new Location(Utilities.StringToDouble(args[1]),
-                            -Utilities.StringToDouble(args[2]), 0));
-                        break;
-                    case "f":
-                        string[] a1s = args[1].Split('/');
-                        string[] a2s = args[2].Split('/');
-                        string[] a3s = args[3].Split('/');
-                        int v1 = Utilities.StringToInt(a3s[0]);
-                        int v2 = Utilities.StringToInt(a2s[0]);
-                        int v3 = Utilities.StringToInt(a1s[0]);
-                        int t1 = Utilities.StringToInt(a1s[1]);
-                        int t2 = Utilities.StringToInt(a2s[1]);
-                        int t3 = Utilities.StringToInt(a3s[1]);
-                        // TODO: Handle missing texture coords gently?
-                        Plane plane = new Plane(result.Vertices[v1 - 1], result.Vertices[v2 - 1], result.Vertices[v3 - 1]);
-                        currentMesh.Faces.Add(new ModelFace(v1, v2, v3, t1, t2, t3, -plane.Normal));
-                        break;
-                    default:
-                        SysConsole.Output(OutputType.WARNING, "Invalid model key '" + args[0] + "'");
-                        break;
-                }
+                throw new Exception("Scene has no meshes!");
             }
-            result.GenerateVBO();
-            return result;
+            Model model = new Model(name);
+            foreach (Mesh mesh in scene.Meshes)
+            {
+                ModelMesh modmesh = new ModelMesh(mesh.Name);
+                modmesh.vbo.Prepare();
+                bool hastc = mesh.HasTextureCoords(0);
+                bool hasn = mesh.HasNormals;
+                if (!hasn)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Mesh has no normals!");
+                }
+                for (int i = 0; i < mesh.Vertices.Count; i++)
+                {
+                    Vector3D vertex = mesh.Vertices[i];
+                    modmesh.vbo.Vertices.Add(new Vector3(vertex.X, vertex.Y, vertex.Z));
+                    if (!hastc)
+                    {
+                        modmesh.vbo.TexCoords.Add(new Vector3(0, 0, 0));
+                    }
+                    else
+                    {
+                        Vector3D texCoord = mesh.TextureCoordinateChannels[0][i];
+                        modmesh.vbo.TexCoords.Add(new Vector3(texCoord.X, texCoord.Y, texCoord.Z));
+                    }
+                    if (!hasn)
+                    {
+                        modmesh.vbo.Normals.Add(new Vector3(0, 0, 1));
+                    }
+                    else
+                    {
+                        modmesh.vbo.Normals.Add(new Vector3(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z));
+                    }
+                    modmesh.vbo.Colors.Add(new Vector4(1, 1, 1, 1)); // TODO: From the mesh?
+                }
+                foreach (Face face in mesh.Faces)
+                {
+                    if (face.Indices.Count == 3)
+                    {
+                        for (int i = 2; i >= 0; i--)
+                        {
+                            modmesh.vbo.Indices.Add((uint)face.Indices[i]);
+                        }
+                    }
+                }
+                model.Meshes.Add(modmesh);
+                modmesh.GenerateVBO();
+            }
+            return model;
         }
     }
 
@@ -163,8 +158,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         {
             Name = _name;
             Meshes = new List<ModelMesh>();
-            Vertices = new List<Location>();
-            TextureCoords = new List<Location>();
         }
 
         /// <summary>
@@ -176,49 +169,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         /// All the meshes this model has.
         /// </summary>
         public List<ModelMesh> Meshes;
-
-        public void GenerateVBO()
-        {
-            for (int i = 0; i < Meshes.Count; i++)
-            {
-                List<Vector3> Vecs = new List<Vector3>(10);
-                List<Vector3> Norms = new List<Vector3>(10);
-                List<Vector3> Texs = new List<Vector3>(10);
-                List<uint> Inds = new List<uint>(10);
-                List<Vector4> Cols = new List<Vector4>(10);
-                for (int x = 0; x < Meshes[i].Faces.Count; x++)
-                {
-                    Location normal = Meshes[i].Faces[x].Normal;
-                    Norms.Add(new Vector3((float)normal.X, (float)normal.Y, (float)normal.Z));
-                    Location vec1 = Vertices[Meshes[i].Faces[x].L1 - 1];
-                    Vecs.Add(new Vector3((float)vec1.X, (float)vec1.Y, (float)vec1.Z));
-                    Inds.Add((uint)(Vecs.Count - 1));
-                    Location tex1 = TextureCoords[Meshes[i].Faces[x].T1 - 1];
-                    Texs.Add(new Vector3((float)tex1.X, (float)tex1.Y, (float)tex1.Z));
-                    Norms.Add(new Vector3((float)normal.X, (float)normal.Y, (float)normal.Z));
-                    Location vec2 = Vertices[Meshes[i].Faces[x].L2 - 1];
-                    Vecs.Add(new Vector3((float)vec2.X, (float)vec2.Y, (float)vec2.Z));
-                    Inds.Add((uint)(Vecs.Count - 1));
-                    Location tex2 = TextureCoords[Meshes[i].Faces[x].T2 - 1];
-                    Texs.Add(new Vector3((float)tex2.X, (float)tex2.Y, (float)tex2.Z));
-                    Norms.Add(new Vector3((float)normal.X, (float)normal.Y, (float)normal.Z));
-                    Location vec3 = Vertices[Meshes[i].Faces[x].L3 - 1];
-                    Vecs.Add(new Vector3((float)vec3.X, (float)vec3.Y, (float)vec3.Z));
-                    Inds.Add((uint)(Vecs.Count - 1));
-                    Location tex3 = TextureCoords[Meshes[i].Faces[x].T3 - 1];
-                    Texs.Add(new Vector3((float)tex3.X, (float)tex3.Y, (float)tex3.Z));
-                    Cols.Add(new Vector4(1, 1, 1, 1));
-                    Cols.Add(new Vector4(1, 1, 1, 1));
-                    Cols.Add(new Vector4(1, 1, 1, 1));
-                }
-                Meshes[i].vbo.Vertices = Vecs;
-                Meshes[i].vbo.Normals = Norms;
-                Meshes[i].vbo.TexCoords = Texs;
-                Meshes[i].vbo.Indices = Inds;
-                Meshes[i].vbo.Colors = Cols;
-                Meshes[i].GenerateVBO();
-            }
-        }
 
         public ModelMesh MeshFor(string name)
         {
@@ -243,16 +193,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 Meshes[i].Draw();
             }
         }
-
-        /// <summary>
-        /// Alll the models's vertices.
-        /// </summary>
-        public List<Location> Vertices;
-
-        /// <summary>
-        /// Alll the models's texture coords.
-        /// </summary>
-        public List<Location> TextureCoords;
     }
 
     public class ModelMesh
