@@ -253,7 +253,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     break;
                 case "spawn":
                     e = new SpawnPointEntity(this);
-                    return;
+                    break;
                 default:
                     throw new Exception("Invalid entity type '" + name + "'!");
             }

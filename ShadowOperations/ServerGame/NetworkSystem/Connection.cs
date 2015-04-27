@@ -192,13 +192,14 @@ namespace ShadowOperations.ServerGame.NetworkSystem
                             SendPacket(new PingPacketOut(0));
                             if (TheServer.SpawnPoints.Count == 0)
                             {
+                                SysConsole.Output(OutputType.WARNING, "No spawn points... generating one!");
                                 TheServer.SpawnEntity(new SpawnPointEntity(TheServer));
                             }
                             SpawnPointEntity spe = null;
                             for (int i = 0; i < 10; i++)
                             {
                                 spe = TheServer.SpawnPoints[Utilities.UtilRandom.Next(TheServer.SpawnPoints.Count)];
-                                if (!TheServer.Collision.CuboidLineTrace(player.HalfSize, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.1f)).Hit)
+                                if (!TheServer.Collision.CuboidLineTrace(player.HalfSize, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.01f)).Hit)
                                 {
                                     break;
                                 }
