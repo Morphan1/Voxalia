@@ -15,9 +15,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
         {
             int len = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1;
             if (data.Length != len
-                && data.Length != len + 4 * 6 + 4 * 6)
+                && data.Length != len + 4 * 6 + 4 * 6
+                && data.Length != len + 4)
             {
-                SysConsole.Output(OutputType.WARNING, "Expected " + (len) + " or " + (len + 4 * 6 + 4 * 6) + " but got " + data.Length);
                 return false;
             }
             byte type = data[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12];
@@ -53,10 +53,18 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             {
                 ce = new OtherPlayerEntity(TheClient, halfsize);
             }
+            else if (type == 2)
+            {
+                int start = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1;
+                NetStringManager strings = TheClient.Network.Strings;
+                ModelEntity me = new ModelEntity(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4))), TheClient);
+                ce = me;
+            }
             else
             {
                 return false;
             }
+            ce.SetMass(mass);
             ce.SetPosition(pos);
             ce.SetVelocity(vel);
             ce.SetAngles(ang);

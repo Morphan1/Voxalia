@@ -41,6 +41,8 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
 
         public ItemRegistry Items;
 
+        public ModelHandler Models;
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
@@ -59,6 +61,8 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             PCEngine = new PlayerCommandEngine();
             SysConsole.Output(OutputType.INIT, "Loading item registry...");
             Items = new ItemRegistry();
+            SysConsole.Output(OutputType.INIT, "Loading model handler...");
+            Models = new ModelHandler();
             SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
             SysConsole.Output(OutputType.INIT, "Preparing networking...");

@@ -83,6 +83,7 @@
     <Compile Include="ClientGame\EntitySystem\BasicPrimitiveEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\Entity.cs" />
+    <Compile Include="ClientGame\EntitySystem\ModelEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\OtherPlayerEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PlayerEntity.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
     <Compile Include="ServerGame\EntitySystem\EntityDamageable.cs" />
     <Compile Include="ServerGame\EntitySystem\EntityLiving.cs" />
+    <Compile Include="ServerGame\EntitySystem\ModelEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PointLightEntity.cs" />

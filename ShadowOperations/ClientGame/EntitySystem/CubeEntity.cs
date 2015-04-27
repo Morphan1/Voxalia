@@ -32,8 +32,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public override void Render()
         {
-            Location loc = GetAngles();
-            Matrix4 mat = (Matrix4.CreateScale((float)HalfSize.X, (float)HalfSize.Y, (float)HalfSize.Z) * GetOrientationMatrix() * Matrix4.CreateTranslation(GetPosition().ToOVector()));
+            Matrix4 mat = (Matrix4.CreateScale(HalfSize.ToOVector()) * GetOrientationMatrix() * Matrix4.CreateTranslation(GetPosition().ToOVector()));
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
             for (int i = 0; i < VBOs.Count; i++)

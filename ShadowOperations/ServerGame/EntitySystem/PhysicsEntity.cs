@@ -285,6 +285,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
         }
 
+        public bool Solid = true; // TODO: implement
+
         public override bool ApplyVar(string var, string data)
         {
             switch (var)
@@ -304,6 +306,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 case "friction":
                     SetFriction(Utilities.StringToFloat(data));
                     return true;
+                case "solid":
+                    Solid = data.ToLower() == "true";
+                    return true;
                 default:
                     return base.ApplyVar(var, data);
             }
@@ -317,6 +322,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             vars.Add(new KeyValuePair<string, string>("angular_velocity", GetAngularVelocity().ToString()));
             vars.Add(new KeyValuePair<string, string>("mass", GetMass().ToString()));
             vars.Add(new KeyValuePair<string, string>("friction", GetFriction().ToString()));
+            vars.Add(new KeyValuePair<string, string>("solid", Solid ? "true": "false"));
             return vars;
         }
     }

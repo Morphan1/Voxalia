@@ -12,7 +12,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
         public SpawnPhysicsEntityPacketOut(PhysicsEntity e)
         {
             ID = 2;
-            Data = new byte[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1 + (e is CubeEntity ? 4 * 6 + 4 * 6: 0)];
+            Data = new byte[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1 + (e is CubeEntity ? 4 * 6 + 4 * 6: (e is ModelEntity ? 4: 0))];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
@@ -30,11 +30,15 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
             {
                 ((PlayerEntity)e).HalfSize.ToBytes().CopyTo(Data, 4 + 12 + 12 + 12 + 12 + 8 + 4);
             }
+            else if (e is ModelEntity)
+            {
+                ((ModelEntity)e).scale.ToBytes().CopyTo(Data, 4 + 12 + 12 + 12 + 12 + 8 + 4);
+            }
             else
             {
                 new Location(5, 5, 5).ToBytes().CopyTo(Data, 4 + 12 + 12 + 12 + 12 + 8 + 4);
             }
-            Data[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12] = (byte)(e is CubeEntity ? 0 : 1);
+            Data[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12] = (byte)(e is CubeEntity ? 0 : (e is PlayerEntity ? 1: 2));
             if (e is CubeEntity)
             {
                 CubeEntity ce = (CubeEntity)e;
@@ -52,6 +56,13 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
                 Utilities.IntToBytes(strings.IndexForString(ce.TexCoords[3])).CopyTo(Data, start + 4 * 6 + 4 * 3);
                 Utilities.IntToBytes(strings.IndexForString(ce.TexCoords[4])).CopyTo(Data, start + 4 * 6 + 4 * 4);
                 Utilities.IntToBytes(strings.IndexForString(ce.TexCoords[5])).CopyTo(Data, start + 4 * 6 + 4 * 5);
+            }
+            else if (e is ModelEntity)
+            {
+                ModelEntity me = (ModelEntity)e;
+                int start = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1;
+                NetStringManager strings = me.TheServer.Networking.Strings;
+                Utilities.IntToBytes(strings.IndexForString(me.model)).CopyTo(Data, start);
             }
         }
     }

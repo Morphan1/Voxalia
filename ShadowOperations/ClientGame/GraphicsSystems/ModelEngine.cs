@@ -37,7 +37,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             "v 0.000000 0.000000 0.000000\nv 1.000000 1.000000 0.000000\nv 1.000000 1.000000 1.000000\nv 0.000000 1.000000 1.000000\n" +
             "v 0.000000 1.000000 0.000000\nvt 1.000000 0.000000\nvt 1.000000 1.000000\nvt 0.000000 1.000000\nvt 0.000000 0.000000\n" +
             "f 2/1 3/2 4/3\nf 8/1 7/2 6/3\nf 1/4 5/1 6/2\nf 2/4 6/1 7/2\nf 7/1 8/2 4/3\nf 1/1 4/2 8/3\nf 1/4 2/1 4/3\nf 5/4 8/1 6/3\n" +
-            "f 2/3 1/4 6/2\nf 3/3 2/4 7/2\nf 3/4 7/1 4/3\nf 5/4 1/1 8/3\n";
+            "f 2/3 1/4 6/2\nf 3/3 2/4 7/2\nf 3/4 7/1 4/3\nf 5/4 1/1 8/3\n"; // TODO: Normals!
 
         public Model LoadModel(string filename)
         {
@@ -99,6 +99,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 throw new Exception("Scene has no meshes!");
             }
             Model model = new Model(name);
+            model.OriginalModel = scene;
             foreach (Mesh mesh in scene.Meshes)
             {
                 ModelMesh modmesh = new ModelMesh(mesh.Name);
@@ -141,6 +142,10 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                             modmesh.vbo.Indices.Add((uint)face.Indices[i]);
                         }
                     }
+                    else
+                    {
+                        SysConsole.Output(OutputType.WARNING, "Mesh has face with " + face.Indices.Count + " faces!!");
+                    }
                 }
                 model.Meshes.Add(modmesh);
                 modmesh.GenerateVBO();
@@ -154,6 +159,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
     /// </summary>
     public class Model
     {
+        public Scene OriginalModel;
+
         public Model(string _name)
         {
             Name = _name;

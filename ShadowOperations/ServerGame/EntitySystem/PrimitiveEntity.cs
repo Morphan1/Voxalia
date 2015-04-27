@@ -102,6 +102,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     return true; // Ignore
                 case "friction":
                     return true; // Ignore
+                case "solid":
+                    return true; // Ignore
                 case "velocity":
                     SetVelocity(Location.FromString(data));
                     return true;
