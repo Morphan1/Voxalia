@@ -16,7 +16,7 @@ using ShadowOperations.ServerGame.ItemSystem;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
-    public class PlayerEntity: PhysicsEntity
+    public class PlayerEntity: EntityLiving
     {
         public Location HalfSize = new Location(0.5f, 0.5f, 1f);
 
@@ -100,7 +100,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public float GrabForce = 0;
 
         public PlayerEntity(Server tserver, Connection conn)
-            : base(tserver, true)
+            : base(tserver, true, 100f)
         {
             Network = conn;
             SetMass(100);

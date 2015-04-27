@@ -135,6 +135,8 @@
     <Compile Include="ServerGame\EntitySystem\BulletEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
+    <Compile Include="ServerGame\EntitySystem\EntityDamageable.cs" />
+    <Compile Include="ServerGame\EntitySystem\EntityLiving.cs" />
     <Compile Include="ServerGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PointLightEntity.cs" />
