@@ -317,6 +317,12 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             string it = "^%^e^7" + GetItemForSlot(QuickBarPos).DisplayName;
             float size = FontSets.Standard.MeasureFancyText(it);
             FontSets.Standard.DrawColoredText(it, new Location(center - size / 2f, Window.Height - 64 - FontSets.Standard.font_default.Height - 5, 0));
+            float percent = 0;
+            if (Player.MaxHealth != 0)
+            {
+                percent = (float)Math.Round((Player.Health / Player.MaxHealth) * 10000) / 100f;
+            }
+            FontSets.Standard.DrawColoredText("^@^e^0" + Player.Health + "/" + Player.MaxHealth + " = " + percent + "%", new Location(5, Window.Height - FontSets.Standard.font_default.Height - 5, 0));
             UIConsole.Draw();
         }
 

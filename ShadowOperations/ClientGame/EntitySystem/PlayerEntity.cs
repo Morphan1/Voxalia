@@ -155,6 +155,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Recalculate();
         }
 
+        public float Health;
+
+        public float MaxHealth;
+
         public void Recalculate()
         {
         }

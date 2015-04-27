@@ -6,7 +6,7 @@ using ShadowOperations.ServerGame.ServerMainSystem;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
-    public class EntityLiving: PhysicsEntity, EntityDamageable
+    public abstract class EntityLiving: PhysicsEntity, EntityDamageable
     {
         public EntityLiving(Server tserver, bool ticks, float maxhealth)
             : base(tserver, ticks)
@@ -19,24 +19,35 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public float MaxHealth = 100;
 
-        public float GetHealth()
+        public virtual float GetHealth()
         {
             return Health;
         }
 
-        public float GetMaxHealth()
+        public virtual float GetMaxHealth()
         {
             return MaxHealth;
         }
 
-        public void SetHealth(float health)
+        public virtual void SetHealth(float health)
         {
             Health = health;
+            if (MaxHealth != 0 && Health <= 0)
+            {
+                Die();
+            }
         }
 
-        public void SetMaxHealth(float maxhealth)
+        public virtual void Damage(float amount)
+        {
+            SetHealth(GetHealth() - amount);
+        }
+
+        public virtual void SetMaxHealth(float maxhealth)
         {
             MaxHealth = maxhealth;
         }
+
+        public abstract void Die();
     }
 }

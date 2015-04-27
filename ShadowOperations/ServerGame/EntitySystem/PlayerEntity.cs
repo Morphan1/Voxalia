@@ -110,6 +110,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             SetPosition(new Location(0, 0, 50));
             GiveItem(new ItemStack("open_hand", TheServer, 1, "items/open_hand", "Open Hand", "Grab things!", Color.White.ToArgb()));
             GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/9mm_pistol_gun", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb()));
+            SetHealth(Health);
         }
 
         public void GiveItem(ItemStack item)
@@ -272,6 +273,38 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public override string ToString()
         {
             return Name;
+        }
+
+        public override void SetHealth(float health)
+        {
+            base.SetHealth(health);
+            Network.SendPacket(new YourStatusPacketOut(GetHealth(), GetMaxHealth()));
+        }
+
+        public override void SetMaxHealth(float maxhealth)
+        {
+            base.SetMaxHealth(maxhealth);
+            Network.SendPacket(new YourStatusPacketOut(GetHealth(), GetMaxHealth()));
+        }
+
+        public override void Die()
+        {
+            SetHealth(MaxHealth);
+            if (TheServer.SpawnPoints.Count == 0)
+            {
+                SysConsole.Output(OutputType.WARNING, "No spawn points... generating one!");
+                TheServer.SpawnEntity(new SpawnPointEntity(TheServer));
+            }
+            SpawnPointEntity spe = null;
+            for (int i = 0; i < 10; i++)
+            {
+                spe = TheServer.SpawnPoints[Utilities.UtilRandom.Next(TheServer.SpawnPoints.Count)];
+                if (!TheServer.Collision.CuboidLineTrace(HalfSize, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.01f)).Hit)
+                {
+                    break;
+                }
+            }
+            SetPosition(spe.GetPosition());
         }
     }
 }

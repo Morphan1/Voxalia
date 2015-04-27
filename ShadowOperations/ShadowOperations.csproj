@@ -117,6 +117,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnLightPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPhysicsEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourPositionPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourStatusPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\CommandPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\HoldItemPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\KeysPacketOut.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPhysicsEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourPositionPacketOut.cs" />
     <Compile Include="ServerGame\ItemSystem\ItemStack.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourStatusPacketOut.cs" />
     <Compile Include="Shared\ItemStackBase.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\AbstractPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\GrabPlayerCommand.cs" />

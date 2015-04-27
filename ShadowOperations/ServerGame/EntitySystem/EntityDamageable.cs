@@ -14,5 +14,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         void SetHealth(float health);
 
         void SetMaxHealth(float health);
+
+        void Damage(float amount);
     }
 }

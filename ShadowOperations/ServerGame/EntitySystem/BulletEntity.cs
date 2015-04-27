@@ -18,13 +18,20 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public void OnCollide(object sender, CollisionEventArgs args)
         {
-            Vector3 loc = (GetPosition() - ((PhysicsEntity)args.Info.HitEnt.Tag).GetPosition()).ToBVector();
+            PhysicsEntity physent = ((PhysicsEntity)args.Info.HitEnt.Tag);
+            Vector3 loc = (GetPosition() - physent.GetPosition()).ToBVector();
             Vector3 impulse = GetVelocity().ToBVector() * Damage / 1000f;
-            ((PhysicsEntity)args.Info.HitEnt.Tag).Body.ApplyImpulse(ref loc, ref impulse);
+            physent.Body.ApplyImpulse(ref loc, ref impulse);
+            if (physent is EntityDamageable)
+            {
+                ((EntityDamageable)physent).Damage(Damage);
+            }
+            if (SplashSize > 0 && SplashDamage > 0)
+            {
+                // TODO: Apply Splash Damage
+                // TODO: Apply Splash Impulses
+            }
             TheServer.DespawnEntity(this);
-            // TODO: Apply Damage
-            // TODO: Apply Splash Damage
-            // TODO: Apply Splash Impulses
         }
 
         public override void Recalculate()
