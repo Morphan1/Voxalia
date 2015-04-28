@@ -93,13 +93,20 @@ namespace ShadowOperations
                     LaunchSettings.Add(new KeyValuePair<string, string>(kvp.Key, kvp.Value + (kvp.Value.Length > 0 ? " " : "") + args[i]));
                 }
             }
-            if (args.Length > 0 && args[0] == "server")
+            try
             {
-                Server.Init();
+                if (args.Length > 0 && args[0] == "server")
+                {
+                    Server.Init();
+                }
+                else
+                {
+                    Client.Init();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Client.Init();
+                SysConsole.Output(OutputType.ERROR, ex.ToString());
             }
             SysConsole.ShutDown();
         }

@@ -6,6 +6,8 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using ShadowOperations.Shared;
+using System.Runtime.InteropServices;
+using System.Xml.Serialization;
 
 namespace ShadowOperations.ClientGame.GraphicsSystems
 {
@@ -16,6 +18,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         uint _NormalVBO;
         uint _TexCoordVBO;
         uint _ColorVBO;
+        uint _BoneIDVBO;
+        uint _BoneWeightVBO;
         public uint _VAO;
 
         public Texture Tex;
@@ -25,6 +29,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         public List<Vector3> Normals;
         public List<Vector3> TexCoords;
         public List<Vector4> Colors;
+        public List<Vector4> BoneIDs;
+        public List<Vector4> BoneWeights;
 
         public void AddSide(Location normal, TextureCoordinates tc)
         {
@@ -34,6 +40,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 Normals.Add(normal.ToOVector());
                 Colors.Add(new Vector4(1f, 1f, 1f, 1f));
                 Indices.Add((uint)Indices.Count);
+                BoneIDs.Add(new Vector4(0, 0, 0, 0));
+                BoneWeights.Add(new Vector4(0f, 0f, 0f, 0f));
             }
             float aX = (tc.xflip ? 1 : 0) + tc.xshift;
             float aY = (tc.yflip ? 1 : 0) + tc.yshift;
@@ -159,6 +167,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Normals = new List<Vector3>();
             TexCoords = new List<Vector3>();
             Colors = new List<Vector4>();
+            BoneIDs = new List<Vector4>();
+            BoneWeights = new List<Vector4>();
         }
 
         bool generated = false;
@@ -173,6 +183,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 GL.DeleteBuffer(_NormalVBO);
                 GL.DeleteBuffer(_TexCoordVBO);
                 GL.DeleteBuffer(_ColorVBO);
+                GL.DeleteBuffer(_BoneIDVBO);
+                GL.DeleteBuffer(_BoneWeightVBO);
             }
         }
 
@@ -192,6 +204,15 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Vector3[] norms = Normals.ToArray();
             Vector3[] texs = TexCoords.ToArray();
             Vector4[] cols = Colors.ToArray();
+            Vector4[] ids = BoneIDs.ToArray();
+            Vector4[] weights = BoneWeights.ToArray();
+            for (int i = 0; i < weights.Length; i++)
+            {
+                if (weights[i].X == 0 && weights[i].Y == 0 && weights[i].Z == 0 && weights[i].W == 0)
+                {
+                    weights[i].X = 1;
+                }
+            }
             // Vertex buffer
             GL.GenBuffers(1, out _VertexVBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _VertexVBO);
@@ -216,6 +237,18 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(cols.Length * Vector4.SizeInBytes),
                     cols, BufferUsageHint.StaticDraw);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            // Weight buffer
+            GL.GenBuffers(1, out _BoneWeightVBO);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeightVBO);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(weights.Length * Vector4.SizeInBytes),
+                    weights, BufferUsageHint.StaticDraw);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            // ID buffer
+            GL.GenBuffers(1, out _BoneIDVBO);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneIDVBO);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(ids.Length * Vector4.SizeInBytes),
+                    ids, BufferUsageHint.StaticDraw);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             // Index buffer
             GL.GenBuffers(1, out _IndexVBO);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IndexVBO);
@@ -233,10 +266,16 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 0, 0);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _ColorVBO);
             GL.VertexAttribPointer(3, 4, VertexAttribPointerType.Float, false, 0, 0);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeightVBO);
+            GL.VertexAttribPointer(4, 4, VertexAttribPointerType.Float, false, 0, 0);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneIDVBO);
+            GL.VertexAttribPointer(5, 4, VertexAttribPointerType.Float, false, 0, 0);
             GL.EnableVertexAttribArray(0);
             GL.EnableVertexAttribArray(1);
             GL.EnableVertexAttribArray(2);
             GL.EnableVertexAttribArray(3);
+            GL.EnableVertexAttribArray(4);
+            GL.EnableVertexAttribArray(5);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IndexVBO);
             // Clean up
             GL.BindVertexArray(0);
@@ -244,9 +283,28 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             GL.DisableVertexAttribArray(1);
             GL.DisableVertexAttribArray(2);
             GL.DisableVertexAttribArray(3);
+            GL.DisableVertexAttribArray(4);
+            GL.DisableVertexAttribArray(5);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             generated = true;
+
+        }
+
+        public static void BonesIdentity(int bones)
+        {
+            float[] floats = new float[bones * 4 * 4];
+            for (int i = 0; i < bones; i++)
+            {
+                for (int x = 0; x < 4; x++)
+                {
+                    for (int y = 0; y < 4; y++)
+                    {
+                        floats[i * 16 + x * 4 + y] = Matrix4.Identity[x, y];
+                    }
+                }
+            }
+            GL.UniformMatrix4(6, bones, false, floats);
         }
 
         public void Render(bool texture)

@@ -148,6 +148,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     }
                 }
                 model.Meshes.Add(modmesh);
+                modmesh.vbo.BoneIDs = new Vector4[modmesh.vbo.Vertices.Count].ToList();
+                modmesh.vbo.BoneWeights = new Vector4[modmesh.vbo.Vertices.Count].ToList();
                 modmesh.GenerateVBO();
             }
             return model;
