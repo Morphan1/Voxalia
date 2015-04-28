@@ -19,22 +19,23 @@ layout (location = 6) uniform mat4 boneTrans[MAX_BONES];
 
 void main(void)
 {
-	mat4 boneTransform = mat4(1.0);
-	if (Weights != vec4(0.0))
-	{
-		boneTransform = boneTrans[int(BoneID[0])] * Weights[0];
-		boneTransform += boneTrans[int(BoneID[1])] * Weights[1];
-		boneTransform += boneTrans[int(BoneID[2])] * Weights[2];
-		boneTransform += boneTrans[int(BoneID[3])] * Weights[3];
-	}
-	vec4 pos1 = boneTransform * vec4(position, 1.0);
+	vec4 pos1 = vec4(position, 1.0);
+	pos1 += (boneTrans[int(BoneID[0])] * Weights[0]) * vec4(position, 1.0);
+	pos1 += (boneTrans[int(BoneID[1])] * Weights[1]) * vec4(position, 1.0);
+	pos1 += (boneTrans[int(BoneID[2])] * Weights[2]) * vec4(position, 1.0);
+	pos1 += (boneTrans[int(BoneID[3])] * Weights[3]) * vec4(position, 1.0);
+	vec4 norm1 = vec4(normal, 1.0);
+	norm1 += (boneTrans[int(BoneID[0])] * Weights[0]) * vec4(normal, 1.0);
+	norm1 += (boneTrans[int(BoneID[1])] * Weights[1]) * vec4(normal, 1.0);
+	norm1 += (boneTrans[int(BoneID[2])] * Weights[2]) * vec4(normal, 1.0);
+	norm1 += (boneTrans[int(BoneID[3])] * Weights[3]) * vec4(normal, 1.0);
 	f_texcoord = texcoords;
 	f_position = mv_matrix * vec4(pos1.xyz, 1.0);
 	mat4 mv_mat_simple = mv_matrix;
 	mv_mat_simple[3][0] = 0.0;
 	mv_mat_simple[3][1] = 0.0;
 	mv_mat_simple[3][2] = 0.0;
-	vec4 norm1 = boneTransform * vec4(normal, 1.0);
+	//vec4 norm1 = boneTransform * vec4(normal, 1.0);
 	vec4 nnormal = mv_mat_simple * vec4(norm1.xyz, 1.0);
 	f_normal = nnormal.xyz / nnormal.w; // TODO: Normalize?
 	gl_Position = proj_matrix * mv_matrix * vec4(pos1.xyz, 1.0);
