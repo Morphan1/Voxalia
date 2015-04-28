@@ -11,7 +11,7 @@ layout (location = 0) out vec4 f_position;
 layout (location = 1) out vec3 f_normal;
 layout (location = 2) out vec2 f_texcoord;
 
-const int MAX_BONES = 25;
+const int MAX_BONES = 50;
 
 layout (location = 1) uniform mat4 proj_matrix;
 layout (location = 2) uniform mat4 mv_matrix;
@@ -29,7 +29,9 @@ void main(void)
 	mv_mat_simple[3][0] = 0.0;
 	mv_mat_simple[3][1] = 0.0;
 	mv_mat_simple[3][2] = 0.0;
-	vec4 nnormal = mv_mat_simple * (boneTransform * vec4(normal, 1.0));
+	vec4 norm1 = boneTransform * vec4(normal, 1.0);
+	vec4 nnormal = mv_mat_simple * vec4(norm1.xyz, 1.0);
 	f_normal = nnormal.xyz / nnormal.w; // TODO: Normalize?
-	gl_Position = proj_matrix * mv_matrix * (boneTransform * position);
+	vec4 pos1 = boneTransform * position;
+	gl_Position = proj_matrix * mv_matrix * vec4(pos1.xyz, 1.0);
 }

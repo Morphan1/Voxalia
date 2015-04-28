@@ -102,7 +102,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             model.OriginalModel = scene;
             foreach (Mesh mesh in scene.Meshes)
             {
-                ModelMesh modmesh = new ModelMesh(mesh.Name);
+                ModelMesh modmesh = new ModelMesh(mesh.Name, mesh);
                 modmesh.vbo.Prepare();
                 bool hastc = mesh.HasTextureCoords(0);
                 bool hasn = mesh.HasNormals;
@@ -144,15 +144,45 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     }
                     else
                     {
-                        SysConsole.Output(OutputType.WARNING, "Mesh has face with " + face.Indices.Count + " faces!!");
+                        SysConsole.Output(OutputType.WARNING, "Mesh has face with " + face.Indices.Count + " faces!");
                     }
                 }
-                model.Meshes.Add(modmesh);
+                int bc = mesh.Bones.Count;
+                if (bc > 50)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Mesh has " + bc + " bones!");
+                    bc = 50;
+                }
                 modmesh.vbo.BoneIDs = new Vector4[modmesh.vbo.Vertices.Count].ToList();
                 modmesh.vbo.BoneWeights = new Vector4[modmesh.vbo.Vertices.Count].ToList();
+                int[] pos = new int[modmesh.vbo.Vertices.Count];
+                for (int i = 0; i < bc; i++)
+                {
+                    for (int x = 0; x < mesh.Bones[i].VertexWeights.Count; x++)
+                    {
+                        VertexWeight vw = mesh.Bones[i].VertexWeights[x];
+                        int spot = pos[vw.VertexID]++;
+                        if (spot > 3)
+                        {
+                            SysConsole.Output(OutputType.WARNING, "Too many bones influencing " + vw.VertexID + "!");
+                            continue;
+                        }
+                        ForceSet(modmesh.vbo.BoneIDs, vw.VertexID, spot, i);
+                        ForceSet(modmesh.vbo.BoneWeights, vw.VertexID, spot, vw.Weight);
+                    }
+                    modmesh.Bones.Add(mesh.Bones[i]);
+                }
+                model.Meshes.Add(modmesh);
                 modmesh.GenerateVBO();
             }
             return model;
+        }
+
+        void ForceSet(List<Vector4> vecs, int ind, int subind, float val)
+        {
+            Vector4 vec = vecs[ind];
+            vec[subind] = val;
+            vecs[ind] = vec;
         }
     }
 
@@ -191,7 +221,34 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
             return null;
         }
-        
+
+        void SetBones(Matrix4[] mats)
+        {
+            int bones = 50;
+            float[] set = new float[bones * 16];
+            for (int i = 0; i < mats.Length; i++)
+            {
+                for (int x = 0; x < 4; x++)
+                {
+                    for (int y = 0; y < 4; y++)
+                    {
+                        set[i * 16 + x * 4 + y] = mats[i][x, y];
+                    }
+                }
+            }
+            for (int i = mats.Length; i < bones; i++)
+            {
+                for (int x = 0; x < 4; x++)
+                {
+                    for (int y = 0; y < 4; y++)
+                    {
+                        set[i * 16 + x * 4 + y] = Matrix4.Identity[x, y];
+                    }
+                }
+            }
+            GL.UniformMatrix4(6, bones, false, set);
+        }
+
         /// <summary>
         /// Draws the model.
         /// </summary>
@@ -199,7 +256,20 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         {
             for (int i = 0; i < Meshes.Count; i++)
             {
+                if (Meshes[i].Bones.Count > 0)
+                {
+                    Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];
+                    for (int x = 0; x < Meshes[i].Bones.Count; x++)
+                    {
+                        mats[x] = Matrix4.Identity;
+                    }
+                    SetBones(mats);
+                }
                 Meshes[i].Draw();
+                if (Meshes[i].Bones.Count > 0)
+                {
+                    VBO.BonesIdentity();
+                }
             }
         }
     }
@@ -211,10 +281,16 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         /// </summary>
         public string Name;
 
-        public ModelMesh(string _name)
+        public Mesh Original;
+
+        public List<Bone> Bones;
+
+        public ModelMesh(string _name, Mesh orig)
         {
+            Original = orig;
             Name = _name.ToLower();
             Faces = new List<ModelFace>();
+            Bones = new List<Bone>();
             vbo = new VBO();
         }
 

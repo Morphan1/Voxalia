@@ -127,7 +127,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 if (CVars.r_lighting.ValueB)
                 {
                     s_shadow.Bind();
-                    VBO.BonesIdentity(25);
+                    VBO.BonesIdentity();
                     RenderingShadows = true;
                     for (int i = 0; i < Lights.Count; i++)
                     {
@@ -141,7 +141,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     }
                     SetViewport();
                     s_fbo.Bind();
-                    VBO.BonesIdentity(25);
+                    VBO.BonesIdentity();
                     RenderingShadows = false;
                     Location CameraTarget = CameraPos + Utilities.ForwardVector_Deg(CameraYaw, CameraPitch);
                     Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CameraFOV), (float)Window.Width / (float)Window.Height, CameraZNear, CameraZFar);

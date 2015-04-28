@@ -7,7 +7,7 @@ layout (location = 3) in vec4 color;
 layout (location = 4) in vec4 Weights;
 layout (location = 5) in vec4 BoneID;
 
-const int MAX_BONES = 25;
+const int MAX_BONES = 50;
 
 layout (location = 1) uniform mat4 projection;
 layout (location = 2) uniform mat4 model_matrix;
@@ -22,7 +22,8 @@ void main()
 						 boneTrans[int(BoneID[1])] * Weights[1] +
 						 boneTrans[int(BoneID[2])] * Weights[2] +
 						 boneTrans[int(BoneID[3])] * Weights[3];
-	vec4 positiony = projection * model_matrix * (boneTransform * vec4(position, 1.0));
+	vec4 pos1 = boneTransform * vec4(position, 1.0);
+	vec4 positiony = projection * model_matrix * vec4(pos1.xyz, pos1.w);
 	f_pos = positiony;
 	gl_Position = positiony;
 }

@@ -208,9 +208,13 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Vector4[] weights = BoneWeights.ToArray();
             for (int i = 0; i < weights.Length; i++)
             {
-                if (weights[i].X == 0 && weights[i].Y == 0 && weights[i].Z == 0 && weights[i].W == 0)
+                //if (weights[i].LengthSquared > 0)
                 {
-                    weights[i].X = 1;
+                    //weights[i] = weights[i].Normalized();
+                }
+                //else
+                {
+                    weights[i] = new Vector4(1, 0, 0, 0);
                 }
             }
             // Vertex buffer
@@ -291,8 +295,9 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         }
 
-        public static void BonesIdentity(int bones)
+        public static void BonesIdentity()
         {
+            int bones = 50;
             float[] floats = new float[bones * 4 * 4];
             for (int i = 0; i < bones; i++)
             {
