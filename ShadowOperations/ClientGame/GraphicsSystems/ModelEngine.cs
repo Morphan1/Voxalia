@@ -441,14 +441,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         /// <summary>
         /// Draws the model.
         /// </summary>
-        public void Draw()
+        public void Draw(double aTime)
         {
             for (int i = 0; i < Meshes.Count; i++)
             {
                 if (Meshes[i].Bones.Count > 0)
                 {
                     globalInverse = convert(OriginalModel.RootNode.Transform).Inverted();
-                    UpdateTransforms((float)Utilities.UtilRandom.NextDouble(), OriginalModel.RootNode, Matrix4.Identity);
+                    UpdateTransforms(aTime, OriginalModel.RootNode, Matrix4.Identity);
                     Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];
                     for (int x = 0; x < Meshes[i].Bones.Count; x++)
                     {

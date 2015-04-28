@@ -171,7 +171,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                     * OpenTK.Matrix4.CreateTranslation(base.GetPosition().ToOVector());
                 GL.UniformMatrix4(2, false, ref mat);
                 TheClient.Rendering.SetMinimumLight(0.0f);
-                model.Draw();
+                model.Draw(0);
             }
         }
     }

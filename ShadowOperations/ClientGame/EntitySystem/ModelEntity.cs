@@ -44,7 +44,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Matrix4 mat = transform * (Matrix4.CreateScale(scale.ToOVector()) * orient * Matrix4.CreateTranslation((GetPosition()).ToOVector()));
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
-            model.Draw();
+            model.Draw(0);
         }
     }
 }

@@ -153,13 +153,20 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
         }
 
+        public double aTime;
+
         public override void Render()
         {
             OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateRotationZ((float)(Direction.X * Utilities.PI180))
                 * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
-            model.Draw();
+            aTime += TheClient.gDelta;
+            if (aTime >= 1f)
+            {
+                aTime -= 1f;
+            }
+            model.Draw(aTime);
         }
     }
 }

@@ -19,10 +19,10 @@ layout (location = 0) out vec4 f_pos;
 void main()
 {
 	vec4 pos1 = vec4(position, 1.0);
-	pos1 += (boneTrans[int(BoneID[0])] * Weights[0]) * vec4(position, 1.0);
-	pos1 += (boneTrans[int(BoneID[1])] * Weights[1]) * vec4(position, 1.0);
-	pos1 += (boneTrans[int(BoneID[2])] * Weights[2]) * vec4(position, 1.0);
-	pos1 += (boneTrans[int(BoneID[3])] * Weights[3]) * vec4(position, 1.0);
+	pos1 += (boneTrans[int(BoneID[0])] * vec4(position, 0.0)) * Weights[0];
+	pos1 += (boneTrans[int(BoneID[1])] * vec4(position, 0.0)) * Weights[1];
+	pos1 += (boneTrans[int(BoneID[2])] * vec4(position, 0.0)) * Weights[2];
+	pos1 += (boneTrans[int(BoneID[3])] * vec4(position, 0.0)) * Weights[3];
 	vec4 positiony = projection * model_matrix * vec4(pos1.xyz, 1.0);
 	f_pos = positiony;
 	gl_Position = positiony;
