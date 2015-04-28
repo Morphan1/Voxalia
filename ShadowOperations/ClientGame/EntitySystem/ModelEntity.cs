@@ -33,10 +33,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             model = TheClient.Models.GetModel(mod);
             Shape = TheClient.Models.Handler.MeshToBepu(model.OriginalModel);
-            Assimp.Matrix4x4 mat = model.OriginalModel.RootNode.Transform;
             offset = -Location.FromBVector(Shape.Position);
-            Matrix4 root = new Matrix4(mat.A1, mat.A2, mat.A3, mat.A4, mat.B1, mat.B2, mat.B3, mat.B4, mat.C1, mat.C2, mat.C3, mat.C4, mat.D1, mat.D2, mat.D3, mat.D4); // TODO: is this needed? Is this even valid?
-            transform = Matrix4.CreateTranslation(offset.ToOVector()) * root;
+            transform = Matrix4.CreateTranslation(offset.ToOVector());
             base.SpawnBody();
         }
 

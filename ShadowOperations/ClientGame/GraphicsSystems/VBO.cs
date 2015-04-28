@@ -208,13 +208,13 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Vector4[] weights = BoneWeights.ToArray();
             for (int i = 0; i < weights.Length; i++)
             {
-                //if (weights[i].LengthSquared > 0)
+                if (weights[i].LengthSquared > 0)
                 {
                     //weights[i] = weights[i].Normalized();
                 }
-                //else
+                else
                 {
-                    weights[i] = new Vector4(1, 0, 0, 0);
+                    //weights[i] = new Vector4(1, 0, 0, 0);
                 }
             }
             // Vertex buffer

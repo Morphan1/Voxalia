@@ -103,6 +103,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             foreach (Mesh mesh in scene.Meshes)
             {
                 ModelMesh modmesh = new ModelMesh(mesh.Name, mesh);
+                modmesh.Base = scene;
                 modmesh.vbo.Prepare();
                 bool hastc = mesh.HasTextureCoords(0);
                 bool hasn = mesh.HasNormals;
@@ -170,7 +171,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                         ForceSet(modmesh.vbo.BoneIDs, vw.VertexID, spot, i);
                         ForceSet(modmesh.vbo.BoneWeights, vw.VertexID, spot, vw.Weight);
                     }
-                    modmesh.Bones.Add(mesh.Bones[i]);
+                    modmesh.Bones.Add(new ModelBone() { Internal = mesh.Bones[i] });
+                    modmesh.BoneLookup.Add(mesh.Bones[i].Name, modmesh.Bones.Count - 1);
                 }
                 model.Meshes.Add(modmesh);
                 modmesh.GenerateVBO();
@@ -249,6 +251,193 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             GL.UniformMatrix4(6, bones, false, set);
         }
 
+        public Matrix4 convert(Matrix4x4 mat)
+        {
+            return new Matrix4(mat.A1, mat.A2, mat.A3, mat.A4,
+                mat.B1, mat.B2, mat.B3, mat.B4,
+                mat.C1, mat.C2, mat.C3, mat.C4,
+                mat.D1, mat.D2, mat.D3, mat.D4);
+        }
+
+        int findPos(double time, NodeAnimationChannel nodeAnim)
+        {
+            for (int i = 0; i < nodeAnim.PositionKeyCount - 1; i++)
+            {
+                if (time < nodeAnim.PositionKeys[i + 1].Time)
+                {
+                    return i;
+                }
+            }
+            throw new Exception("findPos: Can't find pos");
+        }
+
+        Vector3D lerpPos(double aTime, NodeAnimationChannel nodeAnim)
+        {
+            if (nodeAnim.PositionKeyCount == 0)
+            {
+                return new Vector3D(0, 0, 0);
+            }
+            if (nodeAnim.PositionKeyCount == 1)
+            {
+                return nodeAnim.PositionKeys[0].Value;
+            }
+            int index = findPos(aTime, nodeAnim);
+            int nextIndex = index + 1;
+            if (nextIndex >= nodeAnim.PositionKeyCount)
+            {
+                return new Vector3D(0, 0, 0);
+            }
+            double deltaT = nodeAnim.PositionKeys[nextIndex].Time - nodeAnim.PositionKeys[index].Time;
+            double factor = (aTime - nodeAnim.PositionKeys[index].Time) / deltaT;
+            if (factor < 0 || factor > 1)
+            {
+                return new Vector3D(0, 0, 0);
+            }
+            Vector3D start = nodeAnim.PositionKeys[index].Value;
+            Vector3D end = nodeAnim.PositionKeys[nextIndex].Value;
+            Vector3D deltaV = end - start;
+            return start + (float)factor * deltaV;
+        }
+
+        int findRotate(double time, NodeAnimationChannel nodeAnim)
+        {
+            for (int i = 0; i < nodeAnim.RotationKeyCount - 1; i++)
+            {
+                if (time < nodeAnim.RotationKeys[i + 1].Time)
+                {
+                    return i;
+                }
+            }
+            throw new Exception("findRotate: Can't find rotate");
+        }
+
+        Assimp.Quaternion lerpRotate(double aTime, NodeAnimationChannel nodeAnim)
+        {
+            if (nodeAnim.RotationKeyCount == 0)
+            {
+                return new Assimp.Quaternion();
+            }
+            if (nodeAnim.RotationKeyCount == 1)
+            {
+                return nodeAnim.RotationKeys[0].Value;
+            }
+            int index = findRotate(aTime, nodeAnim);
+            int nextIndex = index + 1;
+            if (nextIndex >= nodeAnim.ScalingKeyCount)
+            {
+                return new Assimp.Quaternion();
+            }
+            double deltaT = nodeAnim.RotationKeys[nextIndex].Time - nodeAnim.RotationKeys[index].Time;
+            double factor = (aTime - nodeAnim.RotationKeys[index].Time) / deltaT;
+            if (factor < 0 || factor > 1)
+            {
+                return new Assimp.Quaternion();
+            }
+            Assimp.Quaternion start = nodeAnim.RotationKeys[index].Value;
+            Assimp.Quaternion end = nodeAnim.RotationKeys[nextIndex].Value;
+            Assimp.Quaternion res = Assimp.Quaternion.Slerp(start, end, (float)factor);
+            res.Normalize();
+            return res;
+        }
+
+        int findScale(double time, NodeAnimationChannel nodeAnim)
+        {
+            for (int i = 0; i < nodeAnim.ScalingKeyCount - 1; i++)
+            {
+                if (time < nodeAnim.ScalingKeys[i + 1].Time)
+                {
+                    return i;
+                }
+            }
+            throw new Exception("findScale: Can't find scale");
+        }
+
+        Vector3D lerpScale(double aTime, NodeAnimationChannel nodeAnim)
+        {
+            if (nodeAnim.ScalingKeyCount == 0)
+            {
+                return new Vector3D(1, 1, 1);
+            }
+            if (nodeAnim.ScalingKeyCount == 1)
+            {
+                return nodeAnim.ScalingKeys[0].Value;
+            }
+            int index = findScale(aTime, nodeAnim);
+            int nextIndex = index + 1;
+            if (nextIndex >= nodeAnim.ScalingKeyCount)
+            {
+                return new Vector3D(1, 1, 1);
+            }
+            double deltaT = nodeAnim.ScalingKeys[nextIndex].Time - nodeAnim.ScalingKeys[index].Time;
+            double factor = (aTime - nodeAnim.ScalingKeys[index].Time) / deltaT;
+            if (factor < 0 || factor > 1)
+            {
+                return new Vector3D(1, 1, 1);
+            }
+            Vector3D start = nodeAnim.ScalingKeys[index].Value;
+            Vector3D end = nodeAnim.ScalingKeys[nextIndex].Value;
+            Vector3D deltaV = end - start;
+            Vector3D scale = start + (float)factor * deltaV;
+            return scale;
+        }
+
+        Matrix4 globalInverse = Matrix4.Identity;
+
+        public void UpdateTransforms(double aTime, Node pNode, Matrix4 transf)
+        {
+            try
+            {
+                string nodename = pNode.Name;
+                if (OriginalModel.AnimationCount == 0)
+                {
+                    return;
+                }
+                Animation pAnim = OriginalModel.Animations[0];
+                Matrix4 nodeTransf = convert(pNode.Transform);
+                NodeAnimationChannel pNodeAnim = FindNodeAnim(pAnim, nodename);
+                if (pNodeAnim != null)
+                {
+                    Vector3D scaling = lerpScale(aTime, pNodeAnim);
+                    Matrix4 scale = Matrix4.CreateScale(scaling.X, scaling.Y, scaling.Z);
+                    Assimp.Quaternion rot = lerpRotate(aTime, pNodeAnim);
+                    Matrix4 rotation = convert(new Matrix4x4(rot.GetMatrix()));
+                    Vector3D pos = lerpPos(aTime, pNodeAnim);
+                    Matrix4 translation = Matrix4.CreateTranslation(pos.X, pos.Y, pos.Z);
+                    nodeTransf = translation * rotation * scale;
+                }
+                Matrix4 global = transf * nodeTransf;
+                foreach (ModelMesh mesh in Meshes)
+                {
+                    int pos;
+                    if (mesh.BoneLookup.TryGetValue(nodename, out pos))
+                    {
+                        mesh.Bones[pos].Transform = globalInverse * global * convert(mesh.Bones[pos].Internal.OffsetMatrix);
+                    }
+                }
+                for (int i = 0; i < pNode.ChildCount; i++)
+                {
+                    UpdateTransforms(aTime, pNode.Children[i], global);
+                }
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output(OutputType.ERROR, ex.ToString());
+            }
+        }
+
+        NodeAnimationChannel FindNodeAnim(Animation pAnim, string nodeName)
+        {
+            for (int i = 0; i < pAnim.NodeAnimationChannelCount; i++)
+            {
+                NodeAnimationChannel nac = pAnim.NodeAnimationChannels[i];
+                if (nac.NodeName == nodeName)
+                {
+                    return nac;
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Draws the model.
         /// </summary>
@@ -258,10 +447,12 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             {
                 if (Meshes[i].Bones.Count > 0)
                 {
+                    globalInverse = convert(OriginalModel.RootNode.Transform).Inverted();
+                    UpdateTransforms((float)Utilities.UtilRandom.NextDouble(), OriginalModel.RootNode, Matrix4.Identity);
                     Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];
                     for (int x = 0; x < Meshes[i].Bones.Count; x++)
                     {
-                        mats[x] = Matrix4.Identity;
+                        mats[x] = Meshes[i].Bones[x].Transform;
                     }
                     SetBones(mats);
                 }
@@ -274,6 +465,12 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         }
     }
 
+    public class ModelBone
+    {
+        public Bone Internal = null;
+        public Matrix4 Transform = Matrix4.Identity;
+    }
+
     public class ModelMesh
     {
         /// <summary>
@@ -281,16 +478,21 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         /// </summary>
         public string Name;
 
+        public Scene Base;
+
         public Mesh Original;
 
-        public List<Bone> Bones;
+        public List<ModelBone> Bones;
+
+        public Dictionary<string, int> BoneLookup;
 
         public ModelMesh(string _name, Mesh orig)
         {
             Original = orig;
             Name = _name.ToLower();
             Faces = new List<ModelFace>();
-            Bones = new List<Bone>();
+            Bones = new List<ModelBone>();
+            BoneLookup = new Dictionary<string, int>();
             vbo = new VBO();
         }
 

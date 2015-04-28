@@ -19,10 +19,12 @@ layout (location = 6) uniform mat4 boneTrans[MAX_BONES];
 
 void main(void)
 {
-	mat4 boneTransform = boneTrans[int(BoneID[0])] * Weights[0] +
-						 boneTrans[int(BoneID[1])] * Weights[1] +
-						 boneTrans[int(BoneID[2])] * Weights[2] +
-						 boneTrans[int(BoneID[3])] * Weights[3];
+	mat4 boneTransform = (boneTrans[int(BoneID[0])] * Weights[0]) +
+						 (boneTrans[int(BoneID[1])] * Weights[1]) +
+						 (boneTrans[int(BoneID[2])] * Weights[2]) +
+						 (boneTrans[int(BoneID[3])] * Weights[3]);
+	float rem = 1 - (Weights[0] + Weights[1] + Weights[2] + Weights[3]);
+	boneTransform += mat4(1.0) * rem;
 	f_texcoord = texcoords;
 	f_position = mv_matrix * (boneTransform * position);
 	mat4 mv_mat_simple = mv_matrix;
