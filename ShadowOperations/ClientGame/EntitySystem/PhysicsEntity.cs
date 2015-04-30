@@ -37,6 +37,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
         float Friction = 0.5f;
 
         /// <summary>
+        /// The bounciness (restitution coefficient) of the entity.
+        /// </summary>
+        float Bounciness = 0f;
+
+        /// <summary>
         /// The gravity power of this entity.
         /// </summary>
         public Location Gravity;
@@ -126,6 +131,32 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 // TODO: Separate
                 Body.Material.StaticFriction = fric;
                 Body.Material.KineticFriction = fric;
+            }
+        }
+
+        /// <summary>
+        /// Returns the bounciness (restitution coefficient) of this entity.
+        /// </summary>
+        public virtual float GetBounciness()
+        {
+            if (Body == null)
+            {
+                return Bounciness;
+            }
+            return Body.Material.Bounciness;
+        }
+
+        /// <summary>
+        /// Sets the bounciness (restitution coefficient)  of this entity.
+        /// </summary>
+        /// <param name="bounce">The bounciness (restitution coefficient) </param>
+        public virtual void SetBounciness
+            (float bounce)
+        {
+            Bounciness = bounce;
+            if (Body != null)
+            {
+                Body.Material.Bounciness = bounce;
             }
         }
 

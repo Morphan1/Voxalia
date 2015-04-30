@@ -13,7 +13,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            int len = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1;
+            int len = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1 + 4;
             if (data.Length != len
                 && data.Length != len + 4 * 6 + 4 * 6
                 && data.Length != len + 4)
@@ -64,6 +64,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             {
                 return false;
             }
+            float bounce = Utilities.BytesToFloat(Utilities.BytesPartial(data, data.Length - 4, 4));
             ce.SetMass(mass);
             ce.SetPosition(pos);
             ce.SetVelocity(vel);
@@ -71,6 +72,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             ce.SetAngularVelocity(angvel);
             ce.EID = eID;
             ce.SetFriction(fric);
+            ce.SetBounciness(bounce);
             TheClient.SpawnEntity(ce);
             return true;
         }
