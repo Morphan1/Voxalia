@@ -13,7 +13,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            int len = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1 + 4;
+            int len = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1 + 4 + 1;
             if (data.Length != len
                 && data.Length != len + 4 * 6 + 4 * 6
                 && data.Length != len + 4)
@@ -64,7 +64,10 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             {
                 return false;
             }
-            float bounce = Utilities.BytesToFloat(Utilities.BytesPartial(data, data.Length - 4, 4));
+            float bounce = Utilities.BytesToFloat(Utilities.BytesPartial(data, data.Length - 5, 4));
+            bool Visible = (data[data.Length - 1] & 1) == 1;
+            bool Solid = (data[data.Length - 1] & 2) == 2;
+            ce.Visible = Visible;
             ce.SetMass(mass);
             ce.SetPosition(pos);
             ce.SetVelocity(vel);

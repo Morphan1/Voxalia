@@ -32,6 +32,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public override void Render()
         {
+            if (!Visible)
+            {
+                return;
+            }
             Matrix4 mat = (Matrix4.CreateScale(HalfSize.ToOVector()) * GetOrientationMatrix() * Matrix4.CreateTranslation(GetPosition().ToOVector()));
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);

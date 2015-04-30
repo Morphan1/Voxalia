@@ -157,6 +157,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public override void Render()
         {
+            if (!Visible)
+            {
+                return;
+            }
             OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateRotationZ((float)(Direction.X * Utilities.PI180))
                 * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
             GL.UniformMatrix4(2, false, ref mat);

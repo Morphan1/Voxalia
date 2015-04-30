@@ -47,6 +47,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
         /// </summary>
         public abstract void Render();
 
+        public bool Visible = false;
+
         /// <summary>
         /// Tick the entity. Default implementation throws exception.
         /// </summary>

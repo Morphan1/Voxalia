@@ -40,6 +40,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public override void Render()
         {
+            if (!Visible)
+            {
+                return;
+            }
             Matrix4 orient = GetOrientationMatrix();
             Matrix4 mat = transform * (Matrix4.CreateScale(scale.ToOVector()) * orient * Matrix4.CreateTranslation((GetPosition()).ToOVector()));
             GL.UniformMatrix4(2, false, ref mat);
