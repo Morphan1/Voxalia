@@ -263,12 +263,12 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         {
             for (int i = 0; i < nodeAnim.PositionKeyCount - 1; i++)
             {
-                if (time < nodeAnim.PositionKeys[i + 1].Time)
+                if (time >= nodeAnim.PositionKeys[i].Time && time < nodeAnim.PositionKeys[i + 1].Time)
                 {
                     return i;
                 }
             }
-            throw new Exception("findPos: Can't find pos");
+            return 0;
         }
 
         Vector3D lerpPos(double aTime, NodeAnimationChannel nodeAnim)
@@ -285,13 +285,13 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             int nextIndex = index + 1;
             if (nextIndex >= nodeAnim.PositionKeyCount)
             {
-                return new Vector3D(0, 0, 0);
+                return nodeAnim.PositionKeys[0].Value;
             }
             double deltaT = nodeAnim.PositionKeys[nextIndex].Time - nodeAnim.PositionKeys[index].Time;
             double factor = (aTime - nodeAnim.PositionKeys[index].Time) / deltaT;
             if (factor < 0 || factor > 1)
             {
-                return new Vector3D(0, 0, 0);
+                return nodeAnim.PositionKeys[0].Value;
             }
             Vector3D start = nodeAnim.PositionKeys[index].Value;
             Vector3D end = nodeAnim.PositionKeys[nextIndex].Value;
@@ -303,12 +303,12 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         {
             for (int i = 0; i < nodeAnim.RotationKeyCount - 1; i++)
             {
-                if (time < nodeAnim.RotationKeys[i + 1].Time)
+                if (time >= nodeAnim.RotationKeys[i].Time && time < nodeAnim.RotationKeys[i + 1].Time)
                 {
                     return i;
                 }
             }
-            throw new Exception("findRotate: Can't find rotate");
+            return 0;
         }
 
         Assimp.Quaternion lerpRotate(double aTime, NodeAnimationChannel nodeAnim)
@@ -325,13 +325,13 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             int nextIndex = index + 1;
             if (nextIndex >= nodeAnim.ScalingKeyCount)
             {
-                return new Assimp.Quaternion();
+                return nodeAnim.RotationKeys[0].Value;
             }
             double deltaT = nodeAnim.RotationKeys[nextIndex].Time - nodeAnim.RotationKeys[index].Time;
             double factor = (aTime - nodeAnim.RotationKeys[index].Time) / deltaT;
             if (factor < 0 || factor > 1)
             {
-                return new Assimp.Quaternion();
+                return nodeAnim.RotationKeys[0].Value;
             }
             Assimp.Quaternion start = nodeAnim.RotationKeys[index].Value;
             Assimp.Quaternion end = nodeAnim.RotationKeys[nextIndex].Value;
@@ -344,12 +344,12 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         {
             for (int i = 0; i < nodeAnim.ScalingKeyCount - 1; i++)
             {
-                if (time < nodeAnim.ScalingKeys[i + 1].Time)
+                if (time >= nodeAnim.RotationKeys[i].Time && time < nodeAnim.ScalingKeys[i + 1].Time)
                 {
                     return i;
                 }
             }
-            throw new Exception("findScale: Can't find scale");
+            return 0;
         }
 
         Vector3D lerpScale(double aTime, NodeAnimationChannel nodeAnim)
@@ -366,13 +366,13 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             int nextIndex = index + 1;
             if (nextIndex >= nodeAnim.ScalingKeyCount)
             {
-                return new Vector3D(1, 1, 1);
+                return nodeAnim.ScalingKeys[0].Value;
             }
             double deltaT = nodeAnim.ScalingKeys[nextIndex].Time - nodeAnim.ScalingKeys[index].Time;
             double factor = (aTime - nodeAnim.ScalingKeys[index].Time) / deltaT;
             if (factor < 0 || factor > 1)
             {
-                return new Vector3D(1, 1, 1);
+                return nodeAnim.ScalingKeys[0].Value;
             }
             Vector3D start = nodeAnim.ScalingKeys[index].Value;
             Vector3D end = nodeAnim.ScalingKeys[nextIndex].Value;
