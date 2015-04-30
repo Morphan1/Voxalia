@@ -161,10 +161,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
-            aTime += TheClient.gDelta;
-            if (aTime >= 1f)
+            aTime += TheClient.gDelta / 10f;
+            if (aTime >= 10f)
             {
-                aTime -= 1f;
+                aTime -= 10f;
             }
             model.Draw(aTime);
         }
