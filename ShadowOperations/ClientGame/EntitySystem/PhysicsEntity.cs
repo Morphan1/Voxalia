@@ -178,8 +178,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Mass = mass;
             if (Body != null)
             {
-                DestroyBody();
-                SpawnBody();
+                Body.Mass = mass;
             }
         }
 
