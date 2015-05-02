@@ -22,7 +22,7 @@ namespace ShadowOperations
         /// <summary>
         /// The version of the game.
         /// </summary>
-        public static string GameVersion = "0.0.1";
+        public static string GameVersion = "0.0.2";
 
         /// <summary>
         /// A handle for the console window.
