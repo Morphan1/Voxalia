@@ -149,19 +149,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
         }
-        public override void SpawnBody()
-        {
-            base.SpawnBody();
-            Recalculate();
-        }
 
         public float Health;
 
         public float MaxHealth;
-
-        public void Recalculate()
-        {
-        }
 
         public override void Render()
         {
