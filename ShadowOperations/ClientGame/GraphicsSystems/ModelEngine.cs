@@ -177,7 +177,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                         ForceSet(modmesh.vbo.BoneWeights, vw.VertexID, spot, vw.Weight);
                     }
                     modmesh.Bones.Add(new ModelBone() { Internal = mesh.Bones[i] });
-                    modmesh.BoneLookup.Add(mesh.Bones[i].Name, modmesh.Bones.Count - 1);
+                    if (!modmesh.BoneLookup.ContainsKey(mesh.Bones[i].Name))
+                    {
+                        modmesh.BoneLookup.Add(mesh.Bones[i].Name, modmesh.Bones.Count - 1);
+                    }
+                    else
+                    {
+                        SysConsole.Output(OutputType.WARNING, "Bone " + mesh.Bones[i].Name + " defined repeatedly!");
+                    }
                 }
                 model.Meshes.Add(modmesh);
                 modmesh.GenerateVBO();
