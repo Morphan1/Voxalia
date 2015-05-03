@@ -73,7 +73,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             }
             bool fly = false;
             bool on_ground = TheClient.Collision.CuboidLineTrace(new Location(0.2f, 0.2f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis).Hit;
-            if (Upward && !fly && !pup && on_ground)
+            if (Upward && !fly && !pup && on_ground) // TODO: & Velocity.Z isSmall
             {
                 Body.ApplyImpulse(new Vector3(0, 0, 0), (Location.UnitZ * 500f).ToBVector());
                 Body.ActivityInformation.Activate();
@@ -159,7 +159,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             if (TheClient.RenderingShadows)
             {
                 OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateRotationZ((float)(Direction.X * Utilities.PI180))
-                    * OpenTK.Matrix4.CreateTranslation(base.GetPosition().ToOVector());
+                    * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
                 GL.UniformMatrix4(2, false, ref mat);
                 TheClient.Rendering.SetMinimumLight(0.0f);
                 model.Draw(0);
