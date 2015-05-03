@@ -19,6 +19,25 @@ layout (location = 6) uniform mat4 boneTrans[MAX_BONES];
 
 void main(void)
 {
+	vec4 pos1;
+	vec4 norm1;
+	float rem = 1.0 - (Weights[0] + Weights[1] + Weights[2] + Weights[3]);
+	if (rem < 0.99)
+	{
+		mat4 BT = boneTrans[int(BoneID[0])] * Weights[0];
+		BT += boneTrans[int(BoneID[1])] * Weights[1];
+		BT += boneTrans[int(BoneID[2])] * Weights[2];
+		BT += boneTrans[int(BoneID[3])] * Weights[3];
+		BT += mat4(1.0) * rem;
+		pos1 = BT * vec4(position, 1.0);
+		norm1 = BT * vec4(normal, 1.0);
+	}
+	else
+	{
+		pos1 = vec4(position, 1.0);
+		norm1 = vec4(normal, 1.0);
+	}
+/*
 	vec4 pos1 = vec4(position, 1.0);
 	pos1 += (boneTrans[int(BoneID[0])] * vec4(position, 0.0)) * Weights[0];
 	pos1 += (boneTrans[int(BoneID[1])] * vec4(position, 0.0)) * Weights[1];
@@ -29,6 +48,7 @@ void main(void)
 	norm1 += (boneTrans[int(BoneID[1])] * vec4(normal, 0.0)) * Weights[1];
 	norm1 += (boneTrans[int(BoneID[2])] * vec4(normal, 0.0)) * Weights[2];
 	norm1 += (boneTrans[int(BoneID[3])] * vec4(normal, 0.0)) * Weights[3];
+*/
 	f_texcoord = texcoords;
 	f_position = mv_matrix * vec4(pos1.xyz, 1.0);
 	mat4 mv_mat_simple = mv_matrix;

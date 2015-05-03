@@ -94,6 +94,11 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         public Model FromBytes(string name, byte[] data)
         {
             Scene scene = Handler.LoadModel(data, name.Substring(name.LastIndexOf('.') + 1));
+            return FromScene(scene, name);
+        }
+
+        public Model FromScene(Scene scene, string name)
+        {
             if (!scene.HasMeshes)
             {
                 throw new Exception("Scene has no meshes!");
@@ -259,46 +264,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 mat.D1, mat.D2, mat.D3, mat.D4);
         }
 
-        int findPos(double time, NodeAnimationChannel nodeAnim)
-        {
-            for (int i = 0; i < nodeAnim.PositionKeyCount - 1; i++)
-            {
-                if (time >= nodeAnim.PositionKeys[i].Time && time < nodeAnim.PositionKeys[i + 1].Time)
-                {
-                    return i;
-                }
-            }
-            return 0;
-        }
-
-        Vector3D lerpPos(double aTime, NodeAnimationChannel nodeAnim)
-        {
-            if (nodeAnim.PositionKeyCount == 0)
-            {
-                return new Vector3D(0, 0, 0);
-            }
-            if (nodeAnim.PositionKeyCount == 1)
-            {
-                return nodeAnim.PositionKeys[0].Value;
-            }
-            int index = findPos(aTime, nodeAnim);
-            int nextIndex = index + 1;
-            if (nextIndex >= nodeAnim.PositionKeyCount)
-            {
-                return nodeAnim.PositionKeys[0].Value;
-            }
-            double deltaT = nodeAnim.PositionKeys[nextIndex].Time - nodeAnim.PositionKeys[index].Time;
-            double factor = (aTime - nodeAnim.PositionKeys[index].Time) / deltaT;
-            if (factor < 0 || factor > 1)
-            {
-                return nodeAnim.PositionKeys[0].Value;
-            }
-            Vector3D start = nodeAnim.PositionKeys[index].Value;
-            Vector3D end = nodeAnim.PositionKeys[nextIndex].Value;
-            Vector3D deltaV = end - start;
-            return start + (float)factor * deltaV;
-        }
-
         int findRotate(double time, NodeAnimationChannel nodeAnim)
         {
             for (int i = 0; i < nodeAnim.RotationKeyCount - 1; i++)
@@ -315,7 +280,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         {
             if (nodeAnim.RotationKeyCount == 0)
             {
-                return new Assimp.Quaternion();
+                return new Assimp.Quaternion(0, 0, 0);
             }
             if (nodeAnim.RotationKeyCount == 1)
             {
@@ -340,47 +305,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             return res;
         }
 
-        int findScale(double time, NodeAnimationChannel nodeAnim)
-        {
-            for (int i = 0; i < nodeAnim.ScalingKeyCount - 1; i++)
-            {
-                if (time >= nodeAnim.RotationKeys[i].Time && time < nodeAnim.ScalingKeys[i + 1].Time)
-                {
-                    return i;
-                }
-            }
-            return 0;
-        }
-
-        Vector3D lerpScale(double aTime, NodeAnimationChannel nodeAnim)
-        {
-            if (nodeAnim.ScalingKeyCount == 0)
-            {
-                return new Vector3D(1, 1, 1);
-            }
-            if (nodeAnim.ScalingKeyCount == 1)
-            {
-                return nodeAnim.ScalingKeys[0].Value;
-            }
-            int index = findScale(aTime, nodeAnim);
-            int nextIndex = index + 1;
-            if (nextIndex >= nodeAnim.ScalingKeyCount)
-            {
-                return nodeAnim.ScalingKeys[0].Value;
-            }
-            double deltaT = nodeAnim.ScalingKeys[nextIndex].Time - nodeAnim.ScalingKeys[index].Time;
-            double factor = (aTime - nodeAnim.ScalingKeys[index].Time) / deltaT;
-            if (factor < 0 || factor > 1)
-            {
-                return nodeAnim.ScalingKeys[0].Value;
-            }
-            Vector3D start = nodeAnim.ScalingKeys[index].Value;
-            Vector3D end = nodeAnim.ScalingKeys[nextIndex].Value;
-            Vector3D deltaV = end - start;
-            Vector3D scale = start + (float)factor * deltaV;
-            return scale;
-        }
-
         Matrix4 globalInverse = Matrix4.Identity;
 
         public void UpdateTransforms(double aTime, Node pNode, Matrix4 transf)
@@ -393,17 +317,11 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     return;
                 }
                 Animation pAnim = OriginalModel.Animations[0];
-                Matrix4 nodeTransf = convert(pNode.Transform);
+                Matrix4 nodeTransf = Matrix4.Identity;
                 NodeAnimationChannel pNodeAnim = FindNodeAnim(pAnim, nodename);
                 if (pNodeAnim != null)
                 {
-                    Vector3D scaling = lerpScale(aTime, pNodeAnim);
-                    Matrix4 scale = Matrix4.CreateScale(scaling.X, scaling.Y, scaling.Z);
-                    Assimp.Quaternion rot = lerpRotate(aTime, pNodeAnim);
-                    Matrix4 rotation = convert(new Matrix4x4(rot.GetMatrix()));
-                    Vector3D pos = lerpPos(aTime, pNodeAnim);
-                    Matrix4 translation = Matrix4.CreateTranslation(pos.X, pos.Y, pos.Z);
-                    nodeTransf = translation * rotation * scale;
+                    nodeTransf = convert(new Matrix4x4(lerpRotate(aTime, pNodeAnim).GetMatrix()));
                 }
                 Matrix4 global = transf * nodeTransf;
                 foreach (ModelMesh mesh in Meshes)
@@ -411,7 +329,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     int pos;
                     if (mesh.BoneLookup.TryGetValue(nodename, out pos))
                     {
-                        mesh.Bones[pos].Transform = globalInverse * global * convert(mesh.Bones[pos].Internal.OffsetMatrix);
+                        mesh.Bones[pos].Transform = convert(mesh.Bones[pos].Internal.OffsetMatrix) * global;
                     }
                 }
                 for (int i = 0; i < pNode.ChildCount; i++)
