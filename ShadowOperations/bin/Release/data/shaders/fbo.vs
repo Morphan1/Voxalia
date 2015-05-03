@@ -22,21 +22,22 @@ void main(void)
 	vec4 pos1;
 	vec4 norm1;
 	float rem = 1.0 - (Weights[0] + Weights[1] + Weights[2] + Weights[3]);
+	mat4 BT = mat4(1.0);
 	if (rem < 0.99)
 	{
-		mat4 BT = boneTrans[int(BoneID[0])] * Weights[0];
+		BT = boneTrans[int(BoneID[0])] * Weights[0];
 		BT += boneTrans[int(BoneID[1])] * Weights[1];
 		BT += boneTrans[int(BoneID[2])] * Weights[2];
 		BT += boneTrans[int(BoneID[3])] * Weights[3];
 		BT += mat4(1.0) * rem;
-		pos1 = BT * vec4(position, 1.0);
-		norm1 = BT * vec4(normal, 1.0);
+		//pos1 = BT * vec4(position, 1.0);
+		//norm1 = BT * vec4(normal, 1.0);
 	}
-	else
-	{
+	//else
+	//{
 		pos1 = vec4(position, 1.0);
 		norm1 = vec4(normal, 1.0);
-	}
+	//}
 /*
 	vec4 pos1 = vec4(position, 1.0);
 	pos1 += (boneTrans[int(BoneID[0])] * vec4(position, 0.0)) * Weights[0];
@@ -56,7 +57,10 @@ void main(void)
 	mv_mat_simple[3][1] = 0.0;
 	mv_mat_simple[3][2] = 0.0;
 	//vec4 norm1 = boneTransform * vec4(normal, 1.0);
-	vec4 nnormal = mv_mat_simple * vec4(norm1.xyz, 1.0);
+	vec4 nnormal = (BT * mv_mat_simple) * vec4(norm1.xyz, 1.0);
 	f_normal = nnormal.xyz / nnormal.w; // TODO: Normalize?
-	gl_Position = proj_matrix * mv_matrix * vec4(pos1.xyz, 1.0);
+	vec4 tmat = (BT * mv_matrix) * vec4(pos1.xyz, 1.0);
+	//tmat /= tmat.w;
+	vec4 mmat = proj_matrix * vec4(tmat.xyz, 1.0);
+	gl_Position = mmat;
 }

@@ -336,7 +336,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     int pos;
                     if (mesh.BoneLookup.TryGetValue(nodename, out pos))
                     {
-                        mesh.Bones[pos].Transform = convert(mesh.Bones[pos].Internal.OffsetMatrix) * global;
+                        mesh.Bones[pos].Transform = global * convert(mesh.Bones[pos].Internal.OffsetMatrix);
                     }
                 }
                 for (int i = 0; i < pNode.ChildCount; i++)
