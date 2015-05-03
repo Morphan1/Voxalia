@@ -56,6 +56,8 @@ namespace ShadowOperations
             return null;
         }
 
+        public static FileHandler Files;
+
         /// <summary>
         /// Central program entry point.
         /// Decides whether to lauch the server or the client.
@@ -95,6 +97,8 @@ namespace ShadowOperations
             }
             try
             {
+                Files = new FileHandler();
+                Files.Init();
                 if (args.Length > 0 && args[0] == "server")
                 {
                     Server.Init();

@@ -29,12 +29,12 @@ namespace ShadowOperations.ServerGame.CommandSystem.MapCommands
                 return;
             }
             string mapname = entry.GetArgument(0);
-            if (!FileHandler.Exists("maps/" + mapname + ".map"))
+            if (!Program.Files.Exists("maps/" + mapname + ".map"))
             {
                 entry.Bad("Invalid map name.");
                 return;
             }
-            string data = FileHandler.ReadText("maps/" + mapname + ".map");
+            string data = Program.Files.ReadText("maps/" + mapname + ".map");
             TheServer.LoadMapFromString(data);
             entry.Good("Loaded map.");
         }

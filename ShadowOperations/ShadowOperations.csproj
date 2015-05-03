@@ -191,6 +191,7 @@
     <Compile Include="Shared\SysConsole.cs" />
     <Compile Include="Shared\UnknownFileException.cs" />
     <Compile Include="Shared\Utilities.cs" />
+    <Compile Include="Shared\ZipStorer.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

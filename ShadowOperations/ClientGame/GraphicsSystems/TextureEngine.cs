@@ -117,14 +117,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             try
             {
                 filename = FileHandler.CleanFileName(filename);
-                if (!FileHandler.Exists("textures/" + filename + ".png"))
+                if (!Program.Files.Exists("textures/" + filename + ".png"))
                 {
                     SysConsole.Output(OutputType.ERROR, "Cannot load texture, file '" +
                         TextStyle.Color_Standout + "textures/" + filename + ".png" + TextStyle.Color_Error +
                         "' does not exist.");
                     return null;
                 }
-                Bitmap bmp = new Bitmap(FileHandler.ReadToStream("textures/" + filename + ".png"));
+                Bitmap bmp = new Bitmap(Program.Files.ReadToStream("textures/" + filename + ".png"));
                 Texture texture = new Texture();
                 texture.Name = filename;
                 GL.GenTextures(1, out texture.Original_InternalID);
@@ -157,14 +157,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             try
             {
                 filename = FileHandler.CleanFileName(filename);
-                if (!FileHandler.Exists("textures/" + filename + ".png"))
+                if (!Program.Files.Exists("textures/" + filename + ".png"))
                 {
                     SysConsole.Output(OutputType.ERROR, "Cannot load texture, file '" +
                         TextStyle.Color_Standout + "textures/" + filename + ".png" + TextStyle.Color_Error +
                         "' does not exist.");
                     return;
                 }
-                Bitmap bmp = new Bitmap(FileHandler.ReadToStream("textures/" + filename + ".png"));
+                Bitmap bmp = new Bitmap(Program.Files.ReadToStream("textures/" + filename + ".png"));
                 LockBitmapToTexture(bmp, depth);
                 bmp.Dispose();
             }

@@ -44,14 +44,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             try
             {
                 filename = FileHandler.CleanFileName(filename);
-                if (!FileHandler.Exists("models/" + filename))
+                if (!Program.Files.Exists("models/" + filename))
                 {
                     SysConsole.Output(OutputType.WARNING, "Cannot load model, file '" +
                         TextStyle.Color_Standout + "models/" + filename  + TextStyle.Color_Warning +
                         "' does not exist.");
                     return null;
                 }
-                return FromBytes(filename, FileHandler.ReadBytes("models/" + filename));
+                return FromBytes(filename, Program.Files.ReadBytes("models/" + filename));
             }
             catch (Exception ex)
             {

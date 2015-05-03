@@ -60,7 +60,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public override void SpawnBody()
         {
-            Shape = TheServer.Models.MeshToBepu(TheServer.Models.LoadModel(FileHandler.ReadBytes("models/" + model), model.Substring(model.IndexOf('.') + 1)));
+            Shape = TheServer.Models.MeshToBepu(TheServer.Models.LoadModel(Program.Files.ReadBytes("models/" + model), model.Substring(model.IndexOf('.') + 1)));
             base.SpawnBody();
         }
     }
