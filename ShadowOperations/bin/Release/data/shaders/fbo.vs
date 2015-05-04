@@ -38,18 +38,6 @@ void main(void)
 		pos1 = vec4(position, 1.0);
 		norm1 = vec4(normal, 1.0);
 	}
-/*
-	vec4 pos1 = vec4(position, 1.0);
-	pos1 += (boneTrans[int(BoneID[0])] * vec4(position, 0.0)) * Weights[0];
-	pos1 += (boneTrans[int(BoneID[1])] * vec4(position, 0.0)) * Weights[1];
-	pos1 += (boneTrans[int(BoneID[2])] * vec4(position, 0.0)) * Weights[2];
-	pos1 += (boneTrans[int(BoneID[3])] * vec4(position, 0.0)) * Weights[3];
-	vec4 norm1 = vec4(normal, 1.0);
-	norm1 += (boneTrans[int(BoneID[0])] * vec4(normal, 0.0)) * Weights[0];
-	norm1 += (boneTrans[int(BoneID[1])] * vec4(normal, 0.0)) * Weights[1];
-	norm1 += (boneTrans[int(BoneID[2])] * vec4(normal, 0.0)) * Weights[2];
-	norm1 += (boneTrans[int(BoneID[3])] * vec4(normal, 0.0)) * Weights[3];
-*/
 	f_texcoord = texcoords;
 	f_position = mv_matrix * vec4(pos1.xyz, 1.0);
 	mat4 mv_mat_simple = mv_matrix;
