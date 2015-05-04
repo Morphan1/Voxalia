@@ -173,7 +173,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             GL.DeleteShader(VertexObject);
             return (uint)Program;
         }
-
     }
 
     /// <summary>

@@ -23,7 +23,7 @@ namespace ShadowOperations.Shared
             using (AssimpContext ACont = new AssimpContext())
             {
                 ACont.SetConfig(new NormalSmoothingAngleConfig(66f));
-                return ACont.ImportFileFromStream(new DataStream(data), PostProcessSteps.Triangulate | PostProcessSteps.SortByPrimitiveType, ext);
+                return ACont.ImportFileFromStream(new DataStream(data), PostProcessSteps.Triangulate, ext);
             }
         }
 
