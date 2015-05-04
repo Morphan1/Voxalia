@@ -146,9 +146,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             bool fly = false;
             bool on_ground = TheServer.Collision.CuboidLineTrace(new Location(HalfSize.X, HalfSize.Y, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis).Hit;
-            if (Upward && !fly && !pup && on_ground) // TODO: & Velocity.Z isSmall
+            if (Upward && !fly && !pup && on_ground && GetVelocity().Z < 1f)
             {
-                Body.ApplyImpulse(new Vector3(0, 0, 0), (Location.UnitZ * 500f).ToBVector());
+                Body.ApplyImpulse(new Vector3(0, 0, 0), (Location.UnitZ * GetMass() * 5f).ToBVector());
                 Body.ActivityInformation.Activate();
                 pup = true;
             }
