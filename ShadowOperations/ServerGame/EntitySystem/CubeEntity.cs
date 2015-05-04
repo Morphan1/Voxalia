@@ -43,12 +43,22 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         bool pActive = false;
 
+        public double deltat = 0;
+
         public override void Tick()
         {
             if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
             {
                 pActive = Body.ActivityInformation.IsActive;
                 TheServer.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+            }
+            if (!pActive && GetMass() > 0)
+            {
+                deltat += TheServer.Delta;
+                if (deltat > 2.0)
+                {
+                    TheServer.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                }
             }
         }
 
