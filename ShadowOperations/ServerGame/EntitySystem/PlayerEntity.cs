@@ -196,9 +196,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             if (Grabbed != null)
             {
-                if (Grabbed.IsSpawned && (Grabbed.GetPosition() - GetPosition()).LengthSquared() < 5 * 5 + Grabbed.Widest * Grabbed.Widest)
+                if (Grabbed.IsSpawned && (Grabbed.GetPosition() - GetEyePosition()).LengthSquared() < 5 * 5 + Grabbed.Widest * Grabbed.Widest)
                 {
-                    Location pos = GetPosition() + new Location(0, 0, HalfSize.Z * 1.6f) + Utilities.ForwardVector_Deg(Direction.X, Direction.Y) * (2 + Grabbed.Widest);
+                    Location pos = GetEyePosition() + Utilities.ForwardVector_Deg(Direction.X, Direction.Y) * (2 + Grabbed.Widest);
                     if (GrabForce >= Grabbed.GetMass())
                     {
                         Grabbed.Body.LinearVelocity = new Vector3(0, 0, 0);
