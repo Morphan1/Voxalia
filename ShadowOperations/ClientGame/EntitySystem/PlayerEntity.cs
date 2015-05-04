@@ -112,9 +112,9 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 pvel = pvel.Normalize() * 2 * MoveSpeed;
             }
             pvel *= MoveSpeed * (Slow || Downward ? 0.5f : 1f);
-            if (!fly && on_ground)
+            if (!fly)
             {
-                Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0));
+                Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0) * (on_ground ? 1f : 0.1f));
                 Body.ActivityInformation.Activate();
             }
             if (fly)
