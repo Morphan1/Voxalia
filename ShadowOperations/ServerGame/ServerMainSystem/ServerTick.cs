@@ -37,6 +37,14 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
         /// </summary>
         public List<SpawnPointEntity> SpawnPoints = new List<SpawnPointEntity>();
 
+        public void SendToAll(AbstractPacketOut packet)
+        {
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Players[i].Network.SendPacket(packet);
+            }
+        }
+
         /// <summary>
         /// The server's primary tick function.
         /// </summary>
@@ -99,10 +107,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             }
             if (packet != null)
             {
-                for (int i = 0; i < Players.Count; i++)
-                {
-                    Players[i].Network.SendPacket(packet);
-                }
+                SendToAll(packet);
             }
             if (e is PlayerEntity)
             {
@@ -159,11 +164,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 Players.Remove((PlayerEntity)e);
                 ((PlayerEntity)e).Kick("Despawned!");
             }
-            DespawnEntityPacketOut depo = new DespawnEntityPacketOut(e.EID);
-            for (int i = 0; i < Players.Count; i++)
-            {
-                Players[i].Network.SendPacket(depo);
-            }
+            SendToAll(new DespawnEntityPacketOut(e.EID));
         }
 
         public void LoadMapFromString(string data)

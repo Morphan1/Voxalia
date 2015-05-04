@@ -222,14 +222,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     Grabbed = null;
                 }
             }
-            PlayerUpdatePacketOut pupo = new PlayerUpdatePacketOut(this);
-            for (int i = 0; i < TheServer.Players.Count; i++)
-            {
-                if (TheServer.Players[i] != this)
-                {
-                    TheServer.Players[i].Network.SendPacket(pupo);
-                }
-            }
+            TheServer.SendToAll(new PlayerUpdatePacketOut(this));
             ItemStack cit = GetItemForSlot(cItem);
             if (Click)
             {

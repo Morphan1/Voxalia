@@ -25,11 +25,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem
             if (i < 0 || i >= Strings.Count)
             {
                 Strings.Add(str);
-                NetStringPacketOut nspo = new NetStringPacketOut(str);
-                for (int x = 0; x < TheServer.Players.Count; x++)
-                {
-                    TheServer.Players[x].Network.SendPacket(nspo);
-                }
+                TheServer.SendToAll(new NetStringPacketOut(str));
                 return Strings.Count - 1;
             }
             else

@@ -48,11 +48,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
             {
                 pActive = Body.ActivityInformation.IsActive;
-                PhysicsEntityUpdatePacketOut peupo = new PhysicsEntityUpdatePacketOut(this);
-                for (int i = 0; i < TheServer.Players.Count; i++)
-                {
-                    TheServer.Players[i].Network.SendPacket(peupo);
-                }
+                TheServer.SendToAll(new PhysicsEntityUpdatePacketOut(this));
             }
         }
 
