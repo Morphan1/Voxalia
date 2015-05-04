@@ -89,6 +89,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             // TODO: Gravity
             // TODO: Constraints
             Body = Shape;
+            Body.Tag = this;
             SetFriction(Friction);
             TheClient.PhysicsWorld.Add(Body);
         }
