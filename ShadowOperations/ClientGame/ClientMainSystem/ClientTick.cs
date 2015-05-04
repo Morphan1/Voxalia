@@ -148,6 +148,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 if (!(Entities[i] is PlayerEntity))
                 {
                     Despawn(Entities[i]);
+                    i--;
                 }
             }
         }
