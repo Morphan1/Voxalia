@@ -6,6 +6,7 @@ using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.ServerMainSystem;
 using BEPUutilities;
 using BEPUphysics;
+using ShadowOperations.ServerGame.JointSystem;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -70,6 +71,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// </summary>
         public BEPUphysics.Entities.Entity Shape = null;
 
+        public List<BaseJoint> Joints = new List<BaseJoint>();
+
         /// <summary>
         /// Builds and spawns the body into the world.
         /// </summary>
@@ -89,8 +92,14 @@ namespace ShadowOperations.ServerGame.EntitySystem
             // TODO: Gravity
             // TODO: Constraints
             Body = Shape;
+            Body.CollisionInformation.CollisionRules.Group = Solid ? TheServer.Collision.Solid : TheServer.Collision.NonSolid;
             SetFriction(Friction);
             TheServer.PhysicsWorld.Add(Body);
+            for (int i = 0; i < Joints.Count; i++)
+            {
+                Joints[i].CurrentJoint = Joints[i].GetBaseJoint();
+                TheServer.PhysicsWorld.Add(Joints[i].CurrentJoint);
+            }
         }
 
         /// <summary>
@@ -103,6 +112,10 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Friction = GetFriction();
             // TODO: Gravity = new Location(Body.Gravity.X, Body.Gravity.Y, Body.Gravity.Z);
             WorldTransform = Body.WorldTransform;
+            for (int i = 0; i < Joints.Count; i++)
+            {
+                TheServer.PhysicsWorld.Remove(Joints[i].CurrentJoint);
+            }
             TheServer.PhysicsWorld.Remove(Body);
             Body = null;
         }

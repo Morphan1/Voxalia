@@ -9,6 +9,7 @@ using BEPUphysics;
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.EntityStateManagement;
+using ShadowOperations.ClientGame.JointSystem;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -71,6 +72,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
         /// </summary>
         public BEPUphysics.Entities.Entity Shape = null;
 
+        public List<BaseJoint> Joints = new List<BaseJoint>();
+
         /// <summary>
         /// Builds and spawns the body into the world.
         /// </summary>
@@ -89,10 +92,18 @@ namespace ShadowOperations.ClientGame.EntitySystem
             // TODO: Gravity
             // TODO: Constraints
             Body = Shape;
+            Body.CollisionInformation.CollisionRules.Group = Solid ? TheClient.Collision.Solid : TheClient.Collision.NonSolid;
             Body.Tag = this;
             SetFriction(Friction);
             TheClient.PhysicsWorld.Add(Body);
+            for (int i = 0; i < Joints.Count; i++)
+            {
+                Joints[i].CurrentJoint = Joints[i].GetBaseJoint();
+                TheClient.PhysicsWorld.Add(Joints[i].CurrentJoint);
+            }
         }
+
+        public bool Solid = true;
 
         /// <summary>
         /// Destroys the body, removing it from the physics world.
@@ -104,6 +115,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Friction = GetFriction();
             // TODO: Gravity = new Location(Body.Gravity.X, Body.Gravity.Y, Body.Gravity.Z);
             WorldTransform = Body.WorldTransform;
+            for (int i = 0; i < Joints.Count; i++)
+            {
+                TheClient.PhysicsWorld.Remove(Joints[i].CurrentJoint);
+            }
             TheClient.PhysicsWorld.Remove(Body);
             Body = null;
         }

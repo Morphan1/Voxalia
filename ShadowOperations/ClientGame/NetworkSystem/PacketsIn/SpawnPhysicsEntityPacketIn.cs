@@ -68,6 +68,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             bool Visible = (data[data.Length - 1] & 1) == 1;
             bool Solid = (data[data.Length - 1] & 2) == 2;
             ce.Visible = Visible;
+            ce.Solid = Solid;
             ce.SetMass(mass);
             ce.SetPosition(pos);
             ce.SetVelocity(vel);

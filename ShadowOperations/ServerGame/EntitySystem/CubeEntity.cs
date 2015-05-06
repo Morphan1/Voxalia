@@ -11,7 +11,7 @@ using BEPUphysics.EntityStateManagement;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
-    class CubeEntity: PhysicsEntity
+    public class CubeEntity: PhysicsEntity
     {
         public Location HalfSize = new Location(1);
 

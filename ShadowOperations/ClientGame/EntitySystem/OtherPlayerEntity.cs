@@ -48,7 +48,12 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public bool IgnoreThis(BroadPhaseEntry entry)
         {
-            return ((EntityCollidable)entry).Entity.Tag != this;
+            bool isThis = ((EntityCollidable)entry).Entity.Tag == this;
+            if (isThis)
+            {
+                return false;
+            }
+            return entry.CollisionRules.Group != TheClient.Collision.NonSolid;
         }
 
         public override void Tick()

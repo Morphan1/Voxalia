@@ -361,6 +361,13 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 string nodename = pNode.Name;
                 if (OriginalModel.AnimationCount == 0)
                 {
+                    foreach (ModelMesh mesh in Meshes)
+                    {
+                        foreach (ModelBone bone in mesh.Bones)
+                        {
+                            bone.Transform = Matrix4.Identity;
+                        }
+                    }
                     return;
                 }
                 Animation pAnim = OriginalModel.Animations[0];

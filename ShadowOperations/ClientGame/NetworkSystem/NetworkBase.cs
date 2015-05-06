@@ -155,6 +155,15 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 11:
                             packet = new YourStatusPacketIn();
                             break;
+                        case 12:
+                            packet = new AddJointPacketIn();
+                            break;
+                        case 13:
+                            packet = new YourEIDPacketIn();
+                            break;
+                        case 14:
+                            packet = new DestroyJointPacketIn();
+                            break;
                         default:
                             throw new Exception("Invalid packet ID: " + packetID);
                     }

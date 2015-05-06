@@ -8,6 +8,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.Entities;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
+using BEPUphysics.CollisionRuleManagement;
 
 namespace ShadowOperations.Shared
 {
@@ -32,9 +33,16 @@ namespace ShadowOperations.Shared
     {
         public Space World;
 
+        public CollisionGroup NonSolid = new CollisionGroup();
+
+        public CollisionGroup Solid = new CollisionGroup();
+
         public CollisionUtil(Space world)
         {
             World = world;
+            CollisionGroup.DefineCollisionRule(NonSolid, NonSolid, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(NonSolid, Solid, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Solid, NonSolid, CollisionRule.NoBroadPhase);
         }
 
         /// <summary>

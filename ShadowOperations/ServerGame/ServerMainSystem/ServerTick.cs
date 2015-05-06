@@ -5,7 +5,7 @@ using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.EntitySystem;
 using ShadowOperations.ServerGame.NetworkSystem;
-
+using ShadowOperations.ServerGame.JointSystem;
 using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ServerGame.ServerMainSystem
@@ -37,6 +37,32 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
         /// </summary>
         public List<SpawnPointEntity> SpawnPoints = new List<SpawnPointEntity>();
 
+        public List<BaseJoint> Joints = new List<BaseJoint>();
+
+        long jID = 0;
+
+        public double GlobalTickTime = 0;
+
+        public void AddJoint(BaseJoint joint)
+        {
+            Joints.Add(joint);
+            joint.Ent1.Joints.Add(joint);
+            joint.Ent2.Joints.Add(joint);
+            joint.JID = jID;
+            joint.CurrentJoint = joint.GetBaseJoint();
+            PhysicsWorld.Add(joint.CurrentJoint);
+            SendToAll(new AddJointPacketOut(joint));
+        }
+
+        public void DestroyJoint(BaseJoint joint)
+        {
+            Joints.Remove(joint);
+            joint.Ent1.Joints.Remove(joint);
+            joint.Ent2.Joints.Remove(joint);
+            PhysicsWorld.Remove(joint.CurrentJoint);
+            SendToAll(new DestroyJointPacketOut(joint));
+        }
+
         public void SendToAll(AbstractPacketOut packet)
         {
             for (int i = 0; i < Players.Count; i++)
@@ -51,6 +77,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
         public void Tick(double delta)
         {
             Delta = delta;
+            GlobalTickTime += Delta;
             try
             {
                 Networking.Tick();
@@ -112,6 +139,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             if (e is PlayerEntity)
             {
                 Players.Add((PlayerEntity)e);
+                ((PlayerEntity)e).Network.SendPacket(new YourEIDPacketOut(e.EID));
                 for (int i = 0; i < Networking.Strings.Strings.Count; i++)
                 {
                     ((PlayerEntity)e).Network.SendPacket(new NetStringPacketOut(Networking.Strings.Strings[i]));

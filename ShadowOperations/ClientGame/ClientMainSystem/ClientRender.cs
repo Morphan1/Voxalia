@@ -277,6 +277,12 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 {
                     Entities[i].Render();
                 }
+                Rendering.SetMinimumLight(1.0f);
+            }
+            Textures.White.Bind();
+            for (int i = 0; i < Joints.Count; i++)
+            {
+                Rendering.RenderLine(Joints[i].Ent1.GetPosition(), Joints[i].Ent2.GetPosition());
             }
         }
 

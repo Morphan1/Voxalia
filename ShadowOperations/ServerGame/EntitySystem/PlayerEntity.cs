@@ -13,6 +13,7 @@ using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
 using ShadowOperations.ServerGame.ItemSystem;
+using ShadowOperations.ServerGame.ItemSystem.CommonItems;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -99,6 +100,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public float GrabForce = 0;
 
+        public List<HookInfo> Hooks = new List<HookInfo>();
+
         public PlayerEntity(Server tserver, Connection conn)
             : base(tserver, true, 100f)
         {
@@ -110,6 +113,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             SetPosition(new Location(0, 0, 50));
             GiveItem(new ItemStack("open_hand", TheServer, 1, "items/open_hand", "Open Hand", "Grab things!", Color.White.ToArgb()));
             GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/9mm_pistol_gun", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb()));
+            GiveItem(new ItemStack("hook", TheServer, 1, "items/hook", "Grappling Hook", "Grab distant things!", Color.White.ToArgb()));
             SetHealth(Health);
         }
 
@@ -123,7 +127,12 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public bool IgnoreThis(BroadPhaseEntry entry)
         {
-            return ((EntityCollidable)entry).Entity.Tag != this;
+            bool isThis = ((EntityCollidable)entry).Entity.Tag == this;
+            if (isThis)
+            {
+                return false;
+            }
+            return entry.CollisionRules.Group != TheServer.Collision.NonSolid;
         }
 
         public override void Tick()
@@ -194,6 +203,52 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
+            if (Hooks.Count > 0)
+            {
+                if (Downward)
+                {
+                    for (int i = 0; i < Hooks.Count; i++)
+                    {
+                        Hooks[i].JD.Max += (float)TheServer.Delta;
+                        Hooks[i].JD.Min += (float)TheServer.Delta;
+                        Location norm = -(Hooks[i].One.GetPosition() - GetCenter()).Normalize();
+                        Vector3 vel = (norm * GetMass() * 1.2f).ToBVector();
+                        Body.ApplyLinearImpulse(ref vel);
+                        if (Hooks[i].Hit.GetMass() > 0)
+                        {
+                            vel = -vel;
+                            Hooks[i].Hit.Body.ApplyLinearImpulse(ref vel);
+                            Hooks[i].Hit.Body.ActivityInformation.Activate();
+                        }
+                        TheServer.DestroyJoint(Hooks[i].JD);
+                        TheServer.AddJoint(Hooks[i].JD);
+                    }
+                }
+                else if (Upward)
+                {
+                    for (int i = 0; i < Hooks.Count; i++)
+                    {
+                        Hooks[i].JD.Max -= (float)TheServer.Delta;
+                        Hooks[i].JD.Min -= (float)TheServer.Delta;
+                        if (Hooks[i].JD.Max < 1)
+                        {
+                            Hooks[i].JD.Min += 1 - Hooks[i].JD.Max;
+                            Hooks[i].JD.Max = 1;
+                        }
+                        Location norm = (Hooks[i].One.GetPosition() - GetCenter()).Normalize();
+                        Vector3 vel = (norm * GetMass() * 1.2f).ToBVector();
+                        Body.ApplyLinearImpulse(ref vel);
+                        if (Hooks[i].Hit.GetMass() > 0)
+                        {
+                            vel = -vel;
+                            Hooks[i].Hit.Body.ApplyLinearImpulse(ref vel);
+                            Hooks[i].Hit.Body.ActivityInformation.Activate();
+                        }
+                        TheServer.DestroyJoint(Hooks[i].JD);
+                        TheServer.AddJoint(Hooks[i].JD);
+                    }
+                }
+            }
             if (Grabbed != null)
             {
                 if (Grabbed.IsSpawned && (Grabbed.GetPosition() - GetEyePosition()).LengthSquared() < 5 * 5 + Grabbed.Widest * Grabbed.Widest)
@@ -234,14 +289,18 @@ namespace ShadowOperations.ServerGame.EntitySystem
             if (Click)
             {
                 cit.Info.Click(this, cit);
+                LastClick = TheServer.GlobalTickTime;
             }
             if (AltClick)
             {
                 cit.Info.AltClick(this, cit);
+                LastAltClick = TheServer.GlobalTickTime;
             }
         }
 
-        public bool pclick = false;
+        public double LastClick = 0;
+
+        public double LastAltClick = 0;
 
         public float MoveSpeed = 10;
 
@@ -268,6 +327,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public override void SetPosition(Location pos)
         {
             base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
+        }
+
+        public Location GetCenter()
+        {
+            return base.GetPosition();
         }
 
         public override string ToString()

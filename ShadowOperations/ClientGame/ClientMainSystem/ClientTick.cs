@@ -8,6 +8,7 @@ using ShadowOperations.ClientGame.UISystem;
 using ShadowOperations.ClientGame.EntitySystem;
 using ShadowOperations.ClientGame.OtherSystems;
 using System.Drawing;
+using ShadowOperations.ClientGame.JointSystem;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -24,6 +25,25 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public List<ItemStack> Items = new List<ItemStack>();
 
         public int QuickBarPos = 0;
+
+        public List<BaseJoint> Joints = new List<BaseJoint>();
+
+        public void AddJoint(BaseJoint joint)
+        {
+            Joints.Add(joint);
+            joint.Ent1.Joints.Add(joint);
+            joint.Ent2.Joints.Add(joint);
+            joint.CurrentJoint = joint.GetBaseJoint();
+            PhysicsWorld.Add(joint.CurrentJoint);
+        }
+
+        public void DestroyJoint(BaseJoint joint)
+        {
+            Joints.Remove(joint);
+            joint.Ent1.Joints.Remove(joint);
+            joint.Ent2.Joints.Remove(joint);
+            PhysicsWorld.Remove(joint.CurrentJoint);
+        }
 
         /// <summary>
         /// Returns an item in the quick bar.
