@@ -154,10 +154,10 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 Direction.Y = -89.9f;
             }
             bool fly = false;
-            CollisionResult crGround = TheServer.Collision.CuboidLineTrace(new Location(HalfSize.X, HalfSize.Y, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
+            CollisionResult crGround = TheServer.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.1f, HalfSize.Y - 0.1f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
             if (Upward && !fly && !pup && crGround.Hit && GetVelocity().Z < 1f)
             {
-                Vector3 imp = (Location.UnitZ * GetMass() * 5f).ToBVector();
+                Vector3 imp = (Location.UnitZ * GetMass() * 7f).ToBVector();
                 Body.ApplyLinearImpulse(ref imp);
                 Body.ActivityInformation.Activate();
                 imp = -imp;
