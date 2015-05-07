@@ -154,11 +154,15 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 Direction.Y = -89.9f;
             }
             bool fly = false;
-            bool on_ground = TheServer.Collision.CuboidLineTrace(new Location(HalfSize.X, HalfSize.Y, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis).Hit;
-            if (Upward && !fly && !pup && on_ground && GetVelocity().Z < 1f)
+            CollisionResult crGround = TheServer.Collision.CuboidLineTrace(new Location(HalfSize.X, HalfSize.Y, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
+            if (Upward && !fly && !pup && crGround.Hit && GetVelocity().Z < 1f)
             {
-                Body.ApplyImpulse(new Vector3(0, 0, 0), (Location.UnitZ * GetMass() * 5f).ToBVector());
+                Vector3 imp = (Location.UnitZ * GetMass() * 5f).ToBVector();
+                Body.ApplyLinearImpulse(ref imp);
                 Body.ActivityInformation.Activate();
+                imp = -imp;
+                crGround.HitEnt.ApplyLinearImpulse(ref imp);
+                crGround.HitEnt.ActivityInformation.Activate();
                 pup = true;
             }
             else if (!Upward)
@@ -196,7 +200,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             pvel *= MoveSpeed * (Slow || Downward ? 0.5f : 1f);
             if (!fly)
             {
-                Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0) * (on_ground ? 1f : 0.1f));
+                Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0) * (crGround.Hit ? 1f : 0.1f));
                 Body.ActivityInformation.Activate();
             }
             if (fly)
