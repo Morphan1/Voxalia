@@ -277,7 +277,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 case "cube":
                     e = new CubeEntity(new Location(1, 1, 1), this, 0f);
                     break;
-                case "point_light":
+                case "pointlight":
                     e = new PointLightEntity(this);
                     break;
                 case "spawn":

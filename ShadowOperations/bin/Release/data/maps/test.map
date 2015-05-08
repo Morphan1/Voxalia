@@ -19,7 +19,7 @@ cube
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
-point_light
+pointlight
 {
 	position: (0, 0, 50);
 	angle: (0, 0, 0);
