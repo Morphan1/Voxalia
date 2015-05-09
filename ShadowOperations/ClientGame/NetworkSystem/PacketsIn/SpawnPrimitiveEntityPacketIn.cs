@@ -16,11 +16,11 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                 return false;
             }
             BasicPrimitiveEntity bpe = new BasicPrimitiveEntity(TheClient, false);
-            bpe.model = TheClient.Models.GetModel("projectiles/arrow.dae");
+            bpe.model = TheClient.Models.GetModel("projectiles/arrow.obj");
             bpe.Position = Location.FromBytes(data, 0);
             bpe.Velocity = Location.FromBytes(data, 12);
             bpe.Angle = Location.FromBytes(data, 12 + 12);
-            bpe.scale = Location.FromBytes(data, 12 + 12 + 12);
+            bpe.Scale = Location.FromBytes(data, 12 + 12 + 12);
             bpe.Gravity = Location.FromBytes(data, 12 + 12 + 12 + 12);
             bpe.EID = Utilities.BytesToLong(Utilities.BytesPartial(data, 12 + 12 + 12 + 12 + 12, 8));
             TheClient.SpawnEntity(bpe);

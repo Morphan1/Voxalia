@@ -42,14 +42,17 @@ namespace ShadowOperations.ServerGame.EntitySystem
         {
             SetVelocity(GetVelocity() + Gravity * TheServer.Delta);
             CollisionResult cr = TheServer.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + GetVelocity() * TheServer.Delta, FilterHandle);
+            Location vel = GetVelocity();
             if (cr.Hit && Collide != null)
             {
                 Collide(this, new CollisionEventArgs(cr));
             }
             if (IsSpawned)
             {
-                Location vel = GetVelocity();
-                SetVelocity((cr.Position - GetPosition()) / TheServer.Delta);
+                if (vel == GetVelocity())
+                {
+                    SetVelocity((cr.Position - GetPosition()) / TheServer.Delta);
+                }
                 if (network && vel != GetVelocity())
                 {
                     TheServer.SendToAll(new PrimitiveEntityUpdatePacketOut(this));

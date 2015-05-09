@@ -43,7 +43,10 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 {
                     ((EntityDamageable)pe).Damage(Damage + DamageTimesVelocity * (float)len);
                 }
-                SetPosition(Position + (GetVelocity() / len) * 0.1f);
+                Vector3 loc = (GetPosition() - pe.GetPosition()).ToBVector();
+                Vector3 impulse = GetVelocity().ToBVector() * DamageTimesVelocity / 1000f;
+                pe.Body.ApplyImpulse(ref loc, ref impulse);
+                //SetPosition(Position + (GetVelocity() / len) * 0.1f);
                 SetVelocity(Location.Zero);
             }
         }

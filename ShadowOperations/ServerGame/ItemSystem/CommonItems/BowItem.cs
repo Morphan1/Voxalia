@@ -26,6 +26,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             ae.SetPosition(player.GetEyePosition());
             ae.NoCollide.Add(player.EID);
             ae.SetVelocity(Utilities.ForwardVector_Deg(player.GetAngles().X, player.GetAngles().Y) * 10);
+            ae.Angles = new Location(0, player.GetAngles().Y, player.GetAngles().X);
             player.TheServer.SpawnEntity(ae);
         }
 

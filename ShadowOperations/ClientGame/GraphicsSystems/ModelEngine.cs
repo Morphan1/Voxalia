@@ -410,6 +410,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             return null;
         }
 
+        public bool DB = false;
+
         /// <summary>
         /// Draws the model.
         /// </summary>
@@ -419,6 +421,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             {
                 if (Meshes[i].Bones.Count > 0)
                 {
+                    if (DB) SysConsole.Output(OutputType.INFO, "Bones?!");
                     globalInverse = convert(OriginalModel.RootNode.Transform).Inverted();
                     UpdateTransforms(aTime, OriginalModel.RootNode, Matrix4.Identity);
                     Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];

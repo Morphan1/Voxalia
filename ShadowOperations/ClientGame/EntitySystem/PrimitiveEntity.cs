@@ -16,11 +16,19 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public Location Gravity;
 
+        public List<long> NoCollide = new List<long>(); // TODO: Populate me via packets
+
+        public bool FilterHandle(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)
+        {
+            long eid = ((PhysicsEntity)((BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)entry).Entity.Tag).EID;
+            return !NoCollide.Contains(eid);
+        }
+
         public override void Tick()
         {
-            SetPosition(Position + Velocity * TheClient.Delta);
             SetVelocity(Velocity + Gravity * TheClient.Delta);
-            // TODO: Collision? Gravity?
+            CollisionResult cr = TheClient.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + Velocity * TheClient.Delta, FilterHandle);
+            SetPosition(cr.Position);
         }
 
         public abstract void Spawn();
@@ -32,6 +40,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public Location Velocity;
 
         public Location Angle;
+
+        public Location Scale;
 
         public override Location GetPosition()
         {

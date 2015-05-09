@@ -28,8 +28,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
         }
 
-        public Location scale;
-
         public override void Render()
         {
             if (TheClient.RenderTextures)
@@ -38,12 +36,14 @@ namespace ShadowOperations.ClientGame.EntitySystem
             }
             if (model != null)
             {
-                Matrix4 mat = Matrix4.CreateTranslation(GetPosition().ToOVector());/*
-                    * Matrix4.CreateRotationX((float)(Angle.X * Utilities.PI180))
+                Matrix4 mat = Matrix4.CreateRotationX((float)(Angle.X * Utilities.PI180))
                     * Matrix4.CreateRotationY((float)(Angle.Y * Utilities.PI180))
-                    * Matrix4.CreateRotationZ((float)(Angle.Z * Utilities.PI180));*/
+                    * Matrix4.CreateRotationZ((float)(Angle.Z * Utilities.PI180))
+                    * Matrix4.CreateTranslation(GetPosition().ToOVector());
                 GL.UniformMatrix4(2, false, ref mat);
+                model.DB = true;
                 model.Draw(0);
+                model.DB = false;
             }
             else
             {
