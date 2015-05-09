@@ -134,7 +134,10 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             }
             else if (e is PrimitiveEntity)
             {
-                packet = new SpawnPrimitiveEntityPacketOut((PrimitiveEntity)e);
+                if (e.NetworkMe)
+                {
+                    packet = new SpawnPrimitiveEntityPacketOut((PrimitiveEntity)e);
+                }
             }
             if (packet != null)
             {
@@ -161,6 +164,13 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     else if (Entities[i] is BulletEntity)
                     {
                         ((PlayerEntity)e).Network.SendPacket(new SpawnBulletPacketOut((BulletEntity)Entities[i]));
+                    }
+                    else if (Entities[i] is PrimitiveEntity)
+                    {
+                        if (e.NetworkMe)
+                        {
+                            ((PlayerEntity)e).Network.SendPacket(new SpawnPrimitiveEntityPacketOut((PrimitiveEntity)Entities[i]));
+                        }
                     }
                 }
             }
@@ -196,7 +206,10 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 Players.Remove((PlayerEntity)e);
                 ((PlayerEntity)e).Kick("Despawned!");
             }
-            SendToAll(new DespawnEntityPacketOut(e.EID));
+            if (e.NetworkMe)
+            {
+                SendToAll(new DespawnEntityPacketOut(e.EID));
+            }
         }
 
         public void LoadMapFromString(string data)

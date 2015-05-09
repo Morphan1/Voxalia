@@ -13,6 +13,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             : base(tserver)
         {
             network = false;
+            NetworkMe = false;
         }
     }
 }

@@ -18,6 +18,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Ticks = tickme;
         }
 
+        public bool NetworkMe = true; // TODO: Readonly? Toggler method?
+
         /// <summary>
         /// The unique ID for this entity.
         /// </summary>

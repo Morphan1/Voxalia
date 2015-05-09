@@ -38,10 +38,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
             }
             if (model != null)
             {
-                Matrix4 mat = Matrix4.CreateTranslation(GetPosition().ToOVector())
+                Matrix4 mat = Matrix4.CreateTranslation(GetPosition().ToOVector());/*
                     * Matrix4.CreateRotationX((float)(Angle.X * Utilities.PI180))
                     * Matrix4.CreateRotationY((float)(Angle.Y * Utilities.PI180))
-                    * Matrix4.CreateRotationZ((float)(Angle.Z * Utilities.PI180));
+                    * Matrix4.CreateRotationZ((float)(Angle.Z * Utilities.PI180));*/
                 GL.UniformMatrix4(2, false, ref mat);
                 model.Draw(0);
             }
