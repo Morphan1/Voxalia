@@ -87,7 +87,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
             if (Loaded == null)
             {
-                Loaded = FromBytes(modelname, FileHandler.encoding.GetBytes(CubeData));
+                Loaded = FromBytes("model.obj", FileHandler.encoding.GetBytes(CubeData));
+                Loaded.Name = modelname;
             }
             LoadedModels.Add(Loaded);
             return Loaded;
