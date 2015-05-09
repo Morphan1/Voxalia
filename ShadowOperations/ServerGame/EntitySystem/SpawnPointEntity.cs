@@ -12,6 +12,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public SpawnPointEntity(Server tserver)
             : base(tserver)
         {
+            network = false;
         }
     }
 }

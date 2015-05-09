@@ -121,10 +121,12 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PhysicsEntityUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PlayerUpdatePacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\PrimitiveEntityUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnBulletPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnLightPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPhysicsEntityPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPrimitiveEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourEIDPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourPositionPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourStatusPacketIn.cs" />
@@ -143,6 +145,7 @@
     <Compile Include="ServerGame\CommandSystem\ServerCommands.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerCVar.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerOutputter.cs" />
+    <Compile Include="ServerGame\EntitySystem\ArrowEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\BulletEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
@@ -156,6 +159,7 @@
     <Compile Include="ServerGame\EntitySystem\SpawnPointEntity.cs" />
     <Compile Include="ServerGame\ItemSystem\BaseItemInfo.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BaseGunItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\BowItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\GenericItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\HookItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\OpenHandItem.cs" />
@@ -183,10 +187,12 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PhysicsEntityUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PlayerUpdatePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\PrimitiveEntityUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnBulletPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnLightPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPhysicsEntityPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPrimitiveEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourEIDPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourPositionPacketOut.cs" />
     <Compile Include="ServerGame\ItemSystem\ItemStack.cs" />

@@ -43,7 +43,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Shape.AngularDamping = 1;
             CanRotate = false;
             EID = -1;
-            model = TheClient.Models.GetModel("players/human002/model.dae");
+            model = TheClient.Models.GetModel("players/human002.dae");
         }
 
         public bool IgnoreThis(BroadPhaseEntry entry)

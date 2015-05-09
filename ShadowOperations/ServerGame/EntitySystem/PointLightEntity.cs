@@ -16,6 +16,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public PointLightEntity(Server tserver)
             : base(tserver)
         {
+            network = false; // TODO: Maybe network?
         }
 
         public override List<KeyValuePair<string, string>> GetVariables()

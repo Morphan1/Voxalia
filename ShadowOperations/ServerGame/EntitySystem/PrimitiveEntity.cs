@@ -5,6 +5,7 @@ using System.Text;
 using ShadowOperations.ServerGame.ServerMainSystem;
 using ShadowOperations.Shared;
 using BEPUphysics;
+using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -20,12 +21,16 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
     public abstract class PrimitiveEntity: Entity
     {
+        public Location Gravity = Location.Zero;
+
         public List<long> NoCollide = new List<long>();
 
         public PrimitiveEntity(Server tserver)
             : base(tserver, true)
         {
         }
+
+        public bool network = true;
 
         public bool FilterHandle(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)
         {
@@ -35,6 +40,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public override void Tick()
         {
+            SetVelocity(GetVelocity() + Gravity * TheServer.Delta);
             CollisionResult cr = TheServer.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + GetVelocity() * TheServer.Delta, FilterHandle);
             if (cr.Hit && Collide != null)
             {
@@ -42,8 +48,13 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             if (IsSpawned)
             {
+                Location vel = GetVelocity();
+                SetVelocity((cr.Position - GetPosition()) / TheServer.Delta);
+                if (network && vel != GetVelocity())
+                {
+                    TheServer.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
+                }
                 SetPosition(cr.Position);
-                // TODO: Gravity?
             }
         }
 
@@ -64,6 +75,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public Location Velocity;
 
         public Location Scale;
+
+        public Location Angles;
 
         public override Location GetPosition()
         {
@@ -87,7 +100,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public override List<KeyValuePair<string, string>> GetVariables()
         {
-            return base.GetVariables();
+            List<KeyValuePair<string, string>> vars = base.GetVariables();
+            vars.Add(new KeyValuePair<string,string>("velocity", GetVelocity().ToString()));
+            return vars;
         }
 
         public override bool ApplyVar(string var, string data)
@@ -95,6 +110,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             switch (var)
             {
                 case "angle":
+                    Angles = Location.FromString(data);
                     return true; // TODO
                 case "angular_velocity":
                     return true; // TODO

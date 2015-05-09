@@ -7,6 +7,7 @@ using ShadowOperations.Shared;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
+using ShadowOperations.ClientGame.GraphicsSystems;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -16,6 +17,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
             : base(tclient, cast_shadows)
         {
         }
+
+        public Model model;
 
         public override void Destroy()
         {
@@ -33,10 +36,19 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 TheClient.Textures.White.Bind();
             }
-            //Matrix4 mat = Matrix4.CreateScale(scale.ToOVector() * 2f) * Matrix4.CreateTranslation(GetPosition().ToOVector()) * Matrix4.CreateTranslation((-scale * 0.5f).ToOVector());
-            //GL.UniformMatrix4(2, false, ref mat);
-            //TheClient.Models.Cube.Draw(0);
-            TheClient.Rendering.RenderLine(GetPosition(), GetPosition() - Velocity / 10f);
+            if (model != null)
+            {
+                Matrix4 mat = Matrix4.CreateTranslation(GetPosition().ToOVector())
+                    * Matrix4.CreateRotationX((float)(Angle.X * Utilities.PI180))
+                    * Matrix4.CreateRotationY((float)(Angle.Y * Utilities.PI180))
+                    * Matrix4.CreateRotationZ((float)(Angle.Z * Utilities.PI180));
+                GL.UniformMatrix4(2, false, ref mat);
+                model.Draw(0);
+            }
+            else
+            {
+                TheClient.Rendering.RenderLine(GetPosition(), GetPosition() - Velocity / 10f);
+            }
         }
     }
 }

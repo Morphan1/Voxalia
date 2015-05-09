@@ -132,6 +132,10 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             {
                 packet = new SpawnBulletPacketOut((BulletEntity)e);
             }
+            else if (e is PrimitiveEntity)
+            {
+                packet = new SpawnPrimitiveEntityPacketOut((PrimitiveEntity)e);
+            }
             if (packet != null)
             {
                 SendToAll(packet);

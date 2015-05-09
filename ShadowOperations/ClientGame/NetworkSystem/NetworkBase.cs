@@ -164,6 +164,12 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 14:
                             packet = new DestroyJointPacketIn();
                             break;
+                        case 15:
+                            packet = new SpawnPrimitiveEntityPacketIn();
+                            break;
+                        case 16:
+                            packet = new PrimitiveEntityUpdatePacketIn();
+                            break;
                         default:
                             throw new Exception("Invalid packet ID: " + packetID);
                     }

@@ -14,9 +14,12 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
         }
 
+        public Location Gravity;
+
         public override void Tick()
         {
             SetPosition(Position + Velocity * TheClient.Delta);
+            SetVelocity(Velocity + Gravity * TheClient.Delta);
             // TODO: Collision? Gravity?
         }
 
@@ -27,6 +30,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public Location Position;
 
         public Location Velocity;
+
+        public Location Angle;
 
         public override Location GetPosition()
         {
