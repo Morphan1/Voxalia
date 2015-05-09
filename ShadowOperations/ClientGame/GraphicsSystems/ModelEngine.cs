@@ -76,7 +76,15 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     return LoadedModels[i];
                 }
             }
-            Model Loaded = LoadModel(modelname);
+            Model Loaded = null;
+            try
+            {
+                Loaded = LoadModel(modelname);
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output(OutputType.ERROR, ex.ToString());
+            }
             if (Loaded == null)
             {
                 Loaded = FromBytes(modelname, FileHandler.encoding.GetBytes(CubeData));
