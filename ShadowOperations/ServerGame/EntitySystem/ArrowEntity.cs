@@ -46,8 +46,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 Vector3 loc = (GetPosition() - pe.GetPosition()).ToBVector();
                 Vector3 impulse = GetVelocity().ToBVector() * DamageTimesVelocity / 1000f;
                 pe.Body.ApplyImpulse(ref loc, ref impulse);
-                //SetPosition(Position + (GetVelocity() / len) * 0.1f);
+                SetPosition(Position + (GetVelocity() / len) * 0.3f);
                 SetVelocity(Location.Zero);
+                Gravity = Location.Zero;
             }
         }
     }

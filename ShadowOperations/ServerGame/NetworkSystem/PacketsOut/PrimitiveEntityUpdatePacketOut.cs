@@ -12,11 +12,12 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
         public PrimitiveEntityUpdatePacketOut(PrimitiveEntity pe)
         {
             ID = 16;
-            Data = new byte[12 + 12 + 12 + 8];
+            Data = new byte[12 + 12 + 12 + 12 + 8];
             pe.GetPosition().ToBytes().CopyTo(Data, 0);
             pe.GetVelocity().ToBytes().CopyTo(Data, 12);
             pe.Angles.ToBytes().CopyTo(Data, 12 + 12);
-            Utilities.LongToBytes(pe.EID).CopyTo(Data, 12 + 12 + 12);
+            pe.Gravity.ToBytes().CopyTo(Data, 12 + 12 + 12);
+            Utilities.LongToBytes(pe.EID).CopyTo(Data, 12 + 12 + 12 + 12);
         }
     }
 }

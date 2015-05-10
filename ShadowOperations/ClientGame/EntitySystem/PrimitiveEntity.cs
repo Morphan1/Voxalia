@@ -27,8 +27,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public override void Tick()
         {
             SetVelocity(Velocity + Gravity * TheClient.Delta);
-            CollisionResult cr = TheClient.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + Velocity * TheClient.Delta, FilterHandle);
-            SetPosition(cr.Position);
+            if (Velocity.LengthSquared() > 0)
+            {
+                CollisionResult cr = TheClient.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + Velocity * TheClient.Delta, FilterHandle);
+                SetPosition(cr.Position);
+            }
         }
 
         public abstract void Spawn();

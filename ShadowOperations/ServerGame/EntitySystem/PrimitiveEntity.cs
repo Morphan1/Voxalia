@@ -41,23 +41,26 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public override void Tick()
         {
             SetVelocity(GetVelocity() + Gravity * TheServer.Delta);
-            CollisionResult cr = TheServer.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + GetVelocity() * TheServer.Delta, FilterHandle);
-            Location vel = GetVelocity();
-            if (cr.Hit && Collide != null)
+            if (GetVelocity().LengthSquared() > 0)
             {
-                Collide(this, new CollisionEventArgs(cr));
-            }
-            if (IsSpawned)
-            {
-                if (vel == GetVelocity())
+                CollisionResult cr = TheServer.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + GetVelocity() * TheServer.Delta, FilterHandle);
+                Location vel = GetVelocity();
+                if (cr.Hit && Collide != null)
                 {
-                    SetVelocity((cr.Position - GetPosition()) / TheServer.Delta);
+                    Collide(this, new CollisionEventArgs(cr));
                 }
-                if (network && vel != GetVelocity())
+                if (IsSpawned)
                 {
-                    TheServer.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
+                    if (vel == GetVelocity())
+                    {
+                        SetVelocity((cr.Position - GetPosition()) / TheServer.Delta);
+                    }
+                    SetPosition(cr.Position);
+                    if (network && vel != GetVelocity())
+                    {
+                        TheServer.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
+                    }
                 }
-                SetPosition(cr.Position);
             }
         }
 
