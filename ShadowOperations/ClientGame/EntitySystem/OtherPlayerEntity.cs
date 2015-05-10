@@ -124,6 +124,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
+            if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
+            {
+                base.SetAngles(new Location(0, 0, 0));
+            }
         }
 
         public float MoveSpeed = 10;

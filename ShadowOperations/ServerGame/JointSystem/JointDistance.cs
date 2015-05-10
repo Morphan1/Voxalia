@@ -11,22 +11,24 @@ namespace ShadowOperations.ServerGame.JointSystem
 {
     public class JointDistance : BaseJoint
     {
-        public JointDistance(PhysicsEntity e1, PhysicsEntity e2, float min, float max)
+        public JointDistance(PhysicsEntity e1, PhysicsEntity e2, float min, float max, Location e1pos, Location e2pos)
         {
             Ent1 = e1;
             Ent2 = e2;
             Min = min;
             Max = max;
+            Ent1Pos = e1pos - e1.GetPosition();
+            Ent2Pos = e2pos - e2.GetPosition();
         }
 
         public float Min;
         public float Max;
+        public Location Ent1Pos;
+        public Location Ent2Pos;
 
         public override TwoEntityConstraint GetBaseJoint()
         {
-            DistanceLimit dl = new DistanceLimit(Ent1.Body, Ent2.Body, Ent1.GetPosition().ToBVector(), Ent2.GetPosition().ToBVector(), Min, Max);
-            dl.Bounciness = 0.001f;
-            dl.MaxCorrectiveVelocity = 0.5f;
+            DistanceLimit dl = new DistanceLimit(Ent1.Body, Ent2.Body, (Ent1Pos + Ent1.GetPosition()).ToBVector(), (Ent2Pos + Ent2.GetPosition()).ToBVector(), Min, Max);
             return dl;
         }
     }

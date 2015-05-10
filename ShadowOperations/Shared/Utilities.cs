@@ -64,6 +64,27 @@ namespace ShadowOperations.Shared
             return data;
         }
 
+        public static float StepTowards(float start, float target, float amount)
+        {
+            if (start < target - amount)
+            {
+                return start + amount;
+            }
+            else if (start > target + amount)
+            {
+                return start - amount;
+            }
+            else
+            {
+                return target;
+            }
+        }
+
+        public static bool IsCloseTo(float one, float target, float amount)
+        {
+            return one > target ? one - amount < target : one + amount > target;
+        }
+
         /// <summary>
         /// Converts a string to a float. Returns 0 if the string is not a valid float.
         /// </summary>

@@ -31,26 +31,10 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             }
             RemoveHook(player);
             PhysicsEntity pe = (PhysicsEntity)cr.HitEnt.Tag;
-            CubeEntity ce = new CubeEntity(new Location(0.01f, 0.01f, 0.01f), player.TheServer, 1f);
-            ce.Solid = false;
-            ce.Visible = false;
-            ce.SetPosition(cr.Position);
-            CubeEntity ce2 = new CubeEntity(new Location(0.01f, 0.01f, 0.01f), player.TheServer, 1f);
-            ce2.Solid = false;
-            ce2.Visible = false;
-            ce2.SetPosition(player.GetCenter());
-            JointBallSocket jbs = new JointBallSocket(pe, ce, cr.Position);
-            JointSlider js = new JointSlider(ce, ce2);
-            float len = (float)(cr.Position - player.GetEyePosition()).Length();
-            JointDistance jd = new JointDistance(ce, ce2, len - 0.01f, len);
-            JointBallSocket jbs2 = new JointBallSocket(ce2, player, player.GetCenter());
-            player.Hooks.Add(new HookInfo() { One = ce, Two = ce2, JD = jd, Hit = pe });
-            player.TheServer.SpawnEntity(ce);
-            player.TheServer.SpawnEntity(ce2);
-            player.TheServer.AddJoint(jbs);
-            player.TheServer.AddJoint(js);
+            float len = (float)(cr.Position - player.GetCenter()).Length();
+            JointDistance jd = new JointDistance(player, pe, len - 0.1f, len, player.GetCenter(), cr.Position);
+            player.Hooks.Add(new HookInfo() { JD = jd, Hit = pe });
             player.TheServer.AddJoint(jd);
-            player.TheServer.AddJoint(jbs2);
         }
 
         public override void AltClick(PlayerEntity player, ItemStack item)
@@ -66,16 +50,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
         {
             if (player.Hooks.Count > 0)
             {
-                foreach (BaseJoint joint in new List<BaseJoint>(player.Hooks[0].One.Joints))
-                {
-                    player.TheServer.DestroyJoint(joint);
-                }
-                foreach (BaseJoint joint in new List<BaseJoint>(player.Hooks[0].Two.Joints))
-                {
-                    player.TheServer.DestroyJoint(joint);
-                }
-                player.TheServer.DespawnEntity(player.Hooks[0].One);
-                player.TheServer.DespawnEntity(player.Hooks[0].Two);
+                player.TheServer.DestroyJoint(player.Hooks[0].JD);
                 player.Hooks.RemoveAt(0);
             }
         }
@@ -100,8 +75,6 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
     public class HookInfo
     {
         public PhysicsEntity Hit;
-        public CubeEntity One;
-        public CubeEntity Two;
         public JointDistance JD;
     }
 }

@@ -53,13 +53,15 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 2)
             {
-                if (data.Length != len + 4 + 4)
+                if (data.Length != len + 4 + 4 + 12 + 12)
                 {
                     return false;
                 }
                 float min = Utilities.BytesToFloat(Utilities.BytesPartial(data, len, 4));
                 float max = Utilities.BytesToFloat(Utilities.BytesPartial(data, len + 4, 4));
-                JointDistance jd = new JointDistance(pe1, pe2, min, max);
+                Location ent1pos = Location.FromBytes(data, len + 4 + 4);
+                Location ent2pos = Location.FromBytes(data, len + 4 + 4 + 12);
+                JointDistance jd = new JointDistance(pe1, pe2, min, max, ent1pos, ent2pos);
                 jd.JID = JID;
                 TheClient.AddJoint(jd);
                 return true;

@@ -26,10 +26,12 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
             }
             else if (joint is JointDistance)
             {
-                Data = new byte[len + 4 + 4];
+                Data = new byte[len + 4 + 4 + 12 + 12];
                 Data[0] = 2;
                 Utilities.FloatToBytes(((JointDistance)joint).Min).CopyTo(Data, len);
                 Utilities.FloatToBytes(((JointDistance)joint).Max).CopyTo(Data, len + 4);
+                ((JointDistance)joint).Ent1Pos.ToBytes().CopyTo(Data, len + 4 + 4);
+                ((JointDistance)joint).Ent2Pos.ToBytes().CopyTo(Data, len + 4 + 4 + 12);
             }
             else if (joint is JointPullPush)
             {

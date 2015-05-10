@@ -216,15 +216,6 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     {
                         Hooks[i].JD.Max += (float)TheServer.Delta;
                         Hooks[i].JD.Min += (float)TheServer.Delta;
-                        Location norm = -(Hooks[i].One.GetPosition() - GetCenter()).Normalize();
-                        Vector3 vel = (norm * GetMass() * 1.2f).ToBVector();
-                        Body.ApplyLinearImpulse(ref vel);
-                        if (Hooks[i].Hit.GetMass() > 0)
-                        {
-                            vel = -vel;
-                            Hooks[i].Hit.Body.ApplyLinearImpulse(ref vel);
-                            Hooks[i].Hit.Body.ActivityInformation.Activate();
-                        }
                         TheServer.DestroyJoint(Hooks[i].JD);
                         TheServer.AddJoint(Hooks[i].JD);
                     }
@@ -233,21 +224,10 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 {
                     for (int i = 0; i < Hooks.Count; i++)
                     {
-                        Hooks[i].JD.Max -= (float)TheServer.Delta;
-                        Hooks[i].JD.Min -= (float)TheServer.Delta;
-                        if (Hooks[i].JD.Max < 1)
+                        if (Hooks[i].JD.Max > 1)
                         {
-                            Hooks[i].JD.Min += 1 - Hooks[i].JD.Max;
-                            Hooks[i].JD.Max = 1;
-                        }
-                        Location norm = (Hooks[i].One.GetPosition() - GetCenter()).Normalize();
-                        Vector3 vel = (norm * GetMass() * 1.2f).ToBVector();
-                        Body.ApplyLinearImpulse(ref vel);
-                        if (Hooks[i].Hit.GetMass() > 0)
-                        {
-                            vel = -vel;
-                            Hooks[i].Hit.Body.ApplyLinearImpulse(ref vel);
-                            Hooks[i].Hit.Body.ActivityInformation.Activate();
+                            Hooks[i].JD.Max -= (float)TheServer.Delta;
+                            Hooks[i].JD.Min -= (float)TheServer.Delta;
                         }
                         TheServer.DestroyJoint(Hooks[i].JD);
                         TheServer.AddJoint(Hooks[i].JD);
@@ -281,6 +261,10 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 {
                     Grabbed = null;
                 }
+            }
+            if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
+            {
+                base.SetAngles(new Location(0, 0, 0));
             }
             PlayerUpdatePacketOut pupo = new PlayerUpdatePacketOut(this);
             for (int i = 0; i < TheServer.Players.Count; i++)

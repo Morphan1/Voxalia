@@ -10,6 +10,7 @@ using ShadowOperations.ClientGame.UISystem;
 using ShadowOperations.ClientGame.GraphicsSystems;
 using ShadowOperations.ClientGame.GraphicsSystems.LightingSystem;
 using ShadowOperations.ClientGame.OtherSystems;
+using ShadowOperations.ClientGame.JointSystem;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -282,7 +283,14 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Textures.White.Bind();
             for (int i = 0; i < Joints.Count; i++)
             {
-                Rendering.RenderLine(Joints[i].Ent1.GetPosition(), Joints[i].Ent2.GetPosition());
+                if (Joints[i] is JointDistance)
+                {
+                    Rendering.RenderLine(((JointDistance)Joints[i]).Ent1Pos + Joints[i].Ent1.GetPosition(), ((JointDistance)Joints[i]).Ent2Pos + Joints[i].Ent2.GetPosition());
+                }
+                else
+                {
+                    Rendering.RenderLine(Joints[i].Ent1.GetPosition(), Joints[i].Ent2.GetPosition());
+                }
             }
         }
 
