@@ -41,9 +41,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                     * Matrix4.CreateRotationZ((float)(Angle.Z * Utilities.PI180))
                     * Matrix4.CreateTranslation(GetPosition().ToOVector());
                 GL.UniformMatrix4(2, false, ref mat);
-                model.DB = true;
                 model.Draw(0);
-                model.DB = false;
             }
             else
             {
