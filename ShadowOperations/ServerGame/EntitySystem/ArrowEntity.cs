@@ -5,6 +5,7 @@ using System.Text;
 using ShadowOperations.ServerGame.ServerMainSystem;
 using ShadowOperations.Shared;
 using BEPUutilities;
+using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -22,14 +23,40 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public float Damage = 1;
         public float DamageTimesVelocity = 1;
 
+        public PhysicsEntity StuckTo = null;
+
+        public Location RelPos;
+
         public override void Tick()
         {
-            base.Tick();
-            Location vel = GetVelocity();
-            if (vel.LengthSquared() > 0)
+            if (StuckTo != null)
             {
-                Location dir = Utilities.VectorToAngles(vel.Normalize());
-                Angles = new Location(0, dir.Y, dir.X);
+                if (!StuckTo.IsSpawned)
+                {
+                    TheServer.DespawnEntity(this);
+                }
+                else
+                {
+                    Vector3 vec = RelPos.ToBVector();
+                    RigidTransform rt = new RigidTransform(StuckTo.Body.Position, StuckTo.Body.Orientation);
+                    Vector3 nvec;
+                    RigidTransform.Transform(ref vec, ref rt, out nvec);
+                    Location pos = GetPosition();
+                    SetPosition(Location.FromBVector(nvec));
+                    if (pos != GetPosition())
+                    {
+                    }
+                }
+            }
+            else
+            {
+                base.Tick();
+                Location vel = GetVelocity();
+                if (vel.LengthSquared() > 0)
+                {
+                    Location dir = Utilities.VectorToAngles(vel.Normalize());
+                    Angles = new Location(0, dir.Y, dir.X);
+                }
             }
         }
 
@@ -47,8 +74,14 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 Vector3 impulse = GetVelocity().ToBVector() * DamageTimesVelocity / 1000f;
                 pe.Body.ApplyImpulse(ref loc, ref impulse);
                 SetPosition(Position + (GetVelocity() / len) * 0.3f);
+                StuckTo = pe;
                 SetVelocity(Location.Zero);
                 Gravity = Location.Zero;
+                Vector3 vec = GetPosition().ToBVector();
+                RigidTransform rt = new RigidTransform(pe.Body.Position, pe.Body.Orientation);
+                Vector3 nvec;
+                RigidTransform.TransformByInverse(ref vec, ref rt, out nvec);
+                RelPos = Location.FromBVector(nvec);
             }
         }
     }
