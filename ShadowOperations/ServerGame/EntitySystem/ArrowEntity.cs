@@ -45,6 +45,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     SetPosition(Location.FromBVector(nvec));
                     if (pos != GetPosition())
                     {
+                        TheServer.SendToAll(new PrimitiveEntityUpdatePacketOut(this)); // TODO: Simulate clientside
                     }
                 }
             }
