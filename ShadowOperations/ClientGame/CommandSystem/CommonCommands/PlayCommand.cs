@@ -20,7 +20,7 @@ namespace ShadowOperations.ClientGame.CommandSystem.CommonCommands
             TheClient = tclient;
             Name = "play";
             Description = "Plays a sound effect.";
-            Arguments = "<soundname> [pitch] [volume]"; // TODO: Parse a location input as well
+            Arguments = "<soundname> [pitch] [volume] [location]";
         }
 
         public override void Execute(CommandEntry entry)
@@ -33,6 +33,7 @@ namespace ShadowOperations.ClientGame.CommandSystem.CommonCommands
             string sfx = entry.GetArgument(0);
             float pitch = 1f;
             float gain = 1f;
+            Location loc = Location.NaN;
             if (entry.Arguments.Count > 1)
             {
                 pitch = Utilities.StringToFloat(entry.GetArgument(1));
@@ -41,7 +42,11 @@ namespace ShadowOperations.ClientGame.CommandSystem.CommonCommands
             {
                 gain = Utilities.StringToFloat(entry.GetArgument(2));
             }
-            TheClient.Sounds.Play(TheClient.Sounds.GetSound(sfx), false, Location.NaN, pitch, gain);
+            if (entry.Arguments.Count > 3)
+            {
+                loc = Location.FromString(entry.GetArgument(3));
+            }
+            TheClient.Sounds.Play(TheClient.Sounds.GetSound(sfx), false, loc, pitch, gain);
         }
     }
 }
