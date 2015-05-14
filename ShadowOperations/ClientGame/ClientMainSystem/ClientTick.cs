@@ -94,7 +94,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 {
                     Tickers[i].Tick();
                 }
-                Sounds.Update(CameraPos, CameraTarget - CameraPos, CameraUp);
+                Sounds.Update(CameraPos, CameraTarget - CameraPos, CameraUp, Player.GetVelocity());
             }
             catch (Exception ex)
             {

@@ -26,7 +26,7 @@ namespace ShadowOperations.ClientGame.AudioSystem
 
         }
 
-        public void Update(Location position, Location forward, Location up)
+        public void Update(Location position, Location forward, Location up, Location velocity)
         {
             for (int i = 0; i < PlayingNow.Count; i++)
             {
@@ -40,8 +40,10 @@ namespace ShadowOperations.ClientGame.AudioSystem
             Vector3 pos = position.ToOVector();
             Vector3 forw = forward.ToOVector();
             Vector3 upvec = up.ToOVector();
+            Vector3 vel = velocity.ToOVector();
             AL.Listener(ALListener3f.Position, ref pos);
             AL.Listener(ALListenerfv.Orientation, ref forw, ref upvec);
+            AL.Listener(ALListener3f.Velocity, ref vel);
         }
 
         public Dictionary<string, SoundEffect> Effects;
