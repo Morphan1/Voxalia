@@ -55,7 +55,7 @@ namespace ShadowOperations.ClientGame.AudioSystem
 
         public List<ActiveSound> PlayingNow;
 
-        public ActiveSound Play(SoundEffect sfx, bool loop, Location pos, float pitch, float volume)
+        public ActiveSound Play(SoundEffect sfx, bool loop, Location pos, float pitch = 1, float volume = 1, float seconds = 0)
         {
             if (pitch <= 0 || pitch > 2)
             {
@@ -72,6 +72,10 @@ namespace ShadowOperations.ClientGame.AudioSystem
             actsfx.Loop = loop;
             actsfx.Create();
             actsfx.Play();
+            if (seconds != 0)
+            {
+                actsfx.Seek(seconds);
+            }
             PlayingNow.Add(actsfx);
             return actsfx;
         }

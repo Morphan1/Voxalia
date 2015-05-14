@@ -64,6 +64,11 @@ namespace ShadowOperations.ClientGame.AudioSystem
             AL.SourcePlay(Src);
         }
 
+        public void Seek(float f)
+        {
+            AL.Source(Src, ALSourcef.SecOffset, f);
+        }
+
         public void Pause()
         {
             AL.SourcePause(Src);

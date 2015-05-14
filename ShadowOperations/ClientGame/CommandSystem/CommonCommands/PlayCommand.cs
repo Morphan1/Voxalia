@@ -20,7 +20,7 @@ namespace ShadowOperations.ClientGame.CommandSystem.CommonCommands
             TheClient = tclient;
             Name = "play";
             Description = "Plays a sound effect.";
-            Arguments = "<soundname> [pitch] [volume] [location]";
+            Arguments = "<soundname> [pitch] [volume] [location] [seek time in seconds]";
         }
 
         public override void Execute(CommandEntry entry)
@@ -46,7 +46,12 @@ namespace ShadowOperations.ClientGame.CommandSystem.CommonCommands
             {
                 loc = Location.FromString(entry.GetArgument(3));
             }
-            TheClient.Sounds.Play(TheClient.Sounds.GetSound(sfx), false, loc, pitch, gain);
+            float seek = 0;
+            if (entry.Arguments.Count > 4)
+            {
+                seek = Utilities.StringToFloat(entry.GetArgument(4));
+            }
+            TheClient.Sounds.Play(TheClient.Sounds.GetSound(sfx), false, loc, pitch, gain, seek);
         }
     }
 }
