@@ -27,6 +27,9 @@ namespace ShadowOperations.ClientGame.CommandSystem
         // Renderer CVars
         public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_lighting, r_renderwireframe;
 
+        // Audio CVars
+        public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch;
+
         // UI CVars
         public CVar u_mouse_sensitivity;
 
@@ -48,6 +51,11 @@ namespace ShadowOperations.ClientGame.CommandSystem
             r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed); // What AA mode to use (0 = none).
             r_lighting = Register("r_lighting", "true", CVarFlag.Boolean); // Whether to enable 3D lighting (Otherwise, use FullBright).
             r_renderwireframe = Register("r_renderwireframe", "false", CVarFlag.Boolean); // Whether to render a wireframe.
+            // Audio CVars
+            a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What volume the music should be.
+            a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What pitch the music should be.
+            a_globalvolume = Register("a_globalvolume", "1", CVarFlag.Numeric); // What volume all sounds should be.
+            a_globalpitch = Register("a_globalpitch", "1", CVarFlag.Numeric); // What pitch all sounds should be.
             // UI CVars
             u_mouse_sensitivity = Register("u_mouse_sensitivity", "1", CVarFlag.Numeric); // How sensitive the mouse is.
         }

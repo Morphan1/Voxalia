@@ -127,7 +127,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             KeyHandler.Init();
             SysConsole.Output(OutputType.INIT, "Building the sound system...");
             Sounds = new SoundEngine();
-            Sounds.Init();
+            Sounds.Init(CVars);
             SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
             SysConsole.Output(OutputType.INIT, "Spawning the player...");
@@ -150,7 +150,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             {
                 CurrentMusic.Destroy();
             }
-            CurrentMusic = Sounds.Play(Sounds.GetSound(CMusic), true, Location.NaN, 1, 1); // TODO: Music pitch/volume CVar's
+            CurrentMusic = Sounds.Play(Sounds.GetSound(CMusic), true, Location.NaN, CVars.a_musicpitch.ValueF, CVars.a_musicvolume.ValueF); // TODO: Music pitch/volume CVar's
         }
     }
 }

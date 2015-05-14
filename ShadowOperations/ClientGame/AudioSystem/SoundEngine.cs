@@ -7,6 +7,7 @@ using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using ShadowOperations.Shared;
 using OggDecoder;
+using ShadowOperations.ClientGame.CommandSystem;
 
 namespace ShadowOperations.ClientGame.AudioSystem
 {
@@ -16,8 +17,11 @@ namespace ShadowOperations.ClientGame.AudioSystem
 
         public AudioContext Context;
 
-        public void Init()
+        public ClientCVar CVars;
+        
+        public void Init(ClientCVar cvar)
         {
+            CVars = cvar;
             Context = new AudioContext();
             Context.MakeCurrent();
             Effects = new Dictionary<string, SoundEffect>();
@@ -44,6 +48,7 @@ namespace ShadowOperations.ClientGame.AudioSystem
             AL.Listener(ALListener3f.Position, ref pos);
             AL.Listener(ALListenerfv.Orientation, ref forw, ref upvec);
             AL.Listener(ALListener3f.Velocity, ref vel);
+            AL.Listener(ALListenerf.Gain, CVars.a_globalvolume.ValueF);
         }
 
         public Dictionary<string, SoundEffect> Effects;
@@ -62,7 +67,7 @@ namespace ShadowOperations.ClientGame.AudioSystem
             }
             ActiveSound actsfx = new ActiveSound(sfx);
             actsfx.Position = pos;
-            actsfx.Pitch = pitch;
+            actsfx.Pitch = pitch * CVars.a_globalpitch.ValueF;
             actsfx.Gain = volume;
             actsfx.Loop = loop;
             actsfx.Create();
