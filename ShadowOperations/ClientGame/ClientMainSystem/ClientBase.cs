@@ -51,8 +51,6 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public Texture ItemFrame;
 
-        public SoundEngine Sounds;
-
         /// <summary>
         /// Start up and run the server.
         /// </summary>
@@ -94,6 +92,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public FontSetEngine FontSets;
         public Renderer Rendering;
         public ModelEngine Models;
+
+        public SoundEngine Sounds;
 
         public PlayerEntity Player;
 
@@ -150,7 +150,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             {
                 CurrentMusic.Destroy();
             }
-            CurrentMusic = Sounds.Play(Sounds.GetSound(CMusic), true, Location.NaN, 1, 1);
+            CurrentMusic = Sounds.Play(Sounds.GetSound(CMusic), true, Location.NaN, 1, 1); // TODO: Music pitch/volume CVar's
         }
     }
 }
