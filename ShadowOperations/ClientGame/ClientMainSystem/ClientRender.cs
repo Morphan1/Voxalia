@@ -110,6 +110,10 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             GL.Viewport(0, 0, vpw, vph);
         }
 
+        public Location CameraPos;
+
+        public Location CameraTarget;
+
         public bool RenderingShadows = false;
 
         void Window_RenderFrame(object sender, FrameEventArgs e)
@@ -121,7 +125,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.1f, 0.1f, 0.1f, 1f });
                 GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
                 GL.Enable(EnableCap.DepthTest);
-                Location CameraPos = Player.GetPosition() + new Location(0, 0, Player.HalfSize.Z * 1.6f);
+                CameraPos = Player.GetPosition() + new Location(0, 0, Player.HalfSize.Z * 1.6f);
                 Location CameraAngles = Player.GetAngles();
                 double CameraYaw = CameraAngles.X;
                 double CameraPitch = CameraAngles.Y;
@@ -144,7 +148,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     s_fbo.Bind();
                     VBO.BonesIdentity();
                     RenderingShadows = false;
-                    Location CameraTarget = CameraPos + Utilities.ForwardVector_Deg(CameraYaw, CameraPitch);
+                    CameraTarget = CameraPos + Utilities.ForwardVector_Deg(CameraYaw, CameraPitch);
                     Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CameraFOV), (float)Window.Width / (float)Window.Height, CameraZNear, CameraZFar);
                     Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
                     Matrix4 combined = view * proj;

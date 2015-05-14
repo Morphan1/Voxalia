@@ -44,6 +44,12 @@
     <Reference Include="BEPUutilities">
       <HintPath>.\BEPUutilities.dll</HintPath>
     </Reference>
+    <Reference Include="csogg">
+      <HintPath>.\csogg.dll</HintPath>
+    </Reference>
+    <Reference Include="csvorbis">
+      <HintPath>.\csvorbis.dll</HintPath>
+    </Reference>
     <Reference Include="Frenetic">
       <HintPath>.\Frenetic.dll</HintPath>
     </Reference>
@@ -61,6 +67,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientGame\AudioSystem\ActiveSound.cs" />
+    <Compile Include="ClientGame\AudioSystem\NoiseDefault.cs" />
+    <Compile Include="ClientGame\AudioSystem\OggDecodeStream.cs" />
+    <Compile Include="ClientGame\AudioSystem\SoundEffect.cs" />
+    <Compile Include="ClientGame\AudioSystem\SoundEngine.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientBase.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientPhysics.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientRender.cs" />
@@ -70,6 +81,7 @@
     <Compile Include="ClientGame\CommandSystem\ClientOutputter.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\ItemprevCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\ItemnextCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\CommonCommands\PlayCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\QuitCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\ConnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\DisconnectCommand.cs" />
@@ -197,6 +209,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourPositionPacketOut.cs" />
     <Compile Include="ServerGame\ItemSystem\ItemStack.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourStatusPacketOut.cs" />
+    <Compile Include="Shared\DataReader.cs" />
     <Compile Include="Shared\ItemStackBase.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\AbstractPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\GrabPlayerCommand.cs" />

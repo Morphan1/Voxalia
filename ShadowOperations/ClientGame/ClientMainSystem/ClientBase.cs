@@ -13,6 +13,7 @@ using OpenTK.Input;
 using ShadowOperations.ClientGame.CommandSystem;
 using System.Diagnostics;
 using ShadowOperations.ClientGame.NetworkSystem;
+using ShadowOperations.ClientGame.AudioSystem;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -49,6 +50,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public string Username = "Player" + new Random().Next(1000);
 
         public Texture ItemFrame;
+
+        public SoundEngine Sounds;
 
         /// <summary>
         /// Start up and run the server.
@@ -122,6 +125,9 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Preparing mouse and keyboard handlers...");
             MouseHandler.CaptureMouse();
             KeyHandler.Init();
+            SysConsole.Output(OutputType.INIT, "Building the sound system...");
+            Sounds = new SoundEngine();
+            Sounds.Init();
             SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
             SysConsole.Output(OutputType.INIT, "Spawning the player...");
