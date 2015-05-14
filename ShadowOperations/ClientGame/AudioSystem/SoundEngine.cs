@@ -30,7 +30,7 @@ namespace ShadowOperations.ClientGame.AudioSystem
         {
             for (int i = 0; i < PlayingNow.Count; i++)
             {
-                if (AL.GetSourceState(PlayingNow[i].Src) == ALSourceState.Stopped)
+                if (!PlayingNow[i].Exists || AL.GetSourceState(PlayingNow[i].Src) == ALSourceState.Stopped)
                 {
                     PlayingNow[i].Destroy();
                     PlayingNow.RemoveAt(i);

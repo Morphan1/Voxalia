@@ -136,6 +136,21 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             SpawnEntity(Player);
             SysConsole.Output(OutputType.INIT, "Preparing networking...");
             Network = new NetworkBase(this);
+            SysConsole.Output(OutputType.INIT, "Playing background music...");
+            BackgroundMusic();
+        }
+
+        public ActiveSound CurrentMusic = null;
+
+        public string CMusic = "music/epic/bcdenizen";
+
+        void BackgroundMusic()
+        {
+            if (CurrentMusic != null)
+            {
+                CurrentMusic.Destroy();
+            }
+            CurrentMusic = Sounds.Play(Sounds.GetSound(CMusic), true, Location.NaN, 1, 1);
         }
     }
 }

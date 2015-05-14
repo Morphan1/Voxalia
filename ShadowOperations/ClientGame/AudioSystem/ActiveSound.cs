@@ -28,28 +28,34 @@ namespace ShadowOperations.ClientGame.AudioSystem
 
         public int Src;
 
+        public bool Exists = false;
+
         public void Create()
         {
-            Src = AL.GenSource();
-            AL.Source(Src, ALSourcei.Buffer, Effect.Internal);
-            AL.Source(Src, ALSourceb.Looping, Loop);
-            if (Pitch != 1f)
+            if (!Exists)
             {
-                AL.Source(Src, ALSourcef.Pitch, Pitch);
-            }
-            if (Gain != 1f)
-            {
-                AL.Source(Src, ALSourcef.Gain, Gain);
-            }
-            if (!Position.IsNaN())
-            {
-                Vector3 vec = Position.ToOVector();
-                AL.Source(Src, ALSource3f.Position, ref vec);
-                AL.Source(Src, ALSourceb.SourceRelative, false);
-            }
-            else
-            {
-                AL.Source(Src, ALSourceb.SourceRelative, true);
+                Src = AL.GenSource();
+                AL.Source(Src, ALSourcei.Buffer, Effect.Internal);
+                AL.Source(Src, ALSourceb.Looping, Loop);
+                if (Pitch != 1f)
+                {
+                    AL.Source(Src, ALSourcef.Pitch, Pitch);
+                }
+                if (Gain != 1f)
+                {
+                    AL.Source(Src, ALSourcef.Gain, Gain);
+                }
+                if (!Position.IsNaN())
+                {
+                    Vector3 vec = Position.ToOVector();
+                    AL.Source(Src, ALSource3f.Position, ref vec);
+                    AL.Source(Src, ALSourceb.SourceRelative, false);
+                }
+                else
+                {
+                    AL.Source(Src, ALSourceb.SourceRelative, true);
+                }
+                Exists = true;
             }
         }
 
@@ -70,7 +76,11 @@ namespace ShadowOperations.ClientGame.AudioSystem
 
         public void Destroy()
         {
-            AL.DeleteSource(Src);
+            if (Exists)
+            {
+                AL.DeleteSource(Src);
+                Exists = false;
+            }
         }
     }
 }
