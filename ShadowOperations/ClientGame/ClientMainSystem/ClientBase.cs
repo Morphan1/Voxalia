@@ -63,6 +63,12 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Loading CVar system...");
             CVars = new ClientCVar();
             CVars.Init(Commands.Output);
+            SysConsole.Output(OutputType.INIT, "Loading default settings...");
+            if (Program.Files.Exists("clientdefaultsettings.cfg"))
+            {
+                string contents = Program.Files.ReadText("clientdefaultsettings.cfg");
+                Commands.ExecuteCommands(contents);
+            }
             SysConsole.Output(OutputType.INIT, "Generating window...");
             Window = new GameWindow(800, 600, GraphicsMode.Default, Program.GameName + " v" + Program.GameVersion,
                 GameWindowFlags.Default, DisplayDevice.Default, 4, 3, GraphicsContextFlags.ForwardCompatible);

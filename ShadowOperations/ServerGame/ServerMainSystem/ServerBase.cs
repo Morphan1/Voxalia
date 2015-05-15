@@ -57,6 +57,12 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Loading CVar engine...");
             CVars = new ServerCVar();
             CVars.Init(Commands.Output);
+            SysConsole.Output(OutputType.INIT, "Loading default settings...");
+            if (Program.Files.Exists("serverdefaultsettings.cfg"))
+            {
+                string contents = Program.Files.ReadText("serverdefaultsettings.cfg");
+                Commands.ExecuteCommands(contents);
+            }
             SysConsole.Output(OutputType.INIT, "Loading player command engine...");
             PCEngine = new PlayerCommandEngine();
             SysConsole.Output(OutputType.INIT, "Loading item registry...");
