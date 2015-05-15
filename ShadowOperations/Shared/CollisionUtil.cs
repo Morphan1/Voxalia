@@ -37,12 +37,17 @@ namespace ShadowOperations.Shared
 
         public CollisionGroup Solid = new CollisionGroup();
 
+        public CollisionGroup Player = new CollisionGroup();
+
         public CollisionUtil(Space world)
         {
             World = world;
             CollisionGroup.DefineCollisionRule(NonSolid, NonSolid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(NonSolid, Solid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Solid, NonSolid, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Player, NonSolid, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(NonSolid, Player, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Player, Player, CollisionRule.NoBroadPhase);
         }
 
         /// <summary>

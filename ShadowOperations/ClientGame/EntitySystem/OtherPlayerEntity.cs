@@ -155,11 +155,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public override void SpawnBody()
         {
             base.SpawnBody();
-            Recalculate();
-        }
-
-        public void Recalculate()
-        {
+            Body.CollisionInformation.CollisionRules.Group = TheClient.Collision.Player;
         }
 
         public double aTime;

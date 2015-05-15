@@ -46,6 +46,12 @@ namespace ShadowOperations.ClientGame.EntitySystem
             model = TheClient.Models.GetModel("players/human002.dae");
         }
 
+        public override void SpawnBody()
+        {
+            base.SpawnBody();
+            Body.CollisionInformation.CollisionRules.Group = TheClient.Collision.Player;
+        }
+
         public bool IgnoreThis(BroadPhaseEntry entry)
         {
             bool isThis = ((EntityCollidable)entry).Entity.Tag == this;

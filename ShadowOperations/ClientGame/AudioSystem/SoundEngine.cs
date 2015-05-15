@@ -27,7 +27,6 @@ namespace ShadowOperations.ClientGame.AudioSystem
             Effects = new Dictionary<string, SoundEffect>();
             PlayingNow = new List<ActiveSound>();
             Noise = LoadSound(new DataStream(Convert.FromBase64String(NoiseDefault.NoiseB64)), "noise");
-
         }
 
         public void Update(Location position, Location forward, Location up, Location velocity)

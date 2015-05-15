@@ -359,5 +359,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             SetPosition(spe.GetPosition());
         }
+
+        public override void SpawnBody()
+        {
+            base.SpawnBody();
+            Body.CollisionInformation.CollisionRules.Group = TheServer.Collision.Player;
+        }
     }
 }
