@@ -63,7 +63,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem
             ConnectionThread.Start();
         }
 
-        int MAX = 1024 * 100; // 100 KB by default
+        int MAX = 1024 * 1024 * 2; // 2 MB by default
 
         byte[] recd;
 
