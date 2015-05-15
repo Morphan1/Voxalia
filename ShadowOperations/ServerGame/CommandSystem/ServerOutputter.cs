@@ -40,5 +40,10 @@ namespace ShadowOperations.ServerGame.CommandSystem
             WriteLine(TextStyle.Color_Error + "Unknown command '" +
                 TextStyle.Color_Standout + basecommand + TextStyle.Color_Error + "'.");
         }
+
+        public override string ReadTextFile(string name)
+        {
+            return Program.Files.ReadText("scripts/" + name);
+        }
     }
 }

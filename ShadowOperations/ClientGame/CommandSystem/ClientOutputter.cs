@@ -55,5 +55,10 @@ namespace ShadowOperations.ClientGame.CommandSystem
                     TextStyle.Color_Standout + basecommand + TextStyle.Color_Error + "'.");
             }
         }
+
+        public override string ReadTextFile(string name)
+        {
+            return Program.Files.ReadText("scripts/" + name);
+        }
     }
 }

@@ -51,6 +51,12 @@
             </summary>
             <param name="entry">The CommandEntry data to get usage help from.</param>
         </member>
+        <member name="M:Frenetic.CommandSystem.CommonCmds.CvarinfoCommand.Execute(Frenetic.CommandSystem.CommandEntry)">
+            <summary>
+            Executes the command.
+            </summary>
+            <param name="entry">Entry to be executed</param>
+        </member>
         <member name="T:Frenetic.CommandSystem.CommandQueue">
             <summary>
             Represents a set of commands to be run, and related information.
@@ -121,9 +127,9 @@
             Constructs a new CommandQueue - generally kept to the Frenetic internals.
             </summary>
         </member>
-        <member name="F:Frenetic.CommandSystem.CommandQueue.Completefunc">
+        <member name="F:Frenetic.CommandSystem.CommandQueue.Complete">
             <summary>
-            What CompleteFunction to invoke when the queue finishes.
+            Called when the queue is completed.
             </summary>
         </member>
         <member name="M:Frenetic.CommandSystem.CommandQueue.Execute">
@@ -175,11 +181,6 @@
             <param name="name">The name of the variable</param>
             <returns>The variable's value</returns>
         </member>
-        <member name="T:Frenetic.CommandSystem.CommandQueue.CompleteFunction">
-            <summary>
-            A complete function is something invoked with a queue finishes.
-            </summary>
-        </member>
         <member name="T:Frenetic.CommandSystem.DebugMode">
             <summary>
             An enumerattion of the possible debug modes a queue can have.
@@ -210,9 +211,14 @@
             The entry being waited on.
             </summary>
         </member>
-        <member name="M:Frenetic.CommandSystem.EntryFinisher.Complete">
+        <member name="M:Frenetic.CommandSystem.EntryFinisher.Complete(System.Object,Frenetic.CommandSystem.CommandQueueEventArgs)">
             <summary>
             Add this function as a callback to complete entry.
+            </summary>
+        </member>
+        <member name="T:Frenetic.TagHandlers.TemplateObject">
+            <summary>
+            The abstract base for a tag object.
             </summary>
         </member>
         <member name="M:Frenetic.TagHandlers.TemplateObject.Handle(Frenetic.TagHandlers.TagData)">
@@ -220,6 +226,11 @@
             Parse any direct tag input values.
             </summary>
             <param name="data">The input tag data</param>
+        </member>
+        <member name="T:Frenetic.TagHandlers.TemplateTags">
+            <summary>
+            An abstract class, implementations are used as tag bases.
+            </summary>
         </member>
         <member name="F:Frenetic.TagHandlers.TemplateTags.Name">
             <summary>
@@ -231,6 +242,12 @@
             Parse any direct tag input values.
             </summary>
             <param name="data">The input tag data</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.TemplateTags.ToString">
+            <summary>
+            Usually returns the name of this tag base.
+            </summary>
+            <returns>The name of this tag base</returns>
         </member>
         <member name="T:Frenetic.CVarFlag">
             <summary>
@@ -366,6 +383,12 @@
             </summary>
             <returns>The information</returns>
         </member>
+        <member name="M:Frenetic.CommandSystem.CommonCmds.EchoCommand.Execute(Frenetic.CommandSystem.CommandEntry)">
+            <summary>
+            Executes the command.
+            </summary>
+            <param name="entry">Entry to be executed</param>
+        </member>
         <member name="T:Frenetic.CommandSystem.CommandEntry">
             <summary>
             All the information for a command being currently run.
@@ -497,6 +520,11 @@
             <param name="NewOwner">The new owner of the command entry</param>
             <returns>The duplicate entry</returns>
         </member>
+        <member name="T:Frenetic.TagHandlers.TagData">
+            <summary>
+            A tag information container.
+            </summary>
+        </member>
         <member name="F:Frenetic.TagHandlers.TagData.mode">
             <summary>
             What debug mode to use while filling tags.
@@ -527,6 +555,16 @@
             The 'base color' set by the tag requesting code.
             </summary>
         </member>
+        <member name="M:Frenetic.TagHandlers.TagData.#ctor(Frenetic.TagHandlers.TagParser,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode)">
+            <summary>
+            Constructs the tag information container.
+            </summary>
+            <param name="_system">The command system to use</param>
+            <param name="_input">The input tag pieces</param>
+            <param name="_basecolor">The default color to use for output</param>
+            <param name="_vars">Any variables involved in the queue</param>
+            <param name="_mode">What debug mode to use</param>
+        </member>
         <member name="M:Frenetic.TagHandlers.TagData.Shrink">
             <summary>
             Shrinks the data amount by one at the start, and returns itself.
@@ -539,6 +577,18 @@
             </summary>
             <param name="place">What place to get a modifier from</param>
             <returns>The tag-parsed modifier</returns>
+        </member>
+        <member name="T:Frenetic.CommandSystem.ScriptEvent">
+            <summary>
+            An abstract class, implementations of this should be used to fire events within the script engine.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.ScriptEvent.GetHandlers(Frenetic.CommandSystem.ScriptEvent)">
+            <summary>
+            Gets the list of CommandScripts that handle an event currently.
+            </summary>
+            <param name="_event">The event to get the handlers for</param>
+            <returns>The list of handlers</returns>
         </member>
         <member name="F:Frenetic.CommandSystem.ScriptEvent.Handlers">
             <summary>
@@ -554,6 +604,15 @@
             <summary>
             Whether the script event has been cancelled.
             </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.ScriptEvent.#ctor(Frenetic.CommandSystem.Commands,System.String,System.Collections.Generic.List{Frenetic.CommandSystem.CommandScript})">
+            <summary>
+            Constructs the script event's base data.
+            Called only by implementing script events.
+            </summary>
+            <param name="_system">The command system this event exists within</param>
+            <param name="_name">The name of the event</param>
+            <param name="_handlers">Any pre-existing handlers for this event</param>
         </member>
         <member name="M:Frenetic.CommandSystem.ScriptEvent.Call">
             <summary>
@@ -577,6 +636,12 @@
             <summary>
             The name of this event.
             </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommonCmds.NoopCommand.Execute(Frenetic.CommandSystem.CommandEntry)">
+            <summary>
+            Executes the command.
+            </summary>
+            <param name="entry">Entry to be executed</param>
         </member>
         <member name="T:Frenetic.CommandSystem.CommandScript">
             <summary>
@@ -664,6 +729,11 @@
             Gets the full command string that represents this script.
             </summary>
             <returns>The full command string</returns>
+        </member>
+        <member name="T:Frenetic.TagHandlers.TagParser">
+            <summary>
+            The master class for parsing tags.
+            </summary>
         </member>
         <member name="F:Frenetic.TagHandlers.TagParser.CommandSystem">
             <summary>
@@ -758,6 +828,11 @@
             <param name="left">Whether to pad left (true), or right (false)</param>
             <returns>The padded string</returns>
         </member>
+        <member name="T:Frenetic.CVarSystem">
+            <summary>
+            A system for handling user controllable data variables.
+            </summary>
+        </member>
         <member name="F:Frenetic.CVarSystem.CVarList">
             <summary>
             A list of all existent CVars.
@@ -773,12 +848,60 @@
             The client/server outputter to use.
             </summary>
         </member>
+        <member name="F:Frenetic.CVarSystem.Modified">
+            <summary>
+            Whether the system has been modified or updated since this variable was last set to false.
+            This variable is so implementations can save CVars to file only when needed.
+            </summary>
+        </member>
+        <member name="F:Frenetic.CVarSystem.s_osversion">
+            <summary>
+            System CVars.
+            </summary>
+        </member>
+        <member name="F:Frenetic.CVarSystem.s_user">
+            <summary>
+            System CVars.
+            </summary>
+        </member>
+        <member name="F:Frenetic.CVarSystem.s_dotnetversion">
+            <summary>
+            System CVars.
+            </summary>
+        </member>
+        <member name="F:Frenetic.CVarSystem.s_totalram">
+            <summary>
+            System CVars.
+            </summary>
+        </member>
+        <member name="F:Frenetic.CVarSystem.s_culture">
+            <summary>
+            System CVars.
+            </summary>
+        </member>
+        <member name="F:Frenetic.CVarSystem.s_processors">
+            <summary>
+            System CVars.
+            </summary>
+        </member>
+        <member name="F:Frenetic.CVarSystem.s_machinename">
+            <summary>
+            System CVars.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CVarSystem.#ctor(Frenetic.CommandSystem.Outputter)">
+            <summary>
+            Constructs the CVar system.
+            </summary>
+            <param name="_output">The outputter to use</param>
+        </member>
         <member name="M:Frenetic.CVarSystem.Register(System.String,System.String,Frenetic.CVarFlag)">
             <summary>
             Registers a new CVar.
             </summary>
             <param name="CVar">The name of the CVar</param>
             <param name="value">The default value</param>
+            <param name="flags">The flags to set on this CVar</param>
             <returns>The registered CVar</returns>
         </member>
         <member name="M:Frenetic.CVarSystem.AbsoluteSet(System.String,System.String,System.Boolean)">
@@ -815,10 +938,65 @@
             Perfectly clone the entrydata object.
             </summary>
         </member>
+        <member name="T:Frenetic.TagHandlers.Objects.TimeTag">
+            <summary>
+            Represents a date-time as usable tag.
+            </summary>
+        </member>
         <member name="F:Frenetic.TagHandlers.Objects.TimeTag.Time">
             <summary>
             The text this TextTag represents.
             </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.TimeTag.#ctor(System.DateTime)">
+            <summary>
+            Constructs a time tag.
+            </summary>
+            <param name="_time">The internal date-time to use</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.TimeTag.Handle(Frenetic.TagHandlers.TagData)">
+            <summary>
+            Parse any direct tag input values.
+            </summary>
+            <param name="data">The input tag data</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.TimeTag.ToString">
+            <summary>
+            Returns the a string representation of the date-time internally stored by this time tag.
+            </summary>
+            <returns>A string representation of the date-time</returns>
+        </member>
+        <member name="T:Frenetic.CommandSystem.CommonCmds.DebugOutputInvalidCommand">
+            <summary>
+            A non-user-invocable command called when no other command exists.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommonCmds.DebugOutputInvalidCommand.#ctor">
+            <summary>
+            Constructs the command.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommonCmds.DebugOutputInvalidCommand.Execute(Frenetic.CommandSystem.CommandEntry)">
+            <summary>
+            Executes the command.
+            </summary>
+            <param name="entry">Entry to be executed</param>
+        </member>
+        <member name="T:Frenetic.TagHandlers.Common.UtilTags">
+            <summary>
+            Utility tags.
+            </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Common.UtilTags.#ctor">
+            <summary>
+            Constructs the Utility tags.
+            </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Common.UtilTags.Handle(Frenetic.TagHandlers.TagData)">
+            <summary>
+            Parse any direct tag input values.
+            </summary>
+            <param name="data">The input tag data</param>
         </member>
         <member name="T:Frenetic.TagHandlers.Common.ColorTags">
             <summary>
@@ -835,6 +1013,11 @@
             Handles a 'color' tag.
             </summary>
             <param name="data">The data to be handled</param>
+        </member>
+        <member name="T:Frenetic.CommandSystem.Outputter">
+            <summary>
+            An abstract class, implementations should provide methods that output to a console or equivalent.
+            </summary>
         </member>
         <member name="M:Frenetic.CommandSystem.Outputter.WriteLine(System.String)">
             <summary>
@@ -868,6 +1051,15 @@
             <summary>
             The CVar System used by this command engine.
             </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.Outputter.ReadTextFile(System.String)">
+            <summary>
+            Used to read a text file, generally a script.
+            File format is along the lines of "mymap/myscript.cfg".
+            Throw a System.IO.FileNotFoundException if file does not exist.
+            </summary>
+            <param name="name">The filename to read</param>
+            <returns>The read text file</returns>
         </member>
         <member name="F:Frenetic.CommandSystem.Outputter.Initializing">
             <summary>
@@ -999,6 +1191,31 @@
             A function to invoke when output is generated.
             </summary>
         </member>
+        <member name="T:Frenetic.MessageType">
+            <summary>
+            Command output message types.
+            </summary>
+        </member>
+        <member name="F:Frenetic.MessageType.NUL">
+            <summary>
+            No output type, null, 0.
+            </summary>
+        </member>
+        <member name="F:Frenetic.MessageType.BAD">
+            <summary>
+            Bad output type, 1.
+            </summary>
+        </member>
+        <member name="F:Frenetic.MessageType.GOOD">
+            <summary>
+            Good output type, 2.
+            </summary>
+        </member>
+        <member name="F:Frenetic.MessageType.INFO">
+            <summary>
+            Informational output type, 3.
+            </summary>
+        </member>
         <member name="T:Frenetic.TextStyle">
             <summary>
             Holds all text styles to be used... replace these with your engine's color tag system.
@@ -1059,9 +1276,89 @@
         <member name="F:Frenetic.TextStyle.Color_Importantinfo">
             <summary>Important information style: ^r^3</summary>
         </member>
+        <member name="M:Frenetic.CommandSystem.CommonCmds.SetCommand.Execute(Frenetic.CommandSystem.CommandEntry)">
+            <summary>
+            Executes the command.
+            </summary>
+            <param name="entry">Entry to be executed</param>
+        </member>
+        <member name="T:Frenetic.CommandSystem.CommandQueueEventArgs">
+            <summary>
+            Represents a command queue when used in an event.
+            </summary>
+        </member>
+        <member name="F:Frenetic.CommandSystem.CommandQueueEventArgs.Queue">
+            <summary>
+            The relevant queue.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommandQueueEventArgs.#ctor(Frenetic.CommandSystem.CommandQueue)">
+            <summary>
+            Constructs the event args.
+            </summary>
+            <param name="queue">The relevant queue</param>
+        </member>
+        <member name="T:Frenetic.TagHandlers.Objects.TextTag">
+            <summary>
+            Represents text as a usable tag.
+            </summary>
+        </member>
         <member name="F:Frenetic.TagHandlers.Objects.TextTag.Text">
             <summary>
             The text this TextTag represents.
+            </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.TextTag.#ctor(System.String)">
+            <summary>
+            Constructs a text tag.
+            </summary>
+            <param name="_text">The text to construct it from</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.TextTag.#ctor(System.Boolean)">
+            <summary>
+            Constructs a text tag.
+            </summary>
+            <param name="_text">The text to construct it from</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.TextTag.#ctor(System.Int32)">
+            <summary>
+            Constructs a text tag.
+            </summary>
+            <param name="_text">The text to construct it from</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.TextTag.#ctor(System.Int64)">
+            <summary>
+            Constructs a text tag.
+            </summary>
+            <param name="_text">The text to construct it from</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.TextTag.#ctor(System.Single)">
+            <summary>
+            Constructs a text tag.
+            </summary>
+            <param name="_text">The text to construct it from</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.TextTag.#ctor(System.Double)">
+            <summary>
+            Constructs a text tag.
+            </summary>
+            <param name="_text">The text to construct it from</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.TextTag.Handle(Frenetic.TagHandlers.TagData)">
+            <summary>
+            Parse any direct tag input values.
+            </summary>
+            <param name="data">The input tag data</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.TextTag.ToString">
+            <summary>
+            Converts the text tag to a string by returning the internal text.
+            </summary>
+            <returns>A string representation of this text tag</returns>
+        </member>
+        <member name="T:Frenetic.TagHandlers.Objects.ListTag">
+            <summary>
+            Represents a list as a usable tag.
             </summary>
         </member>
         <member name="F:Frenetic.TagHandlers.Objects.ListTag.ListEntries">
@@ -1069,11 +1366,46 @@
             The list this ListTag represents.
             </summary>
         </member>
+        <member name="M:Frenetic.TagHandlers.Objects.ListTag.#ctor">
+            <summary>
+            Constructs a new list tag.
+            </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.ListTag.#ctor(System.Collections.Generic.List{Frenetic.TagHandlers.TemplateObject})">
+            <summary>
+            Constructs a list tag from a list of entries.
+            </summary>
+            <param name="entries">The entries</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.ListTag.#ctor(System.Collections.Generic.List{System.String})">
+            <summary>
+            Constructs a list tag from a list of textual entries.
+            </summary>
+            <param name="entries">The textual entries</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.ListTag.#ctor(System.String)">
+            <summary>
+            Constructs a list tag from text input.
+            </summary>
+            <param name="list">The text input</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.ListTag.Handle(Frenetic.TagHandlers.TagData)">
+            <summary>
+            Parse any direct tag input values.
+            </summary>
+            <param name="data">The input tag data</param>
+        </member>
         <member name="M:Frenetic.TagHandlers.Objects.ListTag.ToStringList">
             <summary>
             Converts the ListTag to a list of strings.
             </summary>
             <returns>A list of strings</returns>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Objects.ListTag.ToString">
+            <summary>
+            Converts the list tag to a string.
+            </summary>
+            <returns>A string representation of the list</returns>
         </member>
         <member name="M:Frenetic.TagHandlers.Objects.ListTag.ToCSString">
             <summary>
@@ -1116,6 +1448,12 @@
             </summary>
             <param name="_name">See Variable.Name</param>
             <param name="_value">See Variable.Value</param>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommonCmds.ToggleCommand.Execute(Frenetic.CommandSystem.CommandEntry)">
+            <summary>
+            Executes the command.
+            </summary>
+            <param name="entry">Entry to be executed</param>
         </member>
     </members>
 </doc>
