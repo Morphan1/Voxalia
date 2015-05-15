@@ -71,10 +71,10 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 {
                     ((EntityDamageable)pe).Damage(Damage + DamageTimesVelocity * (float)len);
                 }
-                Vector3 loc = (GetPosition() - pe.GetPosition()).ToBVector();
+                Vector3 loc = (args.Info.Position - pe.GetPosition()).ToBVector();
                 Vector3 impulse = GetVelocity().ToBVector() * DamageTimesVelocity / 1000f;
                 pe.Body.ApplyImpulse(ref loc, ref impulse);
-                SetPosition(Position + (GetVelocity() / len) * 0.3f);
+                SetPosition(args.Info.Position + (GetVelocity() / len) * 0.3f);
                 StuckTo = pe;
                 SetVelocity(Location.Zero);
                 Gravity = Location.Zero;
