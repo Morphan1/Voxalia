@@ -74,7 +74,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 Vector3 loc = (args.Info.Position - pe.GetPosition()).ToBVector();
                 Vector3 impulse = GetVelocity().ToBVector() * DamageTimesVelocity / 1000f;
                 pe.Body.ApplyImpulse(ref loc, ref impulse);
-                SetPosition(args.Info.Position + (GetVelocity() / len) * 0.3f);
+                SetPosition(args.Info.Position + (GetVelocity() / len) * 0.05f);
                 StuckTo = pe;
                 SetVelocity(Location.Zero);
                 Gravity = Location.Zero;
