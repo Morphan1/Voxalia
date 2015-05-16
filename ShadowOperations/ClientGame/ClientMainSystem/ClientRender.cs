@@ -118,6 +118,11 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public bool RenderingShadows = false;
 
+        public void sortEntities()
+        {
+            Entities = Entities.OrderBy(o => -(o.GetPosition() - CameraPos).LengthSquared()).ToList();
+        }
+
         void Window_RenderFrame(object sender, FrameEventArgs e)
         {
             gDelta = e.Time;
@@ -128,6 +133,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
                 GL.Enable(EnableCap.DepthTest);
                 CameraPos = Player.GetPosition() + new Location(0, 0, Player.HalfSize.Z * 1.6f);
+                sortEntities();
                 Location CameraAngles = Player.GetAngles();
                 double CameraYaw = CameraAngles.X;
                 double CameraPitch = CameraAngles.Y;
