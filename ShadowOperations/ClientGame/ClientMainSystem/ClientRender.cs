@@ -35,6 +35,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             s_main = Shaders.GetShader("test");
             s_fbo = Shaders.GetShader("fbo");
             s_shadowadder = Shaders.GetShader("shadowadder");
+            s_transponly = Shaders.GetShader("transponly");
             generateLightHelpers();
             ambient = new Location(0.02f);
         }
@@ -92,6 +93,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         Shader s_main;
         Shader s_fbo;
         Shader s_shadowadder;
+        Shader s_transponly;
         RenderSurface4Part RS4P;
 
         public float CameraFOV = 45f;
@@ -231,6 +233,12 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     GL.BindTexture(TextureTarget.Texture2D, 0);
                     GL.ActiveTexture(TextureUnit.Texture0);
                     GL.BindTexture(TextureTarget.Texture2D, 0);
+                    s_transponly.Bind();
+                    GL.UniformMatrix4(1, false, ref combined);
+                    GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, RS4P.fbo);
+                    GL.BlitFramebuffer(0, 0, Window.Width, Window.Height, 0, 0, Window.Width, Window.Height, ClearBufferMask.DepthBufferBit, BlitFramebufferFilter.Nearest);
+                    GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
+                    Render3D(false);
                     Shaders.ColorMultShader.Bind();
                     GL.UniformMatrix4(1, false, ref combined);
                     GL.Enable(EnableCap.CullFace);
