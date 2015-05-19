@@ -159,7 +159,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     }
                     else
                     {
-                        SysConsole.Output(OutputType.WARNING, "Mesh has face with " + face.Indices.Count + " faces!");
+                        SysConsole.Output(OutputType.WARNING, "Mesh has face with " + face.Indices.Count + " vertices!");
                     }
                 }
                 int bc = mesh.Bones.Count;
@@ -444,6 +444,39 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 }
             }
         }
+
+        public bool Skinned = false;
+
+        public void LoadSkin(TextureEngine texs)
+        {
+            if (Skinned)
+            {
+                return;
+            }
+            if (Program.Files.Exists("models/" + Name + ".skin"))
+            {
+                string[] data = Program.Files.ReadText("models/" + Name + ".skin").Split('\n');
+                foreach (string datum in data)
+                {
+                    if (datum.Length > 0)
+                    {
+                        string[] datums = datum.Split('=');
+                        if (datums.Length == 2)
+                        {
+                            Texture tex = texs.GetTexture(datums[1]);
+                            for (int i = 0; i < Meshes.Count; i++)
+                            {
+                                if (Meshes[i].Name == datums[0])
+                                {
+                                    Meshes[i].vbo.Tex = tex;
+                                }
+                            }
+                        }
+                    }
+                }
+                Skinned = true;
+            }
+        }
     }
 
     public class ModelBone
@@ -502,7 +535,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         /// </summary>
         public void Draw()
         {
-            vbo.Render(false);
+            vbo.Render(true);
         }
     }
 
