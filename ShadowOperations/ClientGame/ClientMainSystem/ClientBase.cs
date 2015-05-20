@@ -98,6 +98,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public FontSetEngine FontSets;
         public Renderer Rendering;
         public ModelEngine Models;
+        public AnimationEngine Animations;
 
         public SoundEngine Sounds;
 
@@ -121,6 +122,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Loading model engine...");
             Models = new ModelEngine();
             Models.Init();
+            SysConsole.Output(OutputType.INIT, "Loading animation engine...");
+            Animations = new AnimationEngine();
             SysConsole.Output(OutputType.INIT, "Loading rendering helper...");
             Rendering = new Renderer(Textures);
             Rendering.Init();

@@ -43,6 +43,8 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
 
         public ModelHandler Models;
 
+        public AnimationEngine Animations;
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
@@ -69,6 +71,8 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             Items = new ItemRegistry();
             SysConsole.Output(OutputType.INIT, "Loading model handler...");
             Models = new ModelHandler();
+            SysConsole.Output(OutputType.INIT, "Loading animation handler...");
+            Animations = new AnimationEngine();
             SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
             SysConsole.Output(OutputType.INIT, "Preparing networking...");

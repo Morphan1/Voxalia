@@ -140,7 +140,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     else
                     {
                         Vector3D texCoord = mesh.TextureCoordinateChannels[0][i];
-                        modmesh.vbo.TexCoords.Add(new Vector3(texCoord.X, texCoord.Y, texCoord.Z));
+                        modmesh.vbo.TexCoords.Add(new Vector3(texCoord.X, 1 - texCoord.Y, texCoord.Z));
                     }
                     if (!hasn)
                     {
@@ -284,11 +284,11 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 mat.D1, mat.D2, mat.D3, mat.D4);
         }
 
-        int findPos(double time, NodeAnimationChannel nodeAnim)
+        int findPos(double time, SingleAnimationNode nodeAnim)
         {
-            for (int i = 0; i < nodeAnim.PositionKeyCount - 1; i++)
+            for (int i = 0; i < nodeAnim.Positions.Count - 1; i++)
             {
-                if (time >= nodeAnim.PositionKeys[i].Time && time < nodeAnim.PositionKeys[i + 1].Time)
+                if (time >= nodeAnim.PosTimes[i] && time < nodeAnim.PosTimes[i + 1])
                 {
                     return i;
                 }
@@ -296,39 +296,39 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             return 0;
         }
 
-        Assimp.Vector3D lerpPos(double aTime, NodeAnimationChannel nodeAnim)
+        Location lerpPos(double aTime, SingleAnimationNode nodeAnim)
         {
-            if (nodeAnim.PositionKeyCount == 0)
+            if (nodeAnim.Positions.Count == 0)
             {
-                return new Assimp.Vector3D(0, 0, 0);
+                return Location.Zero;
             }
-            if (nodeAnim.PositionKeyCount == 1)
+            if (nodeAnim.Positions.Count == 1)
             {
-                return nodeAnim.PositionKeys[0].Value;
+                return nodeAnim.Positions[0];
             }
-            int index = findRotate(aTime, nodeAnim);
+            int index = findPos(aTime, nodeAnim);
             int nextIndex = index + 1;
-            if (nextIndex >= nodeAnim.PositionKeyCount)
+            if (nextIndex >= nodeAnim.Positions.Count)
             {
-                return nodeAnim.PositionKeys[0].Value;
+                return nodeAnim.Positions[0];
             }
-            double deltaT = nodeAnim.PositionKeys[nextIndex].Time - nodeAnim.PositionKeys[index].Time;
-            double factor = (aTime - nodeAnim.PositionKeys[index].Time) / deltaT;
+            double deltaT = nodeAnim.PosTimes[nextIndex] - nodeAnim.PosTimes[index];
+            double factor = (aTime - nodeAnim.PosTimes[index]) / deltaT;
             if (factor < 0 || factor > 1)
             {
-                return nodeAnim.PositionKeys[0].Value;
+                return nodeAnim.Positions[0];
             }
-            Assimp.Vector3D start = nodeAnim.PositionKeys[index].Value;
-            Assimp.Vector3D end = nodeAnim.PositionKeys[nextIndex].Value;
-            Vector3D deltaV = end - start;
+            Location start = nodeAnim.Positions[index];
+            Location end = nodeAnim.Positions[nextIndex];
+            Location deltaV = end - start;
             return start + (float)factor * deltaV;
         }
 
-        int findRotate(double time, NodeAnimationChannel nodeAnim)
+        int findRotate(double time, SingleAnimationNode nodeAnim)
         {
-            for (int i = 0; i < nodeAnim.RotationKeyCount - 1; i++)
+            for (int i = 0; i < nodeAnim.Rotations.Count; i++)
             {
-                if (time >= nodeAnim.RotationKeys[i].Time && time < nodeAnim.RotationKeys[i + 1].Time)
+                if (time >= nodeAnim.RotTimes[i] && time < nodeAnim.RotTimes[i + 1])
                 {
                     return i;
                 }
@@ -336,30 +336,30 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             return 0;
         }
 
-        Assimp.Quaternion lerpRotate(double aTime, NodeAnimationChannel nodeAnim)
+        Assimp.Quaternion lerpRotate(double aTime, SingleAnimationNode nodeAnim)
         {
-            if (nodeAnim.RotationKeyCount == 0)
+            if (nodeAnim.Rotations.Count == 0)
             {
                 return new Assimp.Quaternion(0, 0, 0);
             }
-            if (nodeAnim.RotationKeyCount == 1)
+            if (nodeAnim.Rotations.Count == 1)
             {
-                return nodeAnim.RotationKeys[0].Value;
+                return nodeAnim.Rotations[0];
             }
             int index = findRotate(aTime, nodeAnim);
             int nextIndex = index + 1;
-            if (nextIndex >= nodeAnim.ScalingKeyCount)
+            if (nextIndex >= nodeAnim.Rotations.Count)
             {
-                return nodeAnim.RotationKeys[0].Value;
+                return nodeAnim.Rotations[0];
             }
-            double deltaT = nodeAnim.RotationKeys[nextIndex].Time - nodeAnim.RotationKeys[index].Time;
-            double factor = (aTime - nodeAnim.RotationKeys[index].Time) / deltaT;
+            double deltaT = nodeAnim.RotTimes[nextIndex] - nodeAnim.RotTimes[index];
+            double factor = (aTime - nodeAnim.RotTimes[index]) / deltaT;
             if (factor < 0 || factor > 1)
             {
-                return nodeAnim.RotationKeys[0].Value;
+                return nodeAnim.Rotations[0];
             }
-            Assimp.Quaternion start = nodeAnim.RotationKeys[index].Value;
-            Assimp.Quaternion end = nodeAnim.RotationKeys[nextIndex].Value;
+            Assimp.Quaternion start = nodeAnim.Rotations[index];
+            Assimp.Quaternion end = nodeAnim.Rotations[nextIndex];
             Assimp.Quaternion res = Assimp.Quaternion.Slerp(start, end, (float)factor);
             res.Normalize();
             return res;
@@ -385,10 +385,10 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 }
                 Animation pAnim = OriginalModel.Animations[0];
                 Matrix4 nodeTransf = Matrix4.Identity;
-                NodeAnimationChannel pNodeAnim = FindNodeAnim(pAnim, nodename);
+                SingleAnimationNode pNodeAnim = FindNodeAnim(pAnim, nodename);
                 if (pNodeAnim != null)
                 {
-                    nodeTransf = convert(Matrix4x4.FromTranslation(lerpPos(aTime, pNodeAnim))) * convert(new Matrix4x4(lerpRotate(aTime, pNodeAnim).GetMatrix()));
+                    nodeTransf = Matrix4.CreateTranslation(lerpPos(aTime, pNodeAnim).ToOVector()) * convert(new Matrix4x4(lerpRotate(aTime, pNodeAnim).GetMatrix()));
                 }
                 Matrix4 global = transf * nodeTransf;
                 foreach (ModelMesh mesh in Meshes)
@@ -410,12 +410,12 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
         }
 
-        NodeAnimationChannel FindNodeAnim(Animation pAnim, string nodeName)
+        SingleAnimationNode FindNodeAnim(Animation pAnim, string nodeName)
         {
-            for (int i = 0; i < pAnim.NodeAnimationChannelCount; i++)
+            for (int i = 0; i < cAnim.Nodes.Count; i++)
             {
-                NodeAnimationChannel nac = pAnim.NodeAnimationChannels[i];
-                if (nac.NodeName == nodeName)
+                SingleAnimationNode nac = cAnim.Nodes[i];
+                if (nac.Name == nodeName)
                 {
                     return nac;
                 }
@@ -423,23 +423,33 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             return null;
         }
 
+        SingleAnimation cAnim;
+
         /// <summary>
         /// Draws the model.
         /// </summary>
-        public void Draw(double aTime)
+        public void Draw(double aTime = 0, SingleAnimation anim = null)
         {
             for (int i = 0; i < Meshes.Count; i++)
             {
                 if (Meshes[i].Bones.Count > 0)
                 {
-                    globalInverse = convert(OriginalModel.RootNode.Transform).Inverted();
-                    UpdateTransforms(aTime, OriginalModel.RootNode, Matrix4.Identity);
-                    Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];
-                    for (int x = 0; x < Meshes[i].Bones.Count; x++)
+                    cAnim = anim;
+                    if (anim != null)
                     {
-                        mats[x] = Meshes[i].Bones[x].Transform;
+                        globalInverse = convert(OriginalModel.RootNode.Transform).Inverted();
+                        UpdateTransforms(aTime, OriginalModel.RootNode, Matrix4.Identity);
+                        Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];
+                        for (int x = 0; x < Meshes[i].Bones.Count; x++)
+                        {
+                            mats[x] = Meshes[i].Bones[x].Transform;
+                        }
+                        SetBones(mats);
                     }
-                    SetBones(mats);
+                    else
+                    {
+                        SetBones(new Matrix4[] { });
+                    }
                 }
                 Meshes[i].Draw();
                 if (Meshes[i].Bones.Count > 0)

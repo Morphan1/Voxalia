@@ -49,6 +49,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public int cItem = 0;
 
+        public SingleAnimation Anim = null;
+
         /// <summary>
         /// Returns an item in the quick bar.
         /// Can return air.
@@ -116,6 +118,16 @@ namespace ShadowOperations.ServerGame.EntitySystem
             GiveItem(new ItemStack("bow", TheServer, 1, "items/bow", "Bow", "It shoots arrows!", Color.White.ToArgb()));
             GiveItem(new ItemStack("hook", TheServer, 1, "items/hook", "Grappling Hook", "Grab distant things!", Color.White.ToArgb()));
             SetHealth(Health);
+        }
+
+        public void SetAnimation(string anim)
+        {
+            if (Anim != null && Anim.Name == anim)
+            {
+                return;
+            }
+            Anim = TheServer.Animations.GetAnimation(anim);
+            TheServer.SendToAll(new AnimationPacketOut(this, anim));
         }
 
         public void GiveItem(ItemStack item)
@@ -273,6 +285,14 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 {
                     TheServer.Players[i].Network.SendPacket(pupo);
                 }
+            }
+            if (GetVelocity().LengthSquared() > 1)
+            {
+                SetAnimation("human/walk_lowquality");
+            }
+            else
+            {
+                SetAnimation("human/idle01");
             }
             ItemStack cit = GetItemForSlot(cItem);
             if (Click)

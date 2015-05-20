@@ -198,6 +198,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 {
                     ((PlayerEntity)e).Network.SendPacket(new NetStringPacketOut(Networking.Strings.Strings[i]));
                 }
+                ((PlayerEntity)e).SetAnimation("human/idle01");
                 for (int i = 0; i < Entities.Count - 1; i++)
                 {
                     if (Entities[i] is PhysicsEntity)

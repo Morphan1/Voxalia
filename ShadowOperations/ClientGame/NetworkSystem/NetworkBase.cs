@@ -170,6 +170,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 16:
                             packet = new PrimitiveEntityUpdatePacketIn();
                             break;
+                        case 17:
+                            packet = new AnimationPacketIn();
+                            break;
                         default:
                             throw new Exception("Invalid packet ID: " + packetID);
                     }

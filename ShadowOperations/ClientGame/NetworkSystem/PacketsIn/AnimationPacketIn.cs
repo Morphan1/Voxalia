@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using ShadowOperations.Shared;
+using ShadowOperations.ClientGame.EntitySystem;
+
+namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
+{
+    public class AnimationPacketIn: AbstractPacketIn
+    {
+        public override bool ParseBytesAndExecute(byte[] data)
+        {
+            if (data.Length != 8 + 4)
+            {
+                SysConsole.Output(OutputType.WARNING, "Invalid animation packet length");
+                return false;
+            }
+            long EID = Utilities.BytesToLong(Utilities.BytesPartial(data, 0, 8));
+            string anim = TheClient.Network.Strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, 8, 4)));
+            Entity e = TheClient.GetEntity(EID);
+            if (e != null && e is EntityAnimated)
+            {
+                ((EntityAnimated)e).SetAnimation(anim);
+                return true;
+            }
+            SysConsole.Output(OutputType.WARNING, "Not an animated entity: " + EID + " -> " + e);
+            return false;
+        }
+    }
+}

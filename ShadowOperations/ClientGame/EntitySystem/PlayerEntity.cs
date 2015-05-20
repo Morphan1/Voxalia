@@ -16,8 +16,15 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
-    public class PlayerEntity: PhysicsEntity
+    public class PlayerEntity: PhysicsEntity, EntityAnimated
     {
+        public SingleAnimation Anim;
+
+        public void SetAnimation(string anim)
+        {
+            Anim = TheClient.Animations.GetAnimation(anim);
+        }
+
         public Location HalfSize = new Location(0.5f, 0.5f, 1);
 
         public Location Direction = new Location(0, 0, 0);
@@ -178,7 +185,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                     * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
                 GL.UniformMatrix4(2, false, ref mat);
                 TheClient.Rendering.SetMinimumLight(0.0f);
-                model.Draw(0);
+                model.Draw(0, Anim);
             }
         }
     }

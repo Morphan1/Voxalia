@@ -17,8 +17,15 @@ using BEPUphysics.BroadPhaseEntries;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
-    class OtherPlayerEntity: PhysicsEntity
+    class OtherPlayerEntity : PhysicsEntity, EntityAnimated
     {
+        public SingleAnimation Anim;
+
+        public void SetAnimation(string anim)
+        {
+            Anim = TheClient.Animations.GetAnimation(anim);
+        }
+
         public Location HalfSize = new Location(0.5f, 0.5f, 1);
 
         public Location Direction = new Location(0, 0, 0);
@@ -171,12 +178,15 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
-            aTime += TheClient.gDelta / 10f;
-            if (aTime >= 10f)
+            aTime += TheClient.gDelta;
+            if (Anim != null)
             {
-                aTime -= 10f;
+                if (aTime >= Anim.Length)
+                {
+                    aTime = 0;
+                }
             }
-            model.Draw(aTime);
+            model.Draw(aTime, Anim);
         }
     }
 }
