@@ -150,21 +150,21 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public override void Tick()
         {
-            while (Direction.X < 0)
+            while (Direction.Yaw < 0)
             {
-                Direction.X += 360;
+                Direction.Yaw += 360;
             }
-            while (Direction.X > 360)
+            while (Direction.Yaw > 360)
             {
-                Direction.X -= 360;
+                Direction.Yaw -= 360;
             }
-            if (Direction.Y > 89.9f)
+            if (Direction.Pitch > 89.9f)
             {
-                Direction.Y = 89.9f;
+                Direction.Pitch = 89.9f;
             }
-            if (Direction.Y < -89.9f)
+            if (Direction.Pitch < -89.9f)
             {
-                Direction.Y = -89.9f;
+                Direction.Pitch = -89.9f;
             }
             bool fly = false;
             CollisionResult crGround = TheServer.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.1f, HalfSize.Y - 0.1f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
@@ -202,7 +202,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             bool Slow = false;
             if (movement.LengthSquared() > 0)
             {
-                movement = Utilities.RotateVector(movement, Direction.X * Utilities.PI180, fly ? Direction.Y * Utilities.PI180 : 0).Normalize();
+                movement = Utilities.RotateVector(movement, Direction.Yaw * Utilities.PI180, fly ? Direction.Pitch * Utilities.PI180 : 0).Normalize();
             }
             Location intent_vel = movement * MoveSpeed * (Slow || Downward ? 0.5f : 1f);
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
@@ -250,7 +250,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 if (Grabbed.IsSpawned && (Grabbed.GetPosition() - GetEyePosition()).LengthSquared() < 5 * 5 + Grabbed.Widest * Grabbed.Widest)
                 {
-                    Location pos = GetEyePosition() + Utilities.ForwardVector_Deg(Direction.X, Direction.Y) * (2 + Grabbed.Widest);
+                    Location pos = GetEyePosition() + Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch) * (2 + Grabbed.Widest);
                     if (GrabForce >= Grabbed.GetMass())
                     {
                         Grabbed.Body.LinearVelocity = new Vector3(0, 0, 0);

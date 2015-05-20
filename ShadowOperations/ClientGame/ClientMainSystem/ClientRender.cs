@@ -135,8 +135,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 CameraPos = Player.GetPosition() + new Location(0, 0, Player.HalfSize.Z * 1.6f);
                 sortEntities();
                 Location CameraAngles = Player.GetAngles();
-                double CameraYaw = CameraAngles.X;
-                double CameraPitch = CameraAngles.Y;
+                double CameraYaw = CameraAngles.Yaw;
+                double CameraPitch = CameraAngles.Pitch;
                 if (CVars.r_lighting.ValueB)
                 {
                     s_shadow.Bind();

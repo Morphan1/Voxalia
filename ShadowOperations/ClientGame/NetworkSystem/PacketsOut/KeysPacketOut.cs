@@ -13,8 +13,8 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsOut
             ID = 1;
             Data = new byte[2 + 4 + 4];
             Utilities.UshortToBytes((ushort)data).CopyTo(Data, 0);
-            Utilities.FloatToBytes((float)direction.X).CopyTo(Data, 2);
-            Utilities.FloatToBytes((float)direction.Y).CopyTo(Data, 2 + 4);
+            Utilities.FloatToBytes((float)direction.Yaw).CopyTo(Data, 2);
+            Utilities.FloatToBytes((float)direction.Pitch).CopyTo(Data, 2 + 4);
         }
     }
 

@@ -39,7 +39,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             BulletEntity be = new BulletEntity(player.TheServer);
             be.SetPosition(player.GetEyePosition());
             be.NoCollide.Add(player.EID);
-            be.SetVelocity(Utilities.ForwardVector_Deg(player.GetAngles().X, player.GetAngles().Y) * Speed);
+            be.SetVelocity(Utilities.ForwardVector_Deg(player.GetAngles().Yaw, player.GetAngles().Pitch) * Speed);
             be.Size = RoundSize;
             be.Damage = ImpactDamage;
             be.SplashSize = SplashSize;

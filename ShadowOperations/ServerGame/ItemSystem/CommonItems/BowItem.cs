@@ -25,8 +25,8 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             ArrowEntity ae = new ArrowEntity(player.TheServer);
             ae.SetPosition(player.GetEyePosition());
             ae.NoCollide.Add(player.EID);
-            ae.SetVelocity(Utilities.ForwardVector_Deg(player.GetAngles().X, player.GetAngles().Y) * 10);
-            ae.Angles = new Location(0, player.GetAngles().Y, player.GetAngles().X);
+            ae.SetVelocity(Utilities.ForwardVector_Deg(player.GetAngles().Yaw, player.GetAngles().Pitch) * 10);
+            ae.Angles = player.GetAngles();
             player.TheServer.SpawnEntity(ae);
         }
 

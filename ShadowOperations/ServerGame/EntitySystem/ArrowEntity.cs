@@ -55,8 +55,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 Location vel = GetVelocity();
                 if (vel.LengthSquared() > 0)
                 {
-                    Location dir = Utilities.VectorToAngles(vel.Normalize());
-                    Angles = new Location(0, dir.Y, dir.X);
+                    Angles = Utilities.VectorToAngles(vel.Normalize());
                 }
             }
         }

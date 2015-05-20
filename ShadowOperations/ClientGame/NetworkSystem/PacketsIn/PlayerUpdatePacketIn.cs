@@ -21,6 +21,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             ushort keys = Utilities.BytesToUshort(Utilities.BytesPartial(data, 8 + 12 + 12, 2));
             float dX = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 12 + 12 + 2, 4));
             float dY = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 12 + 12 + 2 + 4, 4));
+            Location ang = new Location();
+            ang.Yaw = dX;
+            ang.Pitch = dY;
             for (int i = 0; i < TheClient.Entities.Count; i++)
             {
                 if (TheClient.Entities[i] is OtherPlayerEntity)
@@ -30,7 +33,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                     {
                         e.SetPosition(pos);
                         e.SetVelocity(vel);
-                        e.SetAngles(new Location(dX, dY, 0));
+                        e.SetAngles(ang);
                         e.Forward = (keys & 1) == 1;
                         e.Backward = (keys & 2) == 2;
                         e.Leftward = (keys & 4) == 4;

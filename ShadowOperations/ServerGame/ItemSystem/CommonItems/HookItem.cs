@@ -23,7 +23,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             }
             Location eye = player.GetEyePosition();
             Location dir = player.GetAngles();
-            Location adj = Utilities.ForwardVector_Deg(dir.X, dir.Y) * 20f;
+            Location adj = Utilities.ForwardVector_Deg(dir.Yaw, dir.Pitch) * 20f;
             CollisionResult cr = player.TheServer.Collision.CuboidLineTrace(new Location(0.1f), eye, eye + adj, player.IgnoreThis);
             if (!cr.Hit)
             {

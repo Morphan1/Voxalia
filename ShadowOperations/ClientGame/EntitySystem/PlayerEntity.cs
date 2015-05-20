@@ -72,23 +72,23 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public override void Tick()
         {
-            Direction.X += MouseHandler.MouseDelta.X;
-            Direction.Y += MouseHandler.MouseDelta.Y;
-            while (Direction.X < 0)
+            Direction.Yaw += MouseHandler.MouseDelta.X;
+            Direction.Pitch += MouseHandler.MouseDelta.Y;
+            while (Direction.Yaw < 0)
             {
-                Direction.X += 360;
+                Direction.Yaw += 360;
             }
-            while (Direction.X > 360)
+            while (Direction.Yaw > 360)
             {
-                Direction.X -= 360;
+                Direction.Yaw -= 360;
             }
-            if (Direction.Y > 89.9f)
+            if (Direction.Pitch > 89.9f)
             {
-                Direction.Y = 89.9f;
+                Direction.Pitch = 89.9f;
             }
-            if (Direction.Y < -89.9f)
+            if (Direction.Pitch < -89.9f)
             {
-                Direction.Y = -89.9f;
+                Direction.Pitch = -89.9f;
             }
             bool fly = false;
             bool on_ground = TheClient.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.1f, HalfSize.Y - 0.1f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis).Hit;
@@ -122,7 +122,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             bool Slow = false;
             if (movement.LengthSquared() > 0)
             {
-                movement = Utilities.RotateVector(movement, Direction.X * Utilities.PI180, fly ? Direction.Y * Utilities.PI180 : 0).Normalize();
+                movement = Utilities.RotateVector(movement, Direction.Yaw * Utilities.PI180, fly ? Direction.Pitch * Utilities.PI180 : 0).Normalize();
             }
             Location intent_vel = movement * MoveSpeed * (Slow || Downward ? 0.5f : 1f);
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
@@ -181,7 +181,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             if (TheClient.RenderingShadows)
             {
-                OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateRotationZ((float)(Direction.X * Utilities.PI180))
+                OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
                     * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
                 GL.UniformMatrix4(2, false, ref mat);
                 TheClient.Rendering.SetMinimumLight(0.0f);
