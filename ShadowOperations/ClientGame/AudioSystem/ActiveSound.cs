@@ -30,6 +30,10 @@ namespace ShadowOperations.ClientGame.AudioSystem
 
         public bool Exists = false;
 
+        public bool IsBackground = false;
+
+        public bool Backgrounded = false;
+
         public void Create()
         {
             if (!Exists)

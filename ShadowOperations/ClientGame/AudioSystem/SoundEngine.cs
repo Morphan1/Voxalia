@@ -29,7 +29,7 @@ namespace ShadowOperations.ClientGame.AudioSystem
             Noise = LoadSound(new DataStream(Convert.FromBase64String(NoiseDefault.NoiseB64)), "noise");
         }
 
-        public void Update(Location position, Location forward, Location up, Location velocity)
+        public void Update(Location position, Location forward, Location up, Location velocity, bool selected)
         {
             for (int i = 0; i < PlayingNow.Count; i++)
             {
@@ -38,6 +38,16 @@ namespace ShadowOperations.ClientGame.AudioSystem
                     PlayingNow[i].Destroy();
                     PlayingNow.RemoveAt(i);
                     i--;
+                }
+                else if (!selected && PlayingNow[i].IsBackground && !PlayingNow[i].Backgrounded)
+                {
+                    AL.Source(PlayingNow[i].Src, ALSourcef.Gain, 0.0001f);
+                    PlayingNow[i].Backgrounded = true;
+                }
+                else if (selected && PlayingNow[i].Backgrounded)
+                {
+                    AL.Source(PlayingNow[i].Src, ALSourcef.Gain, PlayingNow[i].Gain);
+                    PlayingNow[i].Backgrounded = false;
                 }
             }
             Vector3 pos = position.ToOVector();

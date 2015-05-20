@@ -125,6 +125,10 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 {
                     SysConsole.Output(OutputType.WARNING, "Mesh has no normals!");
                 }
+                if (!hastc)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Mesh has no texcoords!");
+                }
                 for (int i = 0; i < mesh.Vertices.Count; i++)
                 {
                     Vector3D vertex = mesh.Vertices[i];
@@ -464,17 +468,33 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                         if (datums.Length == 2)
                         {
                             Texture tex = texs.GetTexture(datums[1]);
+                            bool success = false;
                             for (int i = 0; i < Meshes.Count; i++)
                             {
                                 if (Meshes[i].Name == datums[0])
                                 {
                                     Meshes[i].vbo.Tex = tex;
+                                    success = true;
                                 }
+                            }
+                            if (!success)
+                            {
+                                SysConsole.Output(OutputType.WARNING, "Unknown skin entry " + datums[0]);
+                                StringBuilder all = new StringBuilder(Meshes.Count * 100);
+                                for (int i = 0; i < Meshes.Count; i++)
+                                {
+                                    all.Append(Meshes[i].Name + ", ");
+                                }
+                                SysConsole.Output(OutputType.WARNING, "Available: " + all.ToString());
                             }
                         }
                     }
                 }
                 Skinned = true;
+            }
+            else
+            {
+                SysConsole.Output(OutputType.WARNING, "Can't find models/" + Name + ".skin!");
             }
         }
     }
@@ -504,6 +524,10 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         {
             Original = orig;
             Name = _name.ToLower();
+            if (Name.EndsWith(".001"))
+            {
+                Name = Name.Substring(0, Name.Length - ".001".Length);
+            }
             Faces = new List<ModelFace>();
             Bones = new List<ModelBone>();
             BoneLookup = new Dictionary<string, int>();

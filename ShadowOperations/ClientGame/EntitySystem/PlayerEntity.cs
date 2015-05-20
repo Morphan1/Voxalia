@@ -43,7 +43,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Shape.AngularDamping = 1;
             CanRotate = false;
             EID = -1;
-            model = TheClient.Models.GetModel("players/human_male_001.dae");
+            model = TheClient.Models.GetModel("players/human_male_002.dae");
             model.LoadSkin(tclient.Textures);
         }
 

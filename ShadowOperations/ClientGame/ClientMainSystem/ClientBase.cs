@@ -156,7 +156,9 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             {
                 CurrentMusic.Destroy();
             }
-            CurrentMusic = Sounds.Play(Sounds.GetSound(CMusic), true, Location.NaN, CVars.a_musicpitch.ValueF, CVars.a_musicvolume.ValueF); // TODO: Music pitch/volume CVar's
+            SoundEffect mus = Sounds.GetSound(CMusic);
+            CurrentMusic = Sounds.Play(mus, true, Location.NaN, CVars.a_musicpitch.ValueF, CVars.a_musicvolume.ValueF);
+            CurrentMusic.IsBackground = true;
         }
     }
 }
