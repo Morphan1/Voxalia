@@ -85,7 +85,7 @@ namespace ShadowOperations.Shared
                     if (!isgeneral)
                     {
                         node = new SingleAnimationNode();
-                        node.Name = type;
+                        node.Name = type.ToLower();
                     }
                     foreach (KeyValuePair<string, string> entry in entries)
                     {
@@ -135,6 +135,10 @@ namespace ShadowOperations.Shared
                                 SysConsole.Output(OutputType.WARNING, "Unknown NODE key: " + entry.Key);
                             }
                         }
+                    }
+                    if (!isgeneral)
+                    {
+                        created.Nodes.Add(node);
                     }
                     entr++;
                 }

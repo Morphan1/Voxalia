@@ -190,13 +190,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                         ForceSet(modmesh.vbo.BoneWeights, vw.VertexID, spot, vw.Weight);
                     }
                     modmesh.Bones.Add(new ModelBone() { Internal = mesh.Bones[i] });
-                    if (!modmesh.BoneLookup.ContainsKey(mesh.Bones[i].Name))
+                    string nl = mesh.Bones[i].Name.ToLower();
+                    if (!modmesh.BoneLookup.ContainsKey(nl))
                     {
-                        modmesh.BoneLookup.Add(mesh.Bones[i].Name, modmesh.Bones.Count - 1);
+                        modmesh.BoneLookup.Add(nl, modmesh.Bones.Count - 1);
                     }
                     else
                     {
-                        SysConsole.Output(OutputType.WARNING, "Bone " + mesh.Bones[i].Name + " defined repeatedly!");
+                        SysConsole.Output(OutputType.WARNING, "Bone " + nl + " defined repeatedly!");
                     }
                 }
                 model.Meshes.Add(modmesh);
@@ -371,7 +372,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         {
             try
             {
-                string nodename = pNode.Name;
+                string nodename = pNode.Name.ToLower();
                 if (OriginalModel.AnimationCount == 0)
                 {
                     foreach (ModelMesh mesh in Meshes)
@@ -385,7 +386,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 }
                 Animation pAnim = OriginalModel.Animations[0];
                 Matrix4 nodeTransf = Matrix4.Identity;
-                SingleAnimationNode pNodeAnim = FindNodeAnim(pAnim, nodename);
+                SingleAnimationNode pNodeAnim = FindNodeAnim(nodename);
                 if (pNodeAnim != null)
                 {
                     nodeTransf = Matrix4.CreateTranslation(lerpPos(aTime, pNodeAnim).ToOVector()) * convert(new Matrix4x4(lerpRotate(aTime, pNodeAnim).GetMatrix()));
@@ -410,7 +411,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
         }
 
-        SingleAnimationNode FindNodeAnim(Animation pAnim, string nodeName)
+        SingleAnimationNode FindNodeAnim(string nodeName)
         {
             for (int i = 0; i < cAnim.Nodes.Count; i++)
             {
