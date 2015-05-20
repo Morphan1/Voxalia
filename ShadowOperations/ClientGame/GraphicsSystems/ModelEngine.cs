@@ -297,32 +297,36 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             return 0;
         }
 
-        Location lerpPos(double aTime, SingleAnimationNode nodeAnim)
+        Vector3D lerpPos(double aTime, SingleAnimationNode nodeAnim)
         {
             if (nodeAnim.Positions.Count == 0)
             {
-                return Location.Zero;
+                return new Vector3D(0, 0, 0);
             }
             if (nodeAnim.Positions.Count == 1)
             {
-                return nodeAnim.Positions[0];
+                Location pos = nodeAnim.Positions[0];
+                return new Vector3D((float)pos.X, (float)pos.Y, (float)pos.Z);
             }
             int index = findPos(aTime, nodeAnim);
             int nextIndex = index + 1;
             if (nextIndex >= nodeAnim.Positions.Count)
             {
-                return nodeAnim.Positions[0];
+                Location pos = nodeAnim.Positions[0];
+                return new Vector3D((float)pos.X, (float)pos.Y, (float)pos.Z);
             }
             double deltaT = nodeAnim.PosTimes[nextIndex] - nodeAnim.PosTimes[index];
             double factor = (aTime - nodeAnim.PosTimes[index]) / deltaT;
             if (factor < 0 || factor > 1)
             {
-                return nodeAnim.Positions[0];
+                Location pos = nodeAnim.Positions[0];
+                return new Vector3D((float)pos.X, (float)pos.Y, (float)pos.Z);
             }
             Location start = nodeAnim.Positions[index];
             Location end = nodeAnim.Positions[nextIndex];
             Location deltaV = end - start;
-            return start + (float)factor * deltaV;
+            Location npos = start + (float)factor * deltaV;
+            return new Vector3D((float)npos.X, (float)npos.Y, (float)npos.Z);
         }
 
         int findRotate(double time, SingleAnimationNode nodeAnim)
@@ -389,7 +393,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 SingleAnimationNode pNodeAnim = FindNodeAnim(nodename);
                 if (pNodeAnim != null)
                 {
-                    nodeTransf = Matrix4.CreateTranslation(lerpPos(aTime, pNodeAnim).ToOVector()) * convert(new Matrix4x4(lerpRotate(aTime, pNodeAnim).GetMatrix()));
+                    nodeTransf = convert(Matrix4x4.FromTranslation(lerpPos(aTime, pNodeAnim))) * convert(new Matrix4x4(lerpRotate(aTime, pNodeAnim).GetMatrix()));
                 }
                 Matrix4 global = transf * nodeTransf;
                 foreach (ModelMesh mesh in Meshes)
