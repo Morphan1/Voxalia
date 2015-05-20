@@ -167,10 +167,10 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     }
                 }
                 int bc = mesh.Bones.Count;
-                if (bc > 50)
+                if (bc > 70)
                 {
                     SysConsole.Output(OutputType.WARNING, "Mesh has " + bc + " bones!");
-                    bc = 50;
+                    bc = 70;
                 }
                 modmesh.vbo.BoneIDs = new Vector4[modmesh.vbo.Vertices.Count].ToList();
                 modmesh.vbo.BoneWeights = new Vector4[modmesh.vbo.Vertices.Count].ToList();
@@ -183,7 +183,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                         int spot = pos[vw.VertexID]++;
                         if (spot > 3)
                         {
-                            SysConsole.Output(OutputType.WARNING, "Too many bones influencing " + vw.VertexID + "!");
+                            //SysConsole.Output(OutputType.WARNING, "Too many bones influencing " + vw.VertexID + "!");
                             continue;
                         }
                         ForceSet(modmesh.vbo.BoneIDs, vw.VertexID, spot, i);
@@ -252,7 +252,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         void SetBones(Matrix4[] mats)
         {
-            int bones = 50;
+            int bones = 70;
             float[] set = new float[bones * 16];
             for (int i = 0; i < mats.Length; i++)
             {

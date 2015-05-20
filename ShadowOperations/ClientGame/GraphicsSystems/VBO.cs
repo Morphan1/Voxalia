@@ -297,7 +297,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         public static void BonesIdentity()
         {
-            int bones = 50;
+            int bones = 70;
             float[] floats = new float[bones * 4 * 4];
             for (int i = 0; i < bones; i++)
             {

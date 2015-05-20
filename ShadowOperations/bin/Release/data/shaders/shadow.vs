@@ -7,7 +7,7 @@ layout (location = 3) in vec4 color;
 layout (location = 4) in vec4 Weights;
 layout (location = 5) in vec4 BoneID;
 
-const int MAX_BONES = 50;
+const int MAX_BONES = 70;
 
 layout (location = 1) uniform mat4 projection;
 layout (location = 2) uniform mat4 model_matrix;

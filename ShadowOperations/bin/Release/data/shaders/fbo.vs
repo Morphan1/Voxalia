@@ -11,7 +11,7 @@ layout (location = 0) out vec4 f_position;
 layout (location = 1) out vec3 f_normal;
 layout (location = 2) out vec2 f_texcoord;
 
-const int MAX_BONES = 50;
+const int MAX_BONES = 70;
 
 layout (location = 1) uniform mat4 proj_matrix;
 layout (location = 2) uniform mat4 mv_matrix;
