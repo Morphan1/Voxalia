@@ -19,6 +19,7 @@ namespace ShadowOperations.ServerGame.ItemSystem
             Register(new OpenHandItem());
             Register(new HookItem());
             Register(new BowItem());
+            Register(new FlashLightItem());
             Generic = new GenericItem();
         }
 

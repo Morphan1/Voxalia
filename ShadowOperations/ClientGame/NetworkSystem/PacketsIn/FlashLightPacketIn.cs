@@ -1,0 +1,70 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using ShadowOperations.Shared;
+using ShadowOperations.ClientGame.EntitySystem;
+using ShadowOperations.ClientGame.GraphicsSystems;
+using ShadowOperations.ClientGame.GraphicsSystems.LightingSystem;
+
+namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
+{
+    public class FlashLightPacketIn: AbstractPacketIn
+    {
+        public void Destroy(Entity ent)
+        {
+            SpotLight sl = null;
+            if (ent is PlayerEntity)
+            {
+                sl = ((PlayerEntity)ent).Flashlight;
+                ((PlayerEntity)ent).Flashlight = null;
+            }
+            else
+            {
+                sl = ((OtherPlayerEntity)ent).Flashlight;
+                ((OtherPlayerEntity)ent).Flashlight = null;
+            }
+            if (sl != null)
+            {
+                sl.Destroy();
+                TheClient.Lights.Remove(sl);
+            }
+        }
+
+        public override bool ParseBytesAndExecute(byte[] data)
+        {
+            if (data.Length != 8 + 1 + 4 + 12)
+            {
+                return false;
+            }
+            long EID = Utilities.BytesToLong(Utilities.BytesPartial(data, 0, 8));
+            bool enabled = (data[8] & 1) == 1;
+            float distance = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 1, 4));
+            Location color = Location.FromBytes(data, 8 + 1 + 4);
+            Entity ent = TheClient.GetEntity(EID);
+            if (ent == null || !(ent is PlayerEntity || ent is OtherPlayerEntity))
+            {
+                return false;
+            }
+            Destroy(ent);
+            if (enabled)
+            {
+                SpotLight sl = new SpotLight(ent.GetPosition(), 256, distance, color, Location.UnitX, 90);
+                if (ent is PlayerEntity)
+                {
+                    sl.Direction = Utilities.ForwardVector_Deg(((PlayerEntity)ent).GetAngles().Yaw, ((PlayerEntity)ent).GetAngles().Pitch);
+                    sl.Reposition(ent.GetPosition());
+                    ((PlayerEntity)ent).Flashlight = sl;
+                }
+                else
+                {
+                    sl.Direction = Utilities.ForwardVector_Deg(((OtherPlayerEntity)ent).GetAngles().Yaw, ((OtherPlayerEntity)ent).GetAngles().Pitch);
+                    sl.Reposition(ent.GetPosition());
+                    ((OtherPlayerEntity)ent).Flashlight = sl;
+                }
+                TheClient.Lights.Add(sl);
+            }
+            return true;
+        }
+    }
+}

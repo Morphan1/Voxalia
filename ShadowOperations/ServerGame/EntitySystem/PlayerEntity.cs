@@ -45,6 +45,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         bool pkick = false;
 
+        public bool FlashLightOn = false;
+
         public List<ItemStack> Items = new List<ItemStack>();
 
         public int cItem = 0;
@@ -104,6 +106,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public List<HookInfo> Hooks = new List<HookInfo>();
 
+        public double ItemCooldown = 0;
+
         public PlayerEntity(Server tserver, Connection conn)
             : base(tserver, true, 100f)
         {
@@ -117,6 +121,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/9mm_pistol_gun", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb()));
             GiveItem(new ItemStack("bow", TheServer, 1, "items/bow", "Bow", "It shoots arrows!", Color.White.ToArgb()));
             GiveItem(new ItemStack("hook", TheServer, 1, "items/hook", "Grappling Hook", "Grab distant things!", Color.White.ToArgb()));
+            GiveItem(new ItemStack("flashlight", TheServer, 1, "items/flashlight", "Flashlight", "Lights things up!", Color.White.ToArgb()));
             SetHealth(Health);
         }
 

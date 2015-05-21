@@ -132,7 +132,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.1f, 0.1f, 0.1f, 1f });
                 GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
                 GL.Enable(EnableCap.DepthTest);
-                CameraPos = Player.GetPosition() + new Location(0, 0, Player.HalfSize.Z * 1.6f);
+                CameraPos = Player.GetEyePosition();
                 sortEntities();
                 Location CameraAngles = Player.GetAngles();
                 double CameraYaw = CameraAngles.Yaw;
@@ -194,6 +194,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     GL.Disable(EnableCap.CullFace);
                     for (int i = 0; i < Lights.Count; i++)
                     {
+                        GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
                         for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                         {
                             GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);

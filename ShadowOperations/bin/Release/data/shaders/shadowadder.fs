@@ -9,6 +9,7 @@ layout (binding = 5) uniform sampler2D renderhinttex;
 layout (binding = 6) uniform sampler2D diffusetex;
 
 layout (location = 0) in vec2 f_texcoord;
+layout (location = 1) in vec4 f_position;
 
 layout (location = 3) uniform mat4 shadow_matrix;
 layout (location = 4) uniform vec3 light_pos = vec3(5.0, 5.0, 5.0);
@@ -17,6 +18,7 @@ layout (location = 6) uniform float specular_albedo = 0.7;
 layout (location = 8) uniform vec3 light_color = vec3(1.0, 1.0, 1.0);
 layout (location = 9) uniform float light_radius = 30.0;
 layout (location = 10) uniform vec3 eye_pos = vec3(0.0, 0.0, 0.0);
+layout (location = 11) uniform float light_type = 0.0;
 
 out vec4 color;
 
@@ -49,6 +51,10 @@ void main()
 	{
 		float d = light_length / light_radius;
 		atten = clamp(1.0 - (d * d), 0.0, 1.0);
+	}
+	if (light_type == 1.0)
+	{
+		atten *= 1 - (f_spos.x * f_spos.x + f_spos.y * f_spos.y);
 	}
 	vec3 L = light_path / light_length;
 	vec3 V = normalize(position - eye_pos);

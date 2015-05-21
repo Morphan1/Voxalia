@@ -13,6 +13,7 @@ using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
 using ShadowOperations.ClientGame.GraphicsSystems;
 using OpenTK.Graphics.OpenGL4;
+using ShadowOperations.ClientGame.GraphicsSystems.LightingSystem;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -50,7 +51,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Shape.AngularDamping = 1;
             CanRotate = false;
             EID = -1;
-            model = TheClient.Models.GetModel("players/human_male_002.dae");
             model = TheClient.Models.GetModel("players/human_male_004.dae");
             model.LoadSkin(tclient.Textures);
         }
@@ -150,7 +150,14 @@ namespace ShadowOperations.ClientGame.EntitySystem
                   | (Upward ? KeysPacketData.UPWARD : 0) | (Downward ? KeysPacketData.DOWNWARD : 0)
                   | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK: 0);
             TheClient.Network.SendPacket(new KeysPacketOut(kpd, Direction));
+            if (Flashlight != null)
+            {
+                Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
+                Flashlight.Reposition(GetEyePosition() + Flashlight.Direction * 0.3f);
+            }
         }
+
+        public SpotLight Flashlight = null;
 
         public float MoveSpeed = 10;
 
@@ -162,6 +169,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public override void SetAngles(Location rot)
         {
             Direction = rot;
+        }
+
+        public Location GetEyePosition()
+        {
+            return GetPosition() + new Location(0, 0, HalfSize.Z * 1.6f);
         }
 
         public override Location GetPosition()

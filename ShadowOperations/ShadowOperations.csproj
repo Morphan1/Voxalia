@@ -110,6 +110,7 @@
     <Compile Include="ClientGame\GraphicsSystems\LightingSystem\Light.cs" />
     <Compile Include="ClientGame\GraphicsSystems\LightingSystem\LightObject.cs" />
     <Compile Include="ClientGame\GraphicsSystems\LightingSystem\PointLight.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\LightingSystem\SpotLight.cs" />
     <Compile Include="ClientGame\GraphicsSystems\ModelEngine.cs" />
     <Compile Include="ClientGame\GraphicsSystems\Plane.cs" />
     <Compile Include="ClientGame\GraphicsSystems\Renderer.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AnimationPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\DespawnEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\DestroyJointPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\FlashLightPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\MessagePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\NetStringPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PhysicsEntityUpdatePacketIn.cs" />
@@ -175,6 +177,7 @@
     <Compile Include="ServerGame\ItemSystem\BaseItemInfo.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BaseGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BowItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\FlashLightItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\GenericItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\HookItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\OpenHandItem.cs" />
@@ -198,6 +201,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AnimationPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\DespawnEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\DestroyJointPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\FlashLightPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\MessagePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\NetStringPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PhysicsEntityUpdatePacketOut.cs" />
