@@ -372,13 +372,13 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         Matrix4 globalInverse = Matrix4.Identity;
 
-        public void UpdateTransforms(double aTime, Node pNode, Matrix4 transf)
+        public void UpdateTransforms(double aTime, Node pNode, Matrix4 transf, byte mode)
         {
             try
             {
                 string nodename = pNode.Name.ToLower();
                 Matrix4 nodeTransf = Matrix4.Identity;
-                SingleAnimationNode pNodeAnim = FindNodeAnim(nodename);
+                SingleAnimationNode pNodeAnim = FindNodeAnim(nodename, mode);
                 if (pNodeAnim != null)
                 {
                     nodeTransf = convert(Matrix4x4.FromTranslation(lerpPos(aTime, pNodeAnim))) * convert(new Matrix4x4(lerpRotate(aTime, pNodeAnim).GetMatrix()));
@@ -394,7 +394,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 }
                 for (int i = 0; i < pNode.ChildCount; i++)
                 {
-                    UpdateTransforms(aTime, pNode.Children[i], global);
+                    UpdateTransforms(aTime, pNode.Children[i], global, mode);
                 }
             }
             catch (Exception ex)
@@ -403,11 +403,24 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
         }
 
-        SingleAnimationNode FindNodeAnim(string nodeName)
+        SingleAnimationNode FindNodeAnim(string nodeName, int mode)
         {
-            for (int i = 0; i < cAnim.Nodes.Count; i++)
+            List<SingleAnimationNode> nodes;
+            if (mode == 0)
             {
-                SingleAnimationNode nac = cAnim.Nodes[i];
+                nodes = hAnim.Nodes;
+            }
+            else if (mode == 1)
+            {
+                nodes = tAnim.Nodes;
+            }
+            else
+            {
+                nodes = lAnim.Nodes;
+            }
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                SingleAnimationNode nac = nodes[i];
                 if (nac.Name == nodeName)
                 {
                     return nac;
@@ -416,22 +429,37 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             return null;
         }
 
-        SingleAnimation cAnim;
+        SingleAnimation hAnim;
+        SingleAnimation tAnim;
+        SingleAnimation lAnim;
 
         /// <summary>
         /// Draws the model.
         /// </summary>
-        public void Draw(double aTime = 0, SingleAnimation anim = null)
+        public void Draw(double aTimeHead = 0, SingleAnimation headanim = null, double aTimeTorso = 0, SingleAnimation torsoanim = null, double aTimeLegs = 0, SingleAnimation legsanim = null)
         {
             for (int i = 0; i < Meshes.Count; i++)
             {
                 if (Meshes[i].Bones.Count > 0)
                 {
-                    cAnim = anim;
-                    if (anim != null)
+                    hAnim = headanim;
+                    tAnim = torsoanim;
+                    lAnim = legsanim;
+                    if (hAnim != null || tAnim != null || lAnim != null)
                     {
                         globalInverse = convert(OriginalModel.RootNode.Transform).Inverted();
-                        UpdateTransforms(aTime, OriginalModel.RootNode, Matrix4.Identity);
+                        if (hAnim != null)
+                        {
+                            UpdateTransforms(aTimeHead, OriginalModel.RootNode, Matrix4.Identity, 0);
+                        }
+                        if (tAnim != null)
+                        {
+                            UpdateTransforms(aTimeTorso, OriginalModel.RootNode, Matrix4.Identity, 1);
+                        }
+                        if (lAnim != null)
+                        {
+                            UpdateTransforms(aTimeLegs, OriginalModel.RootNode, Matrix4.Identity, 2);
+                        }
                         Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];
                         for (int x = 0; x < Meshes[i].Bones.Count; x++)
                         {

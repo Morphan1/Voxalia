@@ -20,11 +20,24 @@ namespace ShadowOperations.ClientGame.EntitySystem
 {
     class OtherPlayerEntity : PhysicsEntity, EntityAnimated
     {
-        public SingleAnimation Anim;
+        public SingleAnimation hAnim;
+        public SingleAnimation tAnim;
+        public SingleAnimation lAnim;
 
-        public void SetAnimation(string anim)
+        public void SetAnimation(string anim, byte mode)
         {
-            Anim = TheClient.Animations.GetAnimation(anim);
+            if (mode == 0)
+            {
+                hAnim = TheClient.Animations.GetAnimation(anim);
+            }
+            else if (mode == 1)
+            {
+                tAnim = TheClient.Animations.GetAnimation(anim);
+            }
+            else
+            {
+                lAnim = TheClient.Animations.GetAnimation(anim);
+            }
         }
 
         public Location HalfSize = new Location(0.5f, 0.5f, 1);
@@ -142,7 +155,30 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
                 Flashlight.Reposition(GetEyePosition() + Flashlight.Direction * 0.3f);
             }
-            aTime += TheClient.Delta;
+            aHTime += TheClient.Delta;
+            aTTime += TheClient.Delta;
+            aLTime += TheClient.Delta;
+            if (hAnim != null)
+            {
+                if (aHTime >= hAnim.Length)
+                {
+                    aHTime = 0;
+                }
+            }
+            if (tAnim != null)
+            {
+                if (aTTime >= tAnim.Length)
+                {
+                    aTTime = 0;
+                }
+            }
+            if (lAnim != null)
+            {
+                if (aLTime >= lAnim.Length)
+                {
+                    aLTime = 0;
+                }
+            }
         }
 
         public SpotLight Flashlight = null;
@@ -180,7 +216,9 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Body.CollisionInformation.CollisionRules.Group = TheClient.Collision.Player;
         }
 
-        public double aTime;
+        public double aHTime;
+        public double aTTime;
+        public double aLTime;
 
         public override void Render()
         {
@@ -192,14 +230,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
-            if (Anim != null)
-            {
-                if (aTime >= Anim.Length)
-                {
-                    aTime = 0;
-                }
-            }
-            model.Draw(aTime, Anim);
+            model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
         }
     }
 }

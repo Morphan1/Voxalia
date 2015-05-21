@@ -10,7 +10,18 @@ namespace ShadowOperations.Shared
         public AnimationEngine()
         {
             Animations = new Dictionary<string, SingleAnimation>();
+            TorsoBones = new string[] { "hips", "spine", "chest", "chest1", "shoulder.l", "upper_arm.l", "forearm.l", "hand.l",
+                "thumb.01.l", "thumb.02.l", "thumb.03.l", "f_index.01.l", "f_index.02.l", "f_index.03.l", "f_middle.01.l", "f_middle.02.l", "f_middle.03.l",
+            "f_pinky.01.l", "f_pinky.02.l", "f_pinky.03.l", "f_ring.01.l", "f_ring.02.l", "f_ringy.03.l",
+            "shoulder.r", "upper_arm.r", "forearm.r", "hand.r", "thumb.01.r", "thumb.02.r", "thumb.03.r", "f_index.01.r", "f_index.02.r", "f_index.03.r",
+            "f_middle.01.r", "f_middle.02.r", "f_middle.03.r", "f_pinky.01.r", "f_pinky.02.r", "f_pinky.03.r", "f_ring.01.r", "f_ring.02.r", "f_ringy.03.r" };
+            HeadBones = new string[] { "neck", "head", "jaw", "tongue_base", "tongue_mod", "tongue_tip", "lolid.l", "lolid.r", "uplid.l", "uplid.r", "eye.l", "eye.r" };
+            LegBones = new string[] { "thigh.l", "shin.l", "foot.l", "toe.l", "thigh.r", "shin.r", "foot.r", "toe.r" };
         }
+
+        public string[] HeadBones;
+        public string[] TorsoBones;
+        public string[] LegBones;
 
         public Dictionary<string, SingleAnimation> Animations;
 
@@ -31,7 +42,7 @@ namespace ShadowOperations.Shared
             catch (Exception ex)
             {
                 SysConsole.Output(OutputType.ERROR, "Loading an animation: " + ex.ToString());
-                sa = new SingleAnimation() { Name = namelow, Length = 1 };
+                sa = new SingleAnimation() { Name = namelow, Length = 1, Engine = this };
                 Animations.Add(sa.Name, sa);
                 return sa;
             }
@@ -142,6 +153,7 @@ namespace ShadowOperations.Shared
                     }
                     entr++;
                 }
+                created.Engine = this;
                 return created;
             }
             else
@@ -156,6 +168,8 @@ namespace ShadowOperations.Shared
         public string Name;
 
         public double Length;
+
+        public AnimationEngine Engine;
 
         public List<SingleAnimationNode> Nodes = new List<SingleAnimationNode>();
     }

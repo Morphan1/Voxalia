@@ -19,11 +19,24 @@ namespace ShadowOperations.ClientGame.EntitySystem
 {
     public class PlayerEntity: PhysicsEntity, EntityAnimated
     {
-        public SingleAnimation Anim;
+        public SingleAnimation hAnim;
+        public SingleAnimation tAnim;
+        public SingleAnimation lAnim;
 
-        public void SetAnimation(string anim)
+        public void SetAnimation(string anim, byte mode)
         {
-            Anim = TheClient.Animations.GetAnimation(anim);
+            if (mode == 0)
+            {
+                hAnim = TheClient.Animations.GetAnimation(anim);
+            }
+            else if (mode == 1)
+            {
+                tAnim = TheClient.Animations.GetAnimation(anim);
+            }
+            else
+            {
+                lAnim = TheClient.Animations.GetAnimation(anim);
+            }
         }
 
         public Location HalfSize = new Location(0.5f, 0.5f, 1);
@@ -198,7 +211,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                     * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
                 GL.UniformMatrix4(2, false, ref mat);
                 TheClient.Rendering.SetMinimumLight(0.0f);
-                model.Draw(0, Anim);
+                model.Draw(0, hAnim, 0, tAnim, 0, lAnim);
             }
         }
     }

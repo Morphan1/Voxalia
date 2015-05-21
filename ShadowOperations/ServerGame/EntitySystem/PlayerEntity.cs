@@ -51,7 +51,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public int cItem = 0;
 
-        public SingleAnimation Anim = null;
+        public SingleAnimation hAnim = null;
+        public SingleAnimation tAnim = null;
+        public SingleAnimation lAnim = null;
 
         /// <summary>
         /// Returns an item in the quick bar.
@@ -125,14 +127,33 @@ namespace ShadowOperations.ServerGame.EntitySystem
             SetHealth(Health);
         }
 
-        public void SetAnimation(string anim)
+        public void SetAnimation(string anim, byte mode)
         {
-            if (Anim != null && Anim.Name == anim)
+            if (mode == 0)
             {
-                return;
+                if (hAnim != null && hAnim.Name == anim)
+                {
+                    return;
+                }
+                hAnim = TheServer.Animations.GetAnimation(anim);
             }
-            Anim = TheServer.Animations.GetAnimation(anim);
-            TheServer.SendToAll(new AnimationPacketOut(this, anim));
+            else if (mode == 1)
+            {
+                if (tAnim != null && tAnim.Name == anim)
+                {
+                    return;
+                }
+                tAnim = TheServer.Animations.GetAnimation(anim);
+            }
+            else
+            {
+                if (lAnim != null && lAnim.Name == anim)
+                {
+                    return;
+                }
+                lAnim = TheServer.Animations.GetAnimation(anim);
+            }
+            TheServer.SendToAll(new AnimationPacketOut(this, anim, mode));
         }
 
         public void GiveItem(ItemStack item)
@@ -293,11 +314,13 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             if (GetVelocity().LengthSquared() > 1)
             {
-                SetAnimation("human/walk_lowquality");
+                SetAnimation("human/walk_lowquality", 1);
+                SetAnimation("human/walk_lowquality", 2);
             }
             else
             {
-                SetAnimation("human/idle01");
+                SetAnimation("human/idle01", 1);
+                SetAnimation("human/idle01", 2);
             }
             ItemStack cit = GetItemForSlot(cItem);
             if (Click)

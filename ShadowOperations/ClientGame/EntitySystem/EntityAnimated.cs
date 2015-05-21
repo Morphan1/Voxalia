@@ -7,6 +7,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
 {
     public interface EntityAnimated
     {
-        void SetAnimation(string anim);
+        void SetAnimation(string anim, byte mode);
     }
 }
