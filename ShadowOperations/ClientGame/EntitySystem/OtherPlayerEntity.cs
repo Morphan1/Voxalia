@@ -51,6 +51,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             CanRotate = false;
             EID = -1;
             model = TheClient.Models.GetModel("players/human_male_002.dae");
+            model = TheClient.Models.GetModel("players/human_male_004.dae");
             model.LoadSkin(tclient.Textures);
         }
 

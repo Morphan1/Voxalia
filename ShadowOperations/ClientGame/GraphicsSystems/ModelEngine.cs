@@ -377,18 +377,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             try
             {
                 string nodename = pNode.Name.ToLower();
-                if (OriginalModel.AnimationCount == 0)
-                {
-                    foreach (ModelMesh mesh in Meshes)
-                    {
-                        foreach (ModelBone bone in mesh.Bones)
-                        {
-                            bone.Transform = Matrix4.Identity;
-                        }
-                    }
-                    return;
-                }
-                Animation pAnim = OriginalModel.Animations[0];
                 Matrix4 nodeTransf = Matrix4.Identity;
                 SingleAnimationNode pNodeAnim = FindNodeAnim(nodename);
                 if (pNodeAnim != null)
