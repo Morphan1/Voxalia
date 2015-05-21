@@ -142,6 +142,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
                 Flashlight.Reposition(GetEyePosition() + Flashlight.Direction * 0.3f);
             }
+            aTime += TheClient.Delta;
         }
 
         public SpotLight Flashlight = null;
@@ -191,7 +192,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
-            aTime += TheClient.gDelta;
             if (Anim != null)
             {
                 if (aTime >= Anim.Length)

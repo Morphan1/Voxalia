@@ -123,9 +123,14 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Entities = Entities.OrderBy(o => -(o.GetPosition() - CameraPos).LengthSquared()).ToList();
         }
 
+        public int gTicks = 0;
+
+        public int gFPS = 0;
+
         void Window_RenderFrame(object sender, FrameEventArgs e)
         {
             gDelta = e.Time;
+            gTicks++;
             try
             {
                 RenderTextures = true;
@@ -339,7 +344,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public void Render2D()
         {
             GL.Disable(EnableCap.CullFace);
-            FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta) + "\n" + Player.GetPosition()
+            FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
+                + "\n" + Player.GetPosition()
                 + "\n" + Player.GetVelocity() + " == " + Player.GetVelocity().Length()
                 + "\nLight source(s): " + Lights.Count
                 + "\nEntities: " + Entities.Count, new Location(0, 0, 0));

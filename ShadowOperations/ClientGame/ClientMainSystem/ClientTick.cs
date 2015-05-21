@@ -87,6 +87,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public void OncePerSecondActions()
         {
+            gFPS = gTicks;
+            gTicks = 0;
             if (CVars.system.Modified)
             {
                 CVars.system.Modified = false;
