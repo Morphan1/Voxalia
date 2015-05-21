@@ -5,6 +5,7 @@ using System.Text;
 using ShadowOperations.ServerGame.ServerMainSystem;
 using Frenetic;
 using Frenetic.CommandSystem;
+using ShadowOperations.ServerGame.CommandSystem.CommonCommands;
 using ShadowOperations.ServerGame.CommandSystem.MapCommands;
 using ShadowOperations.ServerGame.CommandSystem.PlayerCommands;
 
@@ -41,6 +42,9 @@ namespace ShadowOperations.ServerGame.CommandSystem
             Output = _output;
             CommandSystem.Output = Output;
             CommandSystem.Init();
+
+            // Common Commands
+            CommandSystem.RegisterCommand(new SayCommand(TheServer));
 
             // Map Commands
             CommandSystem.RegisterCommand(new LoadCommand(TheServer));

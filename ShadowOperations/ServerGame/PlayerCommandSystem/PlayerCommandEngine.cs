@@ -14,7 +14,7 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem
 
         public PlayerCommandEngine()
         {
-            Register(new GrabPlayerCommand());
+            Register(new SayPlayerCommand());
         }
 
         public void Register(AbstractPlayerCommand cmd)

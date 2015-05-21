@@ -73,6 +73,15 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             }
         }
 
+        public void Broadcast(string message)
+        {
+            SysConsole.Output(OutputType.INFO, "[Broadcast] " + message);
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Players[i].Network.SendMessage(message);
+            }
+        }
+
         public double opsat = 0;
 
         string SaveStr = null;

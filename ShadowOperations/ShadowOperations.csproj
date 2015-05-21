@@ -157,6 +157,7 @@
     <Compile Include="ClientGame\UISystem\UIConsole.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerGame\CommandSystem\CommonCommands\SayCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\MapCommands\LoadCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\PlayerCommands\KickCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerCommands.cs" />
@@ -221,7 +222,7 @@
     <Compile Include="Shared\DataReader.cs" />
     <Compile Include="Shared\ItemStackBase.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\AbstractPlayerCommand.cs" />
-    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\GrabPlayerCommand.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\SayPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\PlayerCommandEngine.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\PlayerCommandEntry.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerPhysics.cs" />
