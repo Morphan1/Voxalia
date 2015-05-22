@@ -72,8 +72,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
         /// </summary>
         public BEPUphysics.Entities.Entity Shape = null;
 
-        public List<BaseJoint> Joints = new List<BaseJoint>();
-
         /// <summary>
         /// Builds and spawns the body into the world.
         /// </summary>
@@ -98,8 +96,12 @@ namespace ShadowOperations.ClientGame.EntitySystem
             TheClient.PhysicsWorld.Add(Body);
             for (int i = 0; i < Joints.Count; i++)
             {
-                Joints[i].CurrentJoint = Joints[i].GetBaseJoint();
-                TheClient.PhysicsWorld.Add(Joints[i].CurrentJoint);
+                if (Joints[i] is BaseJoint)
+                {
+                    BaseJoint joint = (BaseJoint)Joints[i];
+                    joint.CurrentJoint = joint.GetBaseJoint();
+                    TheClient.PhysicsWorld.Add(joint.CurrentJoint);
+                }
             }
         }
 
@@ -117,7 +119,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
             WorldTransform = Body.WorldTransform;
             for (int i = 0; i < Joints.Count; i++)
             {
-                TheClient.PhysicsWorld.Remove(Joints[i].CurrentJoint);
+                if (Joints[i] is BaseJoint)
+                {
+                    BaseJoint joint = (BaseJoint)Joints[i];
+                    TheClient.PhysicsWorld.Remove(joint.CurrentJoint);
+                }
             }
             TheClient.PhysicsWorld.Remove(Body);
             Body = null;
@@ -299,7 +305,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public OpenTK.Matrix4 GetOrientationMatrix()
         {
             Matrix3x3 omat = Body.OrientationMatrix;
-            //omat.Transpose();
             Matrix mat = Matrix3x3.ToMatrix4X4(omat);
             return new OpenTK.Matrix4(mat.M11, mat.M12, mat.M13, mat.M14, mat.M21, mat.M22,
                 mat.M23, mat.M24, mat.M31, mat.M32, mat.M33, mat.M34, mat.M41, mat.M42, mat.M43, mat.M44);
@@ -308,7 +313,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         /// <summary>
         /// Returns the orientation of an entity.
         /// </summary>
-        public virtual Quaternion GetOrientation()
+        public override Quaternion GetOrientation()
         {
             if (Body != null)
             {
@@ -321,7 +326,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         /// Sets the direction of the entity.
         /// </summary>
         /// <param name="rot">The new angles</param>
-        public virtual void SetOrientation(Quaternion rot)
+        public override void SetOrientation(Quaternion rot)
         {
             if (Body != null)
             {

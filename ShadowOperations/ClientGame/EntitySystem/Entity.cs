@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ClientGame.ClientMainSystem;
+using ShadowOperations.ClientGame.JointSystem;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -48,6 +49,12 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public abstract void Render();
 
         public bool Visible = false;
+
+        public abstract BEPUutilities.Quaternion GetOrientation();
+
+        public abstract void SetOrientation(BEPUutilities.Quaternion quat);
+
+        public List<InternalBaseJoint> Joints = new List<InternalBaseJoint>();
 
         /// <summary>
         /// Tick the entity. Default implementation throws exception.

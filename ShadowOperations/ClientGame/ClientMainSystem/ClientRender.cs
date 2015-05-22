@@ -306,11 +306,12 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             {
                 if (Joints[i] is JointDistance)
                 {
-                    Rendering.RenderLine(((JointDistance)Joints[i]).Ent1Pos + Joints[i].Ent1.GetPosition(), ((JointDistance)Joints[i]).Ent2Pos + Joints[i].Ent2.GetPosition());
+                    // TODO: Only render if set to
+                    Rendering.RenderLine(((JointDistance)Joints[i]).Ent1Pos + Joints[i].One.GetPosition(), ((JointDistance)Joints[i]).Ent2Pos + Joints[i].Two.GetPosition());
                 }
                 else
                 {
-                    Rendering.RenderLine(Joints[i].Ent1.GetPosition(), Joints[i].Ent2.GetPosition());
+                    //Rendering.RenderLine(Joints[i].Ent1.GetPosition(), Joints[i].Ent2.GetPosition());
                 }
             }
         }

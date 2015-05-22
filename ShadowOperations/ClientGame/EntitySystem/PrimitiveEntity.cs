@@ -44,6 +44,16 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public BEPUutilities.Quaternion Angles;
 
+        public override BEPUutilities.Quaternion GetOrientation()
+        {
+            return Angles;
+        }
+
+        public override void SetOrientation(BEPUutilities.Quaternion quat)
+        {
+            Angles = quat;
+        }
+
         public Location Scale;
 
         public override Location GetPosition()

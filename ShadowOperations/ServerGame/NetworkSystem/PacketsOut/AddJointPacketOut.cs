@@ -9,7 +9,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
 {
     public class AddJointPacketOut : AbstractPacketOut
     {
-        public AddJointPacketOut(BaseJoint joint)
+        public AddJointPacketOut(InternalBaseJoint joint)
         {
             ID = 12;
             int len = 1 + 8 + 8 + 8;
@@ -39,8 +39,13 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
                 Data[0] = 3;
                 Utilities.FloatToBytes(((JointPullPush)joint).Strength).CopyTo(Data, len);
             }
-            Utilities.LongToBytes(joint.Ent1.EID).CopyTo(Data, 1);
-            Utilities.LongToBytes(joint.Ent2.EID).CopyTo(Data, 1 + 8);
+            else if (joint is JointForceWeld)
+            {
+                Data = new byte[len];
+                Data[0] = 4;
+            }
+            Utilities.LongToBytes(joint.One.EID).CopyTo(Data, 1);
+            Utilities.LongToBytes(joint.Two.EID).CopyTo(Data, 1 + 8);
             Utilities.LongToBytes(joint.JID).CopyTo(Data, 1 + 8 + 8);
         }
     }

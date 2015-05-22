@@ -104,6 +104,17 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Velocity = vel;
         }
 
+
+        public override BEPUutilities.Quaternion GetOrientation()
+        {
+            return Angles;
+        }
+
+        public override void SetOrientation(BEPUutilities.Quaternion quat)
+        {
+            Angles = quat;
+        }
+
         public override List<KeyValuePair<string, string>> GetVariables()
         {
             List<KeyValuePair<string, string>> vars = base.GetVariables();

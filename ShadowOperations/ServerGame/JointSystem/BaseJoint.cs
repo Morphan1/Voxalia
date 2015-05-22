@@ -8,12 +8,31 @@ using BEPUphysics.Constraints.TwoEntity;
 
 namespace ShadowOperations.ServerGame.JointSystem
 {
-    public abstract class BaseJoint
+    public abstract class BaseJoint : InternalBaseJoint
     {
-        public PhysicsEntity Ent1;
-        public PhysicsEntity Ent2;
+        public PhysicsEntity Ent1
+        {
+            get
+            {
+                return (PhysicsEntity)One;
+            }
+            set
+            {
+                One = value;
+            }
+        }
 
-        public long JID;
+        public PhysicsEntity Ent2
+        {
+            get
+            {
+                return (PhysicsEntity)Two;
+            }
+            set
+            {
+                Two = value;
+            }
+        }
 
         public abstract TwoEntityConstraint GetBaseJoint();
 

@@ -39,29 +39,37 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
         /// </summary>
         public List<SpawnPointEntity> SpawnPoints = new List<SpawnPointEntity>();
 
-        public List<BaseJoint> Joints = new List<BaseJoint>();
+        public List<InternalBaseJoint> Joints = new List<InternalBaseJoint>();
 
         long jID = 0;
 
         public double GlobalTickTime = 0;
 
-        public void AddJoint(BaseJoint joint)
+        public void AddJoint(InternalBaseJoint joint)
         {
             Joints.Add(joint);
-            joint.Ent1.Joints.Add(joint);
-            joint.Ent2.Joints.Add(joint);
+            joint.One.Joints.Add(joint);
+            joint.Two.Joints.Add(joint);
             joint.JID = jID;
-            joint.CurrentJoint = joint.GetBaseJoint();
-            PhysicsWorld.Add(joint.CurrentJoint);
+            if (joint is BaseJoint)
+            {
+                BaseJoint pjoint = (BaseJoint)joint;
+                pjoint.CurrentJoint = pjoint.GetBaseJoint();
+                PhysicsWorld.Add(pjoint.CurrentJoint);
+            }
             SendToAll(new AddJointPacketOut(joint));
         }
 
-        public void DestroyJoint(BaseJoint joint)
+        public void DestroyJoint(InternalBaseJoint joint)
         {
             Joints.Remove(joint);
-            joint.Ent1.Joints.Remove(joint);
-            joint.Ent2.Joints.Remove(joint);
-            PhysicsWorld.Remove(joint.CurrentJoint);
+            joint.One.Joints.Remove(joint);
+            joint.Two.Joints.Remove(joint);
+            if (joint is BaseJoint)
+            {
+                BaseJoint pjoint = (BaseJoint)joint;
+                PhysicsWorld.Remove(pjoint.CurrentJoint);
+            }
             SendToAll(new DestroyJointPacketOut(joint));
         }
 
@@ -143,6 +151,13 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 for (int i = 0; i < Tickers.Count; i++)
                 {
                     Tickers[i].Tick();
+                }
+                for (int i = 0; i < Joints.Count; i++)
+                {
+                    if (Joints[i] is BaseFJoint)
+                    {
+                        ((BaseFJoint)Joints[i]).Solve();
+                    }
                 }
             }
             catch (Exception ex)

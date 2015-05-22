@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.ServerMainSystem;
+using ShadowOperations.ServerGame.JointSystem;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -40,6 +41,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// </summary>
         public Server TheServer = null;
 
+        public List<InternalBaseJoint> Joints = new List<InternalBaseJoint>();
+
         /// <summary>
         /// Tick the entity. Default implementation throws exception.
         /// </summary>
@@ -51,6 +54,10 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public abstract Location GetPosition();
 
         public abstract void SetPosition(Location pos);
+
+        public abstract BEPUutilities.Quaternion GetOrientation();
+
+        public abstract void SetOrientation(BEPUutilities.Quaternion quat);
 
         public bool Visible = true;
 

@@ -71,8 +71,6 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// </summary>
         public BEPUphysics.Entities.Entity Shape = null;
 
-        public List<BaseJoint> Joints = new List<BaseJoint>();
-
         /// <summary>
         /// Builds and spawns the body into the world.
         /// </summary>
@@ -97,8 +95,12 @@ namespace ShadowOperations.ServerGame.EntitySystem
             TheServer.PhysicsWorld.Add(Body);
             for (int i = 0; i < Joints.Count; i++)
             {
-                Joints[i].CurrentJoint = Joints[i].GetBaseJoint();
-                TheServer.PhysicsWorld.Add(Joints[i].CurrentJoint);
+                if (Joints[i] is BaseJoint)
+                {
+                    BaseJoint joint = (BaseJoint)Joints[i];
+                    joint.CurrentJoint = joint.GetBaseJoint();
+                    TheServer.PhysicsWorld.Add(joint.CurrentJoint);
+                }
             }
         }
 
@@ -114,7 +116,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
             WorldTransform = Body.WorldTransform;
             for (int i = 0; i < Joints.Count; i++)
             {
-                TheServer.PhysicsWorld.Remove(Joints[i].CurrentJoint);
+                if (Joints[i] is BaseJoint)
+                {
+                    BaseJoint joint = (BaseJoint)Joints[i];
+                    TheServer.PhysicsWorld.Remove(joint.CurrentJoint);
+                }
             }
             TheServer.PhysicsWorld.Remove(Body);
             Body = null;
@@ -284,7 +290,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// <summary>
         /// Returns the orientation of an entity.
         /// </summary>
-        public virtual Quaternion GetOrientation()
+        public override Quaternion GetOrientation()
         {
             if (Body != null)
             {
@@ -297,7 +303,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// Sets the direction of the entity.
         /// </summary>
         /// <param name="rot">The new angles</param>
-        public virtual void SetOrientation(Quaternion rot)
+        public override void SetOrientation(Quaternion rot)
         {
             if (Body != null)
             {

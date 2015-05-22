@@ -6,6 +6,7 @@ using ShadowOperations.ServerGame.ServerMainSystem;
 using ShadowOperations.Shared;
 using BEPUutilities;
 using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
+using ShadowOperations.ServerGame.JointSystem;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -34,18 +35,6 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 if (!StuckTo.IsSpawned)
                 {
                     TheServer.DespawnEntity(this);
-                }
-                else
-                {
-                    Matrix tmat = RelMat * StuckTo.Body.WorldTransform;
-                    Location pos = Location.FromBVector(tmat.Translation);
-                    Quaternion quat = Quaternion.CreateFromRotationMatrix(tmat);
-                    if (pos != GetPosition() || quat != Angles)
-                    {
-                        Angles = quat;
-                        SetPosition(pos);
-                        TheServer.SendToAll(new PrimitiveEntityUpdatePacketOut(this)); // TODO: Simulate clientside
-                    }
                 }
             }
             else
@@ -79,11 +68,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 StuckTo = pe;
                 SetVelocity(Location.Zero);
                 Gravity = Location.Zero;
-                Matrix worldTrans = pe.Body.WorldTransform;
-                Matrix.Invert(ref worldTrans, out worldTrans);
-                RelMat = (Matrix.CreateFromQuaternion(Angles)
-                    * Matrix.CreateTranslation(GetPosition().ToBVector()))
-                    * worldTrans;
+                TheServer.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
+                JointForceWeld jfw = new JointForceWeld(pe, this);
+                TheServer.AddJoint(jfw);
             }
         }
     }

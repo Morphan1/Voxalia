@@ -28,23 +28,31 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public int QuickBarPos = 0;
 
-        public List<BaseJoint> Joints = new List<BaseJoint>();
+        public List<InternalBaseJoint> Joints = new List<InternalBaseJoint>();
 
-        public void AddJoint(BaseJoint joint)
+        public void AddJoint(InternalBaseJoint joint)
         {
             Joints.Add(joint);
-            joint.Ent1.Joints.Add(joint);
-            joint.Ent2.Joints.Add(joint);
-            joint.CurrentJoint = joint.GetBaseJoint();
-            PhysicsWorld.Add(joint.CurrentJoint);
+            joint.One.Joints.Add(joint);
+            joint.Two.Joints.Add(joint);
+            if (joint is BaseJoint)
+            {
+                BaseJoint pjoint = (BaseJoint)joint;
+                pjoint.CurrentJoint = pjoint.GetBaseJoint();
+                PhysicsWorld.Add(pjoint.CurrentJoint);
+            }
         }
 
-        public void DestroyJoint(BaseJoint joint)
+        public void DestroyJoint(InternalBaseJoint joint)
         {
             Joints.Remove(joint);
-            joint.Ent1.Joints.Remove(joint);
-            joint.Ent2.Joints.Remove(joint);
-            PhysicsWorld.Remove(joint.CurrentJoint);
+            joint.One.Joints.Remove(joint);
+            joint.Two.Joints.Remove(joint);
+            if (joint is BaseJoint)
+            {
+                BaseJoint pjoint = (BaseJoint)joint;
+                PhysicsWorld.Remove(pjoint.CurrentJoint);
+            }
         }
 
         /// <summary>
@@ -142,6 +150,13 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 for (int i = 0; i < Tickers.Count; i++)
                 {
                     Tickers[i].Tick();
+                }
+                for (int i = 0; i < Joints.Count; i++)
+                {
+                    if (Joints[i] is BaseFJoint)
+                    {
+                        ((BaseFJoint)Joints[i]).Solve();
+                    }
                 }
                 Sounds.Update(CameraPos, CameraTarget - CameraPos, CameraUp, Player.GetVelocity(), Window.Focused);
             }
