@@ -11,15 +11,15 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 12 + 12 + 12 + 12 + 8)
+            if (data.Length != 12 + 12 + 16 + 12 + 8)
             {
                 return false;
             }
             Location pos = Location.FromBytes(data, 0);
             Location vel = Location.FromBytes(data, 12);
-            Location ang = Location.FromBytes(data, 12 + 12);
-            Location grav = Location.FromBytes(data, 12 + 12 + 12);
-            long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 12 + 12 + 12 + 12, 8));
+            BEPUutilities.Quaternion ang = Utilities.BytesToQuaternion(data, 12 + 12);
+            Location grav = Location.FromBytes(data, 12 + 12 + 16);
+            long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 12 + 12 + 16 + 12, 8));
             for (int i = 0; i < TheClient.Entities.Count; i++)
             {
                 if (TheClient.Entities[i] is PrimitiveEntity)
@@ -29,7 +29,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                     {
                         e.SetPosition(pos);
                         e.SetVelocity(vel);
-                        e.Angle = ang;
+                        e.Angles = ang;
                         e.Gravity = grav;
                         return true;
                     }

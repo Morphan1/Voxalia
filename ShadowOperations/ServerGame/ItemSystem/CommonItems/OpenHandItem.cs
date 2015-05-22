@@ -26,8 +26,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 
         public override void Click(EntitySystem.PlayerEntity player, ItemStack item)
         {
-            Location ang = player.GetAngles();
-            Location end = player.GetEyePosition() + Utilities.ForwardVector_Deg(ang.X, ang.Y) * 2;
+            Location end = player.GetEyePosition() + player.ForwardVector() * 2;
             BEPUphysics.Entities.Entity e = player.TheServer.Collision.CuboidLineTrace(new Location(0.1, 0.1, 0.1), player.GetEyePosition(), end, player.IgnoreThis).HitEnt;
             if (e != null && !(e.Tag is PlayerEntity) && ((PhysicsEntity)e.Tag).GetMass() > 0)
             {

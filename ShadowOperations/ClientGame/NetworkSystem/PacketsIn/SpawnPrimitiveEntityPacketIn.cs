@@ -11,7 +11,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 12 + 12 + 12 + 12 + 12 + 8)
+            if (data.Length != 12 + 12 + 16 + 12 + 12 + 8)
             {
                 return false;
             }
@@ -19,10 +19,10 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             bpe.model = TheClient.Models.GetModel("projectiles/arrow.obj");
             bpe.Position = Location.FromBytes(data, 0);
             bpe.Velocity = Location.FromBytes(data, 12);
-            bpe.Angle = Location.FromBytes(data, 12 + 12);
-            bpe.Scale = Location.FromBytes(data, 12 + 12 + 12);
-            bpe.Gravity = Location.FromBytes(data, 12 + 12 + 12 + 12);
-            bpe.EID = Utilities.BytesToLong(Utilities.BytesPartial(data, 12 + 12 + 12 + 12 + 12, 8));
+            bpe.Angles = Utilities.BytesToQuaternion(data, 12 + 12);
+            bpe.Scale = Location.FromBytes(data, 12 + 12 + 16);
+            bpe.Gravity = Location.FromBytes(data, 12 + 12 + 16 + 12);
+            bpe.EID = Utilities.BytesToLong(Utilities.BytesPartial(data, 12 + 12 + 16 + 12 + 12, 8));
             TheClient.SpawnEntity(bpe);
             return true;
         }

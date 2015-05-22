@@ -346,6 +346,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
             return Direction;
         }
 
+        public Location ForwardVector()
+        {
+            return Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
+        }
+
         public override void SetAngles(Location rot)
         {
             Direction = rot;

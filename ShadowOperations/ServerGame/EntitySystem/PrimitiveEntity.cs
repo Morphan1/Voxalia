@@ -82,7 +82,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public Location Scale;
 
-        public Location Angles;
+        public BEPUutilities.Quaternion Angles;
 
         public override Location GetPosition()
         {
@@ -116,7 +116,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             switch (var)
             {
                 case "angle":
-                    Angles = Location.FromString(data);
+                    Angles = Utilities.StringToQuat(data);
                     return true; // TODO
                 case "angular_velocity":
                     return true; // TODO

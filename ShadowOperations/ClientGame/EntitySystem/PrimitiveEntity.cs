@@ -42,7 +42,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public Location Velocity;
 
-        public Location Angle;
+        public BEPUutilities.Quaternion Angles;
 
         public Location Scale;
 

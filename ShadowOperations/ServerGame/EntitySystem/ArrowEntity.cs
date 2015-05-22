@@ -25,7 +25,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public PhysicsEntity StuckTo = null;
 
-        public Location RelPos;
+        public Matrix RelMat;
 
         public override void Tick()
         {
@@ -37,14 +37,13 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 }
                 else
                 {
-                    Vector3 vec = RelPos.ToBVector();
-                    RigidTransform rt = new RigidTransform(StuckTo.Body.Position, StuckTo.Body.Orientation);
-                    Vector3 nvec;
-                    RigidTransform.Transform(ref vec, ref rt, out nvec);
-                    Location pos = GetPosition();
-                    SetPosition(Location.FromBVector(nvec));
-                    if (pos != GetPosition())
+                    Matrix tmat = RelMat * StuckTo.Body.WorldTransform;
+                    Location pos = Location.FromBVector(tmat.Translation);
+                    Quaternion quat = Quaternion.CreateFromRotationMatrix(tmat);
+                    if (pos != GetPosition() || quat != Angles)
                     {
+                        Angles = quat;
+                        SetPosition(pos);
                         TheServer.SendToAll(new PrimitiveEntityUpdatePacketOut(this)); // TODO: Simulate clientside
                     }
                 }
@@ -55,7 +54,10 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 Location vel = GetVelocity();
                 if (vel.LengthSquared() > 0)
                 {
-                    Angles = Utilities.VectorToAngles(vel.Normalize());
+                    Matrix lookatlh = Utilities.LookAtLH(Location.Zero, vel, Location.UnitZ);
+                    lookatlh.Transpose();
+                    Angles = Quaternion.CreateFromRotationMatrix(lookatlh);
+                    Angles *= Quaternion.CreateFromAxisAngle(Vector3.UnitY, 90f * (float)Utilities.PI180);
                 }
             }
         }
@@ -77,11 +79,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 StuckTo = pe;
                 SetVelocity(Location.Zero);
                 Gravity = Location.Zero;
-                Vector3 vec = GetPosition().ToBVector();
-                RigidTransform rt = new RigidTransform(pe.Body.Position, pe.Body.Orientation);
-                Vector3 nvec;
-                RigidTransform.TransformByInverse(ref vec, ref rt, out nvec);
-                RelPos = Location.FromBVector(nvec);
+                Matrix worldTrans = pe.Body.WorldTransform;
+                Matrix.Invert(ref worldTrans, out worldTrans);
+                RelMat = (Matrix.CreateFromQuaternion(Angles)
+                    * Matrix.CreateTranslation(GetPosition().ToBVector()))
+                    * worldTrans;
             }
         }
     }

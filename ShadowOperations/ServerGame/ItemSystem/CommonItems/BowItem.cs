@@ -25,8 +25,12 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             ArrowEntity ae = new ArrowEntity(player.TheServer);
             ae.SetPosition(player.GetEyePosition());
             ae.NoCollide.Add(player.EID);
-            ae.SetVelocity(Utilities.ForwardVector_Deg(player.GetAngles().Yaw, player.GetAngles().Pitch) * 10);
-            ae.Angles = player.GetAngles();
+            Location forward = player.ForwardVector();
+            ae.SetVelocity(forward * 10);
+            BEPUutilities.Matrix lookatlh = Utilities.LookAtLH(Location.Zero, forward, Location.UnitZ);
+            lookatlh.Transpose();
+            ae.Angles = BEPUutilities.Quaternion.CreateFromRotationMatrix(lookatlh);
+            ae.Angles *= BEPUutilities.Quaternion.CreateFromAxisAngle(BEPUutilities.Vector3.UnitY, 90f * (float)Utilities.PI180);
             player.TheServer.SpawnEntity(ae);
         }
 

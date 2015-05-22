@@ -359,6 +359,43 @@ namespace ShadowOperations.Shared
             return new Location(bX * cosyaw - vec.Y * sinyaw, bX * sinyaw + vec.Y * cosyaw, bZ);
         }
 
+        public static BEPUutilities.Quaternion StringToQuat(string input)
+        {
+            string[] data = input.Replace('(', ' ').Replace(')', ' ').Replace(" ", "").Split(',');
+            if (data.Length != 4)
+            {
+                return BEPUutilities.Quaternion.Identity;
+            }
+            return new BEPUutilities.Quaternion(StringToFloat(data[0]), StringToFloat(data[1]), StringToFloat(data[2]), StringToFloat(data[3]));
+        }
+
+        public static byte[] QuaternionToBytes(BEPUutilities.Quaternion quat)
+        {
+            byte[] dat = new byte[4 + 4 + 4 + 4];
+            Utilities.FloatToBytes(quat.X).CopyTo(dat, 0);
+            Utilities.FloatToBytes(quat.Y).CopyTo(dat, 4);
+            Utilities.FloatToBytes(quat.Z).CopyTo(dat, 4 + 4);
+            Utilities.FloatToBytes(quat.W).CopyTo(dat, 4 + 4 + 4);
+            return dat;
+        }
+
+        public static BEPUutilities.Quaternion BytesToQuaternion(byte[] dat, int offset)
+        {
+            return new BEPUutilities.Quaternion(BytesToFloat(BytesPartial(dat, offset, 4)), BytesToFloat(BytesPartial(dat, offset + 4, 4)),
+                BytesToFloat(BytesPartial(dat, offset + 4 + 4, 4)), BytesToFloat(BytesPartial(dat, offset + 4 + 4 + 4, 4)));
+
+        }
+
+        public static BEPUutilities.Matrix LookAtLH(Location start, Location end, Location up)
+        {
+            Location zAxis = (end - start).Normalize();
+            Location xAxis = up.CrossProduct(zAxis).Normalize();
+            Location yAxis = zAxis.CrossProduct(xAxis);
+            return new BEPUutilities.Matrix((float)xAxis.X, (float)yAxis.X, (float)zAxis.X, 0, (float)xAxis.Y,
+                (float)yAxis.Y, (float)zAxis.Y, 0, (float)xAxis.Z, (float)yAxis.Z, (float)zAxis.Z, 0,
+                (float)-xAxis.Dot(start), (float)-yAxis.Dot(start), (float)-zAxis.Dot(start), 1);
+        }
+
         /// <summary>
         /// Converts a forward vector to yaw/pitch angles.
         /// </summary>
