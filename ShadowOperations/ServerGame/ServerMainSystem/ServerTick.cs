@@ -262,7 +262,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 {
                     if (Entities[i] is PhysicsEntity)
                     {
-                        if (e.NetworkMe)
+                        if (Entities[i].NetworkMe)
                         {
                             ((PlayerEntity)e).Network.SendPacket(new SpawnPhysicsEntityPacketOut((PhysicsEntity)Entities[i]));
                         }
@@ -277,7 +277,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     }
                     else if (Entities[i] is PrimitiveEntity)
                     {
-                        if (e.NetworkMe)
+                        if (Entities[i].NetworkMe)
                         {
                             ((PlayerEntity)e).Network.SendPacket(new SpawnPrimitiveEntityPacketOut((PrimitiveEntity)Entities[i]));
                         }
