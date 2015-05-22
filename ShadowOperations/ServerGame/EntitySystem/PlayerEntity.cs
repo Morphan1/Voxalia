@@ -371,6 +371,20 @@ namespace ShadowOperations.ServerGame.EntitySystem
             return Name;
         }
 
+        public override Quaternion GetOrientation()
+        {
+            return Quaternion.CreateFromAxisAngle(Vector3.UnitY, (float)Direction.Pitch)
+                * Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)Direction.Yaw);
+        }
+
+        public override void SetOrientation(Quaternion rot)
+        {
+            Matrix trot = Matrix.CreateFromQuaternion(rot);
+            Location ang = Utilities.MatrixToAngles(trot);
+            Direction.Yaw = ang.Yaw;
+            Direction.Pitch = ang.Pitch;
+        }
+
         public override void SetHealth(float health)
         {
             base.SetHealth(health);
