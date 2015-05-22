@@ -146,10 +146,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
+            /*
             if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
             {
                 base.SetAngles(new Location(0, 0, 0));
-            }
+            }*/ // See server.player
             if (Flashlight != null)
             {
                 Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
@@ -185,19 +186,14 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public float MoveSpeed = 10;
 
-        public override Location GetAngles()
-        {
-            return Direction;
-        }
-
         public Location GetEyePosition()
         {
             return GetPosition() + new Location(0, 0, HalfSize.Z * 1.8f);
         }
 
-        public override void SetAngles(Location rot)
+        public Location ForwardVector()
         {
-            Direction = rot;
+            return Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
         }
 
         public override Location GetPosition()

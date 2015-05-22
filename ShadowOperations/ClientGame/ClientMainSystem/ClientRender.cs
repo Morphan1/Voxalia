@@ -139,9 +139,6 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 GL.Enable(EnableCap.DepthTest);
                 CameraPos = Player.GetEyePosition();
                 sortEntities();
-                Location CameraAngles = Player.GetAngles();
-                double CameraYaw = CameraAngles.Yaw;
-                double CameraPitch = CameraAngles.Pitch;
                 if (CVars.r_lighting.ValueB)
                 {
                     s_shadow.Bind();
@@ -161,7 +158,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     s_fbo.Bind();
                     VBO.BonesIdentity();
                     RenderingShadows = false;
-                    CameraTarget = CameraPos + Utilities.ForwardVector_Deg(CameraYaw, CameraPitch);
+                    CameraTarget = CameraPos + Player.ForwardVector();
                     Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CameraFOV), (float)Window.Width / (float)Window.Height, CameraZNear, CameraZFar);
                     Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
                     Matrix4 combined = view * proj;
@@ -262,7 +259,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 else
                 {
                     Shaders.ColorMultShader.Bind();
-                    Location CameraTarget = CameraPos + Utilities.ForwardVector_Deg(CameraYaw, CameraPitch);
+                    Location CameraTarget = CameraPos + Player.ForwardVector();
                     Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CameraFOV), (float)Window.Width / (float)Window.Height, CameraZNear, CameraZFar);
                     Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
                     Matrix4 combined = view * proj;

@@ -12,37 +12,37 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
         public SpawnPhysicsEntityPacketOut(PhysicsEntity e)
         {
             ID = 2;
-            Data = new byte[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1 + (e is CubeEntity ? 4 * 6 + 4 * 6: (e is ModelEntity ? 4: 0)) + 4 + 1];
+            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + (e is CubeEntity ? 4 * 6 + 4 * 6: (e is ModelEntity ? 4: 0)) + 4 + 1];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
-            e.GetAngles().ToBytes().CopyTo(Data, 4 + 12 + 12);
-            e.GetAngularVelocity().ToBytes().CopyTo(Data, 4 + 12 + 12 + 12);
-            Utilities.LongToBytes(e.EID).CopyTo(Data, 4 + 12 + 12 + 12 + 12);
-            Utilities.FloatToBytes(e.GetFriction()).CopyTo(Data, 4 + 12 + 12 + 12 + 12 + 8);
+            Utilities.QuaternionToBytes(e.GetOrientation()).CopyTo(Data, 4 + 12 + 12);
+            e.GetAngularVelocity().ToBytes().CopyTo(Data, 4 + 12 + 12 + 16);
+            Utilities.LongToBytes(e.EID).CopyTo(Data, 4 + 12 + 12 + 16 + 12);
+            Utilities.FloatToBytes(e.GetFriction()).CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8);
             // TODO: Unique gravity, restitution, etc. properties?
             // TODO: handle different e-types cleanly
             if (e is CubeEntity)
             {
-                ((CubeEntity)e).HalfSize.ToBytes().CopyTo(Data, 4 + 12 + 12 + 12 + 12 + 8 + 4);
+                ((CubeEntity)e).HalfSize.ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
             else if (e is PlayerEntity)
             {
-                ((PlayerEntity)e).HalfSize.ToBytes().CopyTo(Data, 4 + 12 + 12 + 12 + 12 + 8 + 4);
+                ((PlayerEntity)e).HalfSize.ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
             else if (e is ModelEntity)
             {
-                ((ModelEntity)e).scale.ToBytes().CopyTo(Data, 4 + 12 + 12 + 12 + 12 + 8 + 4);
+                ((ModelEntity)e).scale.ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
             else
             {
-                new Location(5, 5, 5).ToBytes().CopyTo(Data, 4 + 12 + 12 + 12 + 12 + 8 + 4);
+                new Location(5, 5, 5).ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
-            Data[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12] = (byte)(e is CubeEntity ? 0 : (e is PlayerEntity ? 1: 2));
+            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is CubeEntity ? 0 : (e is PlayerEntity ? 1: 2));
             if (e is CubeEntity)
             {
                 CubeEntity ce = (CubeEntity)e;
-                int start = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1;
+                int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
                 NetStringManager strings = ce.TheServer.Networking.Strings;
                 Utilities.IntToBytes(strings.IndexForString(ce.Textures[0])).CopyTo(Data, start);
                 Utilities.IntToBytes(strings.IndexForString(ce.Textures[1])).CopyTo(Data, start + 4);
@@ -60,7 +60,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
             else if (e is ModelEntity)
             {
                 ModelEntity me = (ModelEntity)e;
-                int start = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1;
+                int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
                 NetStringManager strings = me.TheServer.Networking.Strings;
                 Utilities.IntToBytes(strings.IndexForString(me.model)).CopyTo(Data, start);
             }

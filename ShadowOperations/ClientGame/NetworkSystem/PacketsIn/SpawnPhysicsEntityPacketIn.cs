@@ -13,28 +13,28 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            int len = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1 + 4 + 1;
+            int len = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + 4 + 1;
             if (data.Length != len
                 && data.Length != len + 4 * 6 + 4 * 6
                 && data.Length != len + 4)
             {
                 return false;
             }
-            byte type = data[4 + 12 + 12 + 12 + 12 + 8 + 4 + 12];
+            byte type = data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12];
             float mass = Utilities.BytesToFloat(Utilities.BytesPartial(data, 0, 4));
             Location pos = Location.FromBytes(data, 4);
             Location vel = Location.FromBytes(data, 4 + 12);
-            Location ang = Location.FromBytes(data, 4 + 12 + 12);
-            Location angvel = Location.FromBytes(data, 4 + 12 + 12 + 12);
-            long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 4 + 12 + 12 + 12 + 12, 8));
-            float fric = Utilities.BytesToFloat(Utilities.BytesPartial(data, 4 + 12 + 12 + 12 + 12 + 8, 4));
-            Location halfsize = Location.FromBytes(data, 4 + 12 + 12 + 12 + 12 + 8 + 4);
+            BEPUutilities.Quaternion ang = Utilities.BytesToQuaternion(data, 4 + 12 + 12);
+            Location angvel = Location.FromBytes(data, 4 + 12 + 12 + 16);
+            long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 4 + 12 + 12 + 16 + 12, 8));
+            float fric = Utilities.BytesToFloat(Utilities.BytesPartial(data, 4 + 12 + 12 + 16 + 12 + 8, 4));
+            Location halfsize = Location.FromBytes(data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             PhysicsEntity ce;
             if (type == 0)
             {
                 CubeEntity ce1 = new CubeEntity(TheClient, halfsize);
                 ce = ce1;
-                int start = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1;
+                int start = len - (4 + 1);
                 NetStringManager strings = TheClient.Network.Strings;
                 ce1.Textures[0] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4)));
                 ce1.Textures[1] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4, 4)));
@@ -55,13 +55,14 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 2)
             {
-                int start = 4 + 12 + 12 + 12 + 12 + 8 + 4 + 12 + 1;
+                int start = len - (4 + 1);
                 NetStringManager strings = TheClient.Network.Strings;
                 ModelEntity me = new ModelEntity(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4))), TheClient);
                 ce = me;
             }
             else
             {
+                SysConsole.Output(OutputType.WARNING, "Unknown physent type " + type);
                 return false;
             }
             float bounce = Utilities.BytesToFloat(Utilities.BytesPartial(data, data.Length - 5, 4));
@@ -72,7 +73,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             ce.SetMass(mass);
             ce.SetPosition(pos);
             ce.SetVelocity(vel);
-            ce.SetAngles(ang);
+            ce.SetOrientation(ang);
             ce.SetAngularVelocity(angvel);
             ce.EID = eID;
             ce.SetFriction(fric);

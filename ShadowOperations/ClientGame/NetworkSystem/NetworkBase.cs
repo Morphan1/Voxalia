@@ -188,7 +188,8 @@ namespace ShadowOperations.ClientGame.NetworkSystem
             }
             catch (Exception ex)
             {
-                SysConsole.Output(OutputType.WARNING, "Forcibly disconnected from server: " + ex.GetType().Name + ": " + ex.Message);
+                SysConsole.Output(OutputType.ERROR, "Forcibly disconnected from server: " + ex.GetType().Name + ": " + ex.Message);
+                SysConsole.Output(OutputType.INFO, ex.ToString()); // TODO: Make me 'debug only'!
                 Disconnect();
             }
         }

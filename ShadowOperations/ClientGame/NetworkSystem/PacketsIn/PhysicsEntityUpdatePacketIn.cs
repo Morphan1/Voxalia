@@ -11,16 +11,16 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 12 + 12 + 12 + 12 + 1 + 8)
+            if (data.Length != 12 + 12 + 16 + 12 + 1 + 8)
             {
                 return false;
             }
             Location pos = Location.FromBytes(data, 0);
             Location vel = Location.FromBytes(data, 12);
-            Location ang = Location.FromBytes(data, 12 + 12);
-            Location angvel = Location.FromBytes(data, 12 + 12 + 12);
-            bool active = (data[12 + 12 + 12 + 12] & 1) == 1;
-            long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 12 + 12 + 12 + 12 + 1, 8));
+            BEPUutilities.Quaternion ang = Utilities.BytesToQuaternion(data, 12 + 12);
+            Location angvel = Location.FromBytes(data, 12 + 12 + 16);
+            bool active = (data[12 + 12 + 16 + 12] & 1) == 1;
+            long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 12 + 12 + 16 + 12 + 1, 8));
             for (int i = 0; i < TheClient.Entities.Count; i++)
             {
                 if (TheClient.Entities[i] is PhysicsEntity)
@@ -30,7 +30,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                     {
                         e.SetPosition(pos);
                         e.SetVelocity(vel);
-                        e.SetAngles(ang);
+                        e.SetOrientation(ang);
                         e.SetAngularVelocity(angvel);
                         if (e.Body.ActivityInformation.IsActive && !active)
                         {

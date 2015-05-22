@@ -52,13 +52,13 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                 SpotLight sl = new SpotLight(ent.GetPosition(), 256, distance, color, Location.UnitX, 90);
                 if (ent is PlayerEntity)
                 {
-                    sl.Direction = Utilities.ForwardVector_Deg(((PlayerEntity)ent).GetAngles().Yaw, ((PlayerEntity)ent).GetAngles().Pitch);
+                    sl.Direction = ((PlayerEntity)ent).ForwardVector();
                     sl.Reposition(ent.GetPosition());
                     ((PlayerEntity)ent).Flashlight = sl;
                 }
                 else
                 {
-                    sl.Direction = Utilities.ForwardVector_Deg(((OtherPlayerEntity)ent).GetAngles().Yaw, ((OtherPlayerEntity)ent).GetAngles().Pitch);
+                    sl.Direction = ((OtherPlayerEntity)ent).ForwardVector();
                     sl.Reposition(ent.GetPosition());
                     ((OtherPlayerEntity)ent).Flashlight = sl;
                 }

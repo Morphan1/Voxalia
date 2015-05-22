@@ -33,7 +33,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                     {
                         e.SetPosition(pos);
                         e.SetVelocity(vel);
-                        e.SetAngles(ang);
+                        e.Direction = ang;
                         e.Forward = (keys & 1) == 1;
                         e.Backward = (keys & 2) == 2;
                         e.Leftward = (keys & 4) == 4;

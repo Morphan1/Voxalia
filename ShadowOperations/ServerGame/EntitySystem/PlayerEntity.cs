@@ -300,10 +300,10 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     Grabbed = null;
                 }
             }
-            if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
+            /*if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
             {
                 base.SetAngles(new Location(0, 0, 0));
-            }
+            }*/ // TODO: Does this need to be readded?
             PlayerUpdatePacketOut pupo = new PlayerUpdatePacketOut(this);
             for (int i = 0; i < TheServer.Players.Count; i++)
             {
@@ -341,19 +341,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public float MoveSpeed = 10;
 
-        public override Location GetAngles()
-        {
-            return Direction;
-        }
-
         public Location ForwardVector()
         {
             return Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
-        }
-
-        public override void SetAngles(Location rot)
-        {
-            Direction = rot;
         }
 
         public Location GetEyePosition()

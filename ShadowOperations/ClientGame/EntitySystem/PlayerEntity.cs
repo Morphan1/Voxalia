@@ -154,10 +154,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
+            /*
             if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
             {
                 base.SetAngles(new Location(0, 0, 0));
-            }
+            }*/ // See server.player
             KeysPacketData kpd = (Forward ? KeysPacketData.FORWARD : 0) | (Backward ? KeysPacketData.BACKWARD : 0)
                  | (Leftward ? KeysPacketData.LEFTWARD : 0) | (Rightward ? KeysPacketData.RIGHTWARD : 0)
                   | (Upward ? KeysPacketData.UPWARD : 0) | (Downward ? KeysPacketData.DOWNWARD : 0)
@@ -174,16 +175,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public float MoveSpeed = 10;
 
-        public override Location GetAngles()
-        {
-            return Direction;
-        }
-
-        public override void SetAngles(Location rot)
-        {
-            Direction = rot;
-        }
-
         public Location GetEyePosition()
         {
             return GetPosition() + new Location(0, 0, HalfSize.Z * 1.8f);
@@ -192,6 +183,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public override Location GetPosition()
         {
             return base.GetPosition() - new Location(0, 0, HalfSize.Z);
+        }
+
+        public Location ForwardVector()
+        {
+            return Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
         }
 
         public override void SetPosition(Location pos)

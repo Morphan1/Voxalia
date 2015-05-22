@@ -282,50 +282,30 @@ namespace ShadowOperations.ServerGame.EntitySystem
         }
 
         /// <summary>
-        /// Gets the transformation matrix of this entity as an OpenTK matrix.
+        /// Returns the orientation of an entity.
         /// </summary>
-        /// <returns></returns>
-        public OpenTK.Matrix4 GetTransformationMatrix()
-        {
-            Matrix mat = Body.WorldTransform;
-            return new OpenTK.Matrix4(mat.M11, mat.M12, mat.M13, mat.M14, mat.M21, mat.M22, mat.M23,
-                mat.M24, mat.M31, mat.M32, mat.M33, mat.M34, mat.M41, mat.M42, mat.M43, mat.M44);
-        }
-
-        /// <summary>
-        /// Returns the yaw/pitch/roll of an entity.
-        /// </summary>
-        public virtual Location GetAngles()
+        public virtual Quaternion GetOrientation()
         {
             if (Body != null)
             {
-                WorldTransform = Body.WorldTransform;
+                return Body.Orientation;
             }
-            Location rot;
-            rot.X = Math.Atan2(WorldTransform.M32, WorldTransform.M33) * 180 / Math.PI;
-            rot.Y = -Math.Asin(WorldTransform.M31) * 180 / Math.PI;
-            rot.Z = Math.Atan2(WorldTransform.M21, WorldTransform.M11) * 180 / Math.PI;
-            return rot;
+            return Quaternion.CreateFromRotationMatrix(WorldTransform);
         }
 
         /// <summary>
         /// Sets the direction of the entity.
         /// </summary>
         /// <param name="rot">The new angles</param>
-        public virtual void SetAngles(Location rot)
+        public virtual void SetOrientation(Quaternion rot)
         {
             if (Body != null)
             {
-                WorldTransform = Body.WorldTransform;
+                Body.Orientation = rot;
             }
-            Matrix SpawnMatrix = Matrix.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(rot.X * Utilities.PI180));
-            SpawnMatrix *= Matrix.CreateFromAxisAngle(new Vector3(0, 1, 0), (float)(rot.Y * Utilities.PI180));
-            SpawnMatrix *= Matrix.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(rot.Z * Utilities.PI180));
-            SpawnMatrix *= Matrix.CreateTranslation(WorldTransform.Translation);
-            WorldTransform = SpawnMatrix;
-            if (Body != null)
+            else
             {
-                Body.WorldTransform = SpawnMatrix;
+                WorldTransform = Matrix.CreateFromQuaternion(rot) * Matrix.CreateTranslation(WorldTransform.Translation);
             }
         }
 
@@ -339,7 +319,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     SetVelocity(Location.FromString(data));
                     return true;
                 case "angle":
-                    SetAngles(Location.FromString(data));
+                    SetOrientation(Utilities.StringToQuat(data));
                     return true;
                 case "angular_velocity":
                     SetAngularVelocity(Location.FromString(data));
@@ -365,7 +345,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         {
             List<KeyValuePair<string, string>> vars = base.GetVariables();
             vars.Add(new KeyValuePair<string, string>("velocity", GetVelocity().ToString()));
-            vars.Add(new KeyValuePair<string, string>("angle", GetAngles().ToString()));
+            vars.Add(new KeyValuePair<string, string>("angle", Utilities.QuatToString(GetOrientation())));
             vars.Add(new KeyValuePair<string, string>("angular_velocity", GetAngularVelocity().ToString()));
             vars.Add(new KeyValuePair<string, string>("mass", GetMass().ToString()));
             vars.Add(new KeyValuePair<string, string>("friction", GetFriction().ToString()));
