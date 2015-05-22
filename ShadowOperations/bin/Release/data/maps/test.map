@@ -20,18 +20,34 @@ pointlight
 }
 cube
 {
-	position: (12.5, -3.5, 4);
+	position: (-17.5, 22.5, 4.5);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
-	mass: 0;
+	mass: 200;
 	friction: 0.5;
 	bounciness: 0;
 	solid: true;
 	visible: true;
-	mins: (4, -18, -1);
-	maxes: (21, 11, 9);
-	textures: top|bottom|xp|xm|yp|ym;
+	mins: (-20, 20, -1);
+	maxes: (-15, 25, 10);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (-7.5, 22.5, 12.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 200;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-20, 20, 10);
+	maxes: (5, 25, 15);
+	textures: white|white|white|white|white|white;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
 cube
@@ -52,22 +68,6 @@ cube
 }
 cube
 {
-	position: (-3.108775138855, -13, 8);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (-10.21755027771, -18, -1);
-	maxes: (4, -8, 17);
-	textures: top|bottom|xp|xm|yp|ym;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
 	position: (4.5, 15.5, 0);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
@@ -79,22 +79,6 @@ cube
 	visible: false;
 	mins: (4, 11, -1);
 	maxes: (5, 20, 1);
-	textures: white|white|white|white|white|white;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
-	position: (-17.5, 22.5, 4.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 200;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (-20, 20, -1);
-	maxes: (-15, 25, 10);
 	textures: white|white|white|white|white|white;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
@@ -116,127 +100,19 @@ cube
 }
 cube
 {
-	position: (-7.5, 22.5, 12.5);
+	position: (-13.5, 9, 0.5);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
-	mass: 200;
+	mass: 0;
 	friction: 0.5;
 	bounciness: 0;
 	solid: true;
 	visible: true;
-	mins: (-20, 20, 10);
-	maxes: (5, 25, 15);
+	mins: (-15, 7, -1);
+	maxes: (-12, 11, 2);
 	textures: white|white|white|white|white|white;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
-	position: (-0.254379272460895, 0, -5.7611985206604);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (-80.2543792724609, -80, -10.5223970413208);
-	maxes: (79.7456207275391, 80, -1);
-	textures: top|bottom|xp|xm|yp|ym;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
-	position: (3.5, 0.5, -0.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 10;
-	friction: 0.5;
-	bounciness: 0.5;
-	solid: true;
-	visible: true;
-	mins: (3, 0, -1);
-	maxes: (4, 1, 0);
-	textures: top|top|top|top|top|top;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
-	position: (3.5, 1.5, -0.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 10;
-	friction: 0.5;
-	bounciness: 1;
-	solid: true;
-	visible: true;
-	mins: (3, 1, -1);
-	maxes: (4, 2, 0);
-	textures: top|top|top|top|top|top;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
-	position: (1, -4, 2);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 50;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (-2, -8, -1);
-	maxes: (4, 0, 5);
-	textures: top|bottom|xp|xm|yp|ym;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
-	position: (-5.5, -7.5, -0.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 2;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (-6, -8, -1);
-	maxes: (-5, -7, 0);
-	textures: top|bottom|xp|xm|yp|ym;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
-	position: (-3.5, -6, 0.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 10;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (-5, -8, -1);
-	maxes: (-2, -4, 2);
-	textures: top|bottom|xp|xm|yp|ym;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-spawn
-{
-	position: (0, -4, 5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
 }
 cube
 {
@@ -288,6 +164,7 @@ functrack
 	target: move_about_1a;
 	mindistance: 0.1;
 	loopsperactivation: 1;
+	movespeed: 1;
 }
 targetposition
 {
@@ -302,6 +179,21 @@ targetposition
 	visible: true;
 	targetname: move_about_1a;
 	target: move_about_1b;
+	modifier: 1;
+}
+targetscriptrunner
+{
+	position: (-18, -1, 7);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	targetname: move_about_one;
+	scriptcommands: say "YOU PRESSED DA BUTTON";
 }
 targetposition
 {
@@ -316,24 +208,11 @@ targetposition
 	visible: true;
 	targetname: move_about_1b;
 	target: move_about_1a;
-}
-targetscriptrunner
-{
-	position: (-18, -1, 7);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	targetname: move_about_one;
-	scriptcommands: say "YOU PRESSED DA BUTTON";;
+	modifier: 1;
 }
 cube
 {
-	position: (-13.5, 9, 0.5);
+	position: (12.5, -3.5, 4);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
@@ -342,8 +221,132 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
-	mins: (-15, 7, -1);
-	maxes: (-12, 11, 2);
-	textures: white|white|white|white|white|white;
+	mins: (4, -18, -1);
+	maxes: (21, 11, 9);
+	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (-0.254379272460895, 0, -5.7611985206604);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-80.2543792724609, -80, -10.5223970413208);
+	maxes: (79.7456207275391, 80, -1);
+	textures: top|bottom|xp|xm|yp|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (-3.108775138855, -13, 8);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-10.21755027771, -18, -1);
+	maxes: (4, -8, 17);
+	textures: top|bottom|xp|xm|yp|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (3.5, 1.5, -0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 10;
+	friction: 0.5;
+	bounciness: 1;
+	solid: true;
+	visible: true;
+	mins: (3, 1, -1);
+	maxes: (4, 2, 0);
+	textures: top|top|top|top|top|top;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (-5.5, -7.5, -0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 2;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-6, -8, -1);
+	maxes: (-5, -7, 0);
+	textures: top|bottom|xp|xm|yp|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (3.5, 0.5, -0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 10;
+	friction: 0.5;
+	bounciness: 0.5;
+	solid: true;
+	visible: true;
+	mins: (3, 0, -1);
+	maxes: (4, 1, 0);
+	textures: top|top|top|top|top|top;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (-3.5, -6, 0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 10;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-5, -8, -1);
+	maxes: (-2, -4, 2);
+	textures: top|bottom|xp|xm|yp|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (1, -4, 2);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 50;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-2, -8, -1);
+	maxes: (4, 0, 5);
+	textures: top|bottom|xp|xm|yp|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+spawn
+{
+	position: (0, -4, 5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
 }

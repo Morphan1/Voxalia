@@ -388,16 +388,17 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     {
                         throw new Exception("Invalid key '" + dats[i] + "'!");
                     }
+                    string det = datum[1].Trim().Replace("&nl", "\n").Replace("&sc", ";").Replace("&amp", "&");
                     switch (datum[0])
                     {
                         case "ambient":
-                            // TODO: ambient = Utilities.StringToLocation(datum[1]);
+                            // TODO: ambient = Utilities.StringToLocation(det);
                             break;
                         case "music":
-                            // TODO: music = datum[1];
+                            // TODO: music = det;
                             break;
                         default:
-                            throw new Exception("Invalid key: " + datum[0].Trim() + "!");
+                            throw new Exception("Invalid key: " + datum[0]. + "!");
                     }
                 }
                 return;
@@ -442,7 +443,8 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 {
                     throw new Exception("Invalid key '" + dats[i] + "'!");
                 }
-                if (!e.ApplyVar(datum[0].Trim(), datum[1].Trim()))
+                string det = datum[1].Trim().Replace("&nl", "\n").Replace("&sc", ";").Replace("&amp", "&");
+                if (!e.ApplyVar(datum[0].Trim(), det))
                 {
                     throw new Exception("Invalid key: " + datum[0].Trim() + "!");
                 }
