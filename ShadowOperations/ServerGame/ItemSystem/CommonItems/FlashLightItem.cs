@@ -47,6 +47,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 
         public override void SwitchFrom(PlayerEntity player, ItemStack item)
         {
+            Off(player);
         }
 
         public override void SwitchTo(PlayerEntity player, ItemStack item)
