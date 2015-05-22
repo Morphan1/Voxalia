@@ -34,7 +34,10 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                         e.SetAngularVelocity(angvel);
                         if (e.Body.ActivityInformation.IsActive && !active)
                         {
-                            e.Body.ActivityInformation.SimulationIsland.IsActive = false;
+                            if (e.Body.ActivityInformation.SimulationIsland != null) // TODO: Why is this needed?
+                            {
+                                e.Body.ActivityInformation.SimulationIsland.IsActive = false;
+                            }
                         }
                         else if (!e.Body.ActivityInformation.IsActive && active)
                         {

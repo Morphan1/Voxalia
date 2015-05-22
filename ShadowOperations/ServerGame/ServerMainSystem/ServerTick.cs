@@ -427,6 +427,9 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 case "targetposition":
                     e = new TargetPositionEntity(this);
                     break;
+                case "functrack":
+                    e = new FuncTrackEntity(new Location(1, 1, 1), this, 0);
+                    break;
                 default:
                     throw new Exception("Invalid entity type '" + name + "'!");
             }

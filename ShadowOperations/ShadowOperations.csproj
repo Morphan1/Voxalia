@@ -175,6 +175,7 @@
     <Compile Include="ServerGame\EntitySystem\EntityLiving.cs" />
     <Compile Include="ServerGame\EntitySystem\EntityTargettable.cs" />
     <Compile Include="ServerGame\EntitySystem\EntityUseable.cs" />
+    <Compile Include="ServerGame\EntitySystem\FuncTrackEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\ModelEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />

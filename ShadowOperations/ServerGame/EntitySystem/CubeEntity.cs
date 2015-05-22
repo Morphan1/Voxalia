@@ -23,6 +23,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public double deltat = 0;
 
+        public Location pVelocity;
+
         public override void Tick()
         {
             if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
@@ -37,6 +39,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 {
                     TheServer.SendToAll(new PhysicsEntityUpdatePacketOut(this));
                 }
+            }
+            if (!Body.ActivityInformation.IsActive && GetMass() <= 0 && GetVelocity() != pVelocity)
+            {
+                pVelocity = GetVelocity();
+                TheServer.SendToAll(new PhysicsEntityUpdatePacketOut(this));
             }
         }
 
