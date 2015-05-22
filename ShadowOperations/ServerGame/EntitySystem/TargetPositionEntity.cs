@@ -2,45 +2,47 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.ServerMainSystem;
+using ShadowOperations.Shared;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
-    public abstract class TargetEntity: PrimitiveEntity, EntityTargettable
+    public class TargetPositionEntity: TargetEntity
     {
-        public TargetEntity(Server tserver)
+        public TargetPositionEntity(Server tserver)
             : base(tserver)
         {
-            network = false;
-            NetworkMe = false;
         }
 
-        public string Targetname = "";
+        public string Target = "";
 
-        public string GetTargetName()
+        public float Modifier = 1f;
+
+        public override void Trigger(Entity ent, Entity user)
         {
-            return Targetname;
+            // Do Nothing
         }
-
-        public abstract void Trigger(Entity ent, Entity user);
 
         public override bool ApplyVar(string var, string data)
         {
             switch (var)
             {
-                case "targetname":
-                    Targetname = data;
+                case "target":
+                    Target = data;
+                    return true;
+                case "modifier":
+                    Modifier = Utilities.StringToFloat(data);
                     return true;
                 default:
                     return base.ApplyVar(var, data);
             }
         }
-        
+
         public override List<KeyValuePair<string, string>> GetVariables()
         {
             List<KeyValuePair<string, string>> vars = base.GetVariables();
-            vars.Add(new KeyValuePair<string, string>("targetname", Targetname));
+            vars.Add(new KeyValuePair<string, string>("target", Target));
+            vars.Add(new KeyValuePair<string, string>("modifier", Modifier.ToString()));
             return vars;
         }
     }

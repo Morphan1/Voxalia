@@ -182,6 +182,7 @@
     <Compile Include="ServerGame\EntitySystem\PrimitiveEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\SpawnPointEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\TargetEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\TargetPositionEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\TargetScriptRunnerEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\TriggerEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\TriggerGenericEntity.cs" />

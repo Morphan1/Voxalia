@@ -398,7 +398,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                             // TODO: music = det;
                             break;
                         default:
-                            throw new Exception("Invalid key: " + datum[0]. + "!");
+                            throw new Exception("Invalid key: " + datum[0].Trim() + "!");
                     }
                 }
                 return;
@@ -423,6 +423,9 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     break;
                 case "targetscriptrunner":
                     e = new TargetScriptRunnerEntity(this);
+                    break;
+                case "targetposition":
+                    e = new TargetPositionEntity(this);
                     break;
                 default:
                     throw new Exception("Invalid entity type '" + name + "'!");
