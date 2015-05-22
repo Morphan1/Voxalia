@@ -46,7 +46,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     Matrix lookatlh = Utilities.LookAtLH(Location.Zero, vel, Location.UnitZ);
                     lookatlh.Transpose();
                     Angles = Quaternion.CreateFromRotationMatrix(lookatlh);
-                    Angles *= Quaternion.CreateFromAxisAngle(Vector3.UnitY, 90f * (float)Utilities.PI180);
+                    Angles *= Quaternion.CreateFromAxisAngle(Vector3.UnitX, 90f * (float)Utilities.PI180);
                 }
             }
         }

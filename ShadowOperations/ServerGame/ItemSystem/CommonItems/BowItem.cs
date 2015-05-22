@@ -30,7 +30,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             BEPUutilities.Matrix lookatlh = Utilities.LookAtLH(Location.Zero, forward, Location.UnitZ);
             lookatlh.Transpose();
             ae.Angles = BEPUutilities.Quaternion.CreateFromRotationMatrix(lookatlh);
-            ae.Angles *= BEPUutilities.Quaternion.CreateFromAxisAngle(BEPUutilities.Vector3.UnitY, 90f * (float)Utilities.PI180);
+            ae.Angles *= BEPUutilities.Quaternion.CreateFromAxisAngle(BEPUutilities.Vector3.UnitX, 90f * (float)Utilities.PI180);
             player.TheServer.SpawnEntity(ae);
         }
 
