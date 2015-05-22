@@ -19,7 +19,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
 {
     public class PlayerEntity: EntityLiving
     {
-        public Location HalfSize = new Location(0.5f, 0.5f, 1f);
+        public Location HalfSize = new Location(0.5f, 0.5f, 0.9f);
 
         public Connection Network;
 
@@ -358,7 +358,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public Location GetEyePosition()
         {
-            return GetPosition() + new Location(0, 0, HalfSize.Z * 1.6f);
+            return GetPosition() + new Location(0, 0, HalfSize.Z * 1.8f);
         }
 
         public override Location GetPosition()
