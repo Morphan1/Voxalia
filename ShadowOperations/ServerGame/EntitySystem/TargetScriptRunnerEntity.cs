@@ -6,7 +6,8 @@ using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.ServerMainSystem;
 using Frenetic;
 using Frenetic.CommandSystem;
-
+using Frenetic.TagHandlers;
+using Frenetic.TagHandlers.Objects;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -20,7 +21,10 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public override void Trigger(Entity ent, Entity user)
         {
             CommandQueue queue;
-            TheServer.Commands.CommandSystem.ExecuteScript(scriptcommands, null, out queue);
+            Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>();
+            vars.Add("entity", new TextTag(ent.EID));
+            vars.Add("user", new TextTag(user.EID)); // TODO: Entity objects!
+            TheServer.Commands.CommandSystem.ExecuteScript(scriptcommands, vars, out queue);
         }
         public CommandScript scriptcommands = null;
 
