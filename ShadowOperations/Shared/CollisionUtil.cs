@@ -35,6 +35,8 @@ namespace ShadowOperations.Shared
 
         public CollisionGroup NonSolid = new CollisionGroup();
 
+        public CollisionGroup Trigger = new CollisionGroup();
+
         public CollisionGroup Solid = new CollisionGroup();
 
         public CollisionGroup Player = new CollisionGroup();
@@ -42,12 +44,22 @@ namespace ShadowOperations.Shared
         public CollisionUtil(Space world)
         {
             World = world;
+            // NonSolid Vs. Solid (All)
             CollisionGroup.DefineCollisionRule(NonSolid, NonSolid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(NonSolid, Solid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Solid, NonSolid, CollisionRule.NoBroadPhase);
+            // Player Vs. NonSolid, Player
             CollisionGroup.DefineCollisionRule(Player, NonSolid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(NonSolid, Player, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Player, Player, CollisionRule.NoBroadPhase);
+            // Trigger Vs. Player,Solid,NonSolid (All)
+            CollisionGroup.DefineCollisionRule(Trigger, Player, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Trigger, Solid, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Trigger, NonSolid, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Player, Trigger, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Solid, Trigger, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(NonSolid, Trigger, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Trigger, Trigger, CollisionRule.NoBroadPhase);
         }
 
         /// <summary>

@@ -34,6 +34,8 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
         /// </summary>
         public List<PlayerEntity> Players = new List<PlayerEntity>();
 
+        public List<EntityTargettable> Targetables = new List<EntityTargettable>();
+
         /// <summary>
         /// All spawnpoint-type entities that exist on this server.
         /// </summary>
@@ -87,6 +89,30 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             for (int i = 0; i < Players.Count; i++)
             {
                 Players[i].Network.SendMessage(message);
+            }
+        }
+
+        public List<Entity> GetTargets(string target)
+        {
+            List<Entity> ents = new List<Entity>();
+            for (int i = 0; i < Targetables.Count; i++)
+            {
+                if (Targetables[i].GetTargetName() == target)
+                {
+                    ents.Add((Entity)Targetables[i]);
+                }
+            }
+            return ents;
+        }
+
+        public void Trigger(string target, Entity ent, Entity user)
+        {
+            for (int i = 0; i < Targetables.Count; i++)
+            {
+                if (Targetables[i].GetTargetName() == target)
+                {
+                    Targetables[i].Trigger(ent, user);
+                }
             }
         }
 
@@ -181,11 +207,18 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             {
                 Tickers.Add(e);
             }
+            if (e is EntityTargettable)
+            {
+                Targetables.Add((EntityTargettable)e);
+            }
             AbstractPacketOut packet = null;
             if (e is PhysicsEntity)
             {
                 ((PhysicsEntity)e).SpawnBody();
-                packet = new SpawnPhysicsEntityPacketOut((PhysicsEntity)e);
+                if (e.NetworkMe)
+                {
+                    packet = new SpawnPhysicsEntityPacketOut((PhysicsEntity)e);
+                }
             }
             else if (e is PrimitiveEntity)
             {
@@ -229,7 +262,10 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 {
                     if (Entities[i] is PhysicsEntity)
                     {
-                        ((PlayerEntity)e).Network.SendPacket(new SpawnPhysicsEntityPacketOut((PhysicsEntity)Entities[i]));
+                        if (e.NetworkMe)
+                        {
+                            ((PlayerEntity)e).Network.SendPacket(new SpawnPhysicsEntityPacketOut((PhysicsEntity)Entities[i]));
+                        }
                     }
                     else if (Entities[i] is PointLightEntity)
                     {
@@ -261,6 +297,10 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             if (e.Ticks)
             {
                 Tickers.Remove(e);
+            }
+            if (e is EntityTargettable)
+            {
+                Targetables.Remove((EntityTargettable)e);
             }
             if (e is PhysicsEntity)
             {
@@ -376,6 +416,12 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     break;
                 case "model":
                     e = new ModelEntity("", this);
+                    break;
+                case "triggergeneric":
+                    e = new TriggerGenericEntity(new Location(1, 1, 1), this);
+                    break;
+                case "targetscriptrunner":
+                    e = new TargetScriptRunnerEntity(this);
                     break;
                 default:
                     throw new Exception("Invalid entity type '" + name + "'!");
