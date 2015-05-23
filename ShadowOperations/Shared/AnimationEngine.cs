@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BEPUutilities;
 
 namespace ShadowOperations.Shared
 {
@@ -136,10 +137,14 @@ namespace ShadowOperations.Shared
                                     {
                                         string[] posdata = rots[x].Split('=');
                                         node.RotTimes.Add(Utilities.StringToDouble(posdata[0]));
-                                        node.Rotations.Add(new Assimp.Quaternion(Utilities.StringToFloat(posdata[4]), Utilities.StringToFloat(posdata[1]),
-                                            Utilities.StringToFloat(posdata[2]), Utilities.StringToFloat(posdata[3])));
+                                        node.Rotations.Add(new Quaternion(Utilities.StringToFloat(posdata[1]), Utilities.StringToFloat(posdata[2]),
+                                            Utilities.StringToFloat(posdata[3]), Utilities.StringToFloat(posdata[4])));
                                     }
                                 }
+                            }
+                            else if (entry.Key == "parent")
+                            {
+                                node.ParentName = entry.Value;
                             }
                             else
                             {
@@ -152,6 +157,17 @@ namespace ShadowOperations.Shared
                         created.Nodes.Add(node);
                     }
                     entr++;
+                }
+                foreach (SingleAnimationNode node in created.Nodes)
+                {
+                    for (int i = 0; i < created.Nodes.Count; i++)
+                    {
+                        if (created.Nodes[i].Name == node.ParentName)
+                        {
+                            node.Parent = created.Nodes[i];
+                            break;
+                        }
+                    }
                 }
                 created.Engine = this;
                 return created;
@@ -172,11 +188,27 @@ namespace ShadowOperations.Shared
         public AnimationEngine Engine;
 
         public List<SingleAnimationNode> Nodes = new List<SingleAnimationNode>();
+
+        public SingleAnimationNode GetNode(string name)
+        {
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                if (Nodes[i].Name == name)
+                {
+                    return Nodes[i];
+                }
+            }
+            return null;
+        }
     }
 
     public class SingleAnimationNode
     {
         public string Name;
+
+        public SingleAnimationNode Parent = null;
+
+        public string ParentName;
 
         public List<double> PosTimes = new List<double>();
 
@@ -184,6 +216,103 @@ namespace ShadowOperations.Shared
 
         public List<double> RotTimes = new List<double>();
 
-        public List<Assimp.Quaternion> Rotations = new List<Assimp.Quaternion>();
+        public List<Quaternion> Rotations = new List<Quaternion>();
+
+        int findPos(double time)
+        {
+            for (int i = 0; i < Positions.Count - 1; i++)
+            {
+                if (time >= PosTimes[i] && time < PosTimes[i + 1])
+                {
+                    return i;
+                }
+            }
+            return 0;
+        }
+
+        public Vector3 lerpPos(double aTime)
+        {
+            if (Positions.Count == 0)
+            {
+                return new Vector3(0, 0, 0);
+            }
+            if (Positions.Count == 1)
+            {
+                Location pos = Positions[0];
+                return new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);
+            }
+            int index = findPos(aTime);
+            int nextIndex = index + 1;
+            if (nextIndex >= Positions.Count)
+            {
+                Location pos = Positions[0];
+                return new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);
+            }
+            double deltaT = PosTimes[nextIndex] - PosTimes[index];
+            double factor = (aTime - PosTimes[index]) / deltaT;
+            if (factor < 0 || factor > 1)
+            {
+                Location pos = Positions[0];
+                return new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);
+            }
+            Location start = Positions[index];
+            Location end = Positions[nextIndex];
+            Location deltaV = end - start;
+            Location npos = start + (float)factor * deltaV;
+            return new Vector3((float)npos.X, (float)npos.Y, (float)npos.Z);
+        }
+
+        int findRotate(double time)
+        {
+            for (int i = 0; i < Rotations.Count; i++)
+            {
+                if (time >= RotTimes[i] && time < RotTimes[i + 1])
+                {
+                    return i;
+                }
+            }
+            return 0;
+        }
+
+        public Quaternion lerpRotate(double aTime)
+        {
+            if (Rotations.Count == 0)
+            {
+                return Quaternion.Identity;
+            }
+            if (Rotations.Count == 1)
+            {
+                return Rotations[0];
+            }
+            int index = findRotate(aTime);
+            int nextIndex = index + 1;
+            if (nextIndex >= Rotations.Count)
+            {
+                return Rotations[0];
+            }
+            double deltaT = RotTimes[nextIndex] - RotTimes[index];
+            double factor = (aTime - RotTimes[index]) / deltaT;
+            if (factor < 0 || factor > 1)
+            {
+                return Rotations[0];
+            }
+            Quaternion start = Rotations[index];
+            Quaternion end = Rotations[nextIndex];
+            Quaternion res = Quaternion.Slerp(start, end, (float)factor);
+            res.Normalize();
+            return res;
+        }
+
+        public Matrix GetBoneTotalMatrix(double aTime)
+        {
+            Matrix pos = Matrix.CreateTranslation(lerpPos(aTime));
+            Matrix rot = Matrix.CreateFromQuaternion(lerpRotate(aTime));
+            Matrix combined = pos * rot;
+            if (Parent != null)
+            {
+                combined = Parent.GetBoneTotalMatrix(aTime) * combined;
+            }
+            return combined;
+        }
     }
 }

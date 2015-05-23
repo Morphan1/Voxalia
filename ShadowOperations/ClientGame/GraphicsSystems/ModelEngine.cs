@@ -285,91 +285,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 mat.D1, mat.D2, mat.D3, mat.D4);
         }
 
-        int findPos(double time, SingleAnimationNode nodeAnim)
-        {
-            for (int i = 0; i < nodeAnim.Positions.Count - 1; i++)
-            {
-                if (time >= nodeAnim.PosTimes[i] && time < nodeAnim.PosTimes[i + 1])
-                {
-                    return i;
-                }
-            }
-            return 0;
-        }
-
-        Vector3D lerpPos(double aTime, SingleAnimationNode nodeAnim)
-        {
-            if (nodeAnim.Positions.Count == 0)
-            {
-                return new Vector3D(0, 0, 0);
-            }
-            if (nodeAnim.Positions.Count == 1)
-            {
-                Location pos = nodeAnim.Positions[0];
-                return new Vector3D((float)pos.X, (float)pos.Y, (float)pos.Z);
-            }
-            int index = findPos(aTime, nodeAnim);
-            int nextIndex = index + 1;
-            if (nextIndex >= nodeAnim.Positions.Count)
-            {
-                Location pos = nodeAnim.Positions[0];
-                return new Vector3D((float)pos.X, (float)pos.Y, (float)pos.Z);
-            }
-            double deltaT = nodeAnim.PosTimes[nextIndex] - nodeAnim.PosTimes[index];
-            double factor = (aTime - nodeAnim.PosTimes[index]) / deltaT;
-            if (factor < 0 || factor > 1)
-            {
-                Location pos = nodeAnim.Positions[0];
-                return new Vector3D((float)pos.X, (float)pos.Y, (float)pos.Z);
-            }
-            Location start = nodeAnim.Positions[index];
-            Location end = nodeAnim.Positions[nextIndex];
-            Location deltaV = end - start;
-            Location npos = start + (float)factor * deltaV;
-            return new Vector3D((float)npos.X, (float)npos.Y, (float)npos.Z);
-        }
-
-        int findRotate(double time, SingleAnimationNode nodeAnim)
-        {
-            for (int i = 0; i < nodeAnim.Rotations.Count; i++)
-            {
-                if (time >= nodeAnim.RotTimes[i] && time < nodeAnim.RotTimes[i + 1])
-                {
-                    return i;
-                }
-            }
-            return 0;
-        }
-
-        Assimp.Quaternion lerpRotate(double aTime, SingleAnimationNode nodeAnim)
-        {
-            if (nodeAnim.Rotations.Count == 0)
-            {
-                return new Assimp.Quaternion(0, 0, 0);
-            }
-            if (nodeAnim.Rotations.Count == 1)
-            {
-                return nodeAnim.Rotations[0];
-            }
-            int index = findRotate(aTime, nodeAnim);
-            int nextIndex = index + 1;
-            if (nextIndex >= nodeAnim.Rotations.Count)
-            {
-                return nodeAnim.Rotations[0];
-            }
-            double deltaT = nodeAnim.RotTimes[nextIndex] - nodeAnim.RotTimes[index];
-            double factor = (aTime - nodeAnim.RotTimes[index]) / deltaT;
-            if (factor < 0 || factor > 1)
-            {
-                return nodeAnim.Rotations[0];
-            }
-            Assimp.Quaternion start = nodeAnim.Rotations[index];
-            Assimp.Quaternion end = nodeAnim.Rotations[nextIndex];
-            Assimp.Quaternion res = Assimp.Quaternion.Slerp(start, end, (float)factor);
-            res.Normalize();
-            return res;
-        }
-
         Matrix4 globalInverse = Matrix4.Identity;
 
         public void UpdateTransforms(double aTime, Node pNode, Matrix4 transf, byte mode)
@@ -381,7 +296,9 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 SingleAnimationNode pNodeAnim = FindNodeAnim(nodename, mode);
                 if (pNodeAnim != null)
                 {
-                    nodeTransf = convert(Matrix4x4.FromTranslation(lerpPos(aTime, pNodeAnim))) * convert(new Matrix4x4(lerpRotate(aTime, pNodeAnim).GetMatrix()));
+                    BEPUutilities.Vector3 vec = pNodeAnim.lerpPos(aTime);
+                    BEPUutilities.Quaternion quat = pNodeAnim.lerpRotate(aTime);
+                    nodeTransf = convert(Matrix4x4.FromTranslation(new Vector3D(vec.X, vec.Y, vec.Z))) * convert(new Matrix4x4(new Assimp.Quaternion(quat.W, quat.X, quat.Y, quat.Z).GetMatrix()));
                 }
                 Matrix4 global = transf * nodeTransf;
                 foreach (ModelMesh mesh in Meshes)
