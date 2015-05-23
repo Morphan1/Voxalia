@@ -15,6 +15,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             int len = 1 + 8 + 8 + 8;
             if (data.Length < len)
             {
+                SysConsole.Output(OutputType.WARNING, "Joint packet: Bad initial length!");
                 return false;
             }
             byte type = data[0];
@@ -32,6 +33,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             {
                 if (data.Length != len + 12)
                 {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
                 Location pos = Location.FromBytes(data, len);
@@ -44,6 +46,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             {
                 if (data.Length != len)
                 {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
                 JointSlider js = new JointSlider((PhysicsEntity)pe1, (PhysicsEntity)pe2);
@@ -55,6 +58,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             {
                 if (data.Length != len + 4 + 4 + 12 + 12)
                 {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
                 float min = Utilities.BytesToFloat(Utilities.BytesPartial(data, len, 4));
@@ -70,6 +74,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             {
                 if (data.Length != len + 4)
                 {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
                 float stren = Utilities.BytesToFloat(Utilities.BytesPartial(data, len, 4));
@@ -82,6 +87,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             {
                 if (data.Length != len)
                 {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
                 JointForceWeld jfw = new JointForceWeld(pe1, pe2);
@@ -91,6 +97,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             }
             else
             {
+                SysConsole.Output(OutputType.WARNING, "Unknown joint type " + type);
                 return false;
             }
         }

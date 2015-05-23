@@ -45,6 +45,18 @@ namespace ShadowOperations.ClientGame.OtherSystems
             return Tex == null ? null: Tex.Name;
         }
 
+        public Model Mod;
+
+        public override string GetModelName()
+        {
+            return Mod == null ? null: Mod.Name;
+        }
+
+        public override void SetModelName(string name)
+        {
+            Mod = TheClient.Models.GetModel(name);
+        }
+
         public void Render(Location pos, Location size)
         {
             Tex.Bind();

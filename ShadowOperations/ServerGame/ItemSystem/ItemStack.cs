@@ -14,10 +14,10 @@ namespace ShadowOperations.ServerGame.ItemSystem
     {
         public Server TheServer;
 
-        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, int color)
+        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, int color, string model)
         {
             TheServer = tserver;
-            Load(name, count, tex, display, descrip, color);
+            Load(name, count, tex, display, descrip, color, model);
         }
 
         public ItemStack(byte[] data, Server tserver)
@@ -47,6 +47,18 @@ namespace ShadowOperations.ServerGame.ItemSystem
         public override void SetTextureName(string name)
         {
             Image = name;
+        }
+
+        public string Model;
+        
+        public override string GetModelName()
+        {
+            return Model;
+        }
+
+        public override void SetModelName(string name)
+        {
+            Model = name;
         }
     }
 }

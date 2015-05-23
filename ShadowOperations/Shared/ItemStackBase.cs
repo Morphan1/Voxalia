@@ -45,13 +45,18 @@ namespace ShadowOperations.Shared
 
         public abstract void SetTextureName(string name);
 
+        public abstract string GetModelName();
+
+        public abstract void SetModelName(string name);
+
         public byte[] ToBytes()
         {
             byte[] b_name = FileHandler.encoding.GetBytes(Name);
             byte[] b_dname = FileHandler.encoding.GetBytes(DisplayName);
             byte[] b_desc = FileHandler.encoding.GetBytes(Description);
             byte[] b_tex = FileHandler.encoding.GetBytes(GetTextureName());
-            byte[] data = new byte[4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4 + 4];
+            byte[] b_model = FileHandler.encoding.GetBytes(GetModelName());
+            byte[] data = new byte[4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4 + 4 + 4 + b_model.Length];
             Utilities.IntToBytes(Count).CopyTo(data, 0);
             Utilities.IntToBytes(b_name.Length).CopyTo(data, 4);
             Utilities.IntToBytes(b_dname.Length).CopyTo(data, 4 + 4);
@@ -63,6 +68,11 @@ namespace ShadowOperations.Shared
             b_tex.CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length);
             Utilities.IntToBytes(Datum).CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length);
             Utilities.IntToBytes(DrawColor).CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4);
+            int cur = 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4 + 4;
+            Utilities.IntToBytes(b_model.Length).CopyTo(data, cur);
+            cur += 4;
+            b_model.CopyTo(data, cur);
+            cur += b_model.Length;
             return data;
         }
 
@@ -71,13 +81,14 @@ namespace ShadowOperations.Shared
             Name = name;
         }
 
-        public void Load(string name, int count, string tex, string display, string descrip, int color)
+        public void Load(string name, int count, string tex, string display, string descrip, int color, string model)
         {
             SetName(name);
             Count = count;
             DisplayName = display;
             Description = descrip;
             SetTextureName(tex);
+            SetModelName(model);
             Datum = 0;
             DrawColor = color;
         }
@@ -93,7 +104,7 @@ namespace ShadowOperations.Shared
             int c_dname = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4, 4));
             int c_desc = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4, 4));
             int c_tex = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4 + 4, 4));
-            if (data.Length < 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex + 4)
+            if (data.Length < 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex + 4 + 4)
             {
                 throw new Exception("Invalid item stack bytes!");
             }
@@ -103,6 +114,14 @@ namespace ShadowOperations.Shared
             SetTextureName(FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc, c_tex));
             Datum = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex, 4));
             DrawColor = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex + 4, 4));
+            int cur = 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex + 4 + 4;
+            int c_model = Utilities.BytesToInt(Utilities.BytesPartial(data, cur, 4));
+            cur += 4;
+            if (data.Length < cur + c_model)
+            {
+                throw new Exception("Invalid item stack bytes!");
+            }
+            SetModelName(FileHandler.encoding.GetString(data, cur, c_model));
         }
     }
 }
