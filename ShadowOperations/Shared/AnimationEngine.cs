@@ -144,7 +144,7 @@ namespace ShadowOperations.Shared
                             }
                             else if (entry.Key == "parent")
                             {
-                                node.ParentName = entry.Value;
+                                node.ParentName = entry.Value.ToLower();
                             }
                             else
                             {
