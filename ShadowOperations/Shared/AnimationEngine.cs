@@ -311,37 +311,15 @@ namespace ShadowOperations.Shared
             return res;
         }
 
-        public Matrix GetBoneTotalMatrix(/*Assimp.Scene model_original, */double aTime/*, bool is_sublayer = false*/)
+        public Matrix GetBoneTotalMatrix(double aTime)
         {
             Matrix pos = Matrix.CreateTranslation(lerpPos(aTime));
             Matrix rot = Matrix.CreateFromQuaternion(lerpRotate(aTime));
             Matrix combined = pos * rot;
             if (Parent != null)
             {
-                combined = Parent.GetBoneTotalMatrix(/*model_original, */aTime/*, true*/) * combined;
+                combined = Parent.GetBoneTotalMatrix(aTime) * combined;
             }
-            /*if (!is_sublayer)
-            {
-                combined = combined * Matrix.CreateTranslation(Offset.ToBVector());
-            }*/
-            /*
-            if (!is_sublayer)
-            {
-                foreach (Assimp.Mesh mesh in model_original.Meshes)
-                {
-                    for (int i = 0; i < mesh.BoneCount; i++)
-                    {
-                        if (mesh.Bones[i].Name.ToLower() == Name)
-                        {
-                            combined *= Convert(mesh.Bones[i].OffsetMatrix);
-                            goto breakme;
-                        }
-                    }
-                    continue;
-                breakme:
-                    break;
-                }
-            }*/
             return combined;
         }
 
