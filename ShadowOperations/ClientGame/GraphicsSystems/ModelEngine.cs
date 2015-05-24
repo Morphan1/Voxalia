@@ -222,13 +222,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 PopulateChildren(child, original, model, engine);
                 node.Children.Add(child);
             }
-            for (int i = 0; i < model.Meshes.Count; i++)
+            for (int i = 0; i <model.Meshes.Count; i++)
             {
                 for (int x = 0; x < model.Meshes[i].Original.Bones.Count; x++)
                 {
                     if (model.Meshes[i].Original.Bones[x].Name.ToLower() == node.Internal.Name.ToLower())
                     {
                         ModelBone mb = new ModelBone() { Internal = model.Meshes[i].Original.Bones[x], Offset = convert(model.Meshes[i].Original.Bones[x].OffsetMatrix) };
+                        //mb.Offset.Transpose();
                         node.Bones.Add(mb);
                         model.Meshes[i].Bones.Add(mb);
                     }
@@ -245,10 +246,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         Matrix4 convert(Matrix4x4 mat)
         {
-            return new Matrix4(mat.A1, mat.A2, mat.A3, mat.A4,
+            /*return new Matrix4(mat.A1, mat.A2, mat.A3, mat.A4,
                 mat.B1, mat.B2, mat.B3, mat.B4,
                 mat.C1, mat.C2, mat.C3, mat.C4,
-                mat.D1, mat.D2, mat.D3, mat.D4);
+                mat.D1, mat.D2, mat.D3, mat.D4);*/
+            return new Matrix4(mat.A1, mat.B1, mat.C1, mat.D1,
+                mat.A2, mat.B2, mat.C2, mat.D2,
+                mat.A3, mat.B3, mat.C3, mat.D3,
+                mat.A4, mat.C4, mat.C4, mat.D4);
         }
 
     }
@@ -320,6 +325,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             GL.UniformMatrix4(7, bones, false, set);
         }
 
+        Matrix4 convert(Matrix4x4 mat)
+        {
+            return new Matrix4(mat.A1, mat.A2, mat.A3, mat.A4,
+                mat.B1, mat.B2, mat.B3, mat.B4,
+                mat.C1, mat.C2, mat.C3, mat.C4,
+                mat.D1, mat.D2, mat.D3, mat.D4);
+        }
+
         Matrix4 globalInverse = Matrix4.Identity;
 
         public void UpdateTransforms(ModelNode pNode, Matrix4 transf)
@@ -332,18 +345,20 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             {
                 BEPUutilities.Vector3 vec = pNodeAnim.lerpPos(time);
                 BEPUutilities.Quaternion quat = pNodeAnim.lerpRotate(time);
-                Matrix4 trans = Matrix4.CreateTranslation(vec.X, vec.Y, vec.Z);
-                Matrix4 rot = Matrix4.CreateFromQuaternion(new OpenTK.Quaternion(quat.X, quat.Y, quat.Z, quat.W));
+                OpenTK.Quaternion oquat = new OpenTK.Quaternion(quat.X, quat.Y, quat.Z, quat.W);
+                Matrix4 trans;
+                Matrix4.CreateTranslation(vec.X, vec.Y, vec.Z, out trans);
+                Matrix4 rot;
+                Matrix4.CreateFromQuaternion(ref oquat, out rot);
                 Matrix4.Mult(ref trans, ref rot, out nodeTransf);
             }
             Matrix4 global;
             Matrix4.Mult(ref transf, ref nodeTransf, out global);
-            foreach (ModelMesh mesh in Meshes)
+            for (int i = 0; i < pNode.Bones.Count; i++)
             {
-                for (int i = 0; i < pNode.Bones.Count; i++)
-                {
-                    Matrix4.Mult(ref global, ref pNode.Bones[i].Offset, out pNode.Bones[i].Transform);
-                }
+                Matrix4 modded;
+                Matrix4.Mult(ref globalInverse, ref global, out modded);
+                Matrix4.Mult(ref modded, ref pNode.Bones[i].Offset, out pNode.Bones[i].Transform);
             }
             for (int i = 0; i < pNode.Children.Count; i++)
             {
@@ -393,7 +408,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             hAnim = headanim;
             tAnim = torsoanim;
             lAnim = legsanim;
-            if (hAnim != null || tAnim != null || lAnim != null)
+            bool any = hAnim != null || tAnim != null || lAnim != null;
+            if (any)
             {
                 if (hAnim != null)
                 {
@@ -415,15 +431,18 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
             for (int i = 0; i < Meshes.Count; i++)
             {
-                Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];
-                for (int x = 0; x < Meshes[i].Bones.Count; x++)
+                if (any && Meshes[i].Bones.Count > 0)
                 {
-                    mats[x] = Meshes[i].Bones[x].Transform;
+                    Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];
+                    for (int x = 0; x < Meshes[i].Bones.Count; x++)
+                    {
+                        mats[x] = Meshes[i].Bones[x].Transform;
+                    }
+                    SetBones(mats);
                 }
-                SetBones(mats);
                 Meshes[i].Draw();
             }
-            if (hAnim != null || tAnim != null || lAnim != null)
+            if (any)
             {
                 VBO.BonesIdentity();
             }
