@@ -198,12 +198,33 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 modmesh.GenerateVBO();
             }
             model.RootNode = new ModelNode() { Internal = scene.RootNode, Parent = null, Name = scene.RootNode.Name.ToLower() };
-            PopulateChildren(model.RootNode, scene, model, engine);
+            List<ModelNode> allNodes = new List<ModelNode>();
+            PopulateChildren(model.RootNode, scene, model, engine, allNodes);
+            for (int i = 0; i < model.Meshes.Count; i++)
+            {
+                for (int x = 0; x < model.Meshes[i].Original.Bones.Count; x++)
+                {
+                    ModelNode nodet = null;
+                    string nl = model.Meshes[i].Original.Bones[x].Name.ToLower();
+                    for (int n = 0; n < allNodes.Count; n++)
+                    {
+                        if (allNodes[n].Name == nl)
+                        {
+                            nodet = allNodes[n];
+                            break;
+                        }
+                    }
+                    ModelBone mb = new ModelBone() { Internal = model.Meshes[i].Original.Bones[x], Offset = convert(model.Meshes[i].Original.Bones[x].OffsetMatrix) };
+                    nodet.Bones.Add(mb);
+                    model.Meshes[i].Bones.Add(mb);
+                }
+            }
             return model;
         }
 
-        void PopulateChildren(ModelNode node, Scene original, Model model, AnimationEngine engine)
+        void PopulateChildren(ModelNode node, Scene original, Model model, AnimationEngine engine, List<ModelNode> allNodes)
         {
+            allNodes.Add(node);
             if (engine.HeadBones.Contains(node.Name))
             {
                 node.Mode = 0;
@@ -219,21 +240,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             for (int i = 0; i < node.Internal.Children.Count; i++)
             {
                 ModelNode child = new ModelNode() { Internal = node.Internal.Children[i], Parent = node, Name = node.Internal.Children[i].Name.ToLower() };
-                PopulateChildren(child, original, model, engine);
+                PopulateChildren(child, original, model, engine, allNodes);
                 node.Children.Add(child);
-            }
-            for (int i = 0; i <model.Meshes.Count; i++)
-            {
-                for (int x = 0; x < model.Meshes[i].Original.Bones.Count; x++)
-                {
-                    if (model.Meshes[i].Original.Bones[x].Name.ToLower() == node.Internal.Name.ToLower())
-                    {
-                        ModelBone mb = new ModelBone() { Internal = model.Meshes[i].Original.Bones[x], Offset = convert(model.Meshes[i].Original.Bones[x].OffsetMatrix) };
-                        //mb.Offset.Transpose();
-                        node.Bones.Add(mb);
-                        model.Meshes[i].Bones.Add(mb);
-                    }
-                }
             }
         }
 
