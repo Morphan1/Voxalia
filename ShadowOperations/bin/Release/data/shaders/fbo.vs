@@ -32,10 +32,10 @@ void main(void)
 		BT += boneTrans[int(BoneID[2])] * Weights[2];
 		BT += boneTrans[int(BoneID[3])] * Weights[3];
 		BT += mat4(1.0) * rem;
-		//pos1 = vec4(position, 1.0) * BT;
-		//norm1 = vec4(normal, 1.0) * BT;
-		pos1 = BT * vec4(position, 1.0);
-		norm1 = BT * vec4(normal, 1.0);
+		pos1 = vec4(position, 1.0) * BT;
+		norm1 = vec4(normal, 1.0) * BT;
+		//pos1 = BT * vec4(position, 1.0);
+		//norm1 = BT * vec4(normal, 1.0);
 	}
 	else
 	{

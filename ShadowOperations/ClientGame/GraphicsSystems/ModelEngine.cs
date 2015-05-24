@@ -246,14 +246,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         Matrix4 convert(Matrix4x4 mat)
         {
-            /*return new Matrix4(mat.A1, mat.A2, mat.A3, mat.A4,
+            return new Matrix4(mat.A1, mat.A2, mat.A3, mat.A4,
                 mat.B1, mat.B2, mat.B3, mat.B4,
                 mat.C1, mat.C2, mat.C3, mat.C4,
-                mat.D1, mat.D2, mat.D3, mat.D4);*/
-            return new Matrix4(mat.A1, mat.B1, mat.C1, mat.D1,
+                mat.D1, mat.D2, mat.D3, mat.D4);
+            /*return new Matrix4(mat.A1, mat.B1, mat.C1, mat.D1,
                 mat.A2, mat.B2, mat.C2, mat.D2,
                 mat.A3, mat.B3, mat.C3, mat.D3,
-                mat.A4, mat.C4, mat.C4, mat.D4);
+                mat.A4, mat.C4, mat.C4, mat.D4);*/
         }
 
     }
@@ -348,17 +348,19 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 OpenTK.Quaternion oquat = new OpenTK.Quaternion(quat.X, quat.Y, quat.Z, quat.W);
                 Matrix4 trans;
                 Matrix4.CreateTranslation(vec.X, vec.Y, vec.Z, out trans);
+                trans.Transpose();
                 Matrix4 rot;
                 Matrix4.CreateFromQuaternion(ref oquat, out rot);
+                rot.Transpose();
                 Matrix4.Mult(ref trans, ref rot, out nodeTransf);
             }
             Matrix4 global;
             Matrix4.Mult(ref transf, ref nodeTransf, out global);
             for (int i = 0; i < pNode.Bones.Count; i++)
             {
-                Matrix4 modded;
-                Matrix4.Mult(ref globalInverse, ref global, out modded);
-                Matrix4.Mult(ref modded, ref pNode.Bones[i].Offset, out pNode.Bones[i].Transform);
+                //Matrix4 modded;
+                //Matrix4.Mult(ref globalInverse, ref global, out modded);
+                Matrix4.Mult(ref global, ref pNode.Bones[i].Offset, out pNode.Bones[i].Transform);
             }
             for (int i = 0; i < pNode.Children.Count; i++)
             {
