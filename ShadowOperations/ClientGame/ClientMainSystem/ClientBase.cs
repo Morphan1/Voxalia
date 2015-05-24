@@ -119,11 +119,11 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Fonts.Init();
             FontSets = new FontSetEngine(Fonts);
             FontSets.Init();
-            SysConsole.Output(OutputType.INIT, "Loading model engine...");
-            Models = new ModelEngine();
-            Models.Init();
             SysConsole.Output(OutputType.INIT, "Loading animation engine...");
             Animations = new AnimationEngine();
+            SysConsole.Output(OutputType.INIT, "Loading model engine...");
+            Models = new ModelEngine();
+            Models.Init(Animations);
             SysConsole.Output(OutputType.INIT, "Loading rendering helper...");
             Rendering = new Renderer(Textures);
             Rendering.Init();

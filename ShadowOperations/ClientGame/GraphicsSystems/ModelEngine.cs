@@ -25,8 +25,9 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         /// <summary>
         /// Prepares the model system.
         /// </summary>
-        public void Init()
+        public void Init(AnimationEngine engine)
         {
+            AnimEngine = engine;
             Handler = new ModelHandler();
             LoadedModels = new List<Model>();
             Cube = FromBytes("cube", FileHandler.encoding.GetBytes(CubeData));
@@ -94,6 +95,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             return Loaded;
         }
 
+        public AnimationEngine AnimEngine;
+
         /// <summary>
         /// loads a model from a file byte array.
         /// </summary>
@@ -103,10 +106,10 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         public Model FromBytes(string name, byte[] data)
         {
             Scene scene = Handler.LoadModel(data, name.Substring(name.LastIndexOf('.') + 1));
-            return FromScene(scene, name);
+            return FromScene(scene, name, AnimEngine);
         }
 
-        public Model FromScene(Scene scene, string name)
+        public Model FromScene(Scene scene, string name, AnimationEngine engine)
         {
             if (!scene.HasMeshes)
             {
@@ -114,6 +117,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
             Model model = new Model(name);
             model.OriginalModel = scene;
+            model.Root = convert(scene.RootNode.Transform);
             foreach (Mesh mesh in scene.Meshes)
             {
                 ModelMesh modmesh = new ModelMesh(mesh.Name, mesh);
@@ -189,21 +193,47 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                         ForceSet(modmesh.vbo.BoneIDs, vw.VertexID, spot, i);
                         ForceSet(modmesh.vbo.BoneWeights, vw.VertexID, spot, vw.Weight);
                     }
-                    modmesh.Bones.Add(new ModelBone() { Internal = mesh.Bones[i] });
-                    string nl = mesh.Bones[i].Name.ToLower();
-                    if (!modmesh.BoneLookup.ContainsKey(nl))
-                    {
-                        modmesh.BoneLookup.Add(nl, modmesh.Bones.Count - 1);
-                    }
-                    else
-                    {
-                        SysConsole.Output(OutputType.WARNING, "Bone " + nl + " defined repeatedly!");
-                    }
                 }
                 model.Meshes.Add(modmesh);
                 modmesh.GenerateVBO();
             }
+            model.RootNode = new ModelNode() { Internal = scene.RootNode, Parent = null, Name = scene.RootNode.Name.ToLower() };
+            PopulateChildren(model.RootNode, scene, model, engine);
             return model;
+        }
+
+        void PopulateChildren(ModelNode node, Scene original, Model model, AnimationEngine engine)
+        {
+            if (engine.HeadBones.Contains(node.Name))
+            {
+                node.Mode = 0;
+            }
+            else if (engine.LegBones.Contains(node.Name))
+            {
+                node.Mode = 2;
+            }
+            else
+            {
+                node.Mode = 1;
+            }
+            for (int i = 0; i < node.Internal.Children.Count; i++)
+            {
+                ModelNode child = new ModelNode() { Internal = node.Internal.Children[i], Parent = node, Name = node.Internal.Children[i].Name.ToLower() };
+                PopulateChildren(child, original, model, engine);
+                node.Children.Add(child);
+            }
+            for (int i = 0; i < model.Meshes.Count; i++)
+            {
+                for (int x = 0; x < model.Meshes[i].Original.Bones.Count; x++)
+                {
+                    if (model.Meshes[i].Original.Bones[x].Name.ToLower() == node.Internal.Name.ToLower())
+                    {
+                        ModelBone mb = new ModelBone() { Internal = model.Meshes[i].Original.Bones[x], Offset = convert(model.Meshes[i].Original.Bones[x].OffsetMatrix) };
+                        node.Bones.Add(mb);
+                        model.Meshes[i].Bones.Add(mb);
+                    }
+                }
+            }
         }
 
         void ForceSet(List<Vector4> vecs, int ind, int subind, float val)
@@ -212,6 +242,15 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             vec[subind] = val;
             vecs[ind] = vec;
         }
+
+        Matrix4 convert(Matrix4x4 mat)
+        {
+            return new Matrix4(mat.A1, mat.A2, mat.A3, mat.A4,
+                mat.B1, mat.B2, mat.B3, mat.B4,
+                mat.C1, mat.C2, mat.C3, mat.C4,
+                mat.D1, mat.D2, mat.D3, mat.D4);
+        }
+
     }
 
     /// <summary>
@@ -227,6 +266,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Meshes = new List<ModelMesh>();
         }
 
+        public Matrix4 Root;
+
         /// <summary>
         /// The name of  this model.
         /// </summary>
@@ -236,6 +277,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         /// All the meshes this model has.
         /// </summary>
         public List<ModelMesh> Meshes;
+
+        public ModelNode RootNode;
 
         public ModelMesh MeshFor(string name)
         {
@@ -277,123 +320,112 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             GL.UniformMatrix4(7, bones, false, set);
         }
 
-        public Matrix4 convert(Matrix4x4 mat)
-        {
-            return new Matrix4(mat.A1, mat.A2, mat.A3, mat.A4,
-                mat.B1, mat.B2, mat.B3, mat.B4,
-                mat.C1, mat.C2, mat.C3, mat.C4,
-                mat.D1, mat.D2, mat.D3, mat.D4);
-        }
-
         Matrix4 globalInverse = Matrix4.Identity;
 
-        public void UpdateTransforms(double aTime, Node pNode, Matrix4 transf, byte mode)
+        public void UpdateTransforms(ModelNode pNode, Matrix4 transf)
         {
-            try
+            string nodename = pNode.Name;
+            Matrix4 nodeTransf = Matrix4.Identity;
+            double time;
+            SingleAnimationNode pNodeAnim = FindNodeAnim(nodename, pNode.Mode, out time);
+            if (pNodeAnim != null)
             {
-                string nodename = pNode.Name.ToLower();
-                Matrix4 nodeTransf = Matrix4.Identity;
-                SingleAnimationNode pNodeAnim = FindNodeAnim(nodename, mode);
-                if (pNodeAnim != null)
+                BEPUutilities.Vector3 vec = pNodeAnim.lerpPos(time);
+                BEPUutilities.Quaternion quat = pNodeAnim.lerpRotate(time);
+                Matrix4 trans = Matrix4.CreateTranslation(vec.X, vec.Y, vec.Z);
+                Matrix4 rot = Matrix4.CreateFromQuaternion(new OpenTK.Quaternion(quat.X, quat.Y, quat.Z, quat.W));
+                Matrix4.Mult(ref trans, ref rot, out nodeTransf);
+            }
+            Matrix4 global;
+            Matrix4.Mult(ref transf, ref nodeTransf, out global);
+            foreach (ModelMesh mesh in Meshes)
+            {
+                for (int i = 0; i < pNode.Bones.Count; i++)
                 {
-                    BEPUutilities.Vector3 vec = pNodeAnim.lerpPos(aTime);
-                    BEPUutilities.Quaternion quat = pNodeAnim.lerpRotate(aTime);
-                    nodeTransf = convert(Matrix4x4.FromTranslation(new Vector3D(vec.X, vec.Y, vec.Z))) * convert(new Matrix4x4(new Assimp.Quaternion(quat.W, quat.X, quat.Y, quat.Z).GetMatrix()));
-                }
-                Matrix4 global = transf * nodeTransf;
-                foreach (ModelMesh mesh in Meshes)
-                {
-                    int pos;
-                    if (mesh.BoneLookup.TryGetValue(nodename, out pos))
-                    {
-                        mesh.Bones[pos].Transform = global * convert(mesh.Bones[pos].Internal.OffsetMatrix);
-                    }
-                }
-                for (int i = 0; i < pNode.ChildCount; i++)
-                {
-                    UpdateTransforms(aTime, pNode.Children[i], global, mode);
+                    Matrix4.Mult(ref global, ref pNode.Bones[i].Offset, out pNode.Bones[i].Transform);
                 }
             }
-            catch (Exception ex)
+            for (int i = 0; i < pNode.Children.Count; i++)
             {
-                SysConsole.Output(OutputType.ERROR, ex.ToString());
+                UpdateTransforms(pNode.Children[i], global);
             }
         }
 
-        SingleAnimationNode FindNodeAnim(string nodeName, int mode)
+        AnimationEngine Engine = null;
+
+        SingleAnimationNode FindNodeAnim(string nodeName, int mode, out double time)
         {
-            List<SingleAnimationNode> nodes;
+            SingleAnimation nodes;
             if (mode == 0)
             {
-                nodes = hAnim.Nodes;
+                nodes = hAnim;
+                time = aTHead;
             }
             else if (mode == 1)
             {
-                nodes = tAnim.Nodes;
+                nodes = tAnim;
+                time = aTTorso;
             }
             else
             {
-                nodes = lAnim.Nodes;
+                nodes = lAnim;
+                time = aTLegs;
             }
-            for (int i = 0; i < nodes.Count; i++)
+            if (nodes == null)
             {
-                SingleAnimationNode nac = nodes[i];
-                if (nac.Name == nodeName)
-                {
-                    return nac;
-                }
+                return null;
             }
-            return null;
+            return nodes.GetNode(nodeName);
         }
 
         SingleAnimation hAnim;
         SingleAnimation tAnim;
         SingleAnimation lAnim;
+        double aTHead;
+        double aTTorso;
+        double aTLegs;
 
         /// <summary>
         /// Draws the model.
         /// </summary>
         public void Draw(double aTimeHead = 0, SingleAnimation headanim = null, double aTimeTorso = 0, SingleAnimation torsoanim = null, double aTimeLegs = 0, SingleAnimation legsanim = null)
         {
+            hAnim = headanim;
+            tAnim = torsoanim;
+            lAnim = legsanim;
+            if (hAnim != null || tAnim != null || lAnim != null)
+            {
+                if (hAnim != null)
+                {
+                    Engine = hAnim.Engine;
+                }
+                else if (tAnim != null)
+                {
+                    Engine = tAnim.Engine;
+                }
+                else
+                {
+                    Engine = lAnim.Engine;
+                }
+                globalInverse = Root.Inverted();
+                aTHead = aTimeHead;
+                aTTorso = aTimeTorso;
+                aTLegs = aTimeLegs;
+                UpdateTransforms(RootNode, Matrix4.Identity);
+            }
             for (int i = 0; i < Meshes.Count; i++)
             {
-                if (Meshes[i].Bones.Count > 0)
+                Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];
+                for (int x = 0; x < Meshes[i].Bones.Count; x++)
                 {
-                    hAnim = headanim;
-                    tAnim = torsoanim;
-                    lAnim = legsanim;
-                    if (hAnim != null || tAnim != null || lAnim != null)
-                    {
-                        globalInverse = convert(OriginalModel.RootNode.Transform).Inverted();
-                        if (hAnim != null)
-                        {
-                            UpdateTransforms(aTimeHead, OriginalModel.RootNode, Matrix4.Identity, 0);
-                        }
-                        if (tAnim != null)
-                        {
-                            UpdateTransforms(aTimeTorso, OriginalModel.RootNode, Matrix4.Identity, 1);
-                        }
-                        if (lAnim != null)
-                        {
-                            UpdateTransforms(aTimeLegs, OriginalModel.RootNode, Matrix4.Identity, 2);
-                        }
-                        Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];
-                        for (int x = 0; x < Meshes[i].Bones.Count; x++)
-                        {
-                            mats[x] = Meshes[i].Bones[x].Transform;
-                        }
-                        SetBones(mats);
-                    }
-                    else
-                    {
-                        SetBones(new Matrix4[] { });
-                    }
+                    mats[x] = Meshes[i].Bones[x].Transform;
                 }
+                SetBones(mats);
                 Meshes[i].Draw();
-                if (Meshes[i].Bones.Count > 0)
-                {
-                    VBO.BonesIdentity();
-                }
+            }
+            if (hAnim != null || tAnim != null || lAnim != null)
+            {
+                VBO.BonesIdentity();
             }
         }
 
@@ -451,6 +483,17 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
     {
         public Bone Internal = null;
         public Matrix4 Transform = Matrix4.Identity;
+        public Matrix4 Offset;
+    }
+
+    public class ModelNode
+    {
+        public Node Internal = null;
+        public ModelNode Parent = null;
+        public List<ModelNode> Children = new List<ModelNode>();
+        public List<ModelBone> Bones = new List<ModelBone>();
+        public byte Mode;
+        public string Name;
     }
 
     public class ModelMesh
@@ -464,9 +507,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         public Mesh Original;
 
-        public List<ModelBone> Bones;
-
-        public Dictionary<string, int> BoneLookup;
+        public List<ModelBone> Bones = new List<ModelBone>();
 
         public ModelMesh(string _name, Mesh orig)
         {
@@ -477,8 +518,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 Name = Name.Substring(0, Name.Length - ".001".Length);
             }
             Faces = new List<ModelFace>();
-            Bones = new List<ModelBone>();
-            BoneLookup = new Dictionary<string, int>();
             vbo = new VBO();
         }
 

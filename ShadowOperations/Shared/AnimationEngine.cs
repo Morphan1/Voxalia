@@ -11,18 +11,27 @@ namespace ShadowOperations.Shared
         public AnimationEngine()
         {
             Animations = new Dictionary<string, SingleAnimation>();
-            TorsoBones = new string[] { "hips", "spine", "chest", "chest1", "shoulder.l", "upper_arm.l", "forearm.l", "hand.l",
+            /*
+            string[] TBones = new string[] { "hips", "spine", "chest", "chest1", "shoulder.l", "upper_arm.l", "forearm.l", "hand.l",
                 "thumb.01.l", "thumb.02.l", "thumb.03.l", "f_index.01.l", "f_index.02.l", "f_index.03.l", "f_middle.01.l", "f_middle.02.l", "f_middle.03.l",
             "f_pinky.01.l", "f_pinky.02.l", "f_pinky.03.l", "f_ring.01.l", "f_ring.02.l", "f_ringy.03.l",
             "shoulder.r", "upper_arm.r", "forearm.r", "hand.r", "thumb.01.r", "thumb.02.r", "thumb.03.r", "f_index.01.r", "f_index.02.r", "f_index.03.r",
-            "f_middle.01.r", "f_middle.02.r", "f_middle.03.r", "f_pinky.01.r", "f_pinky.02.r", "f_pinky.03.r", "f_ring.01.r", "f_ring.02.r", "f_ringy.03.r" };
-            HeadBones = new string[] { "neck", "head", "jaw", "tongue_base", "tongue_mod", "tongue_tip", "lolid.l", "lolid.r", "uplid.l", "uplid.r", "eye.l", "eye.r" };
-            LegBones = new string[] { "thigh.l", "shin.l", "foot.l", "toe.l", "thigh.r", "shin.r", "foot.r", "toe.r" };
+            "f_middle.01.r", "f_middle.02.r", "f_middle.03.r", "f_pinky.01.r", "f_pinky.02.r", "f_pinky.03.r", "f_ring.01.r", "f_ring.02.r", "f_ringy.03.r" };*/
+            string[] HBones = new string[] { "neck", "head", "jaw", "tongue_base", "tongue_mod", "tongue_tip", "lolid.l", "lolid.r", "uplid.l", "uplid.r", "eye.l", "eye.r" };
+            string[] LBones = new string[] { "thigh.l", "shin.l", "foot.l", "toe.l", "thigh.r", "shin.r", "foot.r", "toe.r" };
+            foreach (string str in HBones)
+            {
+                HeadBones.Add(str);
+            }
+            foreach (string str in LBones)
+            {
+                LegBones.Add(str);
+            }
         }
 
-        public string[] HeadBones;
-        public string[] TorsoBones;
-        public string[] LegBones;
+        public HashSet<string> HeadBones = new HashSet<string>();
+        //public HashSet<string> TorsoBones = new HashSet<string>();
+        public HashSet<string> LegBones = new HashSet<string>();
 
         public Dictionary<string, SingleAnimation> Animations;
 
@@ -161,6 +170,7 @@ namespace ShadowOperations.Shared
                     if (!isgeneral)
                     {
                         created.Nodes.Add(node);
+                        created.node_map.Add(node.Name, node);
                     }
                     entr++;
                 }
@@ -195,14 +205,14 @@ namespace ShadowOperations.Shared
 
         public List<SingleAnimationNode> Nodes = new List<SingleAnimationNode>();
 
+        public Dictionary<string, SingleAnimationNode> node_map = new Dictionary<string, SingleAnimationNode>();
+
         public SingleAnimationNode GetNode(string name)
         {
-            for (int i = 0; i < Nodes.Count; i++)
+            SingleAnimationNode node;
+            if (node_map.TryGetValue(name, out node))
             {
-                if (Nodes[i].Name == name)
-                {
-                    return Nodes[i];
-                }
+                return node;
             }
             return null;
         }
