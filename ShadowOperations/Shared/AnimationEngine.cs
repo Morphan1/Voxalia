@@ -146,6 +146,12 @@ namespace ShadowOperations.Shared
                             {
                                 node.ParentName = entry.Value.ToLower();
                             }
+                            else if (entry.Key == "offset")
+                            {
+                                string[] posdata = entry.Value.Split('=');
+                                node.Offset = new Location(Utilities.StringToFloat(posdata[0]),
+                                    Utilities.StringToFloat(posdata[1]), Utilities.StringToFloat(posdata[2]));
+                            }
                             else
                             {
                                 SysConsole.Output(OutputType.WARNING, "Unknown NODE key: " + entry.Key);
@@ -209,6 +215,8 @@ namespace ShadowOperations.Shared
         public SingleAnimationNode Parent = null;
 
         public string ParentName;
+
+        public Location Offset;
 
         public List<double> PosTimes = new List<double>();
 
@@ -303,16 +311,44 @@ namespace ShadowOperations.Shared
             return res;
         }
 
-        public Matrix GetBoneTotalMatrix(double aTime)
+        public Matrix GetBoneTotalMatrix(Assimp.Scene model_original, double aTime, bool is_sublayer = false)
         {
             Matrix pos = Matrix.CreateTranslation(lerpPos(aTime));
             Matrix rot = Matrix.CreateFromQuaternion(lerpRotate(aTime));
             Matrix combined = pos * rot;
             if (Parent != null)
             {
-                combined = Parent.GetBoneTotalMatrix(aTime) * combined;
+                combined = Parent.GetBoneTotalMatrix(model_original, aTime, true) * combined;
             }
+            if (!is_sublayer)
+            {
+                combined = combined * Matrix.CreateTranslation(Offset.ToBVector());
+            }
+            /*
+            if (!is_sublayer)
+            {
+                foreach (Assimp.Mesh mesh in model_original.Meshes)
+                {
+                    for (int i = 0; i < mesh.BoneCount; i++)
+                    {
+                        if (mesh.Bones[i].Name.ToLower() == Name)
+                        {
+                            combined *= Convert(mesh.Bones[i].OffsetMatrix);
+                            goto breakme;
+                        }
+                    }
+                    continue;
+                breakme:
+                    break;
+                }
+            }*/
             return combined;
+        }
+
+        Matrix Convert(Assimp.Matrix4x4 mat)
+        {
+            return new Matrix(mat.A1, mat.A2, mat.A3, mat.A4, mat.B1, mat.B2, mat.B3, mat.B4,
+                mat.C1, mat.C2, mat.C3, mat.C4, mat.D1, mat.D2, mat.D3, mat.D4);
         }
     }
 }

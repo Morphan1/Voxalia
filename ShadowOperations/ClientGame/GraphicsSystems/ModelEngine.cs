@@ -274,7 +274,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     }
                 }
             }
-            GL.UniformMatrix4(6, bones, false, set);
+            GL.UniformMatrix4(7, bones, false, set);
         }
 
         public Matrix4 convert(Matrix4x4 mat)
