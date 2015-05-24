@@ -230,13 +230,16 @@ namespace ShadowOperations.ClientGame.EntitySystem
             if (tAnim != null)
             {
                 SingleAnimationNode hand = tAnim.GetNode("hand.l");
-                Matrix m4 = hand.GetBoneTotalMatrix(model.OriginalModel, aTTime);
-                OpenTK.Matrix4 bonemat = new OpenTK.Matrix4(m4.M11, m4.M12, m4.M13, m4.M14, m4.M21, m4.M22, m4.M23, m4.M24,
-                    m4.M31, m4.M32, m4.M33, m4.M34, m4.M41, m4.M42, m4.M43, m4.M44);
-                GL.UniformMatrix4(6, false, ref bonemat);
+                Matrix m4 = hand.GetBoneTotalMatrix(/*model.OriginalModel, */aTTime);
+                OpenTK.Matrix4 bonemat = /*new OpenTK.Matrix4(m4.M11, m4.M12, m4.M13, m4.M14, m4.M21, m4.M22, m4.M23, m4.M24,
+                    m4.M31, m4.M32, m4.M33, m4.M34, m4.M41, m4.M42, m4.M43, m4.M44)
+                    * */OpenTK.Matrix4.CreateTranslation(-0.4968f, -0.2802f, 0.99510f);
+                mat = bonemat * mat;
+                GL.UniformMatrix4(2, false, ref mat);
+                //GL.UniformMatrix4(6, false, ref bonemat);
                 TheClient.Models.Cube.Draw();
                 bonemat = OpenTK.Matrix4.Identity;
-                GL.UniformMatrix4(6, false, ref bonemat);
+                //GL.UniformMatrix4(6, false, ref bonemat);
             }
         }
     }
