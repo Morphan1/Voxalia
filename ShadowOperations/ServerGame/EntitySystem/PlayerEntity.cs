@@ -166,12 +166,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public bool IgnoreThis(BroadPhaseEntry entry)
         {
-            bool isThis = ((EntityCollidable)entry).Entity.Tag == this;
-            if (isThis)
+            if (entry.CollisionRules.Group == TheServer.Collision.Player)
             {
                 return false;
             }
-            return entry.CollisionRules.Group != TheServer.Collision.NonSolid;
+            return TheServer.Collision.ShouldCollide(entry);
         }
 
         public override void Tick()

@@ -41,6 +41,15 @@ namespace ShadowOperations.Shared
 
         public CollisionGroup Player = new CollisionGroup();
 
+        public bool ShouldCollide(BroadPhaseEntry entry)
+        {
+            if (entry.CollisionRules.Group == NonSolid || entry.CollisionRules.Group == Trigger)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public CollisionUtil(Space world)
         {
             World = world;
