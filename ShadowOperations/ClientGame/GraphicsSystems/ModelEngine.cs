@@ -120,6 +120,10 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             model.Root = convert(scene.RootNode.Transform);
             foreach (Mesh mesh in scene.Meshes)
             {
+                if (mesh.Name.ToLower().Contains("collision"))
+                {
+                    continue;
+                }
                 ModelMesh modmesh = new ModelMesh(mesh.Name, mesh);
                 modmesh.Base = scene;
                 modmesh.vbo.Prepare();

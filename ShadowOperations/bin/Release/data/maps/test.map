@@ -81,6 +81,21 @@ targetposition
 	target: move_about_2a;
 	modifier: 1;
 }
+model
+{
+	position: (-12.996964454651, 10.516893863678, 17.7768442630768);
+	angle: (0.6846679, 0.1245131, 0.1098591, 0.7096875);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 100;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	model: mapobjects/plants/pinetest.dae;
+	scale: (1, 1, 1);
+	collisionmode: aabb;
+}
 cube
 {
 	position: (4.5, 15.5, 0);
@@ -95,22 +110,6 @@ cube
 	mins: (4, 11, -1);
 	maxes: (5, 20, 1);
 	textures: white|white|white|white|white|white;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
-	position: (4.5, 15.5, 1.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (4, 11, 1);
-	maxes: (5, 20, 2);
-	textures: common/glass|common/glass|common/glass|common/glass|common/glass|common/glass;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
 cube
@@ -147,7 +146,7 @@ triggergeneric
 }
 cube
 {
-	position: (-13.5, 9, 0.5);
+	position: (4.5, 15.5, 1.5);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
@@ -156,9 +155,9 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
-	mins: (-15, 7, -1);
-	maxes: (-12, 11, 2);
-	textures: white|white|white|white|white|white;
+	mins: (4, 11, 1);
+	maxes: (5, 20, 2);
+	textures: common/glass|common/glass|common/glass|common/glass|common/glass|common/glass;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
 targetposition
@@ -197,20 +196,6 @@ functrack
 	loopsperactivation: 1;
 	movespeed: 1;
 }
-targetscriptrunner
-{
-	position: (-18, -10, 7);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	targetname: move_about_two;
-	scriptcommands: say "YOU PRESSED DA BIGGER BUTTON";
-}
 targetposition
 {
 	position: (-18, -10, 5);
@@ -225,6 +210,20 @@ targetposition
 	targetname: move_about_2b;
 	target: move_about_2c;
 	modifier: 1;
+}
+targetscriptrunner
+{
+	position: (-18, -10, 7);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	targetname: move_about_two;
+	scriptcommands: say "YOU PRESSED DA BIGGER BUTTON";
 }
 cube
 {
@@ -242,6 +241,22 @@ cube
 	textures: ym|ym|ym|ym|ym|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
+cube
+{
+	position: (-13.5, 9, 0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-15, 7, -1);
+	maxes: (-12, 11, 2);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
 triggergeneric
 {
 	position: (-18, -1, 0.5);
@@ -257,21 +272,6 @@ triggergeneric
 	maxes: (-16, 1, 2);
 	target: move_about_one;
 	trigger_type: use;
-}
-model
-{
-	position: (-13.5607681274415, 8.51689386367798, 2.23189377784729);
-	angle: (-0.7083706, -0.01028022, 0.01031926, -0.7056903);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 100;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	model: mapobjects/plants/pinetest.dae;
-	scale: (1, 1, 1);
-	collisionmode: aabb;
 }
 functrack
 {
@@ -309,20 +309,6 @@ targetposition
 	target: move_about_1b;
 	modifier: 1;
 }
-targetscriptrunner
-{
-	position: (-18, -1, 7);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	targetname: move_about_one;
-	scriptcommands: say "YOU PRESSED DA BUTTON";
-}
 targetposition
 {
 	position: (-18, -1, 5);
@@ -337,6 +323,20 @@ targetposition
 	targetname: move_about_1b;
 	target: move_about_1a;
 	modifier: 1;
+}
+targetscriptrunner
+{
+	position: (-18, -1, 7);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	targetname: move_about_one;
+	scriptcommands: say "YOU PRESSED DA BUTTON";
 }
 cube
 {
