@@ -313,13 +313,13 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             if (GetVelocity().LengthSquared() > 1)
             {
-                SetAnimation("human/walk_lowquality", 1);
-                SetAnimation("human/walk_lowquality", 2);
+                SetAnimation("human/" + StanceName() +  "/walk_lowquality", 1);
+                SetAnimation("human/" + StanceName() + "/walk_lowquality", 2);
             }
             else
             {
-                SetAnimation("human/idle01", 1);
-                SetAnimation("human/idle01", 2);
+                SetAnimation("human/" + StanceName() + "/idle01", 1);
+                SetAnimation("human/" + StanceName() + "/idle01", 2);
             }
             ItemStack cit = GetItemForSlot(cItem);
             if (Click)
@@ -416,10 +416,24 @@ namespace ShadowOperations.ServerGame.EntitySystem
             SetPosition(spe.GetPosition());
         }
 
+        public PlayerStance Stance = PlayerStance.STAND;
+
+        public string StanceName()
+        {
+            return Stance.ToString().ToLower();
+        }
+
         public override void SpawnBody()
         {
             base.SpawnBody();
             Body.CollisionInformation.CollisionRules.Group = TheServer.Collision.Player;
         }
+    }
+
+    public enum PlayerStance : byte
+    {
+        STAND = 0,
+        CROUCH = 1,
+        CRAWL = 2
     }
 }

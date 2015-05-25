@@ -16,6 +16,7 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem
         {
             Register(new SayPlayerCommand());
             Register(new UsePlayerCommand());
+            Register(new StancePlayerCommand());
         }
 
         public void Register(AbstractPlayerCommand cmd)
@@ -28,7 +29,7 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem
             StringBuilder args = new StringBuilder();
             for (int i = 0; i < arguments.Count; i++)
             {
-                args.Append(" \"").Append(args[i]).Append("\"");
+                args.Append(" \"").Append(arguments[i]).Append("\"");
             }
             SysConsole.Output(OutputType.INFO, "Client " + entity + " executing command '" + commandname + "' with arguments:" + args.ToString());
             PlayerCommandEntry entry = new PlayerCommandEntry();

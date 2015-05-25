@@ -29,14 +29,17 @@ namespace ShadowOperations.ClientGame.EntitySystem
             if (mode == 0)
             {
                 hAnim = TheClient.Animations.GetAnimation(anim);
+                aHTime = 0;
             }
             else if (mode == 1)
             {
                 tAnim = TheClient.Animations.GetAnimation(anim);
+                aTTime = 0;
             }
             else
             {
                 lAnim = TheClient.Animations.GetAnimation(anim);
+                aLTime = 0;
             }
         }
 

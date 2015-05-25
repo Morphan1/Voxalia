@@ -36,7 +36,10 @@ namespace ShadowOperations.ClientGame.UISystem
             BindKey(Key.S, "+backward");
             BindKey(Key.A, "+leftward");
             BindKey(Key.D, "+rightward");
-            BindKey(Key.C, "+downward");
+            BindKey(Key.Z, "stance crawl");
+            BindKey(Key.X, "stance crouch");
+            BindKey(Key.C, "stance stand");
+            BindKey(Key.V, "+stand_tall");
             BindKey(Key.Space, "+upward");
             BindKey(Key.LShift, "+walk");
             BindKey(Key.F12, "screenshot");

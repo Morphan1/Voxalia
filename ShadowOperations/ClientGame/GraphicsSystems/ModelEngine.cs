@@ -188,10 +188,13 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                         if (spot > 3)
                         {
                             //SysConsole.Output(OutputType.WARNING, "Too many bones influencing " + vw.VertexID + "!");
-                            continue;
+                            ForceSet(modmesh.vbo.BoneWeights, vw.VertexID, 3, modmesh.vbo.BoneWeights[vw.VertexID][3] + vw.Weight);
                         }
-                        ForceSet(modmesh.vbo.BoneIDs, vw.VertexID, spot, i);
-                        ForceSet(modmesh.vbo.BoneWeights, vw.VertexID, spot, vw.Weight);
+                        else
+                        {
+                            ForceSet(modmesh.vbo.BoneIDs, vw.VertexID, spot, i);
+                            ForceSet(modmesh.vbo.BoneWeights, vw.VertexID, spot, vw.Weight);
+                        }
                     }
                 }
                 model.Meshes.Add(modmesh);
