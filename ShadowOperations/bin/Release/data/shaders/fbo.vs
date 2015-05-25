@@ -34,14 +34,14 @@ void main(void)
 		BT += mat4(1.0) * rem;
 		pos1 = vec4(position, 1.0) * BT;
 		norm1 = vec4(normal, 1.0) * BT;
-		//pos1 = BT * vec4(position, 1.0);
-		//norm1 = BT * vec4(normal, 1.0);
 	}
 	else
 	{
 		pos1 = vec4(position, 1.0);
 		norm1 = vec4(normal, 1.0);
 	}
+	//pos1 *= simplebone_matrix;
+	//norm1 *= simplebone_matrix;
 	pos1 = simplebone_matrix * pos1;
 	norm1 = simplebone_matrix * norm1;
 	f_texcoord = texcoords;
