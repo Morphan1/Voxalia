@@ -228,15 +228,13 @@ namespace ShadowOperations.ClientGame.EntitySystem
             model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
             if (tAnim != null)
             {
-                SingleAnimationNode hand = tAnim.GetNode("hand.l");
+                SingleAnimationNode hand = tAnim.GetNode("f_middle.01.l");
                 Matrix m4 = hand.GetBoneTotalMatrix(aTTime);
-                OpenTK.Vector3 offs = new OpenTK.Vector3(-0.4768f, -0.2951f, 1.00282f);
-                OpenTK.Matrix4 offset = OpenTK.Matrix4.CreateTranslation(offs);
                 OpenTK.Matrix4 bonemat = new OpenTK.Matrix4(m4.M11, m4.M12, m4.M13, m4.M14, m4.M21, m4.M22, m4.M23, m4.M24,
                     m4.M31, m4.M32, m4.M33, m4.M34, m4.M41, m4.M42, m4.M43, m4.M44);
-                mat = bonemat * offset * mat;
-                GL.UniformMatrix4(2, false, ref mat);
-                //GL.UniformMatrix4(6, false, ref bonemat);
+                OpenTK.Matrix4 nrot = OpenTK.Matrix4.CreateRotationY(180f * (float)Utilities.PI180);
+                bonemat *= nrot;
+                GL.UniformMatrix4(6, false, ref bonemat);
                 TheClient.Models.GetModel("items/weapons/gun01.dae").Draw();
                 bonemat = OpenTK.Matrix4.Identity;
                 GL.UniformMatrix4(6, false, ref bonemat);

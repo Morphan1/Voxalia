@@ -325,10 +325,13 @@ namespace ShadowOperations.Shared
         {
             Matrix pos = Matrix.CreateTranslation(lerpPos(aTime));
             Matrix rot = Matrix.CreateFromQuaternion(lerpRotate(aTime));
+            pos.Transpose();
+            rot.Transpose();
             Matrix combined = pos * rot;
             if (Parent != null)
             {
                 combined = Parent.GetBoneTotalMatrix(aTime) * combined;
+                //combined *= Parent.GetBoneTotalMatrix(aTime);
             }
             return combined;
         }
