@@ -32,6 +32,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public override void SpawnBody()
         {
             model = TheClient.Models.GetModel(mod);
+            model.LoadSkin(TheClient.Textures);
             Shape = TheClient.Models.Handler.MeshToBepu(model.OriginalModel);
             offset = -Location.FromBVector(Shape.Position);
             transform = Matrix4.CreateTranslation(offset.ToOVector());
