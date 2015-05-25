@@ -40,10 +40,10 @@ void main(void)
 		pos1 = vec4(position, 1.0);
 		norm1 = vec4(normal, 1.0);
 	}
-	//pos1 *= simplebone_matrix;
-	//norm1 *= simplebone_matrix;
-	pos1 = simplebone_matrix * pos1;
-	norm1 = simplebone_matrix * norm1;
+	pos1 *= simplebone_matrix;
+	norm1 *= simplebone_matrix;
+	//pos1 = simplebone_matrix * pos1;
+	//norm1 = simplebone_matrix * norm1;
 	f_texcoord = texcoords;
 	f_position = mv_matrix * vec4(pos1.xyz, 1.0);
 	mat4 mv_mat_simple = mv_matrix;
