@@ -12,7 +12,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
         public SpawnPhysicsEntityPacketOut(PhysicsEntity e)
         {
             ID = 2;
-            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + (e is CubeEntity ? 4 * 6 + 4 * 6: (e is ModelEntity ? 4: 0)) + 4 + 1];
+            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + (e is CubeEntity ? 4 * 6 + 4 * 6: (e is ModelEntity ? 4 + 1: 0)) + 4 + 1];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
@@ -63,6 +63,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
                 int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
                 NetStringManager strings = me.TheServer.Networking.Strings;
                 Utilities.IntToBytes(strings.IndexForString(me.model)).CopyTo(Data, start);
+                Data[start + 4] = (byte)me.mode;
             }
             Utilities.FloatToBytes(e.GetBounciness()).CopyTo(Data, Data.Length - 5);
             Data[Data.Length - 1] = (byte)((e.Visible ? 1 : 0) | (e.Solid ? 2 : 0));

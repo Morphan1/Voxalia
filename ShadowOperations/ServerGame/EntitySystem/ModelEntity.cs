@@ -24,6 +24,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public double deltat = 0;
 
+        public ModelCollisionMode mode = ModelCollisionMode.AABB;
+
         public override void Tick()
         {
             if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
@@ -51,6 +53,13 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 case "scale":
                     scale = Location.FromString(value);
                     return true;
+                case "collisionmode":
+                    ModelCollisionMode newmode;
+                    if (Enum.TryParse(value.ToUpper(), out newmode))
+                    {
+                        mode = newmode;
+                    }
+                    return true;
                 default:
                     return base.ApplyVar(var, value);
             }
@@ -61,13 +70,38 @@ namespace ShadowOperations.ServerGame.EntitySystem
             List<KeyValuePair<string, string>> vars = base.GetVariables();
             vars.Add(new KeyValuePair<string, string>("model", model));
             vars.Add(new KeyValuePair<string, string>("scale", scale.ToString()));
+            vars.Add(new KeyValuePair<string, string>("collisionmode", mode.ToString().ToLower()));
             return vars;
         }
 
         public override void SpawnBody()
         {
-            Shape = TheServer.Models.MeshToBepu(TheServer.Models.LoadModel(Program.Files.ReadBytes("models/" + model), model.Substring(model.IndexOf('.') + 1)));
+            Assimp.Scene smodel = TheServer.Models.LoadModel(Program.Files.ReadBytes("models/" + model), model.Substring(model.IndexOf('.') + 1)); // TODO: Handle better
+            if (mode == ModelCollisionMode.PRECISE)
+            {
+                Shape = TheServer.Models.MeshToBepu(smodel);
+            }
+            else
+            {
+                List<BEPUutilities.Vector3> vecs = TheServer.Models.GetCollisionVertices(smodel);
+                Location zero = Location.FromBVector(vecs[0]);
+                AABB abox = new AABB() { Min = zero, Max = zero };
+                for (int v = 1; v < vecs.Count; v++)
+                {
+                    abox.Include(Location.FromBVector(vecs[v]));
+                }
+                Location size = abox.Max - abox.Min;
+                Location center = abox.Max - size / 2;
+                Shape = new BEPUphysics.Entities.Prefabs.Box(new BEPUphysics.EntityStateManagement.MotionState() { Position = BEPUutilities.Vector3.Zero,
+                    Orientation = BEPUutilities.Quaternion.Identity }, (float)size.X, (float)size.Y, (float)size.Z);
+            }
             base.SpawnBody();
         }
+    }
+
+    public enum ModelCollisionMode : byte
+    {
+        PRECISE = 1,
+        AABB = 2
     }
 }

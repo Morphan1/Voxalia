@@ -16,7 +16,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             int len = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + 4 + 1;
             if (data.Length != len
                 && data.Length != len + 4 * 6 + 4 * 6
-                && data.Length != len + 4)
+                && data.Length != len + 4 + 1)
             {
                 return false;
             }
@@ -58,6 +58,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                 int start = len - (4 + 1);
                 NetStringManager strings = TheClient.Network.Strings;
                 ModelEntity me = new ModelEntity(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4))), TheClient);
+                me.mode = (ModelCollisionMode)data[start + 4];
                 ce = me;
             }
             else

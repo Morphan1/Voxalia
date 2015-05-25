@@ -23,6 +23,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public Matrix4 transform;
 
+        public ModelCollisionMode mode = ModelCollisionMode.AABB;
+
         public ModelEntity(string model_in, Client tclient)
             : base(tclient, false, true)
         {
@@ -33,8 +35,26 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             model = TheClient.Models.GetModel(mod);
             model.LoadSkin(TheClient.Textures);
-            Shape = TheClient.Models.Handler.MeshToBepu(model.OriginalModel);
-            offset = -Location.FromBVector(Shape.Position);
+            if (mode == ModelCollisionMode.PRECISE)
+            {
+                Shape = TheClient.Models.Handler.MeshToBepu(model.OriginalModel);
+                offset = -Location.FromBVector(Shape.Position);
+            }
+            else
+            {
+                List<BEPUutilities.Vector3> vecs = TheClient.Models.Handler.GetCollisionVertices(model.OriginalModel);
+                Location zero = Location.FromBVector(vecs[0]);
+                AABB abox = new AABB() { Min = zero, Max = zero };
+                for (int v = 1; v < vecs.Count; v++)
+                {
+                    abox.Include(Location.FromBVector(vecs[v]));
+                }
+                Location size = abox.Max - abox.Min;
+                Location center = abox.Max - size / 2;
+                Shape = new BEPUphysics.Entities.Prefabs.Box(new BEPUphysics.EntityStateManagement.MotionState() { Position = BEPUutilities.Vector3.Zero,
+                    Orientation = BEPUutilities.Quaternion.Identity }, (float)size.X, (float)size.Y, (float)size.Z);
+                offset = -center;
+            }
             transform = Matrix4.CreateTranslation(offset.ToOVector());
             base.SpawnBody();
         }
@@ -51,5 +71,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
             TheClient.Rendering.SetMinimumLight(0.0f);
             model.Draw(); // TODO: Animation?
         }
+    }
+
+    public enum ModelCollisionMode : byte
+    {
+        PRECISE = 1,
+        AABB = 2
     }
 }

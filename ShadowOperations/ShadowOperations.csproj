@@ -235,6 +235,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourStatusPacketOut.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\StancePlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\UsePlayerCommand.cs" />
+    <Compile Include="Shared\AABB.cs" />
     <Compile Include="Shared\AnimationEngine.cs" />
     <Compile Include="Shared\DataReader.cs" />
     <Compile Include="Shared\ItemStackBase.cs" />

@@ -143,7 +143,7 @@ triggergeneric
 	mins: (-20, -12, -1);
 	maxes: (-16, -8, 2);
 	target: move_about_two;
-	trigger_type: USE;
+	trigger_type: use;
 }
 cube
 {
@@ -197,6 +197,35 @@ functrack
 	loopsperactivation: 1;
 	movespeed: 1;
 }
+targetscriptrunner
+{
+	position: (-18, -10, 7);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	targetname: move_about_two;
+	scriptcommands: say "YOU PRESSED DA BIGGER BUTTON";
+}
+targetposition
+{
+	position: (-18, -10, 5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	targetname: move_about_2b;
+	target: move_about_2c;
+	modifier: 1;
+}
 cube
 {
 	position: (-18, -1, 0);
@@ -227,36 +256,22 @@ triggergeneric
 	mins: (-20, -3, -1);
 	maxes: (-16, 1, 2);
 	target: move_about_one;
-	trigger_type: USE;
+	trigger_type: use;
 }
-targetposition
+model
 {
-	position: (-18, -10, 5);
-	angle: (0, 0, 0, 1);
+	position: (-13.5607681274415, 8.51689386367798, 2.23189377784729);
+	angle: (-0.7083706, -0.01028022, 0.01031926, -0.7056903);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
-	mass: 0;
+	mass: 100;
 	friction: 0.5;
 	bounciness: 0;
 	solid: true;
 	visible: true;
-	targetname: move_about_2b;
-	target: move_about_2c;
-	modifier: 1;
-}
-targetscriptrunner
-{
-	position: (-18, -10, 7);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	targetname: move_about_two;
-	scriptcommands: say "YOU PRESSED DA BIGGER BUTTON";
+	model: mapobjects/plants/pinetest.dae;
+	scale: (1, 1, 1);
+	collisionmode: aabb;
 }
 functrack
 {
@@ -294,6 +309,20 @@ targetposition
 	target: move_about_1b;
 	modifier: 1;
 }
+targetscriptrunner
+{
+	position: (-18, -1, 7);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	targetname: move_about_one;
+	scriptcommands: say "YOU PRESSED DA BUTTON";
+}
 targetposition
 {
 	position: (-18, -1, 5);
@@ -308,20 +337,6 @@ targetposition
 	targetname: move_about_1b;
 	target: move_about_1a;
 	modifier: 1;
-}
-targetscriptrunner
-{
-	position: (-18, -1, 7);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	targetname: move_about_one;
-	scriptcommands: say "YOU PRESSED DA BUTTON";
 }
 cube
 {
@@ -357,22 +372,6 @@ cube
 }
 cube
 {
-	position: (3.5, 1.5, -0.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 10;
-	friction: 0.5;
-	bounciness: 1;
-	solid: true;
-	visible: true;
-	mins: (3, 1, -1);
-	maxes: (4, 2, 0);
-	textures: top|top|top|top|top|top;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
 	position: (-3.108775138855, -13, 8);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
@@ -389,22 +388,6 @@ cube
 }
 cube
 {
-	position: (3.5, 0.5, -0.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 10;
-	friction: 0.5;
-	bounciness: 0.5;
-	solid: true;
-	visible: true;
-	mins: (3, 0, -1);
-	maxes: (4, 1, 0);
-	textures: top|top|top|top|top|top;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
 	position: (-5.5, -7.5, -0.5);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
@@ -417,6 +400,38 @@ cube
 	mins: (-6, -8, -1);
 	maxes: (-5, -7, 0);
 	textures: top|bottom|xp|xm|yp|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (3.5, 1.5, -0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 10;
+	friction: 0.5;
+	bounciness: 1;
+	solid: true;
+	visible: true;
+	mins: (3, 1, -1);
+	maxes: (4, 2, 0);
+	textures: top|top|top|top|top|top;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (3.5, 0.5, -0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 10;
+	friction: 0.5;
+	bounciness: 0.5;
+	solid: true;
+	visible: true;
+	mins: (3, 0, -1);
+	maxes: (4, 1, 0);
+	textures: top|top|top|top|top|top;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
 cube

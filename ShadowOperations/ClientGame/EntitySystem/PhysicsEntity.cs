@@ -304,6 +304,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public OpenTK.Matrix4 GetOrientationMatrix()
         {
+            if (Body == null)
+            {
+                return OpenTK.Matrix4.Identity;
+            }
             Matrix3x3 omat = Body.OrientationMatrix;
             Matrix mat = Matrix3x3.ToMatrix4X4(omat);
             return new OpenTK.Matrix4(mat.M11, mat.M12, mat.M13, mat.M14, mat.M21, mat.M22,
