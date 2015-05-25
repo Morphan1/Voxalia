@@ -469,6 +469,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             {
                 return;
             }
+            Skinned = true;
             if (Program.Files.Exists("models/" + Name + ".skin"))
             {
                 string[] data = Program.Files.ReadText("models/" + Name + ".skin").Split('\n');
@@ -502,7 +503,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                         }
                     }
                 }
-                Skinned = true;
             }
             else
             {
