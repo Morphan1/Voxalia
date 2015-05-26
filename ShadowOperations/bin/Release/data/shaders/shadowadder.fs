@@ -57,7 +57,9 @@ void main()
 		atten *= 1 - (f_spos.x * f_spos.x + f_spos.y * f_spos.y);
 	}
 	vec3 L = light_path / light_length;
-	vec3 V = normalize(position - eye_pos);
+	vec3 V_Base = position - eye_pos;
+	float V_Len = length(V_Base);
+	vec3 V = V_Base / V_Len;
 	vec3 R = reflect(L, N);
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(R, V), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
@@ -67,10 +69,11 @@ void main()
 	float bias = 0.00025 * tan(acos(cosTheta));
 	bias = clamp(bias, 0.0, 0.001);
 	fs.z -= bias / (light_length / 5.0 / (light_radius / 100.0));
-	float depth = textureProj(tex, fs + vec4(0.00, -0.0005, 0.0, 0.0));
-	float depth2 = textureProj(tex, fs + vec4(0.0005, 0.0, 0.0, 0.0));
-	float depth3 = textureProj(tex, fs + vec4(0.0, 0.0005, 0.0, 0.0));
-	float depth4 = textureProj(tex, fs + vec4(-0.0005, 0.0, 0.0, 0.0));
+	float jump = clamp(0.0001 * V_Len, 0.0001, 0.01);
+	float depth = textureProj(tex, fs + vec4(0.00, -jump, 0.0, 0.0));
+	float depth2 = textureProj(tex, fs + vec4(jump, 0.0, 0.0, 0.0));
+	float depth3 = textureProj(tex, fs + vec4(0.0, jump, 0.0, 0.0));
+	float depth4 = textureProj(tex, fs + vec4(-jump, 0.0, 0.0, 0.0));
 	// TODO: Make blurring (and blur quality) optional!
 	depth = (depth + depth2 + depth3 + depth4) / 4;
 	fs = f_spos / f_spos.w / 2.0 + vec4(0.5);
