@@ -34,6 +34,13 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             LoadedModels.Add(Cube);
         }
 
+        public void Update(double time)
+        {
+            cTime = time;
+        }
+
+        public double cTime = 0;
+
         public Model LoadModel(string filename)
         {
             try
@@ -110,6 +117,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 throw new Exception("Scene has no meshes!");
             }
             Model model = new Model(name);
+            model.Engine = this;
             model.OriginalModel = scene;
             model.Root = convert(scene.RootNode.Transform);
             foreach (Mesh mesh in scene.Meshes)
@@ -377,7 +385,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
         }
 
-        AnimationEngine Engine = null;
+        public ModelEngine Engine = null;
 
         SingleAnimationNode FindNodeAnim(string nodeName, int mode, out double time)
         {
@@ -411,29 +419,20 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         double aTTorso;
         double aTLegs;
 
+        public double LastDrawTime;
+
         /// <summary>
         /// Draws the model.
         /// </summary>
         public void Draw(double aTimeHead = 0, SingleAnimation headanim = null, double aTimeTorso = 0, SingleAnimation torsoanim = null, double aTimeLegs = 0, SingleAnimation legsanim = null)
         {
+            LastDrawTime = Engine.cTime;
             hAnim = headanim;
             tAnim = torsoanim;
             lAnim = legsanim;
             bool any = hAnim != null || tAnim != null || lAnim != null;
             if (any)
             {
-                if (hAnim != null)
-                {
-                    Engine = hAnim.Engine;
-                }
-                else if (tAnim != null)
-                {
-                    Engine = tAnim.Engine;
-                }
-                else
-                {
-                    Engine = lAnim.Engine;
-                }
                 globalInverse = Root.Inverted();
                 aTHead = aTimeHead;
                 aTTorso = aTimeTorso;

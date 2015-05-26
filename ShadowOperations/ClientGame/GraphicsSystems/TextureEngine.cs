@@ -72,6 +72,13 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             LoadedTextures.Add(Clear);
         }
 
+        public void Update(double time)
+        {
+            cTime = time;
+        }
+
+        public double cTime = 0;
+
         /// <summary>
         /// Gets the texture object for a specific texture name.
         /// </summary>
@@ -324,11 +331,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             return bmp;
         }
 
+        public double LastBindTime = 0;
+
         /// <summary>
         /// Binds this texture to OpenGL.
         /// </summary>
         public void Bind()
         {
+            LastBindTime = Engine.cTime;
             GL.BindTexture(TextureTarget.Texture2D, Internal_Texture);
         }
     }

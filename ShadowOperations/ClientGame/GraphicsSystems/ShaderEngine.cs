@@ -48,6 +48,13 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             TextCleanerShader = GetShader("text_cleaner");
         }
 
+        public void Update(double time)
+        {
+            cTime = time;
+        }
+
+        public double cTime = 0;
+
         /// <summary>
         /// Gets the shader object for a specific shader name.
         /// </summary>
@@ -219,11 +226,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Engine.LoadedShaders.Remove(this);
         }
 
+        public double LastBindTime = 0;
+
         /// <summary>
         /// Binds this shader to OpenGL.
         /// </summary>
         public void Bind()
         {
+            LastBindTime = Engine.cTime;
             GL.UseProgram(Internal_Program);
         }
     }

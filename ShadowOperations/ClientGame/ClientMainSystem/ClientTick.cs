@@ -130,9 +130,12 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             }
         }
 
+        public double GlobalTickTimeLocal = 0;
+
         void Window_UpdateFrame(object sender, FrameEventArgs e)
         {
             Delta = e.Time;
+            GlobalTickTimeLocal += Delta;
             try
             {
                 opsat += Delta;
@@ -141,6 +144,9 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     opsat -= 1;
                     OncePerSecondActions();
                 }
+                Textures.Update(GlobalTickTimeLocal);
+                Shaders.Update(GlobalTickTimeLocal);
+                Models.Update(GlobalTickTimeLocal);
                 KeyHandler.Tick();
                 MouseHandler.Tick();
                 UIConsole.Tick();
