@@ -98,11 +98,11 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             if (Loaded == null)
             {
                 Loaded = new Texture();
+                Loaded.Engine = this;
                 Loaded.Name = texturename;
                 Loaded.Internal_Texture = White.Original_InternalID;
                 Loaded.Original_InternalID = White.Original_InternalID;
                 Loaded.LoadedProperly = false;
-                Loaded.Engine = this;
             }
             LoadedTextures.Add(Loaded);
             if (OnTextureLoaded != null)
@@ -133,6 +133,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 }
                 Bitmap bmp = new Bitmap(Program.Files.ReadToStream("textures/" + filename + ".png"));
                 Texture texture = new Texture();
+                texture.Engine = this;
                 texture.Name = filename;
                 GL.GenTextures(1, out texture.Original_InternalID);
                 texture.Internal_Texture = texture.Original_InternalID;
@@ -142,7 +143,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 texture.Height = bmp.Height;
                 bmp.Dispose();
                 texture.LoadedProperly = true;
-                texture.Engine = this;
                 return texture;
             }
             catch (Exception ex)
@@ -192,6 +192,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         public Texture GenerateForColor(Color c, string name)
         {
             Texture texture = new Texture();
+            texture.Engine = this;
             texture.Name = name;
             GL.GenTextures(1, out texture.Original_InternalID);
             texture.Internal_Texture = texture.Original_InternalID;
@@ -206,7 +207,6 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             LockBitmapToTexture(bmp);
             bmp.Dispose();
             texture.LoadedProperly = true;
-            texture.Engine = this;
             return texture;
         }
 
