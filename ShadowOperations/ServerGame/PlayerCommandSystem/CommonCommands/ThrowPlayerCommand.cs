@@ -9,11 +9,11 @@ using ShadowOperations.ServerGame.ItemSystem;
 
 namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
 {
-    class DropPlayerCommand : AbstractPlayerCommand
+    class ThrowPlayerCommand : AbstractPlayerCommand
     {
-        public DropPlayerCommand()
+        public ThrowPlayerCommand()
         {
-            Name = "drop";
+            Name = "throw";
         }
 
         public override void Execute(PlayerCommandEntry entry)
@@ -21,7 +21,7 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
             ItemStack stack = entry.Player.GetItemForSlot(entry.Player.cItem);
             if (stack.IsBound)
             {
-                entry.Player.Network.SendMessage("^1Can't drop this."); // TODO: Language, entry.output, etc.
+                entry.Player.Network.SendMessage("^1Can't throw this."); // TODO: Language, entry.output, etc.
                 return;
             }
             ItemEntity ie = new ItemEntity(stack, entry.Player.TheServer);
@@ -29,7 +29,7 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
             Location fvel = entry.Player.ForwardVector();
             ie.SetPosition(entry.Player.GetEyePosition() + fvel);
             ie.SetOrientation(entry.Player.GetOrientation());
-            ie.SetVelocity(fvel);
+            ie.SetVelocity(fvel * 10);
             entry.Player.TheServer.SpawnEntity(ie);
             entry.Player.RemoveItem(entry.Player.cItem);
         }

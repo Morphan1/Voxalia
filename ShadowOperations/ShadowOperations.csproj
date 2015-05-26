@@ -237,6 +237,7 @@
     <Compile Include="ServerGame\ItemSystem\ItemStack.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourStatusPacketOut.cs" />
     <Compile Include="ServerGame\OtherSystems\ModelEngine.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\ThrowPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\DropPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\StancePlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\UsePlayerCommand.cs" />
