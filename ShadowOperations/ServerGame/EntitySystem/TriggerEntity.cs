@@ -13,19 +13,17 @@ namespace ShadowOperations.ServerGame.EntitySystem
             : base(halfsize, tserver, false, 0)
         {
             NetworkMe = false;
-            Shape.CollisionInformation.CollisionRules.Group = TheServer.Collision.Trigger;
         }
 
         public override void Recalculate()
         {
             base.Recalculate();
-            Shape.CollisionInformation.CollisionRules.Group = TheServer.Collision.Trigger;
         }
 
         public override void SpawnBody()
         {
             base.SpawnBody();
-            Body.CollisionInformation.CollisionRules.Group = TheServer.Collision.Trigger;
+            Body.CollisionInformation.CollisionRules.Group = TheServer.Collision.Trigger; // TODO: Getter, Setter
         }
 
         public string Target = "";

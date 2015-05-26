@@ -55,7 +55,7 @@ namespace ShadowOperations.Shared
             return vertices;
         }
 
-        public MobileMesh MeshToBepu(Scene input)
+        public MobileMeshShape MeshToBepu(Scene input)
         {
             List<Vector3> vertices = new List<Vector3>();
             List<int> indices = new List<int>();
@@ -75,7 +75,7 @@ namespace ShadowOperations.Shared
                     AddMesh(mesh, vertices, indices);
                 }
             }
-            return new MobileMesh(vertices.ToArray(), indices.ToArray(), AffineTransform.Identity, MobileMeshSolidity.DoubleSided);
+            return new MobileMeshShape(vertices.ToArray(), indices.ToArray(), AffineTransform.Identity, MobileMeshSolidity.DoubleSided);
         }
 
         void AddMesh(Mesh mesh, List<Vector3> vertices)

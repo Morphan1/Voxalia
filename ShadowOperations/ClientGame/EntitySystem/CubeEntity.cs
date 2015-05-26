@@ -11,6 +11,7 @@ using ShadowOperations.ClientGame.GraphicsSystems;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using BEPUphysics.EntityStateManagement;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -20,7 +21,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             : base(tclient, false, true)
         {
             HalfSize = halfsize;
-            Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
+            Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
             Recalculate();
             Color = new OpenTK.Graphics.Color4(0f, (float)Utilities.UtilRandom.NextDouble(), (float)Utilities.UtilRandom.NextDouble(), 1f);
         }

@@ -5,6 +5,7 @@ using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.ServerMainSystem;
 using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -74,6 +75,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
             return vars;
         }
 
+        public Location offset;
+
         public override void SpawnBody()
         {
             Assimp.Scene smodel = TheServer.Models.GetModel(model).Original;
@@ -92,10 +95,14 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 }
                 Location size = abox.Max - abox.Min;
                 Location center = abox.Max - size / 2;
-                Shape = new BEPUphysics.Entities.Prefabs.Box(new BEPUphysics.EntityStateManagement.MotionState() { Position = BEPUutilities.Vector3.Zero,
-                    Orientation = BEPUutilities.Quaternion.Identity }, (float)size.X, (float)size.Y, (float)size.Z);
+                offset = -center;
+                Shape = new BoxShape((float)size.X, (float)size.Y, (float)size.Z);
             }
             base.SpawnBody();
+            if (mode == ModelCollisionMode.PRECISE)
+            {
+                offset = InternalOffset;
+            }
         }
     }
 

@@ -8,6 +8,8 @@ using ShadowOperations.Shared;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
+using BEPUphysics.CollisionShapes;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -17,11 +19,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public Location scale = Location.One;
 
-        public Location offset;
-
         public string mod;
 
         public Matrix4 transform;
+
+        public Location Offset;
 
         public ModelCollisionMode mode = ModelCollisionMode.AABB;
 
@@ -38,7 +40,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
             if (mode == ModelCollisionMode.PRECISE)
             {
                 Shape = TheClient.Models.Handler.MeshToBepu(model.OriginalModel);
-                offset = -Location.FromBVector(Shape.Position);
             }
             else
             {
@@ -51,12 +52,15 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 }
                 Location size = abox.Max - abox.Min;
                 Location center = abox.Max - size / 2;
-                Shape = new BEPUphysics.Entities.Prefabs.Box(new BEPUphysics.EntityStateManagement.MotionState() { Position = BEPUutilities.Vector3.Zero,
-                    Orientation = BEPUutilities.Quaternion.Identity }, (float)size.X, (float)size.Y, (float)size.Z);
-                offset = -center;
+                Shape = new BoxShape((float)size.X, (float)size.Y, (float)size.Z);
+                Offset = -center;
             }
-            transform = Matrix4.CreateTranslation(offset.ToOVector());
             base.SpawnBody();
+            if (mode == ModelCollisionMode.PRECISE)
+            {
+                Offset = InternalOffset;
+            }
+            transform = Matrix4.CreateTranslation(Offset.ToOVector());
         }
 
         public override void Render()

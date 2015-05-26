@@ -7,6 +7,7 @@ using ShadowOperations.ServerGame.ServerMainSystem;
 using BEPUutilities;
 using BEPUphysics;
 using ShadowOperations.ServerGame.JointSystem;
+using BEPUphysics.CollisionShapes;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -69,7 +70,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// <summary>
         /// The shape of the entity.
         /// </summary>
-        public BEPUphysics.Entities.Entity Shape = null;
+        public EntityShape Shape = null;
+
+        public Location InternalOffset;
 
         /// <summary>
         /// Builds and spawns the body into the world.
@@ -80,16 +83,19 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 DestroyBody();
             }
-            Shape.AngularVelocity = new Vector3((float)AVel.X, (float)AVel.Y, (float)AVel.Z);
-            Shape.LinearVelocity = new Vector3((float)LVel.X, (float)LVel.Y, (float)LVel.Z);
-            Shape.WorldTransform = WorldTransform;
-            Shape.Mass = Mass;
-            Shape.Tag = this;
-            Shape.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Continuous;
+            Body = new BEPUphysics.Entities.Entity(Shape, Mass);
+            InternalOffset = Location.FromBVector(Body.Position);
+            Body.AngularVelocity = new Vector3((float)AVel.X, (float)AVel.Y, (float)AVel.Z);
+            Body.LinearVelocity = new Vector3((float)LVel.X, (float)LVel.Y, (float)LVel.Z);
+            Body.WorldTransform = WorldTransform; // TODO: Position, Orientation=
+            Body.Tag = this;
+            Body.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Continuous;
+            if (!CanRotate)
+            {
+                Body.AngularDamping = 1;
+            }
             // TODO: Other settings
             // TODO: Gravity
-            // TODO: Constraints
-            Body = Shape;
             Body.CollisionInformation.CollisionRules.Group = Solid ? TheServer.Collision.Solid : TheServer.Collision.NonSolid;
             SetFriction(Friction);
             TheServer.PhysicsWorld.Add(Body);

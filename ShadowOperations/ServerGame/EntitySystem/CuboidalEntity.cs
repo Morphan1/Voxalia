@@ -7,6 +7,7 @@ using ShadowOperations.Shared;
 using BEPUutilities;
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -36,7 +37,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public void BuildShape()
         {
-            Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
+            Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
             Widest = (float)HalfSize.Length();
         }
 

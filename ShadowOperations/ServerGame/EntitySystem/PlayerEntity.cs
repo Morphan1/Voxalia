@@ -14,6 +14,7 @@ using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
 using ShadowOperations.ServerGame.ItemSystem;
 using ShadowOperations.ServerGame.ItemSystem.CommonItems;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -115,8 +116,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         {
             Network = conn;
             SetMass(100);
-            Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
-            Shape.AngularDamping = 1;
+            Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
             GiveItem(new ItemStack("open_hand", TheServer, 1, "items/open_hand", "Open Hand", "Grab things!", Color.White.ToArgb(), "items/common/hand.dae", true));

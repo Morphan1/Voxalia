@@ -14,6 +14,7 @@ using BEPUphysics.BroadPhaseEntries;
 using ShadowOperations.ClientGame.GraphicsSystems;
 using OpenTK.Graphics.OpenGL4;
 using ShadowOperations.ClientGame.GraphicsSystems.LightingSystem;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -63,8 +64,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             base (tclient, true, true)
         {
             SetMass(100);
-            Shape = new Box(new BEPUutilities.Vector3(0, 0, 0), (float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
-            Shape.AngularDamping = 1;
+            Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
             CanRotate = false;
             EID = -1;
             model = TheClient.Models.GetModel("players/human_male_004.dae");

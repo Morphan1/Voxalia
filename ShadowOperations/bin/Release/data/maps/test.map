@@ -81,21 +81,6 @@ targetposition
 	target: move_about_2a;
 	modifier: 1;
 }
-model
-{
-	position: (-12.996964454651, 10.516893863678, 17.7768442630768);
-	angle: (0.6846679, 0.1245131, 0.1098591, 0.7096875);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 100;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	model: mapobjects/plants/pinetest.dae;
-	scale: (1, 1, 1);
-	collisionmode: aabb;
-}
 cube
 {
 	position: (4.5, 15.5, 0);
@@ -160,6 +145,21 @@ cube
 	textures: common/glass|common/glass|common/glass|common/glass|common/glass|common/glass;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
+model
+{
+	position: (-13.6005544662477, 8.77106809616091, -0.761003255844098);
+	angle: (0.7105836, 0, 0, 0.7036132);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 100;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	model: mapobjects/plants/pinetest.dae;
+	scale: (1, 1, 1);
+	collisionmode: aabb;
+}
 targetposition
 {
 	position: (-18, -10, 2);
@@ -196,6 +196,38 @@ functrack
 	loopsperactivation: 1;
 	movespeed: 1;
 }
+cube
+{
+	position: (-13.5, 9, 0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-15, 7, -1);
+	maxes: (-12, 11, 2);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (-18, -1, 0);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-19, -2, -1);
+	maxes: (-17, 0, 1);
+	textures: ym|ym|ym|ym|ym|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
 targetposition
 {
 	position: (-18, -10, 5);
@@ -224,38 +256,6 @@ targetscriptrunner
 	visible: true;
 	targetname: move_about_two;
 	scriptcommands: say "YOU PRESSED DA BIGGER BUTTON";
-}
-cube
-{
-	position: (-18, -1, 0);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (-19, -2, -1);
-	maxes: (-17, 0, 1);
-	textures: ym|ym|ym|ym|ym|ym;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
-	position: (-13.5, 9, 0.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (-15, 7, -1);
-	maxes: (-12, 11, 2);
-	textures: white|white|white|white|white|white;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
 triggergeneric
 {
