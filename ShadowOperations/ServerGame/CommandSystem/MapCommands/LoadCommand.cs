@@ -6,6 +6,7 @@ using Frenetic;
 using Frenetic.CommandSystem;
 using ShadowOperations.ServerGame.ServerMainSystem;
 using ShadowOperations.Shared;
+using System.Diagnostics;
 
 namespace ShadowOperations.ServerGame.CommandSystem.MapCommands
 {
@@ -29,6 +30,9 @@ namespace ShadowOperations.ServerGame.CommandSystem.MapCommands
                 return;
             }
             string mapname = entry.GetArgument(0);
+            Stopwatch sw = new Stopwatch();
+            sw.Reset();
+            sw.Start();
             if (!Program.Files.Exists("maps/" + mapname + ".map"))
             {
                 entry.Bad("Invalid map name.");
@@ -36,7 +40,8 @@ namespace ShadowOperations.ServerGame.CommandSystem.MapCommands
             }
             string data = Program.Files.ReadText("maps/" + mapname + ".map");
             TheServer.LoadMapFromString(data);
-            entry.Good("Loaded map.");
+            sw.Stop();
+            entry.Good("Loaded map in " + (float)sw.ElapsedMilliseconds / 1000f + " seconds.");
         }
     }
 }
