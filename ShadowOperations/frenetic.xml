@@ -1455,5 +1455,21 @@
             </summary>
             <param name="entry">Entry to be executed</param>
         </member>
+        <member name="T:Frenetic.CommandSystem.CommonCmds.CleanmemCommand">
+            <summary>
+            A command to interact with the system garbage collector.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommonCmds.CleanmemCommand.#ctor">
+            <summary>
+            Constructs the command.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommonCmds.CleanmemCommand.Execute(Frenetic.CommandSystem.CommandEntry)">
+            <summary>
+            Executes the command.
+            </summary>
+            <param name="entry">Entry to be executed</param>
+        </member>
     </members>
 </doc>
