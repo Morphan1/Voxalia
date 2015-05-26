@@ -76,14 +76,14 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public override void SpawnBody()
         {
-            Assimp.Scene smodel = TheServer.Models.LoadModel(Program.Files.ReadBytes("models/" + model), model.Substring(model.IndexOf('.') + 1)); // TODO: Handle better
+            Assimp.Scene smodel = TheServer.Models.GetModel(model).Original;
             if (mode == ModelCollisionMode.PRECISE)
             {
-                Shape = TheServer.Models.MeshToBepu(smodel);
+                Shape = TheServer.Models.handler.MeshToBepu(smodel);
             }
             else
             {
-                List<BEPUutilities.Vector3> vecs = TheServer.Models.GetCollisionVertices(smodel);
+                List<BEPUutilities.Vector3> vecs = TheServer.Models.handler.GetCollisionVertices(smodel);
                 Location zero = Location.FromBVector(vecs[0]);
                 AABB abox = new AABB() { Min = zero, Max = zero };
                 for (int v = 1; v < vecs.Count; v++)

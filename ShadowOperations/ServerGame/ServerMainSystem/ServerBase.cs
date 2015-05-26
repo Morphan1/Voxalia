@@ -10,6 +10,7 @@ using ShadowOperations.ServerGame.NetworkSystem;
 using ShadowOperations.ServerGame.EntitySystem;
 using ShadowOperations.ServerGame.PlayerCommandSystem;
 using ShadowOperations.ServerGame.ItemSystem;
+using ShadowOperations.ServerGame.OtherSystems;
 
 namespace ShadowOperations.ServerGame.ServerMainSystem
 {
@@ -41,7 +42,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
 
         public ItemRegistry Items;
 
-        public ModelHandler Models;
+        public ModelEngine Models;
 
         public AnimationEngine Animations;
 
@@ -70,7 +71,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Loading item registry...");
             Items = new ItemRegistry();
             SysConsole.Output(OutputType.INIT, "Loading model handler...");
-            Models = new ModelHandler();
+            Models = new ModelEngine();
             SysConsole.Output(OutputType.INIT, "Loading animation handler...");
             Animations = new AnimationEngine();
             SysConsole.Output(OutputType.INIT, "Building physics world...");

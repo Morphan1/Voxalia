@@ -30,15 +30,9 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             AnimEngine = engine;
             Handler = new ModelHandler();
             LoadedModels = new List<Model>();
-            Cube = FromBytes("cube", FileHandler.encoding.GetBytes(CubeData));
+            Cube = FromBytes("cube", FileHandler.encoding.GetBytes(ModelHandler.CubeData));
             LoadedModels.Add(Cube);
         }
-
-        static string CubeData = "o Cube\nv 1.000000 0.000000 0.000000\nv 1.000000 0.000000 1.000000\nv 0.000000 0.000000 1.000000\n" +
-            "v 0.000000 0.000000 0.000000\nv 1.000000 1.000000 0.000000\nv 1.000000 1.000000 1.000000\nv 0.000000 1.000000 1.000000\n" +
-            "v 0.000000 1.000000 0.000000\nvt 1.000000 0.000000\nvt 1.000000 1.000000\nvt 0.000000 1.000000\nvt 0.000000 0.000000\n" +
-            "f 2/1 3/2 4/3\nf 8/1 7/2 6/3\nf 1/4 5/1 6/2\nf 2/4 6/1 7/2\nf 7/1 8/2 4/3\nf 1/1 4/2 8/3\nf 1/4 2/1 4/3\nf 5/4 8/1 6/3\n" +
-            "f 2/3 1/4 6/2\nf 3/3 2/4 7/2\nf 3/4 7/1 4/3\nf 5/4 1/1 8/3\n"; // TODO: Normals!
 
         public Model LoadModel(string filename)
         {
@@ -88,7 +82,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
             if (Loaded == null)
             {
-                Loaded = FromBytes("model.obj", FileHandler.encoding.GetBytes(CubeData));
+                Loaded = FromBytes("model.obj", FileHandler.encoding.GetBytes(ModelHandler.CubeData));
                 Loaded.Name = modelname;
             }
             LoadedModels.Add(Loaded);
