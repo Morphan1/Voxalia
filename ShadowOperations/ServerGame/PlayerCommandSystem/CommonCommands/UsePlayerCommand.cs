@@ -21,7 +21,8 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
 
         public bool TryForUseValidity(BroadPhaseEntry entry)
         {
-            if (entry.CollisionRules.Group == TheServer.Collision.Solid)
+            if (entry.CollisionRules.Group == TheServer.Collision.Solid
+                || entry.CollisionRules.Group == TheServer.Collision.Item)
             {
                 return true;
             }
@@ -41,7 +42,14 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
                 entry.Player.GetEyePosition(), entry.Player.GetEyePosition() + forw * 2, TryForUseValidity);
             if (cr.Hit && cr.HitEnt != null && cr.HitEnt.Tag is EntityUseable)
             {
-                ((EntityUseable)cr.HitEnt.Tag).Use(entry.Player);
+                if (!((EntityUseable)cr.HitEnt.Tag).Use(entry.Player))
+                {
+                    entry.Player.Network.SendMessage("Can't use that at this time!");
+                }
+            }
+            else
+            {
+                entry.Player.Network.SendMessage("Nothing there to use!");
             }
         }
     }

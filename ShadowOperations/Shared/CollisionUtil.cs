@@ -41,6 +41,8 @@ namespace ShadowOperations.Shared
 
         public CollisionGroup Player = new CollisionGroup();
 
+        public CollisionGroup Item = new CollisionGroup();
+
         public bool ShouldCollide(BroadPhaseEntry entry)
         {
             if (entry.CollisionRules.Group == NonSolid || entry.CollisionRules.Group == Trigger)
@@ -69,6 +71,19 @@ namespace ShadowOperations.Shared
             CollisionGroup.DefineCollisionRule(Solid, Trigger, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(NonSolid, Trigger, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Trigger, Trigger, CollisionRule.NoBroadPhase);
+            // Item Vs. Player,Trigger,NonSolid (All)
+            CollisionGroup.DefineCollisionRule(Item, Player, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Player, Item, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Item, Trigger, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Trigger, Item, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Item, NonSolid, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(NonSolid, Item, CollisionRule.NoBroadPhase);
+        }
+
+        public CollisionResult CuboidLineTrace(Location halfsize, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
+        {
+            BoxShape shape = new BoxShape((float)halfsize.X * 2f, (float)halfsize.Y * 2f, (float)halfsize.Z * 2f);
+            return CuboidLineTrace(shape, start, end, filter);
         }
 
         /// <summary>
@@ -79,10 +94,9 @@ namespace ShadowOperations.Shared
         /// <param name="end">The end of the line</param>
         /// <param name="filter">The collision filter, input a BEPU BroadPhaseEntry and output whether collision should be allowed</param>
         /// <returns>The collision details</returns>
-        public CollisionResult CuboidLineTrace(Location halfsize, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
+        public CollisionResult CuboidLineTrace(ConvexShape shape, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
         {
             Vector3 e = new Vector3((float)(end.X - start.X), (float)(end.Y - start.Y), (float)(end.Z - start.Z));
-            BoxShape shape = new BoxShape((float)halfsize.X * 2f, (float)halfsize.Y * 2f, (float)halfsize.Z * 2f);
             RigidTransform rt = new RigidTransform(new Vector3((float)start.X, (float)start.Y, (float)start.Z));
             RayCastResult rcr;
             bool hit;

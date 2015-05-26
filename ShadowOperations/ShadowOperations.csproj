@@ -142,6 +142,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PlayerUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PrimitiveEntityUpdatePacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\RemoveItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnBulletPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnLightPacketIn.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="ServerGame\EntitySystem\EntityTargettable.cs" />
     <Compile Include="ServerGame\EntitySystem\EntityUseable.cs" />
     <Compile Include="ServerGame\EntitySystem\FuncTrackEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\ItemEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\ModelEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />
@@ -224,6 +226,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PlayerUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PrimitiveEntityUpdatePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\RemoveItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnBulletPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnLightPacketOut.cs" />
@@ -234,6 +237,7 @@
     <Compile Include="ServerGame\ItemSystem\ItemStack.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourStatusPacketOut.cs" />
     <Compile Include="ServerGame\OtherSystems\ModelEngine.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\DropPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\StancePlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\UsePlayerCommand.cs" />
     <Compile Include="Shared\AABB.cs" />

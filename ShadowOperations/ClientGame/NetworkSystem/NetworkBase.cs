@@ -176,6 +176,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 18:
                             packet = new FlashLightPacketIn();
                             break;
+                        case 19:
+                            packet = new RemoveItemPacketIn();
+                            break;
                         default:
                             throw new Exception("Invalid packet ID: " + packetID);
                     }

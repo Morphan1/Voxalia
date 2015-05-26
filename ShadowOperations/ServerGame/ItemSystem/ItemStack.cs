@@ -14,10 +14,11 @@ namespace ShadowOperations.ServerGame.ItemSystem
     {
         public Server TheServer;
 
-        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, int color, string model)
+        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, int color, string model, bool bound)
         {
             TheServer = tserver;
             Load(name, count, tex, display, descrip, color, model);
+            IsBound = bound;
         }
 
         public ItemStack(byte[] data, Server tserver)
@@ -27,6 +28,8 @@ namespace ShadowOperations.ServerGame.ItemSystem
         }
 
         public BaseItemInfo Info = null;
+
+        public bool IsBound = false;
 
         public override void SetName(string name)
         {

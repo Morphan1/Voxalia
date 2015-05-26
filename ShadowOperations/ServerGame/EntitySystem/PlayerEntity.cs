@@ -73,7 +73,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             if (slot == 0)
             {
-                return new ItemStack("Air", TheServer, 1, "clear", "Air", "An empty slot.", Color.White.ToArgb(), "blank.dae");
+                return new ItemStack("Air", TheServer, 1, "clear", "Air", "An empty slot.", Color.White.ToArgb(), "blank.dae", true);
             }
             else
             {
@@ -119,11 +119,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Shape.AngularDamping = 1;
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
-            GiveItem(new ItemStack("open_hand", TheServer, 1, "items/open_hand", "Open Hand", "Grab things!", Color.White.ToArgb(), "items/common/hand.dae"));
-            GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/9mm_pistol_gun", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/gun01.dae"));
-            GiveItem(new ItemStack("bow", TheServer, 1, "items/bow", "Bow", "It shoots arrows!", Color.White.ToArgb(), "items/weapons/bow.dae"));
-            GiveItem(new ItemStack("hook", TheServer, 1, "items/hook", "Grappling Hook", "Grab distant things!", Color.White.ToArgb(), "items/common/hook.dae"));
-            GiveItem(new ItemStack("flashlight", TheServer, 1, "items/flashlight", "Flashlight", "Lights things up!", Color.White.ToArgb(), "items/common/flashlight.dae"));
+            GiveItem(new ItemStack("open_hand", TheServer, 1, "items/open_hand", "Open Hand", "Grab things!", Color.White.ToArgb(), "items/common/hand.dae", true));
+            GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/9mm_pistol_gun", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/gun01.dae", false));
+            GiveItem(new ItemStack("bow", TheServer, 1, "items/bow", "Bow", "It shoots arrows!", Color.White.ToArgb(), "items/weapons/bow.dae", false));
+            GiveItem(new ItemStack("hook", TheServer, 1, "items/hook", "Grappling Hook", "Grab distant things!", Color.White.ToArgb(), "items/common/hook.dae", true));
+            GiveItem(new ItemStack("flashlight", TheServer, 1, "items/flashlight", "Flashlight", "Lights things up!", Color.White.ToArgb(), "items/common/flashlight.dae", false));
             SetHealth(Health);
         }
 
@@ -162,6 +162,25 @@ namespace ShadowOperations.ServerGame.EntitySystem
             item.Info.PrepItem(this, item);
             Items.Add(item);
             Network.SendPacket(new SpawnItemPacketOut(Items.Count - 1, item));
+        }
+
+        public void RemoveItem(int item)
+        {
+            ItemStack its = GetItemForSlot(item);
+            if (item == cItem)
+            {
+                its.Info.SwitchFrom(this, its);
+            }
+            while (item < 0)
+            {
+                item += Items.Count + 1;
+            }
+            while (item > Items.Count)
+            {
+                item -= Items.Count + 1;
+            }
+            Items.RemoveAt(item - 1);
+            Network.SendPacket(new RemoveItemPacketOut(item - 1));
         }
 
         public bool IgnoreThis(BroadPhaseEntry entry)
