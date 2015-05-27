@@ -446,7 +446,14 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                         throw new Exception("Invalid key: " + datum[0].Trim() + "!");
                     }
                 }
-                AddJoint(joint);
+                if (joint.One != null && joint.Two != null)
+                {
+                    AddJoint(joint);
+                }
+                else
+                {
+                    SysConsole.Output(OutputType.WARNING, "Invalid joint " + name + ": Invalid targets!");
+                }
             }
             else
             {
