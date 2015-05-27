@@ -125,6 +125,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             GiveItem(new ItemStack("hook", TheServer, 1, "items/hook", "Grappling Hook", "Grab distant things!", Color.White.ToArgb(), "items/common/hook.dae", true));
             GiveItem(new ItemStack("flashlight", TheServer, 1, "items/flashlight", "Flashlight", "Lights things up!", Color.White.ToArgb(), "items/common/flashlight.dae", false));
             SetHealth(Health);
+            CGroup = tserver.Collision.Player;
         }
 
         public void SetAnimation(string anim, byte mode)
@@ -450,12 +451,6 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public string StanceName()
         {
             return Stance.ToString().ToLower();
-        }
-
-        public override void SpawnBody()
-        {
-            base.SpawnBody();
-            Body.CollisionInformation.CollisionRules.Group = TheServer.Collision.Player;
         }
     }
 

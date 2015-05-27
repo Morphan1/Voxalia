@@ -25,12 +25,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         {
             Stack = stack;
             SetMass(5 * stack.Count); // TODO: Weight property for items!
-        }
-
-        public override void SpawnBody()
-        {
-            base.SpawnBody();
-            Body.CollisionInformation.CollisionRules.Group = TheServer.Collision.Item; // TODO: Collision group getter/setter
+            CGroup = tserver.Collision.Item;
         }
 
         public bool Use(Entity user)

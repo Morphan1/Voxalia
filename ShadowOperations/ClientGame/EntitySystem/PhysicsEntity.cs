@@ -11,6 +11,7 @@ using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.EntityStateManagement;
 using BEPUphysics.CollisionShapes;
 using ShadowOperations.ClientGame.JointSystem;
+using BEPUphysics.CollisionRuleManagement;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -21,6 +22,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         {
             Vector3 grav = TheClient.PhysicsWorld.ForceUpdater.Gravity;
             Gravity = new Location(grav.X, grav.Y, grav.Z);
+            CGroup = tclient.Collision.Solid;
         }
 
         /// <summary>
@@ -75,6 +77,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public Location InternalOffset;
 
+        public CollisionGroup CGroup;
+
         /// <summary>
         /// Builds and spawns the body into the world.
         /// </summary>
@@ -85,6 +89,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 DestroyBody();
             }
             Body = new BEPUphysics.Entities.Entity(Shape, Mass);
+            Body.CollisionInformation.CollisionRules.Group = CGroup;
             InternalOffset = Location.FromBVector(Body.Position);
             Body.AngularVelocity = new Vector3((float)AVel.X, (float)AVel.Y, (float)AVel.Z);
             Body.LinearVelocity = new Vector3((float)LVel.X, (float)LVel.Y, (float)LVel.Z);
@@ -96,7 +101,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
             }
             // TODO: Other settings
             // TODO: Gravity
-            Body.CollisionInformation.CollisionRules.Group = Solid ? TheClient.Collision.Solid : TheClient.Collision.NonSolid;
             Body.Tag = this;
             SetFriction(Friction);
             TheClient.PhysicsWorld.Add(Body);
@@ -110,9 +114,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 }
             }
         }
-
-        public bool Solid = true;
-
         /// <summary>
         /// Destroys the body, removing it from the physics world.
         /// </summary>

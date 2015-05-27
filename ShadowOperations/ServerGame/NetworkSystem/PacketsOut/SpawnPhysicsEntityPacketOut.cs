@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ShadowOperations.ServerGame.EntitySystem;
 using ShadowOperations.Shared;
+using BEPUphysics.CollisionRuleManagement;
 
 namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
 {
@@ -65,8 +66,28 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
                 Utilities.IntToBytes(strings.IndexForString(me.model)).CopyTo(Data, start);
                 Data[start + 4] = (byte)me.mode;
             }
-            Utilities.FloatToBytes(e.GetBounciness()).CopyTo(Data, Data.Length - 5);
-            Data[Data.Length - 1] = (byte)((e.Visible ? 1 : 0) | (e.Solid ? 2 : 0));
+            Utilities.FloatToBytes(e.GetBounciness()).CopyTo(Data, Data.Length - (4 + 1));
+            Data[Data.Length - 1] = (byte)(e.Visible ? 1 : 0);
+            if (e.CGroup == e.TheServer.Collision.Solid)
+            {
+                Data[Data.Length - 1] |= 2;
+            }
+            else if (e.CGroup == e.TheServer.Collision.NonSolid)
+            {
+                Data[Data.Length - 1] |= 4;
+            }
+            else if (e.CGroup == e.TheServer.Collision.Item)
+            {
+                Data[Data.Length - 1] |= 2 | 4;
+            }
+            else if (e.CGroup == e.TheServer.Collision.Player)
+            {
+                Data[Data.Length - 1] |= 8;
+            }
+            else if (e.CGroup == e.TheServer.Collision.Trigger)
+            {
+                Data[Data.Length - 1] |= 4 | 8;
+            }
         }
     }
 }

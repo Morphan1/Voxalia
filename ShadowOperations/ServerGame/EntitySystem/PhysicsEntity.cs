@@ -8,6 +8,7 @@ using BEPUutilities;
 using BEPUphysics;
 using ShadowOperations.ServerGame.JointSystem;
 using BEPUphysics.CollisionShapes;
+using BEPUphysics.CollisionRuleManagement;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -18,6 +19,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         {
             Vector3 grav = TheServer.PhysicsWorld.ForceUpdater.Gravity;
             Gravity = new Location(grav.X, grav.Y, grav.Z);
+            CGroup = tserver.Collision.Solid;
         }
 
         public float Widest = 1;
@@ -74,6 +76,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public Location InternalOffset;
 
+        public CollisionGroup CGroup;
+
         /// <summary>
         /// Builds and spawns the body into the world.
         /// </summary>
@@ -84,6 +88,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 DestroyBody();
             }
             Body = new BEPUphysics.Entities.Entity(Shape, Mass);
+            Body.CollisionInformation.CollisionRules.Group = CGroup;
             InternalOffset = Location.FromBVector(Body.Position);
             Body.AngularVelocity = new Vector3((float)AVel.X, (float)AVel.Y, (float)AVel.Z);
             Body.LinearVelocity = new Vector3((float)LVel.X, (float)LVel.Y, (float)LVel.Z);
@@ -96,7 +101,6 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             // TODO: Other settings
             // TODO: Gravity
-            Body.CollisionInformation.CollisionRules.Group = Solid ? TheServer.Collision.Solid : TheServer.Collision.NonSolid;
             SetFriction(Friction);
             TheServer.PhysicsWorld.Add(Body);
             for (int i = 0; i < Joints.Count; i++)
@@ -321,8 +325,6 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
         }
 
-        public bool Solid = true; // TODO: implement
-
         public override bool ApplyVar(string var, string data)
         {
             switch (var)
@@ -346,7 +348,10 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     SetBounciness(Utilities.StringToFloat(data));
                     return true;
                 case "solid":
-                    Solid = data.ToLower() == "true";
+                    if (data.ToLower() != "true")
+                    {
+                        CGroup = TheServer.Collision.NonSolid;
+                    }
                     return true;
                 default:
                     return base.ApplyVar(var, data);
@@ -362,7 +367,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             vars.Add(new KeyValuePair<string, string>("mass", GetMass().ToString()));
             vars.Add(new KeyValuePair<string, string>("friction", GetFriction().ToString()));
             vars.Add(new KeyValuePair<string, string>("bounciness", GetBounciness().ToString()));
-            vars.Add(new KeyValuePair<string, string>("solid", Solid ? "true": "false"));
+            vars.Add(new KeyValuePair<string, string>("solid", CGroup == TheServer.Collision.NonSolid ? "false": "true"));
             return vars;
         }
     }

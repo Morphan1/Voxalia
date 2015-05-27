@@ -58,7 +58,8 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                 int start = len - (4 + 1);
                 NetStringManager strings = TheClient.Network.Strings;
                 ModelEntity me = new ModelEntity(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4))), TheClient);
-                me.mode = (ModelCollisionMode)data[start + 4];
+                byte moder = data[start + 4];
+                me.mode = (ModelCollisionMode)moder;
                 ce = me;
             }
             else
@@ -68,9 +69,36 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             }
             float bounce = Utilities.BytesToFloat(Utilities.BytesPartial(data, data.Length - 5, 4));
             bool Visible = (data[data.Length - 1] & 1) == 1;
-            bool Solid = (data[data.Length - 1] & 2) == 2;
+            int solidity = (data[data.Length - 1] & (2|4|8));
+            if (solidity == 2)
+            {
+                ce.CGroup = ce.TheClient.Collision.Solid;
+            }
+            else if (solidity == 4)
+            {
+                ce.CGroup = ce.TheClient.Collision.NonSolid;
+            }
+            else if (solidity == (2 | 4))
+            {
+                ce.CGroup = ce.TheClient.Collision.Item;
+            }
+            else if (solidity == (8))
+            {
+                ce.CGroup = ce.TheClient.Collision.Player;
+            }
+            else if (solidity == (4 | 8))
+            {
+                ce.CGroup = ce.TheClient.Collision.Trigger;
+            }
+            else if (solidity == (2 | 8))
+            {
+                ce.CGroup = ce.TheClient.Collision.Solid; // PlaceHolder
+            }
+            else if (solidity == (2 | 4 | 8))
+            {
+                ce.CGroup = ce.TheClient.Collision.Solid; // PlaceHolder
+            }
             ce.Visible = Visible;
-            ce.Solid = Solid;
             ce.SetMass(mass);
             ce.SetPosition(pos);
             ce.SetVelocity(vel);

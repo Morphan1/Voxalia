@@ -69,12 +69,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             EID = -1;
             model = TheClient.Models.GetModel("players/human_male_004.dae");
             model.LoadSkin(tclient.Textures);
-        }
-
-        public override void SpawnBody()
-        {
-            base.SpawnBody();
-            Body.CollisionInformation.CollisionRules.Group = TheClient.Collision.Player;
+            CGroup = tclient.Collision.Player;
         }
 
         public bool IgnoreThis(BroadPhaseEntry entry)
