@@ -14,6 +14,7 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
         public DropPlayerCommand()
         {
             Name = "drop";
+            Silent = true;
         }
 
         public override void Execute(PlayerCommandEntry entry)

@@ -12,6 +12,7 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
         public StancePlayerCommand()
         {
             Name = "stance";
+            Silent = true;
         }
 
         public override void Execute(PlayerCommandEntry entry)

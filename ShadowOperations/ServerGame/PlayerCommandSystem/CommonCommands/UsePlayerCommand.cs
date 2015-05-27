@@ -15,6 +15,7 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
         public UsePlayerCommand()
         {
             Name = "use";
+            Silent = true;
         }
 
         Server TheServer;

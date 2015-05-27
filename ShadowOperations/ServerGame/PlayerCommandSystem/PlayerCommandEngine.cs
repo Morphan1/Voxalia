@@ -28,16 +28,19 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem
 
         public void Execute(PlayerEntity entity, List<string> arguments, string commandname)
         {
-            StringBuilder args = new StringBuilder();
-            for (int i = 0; i < arguments.Count; i++)
-            {
-                args.Append(" \"").Append(arguments[i]).Append("\"");
-            }
-            SysConsole.Output(OutputType.INFO, "Client " + entity + " executing command '" + commandname + "' with arguments:" + args.ToString());
             PlayerCommandEntry entry = new PlayerCommandEntry();
             entry.Player = entity;
             entry.InputArguments = arguments;
             entry.Command = GetCommand(commandname);
+            if (entry.Command == null || !entry.Command.Silent)
+            {
+                StringBuilder args = new StringBuilder();
+                for (int i = 0; i < arguments.Count; i++)
+                {
+                    args.Append(" \"").Append(arguments[i]).Append("\"");
+                }
+                SysConsole.Output(OutputType.INFO, "Client " + entity + " executing command '" + commandname + "' with arguments:" + args.ToString());
+            }
             // TODO: Permission
             // TODO: Fire command event
             if (entry.Command == null)
