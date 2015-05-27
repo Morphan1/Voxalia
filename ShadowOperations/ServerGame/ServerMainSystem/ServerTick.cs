@@ -53,6 +53,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             joint.One.Joints.Add(joint);
             joint.Two.Joints.Add(joint);
             joint.JID = jID;
+            joint.Enabled = true;
             if (joint is BaseJoint)
             {
                 BaseJoint pjoint = (BaseJoint)joint;
@@ -67,10 +68,14 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             Joints.Remove(joint);
             joint.One.Joints.Remove(joint);
             joint.Two.Joints.Remove(joint);
+            joint.Enabled = false;
             if (joint is BaseJoint)
             {
                 BaseJoint pjoint = (BaseJoint)joint;
-                PhysicsWorld.Remove(pjoint.CurrentJoint);
+                if (pjoint.CurrentJoint != null)
+                {
+                    PhysicsWorld.Remove(pjoint.CurrentJoint);
+                }
             }
             SendToAll(new DestroyJointPacketOut(joint));
         }
@@ -180,7 +185,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 }
                 for (int i = 0; i < Joints.Count; i++)
                 {
-                    if (Joints[i] is BaseFJoint)
+                    if (Joints[i].Enabled && Joints[i] is BaseFJoint)
                     {
                         ((BaseFJoint)Joints[i]).Solve();
                     }
@@ -194,12 +199,16 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
 
         public long cID = 0;
 
+        public Dictionary<string, Entity> JointTargets = new Dictionary<string,Entity>();
+
         public void SpawnEntity(Entity e)
         {
             if (e.IsSpawned)
             {
                 return;
             }
+            JointTargets.Remove(e.JointTargetID);
+            JointTargets.Add(e.JointTargetID, e);
             Entities.Add(e);
             e.IsSpawned = true;
             e.EID = cID++;
@@ -292,6 +301,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             {
                 return;
             }
+            JointTargets.Remove(e.JointTargetID);
             Entities.Remove(e);
             e.IsSpawned = false;
             if (e.Ticks)
@@ -403,60 +413,98 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 }
                 return;
             }
-            Entity e;
-            switch (name) // TODO: Registry
+            if (name.StartsWith("joint_"))
             {
-                case "cube":
-                    e = new CubeEntity(new Location(1, 1, 1), this, 0f);
-                    break;
-                case "pointlight":
-                    e = new PointLightEntity(this);
-                    break;
-                case "spawn":
-                    e = new SpawnPointEntity(this);
-                    break;
-                case "model":
-                    e = new ModelEntity("", this);
-                    break;
-                case "triggergeneric":
-                    e = new TriggerGenericEntity(new Location(1, 1, 1), this);
-                    break;
-                case "targetscriptrunner":
-                    e = new TargetScriptRunnerEntity(this);
-                    break;
-                case "targetposition":
-                    e = new TargetPositionEntity(this);
-                    break;
-                case "functrack":
-                    e = new FuncTrackEntity(new Location(1, 1, 1), this, 0);
-                    break;
-                default:
-                    throw new Exception("Invalid entity type '" + name + "'!");
+                InternalBaseJoint joint;
+                switch (name.Substring("joint_".Length))
+                {
+                    case "ballsocket":
+                        joint = new JointBallSocket(null, null, Location.Zero);
+                        break;
+                    default:
+                        throw new Exception("Invalid joint type '" + name + "'!");
+                }
+                for (int i = 0; i < dats.Length; i++)
+                {
+                    if (dats[i].Length <= 0)
+                    {
+                        continue;
+                    }
+                    string trimmed = dats[i].Trim();
+                    if (trimmed.Length == 0)
+                    {
+                        continue;
+                    }
+                    string[] datum = trimmed.Split(':');
+                    if (datum.Length != 2)
+                    {
+                        throw new Exception("Invalid key '" + dats[i] + "'!");
+                    }
+                    string det = datum[1].Trim().Replace("&nl", "\n").Replace("&sc", ";").Replace("&amp", "&");
+                    if (!joint.ApplyVar(this, datum[0].Trim(), det))
+                    {
+                        throw new Exception("Invalid key: " + datum[0].Trim() + "!");
+                    }
+                }
+                AddJoint(joint);
             }
-            for (int i = 0; i < dats.Length; i++)
+            else
             {
-                if (dats[i].Length <= 0)
+                Entity e;
+                switch (name) // TODO: Registry
                 {
-                    continue;
+                    case "cube":
+                        e = new CubeEntity(new Location(1, 1, 1), this, 0f);
+                        break;
+                    case "pointlight":
+                        e = new PointLightEntity(this);
+                        break;
+                    case "spawn":
+                        e = new SpawnPointEntity(this);
+                        break;
+                    case "model":
+                        e = new ModelEntity("", this);
+                        break;
+                    case "triggergeneric":
+                        e = new TriggerGenericEntity(new Location(1, 1, 1), this);
+                        break;
+                    case "targetscriptrunner":
+                        e = new TargetScriptRunnerEntity(this);
+                        break;
+                    case "targetposition":
+                        e = new TargetPositionEntity(this);
+                        break;
+                    case "functrack":
+                        e = new FuncTrackEntity(new Location(1, 1, 1), this, 0);
+                        break;
+                    default:
+                        throw new Exception("Invalid entity type '" + name + "'!");
                 }
-                string trimmed = dats[i].Trim();
-                if (trimmed.Length == 0)
+                for (int i = 0; i < dats.Length; i++)
                 {
-                    continue;
+                    if (dats[i].Length <= 0)
+                    {
+                        continue;
+                    }
+                    string trimmed = dats[i].Trim();
+                    if (trimmed.Length == 0)
+                    {
+                        continue;
+                    }
+                    string[] datum = trimmed.Split(':');
+                    if (datum.Length != 2)
+                    {
+                        throw new Exception("Invalid key '" + dats[i] + "'!");
+                    }
+                    string det = datum[1].Trim().Replace("&nl", "\n").Replace("&sc", ";").Replace("&amp", "&");
+                    if (!e.ApplyVar(datum[0].Trim(), det))
+                    {
+                        throw new Exception("Invalid key: " + datum[0].Trim() + "!");
+                    }
                 }
-                string[] datum = trimmed.Split(':');
-                if (datum.Length != 2)
-                {
-                    throw new Exception("Invalid key '" + dats[i] + "'!");
-                }
-                string det = datum[1].Trim().Replace("&nl", "\n").Replace("&sc", ";").Replace("&amp", "&");
-                if (!e.ApplyVar(datum[0].Trim(), det))
-                {
-                    throw new Exception("Invalid key: " + datum[0].Trim() + "!");
-                }
+                e.Recalculate();
+                SpawnEntity(e);
             }
-            e.Recalculate();
-            SpawnEntity(e);
         }
     }
 }

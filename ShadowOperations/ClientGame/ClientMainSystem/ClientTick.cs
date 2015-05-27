@@ -159,7 +159,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 }
                 for (int i = 0; i < Joints.Count; i++)
                 {
-                    if (Joints[i] is BaseFJoint)
+                    if (Joints[i].Enabled && Joints[i] is BaseFJoint)
                     {
                         ((BaseFJoint)Joints[i]).Solve();
                     }

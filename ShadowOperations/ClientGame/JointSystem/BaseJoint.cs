@@ -37,5 +37,23 @@ namespace ShadowOperations.ClientGame.JointSystem
         public abstract TwoEntityConstraint GetBaseJoint();
 
         public TwoEntityConstraint CurrentJoint;
+
+        public override void Enable()
+        {
+            if (CurrentJoint != null)
+            {
+                CurrentJoint.IsActive = true;
+            }
+            Enabled = true;
+        }
+
+        public override void Disable()
+        {
+            if (CurrentJoint != null)
+            {
+                CurrentJoint.IsActive = false;
+            }
+            Enabled = false;
+        }
     }
 }

@@ -27,6 +27,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public long EID;
 
         /// <summary>
+        /// The ID used to identify this entity to joints.
+        /// </summary>
+        public string JointTargetID = "none";
+
+        /// <summary>
         /// Whether this entity should tick.
         /// </summary>
         public readonly bool Ticks;
@@ -65,7 +70,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
         {
             List<KeyValuePair<string, string>> vars = new List<KeyValuePair<string, string>>();
             vars.Add(new KeyValuePair<string, string>("position", GetPosition().ToString()));
-            vars.Add(new KeyValuePair<string, string>("visible", Visible ? "true": "false"));
+            vars.Add(new KeyValuePair<string, string>("visible", Visible ? "true" : "false"));
+            vars.Add(new KeyValuePair<string, string>("jointtargetid", JointTargetID));
             return vars;
         }
 
@@ -78,6 +84,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     return true;
                 case "visible":
                     Visible = data.ToLower() == "true";
+                    return true;
+                case "jointtargetid":
+                    JointTargetID = data;
                     return true;
                 default:
                     return false;

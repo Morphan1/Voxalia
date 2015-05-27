@@ -13,14 +13,26 @@ namespace ShadowOperations.ServerGame.JointSystem
     {
         public JointBallSocket(PhysicsEntity e1, PhysicsEntity e2, Location pos)
         {
-            Ent1 = e1;
-            Ent2 = e2;
+            One = e1;
+            Two = e2;
             Position = pos;
         }
 
         public override TwoEntityConstraint GetBaseJoint()
         {
             return new BallSocketJoint(Ent1.Body, Ent2.Body, Position.ToBVector());
+        }
+
+        public override bool ApplyVar(ServerMainSystem.Server tserver, string var, string value)
+        {
+            switch (var)
+            {
+                case "position":
+                    Position = Location.FromString(value);
+                    return true;
+                default:
+                    return base.ApplyVar(tserver, var, value);
+            }
         }
 
         public Location Position;

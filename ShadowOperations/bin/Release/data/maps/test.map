@@ -36,6 +36,84 @@ cube
 }
 cube
 {
+	position: (-29.9481725692749, -8, 0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 1;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-30, -9, -1);
+	maxes: (-29.8963451385498, -7, 2);
+	textures: mapobjects/plants/rosewood|mapobjects/plants/rosewood|mapobjects/plants/rosewood|mapobjects/plants/rosewood|mapobjects/plants/rosewood|mapobjects/plants/rosewood;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	jointtargetid: 1;
+}
+cube
+{
+	position: (-29.5, -9.5, 1);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-30, -10, -1);
+	maxes: (-29, -9, 3);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	jointtargetid: 2;
+}
+joint_ballsocket
+{
+	one: 1;
+	two: 2;
+	position: (-29.939, -9.048, 0.66);
+}
+joint_ballsocket
+{
+	one: 1;
+	two: 2;
+	position: (-29.939, -9.048, 0.33);
+}
+cube
+{
+	position: (-29.5, -6.5, 1);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-30, -7, -1);
+	maxes: (-29, -6, 3);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (-29.5, -8, 2.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-30, -9, 2);
+	maxes: (-29, -7, 3);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
 	position: (-7.5, 22.5, 12.5);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
@@ -99,6 +177,22 @@ cube
 }
 cube
 {
+	position: (4.5, 15.5, 1.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (4, 11, 1);
+	maxes: (5, 20, 2);
+	textures: common/glass|common/glass|common/glass|common/glass|common/glass|common/glass;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
 	position: (-18, -10, 0);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
@@ -128,22 +222,6 @@ triggergeneric
 	maxes: (-16, -8, 2);
 	target: move_about_two;
 	trigger_type: use;
-}
-cube
-{
-	position: (4.5, 15.5, 1.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (4, 11, 1);
-	maxes: (5, 20, 2);
-	textures: common/glass|common/glass|common/glass|common/glass|common/glass|common/glass;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
 model
 {
@@ -212,9 +290,9 @@ cube
 	textures: white|white|white|white|white|white;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
-cube
+targetscriptrunner
 {
-	position: (-18, -1, 0);
+	position: (-18, -10, 7);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
@@ -223,10 +301,8 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
-	mins: (-19, -2, -1);
-	maxes: (-17, 0, 1);
-	textures: ym|ym|ym|ym|ym|ym;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	targetname: move_about_two;
+	scriptcommands: say "YOU PRESSED DA BIGGER BUTTON";
 }
 targetposition
 {
@@ -243,9 +319,9 @@ targetposition
 	target: move_about_2c;
 	modifier: 1;
 }
-targetscriptrunner
+cube
 {
-	position: (-18, -10, 7);
+	position: (-18, -1, 0);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
@@ -254,8 +330,10 @@ targetscriptrunner
 	bounciness: 0;
 	solid: true;
 	visible: true;
-	targetname: move_about_two;
-	scriptcommands: say "YOU PRESSED DA BIGGER BUTTON";
+	mins: (-19, -2, -1);
+	maxes: (-17, 0, 1);
+	textures: ym|ym|ym|ym|ym|ym;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
 triggergeneric
 {
@@ -309,6 +387,20 @@ targetposition
 	target: move_about_1b;
 	modifier: 1;
 }
+targetscriptrunner
+{
+	position: (-18, -1, 7);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	targetname: move_about_one;
+	scriptcommands: say "YOU PRESSED DA BUTTON";
+}
 targetposition
 {
 	position: (-18, -1, 5);
@@ -323,20 +415,6 @@ targetposition
 	targetname: move_about_1b;
 	target: move_about_1a;
 	modifier: 1;
-}
-targetscriptrunner
-{
-	position: (-18, -1, 7);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	targetname: move_about_one;
-	scriptcommands: say "YOU PRESSED DA BUTTON";
 }
 cube
 {
@@ -388,22 +466,6 @@ cube
 }
 cube
 {
-	position: (-5.5, -7.5, -0.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 2;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (-6, -8, -1);
-	maxes: (-5, -7, 0);
-	textures: top|bottom|xp|xm|yp|ym;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
 	position: (3.5, 1.5, -0.5);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
@@ -432,6 +494,22 @@ cube
 	mins: (3, 0, -1);
 	maxes: (4, 1, 0);
 	textures: top|top|top|top|top|top;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+}
+cube
+{
+	position: (-5.5, -7.5, -0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 2;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	mins: (-6, -8, -1);
+	maxes: (-5, -7, 0);
+	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
 cube

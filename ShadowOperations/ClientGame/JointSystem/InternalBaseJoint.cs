@@ -12,5 +12,11 @@ namespace ShadowOperations.ClientGame.JointSystem
         public Entity Two;
 
         public long JID;
+
+        public abstract void Disable();
+
+        public abstract void Enable();
+
+        public bool Enabled = false;
     }
 }
