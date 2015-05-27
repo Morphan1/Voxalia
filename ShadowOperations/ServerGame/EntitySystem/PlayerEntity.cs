@@ -35,7 +35,6 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public byte LastPingByte = 0;
 
         public bool Upward = false;
-        public bool Downward = false;
         public bool Forward = false;
         public bool Backward = false;
         public bool Leftward = false;
@@ -249,13 +248,13 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 movement = Utilities.RotateVector(movement, Direction.Yaw * Utilities.PI180, fly ? Direction.Pitch * Utilities.PI180 : 0).Normalize();
             }
-            Location intent_vel = movement * MoveSpeed * (Slow || Downward ? 0.5f : 1f);
+            Location intent_vel = movement * MoveSpeed * (Slow ? 0.5f : 1f);
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
             if (pvel.LengthSquared() > 4 * MoveSpeed * MoveSpeed)
             {
                 pvel = pvel.Normalize() * 2 * MoveSpeed;
             }
-            pvel *= MoveSpeed * (Slow || Downward ? 0.5f : 1f);
+            pvel *= MoveSpeed * (Slow ? 0.5f : 1f);
             if (!fly)
             {
                 Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0) * (crGround.Hit ? 1f : 0.1f));
@@ -267,6 +266,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             if (Hooks.Count > 0)
             {
+                // TODO: New keys
+                /*
                 if (Downward)
                 {
                     for (int i = 0; i < Hooks.Count; i++)
@@ -277,7 +278,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                         TheServer.AddJoint(Hooks[i].JD);
                     }
                 }
-                else if (Upward)
+                else */if (Upward)
                 {
                     for (int i = 0; i < Hooks.Count; i++)
                     {

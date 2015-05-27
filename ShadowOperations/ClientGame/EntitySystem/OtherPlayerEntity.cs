@@ -54,7 +54,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public bool Leftward = false;
         public bool Rightward = false;
         public bool Upward = false;
-        public bool Downward = false;
 
         public Model model;
 
@@ -134,13 +133,13 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 movement = Utilities.RotateVector(movement, Direction.Yaw * Utilities.PI180, fly ? Direction.Pitch * Utilities.PI180 : 0).Normalize();
             }
-            Location intent_vel = movement * MoveSpeed * (Slow || Downward ? 0.5f : 1f);
+            Location intent_vel = movement * MoveSpeed * (Slow ? 0.5f : 1f);
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
             if (pvel.LengthSquared() > 4 * MoveSpeed * MoveSpeed)
             {
                 pvel = pvel.Normalize() * 2 * MoveSpeed;
             }
-            pvel *= MoveSpeed * (Slow || Downward ? 0.5f : 1f);
+            pvel *= MoveSpeed * (Slow ? 0.5f : 1f);
             if (!fly)
             {
                 Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0) * (on_ground ? 1f : 0.1f));

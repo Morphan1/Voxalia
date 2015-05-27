@@ -39,7 +39,6 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                         e.Leftward = (keys & 4) == 4;
                         e.Rightward = (keys & 8) == 8;
                         e.Upward = (keys & 16) == 16;
-                        e.Downward = (keys & 32) == 32;
                         return true;
                     }
                 }

@@ -17,7 +17,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
             player.GetPosition().ToBytes().CopyTo(Data, 8);
             player.GetVelocity().ToBytes().CopyTo(Data, 8 + 12);
             ushort dat = (ushort)((player.Forward ? 1 : 0) | (player.Backward ? 2 : 0) | (player.Leftward ? 4 : 0)
-                | (player.Rightward ? 8 : 0) | (player.Upward ? 16 : 0) | (player.Downward ? 32 : 0));
+                | (player.Rightward ? 8 : 0) | (player.Upward ? 16 : 0));
             Utilities.UshortToBytes(dat).CopyTo(Data, 8 + 12 + 12);
             Utilities.FloatToBytes((float)player.Direction.Yaw).CopyTo(Data, 8 + 12 + 12 + 2);
             Utilities.FloatToBytes((float)player.Direction.Pitch).CopyTo(Data, 8 + 12 + 12 + 2 + 4);
