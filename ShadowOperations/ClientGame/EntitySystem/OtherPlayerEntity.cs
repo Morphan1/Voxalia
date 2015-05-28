@@ -54,6 +54,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public bool Leftward = false;
         public bool Rightward = false;
         public bool Upward = false;
+        public bool Walk = false;
 
         public Model model;
 
@@ -130,12 +131,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 movement.X = -1;
             }
-            bool Slow = false;
             if (movement.LengthSquared() > 0)
             {
                 movement = Utilities.RotateVector(movement, Direction.Yaw * Utilities.PI180, fly ? Direction.Pitch * Utilities.PI180 : 0).Normalize();
             }
-            Location intent_vel = movement * MoveSpeed * (Slow ? 0.5f : 1f);
+            Location intent_vel = movement * MoveSpeed * (Walk ? 0.7f : 1f);
             if (Stance == PlayerStance.CROUCH)
             {
                 intent_vel *= 0.5f;
@@ -149,7 +149,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 pvel = pvel.Normalize() * 2 * MoveSpeed;
             }
-            pvel *= MoveSpeed * (Slow ? 0.5f : 1f);
+            pvel *= MoveSpeed * (Walk ? 0.7f : 1f);
             if (!fly)
             {
                 Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0) * (on_ground ? 1f : 0.1f));
@@ -159,11 +159,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
-            /*
-            if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
-            {
-                base.SetAngles(new Location(0, 0, 0));
-            }*/ // See server.player
             if (Flashlight != null)
             {
                 Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);

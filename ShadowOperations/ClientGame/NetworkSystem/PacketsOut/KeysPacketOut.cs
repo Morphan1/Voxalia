@@ -25,7 +25,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsOut
         LEFTWARD = 4,
         RIGHTWARD = 8,
         UPWARD = 16,
-        // 32
+        WALK = 32,
         CLICK = 64,
         ALTCLICK = 128
     }

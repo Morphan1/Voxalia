@@ -39,6 +39,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
         public bool Backward = false;
         public bool Leftward = false;
         public bool Rightward = false;
+        public bool Walk = false;
 
         public bool Click = false;
         public bool AltClick = false;
@@ -243,12 +244,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 movement.X = -1;
             }
-            bool Slow = false;
             if (movement.LengthSquared() > 0)
             {
                 movement = Utilities.RotateVector(movement, Direction.Yaw * Utilities.PI180, fly ? Direction.Pitch * Utilities.PI180 : 0).Normalize();
             }
-            Location intent_vel = movement * MoveSpeed * (Slow ? 0.5f : 1f);
+            Location intent_vel = movement * MoveSpeed * (Walk ? 0.7f : 1f);
             if (Stance == PlayerStance.CROUCH)
             {
                 intent_vel *= 0.5f;
@@ -262,7 +262,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 pvel = pvel.Normalize() * 2 * MoveSpeed;
             }
-            pvel *= MoveSpeed * (Slow ? 0.5f : 1f);
+            pvel *= MoveSpeed * (Walk ? 0.7f : 1f);
             if (!fly)
             {
                 Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0) * (crGround.Hit ? 1f : 0.1f));

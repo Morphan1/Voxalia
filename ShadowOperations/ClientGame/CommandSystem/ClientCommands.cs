@@ -52,6 +52,7 @@ namespace ShadowOperations.ClientGame.CommandSystem
             CommandSystem.RegisterCommand(new RightwardCommand(TheClient));
             CommandSystem.RegisterCommand(new SecondaryCommand(TheClient));
             CommandSystem.RegisterCommand(new UpwardCommand(TheClient));
+            CommandSystem.RegisterCommand(new WalkCommand(TheClient));
 
             // Common Commands
             CommandSystem.RegisterCommand(new ItemnextCommand(TheClient));

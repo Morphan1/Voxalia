@@ -88,6 +88,7 @@
     <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\AttackCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BindCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\WalkCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\SecondaryCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\UpwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\RightwardCommand.cs" />
