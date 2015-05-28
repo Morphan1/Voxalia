@@ -258,6 +258,7 @@
     <Compile Include="Shared\FileHandler.cs" />
     <Compile Include="Shared\Location.cs" />
     <Compile Include="Shared\ModelHandler.cs" />
+    <Compile Include="Shared\SOEnums.cs" />
     <Compile Include="Shared\SysConsole.cs" />
     <Compile Include="Shared\UnknownFileException.cs" />
     <Compile Include="Shared\Utilities.cs" />

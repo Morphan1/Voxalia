@@ -12,7 +12,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
         public PlayerUpdatePacketOut(PlayerEntity player)
         {
             ID = 6;
-            Data = new byte[8 + 12 + 12 + 2 + 4 + 4];
+            Data = new byte[8 + 12 + 12 + 2 + 4 + 4 + 1];
             Utilities.LongToBytes(player.EID).CopyTo(Data, 0);
             player.GetPosition().ToBytes().CopyTo(Data, 8);
             player.GetVelocity().ToBytes().CopyTo(Data, 8 + 12);
@@ -21,6 +21,7 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
             Utilities.UshortToBytes(dat).CopyTo(Data, 8 + 12 + 12);
             Utilities.FloatToBytes((float)player.Direction.Yaw).CopyTo(Data, 8 + 12 + 12 + 2);
             Utilities.FloatToBytes((float)player.Direction.Pitch).CopyTo(Data, 8 + 12 + 12 + 2 + 4);
+            Data[8 + 12 + 12 + 2 + 4] = (byte)(player.Stance == PlayerStance.STAND ? 0 : (player.Stance == PlayerStance.CROUCH ? 1 : 2));
         }
     }
 }

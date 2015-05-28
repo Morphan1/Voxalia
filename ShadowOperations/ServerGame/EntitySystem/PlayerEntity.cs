@@ -249,6 +249,14 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 movement = Utilities.RotateVector(movement, Direction.Yaw * Utilities.PI180, fly ? Direction.Pitch * Utilities.PI180 : 0).Normalize();
             }
             Location intent_vel = movement * MoveSpeed * (Slow ? 0.5f : 1f);
+            if (Stance == PlayerStance.CROUCH)
+            {
+                intent_vel *= 0.5f;
+            }
+            else if (Stance == PlayerStance.CRAWL)
+            {
+                intent_vel *= 0.3f;
+            }
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
             if (pvel.LengthSquared() > 4 * MoveSpeed * MoveSpeed)
             {
@@ -453,12 +461,5 @@ namespace ShadowOperations.ServerGame.EntitySystem
         {
             return Stance.ToString().ToLower();
         }
-    }
-
-    public enum PlayerStance : byte
-    {
-        STAND = 0,
-        CROUCH = 1,
-        CRAWL = 2
     }
 }

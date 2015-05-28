@@ -11,7 +11,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 8 + 12 + 12 + 2 + 4 + 4)
+            if (data.Length != 8 + 12 + 12 + 2 + 4 + 4 + 1)
             {
                 return false;
             }
@@ -24,6 +24,16 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             Location ang = new Location();
             ang.Yaw = dX;
             ang.Pitch = dY;
+            byte st = data[8 + 12 + 12 + 2 + 4];
+            PlayerStance stance = PlayerStance.STAND;
+            if (st == 2)
+            {
+                stance = PlayerStance.CRAWL;
+            }
+            else if (st == 1)
+            {
+                stance = PlayerStance.CROUCH;
+            }
             for (int i = 0; i < TheClient.Entities.Count; i++)
             {
                 if (TheClient.Entities[i] is OtherPlayerEntity)
@@ -39,6 +49,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
                         e.Leftward = (keys & 4) == 4;
                         e.Rightward = (keys & 8) == 8;
                         e.Upward = (keys & 16) == 16;
+                        e.Stance = stance;
                         return true;
                     }
                 }
