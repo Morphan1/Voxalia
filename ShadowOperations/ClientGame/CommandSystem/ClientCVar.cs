@@ -25,7 +25,7 @@ namespace ShadowOperations.ClientGame.CommandSystem
         public CVar n_first;
 
         // Renderer CVars
-        public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_lighting, r_renderwireframe;
+        public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_lighting, r_renderwireframe, r_ssao;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch;
@@ -51,6 +51,7 @@ namespace ShadowOperations.ClientGame.CommandSystem
             r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed); // What AA mode to use (0 = none).
             r_lighting = Register("r_lighting", "true", CVarFlag.Boolean); // Whether to enable 3D lighting (Otherwise, use FullBright).
             r_renderwireframe = Register("r_renderwireframe", "false", CVarFlag.Boolean); // Whether to render a wireframe.
+            r_ssao = Register("r_ssao", "false", CVarFlag.Boolean); // Whether to render with SSAO.
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What volume the music should be.
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What pitch the music should be.

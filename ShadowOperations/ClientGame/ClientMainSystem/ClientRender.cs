@@ -33,6 +33,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             GL.CullFace(CullFaceMode.Front);
             s_shadow = Shaders.GetShader("shadow");
             s_main = Shaders.GetShader("test");
+            s_mainssao = Shaders.GetShader("final_ssao");
             s_fbo = Shaders.GetShader("fbo");
             s_shadowadder = Shaders.GetShader("shadowadder");
             s_transponly = Shaders.GetShader("transponly");
@@ -91,6 +92,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         Shader s_shadow;
         Shader s_main;
+        Shader s_mainssao;
         Shader s_fbo;
         Shader s_shadowadder;
         Shader s_transponly;
@@ -217,7 +219,14 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     }
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                     GL.DrawBuffer(DrawBufferMode.Back);
-                    s_main.Bind();
+                    if (CVars.r_ssao.ValueB)
+                    {
+                        s_mainssao.Bind();
+                    }
+                    else
+                    {
+                        s_main.Bind();
+                    }
                     GL.Uniform3(5, ambient.ToOVector());
                     GL.ActiveTexture(TextureUnit.Texture4);
                     GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
