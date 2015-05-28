@@ -24,14 +24,34 @@ vec4 regularize(vec4 input_r) // TODO: Is this working the best it can?
 	return vec4(input_r.xyz / ((input_r.x >= input_r.y && input_r.x >= input_r.z) ? input_r.x: ((input_r.y >= input_r.z) ? input_r.y: input_r.z)), input_r.w);
 }
 
+const int SSAO_COORD_COUNT = 4;
+
+const float bias = 0.001;
+
+const vec2[SSAO_COORD_COUNT] ssaocoords = vec2[](vec2(0.005, 0.005), vec2(-0.005, 0.005), vec2(0.005, -0.005), vec2(-0.005, -0.005));
+
 void main()
 {
+	float depth = texture2D(depthtex, f_texcoord).r;
+	vec3 normal = texture(normaltex, f_texcoord).xyz;
+	vec3 position = texture(positiontex, f_texcoord).xyz;
+	if (position == vec3(0.0) && normal == vec3(0.0))
+	{
+		position = vec3(999999999.0, 999999999.0, -999999999.0);
+	}
+	float ssaocolor = 1.0;
+	for (int i = 0; i < SSAO_COORD_COUNT; i++)
+	{
+		float nd = texture2D(depthtex, f_texcoord + ssaocoords[i]).r;
+		if ((nd < (depth)) || (nd > (depth + bias)))
+		{
+			ssaocolor -= 0.05;
+		}
+	}
+	vec4 SSAOColor = vec4(ssaocolor);
 	vec4 shadow_light_color = texture(shtex, f_texcoord);
 	vec4 colortex_color = texture(colortex, f_texcoord);
-	vec4 light_color = regularize(vec4(ambient, 0.0) * colortex_color + shadow_light_color);
-	if (light_color.w > 1.0)
-	{
-		light_color.w = 1.0;
-	}
-	color = light_color;
+	vec4 light_color = regularize(vec4(ambient, 0.0) * colortex_color + shadow_light_color) * SSAOColor;
+	light_color.w = 1.0;
+	color = light_color * SSAOColor;
 }
