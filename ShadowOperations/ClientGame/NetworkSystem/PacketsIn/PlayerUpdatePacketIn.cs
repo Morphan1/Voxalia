@@ -24,7 +24,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             Location ang = new Location();
             ang.Yaw = dX;
             ang.Pitch = dY;
-            byte st = data[8 + 12 + 12 + 2 + 4];
+            byte st = data[8 + 12 + 12 + 2 + 4 + 4];
             PlayerStance stance = PlayerStance.STAND;
             if (st == 2)
             {

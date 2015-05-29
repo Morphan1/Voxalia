@@ -168,7 +168,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             if (Flashlight != null)
             {
                 Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
-                Flashlight.Reposition(GetEyePosition() + Flashlight.Direction * 0.3f);
+                Flashlight.Reposition(GetEyePosition() + Utilities.ForwardVector_Deg(Direction.Yaw, 0) * 0.3f);
             }
         }
 

@@ -120,10 +120,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
             GiveItem(new ItemStack("open_hand", TheServer, 1, "items/open_hand", "Open Hand", "Grab things!", Color.White.ToArgb(), "items/common/hand.dae", true));
-            GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/9mm_pistol_gun", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/gun01.dae", false));
+            GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/gun01.dae", false));
             GiveItem(new ItemStack("bow", TheServer, 1, "items/bow", "Bow", "It shoots arrows!", Color.White.ToArgb(), "items/weapons/bow.dae", false));
             GiveItem(new ItemStack("hook", TheServer, 1, "items/hook", "Grappling Hook", "Grab distant things!", Color.White.ToArgb(), "items/common/hook.dae", true));
             GiveItem(new ItemStack("flashlight", TheServer, 1, "items/flashlight", "Flashlight", "Lights things up!", Color.White.ToArgb(), "items/common/flashlight.dae", false));
+            GiveItem(new ItemStack("rifle_gun", TheServer, 1, "items/weapons/assault_rifle", "Assault Rifle", "It shoots rapid-fire bullets!", Color.White.ToArgb(), "items/weapons/m4a1.dae", false));
             SetHealth(Health);
             CGroup = tserver.Collision.Player;
         }

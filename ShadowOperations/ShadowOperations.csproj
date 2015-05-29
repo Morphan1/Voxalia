@@ -197,6 +197,7 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\HookItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\OpenHandItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\PistolGunItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\RifleGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\ItemRegistry.cs" />
     <Compile Include="ServerGame\JointSystem\BaseFJoint.cs" />
     <Compile Include="ServerGame\JointSystem\BaseJoint.cs" />

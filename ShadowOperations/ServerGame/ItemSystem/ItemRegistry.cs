@@ -15,11 +15,12 @@ namespace ShadowOperations.ServerGame.ItemSystem
         public ItemRegistry()
         {
             Infos = new Dictionary<string, BaseItemInfo>();
-            Register(new PistolGunItem());
-            Register(new OpenHandItem());
-            Register(new HookItem());
             Register(new BowItem());
             Register(new FlashLightItem());
+            Register(new HookItem());
+            Register(new OpenHandItem());
+            Register(new PistolGunItem());
+            Register(new RifleGunItem());
             Generic = new GenericItem();
         }
 

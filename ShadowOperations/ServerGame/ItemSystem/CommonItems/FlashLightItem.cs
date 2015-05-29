@@ -15,7 +15,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             Name = "flashlight";
         }
 
-        public float Distance = 10;
+        public float Distance = 20;
 
         public Location Color = Location.One;
 
