@@ -9,6 +9,7 @@ using ShadowOperations.ServerGame.JointSystem;
 using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 using System.Threading;
 using Frenetic;
+using Frenetic.TagHandlers.Common;
 
 namespace ShadowOperations.ServerGame.ServerMainSystem
 {
@@ -139,7 +140,13 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     if (!CVars.system.CVarList[i].Flags.HasFlag(CVarFlag.ServerControl)
                         && !CVars.system.CVarList[i].Flags.HasFlag(CVarFlag.ReadOnly))
                     {
-                        cvarsave.Append("set \"" + CVars.system.CVarList[i].Name + "\" \"" + CVars.system.CVarList[i].Value + "\";\n"); // TODO: Value.Replace("\"", "<{symbol.quote}>") or something
+                        string val = CVars.system.CVarList[i].Value;
+                        string val_esc = EscapeTags.Escape(val);
+                        if (val_esc != val)
+                        {
+                            val = "<{unescape[" + val_esc + "]}>";
+                        }
+                        cvarsave.Append("set \"" + CVars.system.CVarList[i].Name + "\" \"" + val + "\";\n");
                     }
                 }
                 SaveStr = cvarsave.ToString();

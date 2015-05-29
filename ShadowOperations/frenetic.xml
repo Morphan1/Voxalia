@@ -216,6 +216,22 @@
             Add this function as a callback to complete entry.
             </summary>
         </member>
+        <member name="T:Frenetic.CommandSystem.CommonCmds.CleanmemCommand">
+            <summary>
+            A command to interact with the system garbage collector.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommonCmds.CleanmemCommand.#ctor">
+            <summary>
+            Constructs the command.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommonCmds.CleanmemCommand.Execute(Frenetic.CommandSystem.CommandEntry)">
+            <summary>
+            Executes the command.
+            </summary>
+            <param name="entry">Entry to be executed</param>
+        </member>
         <member name="T:Frenetic.TagHandlers.TemplateObject">
             <summary>
             The abstract base for a tag object.
@@ -966,6 +982,52 @@
             </summary>
             <returns>A string representation of the date-time</returns>
         </member>
+        <member name="T:Frenetic.TagHandlers.Common.EscapeTags">
+            <summary>
+            Escapes questionable text input.
+            </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Common.EscapeTags.Escape(System.String)">
+            <summary>
+            Escapes a string.
+            </summary>
+            <param name="input">The unescaped string</param>
+            <returns>The escaped string</returns>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Common.EscapeTags.#ctor">
+            <summary>
+            Construct the EscapeTags - for internal use only.
+            </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Common.EscapeTags.Handle(Frenetic.TagHandlers.TagData)">
+            <summary>
+            Handles the escape tag.
+            </summary>
+            <param name="data">The data to be handled</param>
+        </member>
+        <member name="T:Frenetic.TagHandlers.Common.UnescapeTags">
+            <summary>
+            Unescapes questionable text input.
+            </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Common.UnescapeTags.Unescape(System.String)">
+            <summary>
+            Unescapes a string.
+            </summary>
+            <param name="input">The escaped string</param>
+            <returns>The unescaped string</returns>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Common.UnescapeTags.#ctor">
+            <summary>
+            Construct the UnescapeTags - for internal use only.
+            </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Common.UnescapeTags.Handle(Frenetic.TagHandlers.TagData)">
+            <summary>
+            Handles the unescape tag.
+            </summary>
+            <param name="data">The data to be handled</param>
+        </member>
         <member name="T:Frenetic.CommandSystem.CommonCmds.DebugOutputInvalidCommand">
             <summary>
             A non-user-invocable command called when no other command exists.
@@ -1450,22 +1512,6 @@
             <param name="_value">See Variable.Value</param>
         </member>
         <member name="M:Frenetic.CommandSystem.CommonCmds.ToggleCommand.Execute(Frenetic.CommandSystem.CommandEntry)">
-            <summary>
-            Executes the command.
-            </summary>
-            <param name="entry">Entry to be executed</param>
-        </member>
-        <member name="T:Frenetic.CommandSystem.CommonCmds.CleanmemCommand">
-            <summary>
-            A command to interact with the system garbage collector.
-            </summary>
-        </member>
-        <member name="M:Frenetic.CommandSystem.CommonCmds.CleanmemCommand.#ctor">
-            <summary>
-            Constructs the command.
-            </summary>
-        </member>
-        <member name="M:Frenetic.CommandSystem.CommonCmds.CleanmemCommand.Execute(Frenetic.CommandSystem.CommandEntry)">
             <summary>
             Executes the command.
             </summary>
