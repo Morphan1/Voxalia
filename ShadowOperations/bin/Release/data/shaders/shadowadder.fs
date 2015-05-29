@@ -54,7 +54,8 @@ void main()
 	}
 	if (light_type == 1.0)
 	{
-		atten *= 1 - (f_spos.x * f_spos.x + f_spos.y * f_spos.y) * 0.5;
+		vec4 fst = f_spos / f_spos.w;
+		atten *= 1 - (fst.x * fst.x + fst.y * fst.y);
 	}
 	vec3 L = light_path / light_length;
 	vec3 V_Base = position - eye_pos;
