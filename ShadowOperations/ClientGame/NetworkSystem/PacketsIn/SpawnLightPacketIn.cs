@@ -19,9 +19,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             ple.EID = Utilities.BytesToLong(Utilities.BytesPartial(data, 0, 8));
             ple.LightColor = Location.FromBytes(data, 8);
             ple.texturesize = Utilities.BytesToInt(Utilities.BytesPartial(data, 8 + 12, 4));
-            if (ple.texturesize < 8 || ple.texturesize > 2048) // TODO: CVar
+            if (ple.texturesize < 8 || ple.texturesize > TheClient.CVars.r_shadowquality_max.ValueI)
             {
-                ple.texturesize = 256;
+                ple.texturesize = TheClient.CVars.r_shadowquality_max.ValueI;
             }
             ple.Radius = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 12 + 4, 4));
             if (ple.Radius < 0.1f || ple.Radius > 10000f)

@@ -49,7 +49,7 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             Destroy(ent);
             if (enabled)
             {
-                SpotLight sl = new SpotLight(ent.GetPosition(), 512, distance, color, Location.UnitX, 45);
+                SpotLight sl = new SpotLight(ent.GetPosition(), TheClient.CVars.r_shadowquality_flashlight.ValueI, distance, color, Location.UnitX, 45);
                 if (ent is PlayerEntity)
                 {
                     sl.Direction = ((PlayerEntity)ent).ForwardVector();
