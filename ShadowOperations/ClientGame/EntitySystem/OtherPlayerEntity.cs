@@ -218,6 +218,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public double aTTime;
         public double aLTime;
 
+
         public override void Render()
         {
             if (!Visible)
@@ -225,6 +226,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 return;
             }
             OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
+                * PlayerEntity.PlayerAngleMat
                 * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);

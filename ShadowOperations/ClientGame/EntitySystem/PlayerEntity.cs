@@ -183,7 +183,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 SingleAnimationNode head = tAnim.GetNode("head");
                 Matrix m4 = head.GetBoneTotalMatrix(0);
                 m4.Transpose();
-                return GetPosition() + Location.FromBVector(m4.Translation);
+                return GetPosition() + Location.FromBVector(m4.Translation); // TODO: * PlayerAngleMat?
             }
             else
             {
@@ -210,11 +210,14 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public float MaxHealth;
 
+        public static OpenTK.Matrix4 PlayerAngleMat = OpenTK.Matrix4.CreateRotationZ((float)(270 * Utilities.PI180));
+
         public override void Render()
         {
             if (TheClient.RenderingShadows)
             {
                 OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
+                    * PlayerAngleMat
                     * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
                 GL.UniformMatrix4(2, false, ref mat);
                 TheClient.Rendering.SetMinimumLight(0.0f);
