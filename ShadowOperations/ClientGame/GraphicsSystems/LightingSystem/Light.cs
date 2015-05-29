@@ -48,7 +48,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems.LightingSystem
             // Build the depth texture
             fbo_depthtex = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, fbo_depthtex);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent24, texsize, texsize, 0,
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32, texsize, texsize, 0,
                 OpenTK.Graphics.OpenGL4.PixelFormat.DepthComponent, PixelType.UnsignedByte, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);

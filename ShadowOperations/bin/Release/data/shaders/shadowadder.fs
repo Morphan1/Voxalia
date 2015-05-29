@@ -67,7 +67,7 @@ void main()
 	vec4 fs = f_spos / f_spos.w / 2.0 + 0.5;
 	float cosTheta = dot(N, L);
 	cosTheta = clamp(cosTheta, 0.0, 1.0);
-	float bias = 0.00025 * tan(acos(cosTheta));
+	float bias = 0.00005 * tan(acos(cosTheta));
 	bias = clamp(bias, 0.0, 0.001);
 	fs.z -= bias / (light_length / 5.0 / (light_radius / 100.0));
 	float jump = clamp(0.0001 * V_Len, 0.0001, 0.01);
