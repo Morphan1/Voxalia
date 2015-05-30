@@ -58,7 +58,7 @@ namespace ShadowOperations.ClientGame.CommandSystem
             r_znear = Register("r_znear", "0.1", CVarFlag.Numeric); // How close the near plane should be to the camera.
             r_zfar = Register("r_zfar", "1000", CVarFlag.Numeric); // How far the far plane should be from the camera.
             r_ssao = Register("r_ssao", "false", CVarFlag.Boolean); // Whether to render with SSAO.
-            r_dof_strength = Register("r_dof_strength", "0.5", CVarFlag.Numeric); // How strong the Depth Of Field effect should be.
+            r_dof_strength = Register("r_dof_strength", "4", CVarFlag.Numeric); // How strong the Depth Of Field effect should be.
             r_shadowquality_flashlight = Register("r_shadowquality_flashlight", "512", CVarFlag.Numeric); // What texture size to use for flashlight shadows.
             r_shadowquality_max = Register("r_shadowquality_max", "2048", CVarFlag.Numeric); // What maximum light texture size to accept from the server.
             // Audio CVars
