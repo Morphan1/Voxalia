@@ -177,7 +177,23 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             {
                 SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
             }
+            CameraFinalTarget = Player.GetPosition() + Player.ForwardVector() * 5000f;
+            CameraFinalTarget = Collision.CuboidLineTrace(new Location(0.01, 0.01, 0.01), Player.GetPosition(), CameraFinalTarget, IgnorePlayer).Position;
+            CameraDistance = (Player.GetPosition() - CameraFinalTarget).Length();
         }
+
+        bool IgnorePlayer(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)
+        {
+            if (((BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)entry).Entity.Tag == Player)
+            {
+                return false;
+            }
+            return Collision.ShouldCollide(entry);
+        }
+
+        public Location CameraFinalTarget;
+
+        public double CameraDistance;
 
         /// <summary>
         /// Spawns an entity in the world.

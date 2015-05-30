@@ -9,9 +9,10 @@ layout (binding = 5) uniform sampler2D renderhinttex;
 
 layout (location = 0) in vec2 f_texcoord;
 
-layout (location = 3) uniform mat4 shadow_matrix;
-layout (location = 4) uniform vec3 light_pos = vec3(5.0, 5.0, 5.0);
 layout (location = 5) uniform vec3 ambient = vec3(0.05, 0.05, 0.05);
+// ...
+layout (location = 8) uniform vec3 cameraTargetPos = vec3(0.0, 0.0, 0.0);
+layout (location = 9) uniform float cameraTargetDepth = 0.01;
 
 out vec4 color;
 

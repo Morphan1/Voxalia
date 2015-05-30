@@ -9,9 +9,11 @@ layout (binding = 5) uniform sampler2D renderhinttex;
 
 layout (location = 0) in vec2 f_texcoord;
 
-layout (location = 3) uniform mat4 shadow_matrix;
-layout (location = 4) uniform vec3 light_pos = vec3(5.0, 5.0, 5.0);
 layout (location = 5) uniform vec3 ambient = vec3(0.05, 0.05, 0.05);
+// ...
+layout (location = 8) uniform vec3 cameraTargetPos = vec3(0.0, 0.0, 0.0);
+layout (location = 9) uniform float dof_strength = 0.5;
+layout (location = 10) uniform float depth_range = 10000;
 
 out vec4 color;
 
@@ -29,6 +31,13 @@ const int SSAO_COORD_COUNT = 4;
 const float bias = 0.001;
 
 const vec2[SSAO_COORD_COUNT] ssaocoords = vec2[](vec2(0.005, 0.005), vec2(-0.005, 0.005), vec2(0.005, -0.005), vec2(-0.005, -0.005));
+
+vec4 read_single_pixel(vec2 tcoord)
+{
+	vec4 shadow_light_color = texture(shtex, tcoord);
+	vec4 colortex_color = texture(colortex, tcoord);
+	return regularize(vec4(ambient, 0.0) * colortex_color + shadow_light_color);
+}
 
 void main()
 {
@@ -49,9 +58,14 @@ void main()
 		}
 	}
 	vec4 SSAOColor = vec4(ssaocolor);
-	vec4 shadow_light_color = texture(shtex, f_texcoord);
-	vec4 colortex_color = texture(colortex, f_texcoord);
-	vec4 light_color = regularize(vec4(ambient, 0.0) * colortex_color + shadow_light_color) * SSAOColor;
+	vec4 light_color = read_single_pixel(f_texcoord) * SSAOColor * 0.2;
+	float targetDepth = texture2D(depthtex, vec2(0.5, 0.5)).r;
+	float depth_offset = (depth - targetDepth) * depth_range / (10000 * dof_strength);
+	light_color += read_single_pixel(vec2(f_texcoord.x - depth_offset, f_texcoord.y)) * 0.2;
+	light_color += read_single_pixel(vec2(f_texcoord.x + depth_offset, f_texcoord.y)) * 0.2;
+	light_color += read_single_pixel(vec2(f_texcoord.x - depth_offset * 0.5, f_texcoord.y)) * 0.2;
+	light_color += read_single_pixel(vec2(f_texcoord.x + depth_offset * 0.5, f_texcoord.y)) * 0.2;
 	light_color.w = 1.0;
 	color = light_color;
+	//color = vec4(depth, targetDepth, depth, 1.0);
 }

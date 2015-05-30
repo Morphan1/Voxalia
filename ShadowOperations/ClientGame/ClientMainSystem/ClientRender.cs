@@ -103,7 +103,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public Location CameraUp = Location.UnitZ;
 
         public float CameraZNear = 0.1f;
-        public float CameraZFar = 10000f;
+        public float CameraZFar = 1000f;
 
         public Location ambient;
 
@@ -228,6 +228,9 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                         s_main.Bind();
                     }
                     GL.Uniform3(5, ambient.ToOVector());
+                    GL.Uniform3(8, CameraFinalTarget.ToOVector());
+                    GL.Uniform1(9, CVars.r_dof_strength.ValueF);
+                    GL.Uniform1(10, CameraZFar - CameraZNear);
                     GL.ActiveTexture(TextureUnit.Texture4);
                     GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
                     GL.ActiveTexture(TextureUnit.Texture0);
