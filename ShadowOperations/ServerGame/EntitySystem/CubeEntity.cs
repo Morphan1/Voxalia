@@ -45,6 +45,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 pVelocity = GetVelocity();
                 TheServer.SendToAll(new PhysicsEntityUpdatePacketOut(this));
             }
+            base.Tick();
         }
 
         public override bool ApplyVar(string var, string data)
@@ -65,6 +66,12 @@ namespace ShadowOperations.ServerGame.EntitySystem
                         DefTexs();
                     }
                     return true;
+                case "water":
+                    if (data.ToLower() == "true")
+                    {
+                        CGroup = TheServer.Collision.Water;
+                    }
+                    return true;
                 default:
                     return base.ApplyVar(var, data);
             }
@@ -75,6 +82,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             List<KeyValuePair<string, string>> vars = base.GetVariables();
             vars.Add(new KeyValuePair<string, string>("textures", TexString()));
             vars.Add(new KeyValuePair<string, string>("coords", TexCString()));
+            vars.Add(new KeyValuePair<string, string>("water", CGroup == TheServer.Collision.Water ? "true": "false"));
             return vars;
         }
 

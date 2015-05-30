@@ -9,6 +9,8 @@ using BEPUphysics;
 using ShadowOperations.ServerGame.JointSystem;
 using BEPUphysics.CollisionShapes;
 using BEPUphysics.CollisionRuleManagement;
+using BEPUphysics.BroadPhaseEntries;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -74,9 +76,58 @@ namespace ShadowOperations.ServerGame.EntitySystem
         /// </summary>
         public EntityShape Shape = null;
 
+        public ConvexShape ConvexEntityShape = null;
+
         public Location InternalOffset;
 
         public CollisionGroup CGroup;
+
+        bool IgnoreEverythingButWater(BroadPhaseEntry entry)
+        {
+            return entry.CollisionRules.Group == TheServer.Collision.Water;
+        }
+
+        void DoWaterFloat()
+        {
+            RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
+            Vector3 sweep = new Vector3(0, 0, -0.001f);
+            CollisionResult cr = TheServer.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
+            if (cr.Hit)
+            {
+                // TODO: grab factors from the entity
+                PhysicsEntity pe = (PhysicsEntity)cr.HitEnt.Tag;
+                if (pe.GetVelocity().Z > 0.4f)
+                {
+                    return;
+                }
+                double Top;
+                if (pe is CubeEntity)
+                {
+                    Top = ((CubeEntity)pe).maxes.Z + pe.GetPosition().Z;
+                }
+                else
+                {
+                    return;
+                }
+                // TODO: Reverse of gravity direction, rather than just 'up'
+                double distanceInside = Top - Body.Position.Z;
+                if (distanceInside <= 0)
+                {
+                    return;
+                }
+                Vector3 impulse = new Vector3(0, 0, (float)500 * GetMass() * (float)TheServer.Delta);
+                Body.ApplyLinearImpulse(ref impulse);
+                Body.ActivityInformation.Activate();
+            }
+        }
+
+        public override void Tick()
+        {
+            if (GetMass() > 0)
+            {
+                DoWaterFloat();
+            }
+        }
 
         /// <summary>
         /// Builds and spawns the body into the world.
@@ -87,12 +138,28 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 DestroyBody();
             }
+            if (Shape is ConvexShape)
+            {
+                ConvexEntityShape = (ConvexShape)Shape;
+            }
+            else
+            {
+                if (Shape is MobileMeshShape)
+                {
+                    MobileMeshShape mms = (MobileMeshShape)Shape;
+                    RigidTransform rt = new RigidTransform(Vector3.Zero, Quaternion.Identity);
+                    BoundingBox bb;
+                    mms.GetBoundingBox(ref rt, out bb);
+                    Vector3 size = bb.Max - bb.Min;
+                    ConvexEntityShape = new BoxShape(size.X, size.Y, size.Z);
+                }
+            }
             Body = new BEPUphysics.Entities.Entity(Shape, Mass);
             Body.CollisionInformation.CollisionRules.Group = CGroup;
             InternalOffset = Location.FromBVector(Body.Position);
             Body.AngularVelocity = new Vector3((float)AVel.X, (float)AVel.Y, (float)AVel.Z);
             Body.LinearVelocity = new Vector3((float)LVel.X, (float)LVel.Y, (float)LVel.Z);
-            Body.WorldTransform = WorldTransform; // TODO: Position, Orientation=
+            Body.WorldTransform = WorldTransform; // TODO: Position, Orientation
             Body.Tag = this;
             Body.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Continuous;
             if (!CanRotate)
@@ -348,7 +415,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     SetBounciness(Utilities.StringToFloat(data));
                     return true;
                 case "solid":
-                    if (data.ToLower() != "true")
+                    if (data.ToLower() != "true" && CGroup == TheServer.Collision.Solid)
                     {
                         CGroup = TheServer.Collision.NonSolid;
                     }

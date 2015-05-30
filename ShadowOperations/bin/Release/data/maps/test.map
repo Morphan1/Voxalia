@@ -3,6 +3,112 @@ general
 	ambient: (0, 0, 0);
 	music: ;
 }
+cube
+{
+	position: (-89.5, -15.5, -5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (-90, -20, -9);
+	maxes: (-89, -11, -1);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
+}
+cube
+{
+	position: (-85, -15, -9.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (-90, -20, -10);
+	maxes: (-80, -10, -9);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
+}
+cube
+{
+	position: (-84.5, -19.5, -5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (-89, -20, -9);
+	maxes: (-80, -19, -1);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
+}
+cube
+{
+	position: (-85, -10.5, -5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (-90, -11, -9);
+	maxes: (-80, -10, -1);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
+}
+cube
+{
+	position: (-84.5, -15, -5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (-89, -19, -9);
+	maxes: (-80, -11, -1);
+	textures: common/water|common/water|common/water|common/water|common/water|common/water;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: true;
+}
+pointlight
+{
+	position: (-80, -15, 6);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	radius: 15;
+	color: (1, 1, 1);
+	texture_size: 256;
+}
 pointlight
 {
 	position: (0, 0, 50);
@@ -14,6 +120,7 @@ pointlight
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	radius: 100;
 	color: (1, 1, 1);
 	texture_size: 1024;
@@ -29,10 +136,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-20, 20, -1);
 	maxes: (-15, 25, 10);
 	textures: white|white|white|white|white|white;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
@@ -45,11 +154,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: 1;
 	mins: (-30, -9, -1);
 	maxes: (-29.8963451385498, -7, 2);
 	textures: mapobjects/plants/rosewood|mapobjects/plants/rosewood|mapobjects/plants/rosewood|mapobjects/plants/rosewood|mapobjects/plants/rosewood|mapobjects/plants/rosewood;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-	jointtargetid: 1;
+	water: false;
 }
 cube
 {
@@ -62,23 +172,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: 2;
 	mins: (-30, -10, -1);
 	maxes: (-29, -9, 3);
 	textures: white|white|white|white|white|white;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-	jointtargetid: 2;
-}
-joint_ballsocket
-{
-	one: 1;
-	two: 2;
-	position: (-29.939, -9.048, 0.66);
-}
-joint_ballsocket
-{
-	one: 1;
-	two: 2;
-	position: (-29.939, -9.048, 0.33);
+	water: false;
 }
 cube
 {
@@ -91,10 +190,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-30, -7, -1);
 	maxes: (-29, -6, 3);
 	textures: white|white|white|white|white|white;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
@@ -107,10 +208,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-30, -9, 2);
 	maxes: (-29, -7, 3);
 	textures: white|white|white|white|white|white;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
@@ -123,10 +226,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-20, 20, 10);
 	maxes: (5, 25, 15);
 	textures: white|white|white|white|white|white;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
@@ -139,10 +244,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (0, 20, -1);
 	maxes: (5, 25, 10);
 	textures: white|white|white|white|white|white;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 targetposition
 {
@@ -155,6 +262,7 @@ targetposition
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	targetname: move_about_2c;
 	target: move_about_2a;
 	modifier: 1;
@@ -170,10 +278,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: false;
+	jointtargetid: none;
 	mins: (4, 11, -1);
 	maxes: (5, 20, 1);
 	textures: white|white|white|white|white|white;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
@@ -186,10 +296,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (4, 11, 1);
 	maxes: (5, 20, 2);
 	textures: common/glass|common/glass|common/glass|common/glass|common/glass|common/glass;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
@@ -202,26 +314,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-19, -11, -1);
 	maxes: (-17, -9, 1);
 	textures: ym|ym|ym|ym|ym|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-triggergeneric
-{
-	position: (-18, -10, 0.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (-20, -12, -1);
-	maxes: (-16, -8, 2);
-	target: move_about_two;
-	trigger_type: use;
+	water: false;
 }
 model
 {
@@ -234,9 +332,45 @@ model
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	model: mapobjects/plants/pinetest.dae;
 	scale: (1, 1, 1);
 	collisionmode: aabb;
+}
+triggergeneric
+{
+	position: (-18, -10, 0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (-20, -12, -1);
+	maxes: (-16, -8, 2);
+	target: move_about_two;
+	trigger_type: use;
+}
+cube
+{
+	position: (-13.5, 9, 0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (-15, 7, -1);
+	maxes: (-12, 11, 2);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 targetposition
 {
@@ -249,6 +383,7 @@ targetposition
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	targetname: move_about_2a;
 	target: move_about_2b;
 	modifier: 1;
@@ -264,31 +399,17 @@ functrack
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-19, -11, 1);
 	maxes: (-17, -9, 3);
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 	target: move_about_2a;
 	targetname: move_about_two;
 	mindistance: 0.1;
 	loopsperactivation: 1;
 	movespeed: 1;
-}
-cube
-{
-	position: (-13.5, 9, 0.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	mins: (-15, 7, -1);
-	maxes: (-12, 11, 2);
-	textures: white|white|white|white|white|white;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 }
 targetscriptrunner
 {
@@ -301,6 +422,7 @@ targetscriptrunner
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	targetname: move_about_two;
 	scriptcommands: say "YOU PRESSED DA BIGGER BUTTON";
 }
@@ -315,6 +437,7 @@ targetposition
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	targetname: move_about_2b;
 	target: move_about_2c;
 	modifier: 1;
@@ -330,10 +453,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-19, -2, -1);
 	maxes: (-17, 0, 1);
 	textures: ym|ym|ym|ym|ym|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 triggergeneric
 {
@@ -346,6 +471,7 @@ triggergeneric
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-20, -3, -1);
 	maxes: (-16, 1, 2);
 	target: move_about_one;
@@ -362,10 +488,12 @@ functrack
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-19, -2, 1);
 	maxes: (-17, 0, 3);
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 	target: move_about_1a;
 	targetname: move_about_one;
 	mindistance: 0.1;
@@ -383,6 +511,7 @@ targetposition
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	targetname: move_about_1a;
 	target: move_about_1b;
 	modifier: 1;
@@ -398,6 +527,7 @@ targetscriptrunner
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	targetname: move_about_one;
 	scriptcommands: say "YOU PRESSED DA BUTTON";
 }
@@ -412,6 +542,7 @@ targetposition
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	targetname: move_about_1b;
 	target: move_about_1a;
 	modifier: 1;
@@ -427,14 +558,16 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (4, -18, -1);
 	maxes: (21, 11, 9);
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
-	position: (-0.254379272460895, 0, -5.7611985206604);
+	position: (-0.12718963623044, 0, -5.7611985206604);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
@@ -443,10 +576,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
-	mins: (-80.2543792724609, -80, -10.5223970413208);
+	jointtargetid: none;
+	mins: (-80, -80, -10.5223970413208);
 	maxes: (79.7456207275391, 80, -1);
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
@@ -459,10 +594,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-10.21755027771, -18, -1);
 	maxes: (4, -8, 17);
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
@@ -475,26 +612,12 @@ cube
 	bounciness: 1;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (3, 1, -1);
 	maxes: (4, 2, 0);
 	textures: top|top|top|top|top|top;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-}
-cube
-{
-	position: (3.5, 0.5, -0.5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 10;
-	friction: 0.5;
-	bounciness: 0.5;
-	solid: true;
-	visible: true;
-	mins: (3, 0, -1);
-	maxes: (4, 1, 0);
-	textures: top|top|top|top|top|top;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
@@ -507,10 +630,30 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-6, -8, -1);
 	maxes: (-5, -7, 0);
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
+}
+cube
+{
+	position: (3.5, 0.5, -0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 10;
+	friction: 0.5;
+	bounciness: 0.5;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (3, 0, -1);
+	maxes: (4, 1, 0);
+	textures: top|top|top|top|top|top;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
@@ -523,10 +666,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-5, -8, -1);
 	maxes: (-2, -4, 2);
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
@@ -539,10 +684,12 @@ cube
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
 	mins: (-2, -8, -1);
 	maxes: (4, 0, 5);
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 spawn
 {
@@ -555,4 +702,17 @@ spawn
 	bounciness: 0;
 	solid: true;
 	visible: true;
+	jointtargetid: none;
+}
+joint_ballsocket
+{
+	one: 1;
+	two: 2;
+	position: (-29.939, -9.048, 0.66);
+}
+joint_ballsocket
+{
+	one: 1;
+	two: 2;
+	position: (-29.939, -9.048, 0.33);
 }

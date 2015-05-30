@@ -362,6 +362,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 cit.Info.AltClick(this, cit);
                 LastAltClick = TheServer.GlobalTickTime;
             }
+            base.Tick();
         }
 
         public double LastClick = 0;

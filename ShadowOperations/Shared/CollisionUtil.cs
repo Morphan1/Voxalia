@@ -43,9 +43,11 @@ namespace ShadowOperations.Shared
 
         public CollisionGroup Item = new CollisionGroup();
 
+        public CollisionGroup Water = new CollisionGroup();
+
         public bool ShouldCollide(BroadPhaseEntry entry)
         {
-            if (entry.CollisionRules.Group == NonSolid || entry.CollisionRules.Group == Trigger)
+            if (entry.CollisionRules.Group == NonSolid || entry.CollisionRules.Group == Trigger || entry.CollisionRules.Group == Water)
             {
                 return false;
             }
@@ -78,6 +80,17 @@ namespace ShadowOperations.Shared
             CollisionGroup.DefineCollisionRule(Trigger, Item, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Item, NonSolid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(NonSolid, Item, CollisionRule.NoBroadPhase);
+            // Water Vs. NonSolid,Trigger,Solid,Player,Item (All)
+            CollisionGroup.DefineCollisionRule(Water, NonSolid, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(NonSolid, Water, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Water, Trigger, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Trigger, Water, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Water, Solid, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Solid, Water, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Water, Player, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Player, Water, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Water, Item, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Item, Water, CollisionRule.NoBroadPhase);
         }
 
         public CollisionResult CuboidLineTrace(Location halfsize, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)

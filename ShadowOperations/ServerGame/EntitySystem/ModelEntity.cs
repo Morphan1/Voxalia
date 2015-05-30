@@ -42,6 +42,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                     TheServer.SendToAll(new PhysicsEntityUpdatePacketOut(this));
                 }
             }
+            base.Tick();
         }
 
         public override bool ApplyVar(string var, string value)
