@@ -60,7 +60,7 @@ void main()
 	vec4 SSAOColor = vec4(ssaocolor);
 	vec4 light_color = read_single_pixel(f_texcoord) * SSAOColor * 0.2;
 	float targetDepth = texture2D(depthtex, vec2(0.5, 0.5)).r;
-	float depth_offset = (depth - targetDepth) * depth_range / (10000 * dof_strength);
+	float depth_offset = (depth - targetDepth) * depth_range / (10000 * dof_strength); // TODO: Improve usage of depth_range here
 	light_color += read_single_pixel(vec2(f_texcoord.x - depth_offset, f_texcoord.y)) * 0.2;
 	light_color += read_single_pixel(vec2(f_texcoord.x + depth_offset, f_texcoord.y)) * 0.2;
 	light_color += read_single_pixel(vec2(f_texcoord.x - depth_offset * 0.5, f_texcoord.y)) * 0.2;

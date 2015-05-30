@@ -100,9 +100,6 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public Location CameraUp = Location.UnitZ;
 
-        public float CameraZNear = 0.1f;
-        public float CameraZFar = 1000f;
-
         public Location ambient;
 
         void SetViewport()
@@ -159,7 +156,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     VBO.BonesIdentity();
                     RenderingShadows = false;
                     CameraTarget = CameraPos + Player.ForwardVector();
-                    Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CameraZNear, CameraZFar);
+                    Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
                     Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
                     Matrix4 combined = view * proj;
                     GL.UniformMatrix4(1, false, ref combined);
@@ -228,7 +225,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     GL.Uniform3(5, ambient.ToOVector());
                     GL.Uniform3(8, CameraFinalTarget.ToOVector());
                     GL.Uniform1(9, CVars.r_dof_strength.ValueF);
-                    GL.Uniform1(10, CameraZFar - CameraZNear);
+                    GL.Uniform1(10, CVars.r_zfar.ValueF - CVars.r_znear.ValueF);
                     GL.ActiveTexture(TextureUnit.Texture4);
                     GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
                     GL.ActiveTexture(TextureUnit.Texture0);
@@ -270,7 +267,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 {
                     Shaders.ColorMultShader.Bind();
                     Location CameraTarget = CameraPos + Player.ForwardVector();
-                    Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CameraZNear, CameraZFar);
+                    Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
                     Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
                     Matrix4 combined = view * proj;
                     GL.UniformMatrix4(1, false, ref combined);
