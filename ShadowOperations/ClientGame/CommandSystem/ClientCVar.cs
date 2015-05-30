@@ -26,6 +26,7 @@ namespace ShadowOperations.ClientGame.CommandSystem
 
         // Renderer CVars
         public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_lighting, r_renderwireframe,
+            r_fov,
             r_ssao, r_dof_strength,
             r_shadowquality_flashlight, r_shadowquality_max;
 
@@ -53,6 +54,7 @@ namespace ShadowOperations.ClientGame.CommandSystem
             r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed); // What AA mode to use (0 = none).
             r_lighting = Register("r_lighting", "true", CVarFlag.Boolean); // Whether to enable 3D lighting (Otherwise, use FullBright).
             r_renderwireframe = Register("r_renderwireframe", "false", CVarFlag.Boolean); // Whether to render a wireframe.
+            r_fov = Register("r_fov", "70", CVarFlag.Numeric); // What Field of Vision range value to use.
             r_ssao = Register("r_ssao", "false", CVarFlag.Boolean); // Whether to render with SSAO.
             r_dof_strength = Register("r_dof_strength", "0.5", CVarFlag.Numeric); // How strong the Depth Of Field effect should be.
             r_shadowquality_flashlight = Register("r_shadowquality_flashlight", "512", CVarFlag.Numeric); // What texture size to use for flashlight shadows.
