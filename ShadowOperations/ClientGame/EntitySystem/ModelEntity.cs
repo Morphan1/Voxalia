@@ -28,9 +28,14 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public ModelCollisionMode mode = ModelCollisionMode.AABB;
 
         public ModelEntity(string model_in, Client tclient)
-            : base(tclient, false, true)
+            : base(tclient, true, true)
         {
             mod = model_in;
+        }
+
+        public override void Tick()
+        {
+            base.Tick();
         }
 
         public override void SpawnBody()

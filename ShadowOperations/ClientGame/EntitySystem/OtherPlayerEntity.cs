@@ -188,6 +188,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                     aLTime = 0;
                 }
             }
+            base.Tick();
         }
 
         public SpotLight Flashlight = null;

@@ -18,12 +18,17 @@ namespace ShadowOperations.ClientGame.EntitySystem
     public class CubeEntity : PhysicsEntity
     {
         public CubeEntity(Client tclient, Location halfsize)
-            : base(tclient, false, true)
+            : base(tclient, true, true)
         {
             HalfSize = halfsize;
             Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
             Recalculate();
             Color = new OpenTK.Graphics.Color4(0f, (float)Utilities.UtilRandom.NextDouble(), (float)Utilities.UtilRandom.NextDouble(), 1f);
+        }
+
+        public override void Tick()
+        {
+            base.Tick();
         }
 
         /// <summary>

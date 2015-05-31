@@ -19,6 +19,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public CollisionUtil Collision;
 
+        public Location GravityNormal = new Location(0, 0, -1);
+
         /// <summary>
         /// Builds the physics world.
         /// </summary>

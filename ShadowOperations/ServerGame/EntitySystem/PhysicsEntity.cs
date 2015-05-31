@@ -96,26 +96,30 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 // TODO: grab factors from the entity
                 PhysicsEntity pe = (PhysicsEntity)cr.HitEnt.Tag;
-                if (pe.GetVelocity().Z > 0.4f)
+                if (GetVelocity().Z > 2f)
                 {
                     return;
                 }
                 double Top;
                 if (pe is CubeEntity)
                 {
-                    Top = ((CubeEntity)pe).maxes.Z + pe.GetPosition().Z;
+                    Top = pe.GetPosition().Z + ((CubeEntity)pe).HalfSize.Z;
                 }
                 else
                 {
-                    return;
+                    Top = pe.GetPosition().Z; // Placeholder - TODO: Maybe throw a warning of invalid water source?
                 }
-                // TODO: Reverse of gravity direction, rather than just 'up'
+                // TODO: Reverse of gravity direction, rather than just Z-up
                 double distanceInside = Top - Body.Position.Z;
                 if (distanceInside <= 0)
                 {
                     return;
                 }
-                Vector3 impulse = new Vector3(0, 0, (float)500 * GetMass() * (float)TheServer.Delta);
+                if (distanceInside < 0.5f && GetVelocity().Z > 1f)
+                {
+                    return;
+                }
+                Vector3 impulse = -(TheServer.PhysicsWorld.ForceUpdater.Gravity + TheServer.GravityNormal.ToBVector() * 0.4f) * GetMass() * (float)TheServer.Delta;
                 Body.ApplyLinearImpulse(ref impulse);
                 Body.ActivityInformation.Activate();
             }

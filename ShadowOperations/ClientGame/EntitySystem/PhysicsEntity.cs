@@ -12,6 +12,8 @@ using BEPUphysics.EntityStateManagement;
 using BEPUphysics.CollisionShapes;
 using ShadowOperations.ClientGame.JointSystem;
 using BEPUphysics.CollisionRuleManagement;
+using BEPUphysics.BroadPhaseEntries;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -75,9 +77,62 @@ namespace ShadowOperations.ClientGame.EntitySystem
         /// </summary>
         public EntityShape Shape = null;
 
+        public ConvexShape ConvexEntityShape = null;
+
         public Location InternalOffset;
 
         public CollisionGroup CGroup;
+
+        bool IgnoreEverythingButWater(BroadPhaseEntry entry)
+        {
+            return entry.CollisionRules.Group == TheClient.Collision.Water;
+        }
+
+        void DoWaterFloat()
+        {
+            RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
+            Vector3 sweep = new Vector3(0, 0, -0.001f);
+            CollisionResult cr = TheClient.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
+            if (cr.Hit)
+            {
+                // TODO: grab factors from the entity
+                PhysicsEntity pe = (PhysicsEntity)cr.HitEnt.Tag;
+                if (GetVelocity().Z > 2f)
+                {
+                    return;
+                }
+                double Top;
+                if (pe is CubeEntity)
+                {
+                    Top = pe.GetPosition().Z + ((CubeEntity)pe).HalfSize.Z;
+                }
+                else
+                {
+                    Top = pe.GetPosition().Z; // Placeholder - TODO: Maybe throw a warning of invalid water source?
+                }
+                // TODO: Reverse of gravity direction, rather than just Z-up
+                double distanceInside = Top - Body.Position.Z;
+                if (distanceInside <= 0)
+                {
+                    return;
+                }
+                if (distanceInside < 0.5f && GetVelocity().Z > 1f)
+                {
+                    return;
+                }
+                Vector3 impulse = -(TheClient.PhysicsWorld.ForceUpdater.Gravity + TheClient.GravityNormal.ToBVector() * 0.4f) * GetMass() * (float)TheClient.Delta;
+                Body.ApplyLinearImpulse(ref impulse);
+                Body.ActivityInformation.Activate();
+            }
+        }
+
+        public override void Tick()
+        {
+            if (GetMass() > 0)
+            {
+                DoWaterFloat();
+            }
+        }
 
         /// <summary>
         /// Builds and spawns the body into the world.
@@ -87,6 +142,22 @@ namespace ShadowOperations.ClientGame.EntitySystem
             if (Body != null)
             {
                 DestroyBody();
+            }
+            if (Shape is ConvexShape)
+            {
+                ConvexEntityShape = (ConvexShape)Shape;
+            }
+            else
+            {
+                if (Shape is MobileMeshShape)
+                {
+                    MobileMeshShape mms = (MobileMeshShape)Shape;
+                    RigidTransform rt = new RigidTransform(Vector3.Zero, Quaternion.Identity);
+                    BoundingBox bb;
+                    mms.GetBoundingBox(ref rt, out bb);
+                    Vector3 size = bb.Max - bb.Min;
+                    ConvexEntityShape = new BoxShape(size.X, size.Y, size.Z);
+                }
             }
             Body = new BEPUphysics.Entities.Entity(Shape, Mass);
             Body.CollisionInformation.CollisionRules.Group = CGroup;
