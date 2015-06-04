@@ -22,6 +22,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Vector3 loc = (GetPosition() - physent.GetPosition()).ToBVector();
             Vector3 impulse = GetVelocity().ToBVector() * Damage / 1000f;
             physent.Body.ApplyImpulse(ref loc, ref impulse);
+            physent.Body.ActivityInformation.Activate();
             if (physent is EntityDamageable)
             {
                 ((EntityDamageable)physent).Damage(Damage);
