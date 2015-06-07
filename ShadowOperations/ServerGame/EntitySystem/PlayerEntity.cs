@@ -121,6 +121,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             SetPosition(new Location(0, 0, 50));
             GiveItem(new ItemStack("open_hand", TheServer, 1, "items/open_hand", "Open Hand", "Grab things!", Color.White.ToArgb(), "items/common/hand.dae", true));
             GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/silenced_pistol.dae", false));
+            GiveItem(new ItemStack("shotgun_gun", TheServer, 1, "items/weapons/shotgun", "Shotgun", "It shoots many bullets!", Color.White.ToArgb(), "items/weapons/shotgun.dae", false));
             GiveItem(new ItemStack("bow", TheServer, 1, "items/bow", "Bow", "It shoots arrows!", Color.White.ToArgb(), "items/weapons/bow.dae", false));
             GiveItem(new ItemStack("hook", TheServer, 1, "items/hook", "Grappling Hook", "Grab distant things!", Color.White.ToArgb(), "items/common/hook.dae", true));
             GiveItem(new ItemStack("flashlight", TheServer, 1, "items/flashlight", "Flashlight", "Lights things up!", Color.White.ToArgb(), "items/common/flashlight.dae", false));

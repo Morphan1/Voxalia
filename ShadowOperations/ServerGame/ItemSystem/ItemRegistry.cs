@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ShadowOperations.ServerGame.ItemSystem.CommonItems;
+using ShadowOperations.Shared;
 
 namespace ShadowOperations.ServerGame.ItemSystem
 {
@@ -21,7 +22,9 @@ namespace ShadowOperations.ServerGame.ItemSystem
             Register(new OpenHandItem());
             Register(new PistolGunItem());
             Register(new RifleGunItem());
+            Register(new ShotgunGunItem());
             Generic = new GenericItem();
+            Register(Generic);
         }
 
         public void Register(BaseItemInfo info)
@@ -36,6 +39,7 @@ namespace ShadowOperations.ServerGame.ItemSystem
             {
                 return bii;
             }
+            SysConsole.Output(OutputType.WARNING, "Using generic item for " + name);
             return Generic;
         }
     }

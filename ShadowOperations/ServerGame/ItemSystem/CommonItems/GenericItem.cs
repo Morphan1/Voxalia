@@ -8,9 +8,13 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 {
     public class GenericItem: BaseItemInfo
     {
+        public GenericItem()
+        {
+            Name = "Air";
+        }
+
         public override void PrepItem(EntitySystem.PlayerEntity player, ItemStack item)
         {
-            Name = "Err";
         }
 
         public override void Click(EntitySystem.PlayerEntity player, ItemStack item)

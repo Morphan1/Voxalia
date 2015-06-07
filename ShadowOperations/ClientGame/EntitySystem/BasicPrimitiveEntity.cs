@@ -46,6 +46,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             }
             else
             {
+                TheClient.Rendering.SetColor(Color4.Red);
                 TheClient.Rendering.RenderLine(GetPosition(), GetPosition() - Velocity / 10f);
             }
         }
