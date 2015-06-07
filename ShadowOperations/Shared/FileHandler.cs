@@ -191,7 +191,7 @@ namespace ShadowOperations.Shared
         /// <returns>The file's data, as a string</returns>
         public string ReadText(string filename)
         {
-            return encoding.GetString(ReadBytes(filename)).Replace('\r', ' ');
+            return encoding.GetString(ReadBytes(filename)).Replace("\r", "");
         }
 
         /// <summary>
