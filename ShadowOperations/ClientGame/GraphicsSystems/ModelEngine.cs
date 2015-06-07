@@ -469,7 +469,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Skinned = true;
             if (Program.Files.Exists("models/" + Name + ".skin"))
             {
-                string[] data = Program.Files.ReadText("models/" + Name + ".skin").Split('\n');
+                string[] data = Program.Files.ReadText("models/" + Name + ".skin").Replace("\r", "").Split('\n');
                 foreach (string datum in data)
                 {
                     if (datum.Length > 0)
