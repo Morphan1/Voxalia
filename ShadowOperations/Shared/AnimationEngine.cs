@@ -65,7 +65,7 @@ namespace ShadowOperations.Shared
             {
                 SingleAnimation created = new SingleAnimation();
                 created.Name = name;
-                string[] data = Program.Files.ReadText("animations/" + name + ".anim").Replace("\r", "").Split('\n');
+                string[] data = Program.Files.ReadText("animations/" + name + ".anim").Split('\n');
                 int entr = 0;
                 for (int i = 0; i < data.Length; i++)
                 {
