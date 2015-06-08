@@ -23,9 +23,7 @@ namespace ShadowOperations.ServerGame.ItemSystem
             Register(new PistolGunItem());
             Register(new RifleGunItem());
             Register(new ShotgunGunItem());
-            Register(new PistolAmmoItem());
-            Register(new RifleAmmoItem());
-            Register(new ShotgunAmmoItem());
+            Register(new BulletItem());
             Generic = new GenericItem();
             Register(Generic);
         }

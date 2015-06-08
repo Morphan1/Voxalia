@@ -48,6 +48,7 @@ namespace ShadowOperations.ClientGame.UISystem
             BindKey(Key.F, "use");
             BindKey(Key.B, "drop");
             BindKey(Key.G, "throw");
+            BindKey(Key.R, "reload");
             BindKey(Key.Escape, "quit");
             BindKey(Key.LControl, "capture");
             BindKey(Key.F32, "itemnext");

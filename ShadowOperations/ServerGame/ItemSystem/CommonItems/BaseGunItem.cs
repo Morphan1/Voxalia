@@ -37,12 +37,12 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 
         public override void PrepItem(PlayerEntity player, ItemStack item)
         {
-            item.Datum = ClipSize; // TODO: Calculate how much ammo is had
+            item.Datum = ClipSize;
         }
 
         public override void Click(PlayerEntity player, ItemStack item)
         {
-            if (!player.WaitingForClickRelease && (FireRate == -1 || player.TheServer.GlobalTickTime - player.LastGunShot >= FireRate))
+            if (item.Datum != 0 && !player.WaitingForClickRelease && (FireRate == -1 || player.TheServer.GlobalTickTime - player.LastGunShot >= FireRate))
             {
                 for (int i = 0; i < Shots; i++)
                 {
@@ -58,6 +58,11 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
                     be.SplashSize = SplashSize;
                     be.SplashDamage = SplashMaxDamage;
                     player.TheServer.SpawnEntity(be);
+                    item.Datum -= 1;
+                    if (item.Datum == 0)
+                    {
+                        break;
+                    }
                 }
                 if (FireRate == -1)
                 {

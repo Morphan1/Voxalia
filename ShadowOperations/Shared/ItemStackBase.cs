@@ -17,6 +17,11 @@ namespace ShadowOperations.Shared
         public string Name;
 
         /// <summary>
+        /// The internal secondary name of this item, for use with items that are subtypes.
+        /// </summary>
+        public string SecondaryName;
+
+        /// <summary>
         /// The display name of this item.
         /// </summary>
         public string DisplayName;
@@ -57,6 +62,7 @@ namespace ShadowOperations.Shared
             dw.WriteInt(Datum);
             dw.WriteInt(DrawColor);
             dw.WriteFullString(Name);
+            dw.WriteFullString(SecondaryName == null ? "" : SecondaryName);
             dw.WriteFullString(DisplayName);
             dw.WriteFullString(Description);
             dw.WriteFullString(GetTextureName());
@@ -69,9 +75,15 @@ namespace ShadowOperations.Shared
             Name = name;
         }
 
-        public void Load(string name, int count, string tex, string display, string descrip, int color, string model)
+        public virtual void SetSecondaryName(string secondary_name)
+        {
+            SecondaryName = secondary_name;
+        }
+
+        public void Load(string name, string secondary_name, int count, string tex, string display, string descrip, int color, string model)
         {
             SetName(name);
+            SetSecondaryName(secondary_name);
             Count = count;
             DisplayName = display;
             Description = descrip;
@@ -89,6 +101,8 @@ namespace ShadowOperations.Shared
             Datum = dr.ReadInt();
             DrawColor = dr.ReadInt();
             SetName(dr.ReadFullString());
+            string secondary_name = dr.ReadFullString();
+            SetSecondaryName(secondary_name.Length == 0 ? null : secondary_name);
             DisplayName = dr.ReadFullString();
             Description = dr.ReadFullString();
             SetTextureName(dr.ReadFullString());
