@@ -188,7 +188,10 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     GL.UniformMatrix4(2, false, ref mat);
                     GL.Uniform3(10, CameraPos.ToOVector());
                     bool first = true;
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
+                    GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 1 });
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
+                    GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 1 });
                     GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
                     GL.Disable(EnableCap.CullFace);
                     for (int i = 0; i < Lights.Count; i++)
