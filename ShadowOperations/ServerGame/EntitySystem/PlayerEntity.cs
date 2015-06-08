@@ -128,6 +128,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
             GiveItem(new ItemStack("hook", TheServer, 1, "items/hook", "Grappling Hook", "Grab distant things!", Color.White.ToArgb(), "items/common/hook.dae", true));
             GiveItem(new ItemStack("flashlight", TheServer, 1, "items/flashlight", "Flashlight", "Lights things up!", Color.White.ToArgb(), "items/common/flashlight.dae", false));
             GiveItem(new ItemStack("rifle_gun", TheServer, 1, "items/weapons/assault_rifle", "Assault Rifle", "It shoots rapid-fire bullets!", Color.White.ToArgb(), "items/weapons/m4a1.dae", false));
+            GiveItem(new ItemStack("9mm_ammo", TheServer, 100, "items/weapons/ammo/9mm_round", "9mm Ammo", "Nine whole millimeters!", Color.White.ToArgb(), "items/weapons/ammo/9mm_round.dae", false));
+            GiveItem(new ItemStack("shotgun_ammo", TheServer, 100, "items/weapons/ammo/shotgun_shell", "Shotgun Ammo", "Always travels in packs!", Color.White.ToArgb(), "items/weapons/ammo/shotgun_shell.dae", false));
+            GiveItem(new ItemStack("rifle_ammo", TheServer, 1000, "items/weapons/ammo/rifle_round", "Assault Rifle Ammo", "Very rapid!", Color.White.ToArgb(), "items/weapons/ammo/rifle_round.dae", false));
             SetHealth(Health);
             CGroup = tserver.Collision.Player;
         }

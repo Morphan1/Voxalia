@@ -190,8 +190,12 @@
     <Compile Include="ServerGame\EntitySystem\TriggerEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\TriggerGenericEntity.cs" />
     <Compile Include="ServerGame\ItemSystem\BaseItemInfo.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\BaseAmmoItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BaseGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BowItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\PistolAmmoItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\RifleAmmoItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\ShotgunAmmoItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\ShotgunGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\FlashLightItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\GenericItem.cs" />
