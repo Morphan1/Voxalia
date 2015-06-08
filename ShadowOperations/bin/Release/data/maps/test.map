@@ -109,6 +109,40 @@ pointlight
 	color: (1, 1, 1);
 	texture_size: 256;
 }
+cube
+{
+	position: (-45.5, -8, -0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (-46, -11, -1);
+	maxes: (-45, -5, 0);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
+}
+model
+{
+	position: (-44, -9, 0);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 50;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	model: common/sphere_basic.dae;
+	scale: (1, 1, 1);
+	collisionmode: sphere;
+}
 pointlight
 {
 	position: (0, 0, 50);
@@ -124,6 +158,92 @@ pointlight
 	radius: 100;
 	color: (1, 1, 1);
 	texture_size: 1024;
+}
+cube
+{
+	position: (-42.5, -10.5, -0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (-45, -11, -1);
+	maxes: (-40, -10, 0);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
+}
+cube
+{
+	position: (-42.5, -4.5, -0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (-46, -5, -1);
+	maxes: (-39, -4, 0);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
+}
+pointlight
+{
+	position: (-42.7624015808105, -7.47888612747192, 5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	radius: 15;
+	color: (0, 1, 1);
+	texture_size: 256;
+}
+model
+{
+	position: (-41, -6, 0);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 5;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	model: common/sphere_basic.dae;
+	scale: (1, 1, 1);
+	collisionmode: sphere;
+}
+cube
+{
+	position: (-39.5, -8, -0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (-40, -11, -1);
+	maxes: (-39, -5, 0);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
 }
 cube
 {
@@ -303,6 +423,40 @@ cube
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 	water: false;
 }
+model
+{
+	position: (-13.6005544662477, 8.77106809616091, -0.761003255844098);
+	angle: (0.7105836, 0, 0, 0.7036132);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 100;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	model: mapobjects/plants/pinetest.dae;
+	scale: (1, 1, 1);
+	collisionmode: aabb;
+}
+cube
+{
+	position: (-13.5, 9, 0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (-15, 7, -1);
+	maxes: (-12, 11, 2);
+	textures: white|white|white|white|white|white;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
+}
 cube
 {
 	position: (-18, -10, 0);
@@ -320,22 +474,6 @@ cube
 	textures: ym|ym|ym|ym|ym|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 	water: false;
-}
-model
-{
-	position: (-13.6005544662477, 8.77106809616091, -0.761003255844098);
-	angle: (0.7105836, 0, 0, 0.7036132);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 100;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	jointtargetid: none;
-	model: mapobjects/plants/pinetest.dae;
-	scale: (1, 1, 1);
-	collisionmode: aabb;
 }
 triggergeneric
 {
@@ -356,7 +494,7 @@ triggergeneric
 }
 cube
 {
-	position: (-13.5, 9, 0.5);
+	position: (-18, -1, 0);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
@@ -366,9 +504,9 @@ cube
 	solid: true;
 	visible: true;
 	jointtargetid: none;
-	mins: (-15, 7, -1);
-	maxes: (-12, 11, 2);
-	textures: white|white|white|white|white|white;
+	mins: (-19, -2, -1);
+	maxes: (-17, 0, 1);
+	textures: ym|ym|ym|ym|ym|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 	water: false;
 }
@@ -411,55 +549,6 @@ functrack
 	loopsperactivation: 1;
 	movespeed: 1;
 }
-targetscriptrunner
-{
-	position: (-18, -10, 7);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	jointtargetid: none;
-	targetname: move_about_two;
-	scriptcommands: say "YOU PRESSED DA BIGGER BUTTON";
-}
-targetposition
-{
-	position: (-18, -10, 5);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	jointtargetid: none;
-	targetname: move_about_2b;
-	target: move_about_2c;
-	modifier: 1;
-}
-cube
-{
-	position: (-18, -1, 0);
-	angle: (0, 0, 0, 1);
-	velocity: (0, 0, 0);
-	angular_velocity: (0, 0, 0);
-	mass: 0;
-	friction: 0.5;
-	bounciness: 0;
-	solid: true;
-	visible: true;
-	jointtargetid: none;
-	mins: (-19, -2, -1);
-	maxes: (-17, 0, 1);
-	textures: ym|ym|ym|ym|ym|ym;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-	water: false;
-}
 triggergeneric
 {
 	position: (-18, -1, 0.5);
@@ -476,6 +565,22 @@ triggergeneric
 	maxes: (-16, 1, 2);
 	target: move_about_one;
 	trigger_type: use;
+}
+targetposition
+{
+	position: (-18, -10, 5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 0;
+	friction: 0.5;
+	bounciness: 0;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	targetname: move_about_2b;
+	target: move_about_2c;
+	modifier: 1;
 }
 functrack
 {
@@ -518,7 +623,7 @@ targetposition
 }
 targetscriptrunner
 {
-	position: (-18, -1, 7);
+	position: (-18, -10, 7);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
@@ -528,8 +633,8 @@ targetscriptrunner
 	solid: true;
 	visible: true;
 	jointtargetid: none;
-	targetname: move_about_one;
-	scriptcommands: say "YOU PRESSED DA BUTTON";
+	targetname: move_about_two;
+	scriptcommands: say "YOU PRESSED DA BIGGER BUTTON";
 }
 targetposition
 {
@@ -547,9 +652,9 @@ targetposition
 	target: move_about_1a;
 	modifier: 1;
 }
-cube
+targetscriptrunner
 {
-	position: (12.5, -3.5, 4);
+	position: (-18, -1, 7);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
@@ -559,11 +664,8 @@ cube
 	solid: true;
 	visible: true;
 	jointtargetid: none;
-	mins: (4, -18, -1);
-	maxes: (21, 11, 9);
-	textures: top|bottom|xp|xm|yp|ym;
-	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
-	water: false;
+	targetname: move_about_one;
+	scriptcommands: say "YOU PRESSED DA BUTTON";
 }
 cube
 {
@@ -585,7 +687,7 @@ cube
 }
 cube
 {
-	position: (-3.108775138855, -13, 8);
+	position: (12.5, -3.5, 4);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
@@ -595,8 +697,8 @@ cube
 	solid: true;
 	visible: true;
 	jointtargetid: none;
-	mins: (-10.21755027771, -18, -1);
-	maxes: (4, -8, 17);
+	mins: (4, -18, -1);
+	maxes: (21, 11, 9);
 	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 	water: false;
@@ -621,6 +723,24 @@ cube
 }
 cube
 {
+	position: (3.5, 0.5, -0.5);
+	angle: (0, 0, 0, 1);
+	velocity: (0, 0, 0);
+	angular_velocity: (0, 0, 0);
+	mass: 10;
+	friction: 0.5;
+	bounciness: 0.5;
+	solid: true;
+	visible: true;
+	jointtargetid: none;
+	mins: (3, 0, -1);
+	maxes: (4, 1, 0);
+	textures: top|top|top|top|top|top;
+	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
+	water: false;
+}
+cube
+{
 	position: (-5.5, -7.5, -0.5);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
@@ -639,19 +759,19 @@ cube
 }
 cube
 {
-	position: (3.5, 0.5, -0.5);
+	position: (-3.108775138855, -13, 8);
 	angle: (0, 0, 0, 1);
 	velocity: (0, 0, 0);
 	angular_velocity: (0, 0, 0);
-	mass: 10;
+	mass: 0;
 	friction: 0.5;
-	bounciness: 0.5;
+	bounciness: 0;
 	solid: true;
 	visible: true;
 	jointtargetid: none;
-	mins: (3, 0, -1);
-	maxes: (4, 1, 0);
-	textures: top|top|top|top|top|top;
+	mins: (-10.21755027771, -18, -1);
+	maxes: (4, -8, 17);
+	textures: top|bottom|xp|xm|yp|ym;
 	coords: 1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f;
 	water: false;
 }
