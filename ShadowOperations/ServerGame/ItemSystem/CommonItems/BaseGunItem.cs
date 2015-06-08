@@ -33,9 +33,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
         public string AmmoType;
         public float Spread;
         public int Shots;
-        public double LastShot;
         public float FireRate;
-        public bool WaitForRelease;
 
         public override void PrepItem(PlayerEntity player, ItemStack item)
         {
@@ -44,7 +42,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 
         public override void Click(PlayerEntity player, ItemStack item)
         {
-            if (!WaitForRelease && (FireRate == -1 || player.TheServer.GlobalTickTime - LastShot >= FireRate))
+            if (!player.WaitingForClickRelease && (FireRate == -1 || player.TheServer.GlobalTickTime - player.LastGunShot >= FireRate))
             {
                 for (int i = 0; i < Shots; i++)
                 {
@@ -63,9 +61,9 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
                 }
                 if (FireRate == -1)
                 {
-                    WaitForRelease = true;
+                    player.WaitingForClickRelease = true;
                 }
-                LastShot = player.TheServer.GlobalTickTime;
+                player.LastGunShot = player.TheServer.GlobalTickTime;
             }
         }
 
@@ -75,7 +73,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 
         public override void ReleaseClick(PlayerEntity player, ItemStack item)
         {
-            WaitForRelease = false;
+            player.WaitingForClickRelease = false;
         }
 
         public override void Use(PlayerEntity player, ItemStack item)

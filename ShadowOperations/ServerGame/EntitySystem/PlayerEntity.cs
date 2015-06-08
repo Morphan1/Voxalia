@@ -111,6 +111,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         public double ItemCooldown = 0;
 
+        public bool WaitingForClickRelease = false;
+
         public PlayerEntity(Server tserver, Connection conn)
             : base(tserver, true, 100f)
         {
@@ -373,6 +375,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
         }
 
         public double LastClick = 0;
+
+        public double LastGunShot = 0;
 
         public bool WasClicking = false;
 
