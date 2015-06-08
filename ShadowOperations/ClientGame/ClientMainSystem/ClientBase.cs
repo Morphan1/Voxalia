@@ -113,6 +113,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Loading shaders...");
             Shaders = new ShaderEngine();
             string vendor = GL.GetString(StringName.Vendor);
+            SysConsole.Output(OutputType.INIT, "Found vendor " + vendor);
             if (vendor.ToLower().Contains("intel"))
             {
                 Shaders.MCM_GOOD_GRAPHICS = false;
