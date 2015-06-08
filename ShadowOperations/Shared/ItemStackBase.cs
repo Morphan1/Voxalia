@@ -75,15 +75,10 @@ namespace ShadowOperations.Shared
             Name = name;
         }
 
-        public virtual void SetSecondaryName(string secondary_name)
-        {
-            SecondaryName = secondary_name;
-        }
-
         public void Load(string name, string secondary_name, int count, string tex, string display, string descrip, int color, string model)
         {
             SetName(name);
-            SetSecondaryName(secondary_name);
+            SecondaryName = secondary_name;
             Count = count;
             DisplayName = display;
             Description = descrip;
@@ -102,7 +97,7 @@ namespace ShadowOperations.Shared
             DrawColor = dr.ReadInt();
             SetName(dr.ReadFullString());
             string secondary_name = dr.ReadFullString();
-            SetSecondaryName(secondary_name.Length == 0 ? null : secondary_name);
+            SecondaryName = secondary_name.Length == 0 ? null : secondary_name;
             DisplayName = dr.ReadFullString();
             Description = dr.ReadFullString();
             SetTextureName(dr.ReadFullString());

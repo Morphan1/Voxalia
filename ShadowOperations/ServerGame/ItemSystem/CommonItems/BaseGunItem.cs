@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ShadowOperations.ServerGame.EntitySystem;
 using ShadowOperations.Shared;
+using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 {
@@ -37,7 +38,6 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 
         public override void PrepItem(PlayerEntity player, ItemStack item)
         {
-            item.Datum = ClipSize;
         }
 
         public override void Click(PlayerEntity player, ItemStack item)
@@ -58,17 +58,44 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
                     be.SplashSize = SplashSize;
                     be.SplashDamage = SplashMaxDamage;
                     player.TheServer.SpawnEntity(be);
-                    item.Datum -= 1;
-                    if (item.Datum == 0)
-                    {
-                        break;
-                    }
                 }
                 if (FireRate == -1)
                 {
                     player.WaitingForClickRelease = true;
                 }
                 player.LastGunShot = player.TheServer.GlobalTickTime;
+                item.Datum -= 1;
+            }
+            else if (item.Datum == 0 && !player.WaitingForClickRelease)
+            {
+                Reload(player, item);
+            }
+        }
+
+        public void Reload(PlayerEntity player, ItemStack item)
+        {
+            if (item.Datum < ClipSize)
+            {
+                ItemStack ammo = null;
+                foreach (ItemStack itemStack in player.Items)
+                {
+                    if (itemStack.Info is BulletItem && itemStack.SecondaryName == AmmoType)
+                    {
+                        ammo = itemStack;
+                        break;
+                    }
+                }
+                if (ammo != null && ammo.Count > 0)
+                {
+                    int reloading = ClipSize - item.Datum;
+                    if (reloading > ammo.Count)
+                    {
+                        reloading = ammo.Count;
+                    }
+                    item.Datum += reloading;
+                    ammo.Count -= reloading;
+                    player.Network.SendPacket(new SetItemPacketOut(player.Items.IndexOf(ammo), ammo));
+                }
             }
         }
 
