@@ -179,6 +179,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 19:
                             packet = new RemoveItemPacketIn();
                             break;
+                        case 21:
+                            packet = new SetItemPacketIn();
+                            break;
                         default:
                             throw new Exception("Invalid packet ID: " + packetID);
                     }

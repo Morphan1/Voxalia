@@ -14,11 +14,16 @@ namespace ShadowOperations.ServerGame.ItemSystem
     {
         public Server TheServer;
 
-        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, int color, string model, bool bound)
+        public ItemStack(string name, string secondary_name, Server tserver, int count, string tex, string display, string descrip, int color, string model, bool bound)
         {
             TheServer = tserver;
-            Load(name, count, tex, display, descrip, color, model);
+            Load(name, secondary_name, count, tex, display, descrip, color, model);
             IsBound = bound;
+        }
+
+        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, int color, string model, bool bound)
+            : this(name, null, tserver, count, tex, display, descrip, color, model, bound)
+        {
         }
 
         public ItemStack(byte[] data, Server tserver)

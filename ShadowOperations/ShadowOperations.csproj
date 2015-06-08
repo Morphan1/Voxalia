@@ -143,6 +143,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PlayerUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PrimitiveEntityUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\RemoveItemPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnBulletPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnLightPacketIn.cs" />
@@ -190,8 +191,10 @@
     <Compile Include="ServerGame\EntitySystem\TriggerEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\TriggerGenericEntity.cs" />
     <Compile Include="ServerGame\ItemSystem\BaseItemInfo.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\BaseAmmoItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BaseGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BowItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\BulletItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\ShotgunGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\FlashLightItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\GenericItem.cs" />
@@ -230,6 +233,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PlayerUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PrimitiveEntityUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\RemoveItemPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnBulletPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnLightPacketOut.cs" />
@@ -240,6 +244,7 @@
     <Compile Include="ServerGame\ItemSystem\ItemStack.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourStatusPacketOut.cs" />
     <Compile Include="ServerGame\OtherSystems\ModelEngine.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\ReloadPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\ThrowPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\DropPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\StancePlayerCommand.cs" />

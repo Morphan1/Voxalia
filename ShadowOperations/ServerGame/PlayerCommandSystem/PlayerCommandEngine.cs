@@ -15,6 +15,7 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem
         public PlayerCommandEngine()
         {
             Register(new DropPlayerCommand());
+            Register(new ReloadPlayerCommand());
             Register(new SayPlayerCommand());
             Register(new ThrowPlayerCommand());
             Register(new StancePlayerCommand());
