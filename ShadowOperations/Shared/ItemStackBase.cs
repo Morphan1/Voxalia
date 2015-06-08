@@ -51,26 +51,16 @@ namespace ShadowOperations.Shared
 
         public byte[] ToBytes()
         {
-            byte[] b_name = FileHandler.encoding.GetBytes(Name);
-            byte[] b_dname = FileHandler.encoding.GetBytes(DisplayName);
-            byte[] b_desc = FileHandler.encoding.GetBytes(Description);
-            byte[] b_tex = FileHandler.encoding.GetBytes(GetTextureName());
-            byte[] b_model = FileHandler.encoding.GetBytes(GetModelName());
-            DataStream ds = new DataStream(4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4 + 4 + 4 + b_model.Length);
+            DataStream ds = new DataStream(1000);
             DataWriter dw = new DataWriter(ds);
             dw.WriteInt(Count);
-            dw.WriteInt(b_name.Length);
-            dw.WriteInt(b_dname.Length);
-            dw.WriteInt(b_desc.Length);
-            dw.WriteInt(b_tex.Length);
-            dw.WriteBytes(b_name);
-            dw.WriteBytes(b_dname);
-            dw.WriteBytes(b_desc);
-            dw.WriteBytes(b_tex);
             dw.WriteInt(Datum);
             dw.WriteInt(DrawColor);
-            dw.WriteInt(b_model.Length);
-            dw.WriteBytes(b_model);
+            dw.WriteFullString(Name);
+            dw.WriteFullString(DisplayName);
+            dw.WriteFullString(Description);
+            dw.WriteFullString(GetTextureName());
+            dw.WriteFullString(GetModelName());
             return ds.ToArray();
         }
 
@@ -93,36 +83,16 @@ namespace ShadowOperations.Shared
 
         public void Load(byte[] data)
         {
-            int flen = 4 + 4 + 4 + 4 + 4;
-            if (data.Length < flen)
-            {
-                throw new Exception("Invalid item stack bytes!");
-            }
             DataStream ds = new DataStream(data);
             DataReader dr = new DataReader(ds);
             Count = dr.ReadInt();
-            int c_name = dr.ReadInt();
-            int c_dname = dr.ReadInt();
-            int c_desc = dr.ReadInt();
-            int c_tex = dr.ReadInt();
-            flen += c_name + c_dname + c_desc + c_tex + 4 + 4 + 4;
-            if (data.Length < flen)
-            {
-                throw new Exception("Invalid item stack bytes!");
-            }
-            SetName(dr.ReadString(c_name));
-            DisplayName = dr.ReadString(c_dname);
-            Description = dr.ReadString(c_desc);
-            SetTextureName(dr.ReadString(c_tex));
             Datum = dr.ReadInt();
             DrawColor = dr.ReadInt();
-            int c_model = dr.ReadInt();
-            flen += c_model;
-            if (data.Length < flen)
-            {
-                throw new Exception("Invalid item stack bytes!");
-            }
-            SetModelName(dr.ReadString(c_model));
+            SetName(dr.ReadFullString());
+            DisplayName = dr.ReadFullString();
+            Description = dr.ReadFullString();
+            SetTextureName(dr.ReadFullString());
+            SetModelName(dr.ReadFullString());
         }
     }
 }

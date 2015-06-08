@@ -22,5 +22,12 @@ namespace ShadowOperations.Shared
         {
             base.Write(bits, 0, bits.Length);
         }
+
+        public void WriteFullString(string str)
+        {
+            byte[] data = FileHandler.encoding.GetBytes(str);
+            WriteInt(data.Length);
+            WriteBytes(data);
+        }
     }
 }

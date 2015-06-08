@@ -22,5 +22,11 @@ namespace ShadowOperations.Shared
         {
             return FileHandler.encoding.GetString(base.ReadBytes(length));
         }
+
+        public string ReadFullString()
+        {
+            int len = ReadInt();
+            return ReadString(len);
+        }
     }
 }
