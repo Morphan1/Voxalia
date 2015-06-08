@@ -45,6 +45,10 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             RemoveHook(player);
         }
 
+        public override void ReleaseClick(PlayerEntity player, ItemStack item)
+        {
+        }
+
         void RemoveHook(PlayerEntity player)
         {
             if (player.Hooks.Count > 0)
