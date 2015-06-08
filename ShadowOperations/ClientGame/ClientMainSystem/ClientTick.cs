@@ -111,10 +111,9 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                         && !CVars.system.CVarList[i].Flags.HasFlag(CVarFlag.ReadOnly))
                     {
                         string val = CVars.system.CVarList[i].Value;
-                        string val_esc = EscapeTags.Escape(val);
-                        if (val_esc != val)
+                        if (val.Contains('\"'))
                         {
-                            val = "<{unescape[" + val_esc + "]}>";
+                            val = "<{unescape[" + EscapeTags.Escape(val) + "]}>";
                         }
                         cvarsave.Append("set \"" + CVars.system.CVarList[i].Name + "\" \"" + val + "\";\n");
                     }
