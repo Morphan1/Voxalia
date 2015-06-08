@@ -109,11 +109,11 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 // Delta time = Elapsed ticks * (ticks/second)
                 CurrentDelta = ((double)DeltaCounter.ElapsedTicks) / ((double)Stopwatch.Frequency);
                 // How much time should pass between each tick ideally
-                TARGETFPS = 20;// ServerCVar.g_fps.ValueD; // TODO: Use the CVar!
+                TARGETFPS = 30;// ServerCVar.g_fps.ValueD; // TODO: Use the CVar!
                 if (TARGETFPS < 1 || TARGETFPS > 100)
                 {
-                    //ServerCVar.g_fps.Set("20"); // TODO: Use the CVar!
-                    TARGETFPS = 20;
+                    //ServerCVar.g_fps.Set("30"); // TODO: Use the CVar!
+                    TARGETFPS = 30;
                 }
                 TargetDelta = (1d / TARGETFPS);
                 // How much delta has been built up
