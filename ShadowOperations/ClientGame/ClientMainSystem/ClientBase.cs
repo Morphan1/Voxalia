@@ -99,7 +99,6 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public Renderer Rendering;
         public ModelEngine Models;
         public AnimationEngine Animations;
-
         public SoundEngine Sounds;
 
         public PlayerEntity Player;
@@ -113,6 +112,11 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             ItemFrame = Textures.GetTexture("ui/item_frame");
             SysConsole.Output(OutputType.INIT, "Loading shaders...");
             Shaders = new ShaderEngine();
+            string vendor = GL.GetString(StringName.Vendor);
+            if (vendor.ToLower().Contains("intel"))
+            {
+                Shaders.MCM_GOOD_GRAPHICS = false;
+            }
             Shaders.InitShaderSystem();
             SysConsole.Output(OutputType.INIT, "Loading fonts...");
             Fonts = new GLFontEngine(Shaders);

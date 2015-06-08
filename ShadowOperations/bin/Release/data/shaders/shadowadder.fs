@@ -65,11 +65,15 @@ void main()
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(R, V), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
 	vec4 fs = f_spos / f_spos.w / 2.0 + 0.5;
+#ifdef MCM_GOOD_GRAPHICS
 	float cosTheta = dot(N, L);
 	cosTheta = clamp(cosTheta, 0.0, 1.0);
 	float bias = 0.00005 * tan(acos(cosTheta));
 	bias = clamp(bias, 0.0, 0.001);
 	fs.z -= bias / (light_length / 5.0 / (light_radius / 100.0));
+#else
+	fs.z -= 0.0001;
+#endif
 	float jump = clamp(0.0001 * V_Len, 0.0001, 0.01);
 	float depth = textureProj(tex, fs + vec4(0.00, -jump, 0.0, 0.0));
 	float depth2 = textureProj(tex, fs + vec4(jump, 0.0, 0.0, 0.0));

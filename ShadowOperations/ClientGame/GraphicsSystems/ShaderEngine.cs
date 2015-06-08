@@ -48,6 +48,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             TextCleanerShader = GetShader("text_cleaner");
         }
 
+        public bool MCM_GOOD_GRAPHICS = true;
+
         public void Update(double time)
         {
             cTime = time;
@@ -158,6 +160,10 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 throw new Exception("Error creating VertexShader. Error status: " + VS_Status + ", info: " + VS_Info);
             }
             int FragmentObject = GL.CreateShader(ShaderType.FragmentShader);
+            if (MCM_GOOD_GRAPHICS)
+            {
+                FS = "#define MCM_GOOD_GRAPHICS\n" + FS;
+            }
             GL.ShaderSource(FragmentObject, FS);
             GL.CompileShader(FragmentObject);
             string FS_Info = GL.GetShaderInfoLog(FragmentObject);
@@ -165,7 +171,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             GL.GetShader(FragmentObject, ShaderParameter.CompileStatus, out FS_Status);
             if (FS_Status != 1)
             {
-                throw new Exception("Error creating VertexShader. Error status: " + FS_Status + ", info: " + FS_Info);
+                throw new Exception("Error creating FragmentShader. Error status: " + FS_Status + ", info: " + FS_Info);
             }
             int Program = GL.CreateProgram();
             GL.AttachShader(Program, FragmentObject);
