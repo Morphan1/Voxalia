@@ -9,7 +9,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 {
     public abstract class BaseGunItem: BaseItemInfo
     {
-        public BaseGunItem(string name, float round_size, float impact_damage, float splash_size, float splash_max_damage, float shot_speed, int clip_size, string ammo_type, float spread, int shots)
+        public BaseGunItem(string name, float round_size, float impact_damage, float splash_size, float splash_max_damage, float shot_speed, int clip_size, string ammo_type, float spread, int shots, float fire_rate)
         {
             Name = name;
             RoundSize = round_size;
@@ -21,6 +21,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             AmmoType = ammo_type;
             Spread = spread;
             Shots = shots;
+            FireRate = fire_rate;
         }
 
         public float RoundSize;
@@ -32,6 +33,9 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
         public string AmmoType;
         public float Spread;
         public int Shots;
+        public double LastShot;
+        public float FireRate;
+        public bool WaitForRelease;
 
         public override void PrepItem(PlayerEntity player, ItemStack item)
         {
@@ -40,20 +44,28 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 
         public override void Click(PlayerEntity player, ItemStack item)
         {
-            for (int i = 0; i < Shots; i++)
+            if (!WaitForRelease && (FireRate == -1 || player.TheServer.GlobalTickTime - LastShot >= FireRate))
             {
-                BulletEntity be = new BulletEntity(player.TheServer);
-                be.SetPosition(player.GetEyePosition());
-                be.NoCollide.Add(player.EID);
-                Location ang = player.Direction;
-                ang.Yaw += Utilities.UtilRandom.NextDouble() * Spread * 2 - Spread;
-                ang.Pitch += Utilities.UtilRandom.NextDouble() * Spread * 2 - Spread;
-                be.SetVelocity(Utilities.ForwardVector_Deg(ang.Yaw, ang.Pitch) * Speed);
-                be.Size = RoundSize;
-                be.Damage = ImpactDamage;
-                be.SplashSize = SplashSize;
-                be.SplashDamage = SplashMaxDamage;
-                player.TheServer.SpawnEntity(be);
+                for (int i = 0; i < Shots; i++)
+                {
+                    BulletEntity be = new BulletEntity(player.TheServer);
+                    be.SetPosition(player.GetEyePosition());
+                    be.NoCollide.Add(player.EID);
+                    Location ang = player.Direction;
+                    ang.Yaw += Utilities.UtilRandom.NextDouble() * Spread * 2 - Spread;
+                    ang.Pitch += Utilities.UtilRandom.NextDouble() * Spread * 2 - Spread;
+                    be.SetVelocity(Utilities.ForwardVector_Deg(ang.Yaw, ang.Pitch) * Speed);
+                    be.Size = RoundSize;
+                    be.Damage = ImpactDamage;
+                    be.SplashSize = SplashSize;
+                    be.SplashDamage = SplashMaxDamage;
+                    player.TheServer.SpawnEntity(be);
+                }
+                if (FireRate == -1)
+                {
+                    WaitForRelease = true;
+                }
+                LastShot = player.TheServer.GlobalTickTime;
             }
         }
 
@@ -63,6 +75,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 
         public override void ReleaseClick(PlayerEntity player, ItemStack item)
         {
+            WaitForRelease = false;
         }
 
         public override void Use(PlayerEntity player, ItemStack item)
