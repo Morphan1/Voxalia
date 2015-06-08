@@ -5,3 +5,5 @@ debug/
 *.pdb
 *.exe
 *.pak
+clientdefaultsettings.cfg
+serverdefaultsettings.cfg
