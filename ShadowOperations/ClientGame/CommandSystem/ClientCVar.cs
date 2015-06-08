@@ -19,7 +19,7 @@ namespace ShadowOperations.ClientGame.CommandSystem
         public CVarSystem system;
 
         // System CVars
-        public CVar s_filepath;
+        public CVar s_filepath, s_glversion, s_glrenderer, s_glvendor;
 
         // Network CVars
         public CVar n_first;
@@ -45,6 +45,9 @@ namespace ShadowOperations.ClientGame.CommandSystem
 
             // System CVars
             s_filepath = Register("s_filepath", FileHandler.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly); // The current system environment filepath (The directory of /data).
+            s_glversion = Register("s_glversion", "UNKNOWN", CVarFlag.Textual | CVarFlag.ReadOnly); // What version of OpenGL is in use.
+            s_glrenderer = Register("s_glrenderer", "UNKNOWN", CVarFlag.Textual | CVarFlag.ReadOnly); // What renderer for OpenGL is in use.
+            s_glvendor = Register("s_glvendor", "UNKNOWN", CVarFlag.Textual | CVarFlag.ReadOnly); // What graphics card vendor made the device being used for rendering.
             // Network CVars
             n_first = Register("n_first", "ipv4", CVarFlag.Textual); // Whether to prefer IPv4 or IPv6.
             // Renderer CVars

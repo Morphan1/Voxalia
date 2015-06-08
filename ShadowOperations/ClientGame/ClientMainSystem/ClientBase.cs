@@ -103,6 +103,10 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         public PlayerEntity Player;
 
+        public string GLVendor;
+        public string GLVersion;
+        public string GLRenderer;
+
         void Window_Load(object sender, EventArgs e)
         {
             SysConsole.Output(OutputType.INIT, "Window generated!");
@@ -112,9 +116,13 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             ItemFrame = Textures.GetTexture("ui/item_frame");
             SysConsole.Output(OutputType.INIT, "Loading shaders...");
             Shaders = new ShaderEngine();
-            string vendor = GL.GetString(StringName.Vendor);
-            SysConsole.Output(OutputType.INIT, "Found vendor " + vendor);
-            if (vendor.ToLower().Contains("intel"))
+            GLVendor = GL.GetString(StringName.Vendor);
+            CVars.s_glvendor.Value = GLVendor;
+            GLVersion = GL.GetString(StringName.Version);
+            CVars.s_glversion.Value = GLVersion;
+            GLRenderer = GL.GetString(StringName.Renderer);
+            CVars.s_glrenderer.Value = GLRenderer;
+            if (GLVendor.ToLower().Contains("intel"))
             {
                 Shaders.MCM_GOOD_GRAPHICS = false;
             }
