@@ -357,6 +357,12 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 cit.Info.Click(this, cit);
                 LastClick = TheServer.GlobalTickTime;
+                WasClicking = true;
+            }
+            else if (WasClicking)
+            {
+                cit.Info.ReleaseClick(this, cit);
+                WasClicking = false;
             }
             if (AltClick)
             {
@@ -367,6 +373,8 @@ namespace ShadowOperations.ServerGame.EntitySystem
         }
 
         public double LastClick = 0;
+
+        public bool WasClicking = false;
 
         public double LastAltClick = 0;
 

@@ -25,6 +25,10 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
         {
         }
 
+        public override void ReleaseClick(EntitySystem.PlayerEntity player, ItemStack item)
+        {
+        }
+
         public override void Use(EntitySystem.PlayerEntity player, ItemStack item)
         {
         }
