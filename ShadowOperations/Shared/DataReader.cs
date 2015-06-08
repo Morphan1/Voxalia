@@ -12,5 +12,15 @@ namespace ShadowOperations.Shared
             : base(stream, FileHandler.encoding)
         {
         }
+
+        public int ReadInt()
+        {
+            return Utilities.BytesToInt(base.ReadBytes(4));
+        }
+
+        public string ReadString(int length)
+        {
+            return FileHandler.encoding.GetString(base.ReadBytes(length));
+        }
     }
 }

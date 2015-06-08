@@ -56,24 +56,22 @@ namespace ShadowOperations.Shared
             byte[] b_desc = FileHandler.encoding.GetBytes(Description);
             byte[] b_tex = FileHandler.encoding.GetBytes(GetTextureName());
             byte[] b_model = FileHandler.encoding.GetBytes(GetModelName());
-            byte[] data = new byte[4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4 + 4 + 4 + b_model.Length];
-            Utilities.IntToBytes(Count).CopyTo(data, 0);
-            Utilities.IntToBytes(b_name.Length).CopyTo(data, 4);
-            Utilities.IntToBytes(b_dname.Length).CopyTo(data, 4 + 4);
-            Utilities.IntToBytes(b_desc.Length).CopyTo(data, 4 + 4 + 4);
-            Utilities.IntToBytes(b_tex.Length).CopyTo(data, 4 + 4 + 4 + 4);
-            b_name.CopyTo(data, 4 + 4 + 4 + 4 + 4);
-            b_dname.CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length);
-            b_desc.CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length);
-            b_tex.CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length);
-            Utilities.IntToBytes(Datum).CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length);
-            Utilities.IntToBytes(DrawColor).CopyTo(data, 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4);
-            int cur = 4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4 + 4;
-            Utilities.IntToBytes(b_model.Length).CopyTo(data, cur);
-            cur += 4;
-            b_model.CopyTo(data, cur);
-            cur += b_model.Length;
-            return data;
+            DataStream ds = new DataStream(4 + 4 + 4 + 4 + 4 + b_name.Length + b_dname.Length + b_desc.Length + b_tex.Length + 4 + 4 + 4 + b_model.Length);
+            DataWriter dw = new DataWriter(ds);
+            dw.WriteInt(Count);
+            dw.WriteInt(b_name.Length);
+            dw.WriteInt(b_dname.Length);
+            dw.WriteInt(b_desc.Length);
+            dw.WriteInt(b_tex.Length);
+            dw.WriteBytes(b_name);
+            dw.WriteBytes(b_dname);
+            dw.WriteBytes(b_desc);
+            dw.WriteBytes(b_tex);
+            dw.WriteInt(Datum);
+            dw.WriteInt(DrawColor);
+            dw.WriteInt(b_model.Length);
+            dw.WriteBytes(b_model);
+            return ds.ToArray();
         }
 
         public virtual void SetName(string name)
@@ -95,33 +93,36 @@ namespace ShadowOperations.Shared
 
         public void Load(byte[] data)
         {
-            if (data.Length < 4 + 4 + 4 + 4 + 4)
+            int flen = 4 + 4 + 4 + 4 + 4;
+            if (data.Length < flen)
             {
                 throw new Exception("Invalid item stack bytes!");
             }
-            Count = Utilities.BytesToInt(Utilities.BytesPartial(data, 0, 4));
-            int c_name = Utilities.BytesToInt(Utilities.BytesPartial(data, 4, 4));
-            int c_dname = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4, 4));
-            int c_desc = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4, 4));
-            int c_tex = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4 + 4, 4));
-            if (data.Length < 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex + 4 + 4)
+            DataStream ds = new DataStream(data);
+            DataReader dr = new DataReader(ds);
+            Count = dr.ReadInt();
+            int c_name = dr.ReadInt();
+            int c_dname = dr.ReadInt();
+            int c_desc = dr.ReadInt();
+            int c_tex = dr.ReadInt();
+            flen += c_name + c_dname + c_desc + c_tex + 4 + 4 + 4;
+            if (data.Length < flen)
             {
                 throw new Exception("Invalid item stack bytes!");
             }
-            SetName(FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4, c_name));
-            DisplayName = FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4 + c_name, c_dname);
-            Description = FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname, c_desc);
-            SetTextureName(FileHandler.encoding.GetString(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc, c_tex));
-            Datum = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex, 4));
-            DrawColor = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex + 4, 4));
-            int cur = 4 + 4 + 4 + 4 + 4 + c_name + c_dname + c_desc + c_tex + 4 + 4;
-            int c_model = Utilities.BytesToInt(Utilities.BytesPartial(data, cur, 4));
-            cur += 4;
-            if (data.Length < cur + c_model)
+            SetName(dr.ReadString(c_name));
+            DisplayName = dr.ReadString(c_dname);
+            Description = dr.ReadString(c_desc);
+            SetTextureName(dr.ReadString(c_tex));
+            Datum = dr.ReadInt();
+            DrawColor = dr.ReadInt();
+            int c_model = dr.ReadInt();
+            flen += c_model;
+            if (data.Length < flen)
             {
                 throw new Exception("Invalid item stack bytes!");
             }
-            SetModelName(FileHandler.encoding.GetString(data, cur, c_model));
+            SetModelName(dr.ReadString(c_model));
         }
     }
 }

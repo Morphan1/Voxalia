@@ -27,5 +27,10 @@ namespace ShadowOperations.Shared
             : base()
         {
         }
+
+        public DataStream(int capacity)
+            : base(capacity)
+        {
+        }
     }
 }
