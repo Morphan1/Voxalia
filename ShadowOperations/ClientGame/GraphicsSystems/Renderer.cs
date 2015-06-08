@@ -230,12 +230,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Box.GenerateVBO();
         }
 
-        public Renderer(TextureEngine tengine)
+        public Renderer(TextureEngine tengine, ShaderEngine shaderdet)
         {
             Engine = tengine;
+            Shaders = shaderdet;
         }
 
         public TextureEngine Engine;
+        public ShaderEngine Shaders;
 
         /// <summary>
         /// Renders a black line box.

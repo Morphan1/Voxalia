@@ -309,7 +309,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     }
                 }
             }
-            GL.UniformMatrix4(7, bones, false, floats);
+            GL.UniformMatrix4(8, bones, false, floats);
         }
 
         public void Render(bool texture)

@@ -48,6 +48,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 TheClient.Rendering.SetColor(Color4.Red);
                 TheClient.Rendering.RenderLine(GetPosition(), GetPosition() - Velocity / 10f);
+                TheClient.Rendering.SetColor(Color4.White);
             }
         }
     }

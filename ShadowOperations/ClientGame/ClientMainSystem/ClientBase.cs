@@ -129,7 +129,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             Models = new ModelEngine();
             Models.Init(Animations);
             SysConsole.Output(OutputType.INIT, "Loading rendering helper...");
-            Rendering = new Renderer(Textures);
+            Rendering = new Renderer(Textures, Shaders);
             Rendering.Init();
             SysConsole.Output(OutputType.INIT, "Loading UI Console...");
             UIConsole.InitConsole();
