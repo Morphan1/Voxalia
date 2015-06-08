@@ -1,4 +1,5 @@
 #version 430 core
+#INCLUDE_STATEMENTS_HERE
 
 layout (binding = 0) uniform sampler2D pre_lighttex;
 layout (binding = 1) uniform sampler2D positiontex;
@@ -95,8 +96,4 @@ void main()
 	color = vec4((prelight_color + (vec4(depth, depth, depth, 1.0) *
 		atten * (/*mix(vec4(1.0), diffuse, bvec4(1.0))*/diffuse * vec4(light_color, 1.0)) * diffuset) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, diffuset.w);
-	//color = (diffuse * vec4(light_color, 1.0));
-	/*prelight_color + (vec4(depth, depth, depth, 1.0) *
-		atten * (mix(vec4(1.0), diffuse, bvec4(1.0)) * vec4(light_color, 1.0)) * diffuset) +
-		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth);*/
 }

@@ -162,7 +162,11 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             int FragmentObject = GL.CreateShader(ShaderType.FragmentShader);
             if (MCM_GOOD_GRAPHICS)
             {
-                FS = "#define MCM_GOOD_GRAPHICS\n" + FS;
+                FS = FS.Replace("#INCLUDE_STATEMENTS_HERE", "#define MCM_GOOD_GRAPHICS");
+            }
+            else
+            {
+                FS = FS.Replace("#INCLUDE_STATEMENTS_HERE", "");
             }
             GL.ShaderSource(FragmentObject, FS);
             GL.CompileShader(FragmentObject);
