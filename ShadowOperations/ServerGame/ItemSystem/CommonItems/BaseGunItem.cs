@@ -82,6 +82,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 
         public override void SwitchFrom(PlayerEntity player, ItemStack item)
         {
+            player.WaitingForClickRelease = false;
         }
 
         public override void SwitchTo(PlayerEntity player, ItemStack item)
