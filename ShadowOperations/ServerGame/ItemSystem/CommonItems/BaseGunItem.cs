@@ -10,7 +10,8 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 {
     public abstract class BaseGunItem: BaseItemInfo
     {
-        public BaseGunItem(string name, float round_size, float impact_damage, float splash_size, float splash_max_damage, float shot_speed, int clip_size, string ammo_type, float spread, int shots, float fire_rate)
+        public BaseGunItem(string name, float round_size, float impact_damage, float splash_size, float splash_max_damage,
+            float shot_speed, int clip_size, string ammo_type, float spread, int shots, float fire_rate, float reload_delay, bool shot_per_click)
         {
             Name = name;
             RoundSize = round_size;
@@ -23,6 +24,8 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             Spread = spread;
             Shots = shots;
             FireRate = fire_rate;
+            ReloadDelay = reload_delay;
+            ShotPerClick = shot_per_click;
         }
 
         public float RoundSize;
@@ -35,6 +38,8 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
         public float Spread;
         public int Shots;
         public float FireRate;
+        public float ReloadDelay;
+        public bool ShotPerClick;
 
         public override void PrepItem(PlayerEntity player, ItemStack item)
         {
@@ -42,7 +47,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 
         public override void Click(PlayerEntity player, ItemStack item)
         {
-            if (item.Datum != 0 && !player.WaitingForClickRelease && (FireRate == -1 || player.TheServer.GlobalTickTime - player.LastGunShot >= FireRate))
+            if (item.Datum != 0 && !player.WaitingForClickRelease && (player.TheServer.GlobalTickTime - player.LastGunShot >= FireRate))
             {
                 for (int i = 0; i < Shots; i++)
                 {
@@ -59,7 +64,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
                     be.SplashDamage = SplashMaxDamage;
                     player.TheServer.SpawnEntity(be);
                 }
-                if (FireRate == -1)
+                if (ShotPerClick)
                 {
                     player.WaitingForClickRelease = true;
                 }
@@ -69,34 +74,43 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             else if (item.Datum == 0 && !player.WaitingForClickRelease)
             {
                 Reload(player, item);
+                player.WaitingForClickRelease = true;
+                player.LastGunShot = player.TheServer.GlobalTickTime + ReloadDelay;
             }
         }
 
-        public void Reload(PlayerEntity player, ItemStack item)
+        public bool Reload(PlayerEntity player, ItemStack item)
         {
             if (item.Datum < ClipSize)
             {
-                ItemStack ammo = null;
-                foreach (ItemStack itemStack in player.Items)
+                for (int i = 0; i < player.Items.Count; i++)
                 {
+                    ItemStack itemStack = player.Items[i];
                     if (itemStack.Info is BulletItem && itemStack.SecondaryName == AmmoType)
                     {
-                        ammo = itemStack;
-                        break;
+                        if (itemStack.Count > 0)
+                        {
+                            int reloading = ClipSize - item.Datum;
+                            if (reloading > itemStack.Count)
+                            {
+                                reloading = itemStack.Count;
+                            }
+                            item.Datum += reloading;
+                            itemStack.Count -= reloading;
+                            if (itemStack.Count <= 0)
+                            {
+                                player.RemoveItem(i + 1);
+                            }
+                            else
+                            {
+                                player.Network.SendPacket(new SetItemPacketOut(i, itemStack));
+                            }
+                        }
+                        return true;
                     }
-                }
-                if (ammo != null && ammo.Count > 0)
-                {
-                    int reloading = ClipSize - item.Datum;
-                    if (reloading > ammo.Count)
-                    {
-                        reloading = ammo.Count;
-                    }
-                    item.Datum += reloading;
-                    ammo.Count -= reloading;
-                    player.Network.SendPacket(new SetItemPacketOut(player.Items.IndexOf(ammo), ammo));
                 }
             }
+            return false;
         }
 
         public override void AltClick(PlayerEntity player, ItemStack item)

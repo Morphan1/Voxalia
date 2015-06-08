@@ -22,6 +22,10 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 ((BaseGunItem)item.Info).Reload(entry.Player, item);
             }
+            else
+            {
+                entry.Player.Network.SendMessage("You can't reload that."); // TODO: Language, etc.
+            }
         }
     }
 }
