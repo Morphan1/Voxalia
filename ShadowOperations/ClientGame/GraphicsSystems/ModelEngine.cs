@@ -22,6 +22,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         public Model Cube;
 
+        public Model Cylinder;
+
         /// <summary>
         /// Prepares the model system.
         /// </summary>
@@ -31,7 +33,9 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Handler = new ModelHandler();
             LoadedModels = new List<Model>();
             Cube = FromBytes("cube", FileHandler.encoding.GetBytes(ModelHandler.CubeData));
+            Cylinder = FromBytes("cylinder", FileHandler.encoding.GetBytes(ModelHandler.CylinderData));
             LoadedModels.Add(Cube);
+            LoadedModels.Add(Cylinder);
         }
 
         public void Update(double time)

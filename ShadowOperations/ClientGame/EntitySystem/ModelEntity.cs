@@ -78,6 +78,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
             Matrix4 mat = transform * (Matrix4.CreateScale(scale.ToOVector()) * orient * Matrix4.CreateTranslation((GetPosition()).ToOVector()));
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
+            if (model.Meshes[0].vbo.Tex == null)
+            {
+                TheClient.Textures.White.Bind();
+            }
             model.Draw(); // TODO: Animation?
         }
     }
