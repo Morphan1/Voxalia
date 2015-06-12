@@ -14,6 +14,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             : base(tserver)
         {
             Collide += new EventHandler<CollisionEventArgs>(OnCollide);
+            Gravity = Location.FromBVector(tserver.PhysicsWorld.ForceUpdater.Gravity);
         }
 
         public void OnCollide(object sender, CollisionEventArgs args)

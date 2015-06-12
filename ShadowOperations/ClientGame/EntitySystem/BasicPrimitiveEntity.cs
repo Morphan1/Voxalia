@@ -36,6 +36,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             }
             if (model != null)
             {
+                TheClient.Rendering.SetMinimumLight(0f);
                 BEPUutilities.Matrix matang = BEPUutilities.Matrix.CreateFromQuaternion(Angles);
                 //matang.Transpose();
                 Matrix4 matang4 = new Matrix4(matang.M11, matang.M12, matang.M13, matang.M14, matang.M21, matang.M22, matang.M23, matang.M24,
@@ -46,8 +47,11 @@ namespace ShadowOperations.ClientGame.EntitySystem
             }
             else
             {
+                TheClient.Rendering.SetMinimumLight(1f);
                 TheClient.Rendering.SetColor(Color4.Red);
+                GL.LineWidth(5);
                 TheClient.Rendering.RenderLine(GetPosition(), GetPosition() - Velocity / 10f);
+                GL.LineWidth(1);
                 TheClient.Rendering.SetColor(Color4.White);
             }
         }
