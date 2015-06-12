@@ -21,6 +21,9 @@ namespace ShadowOperations.ServerGame.CommandSystem
         // System CVars
         public CVar s_filepath;
 
+        // Game CVars
+        public CVar g_timescale;
+
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
         /// </summary>
@@ -30,6 +33,8 @@ namespace ShadowOperations.ServerGame.CommandSystem
 
             // System CVars
             s_filepath = Register("s_filepath", FileHandler.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly); // The current system environment filepath (The directory of /data).
+            // Game CVars
+            g_timescale = Register("g_timescale", "1", CVarFlag.Numeric); // The current game time scaling value.
         }
 
         CVar Register(string name, string value, CVarFlag flags)

@@ -179,8 +179,14 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 19:
                             packet = new RemoveItemPacketIn();
                             break;
+                        case 20:
+                            // packet = new JointStatusPacketIn();
+                            throw new NotImplementedException();
                         case 21:
                             packet = new SetItemPacketIn();
+                            break;
+                        case 22:
+                            packet = new CVarSetPacketIn();
                             break;
                         default:
                             throw new Exception("Invalid packet ID: " + packetID);

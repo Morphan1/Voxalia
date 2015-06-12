@@ -140,7 +140,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
 
         void Window_UpdateFrame(object sender, FrameEventArgs e)
         {
-            Delta = e.Time;
+            Delta = e.Time * CVars.g_timescale.ValueD;
             GlobalTickTimeLocal += Delta;
             try
             {

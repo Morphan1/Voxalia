@@ -166,12 +166,14 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             }
         }
 
+        double pts;
+
         /// <summary>
         /// The server's primary tick function.
         /// </summary>
         public void Tick(double delta)
         {
-            Delta = delta;
+            Delta = delta * CVars.g_timescale.ValueD;
             GlobalTickTime += Delta;
             try
             {
@@ -181,6 +183,11 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                     opsat -= 1;
                     OncePerSecondActions();
                 }
+                if (CVars.g_timescale.ValueD != pts)
+                {
+                    SendToAll(new CVarSetPacketOut(CVars.g_timescale, this));
+                }
+                pts = CVars.g_timescale.ValueD;
                 Networking.Tick();
                 ConsoleHandler.CheckInput();
                 Commands.Tick();
