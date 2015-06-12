@@ -273,6 +273,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             {
                 Players.Add((PlayerEntity)e);
                 ((PlayerEntity)e).Network.SendPacket(new YourEIDPacketOut(e.EID));
+                ((PlayerEntity)e).Network.SendPacket(new CVarSetPacketOut(CVars.g_timescale, this));
                 for (int i = 0; i < Networking.Strings.Strings.Count; i++)
                 {
                     ((PlayerEntity)e).Network.SendPacket(new NetStringPacketOut(Networking.Strings.Strings[i]));
