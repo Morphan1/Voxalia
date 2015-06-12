@@ -273,11 +273,11 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             {
                 Players.Add((PlayerEntity)e);
                 ((PlayerEntity)e).Network.SendPacket(new YourEIDPacketOut(e.EID));
-                ((PlayerEntity)e).Network.SendPacket(new CVarSetPacketOut(CVars.g_timescale, this));
                 for (int i = 0; i < Networking.Strings.Strings.Count; i++)
                 {
                     ((PlayerEntity)e).Network.SendPacket(new NetStringPacketOut(Networking.Strings.Strings[i]));
                 }
+                ((PlayerEntity)e).Network.SendPacket(new CVarSetPacketOut(CVars.g_timescale, this));
                 ((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 0);
                 ((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 1);
                 ((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 2);

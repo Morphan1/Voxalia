@@ -16,8 +16,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
             string cvarvalue = dr.ReadFullString();
             string cvarname = TheClient.Network.Strings.StringForIndex(cvarname_id);
             CVar cvar = TheClient.CVars.system.Get(cvarname);
-            if (!cvar.Flags.HasFlag(CVarFlag.ServerControl))
+            if (cvar == null || !cvar.Flags.HasFlag(CVarFlag.ServerControl))
             {
+                SysConsole.Output(OutputType.WARNING, "Invalid CVar " + cvarname);
                 return false;
             }
             cvar.Set(cvarvalue, true);

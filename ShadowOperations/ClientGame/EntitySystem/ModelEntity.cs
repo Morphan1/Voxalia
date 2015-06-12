@@ -46,7 +46,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 Shape = TheClient.Models.Handler.MeshToBepu(model.OriginalModel);
             }
-            else
+            else if (mode == ModelCollisionMode.AABB)
             {
                 List<BEPUutilities.Vector3> vecs = TheClient.Models.Handler.GetCollisionVertices(model.OriginalModel);
                 Location zero = Location.FromBVector(vecs[0]);
@@ -59,6 +59,22 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 Location center = abox.Max - size / 2;
                 Shape = new BoxShape((float)size.X, (float)size.Y, (float)size.Z);
                 Offset = -center;
+            }
+            else
+            {
+                List<BEPUutilities.Vector3> vecs = TheClient.Models.Handler.GetCollisionVertices(model.OriginalModel);
+                Location zero = new Location(vecs[0].X, vecs[0].Y, vecs[0].Z);
+                double distSq = 0;
+                for (int v = 1; v < vecs.Count; v++)
+                {
+                    if (vecs[v].LengthSquared() > distSq)
+                    {
+                        distSq = vecs[v].LengthSquared();
+                    }
+                }
+                double size = Math.Sqrt(distSq);
+                Offset = Location.Zero;
+                Shape = new SphereShape((float)size);
             }
             base.SpawnBody();
             if (mode == ModelCollisionMode.PRECISE)
