@@ -163,7 +163,9 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     GL.ActiveTexture(TextureUnit.Texture0);
                     RS4P.Bind();
                     // TODO: Render settings
+                    RenderLights = true;
                     Render3D(false);
+                    RenderLights = false;
                     RS4P.Unbind();
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
                     GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });

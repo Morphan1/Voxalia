@@ -261,11 +261,30 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         {
             float len = (float)(end - start).Length();
             Location vecang = Utilities.VectorToAngles(start - end);
-            Matrix4 mat = Matrix4.CreateScale(len, len, len) * Matrix4.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
-                * Matrix4.CreateRotationY((float)(-vecang.Y * Utilities.PI180)) * Matrix4.CreateTranslation(start.ToOVector());
+            Matrix4 mat = Matrix4.CreateScale(len, 1, 1)
+                * Matrix4.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
+                * Matrix4.CreateRotationY((float)(-vecang.Y * Utilities.PI180))
+                * Matrix4.CreateTranslation(start.ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Line._VAO);
             GL.DrawElements(PrimitiveType.Lines, 2, DrawElementsType.UnsignedInt, IntPtr.Zero);
+        }
+
+        /// <summary>
+        /// Render a cylinder between two points.
+        /// </summary>
+        /// <param name="start">The initial point</param>
+        /// <param name="end">The ending point</param>
+        public void RenderCylinder(Location start, Location end, float width)
+        {
+            float len = (float)(end - start).Length();
+            Location vecang = Utilities.VectorToAngles(start - end);
+            Matrix4 mat = Matrix4.CreateScale(width, width, len)
+                * Matrix4.CreateRotationY((float)((-vecang.Y + 90) * Utilities.PI180))
+                 * Matrix4.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
+                 * Matrix4.CreateTranslation(start.ToOVector());
+            GL.UniformMatrix4(2, false, ref mat);
+            Client.Central.Models.Cylinder.Draw(); // TODO: Models reference in constructor
         }
 
         public void SetColor(Color4 c)
