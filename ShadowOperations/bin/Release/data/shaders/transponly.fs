@@ -10,10 +10,9 @@ out vec4 color;
 void main()
 {
 	vec4 tcolor = texture(tex, vec2(f_texcoord.x, f_texcoord.y));
-	if (tcolor.w >= 0.9)
+	if (tcolor.w * f_color.w >= 0.9)
 	{
 		discard;
 	}
-	color = vec4(tcolor[0] * f_color[0], tcolor[1] * f_color[1],
-				 tcolor[2] * f_color[2], tcolor[3] * f_color[3]);
+	color = tcolor * f_color;
 }

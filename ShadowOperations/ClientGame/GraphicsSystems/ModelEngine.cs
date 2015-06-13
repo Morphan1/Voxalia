@@ -24,6 +24,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         public Model Cylinder;
 
+        public Model Sphere;
+
         /// <summary>
         /// Prepares the model system.
         /// </summary>
@@ -36,6 +38,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Cylinder = FromBytes("cylinder", FileHandler.encoding.GetBytes(ModelHandler.CylinderData));
             LoadedModels.Add(Cube);
             LoadedModels.Add(Cylinder);
+            Sphere = GetModel("common/sphere_basic.dae");
         }
 
         public void Update(double time)

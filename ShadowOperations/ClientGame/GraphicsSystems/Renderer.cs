@@ -262,8 +262,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             float len = (float)(end - start).Length();
             Location vecang = Utilities.VectorToAngles(start - end);
             Matrix4 mat = Matrix4.CreateScale(len, 1, 1)
+                * Matrix4.CreateRotationY((float)(vecang.Y * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
-                * Matrix4.CreateRotationY((float)(-vecang.Y * Utilities.PI180))
                 * Matrix4.CreateTranslation(start.ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Line._VAO);
@@ -279,9 +279,10 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         {
             float len = (float)(end - start).Length();
             Location vecang = Utilities.VectorToAngles(start - end);
-            Matrix4 mat = Matrix4.CreateScale(width, width, len)
-                * Matrix4.CreateRotationY((float)((-vecang.Y + 90) * Utilities.PI180))
-                 * Matrix4.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
+            Matrix4 mat = Matrix4.CreateRotationY((float)(90 * Utilities.PI180))
+                * Matrix4.CreateScale(len, width, width)
+                * Matrix4.CreateRotationY((float)(vecang.Y * Utilities.PI180))
+                * Matrix4.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
                  * Matrix4.CreateTranslation(start.ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
             Client.Central.Models.Cylinder.Draw(); // TODO: Models reference in constructor
@@ -289,8 +290,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         public void SetColor(Color4 c)
         {
-            Vector3 col = new Vector3(c.R, c.G, c.B);
-            GL.Uniform3(3, ref col);
+            Vector4 col = new Vector4(c.R, c.G, c.B, c.A);
+            GL.Uniform4(3, ref col);
         }
 
         public void SetMinimumLight(float min)

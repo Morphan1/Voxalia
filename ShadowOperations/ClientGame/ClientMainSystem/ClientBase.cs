@@ -14,6 +14,7 @@ using ShadowOperations.ClientGame.CommandSystem;
 using System.Diagnostics;
 using ShadowOperations.ClientGame.NetworkSystem;
 using ShadowOperations.ClientGame.AudioSystem;
+using ShadowOperations.ClientGame.GraphicsSystems.ParticleSystem;
 
 namespace ShadowOperations.ClientGame.ClientMainSystem
 {
@@ -100,6 +101,7 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
         public ModelEngine Models;
         public AnimationEngine Animations;
         public SoundEngine Sounds;
+        public ParticleEngine Particles;
 
         public PlayerEntity Player;
 
@@ -144,6 +146,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             UIConsole.InitConsole();
             SysConsole.Output(OutputType.INIT, "Preparing rendering engine...");
             InitRendering();
+            SysConsole.Output(OutputType.INIT, "Loading particle effect engine...");
+            Particles = new ParticleEngine(this);
             SysConsole.Output(OutputType.INIT, "Preparing mouse and keyboard handlers...");
             MouseHandler.CaptureMouse();
             KeyHandler.Init();

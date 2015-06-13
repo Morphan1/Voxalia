@@ -311,7 +311,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 {
                     Entities[i].Render();
                 }
-                Rendering.SetMinimumLight(1.0f);
+                Rendering.SetMinimumLight(1f);
+                Particles.Render();
             }
             Textures.White.Bind();
             for (int i = 0; i < Joints.Count; i++)

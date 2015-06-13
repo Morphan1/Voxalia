@@ -8,6 +8,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using ShadowOperations.ClientGame.GraphicsSystems;
+using ShadowOperations.ClientGame.GraphicsSystems.ParticleSystem;
 
 namespace ShadowOperations.ClientGame.EntitySystem
 {
@@ -26,7 +27,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public override void Spawn()
         {
+            ppos = Position;
         }
+
+        Location ppos = Location.Zero;
 
         public override void Render()
         {
@@ -48,9 +52,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
             else
             {
                 TheClient.Rendering.SetMinimumLight(1f);
-                TheClient.Rendering.SetColor(Color4.Red);
-                TheClient.Rendering.RenderCylinder(GetPosition(), GetPosition() - Velocity / 10f, 0.2f);
                 TheClient.Rendering.SetColor(Color4.White);
+                TheClient.Rendering.RenderCylinder(GetPosition(), GetPosition() - Velocity / 10f, 0.05f);
+                TheClient.Particles.AddEffect(ParticleEffectType.CYLINDER, ppos, Position, 0.05f, 2f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"));
+                ppos = Position;
             }
         }
     }

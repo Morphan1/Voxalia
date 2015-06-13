@@ -111,6 +111,7 @@
     <Compile Include="ClientGame\GraphicsSystems\LightingSystem\LightObject.cs" />
     <Compile Include="ClientGame\GraphicsSystems\LightingSystem\PointLight.cs" />
     <Compile Include="ClientGame\GraphicsSystems\LightingSystem\SpotLight.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\ParticleSystem\ParticleEffectType.cs" />
     <Compile Include="ClientGame\GraphicsSystems\ParticleSystem\ParticleEngine.cs" />
     <Compile Include="ClientGame\GraphicsSystems\ParticleSystem\ParticleEffect.cs" />
     <Compile Include="ClientGame\GraphicsSystems\ModelEngine.cs" />
