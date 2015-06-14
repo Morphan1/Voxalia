@@ -134,6 +134,10 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
         public override void SwitchFrom(PlayerEntity player, ItemStack item)
         {
             player.WaitingForClickRelease = false;
+            player.LastGunShot = 0;
+            player.Flags &= ~YourStatusFlags.RELOADING;
+            player.Flags &= ~YourStatusFlags.NEEDS_RELOAD;
+            UpdatePlayer(player);
         }
 
         public override void SwitchTo(PlayerEntity player, ItemStack item)

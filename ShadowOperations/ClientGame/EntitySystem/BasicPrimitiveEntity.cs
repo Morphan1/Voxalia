@@ -53,8 +53,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
             {
                 TheClient.Rendering.SetMinimumLight(1f);
                 TheClient.Rendering.SetColor(Color4.White);
-                TheClient.Rendering.RenderCylinder(GetPosition(), GetPosition() - Velocity / 10f, 0.05f);
-                TheClient.Particles.AddEffect(ParticleEffectType.CYLINDER, ppos, Position, 0.05f, 2f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"));
+                TheClient.Rendering.RenderCylinder(GetPosition(), GetPosition() - Velocity / 20f, 0.01f);
+                TheClient.Particles.AddEffect(ParticleEffectType.CYLINDER, ppos, Position, 0.01f, 2f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"));
                 ppos = Position;
             }
         }
