@@ -188,6 +188,9 @@ namespace ShadowOperations.ClientGame.NetworkSystem
                         case 22:
                             packet = new CVarSetPacketIn();
                             break;
+                        case 23:
+                            packet = new SetHeldItemPacketIn();
+                            break;
                         default:
                             throw new Exception("Invalid packet ID: " + packetID);
                     }

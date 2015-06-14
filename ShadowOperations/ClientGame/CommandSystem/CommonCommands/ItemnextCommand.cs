@@ -6,6 +6,7 @@ using Frenetic.CommandSystem;
 using ShadowOperations.ClientGame.ClientMainSystem;
 using ShadowOperations.ClientGame.NetworkSystem.PacketsOut;
 using ShadowOperations.ClientGame.NetworkSystem.PacketsIn;
+using ShadowOperations.Shared;
 
 namespace ShadowOperations.ClientGame.CommandSystem.CommonCommands
 {

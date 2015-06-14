@@ -19,7 +19,12 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
 
         public override void Execute(PlayerCommandEntry entry)
         {
-            ItemStack stack = entry.Player.GetItemForSlot(entry.Player.cItem);
+            int it = entry.Player.cItem;
+            if (entry.InputArguments.Count > 0)
+            {
+                it = Utilities.StringToInt(entry.InputArguments[0]);
+            }
+            ItemStack stack = entry.Player.GetItemForSlot(it);
             if (stack.IsBound)
             {
                 if (stack.Info == entry.Player.TheServer.Items.GetInfoFor("open_hand"))

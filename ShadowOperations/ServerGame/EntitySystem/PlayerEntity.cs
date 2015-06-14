@@ -189,7 +189,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
             }
             Items.RemoveAt(item - 1);
             Network.SendPacket(new RemoveItemPacketOut(item - 1));
-            // TODO: Forceswitch player to the item they were already holding if needed
+            if (item <= cItem)
+            {
+                cItem--;
+                Network.SendPacket(new SetHeldItemPacketOut(cItem));
+            }
         }
 
         public bool IgnoreThis(BroadPhaseEntry entry)

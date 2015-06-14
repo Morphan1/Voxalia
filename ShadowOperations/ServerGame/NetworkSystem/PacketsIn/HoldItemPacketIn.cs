@@ -18,15 +18,20 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsIn
             }
             if (Player.Flags.HasFlag(YourStatusFlags.RELOADING))
             {
-                // TODO: Send correction packet
+                Player.Network.SendPacket(new SetHeldItemPacketOut(Player.cItem));
                 return true; // Permit but ignore
             }
             int dat = Utilities.BytesToInt(data);
+            dat = dat % (Player.Items.Count + 1);
+            while (dat < 0)
+            {
+                dat += Player.Items.Count + 1;
+            }
             ItemStack old = Player.GetItemForSlot(Player.cItem);
             old.Info.SwitchFrom(Player, old);
             Player.cItem = dat;
             ItemStack newit = Player.GetItemForSlot(Player.cItem);
-            newit.Info.SwitchFrom(Player, newit);
+            newit.Info.SwitchTo(Player, newit);
             return true;
         }
     }
