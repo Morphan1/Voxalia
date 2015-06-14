@@ -73,6 +73,10 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
         public override void Use(PlayerEntity player, ItemStack item)
         {
         }
+
+        public override void Tick(PlayerEntity player, ItemStack item)
+        {
+        }
     }
 
     public class HookInfo

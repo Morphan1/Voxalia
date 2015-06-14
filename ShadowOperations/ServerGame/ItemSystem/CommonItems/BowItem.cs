@@ -18,6 +18,10 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
         {
         }
 
+        public override void Tick(PlayerEntity player, ItemStack item)
+        {
+        }
+
         public float Speed = 10;
 
         public override void Click(PlayerEntity player, ItemStack item)

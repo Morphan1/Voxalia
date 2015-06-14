@@ -5,6 +5,7 @@ using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ClientGame.ClientMainSystem;
 using ShadowOperations.ClientGame.UISystem;
+using ShadowOperations.ClientGame.NetworkSystem.PacketsIn;
 using ShadowOperations.ClientGame.NetworkSystem.PacketsOut;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
@@ -20,6 +21,8 @@ namespace ShadowOperations.ClientGame.EntitySystem
 {
     public class PlayerEntity: PhysicsEntity, EntityAnimated
     {
+        public YourStatusFlags ServerFlags = YourStatusFlags.NONE;
+
         public SingleAnimation hAnim;
         public SingleAnimation tAnim;
         public SingleAnimation lAnim;

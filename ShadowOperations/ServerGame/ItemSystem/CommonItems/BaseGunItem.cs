@@ -74,13 +74,15 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             else if (item.Datum == 0 && !player.WaitingForClickRelease)
             {
                 Reload(player, item);
-                player.WaitingForClickRelease = true;
-                player.LastGunShot = player.TheServer.GlobalTickTime + ReloadDelay;
             }
         }
 
         public bool Reload(PlayerEntity player, ItemStack item)
         {
+            if (player.Flags.HasFlag(YourStatusFlags.RELOADING))
+            {
+                return false;
+            }
             if (item.Datum < ClipSize)
             {
                 for (int i = 0; i < player.Items.Count; i++)
@@ -106,6 +108,9 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
                                 player.Network.SendPacket(new SetItemPacketOut(i, itemStack));
                             }
                         }
+                        player.Flags |= YourStatusFlags.RELOADING;
+                        player.WaitingForClickRelease = true;
+                        player.LastGunShot = player.TheServer.GlobalTickTime + ReloadDelay;
                         return true;
                     }
                 }
@@ -133,6 +138,35 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 
         public override void SwitchTo(PlayerEntity player, ItemStack item)
         {
+        }
+
+        public override void Tick(PlayerEntity player, ItemStack item)
+        {
+            if (player.Flags.HasFlag(YourStatusFlags.RELOADING) && (player.TheServer.GlobalTickTime - player.LastGunShot >= FireRate))
+            {
+                player.Flags &= ~YourStatusFlags.RELOADING;
+                UpdatePlayer(player);
+            }
+            else if (!player.Flags.HasFlag(YourStatusFlags.RELOADING) && (player.TheServer.GlobalTickTime - player.LastGunShot < FireRate))
+            {
+                player.Flags |= YourStatusFlags.RELOADING;
+                UpdatePlayer(player);
+            }
+            if (!player.Flags.HasFlag(YourStatusFlags.NEEDS_RELOAD) && item.Datum == 0)
+            {
+                player.Flags |= YourStatusFlags.NEEDS_RELOAD;
+                UpdatePlayer(player);
+            }
+            else if (player.Flags.HasFlag(YourStatusFlags.NEEDS_RELOAD) && item.Datum != 0)
+            {
+                player.Flags &= ~YourStatusFlags.NEEDS_RELOAD;
+                UpdatePlayer(player);
+            }
+        }
+
+        public void UpdatePlayer(PlayerEntity player)
+        {
+            player.Network.SendPacket(new YourStatusPacketOut(player.GetHealth(), player.GetMaxHealth(), player.Flags));
         }
     }
 }

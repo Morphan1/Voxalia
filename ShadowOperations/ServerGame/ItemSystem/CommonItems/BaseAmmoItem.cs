@@ -40,5 +40,9 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
         public override void SwitchTo(PlayerEntity player, ItemStack item)
         {
         }
+
+        public override void Tick(PlayerEntity player, ItemStack item)
+        {
+        }
     }
 }

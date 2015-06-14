@@ -374,6 +374,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 cit.Info.AltClick(this, cit);
                 LastAltClick = TheServer.GlobalTickTime;
             }
+            cit.Info.Tick(this, cit);
             base.Tick();
         }
 
@@ -441,16 +442,18 @@ namespace ShadowOperations.ServerGame.EntitySystem
             Direction.Pitch = ang.Pitch;
         }
 
+        public YourStatusFlags Flags = YourStatusFlags.NONE;
+
         public override void SetHealth(float health)
         {
             base.SetHealth(health);
-            Network.SendPacket(new YourStatusPacketOut(GetHealth(), GetMaxHealth()));
+            Network.SendPacket(new YourStatusPacketOut(GetHealth(), GetMaxHealth(), Flags));
         }
 
         public override void SetMaxHealth(float maxhealth)
         {
             base.SetMaxHealth(maxhealth);
-            Network.SendPacket(new YourStatusPacketOut(GetHealth(), GetMaxHealth()));
+            Network.SendPacket(new YourStatusPacketOut(GetHealth(), GetMaxHealth(), Flags));
         }
 
         public override void Die()

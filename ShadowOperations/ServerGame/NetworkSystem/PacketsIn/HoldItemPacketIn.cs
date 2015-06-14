@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.ItemSystem;
+using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
 
 namespace ShadowOperations.ServerGame.NetworkSystem.PacketsIn
 {
@@ -14,6 +15,11 @@ namespace ShadowOperations.ServerGame.NetworkSystem.PacketsIn
             if (data.Length != 4)
             {
                 return false;
+            }
+            if (Player.Flags.HasFlag(YourStatusFlags.RELOADING))
+            {
+                // TODO: Send correction packet
+                return true; // Permit but ignore
             }
             int dat = Utilities.BytesToInt(data);
             ItemStack old = Player.GetItemForSlot(Player.cItem);

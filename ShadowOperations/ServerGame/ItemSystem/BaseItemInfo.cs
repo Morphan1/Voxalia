@@ -23,5 +23,7 @@ namespace ShadowOperations.ServerGame.ItemSystem
         public abstract void SwitchFrom(PlayerEntity player, ItemStack item);
 
         public abstract void SwitchTo(PlayerEntity player, ItemStack item);
+
+        public abstract void Tick(PlayerEntity player, ItemStack item);
     }
 }

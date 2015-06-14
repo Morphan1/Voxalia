@@ -32,7 +32,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
         public Location vec3;
 
         /// <summary>
-        /// The distance from origin, in theory.
+        /// The distance from the origin.
         /// </summary>
         public double D;
 
@@ -73,7 +73,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             double nDotA = Normal.Dot(start);
             double nDotBA = Normal.Dot(ba);
             double t = -(nDotA + D) / (nDotBA);
-            if (t < 0)
+            if (t < 0) // || t > 1
             {
                 return Location.NaN;
             }

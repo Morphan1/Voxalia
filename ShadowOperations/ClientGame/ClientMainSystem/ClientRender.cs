@@ -352,6 +352,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
             RenderTextures = rt;
         }
 
+        public double RenderExtraItems = 0;
+
         public void Render2D()
         {
             GL.Disable(EnableCap.CullFace);
@@ -359,8 +361,23 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                 + "\n" + Player.GetPosition()
                 + "\n" + Player.GetVelocity() + " == " + Player.GetVelocity().Length()
                 + "\nLight source(s): " + Lights.Count
-                + "\nEntities: " + Entities.Count, new Location(0, 0, 0));
+                + "\nEntities: " + Entities.Count
+                + "\nFLAGS: " + Player.ServerFlags, new Location(0, 0, 0));
             int center = Window.Width / 2;
+            if (RenderExtraItems > 0)
+            {
+                RenderExtraItems -= gDelta;
+                if (RenderExtraItems < 0)
+                {
+                    RenderExtraItems = 0;
+                }
+                RenderItem(GetItemForSlot(QuickBarPos - 5), new Location(center - (32 + 32 + 32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos - 4), new Location(center - (32 + 32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos - 3), new Location(center - (32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos + 3), new Location(center + (32 + 32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos + 4), new Location(center + (32 + 32 + 32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos + 5), new Location(center + (32 + 32 + 32 + 32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
+            }
             RenderItem(GetItemForSlot(QuickBarPos - 2), new Location(center - (32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
             RenderItem(GetItemForSlot(QuickBarPos - 1), new Location(center - (32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
             RenderItem(GetItemForSlot(QuickBarPos + 1), new Location(center + (32 + 1), Window.Height - (32 + 16), 0), 32);
