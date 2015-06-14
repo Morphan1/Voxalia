@@ -68,36 +68,40 @@ void main()
 	vec3 R = reflect(L, N);
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(R, V), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
-	vec4 fs = f_spos / f_spos.w / 2.0 + 0.5;
-#ifdef MCM_GOOD_GRAPHICS
-	float cosTheta = dot(N, L);
-	cosTheta = clamp(cosTheta, 0.0, 1.0);
-	float bias = 0.00005 * tan(acos(cosTheta));
-	bias = clamp(bias, 0.0, 0.001);
-	fs.z -= bias / (light_length / 5.0 / (light_radius / 100.0));
-#else
-	fs.z -= 0.0001;
-#endif
-	float oneoverdj = 1.0 / depth_jump;
-	float jump = tex_size * depth_jump;
-	float depth = 0;
-	float depth_count = 0;
-	// TODO: Make me more efficient
-	for (float x = -oneoverdj * 2; x < oneoverdj * 2 + 1; x++)
-	{
-		for (float y = -oneoverdj * 2; y < oneoverdj * 2 + 1; y++)
-		{
-			depth += textureProj(tex, fs + vec4(x * jump, y * jump, 0.0, 0.0));
-			depth_count++;
-		}
-	}
-	depth = depth / depth_count;
-	fs = f_spos / f_spos.w / 2.0 + vec4(0.5);
+	vec4 fs = f_spos / f_spos.w / 2.0 + vec4(0.5);
+	float depth;
 	if (fs.x < 0.0 || fs.x > 1.0
 		|| fs.y < 0.0 || fs.y > 1.0
 		|| fs.z < 0.0 || fs.z > 1.0)
 	{
 		depth = 0.0;
+	}
+	else
+	{
+		fs = f_spos / f_spos.w / 2.0 + 0.5;
+#ifdef MCM_GOOD_GRAPHICS
+		float cosTheta = dot(N, L);
+		cosTheta = clamp(cosTheta, 0.0, 1.0);
+		float bias = 0.00005 * tan(acos(cosTheta));
+		bias = clamp(bias, 0.0, 0.001);
+		fs.z -= bias / (light_length / 5.0 / (light_radius / 100.0));
+#else
+		fs.z -= 0.0001;
+#endif
+		float oneoverdj = 1.0 / depth_jump;
+		float jump = tex_size * depth_jump;
+		depth = 0;
+		float depth_count = 0;
+		// TODO: Make me more efficient
+		for (float x = -oneoverdj * 2; x < oneoverdj * 2 + 1; x++)
+		{
+			for (float y = -oneoverdj * 2; y < oneoverdj * 2 + 1; y++)
+			{
+				depth += textureProj(tex, fs + vec4(x * jump, y * jump, 0.0, 0.0));
+				depth_count++;
+			}
+		}
+		depth = depth / depth_count;
 	}
 	float min_depth = renderhint.z;
 	depth = max(depth, min_depth);
