@@ -31,7 +31,7 @@ namespace ShadowOperations.ClientGame.CommandSystem
         public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_lighting, r_renderwireframe,
             r_fov, r_znear, r_zfar,
             r_ssao, r_dof_strength,
-            r_shadowquality_flashlight, r_shadowquality_max;
+            r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch;
@@ -69,6 +69,7 @@ namespace ShadowOperations.ClientGame.CommandSystem
             r_dof_strength = Register("r_dof_strength", "4", CVarFlag.Numeric); // How strong the Depth Of Field effect should be.
             r_shadowquality_flashlight = Register("r_shadowquality_flashlight", "512", CVarFlag.Numeric); // What texture size to use for flashlight shadows.
             r_shadowquality_max = Register("r_shadowquality_max", "2048", CVarFlag.Numeric); // What maximum light texture size to accept from the server.
+            r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric); // What factor to use for shadow blurring. Smaller = blurrier.
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What volume the music should be.
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What pitch the music should be.

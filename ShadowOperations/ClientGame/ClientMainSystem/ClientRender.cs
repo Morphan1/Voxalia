@@ -211,6 +211,8 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                             GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
                             GL.Uniform3(8, ref Lights[i].InternalLights[x].color);
                             GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
+                            GL.Uniform1(12, 1f / (float)Lights[i].InternalLights[x].texsize);
+                            GL.Uniform1(13, CVars.r_shadowblur.ValueF);
                             Rendering.RenderRectangle(-1, -1, 1, 1);
                             first = !first;
                             GL.ActiveTexture(TextureUnit.Texture0);

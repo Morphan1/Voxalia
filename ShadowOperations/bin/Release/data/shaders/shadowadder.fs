@@ -21,6 +21,8 @@ layout (location = 8) uniform vec3 light_color = vec3(1.0, 1.0, 1.0);
 layout (location = 9) uniform float light_radius = 30.0;
 layout (location = 10) uniform vec3 eye_pos = vec3(0.0, 0.0, 0.0);
 layout (location = 11) uniform float light_type = 0.0;
+layout (location = 12) uniform float tex_size = 0.001;
+layout (location = 13) uniform float depth_jump = 0.5;
 
 out vec4 color;
 
@@ -76,13 +78,20 @@ void main()
 #else
 	fs.z -= 0.0001;
 #endif
-	float jump = clamp(0.0001 * V_Len, 0.0001, 0.01);
-	float depth = textureProj(tex, fs + vec4(0.00, -jump, 0.0, 0.0));
-	float depth2 = textureProj(tex, fs + vec4(jump, 0.0, 0.0, 0.0));
-	float depth3 = textureProj(tex, fs + vec4(0.0, jump, 0.0, 0.0));
-	float depth4 = textureProj(tex, fs + vec4(-jump, 0.0, 0.0, 0.0));
-	// TODO: Make blurring (and blur quality) optional!
-	depth = (depth + depth2 + depth3 + depth4) / 4;
+	float oneoverdj = 1.0 / depth_jump;
+	float jump = tex_size * depth_jump;
+	float depth = 0;
+	float depth_count = 0;
+	// TODO: Make me more efficient
+	for (float x = -oneoverdj * 2; x < oneoverdj * 2 + 1; x++)
+	{
+		for (float y = -oneoverdj * 2; y < oneoverdj * 2 + 1; y++)
+		{
+			depth += textureProj(tex, fs + vec4(x * jump, y * jump, 0.0, 0.0));
+			depth_count++;
+		}
+	}
+	depth = depth / depth_count;
 	fs = f_spos / f_spos.w / 2.0 + vec4(0.5);
 	if (fs.x < 0.0 || fs.x > 1.0
 		|| fs.y < 0.0 || fs.y > 1.0
