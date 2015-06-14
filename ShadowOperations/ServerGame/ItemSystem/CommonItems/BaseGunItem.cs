@@ -70,6 +70,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
                 }
                 player.LastGunShot = player.TheServer.GlobalTickTime;
                 item.Datum -= 1;
+                player.Network.SendPacket(new SetItemPacketOut(player.Items.IndexOf(item), item));
             }
             else if (item.Datum == 0 && !player.WaitingForClickRelease)
             {
@@ -98,6 +99,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
                                 reloading = itemStack.Count;
                             }
                             item.Datum += reloading;
+                            player.Network.SendPacket(new SetItemPacketOut(player.Items.IndexOf(item), item));
                             itemStack.Count -= reloading;
                             if (itemStack.Count <= 0)
                             {
