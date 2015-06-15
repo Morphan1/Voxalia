@@ -27,9 +27,11 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
             ItemStack stack = entry.Player.GetItemForSlot(it);
             if (stack.IsBound)
             {
-                if (stack.Info == entry.Player.TheServer.Items.GetInfoFor("open_hand"))
+                if (stack.Info == entry.Player.TheServer.Items.GetInfoFor("open_hand")
+                    && entry.Player.GrabJoint != null)
                 {
-                    entry.Player.Grabbed = null;
+                    entry.Player.TheServer.DestroyJoint(entry.Player.GrabJoint);
+                    entry.Player.GrabJoint = null;
                     return;
                 }
                 entry.Player.Network.SendMessage("^1Can't drop this."); // TODO: Language, entry.output, etc.

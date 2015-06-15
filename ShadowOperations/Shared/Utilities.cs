@@ -424,6 +424,7 @@ namespace ShadowOperations.Shared
         /// <returns>The yaw/pitch angle vector</returns>
         public static Location VectorToAngles(Location input)
         {
+            // TODO: Does input need to be normalized?
             if (input.X == 0 && input.Y == 0)
             {
                 if (input.Z > 0)

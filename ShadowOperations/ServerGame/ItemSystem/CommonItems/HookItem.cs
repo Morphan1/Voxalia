@@ -32,28 +32,30 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             RemoveHook(player);
             PhysicsEntity pe = (PhysicsEntity)cr.HitEnt.Tag;
             float len = (float)(cr.Position - player.GetCenter()).Length();
-            JointDistance jd;
+            BaseJoint jd;
             jd = new JointDistance(player, pe, 0.01f, len + 0.1f, player.GetCenter(), cr.Position);
             player.TheServer.AddJoint(jd);
-            player.Hooks.Add(new HookInfo() { JD = jd, Hit = pe, IsBar = false });
+            player.Hooks.Add(new HookInfo() { Joint = jd, Hit = pe, IsBar = false });
             Location step = (player.GetCenter() - cr.Position) / len;
+            Location forw = Utilities.VectorToAngles(step);
+            BEPUutilities.Quaternion quat = BEPUutilities.Quaternion.CreateFromYawPitchRoll((float)(forw.Yaw * Utilities.PI180), (float)(forw.Pitch * Utilities.PI180), 0);
             PhysicsEntity cent = pe;
-            for (float f = 0; f < len; f += 0.5f)
+            for (float f = 0; f < len - 1f; f += 0.5f)
             {
                 Location cpos = cr.Position + step * f;
-                CubeEntity ce = new CubeEntity(new Location(0.05, 0.05, 0.23), player.TheServer, 1);
+                CubeEntity ce = new CubeEntity(new Location(0.23, 0.05, 0.05), player.TheServer, 1);
                 ce.SetPosition(cpos + step * 0.5);
+                ce.SetOrientation(quat);
                 player.TheServer.SpawnEntity(ce);
-                jd = new JointDistance(ce, cent, 0.0001f, 0.00011f, ce.GetPosition() + new Location(0, 0, 0.15), cpos - new Location(0, 0, 0.15));
+                jd = new JointBallSocket(ce, cent, cpos);
                 player.TheServer.AddJoint(jd);
-                player.Hooks.Add(new HookInfo() { JD = jd, Hit = ce, IsBar = true });
+                player.Hooks.Add(new HookInfo() { Joint = jd, Hit = ce, IsBar = true });
                 cent = ce;
             }
-            //cent.Body.CollisionInformation.CollisionRules.Specific.Add(player.Body.CollisionInformation.CollisionRules, CollisionRule.NoBroadPhase);
-            //player.Body.CollisionInformation.CollisionRules.Specific.Add(cent.Body.CollisionInformation.CollisionRules, CollisionRule.NoBroadPhase);
-            jd = new JointDistance(cent, player, 0.001f, 0.0011f, player.GetCenter(), player.GetCenter());
+            //jd = new JointDistance(cent, player, 0.001f, 0.0011f, player.GetCenter(), player.GetCenter());
+            jd = new JointBallSocket(cent, player, player.GetCenter());
             player.TheServer.AddJoint(jd);
-            player.Hooks.Add(new HookInfo() { JD = jd, Hit = player, IsBar = false });
+            player.Hooks.Add(new HookInfo() { Joint = jd, Hit = player, IsBar = false });
         }
 
         public override void AltClick(PlayerEntity player, ItemStack item)
@@ -75,7 +77,10 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             {
                 for (int i = 0; i < player.Hooks.Count; i++)
                 {
-                    player.TheServer.DestroyJoint(player.Hooks[i].JD);
+                    player.TheServer.DestroyJoint(player.Hooks[i].Joint);
+                }
+                for (int i = 0; i < player.Hooks.Count; i++)
+                {
                     if (player.Hooks[i].IsBar)
                     {
                         player.TheServer.DespawnEntity(player.Hooks[i].Hit);
@@ -109,7 +114,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
     public class HookInfo
     {
         public PhysicsEntity Hit = null;
-        public JointDistance JD = null;
+        public BaseJoint Joint = null;
         public bool IsBar = false;
     }
 }

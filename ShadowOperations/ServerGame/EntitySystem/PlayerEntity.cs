@@ -15,6 +15,7 @@ using BEPUphysics.BroadPhaseEntries;
 using ShadowOperations.ServerGame.ItemSystem;
 using ShadowOperations.ServerGame.ItemSystem.CommonItems;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using ShadowOperations.ServerGame.JointSystem;
 
 namespace ShadowOperations.ServerGame.EntitySystem
 {
@@ -103,9 +104,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
 
         bool pup = false;
 
-        public PhysicsEntity Grabbed = null;
-
-        public float GrabForce = 0;
+        public JointBallSocket GrabJoint = null;
 
         public List<HookInfo> Hooks = new List<HookInfo>();
 
@@ -283,34 +282,6 @@ namespace ShadowOperations.ServerGame.EntitySystem
             if (fly)
             {
                 SetPosition(GetPosition() + pvel / 200);
-            }
-            if (Grabbed != null)
-            {
-                if (Grabbed.IsSpawned && (Grabbed.GetPosition() - GetEyePosition()).LengthSquared() < 5 * 5 + Grabbed.Widest * Grabbed.Widest)
-                {
-                    Location pos = GetEyePosition() + Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch) * (2 + Grabbed.Widest);
-                    if (GrabForce >= Grabbed.GetMass())
-                    {
-                        Grabbed.Body.LinearVelocity = new Vector3(0, 0, 0);
-                    }
-                    Location tvec = (pos - Grabbed.GetPosition());
-                    double len = tvec.Length();
-                    if (len == 0)
-                    {
-                        len = 1;
-                    }
-                    Vector3 push = ((-Grabbed.GetVelocity()).Normalize() * GrabForce + (tvec / len) * GrabForce).ToBVector() * Grabbed.Body.InverseMass;
-                    if (push.LengthSquared() > len * len)
-                    {
-                        push /= (float)(push.Length() / len) / 10f;
-                    }
-                    Grabbed.Body.LinearVelocity += push;
-                    Grabbed.Body.ActivityInformation.Activate();
-                }
-                else
-                {
-                    Grabbed = null;
-                }
             }
             /*if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
             {

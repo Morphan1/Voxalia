@@ -24,15 +24,16 @@ namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 if (stack.Info == entry.Player.TheServer.Items.GetInfoFor("open_hand"))
                 {
-                    if (entry.Player.Grabbed != null && entry.Player.Grabbed.IsSpawned
-                        && entry.Player.Grabbed.Body != null)
+                    if (entry.Player.GrabJoint != null)
                     {
                         BEPUutilities.Vector3 launchvec = (entry.Player.ForwardVector() * 100).ToBVector(); // TODO: Strength limits
-                        entry.Player.Grabbed.Body.ApplyLinearImpulse(ref launchvec);
-                        entry.Player.Grabbed.Body.ActivityInformation.Activate();
-                        entry.Player.Grabbed = null;
+                        PhysicsEntity pe = entry.Player.GrabJoint.Ent2;
+                        entry.Player.TheServer.DestroyJoint(entry.Player.GrabJoint);
+                        entry.Player.GrabJoint = null;
+                        pe.Body.ApplyLinearImpulse(ref launchvec);
+                        pe.Body.ActivityInformation.Activate();
+                        return;
                     }
-                    return;
                 }
                 entry.Player.Network.SendMessage("^1Can't throw this."); // TODO: Language, entry.output, etc.
                 return;
