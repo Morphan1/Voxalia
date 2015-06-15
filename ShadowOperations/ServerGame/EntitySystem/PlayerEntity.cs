@@ -284,34 +284,6 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
-            if (Hooks.Count > 0)
-            {
-                // TODO: New keys
-                /*
-                if (Downward)
-                {
-                    for (int i = 0; i < Hooks.Count; i++)
-                    {
-                        Hooks[i].JD.Max += (float)TheServer.Delta;
-                        Hooks[i].JD.Min += (float)TheServer.Delta;
-                        TheServer.DestroyJoint(Hooks[i].JD);
-                        TheServer.AddJoint(Hooks[i].JD);
-                    }
-                }
-                else */if (Upward)
-                {
-                    for (int i = 0; i < Hooks.Count; i++)
-                    {
-                        if (Hooks[i].JD.Max > 1)
-                        {
-                            Hooks[i].JD.Max -= (float)TheServer.Delta;
-                            Hooks[i].JD.Min -= (float)TheServer.Delta;
-                        }
-                        TheServer.DestroyJoint(Hooks[i].JD);
-                        TheServer.AddJoint(Hooks[i].JD);
-                    }
-                }
-            }
             if (Grabbed != null)
             {
                 if (Grabbed.IsSpawned && (Grabbed.GetPosition() - GetEyePosition()).LengthSquared() < 5 * 5 + Grabbed.Widest * Grabbed.Widest)

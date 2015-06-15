@@ -29,6 +29,8 @@ namespace ShadowOperations.ServerGame.JointSystem
         public override TwoEntityConstraint GetBaseJoint()
         {
             DistanceLimit dl = new DistanceLimit(Ent1.Body, Ent2.Body, (Ent1Pos + Ent1.GetPosition()).ToBVector(), (Ent2Pos + Ent2.GetPosition()).ToBVector(), Min, Max);
+            //dl.MaxCorrectiveVelocity = 10000f;
+            //dl.SpringSettings.Stiffness = 10000f;
             return dl;
         }
     }

@@ -337,11 +337,6 @@ namespace ShadowOperations.Shared
             return new Location(v.X * scale, v.Y * scale, v.Z * scale);
         }
 
-        public static Location operator /(Location v, float scale)
-        {
-            return new Location(v.X / scale, v.Y / scale, v.Z / scale);
-        }
-
         public static Location operator *(Location v, double scale)
         {
             return new Location(v.X * scale, v.Y * scale, v.Z * scale);
@@ -352,9 +347,16 @@ namespace ShadowOperations.Shared
             return new Location(v.X * scale, v.Y * scale, v.Z * scale);
         }
 
+        public static Location operator /(Location v, float scale)
+        {
+            float sc = 1 / scale;
+            return new Location(v.X * sc, v.Y * sc, v.Z * sc);
+        }
+
         public static Location operator /(Location v, double scale)
         {
-            return new Location(v.X / scale, v.Y / scale, v.Z / scale);
+            double sc = 1 / scale;
+            return new Location(v.X * sc, v.Y * sc, v.Z * sc);
         }
 
         /// <summary>
