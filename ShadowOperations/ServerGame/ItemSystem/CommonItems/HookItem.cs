@@ -6,6 +6,7 @@ using ShadowOperations.ServerGame.EntitySystem;
 using ShadowOperations.Shared;
 using ShadowOperations.ServerGame.JointSystem;
 using BEPUphysics.CollisionRuleManagement;
+using BEPUutilities;
 
 namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 {
@@ -38,7 +39,8 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
             player.Hooks.Add(new HookInfo() { Joint = jd, Hit = pe, IsBar = false });
             Location step = (player.GetCenter() - cr.Position) / len;
             Location forw = Utilities.VectorToAngles(step);
-            BEPUutilities.Quaternion quat = BEPUutilities.Quaternion.CreateFromYawPitchRoll((float)(forw.Yaw * Utilities.PI180), (float)(forw.Pitch * Utilities.PI180), 0);
+            BEPUutilities.Quaternion quat = Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(forw.Pitch * Utilities.PI180)) *
+                Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(forw.Yaw * Utilities.PI180));
             PhysicsEntity cent = pe;
             for (float f = 0; f < len - 1f; f += 0.5f)
             {

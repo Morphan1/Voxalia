@@ -302,7 +302,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
                 SetPosition(GetPosition() + pvel / 200);
             }
             CursorMarker.SetPosition(GetPosition() + ForwardVector() * 0.4f);
-            CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), (float)(Direction.Pitch * Utilities.PI180)) *
+            CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(Direction.Pitch * Utilities.PI180)) *
                 Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(Direction.Yaw * Utilities.PI180)));
             /*if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
             {
