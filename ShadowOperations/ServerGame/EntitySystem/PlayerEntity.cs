@@ -97,10 +97,16 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 Network.PrimarySocket.Close(5);
             }
+            ItemStack it = GetItemForSlot(cItem);
+            it.Info.SwitchFrom(this, it);
+            HookItem.RemoveHook(this);
+            TheServer.DespawnEntity(CursorMarker);
             TheServer.DespawnEntity(this);
         }
 
         public Location Direction;
+
+        public CubeEntity CursorMarker = null;
 
         bool pup = false;
 
@@ -132,6 +138,18 @@ namespace ShadowOperations.ServerGame.EntitySystem
             GiveItem(new ItemStack("bullet", "rifle_ammo", TheServer, 100, "items/weapons/ammo/rifle_round_ico", "Assault Rifle Ammo", "Very rapid!", Color.White.ToArgb(), "items/weapons/ammo/rifle_round.dae", false));
             SetHealth(Health);
             CGroup = tserver.Collision.Player;
+        }
+
+        public override void SpawnBody()
+        {
+            base.SpawnBody();
+            if (CursorMarker == null)
+            {
+                CursorMarker = new CubeEntity(new Location(0.01, 0.01, 0.01), TheServer, 0);
+                CursorMarker.CGroup = TheServer.Collision.NonSolid;
+                CursorMarker.Visible = false;
+                TheServer.SpawnEntity(CursorMarker);
+            }
         }
 
         public void SetAnimation(string anim, byte mode)
@@ -283,6 +301,9 @@ namespace ShadowOperations.ServerGame.EntitySystem
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
+            CursorMarker.SetPosition(GetPosition() + ForwardVector() * 0.4f);
+            CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), (float)(Direction.Pitch * Utilities.PI180)) *
+                Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(Direction.Yaw * Utilities.PI180)));
             /*if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
             {
                 base.SetAngles(new Location(0, 0, 0));

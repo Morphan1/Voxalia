@@ -50,7 +50,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
         public void Grab(PlayerEntity player, PhysicsEntity pe, Location hit)
         {
             AltClick(player, null);
-            JointBallSocket jbs = new JointBallSocket(player, pe, hit);
+            JointBallSocket jbs = new JointBallSocket(player.CursorMarker, pe, hit);
             player.TheServer.AddJoint(jbs);
             player.GrabJoint = jbs;
 

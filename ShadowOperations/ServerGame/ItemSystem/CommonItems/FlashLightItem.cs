@@ -19,9 +19,9 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 
         public Location Color = Location.One;
 
-        public void Off(PlayerEntity player)
+        public static void Off(PlayerEntity player)
         {
-            player.TheServer.SendToAll(new FlashLightPacketOut(player, false, Distance, Color));
+            player.TheServer.SendToAll(new FlashLightPacketOut(player, false, 0, Location.Zero));
             player.FlashLightOn = false;
         }
 

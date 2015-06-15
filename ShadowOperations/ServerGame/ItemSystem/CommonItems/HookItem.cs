@@ -71,7 +71,7 @@ namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
         {
         }
 
-        void RemoveHook(PlayerEntity player)
+        public static void RemoveHook(PlayerEntity player)
         {
             if (player.Hooks.Count > 0)
             {

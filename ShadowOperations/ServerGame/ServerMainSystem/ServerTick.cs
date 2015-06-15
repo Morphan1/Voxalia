@@ -234,7 +234,7 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                 Targetables.Add((EntityTargettable)e);
             }
             AbstractPacketOut packet = null;
-            if (e is PhysicsEntity)
+            if (e is PhysicsEntity && !(e is PlayerEntity))
             {
                 ((PhysicsEntity)e).SpawnBody();
                 if (e.NetworkMe)
@@ -305,6 +305,11 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                             ((PlayerEntity)e).Network.SendPacket(new SpawnPrimitiveEntityPacketOut((PrimitiveEntity)Entities[i]));
                         }
                     }
+                }
+                ((PhysicsEntity)e).SpawnBody();
+                if (e.NetworkMe)
+                {
+                    packet = new SpawnPhysicsEntityPacketOut((PhysicsEntity)e);
                 }
             }
         }
