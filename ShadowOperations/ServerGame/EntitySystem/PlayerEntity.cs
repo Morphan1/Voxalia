@@ -133,9 +133,11 @@ namespace ShadowOperations.ServerGame.EntitySystem
             GiveItem(new ItemStack("hook", TheServer, 1, "items/common/hook_ico", "Grappling Hook", "Grab distant things!", Color.White.ToArgb(), "items/common/hook.dae", true));
             GiveItem(new ItemStack("flashlight", TheServer, 1, "items/common/flashlight_ico", "Flashlight", "Lights things up!", Color.White.ToArgb(), "items/common/flashlight.dae", false));
             GiveItem(new ItemStack("rifle_gun", TheServer, 1, "items/weapons/rifle_ico", "Assault Rifle", "It shoots rapid-fire bullets!", Color.White.ToArgb(), "items/weapons/m4a1.dae", false));
+            GiveItem(new ItemStack("minigun_gun", TheServer, 1, "items/weapons/minigun_ico", "Minigun", "It shoots ^ivery^r rapid-fire bullets!", Color.White.ToArgb(), "items/weapons/minigun.dae", false));
             GiveItem(new ItemStack("bullet", "9mm_ammo", TheServer, 100, "items/weapons/ammo/9mm_round_ico", "9mm Ammo", "Nine whole millimeters!", Color.White.ToArgb(), "items/weapons/ammo/9mm_round.dae", false));
             GiveItem(new ItemStack("bullet", "shotgun_ammo", TheServer, 100, "items/weapons/ammo/shotgun_shell_ico", "Shotgun Ammo", "Always travels in packs!", Color.White.ToArgb(), "items/weapons/ammo/shotgun_shell.dae", false));
             GiveItem(new ItemStack("bullet", "rifle_ammo", TheServer, 100, "items/weapons/ammo/rifle_round_ico", "Assault Rifle Ammo", "Very rapid!", Color.White.ToArgb(), "items/weapons/ammo/rifle_round.dae", false));
+            GiveItem(new ItemStack("bullet", "minigun_ammo", TheServer, 2000, "items/weapons/ammo/minigun_round_ico", "Minigun Ammo", "Very very rapid!", Color.White.ToArgb(), "items/weapons/ammo/minigun_round.dae", false));
             SetHealth(Health);
             CGroup = tserver.Collision.Player;
         }
@@ -307,7 +309,7 @@ namespace ShadowOperations.ServerGame.EntitySystem
             /*if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
             {
                 base.SetAngles(new Location(0, 0, 0));
-            }*/ // TODO: Does this need to be readded?
+            }*/ // TODO: Does this need to be readded? Can it be made more efficient via quaternions?
             PlayerUpdatePacketOut pupo = new PlayerUpdatePacketOut(this);
             for (int i = 0; i < TheServer.Players.Count; i++)
             {

@@ -200,6 +200,7 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\BaseGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BowItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BulletItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\MinigunGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\ShotgunGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\FlashLightItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\GenericItem.cs" />

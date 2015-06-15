@@ -5,10 +5,10 @@ using System.Text;
 
 namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
 {
-    public class RifleGunItem : BaseGunItem
+    public class MinigunGunItem : BaseGunItem
     {
-        public RifleGunItem()
-            : base("rifle_gun", 0.03f, 10f, 0f, 0f, 90f, 30, "rifle_ammo", 2, 1, 0.099f, 2, false)
+        public MinigunGunItem()
+            : base("minigun_gun", 0.03f, 10f, 0f, 0f, 90f, 1000, "minigun_ammo", 4, 1, 0.049f, 2, false)
         {
         }
     }
