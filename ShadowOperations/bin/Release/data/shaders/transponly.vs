@@ -32,10 +32,10 @@ void main()
 		BT += boneTrans[int(BoneID[1])] * Weights[1];
 		BT += boneTrans[int(BoneID[2])] * Weights[2];
 		BT += boneTrans[int(BoneID[3])] * Weights[3];
-		BT = boneTrans[int(BoneID[0])] * Weights2[0];
-		BT += boneTrans[int(BoneID[1])] * Weights2[1];
-		BT += boneTrans[int(BoneID[2])] * Weights2[2];
-		BT += boneTrans[int(BoneID[3])] * Weights2[3];
+		BT += boneTrans[int(BoneID2[0])] * Weights2[0];
+		BT += boneTrans[int(BoneID2[1])] * Weights2[1];
+		BT += boneTrans[int(BoneID2[2])] * Weights2[2];
+		BT += boneTrans[int(BoneID2[3])] * Weights2[3];
 		BT += mat4(1.0) * rem;
 		pos1 = vec4(position, 1.0) * BT;
 	}

@@ -272,16 +272,25 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
             if (e is PlayerEntity)
             {
                 Players.Add((PlayerEntity)e);
-                ((PlayerEntity)e).Network.SendPacket(new YourEIDPacketOut(e.EID));
                 for (int i = 0; i < Networking.Strings.Strings.Count; i++)
                 {
                     ((PlayerEntity)e).Network.SendPacket(new NetStringPacketOut(Networking.Strings.Strings[i]));
                 }
+                ((PlayerEntity)e).SpawnBody();
+                packet = new SpawnPhysicsEntityPacketOut((PlayerEntity)e);
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    if (Players[i] != e)
+                    {
+                        Players[i].Network.SendPacket(packet);
+                    }
+                }
+                ((PlayerEntity)e).Network.SendPacket(new YourEIDPacketOut(e.EID));
                 ((PlayerEntity)e).Network.SendPacket(new CVarSetPacketOut(CVars.g_timescale, this));
                 ((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 0);
                 ((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 1);
                 ((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 2);
-                for (int i = 0; i < Entities.Count - 1; i++)
+                for (int i = 0; i < Entities.Count - 2; i++)
                 {
                     if (Entities[i] is PhysicsEntity)
                     {
@@ -305,11 +314,6 @@ namespace ShadowOperations.ServerGame.ServerMainSystem
                             ((PlayerEntity)e).Network.SendPacket(new SpawnPrimitiveEntityPacketOut((PrimitiveEntity)Entities[i]));
                         }
                     }
-                }
-                ((PhysicsEntity)e).SpawnBody();
-                if (e.NetworkMe)
-                {
-                    packet = new SpawnPhysicsEntityPacketOut((PhysicsEntity)e);
                 }
             }
         }
