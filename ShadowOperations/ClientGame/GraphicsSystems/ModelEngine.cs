@@ -191,6 +191,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                 }
                 modmesh.vbo.BoneIDs = new Vector4[modmesh.vbo.Vertices.Count].ToList();
                 modmesh.vbo.BoneWeights = new Vector4[modmesh.vbo.Vertices.Count].ToList();
+                modmesh.vbo.BoneIDs2 = new Vector4[modmesh.vbo.Vertices.Count].ToList();
+                modmesh.vbo.BoneWeights2 = new Vector4[modmesh.vbo.Vertices.Count].ToList();
                 int[] pos = new int[modmesh.vbo.Vertices.Count];
                 for (int i = 0; i < bc; i++)
                 {
@@ -198,10 +200,15 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
                     {
                         VertexWeight vw = mesh.Bones[i].VertexWeights[x];
                         int spot = pos[vw.VertexID]++;
+                        if (spot > 7)
+                        {
+                            SysConsole.Output(OutputType.WARNING, "Too many bones influencing " + vw.VertexID + "!");
+                            ForceSet(modmesh.vbo.BoneWeights, vw.VertexID, 3, modmesh.vbo.BoneWeights[vw.VertexID][3] + vw.Weight);
+                        }
                         if (spot > 3)
                         {
-                            //SysConsole.Output(OutputType.WARNING, "Too many bones influencing " + vw.VertexID + "!");
-                            ForceSet(modmesh.vbo.BoneWeights, vw.VertexID, 3, modmesh.vbo.BoneWeights[vw.VertexID][3] + vw.Weight);
+                            ForceSet(modmesh.vbo.BoneIDs2, vw.VertexID, spot - 4, i);
+                            ForceSet(modmesh.vbo.BoneWeights2, vw.VertexID, spot - 4, vw.Weight);
                         }
                         else
                         {
@@ -324,7 +331,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
 
         void SetBones(Matrix4[] mats)
         {
-            int bones = 70;
+            int bones = 200;
             float[] set = new float[bones * 16];
             for (int i = 0; i < mats.Length; i++)
             {

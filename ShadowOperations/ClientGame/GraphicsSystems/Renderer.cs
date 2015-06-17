@@ -52,10 +52,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
             Vector4[] BoneIDs = new Vector4[4];
             Vector4[] BoneWeights = new Vector4[4];
+            Vector4[] BoneIDs2 = new Vector4[4];
+            Vector4[] BoneWeights2 = new Vector4[4];
             for (int n = 0; n < 4; n++)
             {
                 BoneIDs[n] = new Vector4(0, 0, 0, 0);
                 BoneWeights[n] = new Vector4(0, 0, 0, 0);
+                BoneIDs2[n] = new Vector4(0, 0, 0, 0);
+                BoneWeights2[n] = new Vector4(0, 0, 0, 0);
             }
             vecs[0] = new Vector3(1, 0, 0);
             texs[0] = new Vector3(1, 0, 0);
@@ -73,6 +77,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Square.Colors = cols.ToList();
             Square.BoneIDs = BoneIDs.ToList();
             Square.BoneWeights = BoneWeights.ToList();
+            Square.BoneIDs2 = BoneIDs2.ToList();
+            Square.BoneWeights2 = BoneWeights2.ToList();
             Square.GenerateVBO();
         }
 
@@ -97,10 +103,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
             Vector4[] BoneIDs = new Vector4[4];
             Vector4[] BoneWeights = new Vector4[4];
+            Vector4[] BoneIDs2 = new Vector4[4];
+            Vector4[] BoneWeights2 = new Vector4[4];
             for (int n = 0; n < 4; n++)
             {
                 BoneIDs[n] = new Vector4(0, 0, 0, 0);
                 BoneWeights[n] = new Vector4(0, 0, 0, 0);
+                BoneIDs2[n] = new Vector4(0, 0, 0, 0);
+                BoneWeights2[n] = new Vector4(0, 0, 0, 0);
             }
             vecs[0] = new Vector3(10000, -10000, 0);
             texs[0] = new Vector3(1000, -1000, 0);
@@ -118,6 +128,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Backgrid.Colors = cols.ToList();
             Backgrid.BoneIDs = BoneIDs.ToList();
             Backgrid.BoneWeights = BoneWeights.ToList();
+            Backgrid.BoneIDs2 = BoneIDs2.ToList();
+            Backgrid.BoneWeights2 = BoneWeights2.ToList();
             Backgrid.GenerateVBO();
         }
 
@@ -142,10 +154,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
             Vector4[] BoneIDs = new Vector4[2];
             Vector4[] BoneWeights = new Vector4[2];
+            Vector4[] BoneIDs2 = new Vector4[2];
+            Vector4[] BoneWeights2 = new Vector4[2];
             for (int n = 0; n < 2; n++)
             {
                 BoneIDs[n] = new Vector4(0, 0, 0, 0);
                 BoneWeights[n] = new Vector4(0, 0, 0, 0);
+                BoneIDs2[n] = new Vector4(0, 0, 0, 0);
+                BoneWeights2[n] = new Vector4(0, 0, 0, 0);
             }
             vecs[0] = new Vector3(0, 0, 0);
             texs[0] = new Vector3(0, 0, 0);
@@ -159,6 +175,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Line.Colors = cols.ToList();
             Line.BoneIDs = BoneIDs.ToList();
             Line.BoneWeights = BoneWeights.ToList();
+            Line.BoneIDs2 = BoneIDs2.ToList();
+            Line.BoneWeights2 = BoneWeights2.ToList();
             Line.GenerateVBO();
         }
 
@@ -188,10 +206,14 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             }
             Vector4[] BoneIDs = new Vector4[24];
             Vector4[] BoneWeights = new Vector4[24];
+            Vector4[] BoneIDs2 = new Vector4[24];
+            Vector4[] BoneWeights2 = new Vector4[24];
             for (int n = 0; n < 24; n++)
             {
                 BoneIDs[n] = new Vector4(0, 0, 0, 0);
                 BoneWeights[n] = new Vector4(0, 0, 0, 0);
+                BoneIDs2[n] = new Vector4(0, 0, 0, 0);
+                BoneWeights2[n] = new Vector4(0, 0, 0, 0);
             }
             int i = 0;
             int zero = -1; // Ssh.
@@ -227,6 +249,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems
             Box.Colors = cols.ToList();
             Box.BoneIDs = BoneIDs.ToList();
             Box.BoneWeights = BoneWeights.ToList();
+            Box.BoneIDs2 = BoneIDs2.ToList();
+            Box.BoneWeights2 = BoneWeights2.ToList();
             Box.GenerateVBO();
         }
 
