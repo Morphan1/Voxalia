@@ -234,7 +234,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
             model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
             if (tAnim != null)
             {
-                SingleAnimationNode hand = tAnim.GetNode("f_middle.01.l");
+                SingleAnimationNode hand = tAnim.GetNode("metacarpal2.l");
                 Matrix m4 = hand.GetBoneTotalMatrix(aTTime);
                 OpenTK.Matrix4 bonemat = new OpenTK.Matrix4(m4.M11, m4.M12, m4.M13, m4.M14, m4.M21, m4.M22, m4.M23, m4.M24,
                     m4.M31, m4.M32, m4.M33, m4.M34, m4.M41, m4.M42, m4.M43, m4.M44);

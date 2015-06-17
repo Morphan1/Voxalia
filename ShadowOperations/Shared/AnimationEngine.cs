@@ -11,14 +11,18 @@ namespace ShadowOperations.Shared
         public AnimationEngine()
         {
             Animations = new Dictionary<string, SingleAnimation>();
-            /*
-            string[] TBones = new string[] { "hips", "spine", "chest", "chest1", "shoulder.l", "upper_arm.l", "forearm.l", "hand.l",
-                "thumb.01.l", "thumb.02.l", "thumb.03.l", "f_index.01.l", "f_index.02.l", "f_index.03.l", "f_middle.01.l", "f_middle.02.l", "f_middle.03.l",
-            "f_pinky.01.l", "f_pinky.02.l", "f_pinky.03.l", "f_ring.01.l", "f_ring.02.l", "f_ringy.03.l",
-            "shoulder.r", "upper_arm.r", "forearm.r", "hand.r", "thumb.01.r", "thumb.02.r", "thumb.03.r", "f_index.01.r", "f_index.02.r", "f_index.03.r",
-            "f_middle.01.r", "f_middle.02.r", "f_middle.03.r", "f_pinky.01.r", "f_pinky.02.r", "f_pinky.03.r", "f_ring.01.r", "f_ring.02.r", "f_ringy.03.r" };*/
-            string[] HBones = new string[] { "neck", "head", "jaw", "tongue_base", "tongue_mod", "tongue_tip", "lolid.l", "lolid.r", "uplid.l", "uplid.r", "eye.l", "eye.r" };
-            string[] LBones = new string[] { "thigh.l", "shin.l", "foot.l", "toe.l", "thigh.r", "shin.r", "foot.r", "toe.r" };
+            string[] HBones = new string[] { "neck02", "neck03", "head", "jaw", "levator02.l", "levator02.r", "special01", "special03", "special06.l", "special06.r",
+                                             "temporalis01.l", "temporalis01.r", "temporalis02.l", "temporalis02.r", "special04", "oris02", "oris01", "oris06.l",
+                                             "oris07.l", "oris06.r", "oris07.r", "tongue00", "tongue01", "tongue02", "tongue03", "tongue04", "tongue07.l", "tongue07.r",
+                                             "tongue06.l", "tongue06.r", "tongue05.l", "tongue05.r", "levator03.l", "levator04.l", "levator05.l", "levator03.r",
+                                             "levator04.r", "levator05.r", "oris04.l", "oris03.l", "oris04.r", "oris03.r", "oris06", "oris05", "levator06.l", "levator06.r",
+                                             "special05.l", "eye.l", "orbicularis03.l", "orbicularis04.l", "special05.r", "eye.r", "orbicularis03.r", "orbicularis04.r",
+                                             "oculi02.l", "oculi01.l", "oculi02.r", "oculi01.r", "risorius02.l", "risorius03.l", "risorius02.r", "risorius03.r" };
+            string[] LBones = new string[] { "pelvis.l", "upperleg01.l", "upperleg02.l", "lowerleg01.l", "lowerleg02.l", "foot.l", "toe1-1.l", "toe1-2.l",
+                                             "toe2-1.l", "toe2-2.l", "toe2-3.l", "toe3-1.l", "toe3-2.l", "toe3-3.l", "toe4-1.l", "toe4-2.l", "toe4-3.l",
+                                             "toe5-1.l", "toe5-2.l", "toe5-3.l", "pelvis.r", "upperleg01.r", "upperleg02.r", "lowerleg01.r", "lowerleg02.r",
+                                             "foot.r", "toe1-1.r", "toe1-2.r", "toe2-1.r", "toe2-2.r", "toe2-3.r", "toe3-1.r", "toe3-2.r", "toe3-3.r",
+                                             "toe4-1.r", "toe4-2.r", "toe4-3.r", "toe5-1.r", "toe5-2.r", "toe5-3.r" };
             foreach (string str in HBones)
             {
                 HeadBones.Add(str);
