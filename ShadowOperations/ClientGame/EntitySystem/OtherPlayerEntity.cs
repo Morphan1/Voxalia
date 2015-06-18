@@ -219,7 +219,6 @@ namespace ShadowOperations.ClientGame.EntitySystem
         public double aTTime;
         public double aLTime;
 
-
         public override void Render()
         {
             if (!Visible)

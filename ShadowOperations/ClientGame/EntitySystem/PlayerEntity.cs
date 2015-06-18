@@ -32,17 +32,17 @@ namespace ShadowOperations.ClientGame.EntitySystem
             if (mode == 0)
             {
                 hAnim = TheClient.Animations.GetAnimation(anim);
-                //aHTime = 0;
+                aHTime = 0;
             }
             else if (mode == 1)
             {
                 tAnim = TheClient.Animations.GetAnimation(anim);
-                //aTTime = 0;
+                aTTime = 0;
             }
             else
             {
                 lAnim = TheClient.Animations.GetAnimation(anim);
-                //aLTime = 0;
+                aLTime = 0;
             }
         }
 
@@ -174,6 +174,30 @@ namespace ShadowOperations.ClientGame.EntitySystem
                 Flashlight.Reposition(GetEyePosition() + Utilities.ForwardVector_Deg(Direction.Yaw, 0) * 0.3f);
             }
             base.Tick();
+            aHTime += TheClient.Delta;
+            aTTime += TheClient.Delta;
+            aLTime += TheClient.Delta;
+            if (hAnim != null)
+            {
+                if (aHTime >= hAnim.Length)
+                {
+                    aHTime = 0;
+                }
+            }
+            if (tAnim != null)
+            {
+                if (aTTime >= tAnim.Length)
+                {
+                    aTTime = 0;
+                }
+            }
+            if (lAnim != null)
+            {
+                if (aLTime >= lAnim.Length)
+                {
+                    aLTime = 0;
+                }
+            }
         }
 
         public SpotLight Flashlight = null;
@@ -216,6 +240,10 @@ namespace ShadowOperations.ClientGame.EntitySystem
 
         public static OpenTK.Matrix4 PlayerAngleMat = OpenTK.Matrix4.CreateRotationZ((float)(270 * Utilities.PI180));
 
+        public double aHTime;
+        public double aTTime;
+        public double aLTime;
+
         public override void Render()
         {
             if (TheClient.RenderingShadows)
@@ -225,7 +253,7 @@ namespace ShadowOperations.ClientGame.EntitySystem
                     * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
                 GL.UniformMatrix4(2, false, ref mat);
                 TheClient.Rendering.SetMinimumLight(0.0f);
-                model.Draw(0, hAnim, 0, tAnim, 0, lAnim);
+                model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
             }
         }
     }
