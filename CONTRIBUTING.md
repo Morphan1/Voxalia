@@ -1,5 +1,5 @@
-Contribution to Shadow Operations
----------------------------------
+Contribution to Voxalia
+-----------------------
 
 
 ## Mini-license pre-warning
