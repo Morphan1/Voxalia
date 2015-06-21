@@ -10,6 +10,8 @@ namespace Voxalia.ClientGame.NetworkSystem
     {
         public Client TheClient;
 
+        public bool Chunk = false;
+
         /// <summary>
         /// Parse the given byte array and execute the results.
         /// </summary>

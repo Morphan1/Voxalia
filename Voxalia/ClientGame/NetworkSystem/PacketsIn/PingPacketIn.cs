@@ -16,7 +16,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 return false;
             }
             byte bit = data[0];
-            TheClient.Network.SendPacket(new PingPacketOut(bit));
+            if (Chunk)
+            {
+                TheClient.Network.SendChunkPacket(new PingPacketOut(bit));
+            }
+            else
+            {
+                TheClient.Network.SendPacket(new PingPacketOut(bit));
+            }
             return true;
         }
     }

@@ -35,6 +35,8 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// </summary>
         public List<PlayerEntity> Players = new List<PlayerEntity>();
 
+        public List<PlayerEntity> PlayersWaiting = new List<PlayerEntity>();
+
         public List<EntityTargettable> Targetables = new List<EntityTargettable>();
 
         /// <summary>

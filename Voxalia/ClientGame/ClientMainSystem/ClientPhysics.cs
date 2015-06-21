@@ -7,6 +7,7 @@ using Voxalia.ClientGame.EntitySystem;
 using BEPUphysics;
 using BEPUutilities;
 using BEPUphysics.Settings;
+using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -20,6 +21,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public CollisionUtil Collision;
 
         public Location GravityNormal = new Location(0, 0, -1);
+
+        // Note: the client only has one world loaded at any given time.
+        public World TheWorld = new World();
 
         /// <summary>
         /// Builds the physics world.

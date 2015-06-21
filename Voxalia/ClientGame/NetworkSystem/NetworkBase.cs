@@ -21,11 +21,14 @@ namespace Voxalia.ClientGame.NetworkSystem
             TheClient = tclient;
             Strings = new NetStringManager();
             recd = new byte[MAX];
+            recd2 = new byte[MAX];
         }
 
         public NetStringManager Strings;
 
         public Socket ConnectionSocket;
+
+        public Socket ChunkSocket;
 
         public Thread ConnectionThread;
 
@@ -48,6 +51,11 @@ namespace Voxalia.ClientGame.NetworkSystem
                 ConnectionSocket.Close(2);
                 ConnectionSocket = null;
             }
+            if (ChunkSocket != null)
+            {
+                ChunkSocket.Close(2);
+                ChunkSocket = null;
+            }
             IsAlive = false;
         }
 
@@ -69,6 +77,137 @@ namespace Voxalia.ClientGame.NetworkSystem
 
         int recdsofar = 0;
 
+        byte[] recd2;
+
+        int recdsofar2 = 0;
+
+        public void TickSocket(Socket sock, ref byte[] rd, ref int rdsf)
+        {
+            int avail = sock.Available;
+            if (avail <= 0)
+            {
+                return;
+            }
+            if (avail + rdsf > MAX)
+            {
+                throw new Exception("Received too much data!");
+            }
+            sock.Receive(rd, rdsf, avail, SocketFlags.None);
+            rdsf += avail;
+            if (rdsf < 5)
+            {
+                return;
+            }
+            while (true)
+            {
+                byte[] len_bytes = new byte[4];
+                Array.Copy(rd, len_bytes, 4);
+                int len = Utilities.BytesToInt(len_bytes);
+                if (len + 5 > MAX)
+                {
+                    throw new Exception("Unreasonably huge packet!");
+                }
+                if (rdsf < 5 + len)
+                {
+                    return;
+                }
+                byte packetID = rd[4];
+                byte[] data = new byte[len];
+                Array.Copy(rd, 5, data, 0, len);
+                byte[] rem_data = new byte[rdsf - (len + 5)];
+                if (rem_data.Length > 0)
+                {
+                    Array.Copy(rd, len + 5, rem_data, 0, rem_data.Length);
+                    Array.Copy(rem_data, rd, rem_data.Length);
+                }
+                rdsf -= len + 5;
+                AbstractPacketIn packet;
+                switch (packetID) // TODO: Packet registry?
+                {
+                    case 0:
+                        packet = new PingPacketIn();
+                        break;
+                    case 1:
+                        packet = new YourPositionPacketIn();
+                        break;
+                    case 2:
+                        packet = new SpawnPhysicsEntityPacketIn();
+                        break;
+                    case 3:
+                        packet = new PhysicsEntityUpdatePacketIn();
+                        break;
+                    case 4:
+                        packet = new SpawnLightPacketIn();
+                        break;
+                    case 5:
+                        packet = new MessagePacketIn();
+                        break;
+                    case 6:
+                        packet = new PlayerUpdatePacketIn();
+                        break;
+                    case 7:
+                        packet = new SpawnBulletPacketIn();
+                        break;
+                    case 8:
+                        packet = new DespawnEntityPacketIn();
+                        break;
+                    case 9:
+                        packet = new NetStringPacketIn();
+                        break;
+                    case 10:
+                        packet = new SpawnItemPacketIn();
+                        break;
+                    case 11:
+                        packet = new YourStatusPacketIn();
+                        break;
+                    case 12:
+                        packet = new AddJointPacketIn();
+                        break;
+                    case 13:
+                        packet = new YourEIDPacketIn();
+                        break;
+                    case 14:
+                        packet = new DestroyJointPacketIn();
+                        break;
+                    case 15:
+                        packet = new SpawnPrimitiveEntityPacketIn();
+                        break;
+                    case 16:
+                        packet = new PrimitiveEntityUpdatePacketIn();
+                        break;
+                    case 17:
+                        packet = new AnimationPacketIn();
+                        break;
+                    case 18:
+                        packet = new FlashLightPacketIn();
+                        break;
+                    case 19:
+                        packet = new RemoveItemPacketIn();
+                        break;
+                    case 20:
+                        // packet = new JointStatusPacketIn();
+                        throw new NotImplementedException();
+                    case 21:
+                        packet = new SetItemPacketIn();
+                        break;
+                    case 22:
+                        packet = new CVarSetPacketIn();
+                        break;
+                    case 23:
+                        packet = new SetHeldItemPacketIn();
+                        break;
+                    default:
+                        throw new Exception("Invalid packet ID: " + packetID);
+                }
+                packet.TheClient = TheClient;
+                packet.Chunk = sock == ChunkSocket;
+                if (!packet.ParseBytesAndExecute(data))
+                {
+                    throw new Exception("Imperfect packet data for packet " + packetID);
+                }
+            }
+        }
+
         public void Tick()
         {
             // TODO: Connection timeout
@@ -78,128 +217,8 @@ namespace Voxalia.ClientGame.NetworkSystem
             }
             try
             {
-                int avail = ConnectionSocket.Available;
-                if (avail <= 0)
-                {
-                    return;
-                }
-                if (avail + recdsofar > MAX)
-                {
-                    throw new Exception("Received too much data!");
-                }
-                ConnectionSocket.Receive(recd, recdsofar, avail, SocketFlags.None);
-                recdsofar += avail;
-                if (recdsofar < 5)
-                {
-                    return;
-                }
-                while (true)
-                {
-                    byte[] len_bytes = new byte[4];
-                    Array.Copy(recd, len_bytes, 4);
-                    int len = Utilities.BytesToInt(len_bytes);
-                    if (len + 5 > MAX)
-                    {
-                        throw new Exception("Unreasonably huge packet!");
-                    }
-                    if (recdsofar < 5 + len)
-                    {
-                        return;
-                    }
-                    byte packetID = recd[4];
-                    byte[] data = new byte[len];
-                    Array.Copy(recd, 5, data, 0, len);
-                    byte[] rem_data = new byte[recdsofar - (len + 5)];
-                    if (rem_data.Length > 0)
-                    {
-                        Array.Copy(recd, len + 5, rem_data, 0, rem_data.Length);
-                        Array.Copy(rem_data, recd, rem_data.Length);
-                    }
-                    recdsofar -= len + 5;
-                    AbstractPacketIn packet;
-                    switch (packetID) // TODO: Packet registry?
-                    {
-                        case 0:
-                            packet = new PingPacketIn();
-                            break;
-                        case 1:
-                            packet = new YourPositionPacketIn();
-                            break;
-                        case 2:
-                            packet = new SpawnPhysicsEntityPacketIn();
-                            break;
-                        case 3:
-                            packet = new PhysicsEntityUpdatePacketIn();
-                            break;
-                        case 4:
-                            packet = new SpawnLightPacketIn();
-                            break;
-                        case 5:
-                            packet = new MessagePacketIn();
-                            break;
-                        case 6:
-                            packet = new PlayerUpdatePacketIn();
-                            break;
-                        case 7:
-                            packet = new SpawnBulletPacketIn();
-                            break;
-                        case 8:
-                            packet = new DespawnEntityPacketIn();
-                            break;
-                        case 9:
-                            packet = new NetStringPacketIn();
-                            break;
-                        case 10:
-                            packet = new SpawnItemPacketIn();
-                            break;
-                        case 11:
-                            packet = new YourStatusPacketIn();
-                            break;
-                        case 12:
-                            packet = new AddJointPacketIn();
-                            break;
-                        case 13:
-                            packet = new YourEIDPacketIn();
-                            break;
-                        case 14:
-                            packet = new DestroyJointPacketIn();
-                            break;
-                        case 15:
-                            packet = new SpawnPrimitiveEntityPacketIn();
-                            break;
-                        case 16:
-                            packet = new PrimitiveEntityUpdatePacketIn();
-                            break;
-                        case 17:
-                            packet = new AnimationPacketIn();
-                            break;
-                        case 18:
-                            packet = new FlashLightPacketIn();
-                            break;
-                        case 19:
-                            packet = new RemoveItemPacketIn();
-                            break;
-                        case 20:
-                            // packet = new JointStatusPacketIn();
-                            throw new NotImplementedException();
-                        case 21:
-                            packet = new SetItemPacketIn();
-                            break;
-                        case 22:
-                            packet = new CVarSetPacketIn();
-                            break;
-                        case 23:
-                            packet = new SetHeldItemPacketIn();
-                            break;
-                        default:
-                            throw new Exception("Invalid packet ID: " + packetID);
-                    }
-                    packet.TheClient = TheClient;
-                    if (!packet.ParseBytesAndExecute(data))
-                    {
-                        throw new Exception("Imperfect packet data for packet " + packetID);
-                    }
-                }
+                TickSocket(ConnectionSocket, ref recd, ref recdsofar);
+                TickSocket(ChunkSocket, ref recd2, ref recdsofar2);
             }
             catch (Exception ex)
             {
@@ -207,6 +226,17 @@ namespace Voxalia.ClientGame.NetworkSystem
                 SysConsole.Output(OutputType.INFO, ex.ToString()); // TODO: Make me 'debug only'!
                 Disconnect();
             }
+        }
+
+        public byte[] GetBytesFor(AbstractPacketOut packet)
+        {
+            byte id = packet.ID;
+            byte[] data = packet.Data;
+            byte[] fdata = new byte[data.Length + 5];
+            Utilities.IntToBytes(data.Length).CopyTo(fdata, 0);
+            fdata[4] = id;
+            data.CopyTo(fdata, 5);
+            return fdata;
         }
 
         public void SendPacket(AbstractPacketOut packet)
@@ -217,13 +247,24 @@ namespace Voxalia.ClientGame.NetworkSystem
             }
             try
             {
-                byte id = packet.ID;
-                byte[] data = packet.Data;
-                byte[] fdata = new byte[data.Length + 5];
-                Utilities.IntToBytes(data.Length).CopyTo(fdata, 0);
-                fdata[4] = id;
-                data.CopyTo(fdata, 5);
-                ConnectionSocket.Send(fdata);
+                ConnectionSocket.Send(GetBytesFor(packet));
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output(OutputType.WARNING, "Forcibly disconnected from server: " + ex.GetType().Name + ": " + ex.Message);
+                Disconnect();
+            }
+        }
+
+        public void SendChunkPacket(AbstractPacketOut packet)
+        {
+            if (!IsAlive)
+            {
+                return;
+            }
+            try
+            {
+                ChunkSocket.Send(GetBytesFor(packet));
             }
             catch (Exception ex)
             {
@@ -292,7 +333,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                 ConnectionSocket.SendBufferSize = 5 * 1024 * 1024;
                 int tport = Utilities.StringToInt(LastPort);
                 ConnectionSocket.Connect(new IPEndPoint(address, tport));
-                ConnectionSocket.Send(FileHandler.encoding.GetBytes("SOG__\r" + TheClient.Username
+                ConnectionSocket.Send(FileHandler.encoding.GetBytes("VOX__\r" + TheClient.Username
                     + "\r" + key + "\r" + LastIP + "\r" + LastPort + "\n"));
                 byte[] resp = ReceiveUntil(ConnectionSocket, 50, (byte)'\n');
                 if (FileHandler.encoding.GetString(resp) != "ACCEPT")
@@ -301,6 +342,24 @@ namespace Voxalia.ClientGame.NetworkSystem
                     throw new Exception("Server did not accept connection");
                 }
                 ConnectionSocket.Blocking = false;
+                ChunkSocket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                ChunkSocket.LingerState.LingerTime = 5;
+                ChunkSocket.LingerState.Enabled = true;
+                ChunkSocket.ReceiveTimeout = 10000;
+                ChunkSocket.SendTimeout = 10000;
+                ChunkSocket.ReceiveBufferSize = 5 * 1024 * 1024;
+                ChunkSocket.SendBufferSize = 5 * 1024 * 1024;
+                ChunkSocket.Connect(new IPEndPoint(address, tport));
+                ChunkSocket.Send(FileHandler.encoding.GetBytes("VOXc_\r" + TheClient.Username
+                    + "\r" + key + "\r" + LastIP + "\r" + LastPort + "\n"));
+                resp = ReceiveUntil(ChunkSocket, 50, (byte)'\n');
+                if (FileHandler.encoding.GetString(resp) != "ACCEPT")
+                {
+                    ConnectionSocket.Close();
+                    ChunkSocket.Close();
+                    throw new Exception("Server did not accept connection");
+                }
+                ChunkSocket.Blocking = false;
                 SysConsole.Output(OutputType.INFO, "Connected to " + address.ToString() + ":" + tport);
                 IsAlive = true;
             }
@@ -312,6 +371,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                 }
                 SysConsole.Output(OutputType.ERROR, "Networking / connect internal: " + ex.ToString());
                 ConnectionSocket.Close(5);
+                ChunkSocket.Close(5);
             }
         }
 

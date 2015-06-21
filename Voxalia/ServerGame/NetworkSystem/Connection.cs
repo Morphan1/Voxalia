@@ -66,7 +66,7 @@ namespace Voxalia.ServerGame.NetworkSystem
             {
                 SysConsole.Output(OutputType.WARNING, "Disconnected " + PE + " -> " + ex.GetType().Name + ": " + ex.Message);
                 // TODO: Debug Only
-                SysConsole.Output(OutputType.ERROR, ex.ToString());
+                SysConsole.Output(ex);
                 PE.Kick("Internal exception.");
             }
         }
@@ -138,6 +138,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                             default:
                                 throw new Exception("Invalid packet ID: " + packetID);
                         }
+                        packet.Chunk = PE.ChunkNetwork == this;
                         packet.Player = PE;
                         if (!packet.ParseBytesAndExecute(data))
                         {
@@ -162,7 +163,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                         // HTTP HEAD
                         throw new NotImplementedException("HTTP HEAD not yet implemented");
                     }
-                    else if (recd[0] == 'S' && recd[1] == 'O' && recd[2] == 'G' && recd[3] == '_' && recd[4] == '_')
+                    else if (recd[0] == 'V' && recd[1] == 'O' && recd[2] == 'X' && recd[3] == '_' && recd[4] == '_')
                     {
                         if (recd[recdsofar - 1] == '\n')
                         {
@@ -170,7 +171,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                             string[] datums = data.Split('\r');
                             if (datums.Length != 4)
                             {
-                                throw new Exception("Invalid SOG__ connection details!");
+                                throw new Exception("Invalid VOX__ connection details!");
                             }
                             string name = datums[0];
                             string key = datums[1];
@@ -187,9 +188,53 @@ namespace Voxalia.ServerGame.NetworkSystem
                             player.Host = host;
                             player.Port = port;
                             player.IP = PrimarySocket.RemoteEndPoint.ToString();
+                            TheServer.PlayersWaiting.Add(player);
+                            GotBase = true;
+                            PE = player;
+                            recdsofar = 0;
+                        }
+                    }
+                    else if (recd[0] == 'V' && recd[1] == 'O' && recd[2] == 'X' && recd[3] == 'c' && recd[4] == '_')
+                    {
+                        if (recd[recdsofar - 1] == '\n')
+                        {
+                            string data = FileHandler.encoding.GetString(recd, 6, recdsofar - 6);
+                            string[] datums = data.Split('\r');
+                            if (datums.Length != 4)
+                            {
+                                throw new Exception("Invalid VOXc_ connection details!");
+                            }
+                            string name = datums[0];
+                            string key = datums[1];
+                            string host = datums[2];
+                            string port = datums[3];
+                            if (!Utilities.ValidateUsername(name))
+                            {
+                                throw new Exception("Invalid connection - unreasonable username!");
+                            }
+                            PlayerEntity player = null;
+                            for (int i = 0; i < TheServer.PlayersWaiting.Count; i++)
+                            {
+                                if (TheServer.PlayersWaiting[i].Name == name && TheServer.PlayersWaiting[i].Host == host &&
+                                    TheServer.PlayersWaiting[i].Port == port)
+                                    // TODO: Check key
+                                {
+                                    player = TheServer.PlayersWaiting[i];
+                                    TheServer.PlayersWaiting.RemoveAt(i);
+                                    break;
+                                }
+                            }
+                            if (player == null)
+                            {
+                                throw new Exception("Can't find player for VOXc_!");
+                            }
+                            player.ChunkNetwork = this;
+                            PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
                             TheServer.SpawnEntity(player);
                             player.LastPingByte = 0;
+                            player.LastCPingByte = 0;
                             SendPacket(new PingPacketOut(0));
+                            player.Network.SendPacket(new PingPacketOut(0));
                             player.Die();
                             GotBase = true;
                             PE = player;
@@ -205,14 +250,20 @@ namespace Voxalia.ServerGame.NetworkSystem
             catch (Exception ex)
             {
                 PrimarySocket.Close();
-                if (PE != null)
+                try
                 {
-                    PE.Kick("Internal exception.");
+                    if (PE != null)
+                    {
+                        PE.Kick("Internal exception.");
+                    }
                 }
-                SysConsole.Output(OutputType.WARNING, "Forcibly disconnected client: " + ex.GetType().Name + ": " + ex.Message);
-                // TODO: Debug Only
-                SysConsole.Output(OutputType.ERROR, ex.ToString());
-                Alive = false;
+                finally
+                {
+                    SysConsole.Output(OutputType.WARNING, "Forcibly disconnected client: " + ex.GetType().Name + ": " + ex.Message);
+                    // TODO: Debug Only
+                    SysConsole.Output(ex);
+                    Alive = false;
+                }
             }
         }
     }

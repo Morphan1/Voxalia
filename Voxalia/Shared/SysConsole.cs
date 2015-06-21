@@ -208,6 +208,11 @@ namespace Voxalia.Shared
             Console.Write(">");// TODO + ConsoleHandler.read);
         }
 
+        public static void Output(Exception ex)
+        {
+            Output(OutputType.ERROR, ex.GetType().Name + ": " + ex.Message + "\n" + Environment.StackTrace);
+        }
+
         /// <summary>
         /// Properly formats system console output.
         /// </summary>

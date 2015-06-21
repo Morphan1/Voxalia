@@ -25,6 +25,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Connection Network;
 
+        public Connection ChunkNetwork;
+
         public string Name;
 
         public string Host;
@@ -34,6 +36,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public string IP;
 
         public byte LastPingByte = 0;
+
+        public byte LastCPingByte = 0;
 
         public bool Upward = false;
         public bool Forward = false;
@@ -97,11 +101,13 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 Network.PrimarySocket.Close(5);
             }
-            ItemStack it = GetItemForSlot(cItem);
-            it.Info.SwitchFrom(this, it);
-            HookItem.RemoveHook(this);
-            TheServer.DespawnEntity(CursorMarker);
-            TheServer.DespawnEntity(this);
+            if (IsSpawned)
+            {
+                ItemStack it = GetItemForSlot(cItem);
+                it.Info.SwitchFrom(this, it);
+                HookItem.RemoveHook(this);
+                TheServer.DespawnEntity(this);
+            }
         }
 
         public Location Direction;
@@ -151,6 +157,16 @@ namespace Voxalia.ServerGame.EntitySystem
                 CursorMarker.CGroup = TheServer.Collision.NonSolid;
                 CursorMarker.Visible = false;
                 TheServer.SpawnEntity(CursorMarker);
+            }
+        }
+
+        public override void DestroyBody()
+        {
+            base.DestroyBody();
+            if (CursorMarker.IsSpawned)
+            {
+                TheServer.DespawnEntity(CursorMarker);
+                CursorMarker = null;
             }
         }
 
@@ -226,6 +242,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
+            if (!IsSpawned)
+            {
+                return;
+            }
             while (Direction.Yaw < 0)
             {
                 Direction.Yaw += 360;
@@ -303,8 +323,8 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
-            CursorMarker.SetPosition(GetPosition() + ForwardVector() * 0.4f);
-            CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(Direction.Pitch * Utilities.PI180)) *
+            CursorMarker.SetPosition(GetPosition() + ForwardVector() * 0.5f);
+            CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(Direction.Pitch * Utilities.PI180)) * // TODO: is the pitch really needed for this?
                 Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(Direction.Yaw * Utilities.PI180)));
             /*if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
             {
