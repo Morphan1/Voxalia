@@ -42,6 +42,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             // TODO: Actually load from file!
             World world = new World();
             world.Name = name.ToLower();
+            world.TheServer = this;
             LoadedWorlds.Add(world);
         }
 

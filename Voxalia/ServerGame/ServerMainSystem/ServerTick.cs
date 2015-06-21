@@ -216,7 +216,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         public Dictionary<string, Entity> JointTargets = new Dictionary<string,Entity>();
 
-        public void SpawnEntity(Entity e)
+        public void SpawnEntity(Entity e) // TODO: Move me to World
         {
             if (e.IsSpawned)
             {
@@ -235,6 +235,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             {
                 Targetables.Add((EntityTargettable)e);
             }
+            e.TheWorld = LoadedWorlds[0]; // TODO: this
             AbstractPacketOut packet = null;
             if (e is PhysicsEntity && !(e is PlayerEntity))
             {

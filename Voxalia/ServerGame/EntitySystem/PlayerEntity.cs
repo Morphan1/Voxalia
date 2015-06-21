@@ -366,6 +366,14 @@ namespace Voxalia.ServerGame.EntitySystem
                 LastAltClick = TheServer.GlobalTickTime;
             }
             cit.Info.Tick(this, cit);
+            // TODO: Better system
+            TheWorld.LoadChunk(GetPosition());
+            TheWorld.LoadChunk(GetPosition() + new Location(30, 0, 0));
+            TheWorld.LoadChunk(GetPosition() + new Location(-30, 0, 0));
+            TheWorld.LoadChunk(GetPosition() + new Location(0, -30, 0));
+            TheWorld.LoadChunk(GetPosition() + new Location(0, 30, 0));
+            TheWorld.LoadChunk(GetPosition() + new Location(0, 0, -30));
+            TheWorld.LoadChunk(GetPosition() + new Location(0, 0, 30));
             base.Tick();
         }
 

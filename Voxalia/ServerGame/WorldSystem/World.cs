@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Voxalia.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
     public class World
     {
         public string Name = null;
+
+        public Server TheServer = null;
 
         public Dictionary<Location, Chunk> LoadedChunks = new Dictionary<Location, Chunk>();
 
@@ -24,14 +27,17 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             // TODO: Actually load from file
             chunk = new Chunk();
+            chunk.OwningWorld = this;
+            chunk.WorldPosition = pos;
             PopulateChunk(chunk);
             LoadedChunks.Add(pos, chunk);
+            chunk.AddToWorld();
             return chunk;
         }
 
         public void PopulateChunk(Chunk chunk)
         {
-            if (chunk.WorldPosition.X < 0)
+            if (chunk.WorldPosition.Z < 0)
             {
                 for (int i = 0; i < chunk.BlocksInternal.Length; i++)
                 {

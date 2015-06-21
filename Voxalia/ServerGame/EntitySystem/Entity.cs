@@ -5,6 +5,7 @@ using System.Text;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.JointSystem;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -13,6 +14,8 @@ namespace Voxalia.ServerGame.EntitySystem
     /// </summary>
     public abstract class Entity
     {
+        public World TheWorld;
+
         public Entity(Server tserver, bool tickme)
         {
             TheServer = tserver;
