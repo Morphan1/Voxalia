@@ -29,6 +29,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems.LightingSystem
             InternalLights[4].up = new Vector3(0, 1, 0);
             InternalLights[5].up = new Vector3(0, 1, 0);
             Reposition(EyePos);
+            MaxDistance = radius;
         }
 
         public void Destroy()

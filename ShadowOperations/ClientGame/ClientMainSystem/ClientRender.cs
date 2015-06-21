@@ -143,12 +143,16 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     RenderingShadows = true;
                     for (int i = 0; i < Lights.Count; i++)
                     {
-                        for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                        // TODO: If movement_near_light
+                        if ((Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance)
                         {
-                            Lights[i].InternalLights[x].Attach();
-                            // TODO: Render settings
-                            Render3D(true);
-                            Lights[i].InternalLights[x].Complete();
+                            for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                            {
+                                Lights[i].InternalLights[x].Attach();
+                                // TODO: Render settings
+                                Render3D(true);
+                                Lights[i].InternalLights[x].Complete();
+                            }
                         }
                     }
                     SetViewport();
@@ -198,25 +202,31 @@ namespace ShadowOperations.ClientGame.ClientMainSystem
                     GL.Disable(EnableCap.CullFace);
                     for (int i = 0; i < Lights.Count; i++)
                     {
-                        GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
-                        for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                        if ((Lights[i].EyePos - CameraPos).LengthSquared() <
+                            CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD
+                            + Lights[i].MaxDistance * Lights[i].MaxDistance * 4)
+                        // TODO: Else, if somewhat close, fade in/out
                         {
-                            GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
-                            GL.ActiveTexture(TextureUnit.Texture0);
-                            GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
-                            GL.ActiveTexture(TextureUnit.Texture4);
-                            GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
-                            Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
-                            GL.UniformMatrix4(3, false, ref smat);
-                            GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
-                            GL.Uniform3(8, ref Lights[i].InternalLights[x].color);
-                            GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
-                            GL.Uniform1(12, 1f / (float)Lights[i].InternalLights[x].texsize);
-                            GL.Uniform1(13, CVars.r_shadowblur.ValueF);
-                            Rendering.RenderRectangle(-1, -1, 1, 1);
-                            first = !first;
-                            GL.ActiveTexture(TextureUnit.Texture0);
-                            GL.BindTexture(TextureTarget.Texture2D, 0);
+                            GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
+                            for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                            {
+                                GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
+                                GL.ActiveTexture(TextureUnit.Texture0);
+                                GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
+                                GL.ActiveTexture(TextureUnit.Texture4);
+                                GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
+                                Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
+                                GL.UniformMatrix4(3, false, ref smat);
+                                GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
+                                GL.Uniform3(8, ref Lights[i].InternalLights[x].color);
+                                GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
+                                GL.Uniform1(12, 1f / (float)Lights[i].InternalLights[x].texsize);
+                                GL.Uniform1(13, CVars.r_shadowblur.ValueF);
+                                Rendering.RenderRectangle(-1, -1, 1, 1);
+                                first = !first;
+                                GL.ActiveTexture(TextureUnit.Texture0);
+                                GL.BindTexture(TextureTarget.Texture2D, 0);
+                            }
                         }
                     }
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);

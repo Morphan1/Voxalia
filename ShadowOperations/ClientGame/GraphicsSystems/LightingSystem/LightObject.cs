@@ -12,6 +12,8 @@ namespace ShadowOperations.ClientGame.GraphicsSystems.LightingSystem
 
         public Location EyePos;
 
+        public float MaxDistance;
+
         public abstract void Reposition(Location pos);
     }
 }

@@ -28,6 +28,7 @@ namespace ShadowOperations.ClientGame.GraphicsSystems.LightingSystem
             Width = size;
             InternalLights.Add(new Light());
             InternalLights[0].Create(Texsize, pos.ToOVector(), (pos + dir).ToOVector(), Width, Radius, Color.ToOVector());
+            MaxDistance = radius;
         }
 
         public void Destroy()
