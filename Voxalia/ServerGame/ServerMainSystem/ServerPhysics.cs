@@ -6,6 +6,7 @@ using Voxalia.Shared;
 using BEPUphysics;
 using BEPUutilities;
 using BEPUphysics.Settings;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.ServerMainSystem
 {
@@ -32,6 +33,16 @@ namespace Voxalia.ServerGame.ServerMainSystem
             CollisionDetectionSettings.AllowedPenetration = 0.001f;
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
+        }
+
+        public List<World> LoadedWorlds = new List<World>();
+
+        public void LoadWorld(string name)
+        {
+            // TODO: Actually load from file!
+            World world = new World();
+            world.Name = name.ToLower();
+            LoadedWorlds.Add(world);
         }
 
         /// <summary>
