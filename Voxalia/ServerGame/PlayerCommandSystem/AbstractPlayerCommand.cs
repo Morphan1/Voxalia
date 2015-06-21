@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ShadowOperations.ServerGame.PlayerCommandSystem
+namespace Voxalia.ServerGame.PlayerCommandSystem
 {
     public abstract class AbstractPlayerCommand
     {

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.ServerMainSystem;
 using Frenetic;
 using Frenetic.CommandSystem;
-using ShadowOperations.ServerGame.CommandSystem.CommonCommands;
-using ShadowOperations.ServerGame.CommandSystem.MapCommands;
-using ShadowOperations.ServerGame.CommandSystem.PlayerCommands;
+using Voxalia.ServerGame.CommandSystem.CommonCommands;
+using Voxalia.ServerGame.CommandSystem.MapCommands;
+using Voxalia.ServerGame.CommandSystem.PlayerCommands;
 
-namespace ShadowOperations.ServerGame.CommandSystem
+namespace Voxalia.ServerGame.CommandSystem
 {
     /// <summary>
     /// Handles all console commands and key binds.

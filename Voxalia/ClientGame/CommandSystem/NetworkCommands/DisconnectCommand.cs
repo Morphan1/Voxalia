@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Frenetic;
 using Frenetic.CommandSystem;
-using ShadowOperations.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.ClientMainSystem;
 
-namespace ShadowOperations.ClientGame.CommandSystem.NetworkCommands
+namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
 {
     class DisconnectCommand: AbstractCommand
     {

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.EntitySystem;
-using ShadowOperations.Shared;
+using Voxalia.ServerGame.EntitySystem;
+using Voxalia.Shared;
 using BEPUphysics.CollisionRuleManagement;
 
-namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
+namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     class SpawnPhysicsEntityPacketOut: AbstractPacketOut
     {

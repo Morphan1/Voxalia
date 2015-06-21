@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using BEPUutilities;
 
-namespace ShadowOperations.Shared
+namespace Voxalia.Shared
 {
     public class AnimationEngine
     {

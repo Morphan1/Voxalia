@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ShadowOperations.ClientGame.NetworkSystem
+namespace Voxalia.ClientGame.NetworkSystem
 {
     public class NetStringManager
     {

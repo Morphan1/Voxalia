@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.ItemSystem;
-using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.Shared;
+using Voxalia.ServerGame.ItemSystem;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
-namespace ShadowOperations.ServerGame.NetworkSystem.PacketsIn
+namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
 {
     public class HoldItemPacketIn: AbstractPacketIn
     {

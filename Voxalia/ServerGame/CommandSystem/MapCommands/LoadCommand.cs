@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using Frenetic;
 using Frenetic.CommandSystem;
-using ShadowOperations.ServerGame.ServerMainSystem;
-using ShadowOperations.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.Shared;
 using System.Diagnostics;
 
-namespace ShadowOperations.ServerGame.CommandSystem.MapCommands
+namespace Voxalia.ServerGame.CommandSystem.MapCommands
 {
     class LoadCommand: AbstractCommand
     {

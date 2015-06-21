@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic.CommandSystem;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.ClientGame.NetworkSystem.PacketsOut;
-using ShadowOperations.ClientGame.NetworkSystem.PacketsIn;
-using ShadowOperations.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.NetworkSystem.PacketsOut;
+using Voxalia.ClientGame.NetworkSystem.PacketsIn;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ClientGame.CommandSystem.CommonCommands
+namespace Voxalia.ClientGame.CommandSystem.CommonCommands
 {
     /// <summary>
     /// A quick command to switch to the previous item.

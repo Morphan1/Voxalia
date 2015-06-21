@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace ShadowOperations.Shared
+namespace Voxalia.Shared
 {
     /// <summary>
     /// Handles command line input.
@@ -165,7 +165,7 @@ namespace ShadowOperations.Shared
             {
                 for (int i = 0; i < commandsinput.Count; i++)
                 {
-                    ShadowOperations.ServerGame.ServerMainSystem.Server.Central.Commands.ExecuteCommands(Utilities.CleanStringInput(commandsinput[i]));
+                    Voxalia.ServerGame.ServerMainSystem.Server.Central.Commands.ExecuteCommands(Utilities.CleanStringInput(commandsinput[i]));
                 }
             }
         }

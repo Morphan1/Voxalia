@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Diagnostics;
 
-namespace ShadowOperations.Shared
+namespace Voxalia.Shared
 {
     public class SysConsole
     {

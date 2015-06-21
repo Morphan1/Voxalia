@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.ServerMainSystem;
-using ShadowOperations.ServerGame.JointSystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.JointSystem;
 
-namespace ShadowOperations.ServerGame.EntitySystem
+namespace Voxalia.ServerGame.EntitySystem
 {
     /// <summary>
     /// Represents an object within the world.

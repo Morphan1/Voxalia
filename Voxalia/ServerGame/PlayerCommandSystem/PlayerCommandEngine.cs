@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.EntitySystem;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands;
+using Voxalia.ServerGame.EntitySystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.PlayerCommandSystem.CommonCommands;
 
-namespace ShadowOperations.ServerGame.PlayerCommandSystem
+namespace Voxalia.ServerGame.PlayerCommandSystem
 {
     public class PlayerCommandEngine
     {

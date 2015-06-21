@@ -6,7 +6,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 
-namespace ShadowOperations.ClientGame.GraphicsSystems
+namespace Voxalia.ClientGame.GraphicsSystems
 {
     public class TextVBO
     {

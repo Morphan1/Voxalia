@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.ClientMainSystem;
+using Voxalia.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
 
-namespace ShadowOperations.ClientGame.EntitySystem
+namespace Voxalia.ClientGame.EntitySystem
 {
     public abstract class PrimitiveEntity: Entity
     {

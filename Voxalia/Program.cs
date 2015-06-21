@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.ServerMainSystem;
-using ShadowOperations.ClientGame.ClientMainSystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.ClientGame.ClientMainSystem;
 
-namespace ShadowOperations
+namespace Voxalia
 {
     /// <summary>
     /// Central program entry point.
@@ -17,7 +17,7 @@ namespace ShadowOperations
         /// <summary>
         /// The name of the game.
         /// </summary>
-        public static string GameName = "ShadowOperations";
+        public static string GameName = "Voxalia";
 
         /// <summary>
         /// The version of the game.

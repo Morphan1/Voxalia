@@ -5,9 +5,9 @@ using System.Text;
 using OpenTK;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ClientGame.AudioSystem
+namespace Voxalia.ClientGame.AudioSystem
 {
     public class ActiveSound
     {

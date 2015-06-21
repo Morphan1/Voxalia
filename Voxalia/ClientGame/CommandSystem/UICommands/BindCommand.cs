@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic.CommandSystem;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.ClientGame.UISystem;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.UISystem;
 using OpenTK.Input;
 using Frenetic.TagHandlers;
 
-namespace ShadowOperations.ClientGame.CommandSystem.UICommands
+namespace Voxalia.ClientGame.CommandSystem.UICommands
 {
     /// <summary>
     /// A quick command to quit the game.

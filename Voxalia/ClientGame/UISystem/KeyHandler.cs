@@ -6,9 +6,9 @@ using Frenetic;
 using Frenetic.CommandSystem;
 using OpenTK;
 using OpenTK.Input;
-using ShadowOperations.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.ClientMainSystem;
 
-namespace ShadowOperations.ClientGame.UISystem
+namespace Voxalia.ClientGame.UISystem
 {
     /// <summary>
     /// Handles keyboard input.

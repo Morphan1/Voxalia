@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.JointSystem;
-using ShadowOperations.Shared;
+using Voxalia.ServerGame.JointSystem;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
+namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     public class AddJointPacketOut : AbstractPacketOut
     {

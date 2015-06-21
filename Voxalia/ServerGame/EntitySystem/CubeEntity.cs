@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.ServerMainSystem;
-using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using BEPUphysics.EntityStateManagement;
 
-namespace ShadowOperations.ServerGame.EntitySystem
+namespace Voxalia.ServerGame.EntitySystem
 {
     public class CubeEntity: CuboidalEntity
     {

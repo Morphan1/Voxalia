@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.ServerMainSystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
 
-namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
+namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     public class CVarSetPacketOut: AbstractPacketOut
     {

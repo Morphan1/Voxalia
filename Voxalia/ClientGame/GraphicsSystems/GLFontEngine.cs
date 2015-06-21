@@ -8,9 +8,9 @@ using OpenTK.Graphics.OpenGL4;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Drawing.Imaging;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ClientGame.GraphicsSystems
+namespace Voxalia.ClientGame.GraphicsSystems
 {
     public class GLFontEngine
     {

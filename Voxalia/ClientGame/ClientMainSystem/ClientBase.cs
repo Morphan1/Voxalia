@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using ShadowOperations.ClientGame.EntitySystem;
-using ShadowOperations.ClientGame.GraphicsSystems;
-using ShadowOperations.ClientGame.UISystem;
+using Voxalia.ClientGame.EntitySystem;
+using Voxalia.ClientGame.GraphicsSystems;
+using Voxalia.ClientGame.UISystem;
 using OpenTK.Input;
-using ShadowOperations.ClientGame.CommandSystem;
+using Voxalia.ClientGame.CommandSystem;
 using System.Diagnostics;
-using ShadowOperations.ClientGame.NetworkSystem;
-using ShadowOperations.ClientGame.AudioSystem;
-using ShadowOperations.ClientGame.GraphicsSystems.ParticleSystem;
+using Voxalia.ClientGame.NetworkSystem;
+using Voxalia.ClientGame.AudioSystem;
+using Voxalia.ClientGame.GraphicsSystems.ParticleSystem;
 
-namespace ShadowOperations.ClientGame.ClientMainSystem
+namespace Voxalia.ClientGame.ClientMainSystem
 {
     /// <summary>
     /// The center of all client activity in Shadow Operations.

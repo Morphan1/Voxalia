@@ -1,1 +1,1 @@
-ShadowOperations.exe server
+Voxalia.exe server

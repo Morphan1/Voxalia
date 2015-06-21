@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ShadowOperations.ServerGame.NetworkSystem
+namespace Voxalia.ServerGame.NetworkSystem
 {
     public abstract class AbstractPacketOut
     {

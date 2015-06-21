@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 using BEPUphysics;
 using BEPUutilities;
 using BEPUphysics.Settings;
 
-namespace ShadowOperations.ServerGame.ServerMainSystem
+namespace Voxalia.ServerGame.ServerMainSystem
 {
     public partial class Server
     {

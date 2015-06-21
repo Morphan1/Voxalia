@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic.CommandSystem;
-using ShadowOperations.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.ClientMainSystem;
 
-namespace ShadowOperations.ClientGame.CommandSystem.UICommands
+namespace Voxalia.ClientGame.CommandSystem.UICommands
 {
     /// <summary>
     /// A command to walk.

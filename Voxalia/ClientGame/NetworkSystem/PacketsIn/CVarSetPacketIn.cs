@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 using Frenetic;
 
-namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
+namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
     public class CVarSetPacketIn: AbstractPacketIn
     {

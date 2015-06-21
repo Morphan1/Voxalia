@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 using OpenTK;
 
-namespace ShadowOperations.ClientGame.GraphicsSystems
+namespace Voxalia.ClientGame.GraphicsSystems
 {
     /// <summary>
     /// Represents a 3D Frustum.

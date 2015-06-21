@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.ClientMainSystem;
 
-namespace ShadowOperations.ClientGame.NetworkSystem
+namespace Voxalia.ClientGame.NetworkSystem
 {
     public abstract class AbstractPacketIn
     {

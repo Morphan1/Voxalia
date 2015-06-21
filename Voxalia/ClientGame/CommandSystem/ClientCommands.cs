@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using Frenetic;
 using Frenetic.CommandSystem;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.ClientGame.CommandSystem.UICommands;
-using ShadowOperations.ClientGame.CommandSystem.CommonCommands;
-using ShadowOperations.ClientGame.CommandSystem.NetworkCommands;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.CommandSystem.UICommands;
+using Voxalia.ClientGame.CommandSystem.CommonCommands;
+using Voxalia.ClientGame.CommandSystem.NetworkCommands;
 
-namespace ShadowOperations.ClientGame.CommandSystem
+namespace Voxalia.ClientGame.CommandSystem
 {
     /// <summary>
     /// Handles all console commands and key binds.

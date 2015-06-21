@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.EntitySystem;
-using ShadowOperations.ServerGame.NetworkSystem;
-using ShadowOperations.ServerGame.JointSystem;
-using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.Shared;
+using Voxalia.ServerGame.EntitySystem;
+using Voxalia.ServerGame.NetworkSystem;
+using Voxalia.ServerGame.JointSystem;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using System.Threading;
 using Frenetic;
 using Frenetic.TagHandlers.Common;
 
-namespace ShadowOperations.ServerGame.ServerMainSystem
+namespace Voxalia.ServerGame.ServerMainSystem
 {
     public partial class Server
     {

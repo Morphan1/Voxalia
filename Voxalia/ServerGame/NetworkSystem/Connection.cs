@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.ServerMainSystem;
-using ShadowOperations.ServerGame.EntitySystem;
-using ShadowOperations.ServerGame.NetworkSystem.PacketsIn;
-using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.EntitySystem;
+using Voxalia.ServerGame.NetworkSystem.PacketsIn;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
-namespace ShadowOperations.ServerGame.NetworkSystem
+namespace Voxalia.ServerGame.NetworkSystem
 {
     public class Connection
     {

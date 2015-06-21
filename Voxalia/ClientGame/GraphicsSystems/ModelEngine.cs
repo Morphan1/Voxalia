@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 using Frenetic;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using Assimp;
 
-namespace ShadowOperations.ClientGame.GraphicsSystems
+namespace Voxalia.ClientGame.GraphicsSystems
 {
     public class ModelEngine
     {

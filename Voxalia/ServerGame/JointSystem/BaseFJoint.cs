@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.EntitySystem;
-using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.ServerGame.EntitySystem;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
-namespace ShadowOperations.ServerGame.JointSystem
+namespace Voxalia.ServerGame.JointSystem
 {
     public abstract class BaseFJoint: InternalBaseJoint
     {

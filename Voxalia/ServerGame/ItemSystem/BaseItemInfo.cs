@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.EntitySystem;
+using Voxalia.ServerGame.EntitySystem;
 
-namespace ShadowOperations.ServerGame.ItemSystem
+namespace Voxalia.ServerGame.ItemSystem
 {
     public abstract class BaseItemInfo
     {

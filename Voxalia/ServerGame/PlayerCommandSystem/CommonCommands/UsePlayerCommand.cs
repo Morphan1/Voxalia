@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.ServerMainSystem;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.EntitySystem;
+using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.EntitySystem;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 
-namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
+namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
     class UsePlayerCommand: AbstractPlayerCommand
     {

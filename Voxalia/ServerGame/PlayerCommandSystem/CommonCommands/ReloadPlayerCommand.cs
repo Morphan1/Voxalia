@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.ItemSystem;
-using ShadowOperations.ServerGame.ItemSystem.CommonItems;
+using Voxalia.ServerGame.ItemSystem;
+using Voxalia.ServerGame.ItemSystem.CommonItems;
 
-namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
+namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
     class ReloadPlayerCommand : AbstractPlayerCommand
     {

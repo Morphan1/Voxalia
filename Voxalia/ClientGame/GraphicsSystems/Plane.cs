@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ClientGame.GraphicsSystems
+namespace Voxalia.ClientGame.GraphicsSystems
 {
     /// <summary>
     /// Represents a triangle in 3D space.

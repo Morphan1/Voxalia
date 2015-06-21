@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using Frenetic;
 using Frenetic.CommandSystem;
-using ShadowOperations.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.ServerMainSystem;
 using Frenetic.TagHandlers;
 using Frenetic.TagHandlers.Common;
 using Frenetic.TagHandlers.Objects;
-using ShadowOperations.ServerGame.EntitySystem;
+using Voxalia.ServerGame.EntitySystem;
 
-namespace ShadowOperations.ServerGame.CommandSystem.PlayerCommands
+namespace Voxalia.ServerGame.CommandSystem.PlayerCommands
 {
     class KickCommand: AbstractCommand
     {

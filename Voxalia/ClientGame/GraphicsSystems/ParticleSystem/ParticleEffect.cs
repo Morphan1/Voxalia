@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.Shared;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 
-namespace ShadowOperations.ClientGame.GraphicsSystems.ParticleSystem
+namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 {
     public class ParticleEffect
     {

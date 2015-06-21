@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ClientGame.NetworkSystem.PacketsOut;
-using ShadowOperations.Shared;
+using Voxalia.ClientGame.NetworkSystem.PacketsOut;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
+namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
     public class PingPacketIn: AbstractPacketIn
     {

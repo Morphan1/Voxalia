@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ShadowOperations.ClientGame.EntitySystem
+namespace Voxalia.ClientGame.EntitySystem
 {
     public interface EntityAnimated
     {

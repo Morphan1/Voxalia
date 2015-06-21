@@ -5,11 +5,11 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 
-namespace ShadowOperations.ClientGame.GraphicsSystems
+namespace Voxalia.ClientGame.GraphicsSystems
 {
     public class VBO
     {

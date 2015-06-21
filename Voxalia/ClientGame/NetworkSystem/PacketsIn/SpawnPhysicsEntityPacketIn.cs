@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.ClientGame.EntitySystem;
-using ShadowOperations.ClientGame.GraphicsSystems;
+using Voxalia.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.EntitySystem;
+using Voxalia.ClientGame.GraphicsSystems;
 
-namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
+namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
     public class SpawnPhysicsEntityPacketIn: AbstractPacketIn
     {

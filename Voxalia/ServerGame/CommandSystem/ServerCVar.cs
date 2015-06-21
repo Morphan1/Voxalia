@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Frenetic;
 using Frenetic.CommandSystem;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ServerGame.CommandSystem
+namespace Voxalia.ServerGame.CommandSystem
 {
     /// <summary>
     /// Handles the serverside CVar system.

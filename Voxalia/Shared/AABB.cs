@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ShadowOperations.Shared
+namespace Voxalia.Shared
 {
     public class AABB
     {

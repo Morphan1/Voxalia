@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.EntitySystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.EntitySystem;
 using BEPUphysics.Constraints.TwoEntity;
 using BEPUphysics.Constraints.TwoEntity.Joints;
 
-namespace ShadowOperations.ServerGame.JointSystem
+namespace Voxalia.ServerGame.JointSystem
 {
     public class JointSlider : BaseJoint
     {

@@ -5,11 +5,11 @@ using System.Text;
 using OpenTK;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 using OggDecoder;
-using ShadowOperations.ClientGame.CommandSystem;
+using Voxalia.ClientGame.CommandSystem;
 
-namespace ShadowOperations.ClientGame.AudioSystem
+namespace Voxalia.ClientGame.AudioSystem
 {
     public class SoundEngine
     {

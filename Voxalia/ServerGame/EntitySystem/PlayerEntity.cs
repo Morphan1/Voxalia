@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.ServerMainSystem;
-using ShadowOperations.ServerGame.NetworkSystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.NetworkSystem;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using BEPUphysics.EntityStateManagement;
-using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
-using ShadowOperations.ServerGame.ItemSystem;
-using ShadowOperations.ServerGame.ItemSystem.CommonItems;
+using Voxalia.ServerGame.ItemSystem;
+using Voxalia.ServerGame.ItemSystem.CommonItems;
 using BEPUphysics.CollisionShapes.ConvexShapes;
-using ShadowOperations.ServerGame.JointSystem;
+using Voxalia.ServerGame.JointSystem;
 
-namespace ShadowOperations.ServerGame.EntitySystem
+namespace Voxalia.ServerGame.EntitySystem
 {
     public class PlayerEntity: EntityLiving
     {

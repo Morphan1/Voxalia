@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.EntitySystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.EntitySystem;
 
-namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
+namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     public class SpawnPrimitiveEntityPacketOut: AbstractPacketOut
     {

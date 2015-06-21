@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ClientGame.EntitySystem;
+using Voxalia.ClientGame.EntitySystem;
 using BEPUutilities;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ClientGame.JointSystem
+namespace Voxalia.ClientGame.JointSystem
 {
     class JointForceWeld: BaseFJoint
     {

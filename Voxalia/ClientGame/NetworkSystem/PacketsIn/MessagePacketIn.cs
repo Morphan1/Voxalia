@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ClientGame.UISystem;
-using ShadowOperations.Shared;
+using Voxalia.ClientGame.UISystem;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
+namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
     class MessagePacketIn: AbstractPacketIn
     {

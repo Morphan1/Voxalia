@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.ServerMainSystem;
-using ShadowOperations.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.Shared;
 using BEPUutilities;
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 
-namespace ShadowOperations.ServerGame.EntitySystem
+namespace Voxalia.ServerGame.EntitySystem
 {
     public abstract class CuboidalEntity: PhysicsEntity
     {

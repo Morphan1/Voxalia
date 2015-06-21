@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.ServerMainSystem;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.ItemSystem;
+using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.ItemSystem;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseEntries.Events;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
@@ -14,7 +14,7 @@ using BEPUphysics.Entities;
 using BEPUphysics.CollisionRuleManagement;
 using BEPUutilities;
 
-namespace ShadowOperations.ServerGame.EntitySystem
+namespace Voxalia.ServerGame.EntitySystem
 {
     class ItemEntity: ModelEntity, EntityUseable
     {

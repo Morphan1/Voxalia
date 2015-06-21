@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic.CommandSystem;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ClientGame.CommandSystem.UICommands
+namespace Voxalia.ClientGame.CommandSystem.UICommands
 {
     /// <summary>
     /// A command to attack.

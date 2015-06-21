@@ -10,7 +10,7 @@ using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionRuleManagement;
 
-namespace ShadowOperations.Shared
+namespace Voxalia.Shared
 {
     public class CollisionResult
     {

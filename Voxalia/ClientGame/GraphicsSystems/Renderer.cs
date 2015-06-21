@@ -5,10 +5,10 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.ClientMainSystem;
+using Voxalia.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
 
-namespace ShadowOperations.ClientGame.GraphicsSystems
+namespace Voxalia.ClientGame.GraphicsSystems
 {
     /// <summary>
     /// Rendering utility.

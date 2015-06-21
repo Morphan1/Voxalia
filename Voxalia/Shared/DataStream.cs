@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace ShadowOperations.Shared
+namespace Voxalia.Shared
 {
     /// <summary>
     /// Wraps a System.IO.MemoryStream.

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 using OpenTK;
 using OpenTK.Input;
-using ShadowOperations.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.ClientMainSystem;
 using System.Drawing;
 
 
-namespace ShadowOperations.ClientGame.UISystem
+namespace Voxalia.ClientGame.UISystem
 {
     /// <summary>
     /// Handles mouse input.

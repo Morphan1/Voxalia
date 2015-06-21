@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.ServerMainSystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
 
-namespace ShadowOperations.ServerGame.ItemSystem
+namespace Voxalia.ServerGame.ItemSystem
 {
     /// <summary>
     /// Represents an item or stack of items on the server.

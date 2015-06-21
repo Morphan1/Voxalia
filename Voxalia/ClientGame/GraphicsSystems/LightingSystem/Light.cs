@@ -5,9 +5,9 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using ShadowOperations.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.ClientMainSystem;
 
-namespace ShadowOperations.ClientGame.GraphicsSystems.LightingSystem
+namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 {
     public class Light
     {

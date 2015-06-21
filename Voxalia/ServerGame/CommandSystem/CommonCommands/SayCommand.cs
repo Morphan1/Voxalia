@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using Frenetic;
 using Frenetic.CommandSystem;
-using ShadowOperations.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.ServerMainSystem;
 using Frenetic.TagHandlers;
 using Frenetic.TagHandlers.Common;
 using Frenetic.TagHandlers.Objects;
-using ShadowOperations.ServerGame.EntitySystem;
-using ShadowOperations.Shared;
+using Voxalia.ServerGame.EntitySystem;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ServerGame.CommandSystem.CommonCommands
+namespace Voxalia.ServerGame.CommandSystem.CommonCommands
 {
     class SayCommand: AbstractCommand
     {

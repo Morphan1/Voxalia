@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.Shared;
 using BEPUutilities;
 using BEPUphysics;
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.EntityStateManagement;
 using BEPUphysics.CollisionShapes;
-using ShadowOperations.ClientGame.JointSystem;
+using Voxalia.ClientGame.JointSystem;
 using BEPUphysics.CollisionRuleManagement;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 
-namespace ShadowOperations.ClientGame.EntitySystem
+namespace Voxalia.ClientGame.EntitySystem
 {
     public abstract class PhysicsEntity: Entity
     {

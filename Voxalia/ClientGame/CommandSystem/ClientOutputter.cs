@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using Frenetic;
 using Frenetic.CommandSystem;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.ClientGame.UISystem;
-using ShadowOperations.ClientGame.NetworkSystem.PacketsOut;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.UISystem;
+using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 
-namespace ShadowOperations.ClientGame.CommandSystem
+namespace Voxalia.ClientGame.CommandSystem
 {
     class ClientOutputter : Outputter
     {

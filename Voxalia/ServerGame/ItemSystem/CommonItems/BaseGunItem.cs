@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.EntitySystem;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.ServerGame.EntitySystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
-namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
+namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
     public abstract class BaseGunItem: BaseItemInfo
     {

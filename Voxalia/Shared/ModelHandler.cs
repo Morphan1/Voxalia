@@ -10,7 +10,7 @@ using BEPUphysics.CollisionShapes;
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 
-namespace ShadowOperations.Shared
+namespace Voxalia.Shared
 {
     public class ModelHandler
     {

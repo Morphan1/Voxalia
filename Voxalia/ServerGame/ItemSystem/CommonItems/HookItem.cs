@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.EntitySystem;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.JointSystem;
+using Voxalia.ServerGame.EntitySystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.JointSystem;
 using BEPUphysics.CollisionRuleManagement;
 using BEPUutilities;
 
-namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
+namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
     class HookItem : BaseItemInfo
     {

@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.ServerMainSystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
 using BEPUutilities;
 using BEPUphysics;
-using ShadowOperations.ServerGame.JointSystem;
+using Voxalia.ServerGame.JointSystem;
 using BEPUphysics.CollisionShapes;
 using BEPUphysics.CollisionRuleManagement;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 
-namespace ShadowOperations.ServerGame.EntitySystem
+namespace Voxalia.ServerGame.EntitySystem
 {
     public abstract class PhysicsEntity: Entity
     {

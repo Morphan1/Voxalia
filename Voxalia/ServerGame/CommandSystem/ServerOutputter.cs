@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 using Frenetic;
 using Frenetic.CommandSystem;
-using ShadowOperations.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.ServerMainSystem;
 
-namespace ShadowOperations.ServerGame.CommandSystem
+namespace Voxalia.ServerGame.CommandSystem
 {
     class ServerOutputter : Outputter
     {

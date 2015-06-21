@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.EntitySystem;
+using Voxalia.Shared;
+using Voxalia.ClientGame.EntitySystem;
 
-namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
+namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
     public class PrimitiveEntityUpdatePacketIn: AbstractPacketIn
     {

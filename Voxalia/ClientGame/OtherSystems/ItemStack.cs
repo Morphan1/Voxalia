@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.ClientGame.GraphicsSystems;
+using Voxalia.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.GraphicsSystems;
 using OpenTK;
 using OpenTK.Graphics;
 
-namespace ShadowOperations.ClientGame.OtherSystems
+namespace Voxalia.ClientGame.OtherSystems
 {
     public class ItemStack: ItemStackBase
     {

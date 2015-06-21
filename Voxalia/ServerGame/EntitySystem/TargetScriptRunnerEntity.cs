@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ServerGame.ServerMainSystem;
+using Voxalia.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
 using Frenetic;
 using Frenetic.CommandSystem;
 using Frenetic.TagHandlers;
 using Frenetic.TagHandlers.Objects;
 
-namespace ShadowOperations.ServerGame.EntitySystem
+namespace Voxalia.ServerGame.EntitySystem
 {
     public class TargetScriptRunnerEntity: TargetEntity
     {

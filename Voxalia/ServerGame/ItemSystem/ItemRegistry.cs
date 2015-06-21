@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.ItemSystem.CommonItems;
-using ShadowOperations.Shared;
+using Voxalia.ServerGame.ItemSystem.CommonItems;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ServerGame.ItemSystem
+namespace Voxalia.ServerGame.ItemSystem
 {
     public class ItemRegistry
     {

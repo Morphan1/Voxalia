@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.ServerMainSystem;
-using ShadowOperations.ServerGame.EntitySystem;
-using ShadowOperations.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.EntitySystem;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
-namespace ShadowOperations.ServerGame.NetworkSystem
+namespace Voxalia.ServerGame.NetworkSystem
 {
     public class NetStringManager
     {

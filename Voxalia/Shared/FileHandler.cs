@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.IO.Compression;
 
-namespace ShadowOperations.Shared
+namespace Voxalia.Shared
 {
     /// <summary>
     /// Handles the file system cleanly.

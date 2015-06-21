@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ShadowOperations.ServerGame.ItemSystem.CommonItems
+namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
     public class BulletItem : BaseAmmoItem
     {

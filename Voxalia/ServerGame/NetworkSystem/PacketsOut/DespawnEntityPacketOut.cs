@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ServerGame.NetworkSystem.PacketsOut
+namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     class DespawnEntityPacketOut: AbstractPacketOut
     {

@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 using System.Diagnostics;
 using System.Threading;
-using ShadowOperations.ServerGame.CommandSystem;
-using ShadowOperations.ServerGame.NetworkSystem;
-using ShadowOperations.ServerGame.EntitySystem;
-using ShadowOperations.ServerGame.PlayerCommandSystem;
-using ShadowOperations.ServerGame.ItemSystem;
-using ShadowOperations.ServerGame.OtherSystems;
+using Voxalia.ServerGame.CommandSystem;
+using Voxalia.ServerGame.NetworkSystem;
+using Voxalia.ServerGame.EntitySystem;
+using Voxalia.ServerGame.PlayerCommandSystem;
+using Voxalia.ServerGame.ItemSystem;
+using Voxalia.ServerGame.OtherSystems;
 
-namespace ShadowOperations.ServerGame.ServerMainSystem
+namespace Voxalia.ServerGame.ServerMainSystem
 {
     /// <summary>
     /// The center of all server activity in Shadow Operations.

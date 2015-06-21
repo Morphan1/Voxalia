@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.ServerMainSystem;
-using ShadowOperations.ServerGame.EntitySystem;
-using ShadowOperations.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.EntitySystem;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ServerGame.PlayerCommandSystem.CommonCommands
+namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
     public class StancePlayerCommand: AbstractPlayerCommand
     {

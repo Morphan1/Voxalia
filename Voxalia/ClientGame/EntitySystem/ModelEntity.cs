@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.ClientGame.GraphicsSystems;
-using ShadowOperations.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.GraphicsSystems;
+using Voxalia.Shared;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using BEPUphysics.CollisionShapes;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 
-namespace ShadowOperations.ClientGame.EntitySystem
+namespace Voxalia.ClientGame.EntitySystem
 {
     class ModelEntity: PhysicsEntity
     {

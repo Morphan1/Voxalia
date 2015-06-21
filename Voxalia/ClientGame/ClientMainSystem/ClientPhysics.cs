@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.EntitySystem;
+using Voxalia.Shared;
+using Voxalia.ClientGame.EntitySystem;
 using BEPUphysics;
 using BEPUutilities;
 using BEPUphysics.Settings;
 
-namespace ShadowOperations.ClientGame.ClientMainSystem
+namespace Voxalia.ClientGame.ClientMainSystem
 {
     public partial class Client
     {

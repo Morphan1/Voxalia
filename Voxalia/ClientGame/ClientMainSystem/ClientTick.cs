@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.UISystem;
-using ShadowOperations.ClientGame.EntitySystem;
-using ShadowOperations.ClientGame.OtherSystems;
+using Voxalia.Shared;
+using Voxalia.ClientGame.UISystem;
+using Voxalia.ClientGame.EntitySystem;
+using Voxalia.ClientGame.OtherSystems;
 using System.Drawing;
-using ShadowOperations.ClientGame.JointSystem;
+using Voxalia.ClientGame.JointSystem;
 using System.Threading;
 using Frenetic;
 using Frenetic.TagHandlers.Common;
 
-namespace ShadowOperations.ClientGame.ClientMainSystem
+namespace Voxalia.ClientGame.ClientMainSystem
 {
     public partial class Client
     {

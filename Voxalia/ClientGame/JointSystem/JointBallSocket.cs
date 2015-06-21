@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ClientGame.EntitySystem;
-using ShadowOperations.Shared;
+using Voxalia.ClientGame.EntitySystem;
+using Voxalia.Shared;
 using BEPUphysics.Constraints.TwoEntity;
 using BEPUphysics.Constraints.TwoEntity.Joints;
 
-namespace ShadowOperations.ClientGame.JointSystem
+namespace Voxalia.ClientGame.JointSystem
 {
     public class JointBallSocket : BaseJoint
     {

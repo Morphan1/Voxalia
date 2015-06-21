@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ClientGame.EntitySystem;
+using Voxalia.ClientGame.EntitySystem;
 
-namespace ShadowOperations.ClientGame.JointSystem
+namespace Voxalia.ClientGame.JointSystem
 {
     public abstract class InternalBaseJoint
     {

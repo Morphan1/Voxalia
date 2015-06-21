@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.GraphicsSystems;
-using ShadowOperations.ClientGame.GraphicsSystems.LightingSystem;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.Shared;
+using Voxalia.ClientGame.GraphicsSystems;
+using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 
-namespace ShadowOperations.ClientGame.EntitySystem
+namespace Voxalia.ClientGame.EntitySystem
 {
     public class PointLightEntity: PrimitiveEntity
     {

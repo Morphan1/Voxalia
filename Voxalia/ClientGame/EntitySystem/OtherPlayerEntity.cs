@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.ClientGame.UISystem;
-using ShadowOperations.ClientGame.NetworkSystem.PacketsOut;
+using Voxalia.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.UISystem;
+using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using BEPUphysics.EntityStateManagement;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using ShadowOperations.ClientGame.GraphicsSystems;
+using Voxalia.ClientGame.GraphicsSystems;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
-using ShadowOperations.ClientGame.GraphicsSystems.LightingSystem;
+using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 using BEPUphysics.CollisionShapes;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 
-namespace ShadowOperations.ClientGame.EntitySystem
+namespace Voxalia.ClientGame.EntitySystem
 {
     class OtherPlayerEntity : PhysicsEntity, EntityAnimated
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace ShadowOperations.Shared
+namespace Voxalia.Shared
 {
     /// <summary>
     /// Represents an item or stack of items on the server or client.

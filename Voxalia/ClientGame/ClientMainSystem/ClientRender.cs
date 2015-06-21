@@ -5,14 +5,14 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.UISystem;
-using ShadowOperations.ClientGame.GraphicsSystems;
-using ShadowOperations.ClientGame.GraphicsSystems.LightingSystem;
-using ShadowOperations.ClientGame.OtherSystems;
-using ShadowOperations.ClientGame.JointSystem;
+using Voxalia.Shared;
+using Voxalia.ClientGame.UISystem;
+using Voxalia.ClientGame.GraphicsSystems;
+using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
+using Voxalia.ClientGame.OtherSystems;
+using Voxalia.ClientGame.JointSystem;
 
-namespace ShadowOperations.ClientGame.ClientMainSystem
+namespace Voxalia.ClientGame.ClientMainSystem
 {
     public partial class Client
     {

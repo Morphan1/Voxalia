@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.GraphicsSystems;
-using ShadowOperations.ClientGame.ClientMainSystem;
+using Voxalia.Shared;
+using Voxalia.ClientGame.GraphicsSystems;
+using Voxalia.ClientGame.ClientMainSystem;
 using Frenetic;
 using OpenTK;
 using OpenTK.Graphics;
 
-namespace ShadowOperations.ClientGame.UISystem
+namespace Voxalia.ClientGame.UISystem
 {
     /// <summary>
     /// Handles the interactive user text console.

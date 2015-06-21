@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.ServerMainSystem;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using ShadowOperations.Shared;
+using Voxalia.Shared;
 
-namespace ShadowOperations.ServerGame.NetworkSystem
+namespace Voxalia.ServerGame.NetworkSystem
 {
     public class NetworkBase
     {

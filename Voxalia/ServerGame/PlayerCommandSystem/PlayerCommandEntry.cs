@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.ServerGame.EntitySystem;
+using Voxalia.ServerGame.EntitySystem;
 
-namespace ShadowOperations.ServerGame.PlayerCommandSystem
+namespace Voxalia.ServerGame.PlayerCommandSystem
 {
     public class PlayerCommandEntry
     {

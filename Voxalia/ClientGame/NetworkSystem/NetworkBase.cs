@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading;
 using System.Net;
 using System.Net.Sockets;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.ClientMainSystem;
-using ShadowOperations.ClientGame.NetworkSystem.PacketsIn;
-using ShadowOperations.ClientGame.NetworkSystem.PacketsOut;
+using Voxalia.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.NetworkSystem.PacketsIn;
+using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 
-namespace ShadowOperations.ClientGame.NetworkSystem
+namespace Voxalia.ClientGame.NetworkSystem
 {
     public class NetworkBase
     {

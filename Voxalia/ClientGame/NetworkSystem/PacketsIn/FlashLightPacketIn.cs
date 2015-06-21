@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShadowOperations.Shared;
-using ShadowOperations.ClientGame.EntitySystem;
-using ShadowOperations.ClientGame.GraphicsSystems;
-using ShadowOperations.ClientGame.GraphicsSystems.LightingSystem;
+using Voxalia.Shared;
+using Voxalia.ClientGame.EntitySystem;
+using Voxalia.ClientGame.GraphicsSystems;
+using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 
-namespace ShadowOperations.ClientGame.NetworkSystem.PacketsIn
+namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
     public class FlashLightPacketIn: AbstractPacketIn
     {

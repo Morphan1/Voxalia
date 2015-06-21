@@ -8,8 +8,8 @@
     <ProjectGuid>{EE5A02F5-5105-4B5F-8580-1E8F6E091773}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ShadowOperations</RootNamespace>
-    <AssemblyName>ShadowOperations</AssemblyName>
+    <RootNamespace>Voxalia</RootNamespace>
+    <AssemblyName>Voxalia</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
