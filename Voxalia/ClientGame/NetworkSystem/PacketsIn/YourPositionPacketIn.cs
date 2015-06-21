@@ -16,11 +16,20 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 return false;
             }
             Location pos = Location.FromBytes(data, 0);
-            Location dir = pos - TheClient.Player.GetPosition();
-            TheClient.Player.SetPosition(TheClient.Player.GetPosition() + dir / 15f); // TODO: Replace '15f' with a CVar
             Location vel = Location.FromBytes(data, 12);
-            Location veldir = vel - TheClient.Player.GetVelocity();
-            TheClient.Player.SetVelocity(TheClient.Player.GetVelocity() + veldir / 15f); // TODO: Replace '15f' with a CVar
+            Location dir = pos - TheClient.Player.GetPosition();
+            if (dir.LengthSquared() < 20 * 20) // TODO: replace '20' with a CVar
+            {
+                TheClient.Player.SetPosition(TheClient.Player.GetPosition() + dir / 15f); // TODO: Replace '15f' with a CVar
+                Location veldir = vel - TheClient.Player.GetVelocity();
+                TheClient.Player.SetVelocity(TheClient.Player.GetVelocity() + veldir / 15f); // TODO: Replace '15f' with a CVar
+            }
+            else
+            {
+                TheClient.Player.SetPosition(pos);
+                TheClient.Player.SetVelocity(vel);
+
+            }
             byte st = data[12 + 12];
             PlayerStance stance = PlayerStance.STAND;
             if (st == 2)
