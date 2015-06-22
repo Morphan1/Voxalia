@@ -331,9 +331,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Textures.White.Bind();
             for (int i = 0; i < Joints.Count; i++)
             {
+                // TODO: Only render if set to
                 if (Joints[i] is JointDistance)
                 {
-                    // TODO: Only render if set to
                     Rendering.RenderLine(((JointDistance)Joints[i]).Ent1Pos + Joints[i].One.GetPosition(), ((JointDistance)Joints[i]).Ent2Pos + Joints[i].Two.GetPosition());
                 }
                 else
@@ -359,6 +359,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Rendering.SetColor(Entities[i].Color);
                 Entities[i].Render();
             }
+            TheWorld.Render();
+            // TODO: Render joints?
             GL.Enable(EnableCap.DepthTest);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.LineWidth(1);

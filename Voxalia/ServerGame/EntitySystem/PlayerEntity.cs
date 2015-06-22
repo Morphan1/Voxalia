@@ -373,12 +373,16 @@ namespace Voxalia.ServerGame.EntitySystem
             // TODO: Better system
             Location pos = GetPosition();
             TryChunk(pos);
-            TryChunk(pos + new Location(30, 0, 0));
-            TryChunk(pos + new Location(-30, 0, 0));
-            TryChunk(pos + new Location(0, -30, 0));
-            TryChunk(pos + new Location(0, 30, 0));
-            TryChunk(pos + new Location(0, 0, -30));
-            TryChunk(pos + new Location(0, 0, 30));
+            for (int x = -2; x < 3; x++)
+            {
+                for (int y = -2; y < 3; y++)
+                {
+                    for (int z = -2; z < 3; z++)
+                    {
+                        TryChunk(pos + new Location(30 * x, 30 * y, 30 * z));
+                    }
+                }
+            }
             base.Tick();
         }
 

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using Voxalia.Shared;
 using Voxalia.ClientGame.ClientMainSystem;
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -32,6 +35,9 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void Render()
         {
+            Matrix4 mat = Matrix4.Identity;
+            GL.UniformMatrix4(2, false, ref mat);
+            GL.UniformMatrix4(7, false, ref mat);
             foreach (Chunk chunk in LoadedChunks.Values)
             {
                 // TODO: If chunk.InFrustum(frustum) { }

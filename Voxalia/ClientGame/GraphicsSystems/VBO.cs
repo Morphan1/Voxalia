@@ -179,7 +179,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             BoneWeights2 = new List<Vector4>();
         }
 
-        bool generated = false;
+        public bool generated = false;
 
         public void Destroy()
         {
