@@ -29,5 +29,14 @@ namespace Voxalia.ClientGame.WorldSystem
             LoadedChunks.Add(pos, chunk);
             return chunk;
         }
+
+        public void Render()
+        {
+            foreach (Chunk chunk in LoadedChunks.Values)
+            {
+                // TODO: If chunk.InFrustum(frustum) { }
+                chunk.Render();
+            }
+        }
     }
 }

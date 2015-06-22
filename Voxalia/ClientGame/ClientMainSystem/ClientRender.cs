@@ -327,6 +327,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Particles.Render();
             }
             Textures.White.Bind();
+            TheWorld.Render();
+            Textures.White.Bind();
             for (int i = 0; i < Joints.Count; i++)
             {
                 if (Joints[i] is JointDistance)

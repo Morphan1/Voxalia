@@ -24,8 +24,8 @@ namespace Voxalia.Shared
         static MaterialHelpers()
         {
             MaterialInfo[] mats = new MaterialInfo[] {
-                new MaterialInfo() { ID = 0, Solid = false, Opaque = false },
-                new MaterialInfo() { ID = 1, Solid = true, Opaque = true }
+                new MaterialInfo(0) { Solid = false, Opaque = false },
+                new MaterialInfo(1) { Solid = true, Opaque = true }
             };
             ALL_MATS.AddRange(mats);
         }
@@ -49,14 +49,41 @@ namespace Voxalia.Shared
         {
             return ALL_MATS[(int)mat].Opaque;
         }
+
+        public static int TextureID(this Material mat, MaterialSide side)
+        {
+            return ALL_MATS[(int)mat].TID[(int)side];
+        }
+    }
+
+    public enum MaterialSide : byte
+    {
+        TOP = 0,
+        BOTTOM = 1,
+        XP = 2,
+        YP = 3,
+        XM = 4,
+        YM = 5,
+        COUNT = 6
     }
 
     public class MaterialInfo
     {
+        public MaterialInfo(int _ID)
+        {
+            ID = _ID;
+            for (int i = 0; i < (int)MaterialSide.COUNT; i++)
+            {
+                TID[i] = ID;
+            }
+        }
+
         public int ID = 0;
 
         public bool Solid = true;
 
         public bool Opaque = true;
+
+        public int[] TID = new int[(int)MaterialSide.COUNT];
     }
 }

@@ -29,6 +29,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 chk.BlocksInternal[i] = Utilities.BytesToUshort(Utilities.BytesPartial(data_orig, i * 2, 2));
             }
             chk.AddToWorld();
+            chk.CreateVBO();
             return true;
         }
     }

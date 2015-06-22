@@ -39,7 +39,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public StaticMesh CalculateChunkShape()
         {
             List<Vector3> Vertices = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6); // TODO: Make me an array?
-            Vector3 pos = WorldPosition.ToBVector();
+            Vector3 ppos = WorldPosition.ToBVector();
             for (int x = 0; x < CHUNK_SIZE; x++)
             {
                 for (int y = 0; y < CHUNK_SIZE; y++)
@@ -62,6 +62,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         ushort xmm = MaterialHelpers.GetMaterialHardMat(xm);
                         if (((Material)cm).IsOpaque() || ((Material)cm).IsSolid()) // TODO: Better check. OccupiesFullBlock()?
                         {
+                            Vector3 pos = new Vector3(ppos.X + x, ppos.Y + y, ppos.Z + z);
                             if (!((Material)zpm).IsOpaque())
                             {
                                 Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));

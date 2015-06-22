@@ -167,6 +167,7 @@
     <Compile Include="ClientGame\UISystem\MouseHandler.cs" />
     <Compile Include="ClientGame\UISystem\UIConsole.cs" />
     <Compile Include="ClientGame\WorldSystem\Chunk.cs" />
+    <Compile Include="ClientGame\WorldSystem\ChunkRendering.cs" />
     <Compile Include="ClientGame\WorldSystem\World.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
