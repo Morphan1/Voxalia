@@ -177,7 +177,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
             }
             CameraFinalTarget = Player.GetPosition() + Player.ForwardVector() * 100f;
-            CameraFinalTarget = Collision.CuboidLineTrace(new Location(0.1, 0.1, 0.1), Player.GetPosition(), CameraFinalTarget, IgnorePlayer).Position;
+            CameraFinalTarget = Collision.RayTrace(Player.GetPosition(), CameraFinalTarget, IgnorePlayer).Position;
             CameraDistance = (Player.GetPosition() - CameraFinalTarget).Length();
         }
 

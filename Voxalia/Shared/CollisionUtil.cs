@@ -102,7 +102,6 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns information on what a cuboid-shaped line trace would collide with, if anything.
         /// </summary>
-        /// <param name="halfsize">Half the size of the cuboid</param>
         /// <param name="start">The start of the line</param>
         /// <param name="end">The end of the line</param>
         /// <param name="filter">The collision filter, input a BEPU BroadPhaseEntry and output whether collision should be allowed</param>
@@ -120,6 +119,51 @@ namespace Voxalia.Shared
             else
             {
                 hit = World.ConvexCast(shape, ref rt, ref e, filter, out rcr);
+            }
+            CollisionResult cr = new CollisionResult();
+            cr.Hit = hit;
+            if (hit)
+            {
+                cr.Normal = Location.FromBVector(rcr.HitData.Normal);
+                cr.Position = Location.FromBVector(rcr.HitData.Location);
+                if (rcr.HitObject is EntityCollidable)
+                {
+                    cr.HitEnt = ((EntityCollidable)rcr.HitObject).Entity;
+                }
+                else
+                {
+                    cr.HitEnt = null; // Impacted static world
+                }
+            }
+            else
+            {
+                cr.Normal = Location.Zero;
+                cr.Position = end;
+                cr.HitEnt = null;
+            }
+            return cr;
+        }
+
+        /// <summary>
+        /// Returns information on what a line trace would collide with, if anything.
+        /// </summary>
+        /// <param name="start">The start of the line</param>
+        /// <param name="end">The end of the line</param>
+        /// <param name="filter">The collision filter, input a BEPU BroadPhaseEntry and output whether collision should be allowed</param>
+        /// <returns>The collision details</returns>
+        public CollisionResult RayTrace(Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
+        {
+            double len = (end - start).Length();
+            Ray ray = new Ray(start.ToBVector(), ((end - start) / len).ToBVector());
+            RayCastResult rcr;
+            bool hit;
+            if (filter == null)
+            {
+                hit = World.RayCast(ray, (float)len, out rcr);
+            }
+            else
+            {
+                hit = World.RayCast(ray, (float)len, filter, out rcr);
             }
             CollisionResult cr = new CollisionResult();
             cr.Hit = hit;
