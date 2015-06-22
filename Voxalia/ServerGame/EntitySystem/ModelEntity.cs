@@ -9,7 +9,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    class ModelEntity: PhysicsEntity
+    public class ModelEntity: PhysicsEntity
     {
         public string model;
 

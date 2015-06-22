@@ -44,6 +44,12 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 Data = new byte[len];
                 Data[0] = 4;
             }
+            else if (joint is JointSpinner)
+            {
+                Data = new byte[len + 12];
+                Data[0] = 5;
+                ((JointSpinner)joint).Direction.ToBytes().CopyTo(Data, len);
+            }
             Utilities.LongToBytes(joint.One.EID).CopyTo(Data, 1);
             Utilities.LongToBytes(joint.Two.EID).CopyTo(Data, 1 + 8);
             Utilities.LongToBytes(joint.JID).CopyTo(Data, 1 + 8 + 8);

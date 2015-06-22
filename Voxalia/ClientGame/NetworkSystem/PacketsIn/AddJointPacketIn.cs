@@ -95,6 +95,19 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 TheClient.AddJoint(jfw);
                 return true;
             }
+            else if (type == 5)
+            {
+                if (data.Length != len + 12)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
+                    return false;
+                }
+                Location dir = Location.FromBytes(data, len);
+                JointSpinner jbs = new JointSpinner((PhysicsEntity)pe1, (PhysicsEntity)pe2, dir);
+                jbs.JID = JID;
+                TheClient.AddJoint(jbs);
+                return true;
+            }
             else
             {
                 SysConsole.Output(OutputType.WARNING, "Unknown joint type " + type);
