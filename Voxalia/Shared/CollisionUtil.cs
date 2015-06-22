@@ -127,7 +127,14 @@ namespace Voxalia.Shared
             {
                 cr.Normal = Location.FromBVector(rcr.HitData.Normal);
                 cr.Position = Location.FromBVector(rcr.HitData.Location);
-                cr.HitEnt = ((EntityCollidable)rcr.HitObject).Entity;
+                if (rcr.HitObject is EntityCollidable)
+                {
+                    cr.HitEnt = ((EntityCollidable)rcr.HitObject).Entity;
+                }
+                else
+                {
+                    cr.HitEnt = null; // Impacted static world
+                }
             }
             else
             {

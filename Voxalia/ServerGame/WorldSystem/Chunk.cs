@@ -86,7 +86,6 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 inds[i] = i;
             }
-            SysConsole.Output(OutputType.INFO, "Spawning chunk " + Vertices.Count);
             Vector3[] vecs = Vertices.ToArray();
             StaticMesh sm = new StaticMesh(vecs, inds);
             return sm;
@@ -98,7 +97,7 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             if (worldObject != null)
             {
-                OwningWorld.TheServer.PhysicsWorld.Add(worldObject);
+                OwningWorld.TheServer.PhysicsWorld.Remove(worldObject);
             }
             worldObject = CalculateChunkShape();
             if (worldObject != null)

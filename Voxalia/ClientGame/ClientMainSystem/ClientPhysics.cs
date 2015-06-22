@@ -37,6 +37,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CollisionDetectionSettings.AllowedPenetration = 0.001f;
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
+            TheWorld.TheClient = this;
         }
 
         /// <summary>

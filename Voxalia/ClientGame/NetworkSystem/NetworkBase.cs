@@ -196,11 +196,14 @@ namespace Voxalia.ClientGame.NetworkSystem
                     case 23:
                         packet = new SetHeldItemPacketIn();
                         break;
+                    case 24:
+                        packet = new ChunkInfoPacketIn();
+                        break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);
                 }
                 packet.TheClient = TheClient;
-                packet.Chunk = sock == ChunkSocket;
+                packet.ChunkN = sock == ChunkSocket;
                 if (!packet.ParseBytesAndExecute(data))
                 {
                     throw new Exception("Imperfect packet data for packet " + packetID);

@@ -31,6 +31,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             RemoveHook(player);
+            if (cr.HitEnt == null)
+            {
+                return;
+                // TODO: Hook static world somehow - perhaps spawn a temporary mass=0 entity?
+            }
             PhysicsEntity pe = (PhysicsEntity)cr.HitEnt.Tag;
             float len = (float)(cr.Position - player.GetCenter()).Length();
             BaseJoint jd;

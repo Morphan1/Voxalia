@@ -183,9 +183,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         bool IgnorePlayer(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)
         {
-            if (((BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)entry).Entity.Tag == Player)
+            if (entry is BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)
             {
-                return false;
+                if (((BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)entry).Entity.Tag == Player)
+                {
+                    return false;
+                }
             }
             return Collision.ShouldCollide(entry);
         }

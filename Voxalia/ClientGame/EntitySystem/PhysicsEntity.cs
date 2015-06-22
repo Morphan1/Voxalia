@@ -93,7 +93,7 @@ namespace Voxalia.ClientGame.EntitySystem
             RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
             Vector3 sweep = new Vector3(0, 0, -0.001f);
             CollisionResult cr = TheClient.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
-            if (cr.Hit)
+            if (cr.Hit && cr.HitEnt != null)
             {
                 // TODO: grab factors from the entity
                 PhysicsEntity pe = (PhysicsEntity)cr.HitEnt.Tag;

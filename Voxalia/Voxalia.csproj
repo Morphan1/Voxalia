@@ -136,6 +136,7 @@
     <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddJointPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AnimationPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\ChunkInfoPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\CVarSetPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\DespawnEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\DestroyJointPacketIn.cs" />
@@ -230,6 +231,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddJointPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AnimationPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\ChunkInfoPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\CVarSetPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\DespawnEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\DestroyJointPacketOut.cs" />

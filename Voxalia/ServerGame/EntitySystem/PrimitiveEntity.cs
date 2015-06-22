@@ -34,10 +34,13 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool FilterHandle(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)
         {
-            long eid = ((PhysicsEntity)((BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)entry).Entity.Tag).EID;
-            if (NoCollide.Contains(eid))
+            if (entry is BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)
             {
-                return false;
+                long eid = ((PhysicsEntity)((BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)entry).Entity.Tag).EID;
+                if (NoCollide.Contains(eid))
+                {
+                    return false;
+                }
             }
             if (entry.CollisionRules.Group == TheServer.Collision.NonSolid
                 || entry.CollisionRules.Group == TheServer.Collision.Trigger)

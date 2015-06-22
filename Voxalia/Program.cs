@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ClientGame.ClientMainSystem;
+using System.IO;
 
 namespace Voxalia
 {
@@ -110,7 +111,8 @@ namespace Voxalia
             }
             catch (Exception ex)
             {
-                SysConsole.Output(OutputType.ERROR, ex.ToString());
+                SysConsole.Output(ex);
+                File.WriteAllText(DateTime.Now.ToFileTimeUtc().ToString() + ".txt", ex.GetType().Name + ": " + ex.Message + "\n" + Environment.StackTrace + "\n\n" + ex.StackTrace.ToString());
             }
             SysConsole.ShutDown();
         }

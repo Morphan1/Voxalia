@@ -16,6 +16,7 @@ using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.ItemSystem.CommonItems;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.JointSystem;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -270,8 +271,11 @@ namespace Voxalia.ServerGame.EntitySystem
                 Body.ApplyLinearImpulse(ref imp);
                 Body.ActivityInformation.Activate();
                 imp = -imp;
-                crGround.HitEnt.ApplyLinearImpulse(ref imp);
-                crGround.HitEnt.ActivityInformation.Activate();
+                if (crGround.HitEnt != null)
+                {
+                    crGround.HitEnt.ApplyLinearImpulse(ref imp);
+                    crGround.HitEnt.ActivityInformation.Activate();
+                }
                 pup = true;
             }
             else if (!Upward)
@@ -367,15 +371,31 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             cit.Info.Tick(this, cit);
             // TODO: Better system
-            TheWorld.LoadChunk(GetPosition());
-            TheWorld.LoadChunk(GetPosition() + new Location(30, 0, 0));
-            TheWorld.LoadChunk(GetPosition() + new Location(-30, 0, 0));
-            TheWorld.LoadChunk(GetPosition() + new Location(0, -30, 0));
-            TheWorld.LoadChunk(GetPosition() + new Location(0, 30, 0));
-            TheWorld.LoadChunk(GetPosition() + new Location(0, 0, -30));
-            TheWorld.LoadChunk(GetPosition() + new Location(0, 0, 30));
+            Location pos = GetPosition();
+            TryChunk(pos);
+            TryChunk(pos + new Location(30, 0, 0));
+            TryChunk(pos + new Location(-30, 0, 0));
+            TryChunk(pos + new Location(0, -30, 0));
+            TryChunk(pos + new Location(0, 30, 0));
+            TryChunk(pos + new Location(0, 0, -30));
+            TryChunk(pos + new Location(0, 0, 30));
             base.Tick();
         }
+
+        public void TryChunk(Location pos)
+        {
+            pos.X = (int)pos.X - (int)pos.X % 30;
+            pos.Y = (int)pos.Y - (int)pos.Y % 30;
+            pos.Z = (int)pos.Z - (int)pos.Z % 30;
+            if (!ChunksAwareOf.Contains(pos))
+            {
+                Chunk chk = TheWorld.LoadChunk(pos);
+                ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk));
+                ChunksAwareOf.Add(pos);
+            }
+        }
+
+        public HashSet<Location> ChunksAwareOf = new HashSet<Location>();
 
         public double LastClick = 0;
 

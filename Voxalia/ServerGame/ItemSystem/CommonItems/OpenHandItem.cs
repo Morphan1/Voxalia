@@ -33,8 +33,9 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
         {
             Location end = player.GetEyePosition() + player.ForwardVector() * 2;
             CollisionResult cr = player.TheServer.Collision.CuboidLineTrace(new Location(0.1, 0.1, 0.1), player.GetEyePosition(), end, player.IgnoreThis);
-            if (cr.Hit)
+            if (cr.Hit && cr.HitEnt != null)
             {
+                // TODO: handle static world impact
                 PhysicsEntity pe = (PhysicsEntity)cr.HitEnt.Tag;
                 if (pe.GetMass() > 0 && pe.GetMass() < 200)
                 {

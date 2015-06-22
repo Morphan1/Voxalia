@@ -20,8 +20,20 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public bool FilterHandle(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)
         {
-            long eid = ((PhysicsEntity)((BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)entry).Entity.Tag).EID;
-            return !NoCollide.Contains(eid);
+            if (entry is BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)
+            {
+                long eid = ((PhysicsEntity)((BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)entry).Entity.Tag).EID;
+                if (NoCollide.Contains(eid))
+                {
+                    return false;
+                }
+            }
+            if (entry.CollisionRules.Group == TheClient.Collision.NonSolid
+                || entry.CollisionRules.Group == TheClient.Collision.Trigger)
+            {
+                return false;
+            }
+            return true;
         }
 
         public override void Tick()

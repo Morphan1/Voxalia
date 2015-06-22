@@ -19,14 +19,17 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public void OnCollide(object sender, CollisionEventArgs args)
         {
-            PhysicsEntity physent = ((PhysicsEntity)args.Info.HitEnt.Tag);
-            Vector3 loc = (GetPosition() - physent.GetPosition()).ToBVector();
-            Vector3 impulse = GetVelocity().ToBVector() * Damage / 1000f;
-            physent.Body.ApplyImpulse(ref loc, ref impulse);
-            physent.Body.ActivityInformation.Activate();
-            if (physent is EntityDamageable)
+            if (args.Info.HitEnt != null)
             {
-                ((EntityDamageable)physent).Damage(Damage);
+                PhysicsEntity physent = ((PhysicsEntity)args.Info.HitEnt.Tag);
+                Vector3 loc = (GetPosition() - physent.GetPosition()).ToBVector();
+                Vector3 impulse = GetVelocity().ToBVector() * Damage / 1000f;
+                physent.Body.ApplyImpulse(ref loc, ref impulse);
+                physent.Body.ActivityInformation.Activate();
+                if (physent is EntityDamageable)
+                {
+                    ((EntityDamageable)physent).Damage(Damage);
+                }
             }
             if (SplashSize > 0 && SplashDamage > 0)
             {
