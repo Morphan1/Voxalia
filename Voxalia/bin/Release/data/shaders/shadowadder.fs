@@ -79,15 +79,13 @@ void main()
 	else
 	{
 		fs = f_spos / f_spos.w / 2.0 + 0.5;
-#ifdef MCM_GOOD_GRAPHICS
-		float cosTheta = dot(N, L);
-		cosTheta = clamp(cosTheta, 0.0, 1.0);
-		float bias = 0.00005 * tan(acos(cosTheta));
-		bias = clamp(bias, 0.0, 0.001);
-		fs.z -= bias / (light_length / 5.0 / (light_radius / 100.0));
-#else
-		fs.z -= 0.0001;
-#endif
+		vec2 dz_duv;
+		vec3 duvdist_dx = dFdx(fs.xyz);
+		vec3 duvdist_dy = dFdy(fs.xyz);
+		dz_duv.x = duvdist_dy.y * duvdist_dx.z - duvdist_dx.y * duvdist_dy.z;
+		dz_duv.y = duvdist_dx.x * duvdist_dy.z - duvdist_dy.x * duvdist_dx.z;
+		float tlen = (duvdist_dx.x * duvdist_dy.y) - (duvdist_dx.y * duvdist_dy.x);
+		dz_duv /= tlen;
 		float oneoverdj = 1.0 / depth_jump;
 		float jump = tex_size * depth_jump;
 		depth = 0;
@@ -97,7 +95,12 @@ void main()
 		{
 			for (float y = -oneoverdj * 2; y < oneoverdj * 2 + 1; y++)
 			{
-				depth += textureProj(tex, fs + vec4(x * jump, y * jump, 0.0, 0.0));
+				float offz = dot(dz_duv, vec2(x * jump, y * jump)) * 1000.0;
+				if (offz > -0.000001)
+				{
+					offz = -0.000001;
+				}
+				depth += textureProj(tex, fs + vec4(x * jump, y * jump, offz, 0.0));
 				depth_count++;
 			}
 		}
