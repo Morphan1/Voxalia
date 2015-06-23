@@ -7,11 +7,127 @@ using Voxalia.ClientGame.ClientMainSystem;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
+using BEPUphysics;
+using BEPUphysics.Settings;
+using BEPUutilities;
+using Voxalia.ClientGame.JointSystem;
+using Voxalia.ClientGame.EntitySystem;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
     public class World
     {
+        /// <summary>
+        /// The physics world in which all physics-related activity takes place.
+        /// </summary>
+        public Space PhysicsWorld;
+
+        public CollisionUtil Collision;
+
+        public double Delta;
+
+        public Location GravityNormal = new Location(0, 0, -1);
+
+        public List<Entity> Entities = new List<Entity>();
+
+        public List<Entity> Tickers = new List<Entity>();
+
+        public List<Entity> ShadowCasters = new List<Entity>();
+
+        /// <summary>
+        /// Builds the physics world.
+        /// </summary>
+        public void BuildWorld()
+        {
+            PhysicsWorld = new Space();
+            // Set the world's general default gravity
+            PhysicsWorld.ForceUpdater.Gravity = new BEPUutilities.Vector3(0, 0, -9.8f);
+            // Minimize penetration
+            CollisionDetectionSettings.AllowedPenetration = 0.001f;
+            // Load a CollisionUtil instance
+            Collision = new CollisionUtil(PhysicsWorld);
+        }
+
+        /// <summary>
+        /// Ticks the physics world.
+        /// </summary>
+        public void TickWorld(double delta)
+        {
+            Delta = delta;
+            GlobalTickTimeLocal += Delta;
+            PhysicsWorld.Update((float)delta); // TODO: More specific settings?
+            for (int i = 0; i < Tickers.Count; i++)
+            {
+                Tickers[i].Tick();
+            }
+            for (int i = 0; i < Joints.Count; i++)
+            {
+                if (Joints[i].Enabled && Joints[i] is BaseFJoint)
+                {
+                    ((BaseFJoint)Joints[i]).Solve();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Spawns an entity in the world.
+        /// </summary>
+        /// <param name="e">The entity to spawn</param>
+        public void SpawnEntity(Entity e)
+        {
+            Entities.Add(e);
+            if (e.Ticks)
+            {
+                Tickers.Add(e);
+            }
+            if (e.CastShadows)
+            {
+                ShadowCasters.Add(e);
+            }
+            if (e is PhysicsEntity)
+            {
+                ((PhysicsEntity)e).SpawnBody();
+            }
+            else if (e is PrimitiveEntity)
+            {
+                ((PrimitiveEntity)e).Spawn();
+            }
+        }
+
+        public void Despawn(Entity e)
+        {
+            Entities.Remove(e);
+            if (e.Ticks)
+            {
+                Tickers.Remove(e);
+            }
+            if (e.CastShadows)
+            {
+                ShadowCasters.Remove(e);
+            }
+            if (e is PhysicsEntity)
+            {
+                ((PhysicsEntity)e).DestroyBody();
+            }
+            else if (e is PrimitiveEntity)
+            {
+                ((PrimitiveEntity)e).Destroy();
+            }
+        }
+
+        public Entity GetEntity(long EID)
+        {
+            for (int i = 0; i < Entities.Count; i++)
+            {
+                if (Entities[i].EID == EID)
+                {
+                    return Entities[i];
+                }
+            }
+            return null;
+        }
+
         public Dictionary<Location, Chunk> LoadedChunks = new Dictionary<Location, Chunk>();
 
         public Client TheClient;
@@ -46,5 +162,34 @@ namespace Voxalia.ClientGame.WorldSystem
                 chunk.Render();
             }
         }
+
+        public List<InternalBaseJoint> Joints = new List<InternalBaseJoint>();
+
+        public void AddJoint(InternalBaseJoint joint)
+        {
+            Joints.Add(joint);
+            joint.One.Joints.Add(joint);
+            joint.Two.Joints.Add(joint);
+            if (joint is BaseJoint)
+            {
+                BaseJoint pjoint = (BaseJoint)joint;
+                pjoint.CurrentJoint = pjoint.GetBaseJoint();
+                PhysicsWorld.Add(pjoint.CurrentJoint);
+            }
+        }
+
+        public void DestroyJoint(InternalBaseJoint joint)
+        {
+            Joints.Remove(joint);
+            joint.One.Joints.Remove(joint);
+            joint.Two.Joints.Remove(joint);
+            if (joint is BaseJoint)
+            {
+                BaseJoint pjoint = (BaseJoint)joint;
+                PhysicsWorld.Remove(pjoint.CurrentJoint);
+            }
+        }
+
+        public double GlobalTickTimeLocal = 0;
     }
 }

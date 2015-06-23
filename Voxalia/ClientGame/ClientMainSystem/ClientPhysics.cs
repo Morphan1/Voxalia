@@ -13,39 +13,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
 {
     public partial class Client
     {
-        /// <summary>
-        /// The physics world in which all physics-related activity takes place.
-        /// </summary>
-        public Space PhysicsWorld;
-
-        public CollisionUtil Collision;
-
-        public Location GravityNormal = new Location(0, 0, -1);
-
         // Note: the client only has one world loaded at any given time.
-        public World TheWorld = new World();
+        public World TheWorld = null;
 
-        /// <summary>
-        /// Builds the physics world.
-        /// </summary>
         public void BuildWorld()
         {
-            PhysicsWorld = new Space();
-               // Set the world's general default gravity
-            PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f);
-            // Minimize penetration
-            CollisionDetectionSettings.AllowedPenetration = 0.001f;
-            // Load a CollisionUtil instance
-            Collision = new CollisionUtil(PhysicsWorld);
+            TheWorld = new World();
+            TheWorld.BuildWorld();
             TheWorld.TheClient = this;
         }
 
-        /// <summary>
-        /// Ticks the physics world.
-        /// </summary>
         public void TickWorld(double delta)
         {
-            PhysicsWorld.Update((float)delta); // TODO: More specific settings?
+            TheWorld.TickWorld(delta);
         }
     }
 }

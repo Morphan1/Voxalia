@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using Voxalia.Shared;
 using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
     public abstract class PrimitiveEntity: Entity
     {
-        public PrimitiveEntity(Client tclient, bool cast_shadows)
-            : base(tclient, true, cast_shadows)
+        public PrimitiveEntity(World tworld, bool cast_shadows)
+            : base(tworld, true, cast_shadows)
         {
         }
 
@@ -41,7 +42,7 @@ namespace Voxalia.ClientGame.EntitySystem
             SetVelocity(Velocity + Gravity * TheClient.Delta);
             if (Velocity.LengthSquared() > 0)
             {
-                CollisionResult cr = TheClient.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + Velocity * TheClient.Delta, FilterHandle);
+                CollisionResult cr = TheClient.TheWorld.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + Velocity * TheClient.Delta, FilterHandle);
                 SetPosition(cr.Position);
             }
         }

@@ -16,6 +16,7 @@ using Voxalia.ClientGame.GraphicsSystems;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -63,15 +64,15 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Model model;
 
-        public PlayerEntity(Client tclient):
-            base (tclient, true, true)
+        public PlayerEntity(World tworld)
+            : base(tworld, true, true)
         {
             SetMass(100);
             Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
             CanRotate = false;
             EID = -1;
             model = TheClient.Models.GetModel("players/human_male_004.dae");
-            model.LoadSkin(tclient.Textures);
+            model.LoadSkin(TheClient.Textures);
             CGroup = CollisionUtil.Player;
         }
 
@@ -81,7 +82,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return false;
             }
-            return TheClient.Collision.ShouldCollide(entry);
+            return TheWorld.Collision.ShouldCollide(entry);
         }
 
         public PlayerStance Stance = PlayerStance.STAND;
@@ -107,7 +108,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Direction.Pitch = -89.9f;
             }
             bool fly = false;
-            bool on_ground = TheClient.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.1f, HalfSize.Y - 0.1f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis).Hit;
+            bool on_ground = TheClient.TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.1f, HalfSize.Y - 0.1f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis).Hit;
             if (Upward && !fly && !pup && on_ground && GetVelocity().Z < 1f)
             {
                 Body.ApplyImpulse(new Vector3(0, 0, 0), (Location.UnitZ * GetMass() * 7f).ToBVector());

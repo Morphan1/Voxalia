@@ -117,7 +117,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void sortEntities()
         {
-            Entities = Entities.OrderBy(o => -(o.GetPosition() - CameraPos).LengthSquared()).ToList();
+            TheWorld.Entities = TheWorld.Entities.OrderBy(o => (o.GetPosition() - CameraPos).LengthSquared()).ToList();
+        }
+
+        public void ReverseEntitiesOrder()
+        {
+            TheWorld.Entities.Reverse();
         }
 
         public int gTicks = 0;
@@ -266,6 +271,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     GL.BindTexture(TextureTarget.Texture2D, 0);
                     GL.ActiveTexture(TextureUnit.Texture0);
                     GL.BindTexture(TextureTarget.Texture2D, 0);
+                    ReverseEntitiesOrder();
                     s_transponly.Bind();
                     GL.UniformMatrix4(1, false, ref combined);
                     GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, RS4P.fbo);
@@ -282,6 +288,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 else
                 {
+                    ReverseEntitiesOrder();
                     Shaders.ColorMultShader.Bind();
                     Location CameraTarget = CameraPos + Player.ForwardVector();
                     Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
@@ -312,16 +319,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.Enable(EnableCap.CullFace);
             if (shadows_only)
             {
-                for (int i = 0; i < ShadowCasters.Count; i++)
+                for (int i = 0; i < TheWorld.ShadowCasters.Count; i++)
                 {
-                    ShadowCasters[i].Render();
+                    TheWorld.ShadowCasters[i].Render();
                 }
             }
             else
             {
-                for (int i = 0; i < Entities.Count; i++)
+                for (int i = 0; i < TheWorld.Entities.Count; i++)
                 {
-                    Entities[i].Render();
+                    TheWorld.Entities[i].Render();
                 }
                 Rendering.SetMinimumLight(1f);
                 Particles.Render();
@@ -329,12 +336,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Textures.White.Bind();
             TheWorld.Render();
             Textures.White.Bind();
-            for (int i = 0; i < Joints.Count; i++)
+            for (int i = 0; i < TheWorld.Joints.Count; i++)
             {
                 // TODO: Only render if set to
-                if (Joints[i] is JointDistance)
+                if (TheWorld.Joints[i] is JointDistance)
                 {
-                    Rendering.RenderLine(((JointDistance)Joints[i]).Ent1Pos + Joints[i].One.GetPosition(), ((JointDistance)Joints[i]).Ent2Pos + Joints[i].Two.GetPosition());
+                    Rendering.RenderLine(((JointDistance)TheWorld.Joints[i]).Ent1Pos + TheWorld.Joints[i].One.GetPosition(), ((JointDistance)TheWorld.Joints[i]).Ent2Pos + TheWorld.Joints[i].Two.GetPosition());
                 }
                 else
                 {
@@ -354,10 +361,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
             Textures.White.Bind();
             GL.Enable(EnableCap.CullFace);
-            for (int i = 0; i < Entities.Count; i++)
+            for (int i = 0; i < TheWorld.Entities.Count; i++)
             {
-                Rendering.SetColor(Entities[i].Color);
-                Entities[i].Render();
+                Rendering.SetColor(TheWorld.Entities[i].Color);
+                TheWorld.Entities[i].Render();
             }
             TheWorld.Render();
             // TODO: Render joints?
@@ -377,7 +384,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 + "\n" + Player.GetPosition()
                 + "\n" + Player.GetVelocity() + " == " + Player.GetVelocity().Length()
                 + "\nLight source(s): " + Lights.Count
-                + "\nEntities: " + Entities.Count
+                + "\nEntities: " + TheWorld.Entities.Count
                 + "\nFLAGS: " + Player.ServerFlags, new Location(0, 0, 0));
             int center = Window.Width / 2;
             if (RenderExtraItems > 0)

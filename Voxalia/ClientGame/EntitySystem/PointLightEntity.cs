@@ -6,6 +6,7 @@ using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.Shared;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
+using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -17,8 +18,8 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public int texturesize = 256;
 
-        public PointLightEntity(Client tclient)
-            : base(tclient, false)
+        public PointLightEntity(World tworld)
+            : base(tworld, false)
         {
         }
 

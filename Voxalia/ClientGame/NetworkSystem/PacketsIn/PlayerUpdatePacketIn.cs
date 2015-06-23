@@ -34,11 +34,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 stance = PlayerStance.CROUCH;
             }
-            for (int i = 0; i < TheClient.Entities.Count; i++)
+            for (int i = 0; i < TheClient.TheWorld.Entities.Count; i++)
             {
-                if (TheClient.Entities[i] is OtherPlayerEntity)
+                if (TheClient.TheWorld.Entities[i] is OtherPlayerEntity)
                 {
-                    OtherPlayerEntity e = (OtherPlayerEntity)TheClient.Entities[i];
+                    OtherPlayerEntity e = (OtherPlayerEntity)TheClient.TheWorld.Entities[i];
                     if (e.EID == eID)
                     {
                         e.SetPosition(pos);

@@ -17,44 +17,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
 {
     public partial class Client
     {
-        public double Delta;
-
-        public List<Entity> Entities = new List<Entity>();
-
-        public List<Entity> Tickers = new List<Entity>();
-
-        public List<Entity> ShadowCasters = new List<Entity>();
-
         public List<ItemStack> Items = new List<ItemStack>();
 
         public int QuickBarPos = 0;
-
-        public List<InternalBaseJoint> Joints = new List<InternalBaseJoint>();
-
-        public void AddJoint(InternalBaseJoint joint)
-        {
-            Joints.Add(joint);
-            joint.One.Joints.Add(joint);
-            joint.Two.Joints.Add(joint);
-            if (joint is BaseJoint)
-            {
-                BaseJoint pjoint = (BaseJoint)joint;
-                pjoint.CurrentJoint = pjoint.GetBaseJoint();
-                PhysicsWorld.Add(pjoint.CurrentJoint);
-            }
-        }
-
-        public void DestroyJoint(InternalBaseJoint joint)
-        {
-            Joints.Remove(joint);
-            joint.One.Joints.Remove(joint);
-            joint.Two.Joints.Remove(joint);
-            if (joint is BaseJoint)
-            {
-                BaseJoint pjoint = (BaseJoint)joint;
-                PhysicsWorld.Remove(pjoint.CurrentJoint);
-            }
-        }
 
         /// <summary>
         /// Returns an item in the quick bar.
@@ -138,6 +103,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public double GlobalTickTimeLocal = 0;
 
+        public double Delta;
+
         void Window_UpdateFrame(object sender, FrameEventArgs e)
         {
             Delta = e.Time * CVars.g_timescale.ValueD;
@@ -159,17 +126,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Commands.Tick();
                 Network.Tick();
                 TickWorld(Delta);
-                for (int i = 0; i < Tickers.Count; i++)
-                {
-                    Tickers[i].Tick();
-                }
-                for (int i = 0; i < Joints.Count; i++)
-                {
-                    if (Joints[i].Enabled && Joints[i] is BaseFJoint)
-                    {
-                        ((BaseFJoint)Joints[i]).Solve();
-                    }
-                }
                 Sounds.Update(CameraPos, CameraTarget - CameraPos, CameraUp, Player.GetVelocity(), Window.Focused);
             }
             catch (Exception ex)
@@ -177,7 +133,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
             }
             CameraFinalTarget = Player.GetPosition() + Player.ForwardVector() * 100f;
-            CameraFinalTarget = Collision.RayTrace(Player.GetPosition(), CameraFinalTarget, IgnorePlayer).Position;
+            CameraFinalTarget = TheWorld.Collision.RayTrace(Player.GetPosition(), CameraFinalTarget, IgnorePlayer).Position;
             CameraDistance = (Player.GetPosition() - CameraFinalTarget).Length();
         }
 
@@ -190,83 +146,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     return false;
                 }
             }
-            return Collision.ShouldCollide(entry);
+            return TheWorld.Collision.ShouldCollide(entry);
         }
 
         public Location CameraFinalTarget;
 
         public double CameraDistance;
 
-        /// <summary>
-        /// Spawns an entity in the world.
-        /// </summary>
-        /// <param name="e">The entity to spawn</param>
-        public void SpawnEntity(Entity e)
-        {
-            Entities.Add(e);
-            if (e.Ticks)
-            {
-                Tickers.Add(e);
-            }
-            if (e.CastShadows)
-            {
-                ShadowCasters.Add(e);
-            }
-            if (e is PhysicsEntity)
-            {
-                ((PhysicsEntity)e).SpawnBody();
-            }
-            else if (e is PrimitiveEntity)
-            {
-                ((PrimitiveEntity)e).Spawn();
-            }
-        }
-
-        public void Despawn(Entity e)
-        {
-            Entities.Remove(e);
-            if (e.Ticks)
-            {
-                Tickers.Remove(e);
-            }
-            if (e.CastShadows)
-            {
-                ShadowCasters.Remove(e);
-            }
-            if (e is PhysicsEntity)
-            {
-                ((PhysicsEntity)e).DestroyBody();
-            }
-            else if (e is PrimitiveEntity)
-            {
-                ((PrimitiveEntity)e).Destroy();
-            }
-        }
-
-        public Entity GetEntity(long EID)
-        {
-            for (int i = 0; i < Entities.Count; i++)
-            {
-                if (Entities[i].EID == EID)
-                {
-                    return Entities[i];
-                }
-            }
-            return null;
-        }
-
         public void ResetWorld()
         {
             Items.Clear();
             QuickBarPos = 0;
-            for (int i = 0; i < Entities.Count; i++)
-            {
-                if (!(Entities[i] is PlayerEntity))
-                {
-                    Despawn(Entities[i]);
-                    i--;
-                }
-            }
+            BuildWorld();
+            TheWorld.SpawnEntity(Player);
         }
     }
 }

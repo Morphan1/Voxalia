@@ -20,11 +20,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             BEPUutilities.Quaternion ang = Utilities.BytesToQuaternion(data, 12 + 12);
             Location grav = Location.FromBytes(data, 12 + 12 + 16);
             long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 12 + 12 + 16 + 12, 8));
-            for (int i = 0; i < TheClient.Entities.Count; i++)
+            for (int i = 0; i < TheClient.TheWorld.Entities.Count; i++)
             {
-                if (TheClient.Entities[i] is PrimitiveEntity)
+                if (TheClient.TheWorld.Entities[i] is PrimitiveEntity)
                 {
-                    PrimitiveEntity e = (PrimitiveEntity)TheClient.Entities[i];
+                    PrimitiveEntity e = (PrimitiveEntity)TheClient.TheWorld.Entities[i];
                     if (e.EID == eID)
                     {
                         e.SetPosition(pos);

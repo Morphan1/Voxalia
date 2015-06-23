@@ -15,7 +15,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 return false;
             }
-            BasicPrimitiveEntity bpe = new BasicPrimitiveEntity(TheClient, false);
+            BasicPrimitiveEntity bpe = new BasicPrimitiveEntity(TheClient.TheWorld, false);
             bpe.model = TheClient.Models.GetModel("projectiles/arrow.dae");
             bpe.Position = Location.FromBytes(data, 0);
             bpe.Velocity = Location.FromBytes(data, 12);
@@ -23,7 +23,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             bpe.Scale = Location.FromBytes(data, 12 + 12 + 16);
             bpe.Gravity = Location.FromBytes(data, 12 + 12 + 16 + 12);
             bpe.EID = Utilities.BytesToLong(Utilities.BytesPartial(data, 12 + 12 + 16 + 12 + 12, 8));
-            TheClient.SpawnEntity(bpe);
+            TheClient.TheWorld.SpawnEntity(bpe);
             return true;
         }
     }

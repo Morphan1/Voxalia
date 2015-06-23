@@ -12,13 +12,14 @@ using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using BEPUphysics.EntityStateManagement;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
     public class CubeEntity : PhysicsEntity
     {
-        public CubeEntity(Client tclient, Location halfsize)
-            : base(tclient, true, true)
+        public CubeEntity(World tworld, Location halfsize)
+            : base(tworld, true, true)
         {
             HalfSize = halfsize;
             Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);

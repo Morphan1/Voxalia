@@ -21,11 +21,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Location angvel = Location.FromBytes(data, 12 + 12 + 16);
             bool active = (data[12 + 12 + 16 + 12] & 1) == 1;
             long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 12 + 12 + 16 + 12 + 1, 8));
-            for (int i = 0; i < TheClient.Entities.Count; i++)
+            for (int i = 0; i < TheClient.TheWorld.Entities.Count; i++)
             {
-                if (TheClient.Entities[i] is PhysicsEntity)
+                if (TheClient.TheWorld.Entities[i] is PhysicsEntity)
                 {
-                    PhysicsEntity e = (PhysicsEntity)TheClient.Entities[i];
+                    PhysicsEntity e = (PhysicsEntity)TheClient.TheWorld.Entities[i];
                     if (e.EID == eID)
                     {
                         e.SetPosition(pos);

@@ -10,6 +10,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using BEPUphysics.CollisionShapes;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -27,8 +28,8 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public ModelCollisionMode mode = ModelCollisionMode.AABB;
 
-        public ModelEntity(string model_in, Client tclient)
-            : base(tclient, true, true)
+        public ModelEntity(string model_in, World tworld)
+            : base(tworld, true, true)
         {
             mod = model_in;
         }

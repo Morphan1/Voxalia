@@ -15,7 +15,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 return false;
             }
-            PointLightEntity ple = new PointLightEntity(TheClient);
+            PointLightEntity ple = new PointLightEntity(TheClient.TheWorld);
             ple.EID = Utilities.BytesToLong(Utilities.BytesPartial(data, 0, 8));
             ple.LightColor = Location.FromBytes(data, 8);
             ple.texturesize = Utilities.BytesToInt(Utilities.BytesPartial(data, 8 + 12, 4));
@@ -30,7 +30,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             ple.SetPosition(Location.FromBytes(data, 8 + 12 + 4 + 4));
             ple.SetVelocity(Location.FromBytes(data, 8 + 12 + 4 + 4 + 12));
-            TheClient.SpawnEntity(ple);
+            TheClient.TheWorld.SpawnEntity(ple);
             return true;
         }
     }

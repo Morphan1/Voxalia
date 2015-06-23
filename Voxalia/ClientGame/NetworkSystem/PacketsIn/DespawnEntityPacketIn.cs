@@ -15,12 +15,12 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 return false;
             }
-            Entity e = TheClient.GetEntity(Utilities.BytesToLong(data));
+            Entity e = TheClient.TheWorld.GetEntity(Utilities.BytesToLong(data));
             if (e == null)
             {
                 return false;
             }
-            TheClient.Despawn(e);
+            TheClient.TheWorld.Despawn(e);
             return true;
         }
     }

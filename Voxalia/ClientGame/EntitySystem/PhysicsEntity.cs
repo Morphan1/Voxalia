@@ -14,15 +14,16 @@ using Voxalia.ClientGame.JointSystem;
 using BEPUphysics.CollisionRuleManagement;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
     public abstract class PhysicsEntity: Entity
     {
-        public PhysicsEntity(Client tclient, bool ticks, bool cast_shadows)
-            : base(tclient, ticks, cast_shadows)
+        public PhysicsEntity(World tworld, bool ticks, bool cast_shadows)
+            : base(tworld, ticks, cast_shadows)
         {
-            Vector3 grav = TheClient.PhysicsWorld.ForceUpdater.Gravity;
+            Vector3 grav = TheWorld.PhysicsWorld.ForceUpdater.Gravity;
             Gravity = new Location(grav.X, grav.Y, grav.Z);
             CGroup = CollisionUtil.Solid;
         }
@@ -92,7 +93,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
             Vector3 sweep = new Vector3(0, 0, -0.001f);
-            CollisionResult cr = TheClient.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
+            CollisionResult cr = TheClient.TheWorld.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
             if (cr.Hit && cr.HitEnt != null)
             {
                 // TODO: grab factors from the entity
@@ -120,7 +121,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 {
                     return;
                 }
-                Vector3 impulse = -(TheClient.PhysicsWorld.ForceUpdater.Gravity + TheClient.GravityNormal.ToBVector() * 0.4f) * GetMass() * (float)TheClient.Delta;
+                Vector3 impulse = -(TheWorld.PhysicsWorld.ForceUpdater.Gravity + TheWorld.GravityNormal.ToBVector() * 0.4f) * GetMass() * (float)TheClient.Delta;
                 Body.ApplyLinearImpulse(ref impulse);
                 Body.ActivityInformation.Activate();
             }
@@ -174,14 +175,14 @@ namespace Voxalia.ClientGame.EntitySystem
             // TODO: Gravity
             Body.Tag = this;
             SetFriction(Friction);
-            TheClient.PhysicsWorld.Add(Body);
+            TheWorld.PhysicsWorld.Add(Body);
             for (int i = 0; i < Joints.Count; i++)
             {
                 if (Joints[i] is BaseJoint)
                 {
                     BaseJoint joint = (BaseJoint)Joints[i];
                     joint.CurrentJoint = joint.GetBaseJoint();
-                    TheClient.PhysicsWorld.Add(joint.CurrentJoint);
+                    TheWorld.PhysicsWorld.Add(joint.CurrentJoint);
                 }
             }
         }
@@ -200,10 +201,10 @@ namespace Voxalia.ClientGame.EntitySystem
                 if (Joints[i] is BaseJoint)
                 {
                     BaseJoint joint = (BaseJoint)Joints[i];
-                    TheClient.PhysicsWorld.Remove(joint.CurrentJoint);
+                    TheWorld.PhysicsWorld.Remove(joint.CurrentJoint);
                 }
             }
-            TheClient.PhysicsWorld.Remove(Body);
+            TheWorld.PhysicsWorld.Remove(Body);
             Body = null;
         }
 

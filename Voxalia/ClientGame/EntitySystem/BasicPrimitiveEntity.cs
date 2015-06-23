@@ -9,13 +9,14 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.GraphicsSystems.ParticleSystem;
+using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
     public class BasicPrimitiveEntity: PrimitiveEntity
     {
-        public BasicPrimitiveEntity(Client tclient, bool cast_shadows)
-            : base(tclient, cast_shadows)
+        public BasicPrimitiveEntity(World tworld, bool cast_shadows)
+            : base(tworld, cast_shadows)
         {
         }
 

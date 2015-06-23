@@ -157,9 +157,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Building physics world...");
             BuildWorld();
             SysConsole.Output(OutputType.INIT, "Spawning the player...");
-            Player = new PlayerEntity(this);
+            Player = new PlayerEntity(TheWorld);
             Player.SetPosition(new Location(0, 0, 10));
-            SpawnEntity(Player);
+            TheWorld.SpawnEntity(Player);
             SysConsole.Output(OutputType.INIT, "Preparing networking...");
             Network = new NetworkBase(this);
             SysConsole.Output(OutputType.INIT, "Playing background music...");

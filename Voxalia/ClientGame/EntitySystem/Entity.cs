@@ -5,6 +5,7 @@ using System.Text;
 using Voxalia.Shared;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.JointSystem;
+using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -15,9 +16,10 @@ namespace Voxalia.ClientGame.EntitySystem
     {
         public OpenTK.Graphics.Color4 Color;
 
-        public Entity(Client tclient, bool tickme, bool cast_shadows)
+        public Entity(World tworld, bool tickme, bool cast_shadows)
         {
-            TheClient = tclient;
+            TheWorld = tworld;
+            TheClient = tworld.TheClient;
             Ticks = tickme;
             Color = new OpenTK.Graphics.Color4((float)Utilities.UtilRandom.NextDouble(), (float)Utilities.UtilRandom.NextDouble(), 0f, 1f);
             CastShadows = cast_shadows;
@@ -41,7 +43,9 @@ namespace Voxalia.ClientGame.EntitySystem
         /// <summary>
         /// The client that manages this entity.
         /// </summary>
-        public Client TheClient = null; 
+        public Client TheClient = null;
+
+        public World TheWorld = null;
 
         /// <summary>
         /// Draw the entity in the 3D world.

@@ -41,7 +41,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             bool enabled = (data[8] & 1) == 1;
             float distance = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 1, 4));
             Location color = Location.FromBytes(data, 8 + 1 + 4);
-            Entity ent = TheClient.GetEntity(EID);
+            Entity ent = TheClient.TheWorld.GetEntity(EID);
             if (ent == null || !(ent is PlayerEntity || ent is OtherPlayerEntity))
             {
                 return false;
