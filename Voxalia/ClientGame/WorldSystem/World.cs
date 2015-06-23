@@ -13,6 +13,7 @@ using BEPUutilities;
 using Voxalia.ClientGame.JointSystem;
 using Voxalia.ClientGame.EntitySystem;
 using Voxalia.ClientGame.OtherSystems;
+using BEPUutilities.Threading;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -40,7 +41,12 @@ namespace Voxalia.ClientGame.WorldSystem
         /// </summary>
         public void BuildWorld()
         {
-            PhysicsWorld = new Space();
+            ParallelLooper pl = new ParallelLooper();
+            for (int i =0; i < Environment.ProcessorCount; i++)
+            {
+                pl.AddThread();
+            }
+            PhysicsWorld = new Space(pl);
             // Set the world's general default gravity
             PhysicsWorld.ForceUpdater.Gravity = new BEPUutilities.Vector3(0, 0, -9.8f);
             // Minimize penetration
