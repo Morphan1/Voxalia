@@ -129,6 +129,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public int gFPS = 0;
 
+        public Frustum CFrust = null;
+
+        public int LightsC = 0;
+
         void Window_RenderFrame(object sender, FrameEventArgs e)
         {
             gDelta = e.Time;
@@ -143,20 +147,32 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 sortEntities();
                 if (CVars.r_lighting.ValueB)
                 {
+                    SetViewport();
+                    CameraTarget = CameraPos + Player.ForwardVector();
+                    Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
+                    Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
+                    Matrix4 combined = view * proj;
+                    Frustum camFrust = new Frustum(combined);
                     s_shadow.Bind();
                     VBO.BonesIdentity();
                     RenderingShadows = true;
+                    LightsC = 0;
                     for (int i = 0; i < Lights.Count; i++)
                     {
-                        // TODO: If movement_near_light
-                        if ((Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
+                        if (camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                         {
-                            for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                            // TODO: If movement_near_light
+                            if ((Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
                             {
-                                Lights[i].InternalLights[x].Attach();
-                                // TODO: Render settings
-                                Render3D(true);
-                                Lights[i].InternalLights[x].Complete();
+                                LightsC++;
+                                for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                                {
+                                    CFrust = new Frustum(Lights[i].InternalLights[x].GetMatrix());
+                                    Lights[i].InternalLights[x].Attach();
+                                    // TODO: Render settings
+                                    Render3D(true);
+                                    Lights[i].InternalLights[x].Complete();
+                                }
                             }
                         }
                     }
@@ -164,10 +180,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     s_fbo.Bind();
                     VBO.BonesIdentity();
                     RenderingShadows = false;
-                    CameraTarget = CameraPos + Player.ForwardVector();
-                    Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
-                    Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
-                    Matrix4 combined = view * proj;
+                    CFrust = camFrust;
                     GL.UniformMatrix4(1, false, ref combined);
                     GL.ActiveTexture(TextureUnit.Texture0);
                     RS4P.Bind();
@@ -207,39 +220,43 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     GL.Disable(EnableCap.CullFace);
                     for (int i = 0; i < Lights.Count; i++)
                     {
-                        double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
-                        double d2 = CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance;
-                        double maxrangemult = 0;
-                        if (d1 < d2 * 4)
+                        if (camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                         {
-                            maxrangemult = 1;
-                        }
-                        else if (d1 < d2 * 6)
-                        {
-                            maxrangemult = 1 - ((d1 - (d2 * 4)) / ((d2 * 6) - (d2 * 4)));
-                        }
-                        if (maxrangemult > 0)
-                        {
-                            GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
-                            for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                            // TODO: if Light_in_Frustrum
+                            double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
+                            double d2 = CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance;
+                            double maxrangemult = 0;
+                            if (d1 < d2 * 4)
                             {
-                                GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
-                                GL.ActiveTexture(TextureUnit.Texture0);
-                                GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
-                                GL.ActiveTexture(TextureUnit.Texture4);
-                                GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
-                                Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
-                                GL.UniformMatrix4(3, false, ref smat);
-                                GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
-                                Vector3 col = Lights[i].InternalLights[x].color * (float)maxrangemult;
-                                GL.Uniform3(8, ref col);
-                                GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
-                                GL.Uniform1(12, 1f / (float)Lights[i].InternalLights[x].texsize);
-                                GL.Uniform1(13, CVars.r_shadowblur.ValueF);
-                                Rendering.RenderRectangle(-1, -1, 1, 1);
-                                first = !first;
-                                GL.ActiveTexture(TextureUnit.Texture0);
-                                GL.BindTexture(TextureTarget.Texture2D, 0);
+                                maxrangemult = 1;
+                            }
+                            else if (d1 < d2 * 6)
+                            {
+                                maxrangemult = 1 - ((d1 - (d2 * 4)) / ((d2 * 6) - (d2 * 4)));
+                            }
+                            if (maxrangemult > 0)
+                            {
+                                GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
+                                for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                                {
+                                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
+                                    GL.ActiveTexture(TextureUnit.Texture0);
+                                    GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
+                                    GL.ActiveTexture(TextureUnit.Texture4);
+                                    GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
+                                    Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
+                                    GL.UniformMatrix4(3, false, ref smat);
+                                    GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
+                                    Vector3 col = Lights[i].InternalLights[x].color * (float)maxrangemult;
+                                    GL.Uniform3(8, ref col);
+                                    GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
+                                    GL.Uniform1(12, 1f / (float)Lights[i].InternalLights[x].texsize);
+                                    GL.Uniform1(13, CVars.r_shadowblur.ValueF);
+                                    Rendering.RenderRectangle(-1, -1, 1, 1);
+                                    first = !first;
+                                    GL.ActiveTexture(TextureUnit.Texture0);
+                                    GL.BindTexture(TextureTarget.Texture2D, 0);
+                                }
                             }
                         }
                     }
@@ -304,6 +321,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
                     Matrix4 combined = view * proj;
                     GL.UniformMatrix4(1, false, ref combined);
+                    CFrust = new Frustum(combined);
                     Render3D(false);
                     if (CVars.r_renderwireframe.ValueB)
                     {
@@ -392,7 +410,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
                 + "\n" + Player.GetPosition()
                 + "\n" + Player.GetVelocity() + " == " + Player.GetVelocity().Length()
-                + "\nLight source(s): " + Lights.Count
+                + "\nLight source(s): " + LightsC
                 + "\nEntities: " + TheWorld.Entities.Count
                 + "\nFLAGS: " + Player.ServerFlags, new Location(0, 0, 0));
             int center = Window.Width / 2;

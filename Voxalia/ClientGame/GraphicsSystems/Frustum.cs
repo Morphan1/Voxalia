@@ -94,6 +94,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>Whether it intersects</returns>
         public bool ContainsSphere(Location point, float radius)
         { // TODO: Improve accuracy
+            /*
             double dist;
             for (int i = 0; i < 6; i++)
             {
@@ -108,7 +109,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     return true;
                 }
             }
-            return true;
+            return true;*/
+            return ContainsBox(point - new Location(radius), point + new Location(radius));
         }
 
         public Plane GetFor(int i)

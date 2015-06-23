@@ -164,8 +164,10 @@ namespace Voxalia.ClientGame.WorldSystem
             GL.UniformMatrix4(7, false, ref mat);
             foreach (Chunk chunk in LoadedChunks.Values)
             {
-                // TODO: If chunk.InFrustum(frustum) { }
-                chunk.Render();
+                if (TheClient.CFrust.ContainsBox(chunk.WorldPosition, chunk.WorldPosition + new Location(30, 30, 30)))
+                {
+                    chunk.Render();
+                }
             }
         }
 
