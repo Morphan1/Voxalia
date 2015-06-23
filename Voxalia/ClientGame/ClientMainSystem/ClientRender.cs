@@ -149,7 +149,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     for (int i = 0; i < Lights.Count; i++)
                     {
                         // TODO: If movement_near_light
-                        if ((Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance)
+                        if ((Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 4)
                         {
                             for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                             {
@@ -207,9 +207,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     GL.Disable(EnableCap.CullFace);
                     for (int i = 0; i < Lights.Count; i++)
                     {
-                        if ((Lights[i].EyePos - CameraPos).LengthSquared() <
-                            CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD
-                            + Lights[i].MaxDistance * Lights[i].MaxDistance * 4)
+                        if ((Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 4)
                         // TODO: Else, if somewhat close, fade in/out
                         {
                             GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
