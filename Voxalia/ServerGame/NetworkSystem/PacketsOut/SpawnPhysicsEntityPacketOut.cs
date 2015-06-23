@@ -68,23 +68,23 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             }
             Utilities.FloatToBytes(e.GetBounciness()).CopyTo(Data, Data.Length - (4 + 1));
             Data[Data.Length - 1] = (byte)(e.Visible ? 1 : 0);
-            if (e.CGroup == e.TheServer.Collision.Solid)
+            if (e.CGroup == CollisionUtil.Solid)
             {
                 Data[Data.Length - 1] |= 2;
             }
-            else if (e.CGroup == e.TheServer.Collision.NonSolid)
+            else if (e.CGroup == CollisionUtil.NonSolid)
             {
                 Data[Data.Length - 1] |= 4;
             }
-            else if (e.CGroup == e.TheServer.Collision.Item)
+            else if (e.CGroup == CollisionUtil.Item)
             {
                 Data[Data.Length - 1] |= 2 | 4;
             }
-            else if (e.CGroup == e.TheServer.Collision.Player)
+            else if (e.CGroup == CollisionUtil.Player)
             {
                 Data[Data.Length - 1] |= 8;
             }
-            else if (e.CGroup == e.TheServer.Collision.Trigger)
+            else if (e.CGroup == CollisionUtil.Trigger)
             {
                 Data[Data.Length - 1] |= 4 | 8;
             }

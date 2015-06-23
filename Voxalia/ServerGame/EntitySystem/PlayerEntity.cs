@@ -107,7 +107,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 ItemStack it = GetItemForSlot(cItem);
                 it.Info.SwitchFrom(this, it);
                 HookItem.RemoveHook(this);
-                TheServer.DespawnEntity(this);
+                TheWorld.DespawnEntity(this);
             }
         }
 
@@ -125,8 +125,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool WaitingForClickRelease = false;
 
-        public PlayerEntity(Server tserver, Connection conn)
-            : base(tserver, true, 100f)
+        public PlayerEntity(World tworld, Connection conn)
+            : base(tworld, true, 100f)
         {
             Network = conn;
             SetMass(100);
@@ -146,7 +146,7 @@ namespace Voxalia.ServerGame.EntitySystem
             GiveItem(new ItemStack("bullet", "rifle_ammo", TheServer, 100, "items/weapons/ammo/rifle_round_ico", "Assault Rifle Ammo", "Very rapid!", Color.White.ToArgb(), "items/weapons/ammo/rifle_round.dae", false));
             GiveItem(new ItemStack("bullet", "minigun_ammo", TheServer, 2000, "items/weapons/ammo/minigun_round_ico", "Minigun Ammo", "Very very rapid!", Color.White.ToArgb(), "items/weapons/ammo/minigun_round.dae", false));
             SetHealth(Health);
-            CGroup = tserver.Collision.Player;
+            CGroup = CollisionUtil.Player;
         }
 
         public override void SpawnBody()
@@ -154,10 +154,10 @@ namespace Voxalia.ServerGame.EntitySystem
             base.SpawnBody();
             if (CursorMarker == null)
             {
-                CursorMarker = new CubeEntity(new Location(0.01, 0.01, 0.01), TheServer, 0);
-                CursorMarker.CGroup = TheServer.Collision.NonSolid;
+                CursorMarker = new CubeEntity(new Location(0.01, 0.01, 0.01), TheWorld, 0);
+                CursorMarker.CGroup = CollisionUtil.NonSolid;
                 CursorMarker.Visible = false;
-                TheServer.SpawnEntity(CursorMarker);
+                TheWorld.SpawnEntity(CursorMarker);
             }
         }
 
@@ -166,7 +166,7 @@ namespace Voxalia.ServerGame.EntitySystem
             base.DestroyBody();
             if (CursorMarker.IsSpawned)
             {
-                TheServer.DespawnEntity(CursorMarker);
+                TheWorld.DespawnEntity(CursorMarker);
                 CursorMarker = null;
             }
         }
@@ -197,7 +197,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 lAnim = TheServer.Animations.GetAnimation(anim);
             }
-            TheServer.SendToAll(new AnimationPacketOut(this, anim, mode));
+            TheWorld.SendToAll(new AnimationPacketOut(this, anim, mode));
         }
 
         public void GiveItem(ItemStack item)
@@ -234,11 +234,11 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool IgnoreThis(BroadPhaseEntry entry)
         {
-            if (entry.CollisionRules.Group == TheServer.Collision.Player)
+            if (entry.CollisionRules.Group == CollisionUtil.Player)
             {
                 return false;
             }
-            return TheServer.Collision.ShouldCollide(entry);
+            return TheWorld.Collision.ShouldCollide(entry);
         }
 
         public override void Tick()
@@ -264,7 +264,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Direction.Pitch = -89.9f;
             }
             bool fly = false;
-            CollisionResult crGround = TheServer.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.1f, HalfSize.Y - 0.1f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
+            CollisionResult crGround = TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.1f, HalfSize.Y - 0.1f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
             if (Upward && !fly && !pup && crGround.Hit && GetVelocity().Z < 1f)
             {
                 Vector3 imp = (Location.UnitZ * GetMass() * 7f).ToBVector();
@@ -356,7 +356,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (Click)
             {
                 cit.Info.Click(this, cit);
-                LastClick = TheServer.GlobalTickTime;
+                LastClick = TheWorld.GlobalTickTime;
                 WasClicking = true;
             }
             else if (WasClicking)
@@ -367,7 +367,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (AltClick)
             {
                 cit.Info.AltClick(this, cit);
-                LastAltClick = TheServer.GlobalTickTime;
+                LastAltClick = TheWorld.GlobalTickTime;
             }
             cit.Info.Tick(this, cit);
             // TODO: Better system
@@ -482,16 +482,16 @@ namespace Voxalia.ServerGame.EntitySystem
         public override void Die()
         {
             SetHealth(MaxHealth);
-            if (TheServer.SpawnPoints.Count == 0)
+            if (TheWorld.SpawnPoints.Count == 0)
             {
                 SysConsole.Output(OutputType.WARNING, "No spawn points... generating one!");
-                TheServer.SpawnEntity(new SpawnPointEntity(TheServer));
+                TheWorld.SpawnEntity(new SpawnPointEntity(TheWorld));
             }
             SpawnPointEntity spe = null;
             for (int i = 0; i < 10; i++)
             {
-                spe = TheServer.SpawnPoints[Utilities.UtilRandom.Next(TheServer.SpawnPoints.Count)];
-                if (!TheServer.Collision.CuboidLineTrace(HalfSize, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.01f)).Hit)
+                spe = TheWorld.SpawnPoints[Utilities.UtilRandom.Next(TheWorld.SpawnPoints.Count)];
+                if (!TheWorld.Collision.CuboidLineTrace(HalfSize, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.01f)).Hit)
                 {
                     break;
                 }

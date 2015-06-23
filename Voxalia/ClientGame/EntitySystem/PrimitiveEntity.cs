@@ -28,8 +28,8 @@ namespace Voxalia.ClientGame.EntitySystem
                     return false;
                 }
             }
-            if (entry.CollisionRules.Group == TheClient.Collision.NonSolid
-                || entry.CollisionRules.Group == TheClient.Collision.Trigger)
+            if (entry.CollisionRules.Group == CollisionUtil.NonSolid
+                || entry.CollisionRules.Group == CollisionUtil.Trigger)
             {
                 return false;
             }

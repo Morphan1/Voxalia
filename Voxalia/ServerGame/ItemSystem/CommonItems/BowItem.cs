@@ -26,7 +26,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void Click(PlayerEntity player, ItemStack item)
         {
-            ArrowEntity ae = new ArrowEntity(player.TheServer);
+            ArrowEntity ae = new ArrowEntity(player.TheWorld);
             ae.SetPosition(player.GetEyePosition());
             ae.NoCollide.Add(player.EID);
             Location forward = player.ForwardVector();
@@ -35,7 +35,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             lookatlh.Transpose();
             ae.Angles = BEPUutilities.Quaternion.CreateFromRotationMatrix(lookatlh);
             ae.Angles *= BEPUutilities.Quaternion.CreateFromAxisAngle(BEPUutilities.Vector3.UnitX, 90f * (float)Utilities.PI180);
-            player.TheServer.SpawnEntity(ae);
+            player.TheWorld.SpawnEntity(ae);
         }
 
         public override void AltClick(PlayerEntity player, ItemStack item)

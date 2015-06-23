@@ -8,6 +8,7 @@ using BEPUutilities;
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -24,8 +25,8 @@ namespace Voxalia.ServerGame.EntitySystem
             TexCoords = "1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f".Split('|');
         }
 
-        public CuboidalEntity(Location half, Server tserver, bool ticks, float mass)
-            : base(tserver, ticks)
+        public CuboidalEntity(Location half, World tworld, bool ticks, float mass)
+            : base(tworld, ticks)
         {
             DefTexs();
             HalfSize = half;

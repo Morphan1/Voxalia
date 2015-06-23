@@ -6,6 +6,7 @@ using Voxalia.ServerGame.EntitySystem;
 using Voxalia.Shared;
 using BEPUphysics.Constraints.TwoEntity;
 using BEPUphysics.Constraints.TwoEntity.Joints;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.JointSystem
 {
@@ -23,7 +24,7 @@ namespace Voxalia.ServerGame.JointSystem
             return new RevoluteAngularJoint(Ent1.Body, Ent2.Body, Direction.ToBVector());
         }
 
-        public override bool ApplyVar(ServerMainSystem.Server tserver, string var, string value)
+        public override bool ApplyVar(World tworld, string var, string value)
         {
             switch (var)
             {
@@ -31,7 +32,7 @@ namespace Voxalia.ServerGame.JointSystem
                     Direction = Location.FromString(value);
                     return true;
                 default:
-                    return base.ApplyVar(tserver, var, value);
+                    return base.ApplyVar(tworld, var, value);
             }
         }
 

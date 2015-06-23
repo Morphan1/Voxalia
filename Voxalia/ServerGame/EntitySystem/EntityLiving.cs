@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
     public abstract class EntityLiving: PhysicsEntity, EntityDamageable
     {
-        public EntityLiving(Server tserver, bool ticks, float maxhealth)
-            : base(tserver, ticks)
+        public EntityLiving(World tworld, bool ticks, float maxhealth)
+            : base(tworld, ticks)
         {
             MaxHealth = maxhealth;
             Health = maxhealth;

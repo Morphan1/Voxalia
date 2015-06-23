@@ -9,7 +9,9 @@ namespace Voxalia.Shared
     {
         AIR = 0,
         STONE = 1,
-        NUM_DEFAULT = 2,
+        GRASS = 2,
+        DIRT = 3,
+        NUM_DEFAULT = 4,
         MAX = (ushort)(1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 256 * 2 | 256 * 4 | 256 * 8),
         SUBDATA_BIT = (ushort)(256 * 16 | 256 * 32 | 256 * 64 | 256 * 128)
     }
@@ -53,6 +55,16 @@ namespace Voxalia.Shared
         public static int TextureID(this Material mat, MaterialSide side)
         {
             return ALL_MATS[(int)mat].TID[(int)side];
+        }
+
+        public static Material GetHardMaterial(this Material mat)
+        {
+            return (Material)GetMaterialHardMat((ushort)mat);
+        }
+
+        public static ushort GetSubData(this Material mat)
+        {
+            return GetMaterialSubData((ushort)mat);
         }
     }
 

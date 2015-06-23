@@ -47,11 +47,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void Click(PlayerEntity player, ItemStack item)
         {
-            if (item.Datum != 0 && !player.WaitingForClickRelease && (player.TheServer.GlobalTickTime - player.LastGunShot >= FireRate))
+            if (item.Datum != 0 && !player.WaitingForClickRelease && (player.TheWorld.GlobalTickTime - player.LastGunShot >= FireRate))
             {
                 for (int i = 0; i < Shots; i++)
                 {
-                    BulletEntity be = new BulletEntity(player.TheServer);
+                    BulletEntity be = new BulletEntity(player.TheWorld);
                     be.SetPosition(player.GetEyePosition());
                     be.NoCollide.Add(player.EID);
                     Location ang = player.Direction;
@@ -62,13 +62,13 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     be.Damage = ImpactDamage;
                     be.SplashSize = SplashSize;
                     be.SplashDamage = SplashMaxDamage;
-                    player.TheServer.SpawnEntity(be);
+                    player.TheWorld.SpawnEntity(be);
                 }
                 if (ShotPerClick)
                 {
                     player.WaitingForClickRelease = true;
                 }
-                player.LastGunShot = player.TheServer.GlobalTickTime;
+                player.LastGunShot = player.TheWorld.GlobalTickTime;
                 item.Datum -= 1;
                 player.Network.SendPacket(new SetItemPacketOut(player.Items.IndexOf(item), item));
             }
@@ -112,7 +112,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                         }
                         player.Flags |= YourStatusFlags.RELOADING;
                         player.WaitingForClickRelease = true;
-                        player.LastGunShot = player.TheServer.GlobalTickTime + ReloadDelay;
+                        player.LastGunShot = player.TheWorld.GlobalTickTime + ReloadDelay;
                         return true;
                     }
                 }
@@ -148,12 +148,12 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void Tick(PlayerEntity player, ItemStack item)
         {
-            if (player.Flags.HasFlag(YourStatusFlags.RELOADING) && (player.TheServer.GlobalTickTime - player.LastGunShot >= FireRate))
+            if (player.Flags.HasFlag(YourStatusFlags.RELOADING) && (player.TheWorld.GlobalTickTime - player.LastGunShot >= FireRate))
             {
                 player.Flags &= ~YourStatusFlags.RELOADING;
                 UpdatePlayer(player);
             }
-            else if (!player.Flags.HasFlag(YourStatusFlags.RELOADING) && (player.TheServer.GlobalTickTime - player.LastGunShot < FireRate))
+            else if (!player.Flags.HasFlag(YourStatusFlags.RELOADING) && (player.TheWorld.GlobalTickTime - player.LastGunShot < FireRate))
             {
                 player.Flags |= YourStatusFlags.RELOADING;
                 UpdatePlayer(player);

@@ -8,13 +8,14 @@ using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using BEPUphysics.EntityStateManagement;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
     public class CubeEntity: CuboidalEntity
     {
-        public CubeEntity(Location half, Server tserver, float mass)
-            : base(half, tserver, true, mass)
+        public CubeEntity(Location half, World tworld, float mass)
+            : base(half, tworld, true, mass)
         {
             NetworkMe = true;
         }
@@ -30,20 +31,20 @@ namespace Voxalia.ServerGame.EntitySystem
             if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
             {
                 pActive = Body.ActivityInformation.IsActive;
-                TheServer.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                TheWorld.SendToAll(new PhysicsEntityUpdatePacketOut(this));
             }
             if (!pActive && GetMass() > 0)
             {
-                deltat += TheServer.Delta;
+                deltat += TheWorld.Delta;
                 if (deltat > 2.0)
                 {
-                    TheServer.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                    TheWorld.SendToAll(new PhysicsEntityUpdatePacketOut(this));
                 }
             }
             if (!Body.ActivityInformation.IsActive && GetMass() <= 0 && GetVelocity() != pVelocity)
             {
                 pVelocity = GetVelocity();
-                TheServer.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                TheWorld.SendToAll(new PhysicsEntityUpdatePacketOut(this));
             }
             base.Tick();
         }
@@ -69,7 +70,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 case "water":
                     if (data.ToLower() == "true")
                     {
-                        CGroup = TheServer.Collision.Water;
+                        CGroup = CollisionUtil.Water;
                     }
                     return true;
                 default:
@@ -82,7 +83,7 @@ namespace Voxalia.ServerGame.EntitySystem
             List<KeyValuePair<string, string>> vars = base.GetVariables();
             vars.Add(new KeyValuePair<string, string>("textures", TexString()));
             vars.Add(new KeyValuePair<string, string>("coords", TexCString()));
-            vars.Add(new KeyValuePair<string, string>("water", CGroup == TheServer.Collision.Water ? "true": "false"));
+            vars.Add(new KeyValuePair<string, string>("water", CGroup == CollisionUtil.Water ? "true" : "false"));
             return vars;
         }
 

@@ -11,17 +11,18 @@ using BEPUphysics.CollisionShapes;
 using BEPUphysics.CollisionRuleManagement;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
     public abstract class PhysicsEntity: Entity
     {
-        public PhysicsEntity(Server tserver, bool ticks)
-            : base(tserver, ticks)
+        public PhysicsEntity(World tworld, bool ticks)
+            : base(tworld, ticks)
         {
-            Vector3 grav = TheServer.PhysicsWorld.ForceUpdater.Gravity;
+            Vector3 grav = TheWorld.PhysicsWorld.ForceUpdater.Gravity;
             Gravity = new Location(grav.X, grav.Y, grav.Z);
-            CGroup = tserver.Collision.Solid;
+            CGroup = CollisionUtil.Solid;
         }
 
         public float Widest = 1;
@@ -84,14 +85,14 @@ namespace Voxalia.ServerGame.EntitySystem
 
         bool IgnoreEverythingButWater(BroadPhaseEntry entry)
         {
-            return entry.CollisionRules.Group == TheServer.Collision.Water;
+            return entry.CollisionRules.Group == CollisionUtil.Water;
         }
 
         void DoWaterFloat()
         {
             RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
             Vector3 sweep = new Vector3(0, 0, -0.001f);
-            CollisionResult cr = TheServer.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
+            CollisionResult cr = TheWorld.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
             if (cr.Hit && cr.HitEnt != null)
             {
                 // TODO: grab factors from the entity
@@ -119,7 +120,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     return;
                 }
-                Vector3 impulse = -(TheServer.PhysicsWorld.ForceUpdater.Gravity + TheServer.GravityNormal.ToBVector() * 0.4f) * GetMass() * (float)TheServer.Delta;
+                Vector3 impulse = -(TheWorld.PhysicsWorld.ForceUpdater.Gravity + TheWorld.GravityNormal.ToBVector() * 0.4f) * GetMass() * (float)TheWorld.Delta;
                 Body.ApplyLinearImpulse(ref impulse);
                 Body.ActivityInformation.Activate();
             }
@@ -173,14 +174,14 @@ namespace Voxalia.ServerGame.EntitySystem
             // TODO: Other settings
             // TODO: Gravity
             SetFriction(Friction);
-            TheServer.PhysicsWorld.Add(Body);
+            TheWorld.PhysicsWorld.Add(Body);
             for (int i = 0; i < Joints.Count; i++)
             {
                 if (Joints[i] is BaseJoint)
                 {
                     BaseJoint joint = (BaseJoint)Joints[i];
                     joint.CurrentJoint = joint.GetBaseJoint();
-                    TheServer.PhysicsWorld.Add(joint.CurrentJoint);
+                    TheWorld.PhysicsWorld.Add(joint.CurrentJoint);
                 }
             }
         }
@@ -200,10 +201,10 @@ namespace Voxalia.ServerGame.EntitySystem
                 if (Joints[i] is BaseJoint)
                 {
                     BaseJoint joint = (BaseJoint)Joints[i];
-                    TheServer.PhysicsWorld.Remove(joint.CurrentJoint);
+                    TheWorld.PhysicsWorld.Remove(joint.CurrentJoint);
                 }
             }
-            TheServer.PhysicsWorld.Remove(Body);
+            TheWorld.PhysicsWorld.Remove(Body);
             Body = null;
         }
 
@@ -419,9 +420,9 @@ namespace Voxalia.ServerGame.EntitySystem
                     SetBounciness(Utilities.StringToFloat(data));
                     return true;
                 case "solid":
-                    if (data.ToLower() != "true" && CGroup == TheServer.Collision.Solid)
+                    if (data.ToLower() != "true" && CGroup == CollisionUtil.Solid)
                     {
-                        CGroup = TheServer.Collision.NonSolid;
+                        CGroup = CollisionUtil.NonSolid;
                     }
                     return true;
                 default:
@@ -438,7 +439,7 @@ namespace Voxalia.ServerGame.EntitySystem
             vars.Add(new KeyValuePair<string, string>("mass", GetMass().ToString()));
             vars.Add(new KeyValuePair<string, string>("friction", GetFriction().ToString()));
             vars.Add(new KeyValuePair<string, string>("bounciness", GetBounciness().ToString()));
-            vars.Add(new KeyValuePair<string, string>("solid", CGroup == TheServer.Collision.NonSolid ? "false": "true"));
+            vars.Add(new KeyValuePair<string, string>("solid", CGroup == CollisionUtil.NonSolid ? "false" : "true"));
             return vars;
         }
     }

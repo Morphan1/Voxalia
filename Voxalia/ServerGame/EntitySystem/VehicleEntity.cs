@@ -5,6 +5,7 @@ using System.Text;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared;
 using Voxalia.ServerGame.JointSystem;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -12,8 +13,8 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public string vehName;
 
-        public VehicleEntity(string vehicle, Server tserver)
-            : base("vehicles/" + vehicle + "_base.dae", tserver)
+        public VehicleEntity(string vehicle, World tworld)
+            : base("vehicles/" + vehicle + "_base.dae", tworld)
         {
             vehName = vehicle;
             SetMass(100);
@@ -39,17 +40,17 @@ namespace Voxalia.ServerGame.EntitySystem
                             Assimp.Quaternion arot;
                             scene.Meshes[i].Bones[x].OffsetMatrix.Decompose(out apos, out arot, out ascale);
                             Location pos = GetPosition() + new Location(apos.X, apos.Y, apos.Z);
-                            ModelEntity wheel = new ModelEntity("vehicles/" + vehName + "_wheel.dae", TheServer);
+                            ModelEntity wheel = new ModelEntity("vehicles/" + vehName + "_wheel.dae", TheWorld);
                             wheel.SetPosition(pos);
                             wheel.SetOrientation(new BEPUutilities.Quaternion(arot.X, arot.Y, arot.Z, arot.W));
                             wheel.Gravity = Gravity;
                             wheel.CGroup = CGroup;
                             wheel.SetMass(5);
-                            TheServer.SpawnEntity(wheel);
+                            TheWorld.SpawnEntity(wheel);
                             //BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
                             //JointSpinner jbs = new JointSpinner(this, wheel, Location.FromBVector(forward));
                             JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
-                            TheServer.AddJoint(jbs);
+                            TheWorld.AddJoint(jbs);
                         }
 
                     }

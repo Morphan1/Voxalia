@@ -46,7 +46,7 @@ namespace Voxalia.ServerGame.JointSystem
                 CurrentJoint.IsActive = true;
             }
             Enabled = true;
-            One.TheServer.SendToAll(new JointStatusPacketOut(this));
+            One.TheWorld.SendToAll(new JointStatusPacketOut(this));
         }
 
         public override void Disable()
@@ -56,7 +56,7 @@ namespace Voxalia.ServerGame.JointSystem
                 CurrentJoint.IsActive = false;
             }
             Enabled = false;
-            One.TheServer.SendToAll(new JointStatusPacketOut(this));
+            One.TheWorld.SendToAll(new JointStatusPacketOut(this));
         }
     }
 }

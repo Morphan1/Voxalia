@@ -13,6 +13,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.Entities;
 using BEPUphysics.CollisionRuleManagement;
 using BEPUutilities;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -20,12 +21,12 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public ItemStack Stack;
 
-        public ItemEntity(ItemStack stack, Server tserver)
-            : base(stack.Model, tserver)
+        public ItemEntity(ItemStack stack, World tworld)
+            : base(stack.Model, tworld)
         {
             Stack = stack;
             SetMass(5 * stack.Count); // TODO: Weight property for items!
-            CGroup = tserver.Collision.Item;
+            CGroup = CollisionUtil.Item;
         }
 
         public bool Use(Entity user)
@@ -33,7 +34,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (user is PlayerEntity)
             {
                 ((PlayerEntity)user).GiveItem(Stack);
-                TheServer.DespawnEntity(this);
+                TheWorld.DespawnEntity(this);
                 return true;
             }
             return false;

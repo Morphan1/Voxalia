@@ -13,26 +13,10 @@ namespace Voxalia.ServerGame.ServerMainSystem
     public partial class Server
     {
         /// <summary>
-        /// The physics world in which all physics-related activity takes place.
-        /// </summary>
-        public Space PhysicsWorld;
-
-        public CollisionUtil Collision;
-
-        public Location GravityNormal = new Location(0, 0, -1);
-
-        /// <summary>
         /// Builds the physics world.
         /// </summary>
         public void BuildWorld()
         {
-            PhysicsWorld = new Space();
-            // Set the world's general default gravity
-            PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f);
-            // Minimize penetration
-            CollisionDetectionSettings.AllowedPenetration = 0.001f;
-            // Load a CollisionUtil instance
-            Collision = new CollisionUtil(PhysicsWorld);
         }
 
         public List<World> LoadedWorlds = new List<World>();
@@ -43,15 +27,19 @@ namespace Voxalia.ServerGame.ServerMainSystem
             World world = new World();
             world.Name = name.ToLower();
             world.TheServer = this;
+            world.BuildWorld();
             LoadedWorlds.Add(world);
         }
 
         /// <summary>
         /// Ticks the physics world.
         /// </summary>
-        public void TickWorld(double delta)
+        public void TickWorlds(double delta)
         {
-            PhysicsWorld.Update((float)delta); // TODO: More specific settings?
+            for (int i = 0; i < LoadedWorlds.Count; i++)
+            {
+                LoadedWorlds[i].Tick(delta);
+            }
         }
     }
 }

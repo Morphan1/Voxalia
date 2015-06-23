@@ -5,13 +5,14 @@ using System.Text;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared;
 using BEPUutilities;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
     class FuncTrackEntity: CubeEntity, EntityTargettable
     {
-        public FuncTrackEntity(Location half, Server tserver, float mass)
-            : base(half, tserver, mass)
+        public FuncTrackEntity(Location half, World tworld, float mass)
+            : base(half, tworld, mass)
         {
         }
 
@@ -37,7 +38,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 return;
             }
             loopsSoFar = 0;
-            List<Entity> ents = TheServer.GetTargets(Target);
+            List<Entity> ents = TheWorld.GetTargets(Target);
             if (ents.Count == 0)
             {
                 return;
@@ -48,7 +49,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return;
             }
-            ents = TheServer.GetTargets(((TargetPositionEntity)t1).Target);
+            ents = TheWorld.GetTargets(((TargetPositionEntity)t1).Target);
             if (ents.Count == 0)
             {
                 return;
@@ -88,7 +89,7 @@ namespace Voxalia.ServerGame.EntitySystem
                                 active = false;
                             }
                         }
-                        List<Entity> ents = TheServer.GetTargets(((TargetPositionEntity)nextInLine).Target);
+                        List<Entity> ents = TheWorld.GetTargets(((TargetPositionEntity)nextInLine).Target);
                         if (ents.Count == 0)
                         {
                             SysConsole.Output(OutputType.WARNING, "Incomplete FuncTrack chain!"); // TODO: Debug mode only

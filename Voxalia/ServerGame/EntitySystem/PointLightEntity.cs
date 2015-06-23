@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -13,8 +14,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public Location Color = Location.One;
         public float Radius = 10;
 
-        public PointLightEntity(Server tserver)
-            : base(tserver)
+        public PointLightEntity(World tworld)
+            : base(tworld)
         {
             network = false; // TODO: Maybe network?
         }

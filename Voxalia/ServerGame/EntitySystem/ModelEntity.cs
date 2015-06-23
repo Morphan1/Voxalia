@@ -6,6 +6,7 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -15,8 +16,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Location scale = Location.One;
 
-        public ModelEntity(string mod, Server tserver)
-            : base(tserver, true)
+        public ModelEntity(string mod, World tworld)
+            : base(tworld, true)
         {
             model = mod;
         }
@@ -32,14 +33,14 @@ namespace Voxalia.ServerGame.EntitySystem
             if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
             {
                 pActive = Body.ActivityInformation.IsActive;
-                TheServer.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                TheWorld.SendToAll(new PhysicsEntityUpdatePacketOut(this));
             }
             if (!pActive && GetMass() > 0)
             {
-                deltat += TheServer.Delta;
+                deltat += TheWorld.Delta;
                 if (deltat > 2.0)
                 {
-                    TheServer.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                    TheWorld.SendToAll(new PhysicsEntityUpdatePacketOut(this));
                 }
             }
             base.Tick();

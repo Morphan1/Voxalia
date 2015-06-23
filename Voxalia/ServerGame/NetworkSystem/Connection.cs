@@ -183,7 +183,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                             }
                             // TODO: Additional details?
                             PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
-                            PlayerEntity player = new PlayerEntity(TheServer, this);
+                            PlayerEntity player = new PlayerEntity(TheServer.LoadedWorlds[0], this); // TODO: BEtter world selection
                             player.Name = name;
                             player.Host = host;
                             player.Port = port;
@@ -230,7 +230,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                             }
                             player.ChunkNetwork = this;
                             PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
-                            TheServer.SpawnEntity(player);
+                            TheServer.LoadedWorlds[0].SpawnEntity(player); // TODO: Pick world better
                             player.LastPingByte = 0;
                             player.LastCPingByte = 0;
                             SendPacket(new PingPacketOut(0));

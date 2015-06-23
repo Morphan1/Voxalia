@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
     public class TargetPositionEntity: TargetEntity
     {
-        public TargetPositionEntity(Server tserver)
-            : base(tserver)
+        public TargetPositionEntity(World tworld)
+            : base(tworld)
         {
         }
 

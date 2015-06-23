@@ -22,12 +22,12 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 
         public bool TryForUseValidity(BroadPhaseEntry entry)
         {
-            if (entry.CollisionRules.Group == TheServer.Collision.Solid
-                || entry.CollisionRules.Group == TheServer.Collision.Item)
+            if (entry.CollisionRules.Group == CollisionUtil.Solid
+                || entry.CollisionRules.Group == CollisionUtil.Item)
             {
                 return true;
             }
-            if (entry.CollisionRules.Group == TheServer.Collision.Trigger
+            if (entry.CollisionRules.Group == CollisionUtil.Trigger
                 && ((EntityCollidable)entry).Entity.Tag is EntityUseable)
             {
                 return true;
@@ -39,7 +39,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
         {
             TheServer = entry.Player.TheServer;
             Location forw = entry.Player.ForwardVector();
-            CollisionResult cr = entry.Player.TheServer.Collision.CuboidLineTrace(new Location(0.1f),
+            CollisionResult cr = entry.Player.TheWorld.Collision.CuboidLineTrace(new Location(0.1f),
                 entry.Player.GetEyePosition(), entry.Player.GetEyePosition() + forw * 2, TryForUseValidity);
             if (cr.Hit && cr.HitEnt != null && cr.HitEnt.Tag is EntityUseable)
             {

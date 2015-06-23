@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
     public abstract class TargetEntity: PrimitiveEntity, EntityTargettable
     {
-        public TargetEntity(Server tserver)
-            : base(tserver)
+        public TargetEntity(World tworld)
+            : base(tworld)
         {
             network = false;
             NetworkMe = false;

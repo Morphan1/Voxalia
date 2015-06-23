@@ -24,7 +24,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             Vector3 grav = TheClient.PhysicsWorld.ForceUpdater.Gravity;
             Gravity = new Location(grav.X, grav.Y, grav.Z);
-            CGroup = tclient.Collision.Solid;
+            CGroup = CollisionUtil.Solid;
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         bool IgnoreEverythingButWater(BroadPhaseEntry entry)
         {
-            return entry.CollisionRules.Group == TheClient.Collision.Water;
+            return entry.CollisionRules.Group == CollisionUtil.Water;
         }
 
         void DoWaterFloat()

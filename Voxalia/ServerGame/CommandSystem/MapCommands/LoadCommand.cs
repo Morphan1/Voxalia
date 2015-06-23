@@ -39,7 +39,7 @@ namespace Voxalia.ServerGame.CommandSystem.MapCommands
                 return;
             }
             string data = Program.Files.ReadText("maps/" + mapname + ".map");
-            TheServer.LoadMapFromString(data);
+            TheServer.LoadedWorlds[0].LoadMapFromString(data); // TODO: Choose world better. Generate, ignore, etc.
             sw.Stop();
             entry.Good("Loaded map in " + (float)sw.ElapsedMilliseconds / 1000f + " seconds.");
         }

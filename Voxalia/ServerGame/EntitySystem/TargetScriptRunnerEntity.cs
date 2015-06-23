@@ -8,13 +8,14 @@ using Frenetic;
 using Frenetic.CommandSystem;
 using Frenetic.TagHandlers;
 using Frenetic.TagHandlers.Objects;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
     public class TargetScriptRunnerEntity: TargetEntity
     {
-        public TargetScriptRunnerEntity(Server tserver)
-            : base(tserver)
+        public TargetScriptRunnerEntity(World tworld)
+            : base(tworld)
         {
         }
 

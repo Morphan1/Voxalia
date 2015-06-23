@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
     public class TriggerGenericEntity: TriggerEntity, EntityUseable
     {
-        public TriggerGenericEntity(Location half, Server tserver)
-            : base(half, tserver)
+        public TriggerGenericEntity(Location half, World tworld)
+            : base(half, tworld)
         {
         }
 

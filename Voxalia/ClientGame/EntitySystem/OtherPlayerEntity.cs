@@ -72,12 +72,12 @@ namespace Voxalia.ClientGame.EntitySystem
             EID = -1;
             model = TheClient.Models.GetModel("players/human_male_004.dae");
             model.LoadSkin(tclient.Textures);
-            CGroup = tclient.Collision.Player;
+            CGroup = CollisionUtil.Player;
         }
 
         public bool IgnoreThis(BroadPhaseEntry entry)
         {
-            if (entry.CollisionRules.Group == TheClient.Collision.Player)
+            if (entry.CollisionRules.Group == CollisionUtil.Player)
             {
                 return false;
             }

@@ -72,31 +72,31 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             int solidity = (data[data.Length - 1] & (2|4|8));
             if (solidity == 2)
             {
-                ce.CGroup = ce.TheClient.Collision.Solid;
+                ce.CGroup = CollisionUtil.Solid;
             }
             else if (solidity == 4)
             {
-                ce.CGroup = ce.TheClient.Collision.NonSolid;
+                ce.CGroup = CollisionUtil.NonSolid;
             }
             else if (solidity == (2 | 4))
             {
-                ce.CGroup = ce.TheClient.Collision.Item;
+                ce.CGroup = CollisionUtil.Item;
             }
             else if (solidity == (8))
             {
-                ce.CGroup = ce.TheClient.Collision.Player;
+                ce.CGroup = CollisionUtil.Player;
             }
             else if (solidity == (4 | 8))
             {
-                ce.CGroup = ce.TheClient.Collision.Trigger;
+                ce.CGroup = CollisionUtil.Trigger;
             }
             else if (solidity == (2 | 8))
             {
-                ce.CGroup = ce.TheClient.Collision.Solid; // PlaceHolder
+                ce.CGroup = CollisionUtil.Solid; // PlaceHolder
             }
             else if (solidity == (2 | 4 | 8))
             {
-                ce.CGroup = ce.TheClient.Collision.Solid; // PlaceHolder
+                ce.CGroup = CollisionUtil.Solid; // PlaceHolder
             }
             ce.Visible = Visible;
             ce.SetMass(mass);

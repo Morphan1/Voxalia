@@ -56,9 +56,9 @@ namespace Voxalia.ServerGame.CommandSystem
         /// <summary>
         /// Advances any running command queues.
         /// </summary>
-        public void Tick()
+        public void Tick(double delta)
         {
-            CommandSystem.Tick((float)TheServer.Delta);
+            CommandSystem.Tick((float)delta);
         }
 
         /// <summary>

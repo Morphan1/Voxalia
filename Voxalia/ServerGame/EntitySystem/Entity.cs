@@ -16,9 +16,10 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public World TheWorld;
 
-        public Entity(Server tserver, bool tickme)
+        public Entity(World tworld, bool tickme)
         {
-            TheServer = tserver;
+            TheWorld = tworld;
+            TheServer = tworld.TheServer;
             Ticks = tickme;
         }
 

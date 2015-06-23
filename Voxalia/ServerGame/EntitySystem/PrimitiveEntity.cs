@@ -6,6 +6,7 @@ using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared;
 using BEPUphysics;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -25,8 +26,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public List<long> NoCollide = new List<long>();
 
-        public PrimitiveEntity(Server tserver)
-            : base(tserver, true)
+        public PrimitiveEntity(World tworld)
+            : base(tworld, true)
         {
         }
 
@@ -42,8 +43,8 @@ namespace Voxalia.ServerGame.EntitySystem
                     return false;
                 }
             }
-            if (entry.CollisionRules.Group == TheServer.Collision.NonSolid
-                || entry.CollisionRules.Group == TheServer.Collision.Trigger)
+            if (entry.CollisionRules.Group == CollisionUtil.NonSolid
+                || entry.CollisionRules.Group == CollisionUtil.Trigger)
             {
                 return false;
             }
@@ -52,10 +53,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
-            SetVelocity(GetVelocity() + Gravity * TheServer.Delta);
+            SetVelocity(GetVelocity() + Gravity * TheWorld.Delta);
             if (GetVelocity().LengthSquared() > 0)
             {
-                CollisionResult cr = TheServer.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + GetVelocity() * TheServer.Delta, FilterHandle);
+                CollisionResult cr = TheWorld.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + GetVelocity() * TheWorld.Delta, FilterHandle);
                 Location vel = GetVelocity();
                 if (cr.Hit && Collide != null)
                 {
@@ -65,12 +66,12 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     if (vel == GetVelocity())
                     {
-                        SetVelocity((cr.Position - GetPosition()) / TheServer.Delta);
+                        SetVelocity((cr.Position - GetPosition()) / TheWorld.Delta);
                     }
                     SetPosition(cr.Position);
                     if (network && vel != GetVelocity())
                     {
-                        TheServer.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
+                        TheWorld.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
                     }
                 }
             }

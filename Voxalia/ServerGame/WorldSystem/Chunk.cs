@@ -98,12 +98,12 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             if (worldObject != null)
             {
-                OwningWorld.TheServer.PhysicsWorld.Remove(worldObject);
+                OwningWorld.PhysicsWorld.Remove(worldObject);
             }
             worldObject = CalculateChunkShape();
             if (worldObject != null)
             {
-                OwningWorld.TheServer.PhysicsWorld.Add(worldObject);
+                OwningWorld.PhysicsWorld.Add(worldObject);
             }
         }
     }

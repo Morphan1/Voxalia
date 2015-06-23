@@ -5,16 +5,17 @@ using System.Text;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared;
 using BEPUutilities;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
     public class BulletEntity: PrimitiveEntity
     {
-        public BulletEntity(Server tserver)
-            : base(tserver)
+        public BulletEntity(World tworld)
+            : base(tworld)
         {
             Collide += new EventHandler<CollisionEventArgs>(OnCollide);
-            Gravity = Location.FromBVector(tserver.PhysicsWorld.ForceUpdater.Gravity);
+            Gravity = Location.FromBVector(TheWorld.PhysicsWorld.ForceUpdater.Gravity);
         }
 
         public void OnCollide(object sender, CollisionEventArgs args)
@@ -36,7 +37,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 // TODO: Apply Splash Damage
                 // TODO: Apply Splash Impulses
             }
-            TheServer.DespawnEntity(this);
+            TheWorld.DespawnEntity(this);
         }
 
         public override void Recalculate()

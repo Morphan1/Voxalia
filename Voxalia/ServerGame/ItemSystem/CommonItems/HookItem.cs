@@ -19,13 +19,13 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void Click(PlayerEntity player, ItemStack item)
         {
-            if (player.LastClick + 0.2 > player.TheServer.GlobalTickTime)
+            if (player.LastClick + 0.2 > player.TheWorld.GlobalTickTime)
             {
                 return;
             }
             Location eye = player.GetEyePosition();
             Location adj = player.ForwardVector() * 20f;
-            CollisionResult cr = player.TheServer.Collision.CuboidLineTrace(new Location(0.1f), eye, eye + adj, player.IgnoreThis);
+            CollisionResult cr = player.TheWorld.Collision.CuboidLineTrace(new Location(0.1f), eye, eye + adj, player.IgnoreThis);
             if (!cr.Hit)
             {
                 return;
@@ -40,7 +40,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             float len = (float)(cr.Position - player.GetCenter()).Length();
             BaseJoint jd;
             jd = new JointDistance(player, pe, 0.01f, len + 0.1f, player.GetCenter(), cr.Position);
-            player.TheServer.AddJoint(jd);
+            player.TheWorld.AddJoint(jd);
             player.Hooks.Add(new HookInfo() { Joint = jd, Hit = pe, IsBar = false });
             Location step = (player.GetCenter() - cr.Position) / len;
             Location forw = Utilities.VectorToAngles(step);
@@ -50,24 +50,24 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             for (float f = 0; f < len - 1f; f += 0.5f)
             {
                 Location cpos = cr.Position + step * f;
-                CubeEntity ce = new CubeEntity(new Location(0.23, 0.05, 0.05), player.TheServer, 1);
+                CubeEntity ce = new CubeEntity(new Location(0.23, 0.05, 0.05), player.TheWorld, 1);
                 ce.SetPosition(cpos + step * 0.5);
                 ce.SetOrientation(quat);
-                player.TheServer.SpawnEntity(ce);
+                player.TheWorld.SpawnEntity(ce);
                 jd = new JointBallSocket(ce, cent, cpos);
-                player.TheServer.AddJoint(jd);
+                player.TheWorld.AddJoint(jd);
                 player.Hooks.Add(new HookInfo() { Joint = jd, Hit = ce, IsBar = true });
                 cent = ce;
             }
             //jd = new JointDistance(cent, player, 0.001f, 0.0011f, player.GetCenter(), player.GetCenter());
             jd = new JointBallSocket(cent, player, player.GetCenter());
-            player.TheServer.AddJoint(jd);
+            player.TheWorld.AddJoint(jd);
             player.Hooks.Add(new HookInfo() { Joint = jd, Hit = player, IsBar = false });
         }
 
         public override void AltClick(PlayerEntity player, ItemStack item)
         {
-            if (player.LastAltClick + 0.2 > player.TheServer.GlobalTickTime)
+            if (player.LastAltClick + 0.2 > player.TheWorld.GlobalTickTime)
             {
                 return;
             }
@@ -84,13 +84,13 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             {
                 for (int i = 0; i < player.Hooks.Count; i++)
                 {
-                    player.TheServer.DestroyJoint(player.Hooks[i].Joint);
+                    player.TheWorld.DestroyJoint(player.Hooks[i].Joint);
                 }
                 for (int i = 0; i < player.Hooks.Count; i++)
                 {
                     if (player.Hooks[i].IsBar)
                     {
-                        player.TheServer.DespawnEntity(player.Hooks[i].Hit);
+                        player.TheWorld.DespawnEntity(player.Hooks[i].Hit);
                     }
                 }
                 player.Hooks.Clear();

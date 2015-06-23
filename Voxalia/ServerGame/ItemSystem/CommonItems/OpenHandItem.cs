@@ -24,7 +24,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
         {
             if (player.GrabJoint != null)
             {
-                player.TheServer.DestroyJoint(player.GrabJoint);
+                player.TheWorld.DestroyJoint(player.GrabJoint);
             }
             player.GrabJoint = null;
         }
@@ -32,7 +32,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
         public override void Click(EntitySystem.PlayerEntity player, ItemStack item)
         {
             Location end = player.GetEyePosition() + player.ForwardVector() * 2;
-            CollisionResult cr = player.TheServer.Collision.CuboidLineTrace(new Location(0.1, 0.1, 0.1), player.GetEyePosition(), end, player.IgnoreThis);
+            CollisionResult cr = player.TheWorld.Collision.CuboidLineTrace(new Location(0.1, 0.1, 0.1), player.GetEyePosition(), end, player.IgnoreThis);
             if (cr.Hit && cr.HitEnt != null)
             {
                 // TODO: handle static world impact
@@ -52,7 +52,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
         {
             AltClick(player, null);
             JointBallSocket jbs = new JointBallSocket(player.CursorMarker, pe, hit);
-            player.TheServer.AddJoint(jbs);
+            player.TheWorld.AddJoint(jbs);
             player.GrabJoint = jbs;
 
         }

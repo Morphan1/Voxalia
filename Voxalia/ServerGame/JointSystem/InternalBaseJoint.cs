@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.JointSystem
 {
@@ -20,16 +21,14 @@ namespace Voxalia.ServerGame.JointSystem
 
         public bool Enabled = false;
 
-        public virtual bool ApplyVar(Server tserver, string var, string value)
+        public virtual bool ApplyVar(World tworld, string var, string value)
         {
             switch (var)
             {
                 case "one":
-                    One = tserver.JointTargets[value];
-                    return true;
+                    return tworld.JointTargets.TryGetValue(value, out One);
                 case "two":
-                    Two = tserver.JointTargets[value];
-                    return true;
+                    return tworld.JointTargets.TryGetValue(value, out Two);
                 default:
                     return false;
             }

@@ -7,16 +7,17 @@ using Voxalia.Shared;
 using BEPUutilities;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.ServerGame.JointSystem;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
     public class ArrowEntity: PrimitiveEntity
     {
-        public ArrowEntity(Server tserver)
-            : base(tserver)
+        public ArrowEntity(World tworld)
+            : base(tworld)
         {
             Collide += new EventHandler<CollisionEventArgs>(OnCollide);
-            Vector3 grav = TheServer.PhysicsWorld.ForceUpdater.Gravity;
+            Vector3 grav = TheWorld.PhysicsWorld.ForceUpdater.Gravity;
             Gravity = Location.FromBVector(grav);
             Scale = new Location(0.1f, 0.1f, 0.1f);
         }
@@ -34,7 +35,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 if (!StuckTo.IsSpawned)
                 {
-                    TheServer.DespawnEntity(this);
+                    TheWorld.DespawnEntity(this);
                 }
             }
             else
@@ -71,12 +72,12 @@ namespace Voxalia.ServerGame.EntitySystem
                 SetPosition(args.Info.Position + (GetVelocity() / len) * 0.05f);
                 SetVelocity(Location.Zero);
                 Gravity = Location.Zero;
-                TheServer.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
+                TheWorld.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
                 if (args.Info.HitEnt != null)
                 {
                     PhysicsEntity pe = (PhysicsEntity)args.Info.HitEnt.Tag;
                     JointForceWeld jfw = new JointForceWeld(pe, this);
-                    TheServer.AddJoint(jfw);
+                    TheWorld.AddJoint(jfw);
                 }
             }
         }

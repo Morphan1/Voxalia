@@ -33,17 +33,17 @@ namespace Voxalia.Shared
     {
         public Space World;
 
-        public CollisionGroup NonSolid = new CollisionGroup();
+        public static CollisionGroup NonSolid = new CollisionGroup();
 
-        public CollisionGroup Trigger = new CollisionGroup();
+        public static CollisionGroup Trigger = new CollisionGroup();
 
-        public CollisionGroup Solid = new CollisionGroup();
+        public static CollisionGroup Solid = new CollisionGroup();
 
-        public CollisionGroup Player = new CollisionGroup();
+        public static CollisionGroup Player = new CollisionGroup();
 
-        public CollisionGroup Item = new CollisionGroup();
+        public static CollisionGroup Item = new CollisionGroup();
 
-        public CollisionGroup Water = new CollisionGroup();
+        public static CollisionGroup Water = new CollisionGroup();
 
         public bool ShouldCollide(BroadPhaseEntry entry)
         {
