@@ -149,7 +149,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     for (int i = 0; i < Lights.Count; i++)
                     {
                         // TODO: If movement_near_light
-                        if ((Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 4)
+                        if ((Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
                         {
                             for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                             {
@@ -207,8 +207,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     GL.Disable(EnableCap.CullFace);
                     for (int i = 0; i < Lights.Count; i++)
                     {
-                        if ((Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 4)
-                        // TODO: Else, if somewhat close, fade in/out
+                        double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
+                        double d2 = CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance;
+                        double maxrangemult = 0;
+                        if (d1 < d2 * 4)
+                        {
+                            maxrangemult = 1;
+                        }
+                        else if (d1 < d2 * 6)
+                        {
+                            maxrangemult = 1 - ((d1 - (d2 * 4)) / ((d2 * 6) - (d2 * 4)));
+                        }
+                        if (maxrangemult > 0)
                         {
                             GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
                             for (int x = 0; x < Lights[i].InternalLights.Count; x++)
@@ -221,7 +231,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
                                 GL.UniformMatrix4(3, false, ref smat);
                                 GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
-                                GL.Uniform3(8, ref Lights[i].InternalLights[x].color);
+                                Vector3 col = Lights[i].InternalLights[x].color * (float)maxrangemult;
+                                GL.Uniform3(8, ref col);
                                 GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
                                 GL.Uniform1(12, 1f / (float)Lights[i].InternalLights[x].texsize);
                                 GL.Uniform1(13, CVars.r_shadowblur.ValueF);
