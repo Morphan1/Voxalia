@@ -135,210 +135,213 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         void Window_RenderFrame(object sender, FrameEventArgs e)
         {
-            gDelta = e.Time;
-            gTicks++;
-            try
+            lock (TickLock)
             {
-                RenderTextures = true;
-                GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.1f, 0.1f, 0.1f, 1f });
-                GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
-                GL.Enable(EnableCap.DepthTest);
-                CameraPos = Player.GetEyePosition();
-                sortEntities();
-                if (CVars.r_lighting.ValueB)
+                gDelta = e.Time;
+                gTicks++;
+                try
                 {
-                    SetViewport();
-                    CameraTarget = CameraPos + Player.ForwardVector();
-                    Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
-                    Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
-                    Matrix4 combined = view * proj;
-                    Frustum camFrust = new Frustum(combined);
-                    s_shadow.Bind();
-                    VBO.BonesIdentity();
-                    RenderingShadows = true;
-                    LightsC = 0;
-                    for (int i = 0; i < Lights.Count; i++)
+                    RenderTextures = true;
+                    GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.1f, 0.1f, 0.1f, 1f });
+                    GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
+                    GL.Enable(EnableCap.DepthTest);
+                    CameraPos = Player.GetEyePosition();
+                    sortEntities();
+                    if (CVars.r_lighting.ValueB)
                     {
-                        if (camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                        SetViewport();
+                        CameraTarget = CameraPos + Player.ForwardVector();
+                        Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
+                        Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
+                        Matrix4 combined = view * proj;
+                        Frustum camFrust = new Frustum(combined);
+                        s_shadow.Bind();
+                        VBO.BonesIdentity();
+                        RenderingShadows = true;
+                        LightsC = 0;
+                        for (int i = 0; i < Lights.Count; i++)
                         {
-                            // TODO: If movement_near_light
-                            if ((Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
+                            if (camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                             {
-                                LightsC++;
-                                for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                                // TODO: If movement_near_light
+                                if ((Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
                                 {
-                                    CFrust = new Frustum(Lights[i].InternalLights[x].GetMatrix());
-                                    Lights[i].InternalLights[x].Attach();
-                                    // TODO: Render settings
-                                    Render3D(true);
-                                    Lights[i].InternalLights[x].Complete();
+                                    LightsC++;
+                                    for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                                    {
+                                        CFrust = new Frustum(Lights[i].InternalLights[x].GetMatrix());
+                                        Lights[i].InternalLights[x].Attach();
+                                        // TODO: Render settings
+                                        Render3D(true);
+                                        Lights[i].InternalLights[x].Complete();
+                                    }
                                 }
                             }
                         }
-                    }
-                    SetViewport();
-                    s_fbo.Bind();
-                    VBO.BonesIdentity();
-                    RenderingShadows = false;
-                    CFrust = camFrust;
-                    GL.UniformMatrix4(1, false, ref combined);
-                    GL.ActiveTexture(TextureUnit.Texture0);
-                    RS4P.Bind();
-                    // TODO: Render settings
-                    RenderLights = true;
-                    Render3D(false);
-                    RenderLights = false;
-                    RS4P.Unbind();
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
-                    GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
-                    GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-                    s_shadowadder.Bind();
-                    GL.ActiveTexture(TextureUnit.Texture1);
-                    GL.BindTexture(TextureTarget.Texture2D, RS4P.PositionTexture);
-                    GL.ActiveTexture(TextureUnit.Texture2);
-                    GL.BindTexture(TextureTarget.Texture2D, RS4P.NormalsTexture);
-                    GL.ActiveTexture(TextureUnit.Texture3);
-                    GL.BindTexture(TextureTarget.Texture2D, RS4P.DepthTexture);
-                    GL.ActiveTexture(TextureUnit.Texture5);
-                    GL.BindTexture(TextureTarget.Texture2D, RS4P.RenderhintTexture);
-                    GL.ActiveTexture(TextureUnit.Texture6);
-                    GL.BindTexture(TextureTarget.Texture2D, RS4P.DiffuseTexture);
-                    Matrix4 mat = Matrix4.CreateOrthographicOffCenter(-1, 1, -1, 1, -1, 1);
-                    GL.UniformMatrix4(1, false, ref mat);
-                    mat = Matrix4.Identity;
-                    GL.UniformMatrix4(2, false, ref mat);
-                    GL.Uniform3(10, CameraPos.ToOVector());
-                    bool first = true;
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
-                    GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 1 });
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
-                    GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 1 });
-                    GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
-                    GL.Disable(EnableCap.CullFace);
-                    for (int i = 0; i < Lights.Count; i++)
-                    {
-                        if (camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                        SetViewport();
+                        s_fbo.Bind();
+                        VBO.BonesIdentity();
+                        RenderingShadows = false;
+                        CFrust = camFrust;
+                        GL.UniformMatrix4(1, false, ref combined);
+                        GL.ActiveTexture(TextureUnit.Texture0);
+                        RS4P.Bind();
+                        // TODO: Render settings
+                        RenderLights = true;
+                        Render3D(false);
+                        RenderLights = false;
+                        RS4P.Unbind();
+                        GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
+                        GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
+                        GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                        GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
+                        GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
+                        GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                        s_shadowadder.Bind();
+                        GL.ActiveTexture(TextureUnit.Texture1);
+                        GL.BindTexture(TextureTarget.Texture2D, RS4P.PositionTexture);
+                        GL.ActiveTexture(TextureUnit.Texture2);
+                        GL.BindTexture(TextureTarget.Texture2D, RS4P.NormalsTexture);
+                        GL.ActiveTexture(TextureUnit.Texture3);
+                        GL.BindTexture(TextureTarget.Texture2D, RS4P.DepthTexture);
+                        GL.ActiveTexture(TextureUnit.Texture5);
+                        GL.BindTexture(TextureTarget.Texture2D, RS4P.RenderhintTexture);
+                        GL.ActiveTexture(TextureUnit.Texture6);
+                        GL.BindTexture(TextureTarget.Texture2D, RS4P.DiffuseTexture);
+                        Matrix4 mat = Matrix4.CreateOrthographicOffCenter(-1, 1, -1, 1, -1, 1);
+                        GL.UniformMatrix4(1, false, ref mat);
+                        mat = Matrix4.Identity;
+                        GL.UniformMatrix4(2, false, ref mat);
+                        GL.Uniform3(10, CameraPos.ToOVector());
+                        bool first = true;
+                        GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
+                        GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 1 });
+                        GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
+                        GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 1 });
+                        GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
+                        GL.Disable(EnableCap.CullFace);
+                        for (int i = 0; i < Lights.Count; i++)
                         {
-                            // TODO: if Light_in_Frustrum
-                            double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
-                            double d2 = CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance;
-                            double maxrangemult = 0;
-                            if (d1 < d2 * 4)
+                            if (camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                             {
-                                maxrangemult = 1;
-                            }
-                            else if (d1 < d2 * 6)
-                            {
-                                maxrangemult = 1 - ((d1 - (d2 * 4)) / ((d2 * 6) - (d2 * 4)));
-                            }
-                            if (maxrangemult > 0)
-                            {
-                                GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
-                                for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                                // TODO: if Light_in_Frustrum
+                                double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
+                                double d2 = CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance;
+                                double maxrangemult = 0;
+                                if (d1 < d2 * 4)
                                 {
-                                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
-                                    GL.ActiveTexture(TextureUnit.Texture0);
-                                    GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
-                                    GL.ActiveTexture(TextureUnit.Texture4);
-                                    GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
-                                    Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
-                                    GL.UniformMatrix4(3, false, ref smat);
-                                    GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
-                                    Vector3 col = Lights[i].InternalLights[x].color * (float)maxrangemult;
-                                    GL.Uniform3(8, ref col);
-                                    GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
-                                    GL.Uniform1(12, 1f / (float)Lights[i].InternalLights[x].texsize);
-                                    GL.Uniform1(13, CVars.r_shadowblur.ValueF);
-                                    Rendering.RenderRectangle(-1, -1, 1, 1);
-                                    first = !first;
-                                    GL.ActiveTexture(TextureUnit.Texture0);
-                                    GL.BindTexture(TextureTarget.Texture2D, 0);
+                                    maxrangemult = 1;
+                                }
+                                else if (d1 < d2 * 6)
+                                {
+                                    maxrangemult = 1 - ((d1 - (d2 * 4)) / ((d2 * 6) - (d2 * 4)));
+                                }
+                                if (maxrangemult > 0)
+                                {
+                                    GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
+                                    for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                                    {
+                                        GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
+                                        GL.ActiveTexture(TextureUnit.Texture0);
+                                        GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
+                                        GL.ActiveTexture(TextureUnit.Texture4);
+                                        GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
+                                        Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
+                                        GL.UniformMatrix4(3, false, ref smat);
+                                        GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
+                                        Vector3 col = Lights[i].InternalLights[x].color * (float)maxrangemult;
+                                        GL.Uniform3(8, ref col);
+                                        GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
+                                        GL.Uniform1(12, 1f / (float)Lights[i].InternalLights[x].texsize);
+                                        GL.Uniform1(13, CVars.r_shadowblur.ValueF);
+                                        Rendering.RenderRectangle(-1, -1, 1, 1);
+                                        first = !first;
+                                        GL.ActiveTexture(TextureUnit.Texture0);
+                                        GL.BindTexture(TextureTarget.Texture2D, 0);
+                                    }
                                 }
                             }
                         }
-                    }
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-                    GL.DrawBuffer(DrawBufferMode.Back);
-                    if (CVars.r_ssao.ValueB)
-                    {
-                        s_mainssao.Bind();
+                        GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                        GL.DrawBuffer(DrawBufferMode.Back);
+                        if (CVars.r_ssao.ValueB)
+                        {
+                            s_mainssao.Bind();
+                        }
+                        else
+                        {
+                            s_main.Bind();
+                        }
+                        GL.Uniform3(5, ambient.ToOVector());
+                        GL.Uniform3(8, CameraFinalTarget.ToOVector());
+                        GL.Uniform1(9, CVars.r_dof_strength.ValueF);
+                        GL.Uniform1(10, CVars.r_zfar.ValueF - CVars.r_znear.ValueF);
+                        GL.ActiveTexture(TextureUnit.Texture4);
+                        GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
+                        GL.ActiveTexture(TextureUnit.Texture0);
+                        GL.BindTexture(TextureTarget.Texture2D, RS4P.DiffuseTexture);
+                        mat = Matrix4.CreateOrthographicOffCenter(-1, 1, -1, 1, -1, 1);
+                        GL.UniformMatrix4(1, false, ref mat);
+                        mat = Matrix4.Identity;
+                        GL.UniformMatrix4(2, false, ref mat);
+                        Rendering.RenderRectangle(-1, -1, 1, 1);
+                        GL.ActiveTexture(TextureUnit.Texture6);
+                        GL.BindTexture(TextureTarget.Texture2D, 0);
+                        GL.ActiveTexture(TextureUnit.Texture5);
+                        GL.BindTexture(TextureTarget.Texture2D, 0);
+                        GL.ActiveTexture(TextureUnit.Texture4);
+                        GL.BindTexture(TextureTarget.Texture2D, 0);
+                        GL.ActiveTexture(TextureUnit.Texture3);
+                        GL.BindTexture(TextureTarget.Texture2D, 0);
+                        GL.ActiveTexture(TextureUnit.Texture2);
+                        GL.BindTexture(TextureTarget.Texture2D, 0);
+                        GL.ActiveTexture(TextureUnit.Texture1);
+                        GL.BindTexture(TextureTarget.Texture2D, 0);
+                        GL.ActiveTexture(TextureUnit.Texture0);
+                        GL.BindTexture(TextureTarget.Texture2D, 0);
+                        ReverseEntitiesOrder();
+                        s_transponly.Bind();
+                        GL.UniformMatrix4(1, false, ref combined);
+                        GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, RS4P.fbo);
+                        GL.BlitFramebuffer(0, 0, Window.Width, Window.Height, 0, 0, Window.Width, Window.Height, ClearBufferMask.DepthBufferBit, BlitFramebufferFilter.Nearest);
+                        GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
+                        Render3D(false);
+                        Shaders.ColorMultShader.Bind();
+                        GL.UniformMatrix4(1, false, ref combined);
+                        GL.Enable(EnableCap.CullFace);
+                        if (CVars.r_renderwireframe.ValueB)
+                        {
+                            Render3DWires();
+                        }
                     }
                     else
                     {
-                        s_main.Bind();
+                        ReverseEntitiesOrder();
+                        Shaders.ColorMultShader.Bind();
+                        Location CameraTarget = CameraPos + Player.ForwardVector();
+                        Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
+                        Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
+                        Matrix4 combined = view * proj;
+                        GL.UniformMatrix4(1, false, ref combined);
+                        CFrust = new Frustum(combined);
+                        Render3D(false);
+                        if (CVars.r_renderwireframe.ValueB)
+                        {
+                            Render3DWires();
+                        }
                     }
-                    GL.Uniform3(5, ambient.ToOVector());
-                    GL.Uniform3(8, CameraFinalTarget.ToOVector());
-                    GL.Uniform1(9, CVars.r_dof_strength.ValueF);
-                    GL.Uniform1(10, CVars.r_zfar.ValueF - CVars.r_znear.ValueF);
-                    GL.ActiveTexture(TextureUnit.Texture4);
-                    GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
-                    GL.ActiveTexture(TextureUnit.Texture0);
-                    GL.BindTexture(TextureTarget.Texture2D, RS4P.DiffuseTexture);
-                    mat = Matrix4.CreateOrthographicOffCenter(-1, 1, -1, 1, -1, 1);
-                    GL.UniformMatrix4(1, false, ref mat);
-                    mat = Matrix4.Identity;
-                    GL.UniformMatrix4(2, false, ref mat);
-                    Rendering.RenderRectangle(-1, -1, 1, 1);
-                    GL.ActiveTexture(TextureUnit.Texture6);
-                    GL.BindTexture(TextureTarget.Texture2D, 0);
-                    GL.ActiveTexture(TextureUnit.Texture5);
-                    GL.BindTexture(TextureTarget.Texture2D, 0);
-                    GL.ActiveTexture(TextureUnit.Texture4);
-                    GL.BindTexture(TextureTarget.Texture2D, 0);
-                    GL.ActiveTexture(TextureUnit.Texture3);
-                    GL.BindTexture(TextureTarget.Texture2D, 0);
-                    GL.ActiveTexture(TextureUnit.Texture2);
-                    GL.BindTexture(TextureTarget.Texture2D, 0);
-                    GL.ActiveTexture(TextureUnit.Texture1);
-                    GL.BindTexture(TextureTarget.Texture2D, 0);
-                    GL.ActiveTexture(TextureUnit.Texture0);
-                    GL.BindTexture(TextureTarget.Texture2D, 0);
-                    ReverseEntitiesOrder();
-                    s_transponly.Bind();
-                    GL.UniformMatrix4(1, false, ref combined);
-                    GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, RS4P.fbo);
-                    GL.BlitFramebuffer(0, 0, Window.Width, Window.Height, 0, 0, Window.Width, Window.Height, ClearBufferMask.DepthBufferBit, BlitFramebufferFilter.Nearest);
-                    GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
-                    Render3D(false);
+                    GL.Disable(EnableCap.DepthTest);
                     Shaders.ColorMultShader.Bind();
-                    GL.UniformMatrix4(1, false, ref combined);
-                    GL.Enable(EnableCap.CullFace);
-                    if (CVars.r_renderwireframe.ValueB)
-                    {
-                        Render3DWires();
-                    }
+                    Ortho = Matrix4.CreateOrthographicOffCenter(0, Window.Width, Window.Height, 0, -1, 1);
+                    GL.UniformMatrix4(1, false, ref Ortho);
+                    Render2D();
                 }
-                else
+                catch (Exception ex)
                 {
-                    ReverseEntitiesOrder();
-                    Shaders.ColorMultShader.Bind();
-                    Location CameraTarget = CameraPos + Player.ForwardVector();
-                    Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
-                    Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
-                    Matrix4 combined = view * proj;
-                    GL.UniformMatrix4(1, false, ref combined);
-                    CFrust = new Frustum(combined);
-                    Render3D(false);
-                    if (CVars.r_renderwireframe.ValueB)
-                    {
-                        Render3DWires();
-                    }
+                    SysConsole.Output(OutputType.ERROR, "Rendering: " + ex.ToString());
                 }
-                GL.Disable(EnableCap.DepthTest);
-                Shaders.ColorMultShader.Bind();
-                Ortho = Matrix4.CreateOrthographicOffCenter(0, Window.Width, Window.Height, 0, -1, 1);
-                GL.UniformMatrix4(1, false, ref Ortho);
-                Render2D();
+                Window.SwapBuffers();
             }
-            catch (Exception ex)
-            {
-                SysConsole.Output(OutputType.ERROR, "Rendering: " + ex.ToString());
-            }
-            Window.SwapBuffers();
         }
 
         public void Render3D(bool shadows_only)

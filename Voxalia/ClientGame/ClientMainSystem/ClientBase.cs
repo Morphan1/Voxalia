@@ -15,6 +15,7 @@ using System.Diagnostics;
 using Voxalia.ClientGame.NetworkSystem;
 using Voxalia.ClientGame.AudioSystem;
 using Voxalia.ClientGame.GraphicsSystems.ParticleSystem;
+using System.Threading.Tasks;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -51,6 +52,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public string Username = "Player" + new Random().Next(1000);
 
         public Texture ItemFrame;
+
+        public List<Task> RunImmediately = new List<Task>();
 
         /// <summary>
         /// Start up and run the server.

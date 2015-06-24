@@ -21,6 +21,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public int QuickBarPos = 0;
 
+        public Object TickLock = new Object();
+
         /// <summary>
         /// Returns an item in the quick bar.
         /// Can return air.
@@ -105,36 +107,50 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public double Delta;
 
+        void ScheduleCheck()
+        {
+            for (int i = 0; i < RunImmediately.Count; i++)
+            {
+                RunImmediately[i].RunSynchronously();
+            }
+            RunImmediately.Clear();
+        }
+
         void Window_UpdateFrame(object sender, FrameEventArgs e)
         {
-            Delta = e.Time * CVars.g_timescale.ValueD;
-            GlobalTickTimeLocal += Delta;
-            try
+            lock (TickLock)
             {
-                opsat += Delta;
-                if (opsat >= 1)
+                Delta = e.Time * CVars.g_timescale.ValueD;
+                GlobalTickTimeLocal += Delta;
+                try
                 {
-                    opsat -= 1;
-                    OncePerSecondActions();
+                    opsat += Delta;
+                    if (opsat >= 1)
+                    {
+                        opsat -= 1;
+                        OncePerSecondActions();
+                    }
+                    ScheduleCheck();
+                    Textures.Update(GlobalTickTimeLocal);
+                    Shaders.Update(GlobalTickTimeLocal);
+                    Models.Update(GlobalTickTimeLocal);
+                    KeyHandler.Tick();
+                    MouseHandler.Tick();
+                    UIConsole.Tick();
+                    Commands.Tick();
+                    Network.Tick();
+                    TickWorld(Delta);
+                    Sounds.Update(CameraPos, CameraTarget - CameraPos, CameraUp, Player.GetVelocity(), Window.Focused);
+                    ScheduleCheck();
                 }
-                Textures.Update(GlobalTickTimeLocal);
-                Shaders.Update(GlobalTickTimeLocal);
-                Models.Update(GlobalTickTimeLocal);
-                KeyHandler.Tick();
-                MouseHandler.Tick();
-                UIConsole.Tick();
-                Commands.Tick();
-                Network.Tick();
-                TickWorld(Delta);
-                Sounds.Update(CameraPos, CameraTarget - CameraPos, CameraUp, Player.GetVelocity(), Window.Focused);
+                catch (Exception ex)
+                {
+                    SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
+                }
+                CameraFinalTarget = Player.GetPosition() + Player.ForwardVector() * 100f;
+                CameraFinalTarget = TheWorld.Collision.RayTrace(Player.GetPosition(), CameraFinalTarget, IgnorePlayer).Position;
+                CameraDistance = (Player.GetPosition() - CameraFinalTarget).Length();
             }
-            catch (Exception ex)
-            {
-                SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
-            }
-            CameraFinalTarget = Player.GetPosition() + Player.ForwardVector() * 100f;
-            CameraFinalTarget = TheWorld.Collision.RayTrace(Player.GetPosition(), CameraFinalTarget, IgnorePlayer).Position;
-            CameraDistance = (Player.GetPosition() - CameraFinalTarget).Length();
         }
 
         bool IgnorePlayer(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)

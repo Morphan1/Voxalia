@@ -7,6 +7,8 @@ using BEPUphysics;
 using BEPUphysics.CollisionShapes;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -93,16 +95,55 @@ namespace Voxalia.ClientGame.WorldSystem
 
         StaticMesh worldObject = null;
 
+        public Thread adding = null;
+
         public void AddToWorld()
         {
             if (worldObject != null)
             {
                 OwningWorld.PhysicsWorld.Remove(worldObject);
             }
-            worldObject = CalculateChunkShape();
+            if (adding != null && adding.ThreadState == ThreadState.Running)
+            {
+                adding.Abort();
+                adding = null;
+            }
+            adding = new Thread(new ThreadStart(AddInternal));
+            adding.Start();
+        }
+
+        public void Destroy()
+        {
+            if (adding != null && adding.ThreadState == ThreadState.Running)
+            {
+                adding.Abort();
+                adding = null;
+            }
+            if (rendering != null && rendering.ThreadState == ThreadState.Running)
+            {
+                rendering.Abort();
+                rendering = null;
+            }
             if (worldObject != null)
             {
-                OwningWorld.PhysicsWorld.Add(worldObject);
+                OwningWorld.PhysicsWorld.Remove(worldObject);
+            }
+            if (_VBO != null)
+            {
+                _VBO.Destroy();
+            }
+        }
+
+        void AddInternal()
+        {
+            StaticMesh tworldObject = CalculateChunkShape();
+            lock (OwningWorld.TheClient.TickLock)
+            {
+                worldObject = tworldObject;
+                if (worldObject != null)
+                {
+                    OwningWorld.PhysicsWorld.Add(worldObject);
+                }
             }
         }
     }
