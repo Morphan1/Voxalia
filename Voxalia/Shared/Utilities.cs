@@ -19,42 +19,42 @@ namespace Voxalia.Shared
 
         public static ushort BytesToUshort(byte[] bytes)
         {
-            return BitConverter.ToUInt16(BitConverter.IsLittleEndian ? bytes.Reverse().ToArray() : bytes, 0);
+            return BitConverter.ToUInt16(bytes, 0);
         }
 
         public static float BytesToFloat(byte[] bytes)
         {
-            return BitConverter.ToSingle(BitConverter.IsLittleEndian ? bytes.Reverse().ToArray() : bytes, 0);
+            return BitConverter.ToSingle(bytes, 0);
         }
 
         public static byte[] UshortToBytes(ushort ush)
         {
-            return BitConverter.IsLittleEndian ? BitConverter.GetBytes(ush).Reverse().ToArray() : BitConverter.GetBytes(ush);
+            return BitConverter.GetBytes(ush);
         }
 
         public static byte[] FloatToBytes(float flt)
         {
-            return BitConverter.IsLittleEndian ? BitConverter.GetBytes(flt).Reverse().ToArray() : BitConverter.GetBytes(flt);
+            return BitConverter.GetBytes(flt);
         }
 
         public static int BytesToInt(byte[] bytes)
         {
-            return BitConverter.ToInt32(BitConverter.IsLittleEndian ? bytes.Reverse().ToArray() : bytes, 0);
+            return BitConverter.ToInt32(bytes, 0);
         }
 
         public static long BytesToLong(byte[] bytes)
         {
-            return BitConverter.ToInt64(BitConverter.IsLittleEndian ? bytes.Reverse().ToArray() : bytes, 0);
+            return BitConverter.ToInt64(bytes, 0);
         }
 
         public static byte[] IntToBytes(int intty)
         {
-            return BitConverter.IsLittleEndian ? BitConverter.GetBytes(intty).Reverse().ToArray() : BitConverter.GetBytes(intty);
+            return BitConverter.GetBytes(intty);
         }
 
         public static byte[] LongToBytes(long intty)
         {
-            return BitConverter.IsLittleEndian ? BitConverter.GetBytes(intty).Reverse().ToArray() : BitConverter.GetBytes(intty);
+            return BitConverter.GetBytes(intty);
         }
 
         public static byte[] BytesPartial(byte[] full, int start, int length)

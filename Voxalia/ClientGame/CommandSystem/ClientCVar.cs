@@ -19,7 +19,7 @@ namespace Voxalia.ClientGame.CommandSystem
         public CVarSystem system;
 
         // System CVars
-        public CVar s_filepath, s_glversion, s_glrenderer, s_glvendor;
+        public CVar s_filepath, s_glversion, s_glrenderer, s_glvendor, s_littleendian;
 
         // Game CVars
         public CVar g_timescale;
