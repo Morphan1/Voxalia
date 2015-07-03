@@ -12,8 +12,8 @@ namespace Voxalia.Shared
         GRASS = 2,
         DIRT = 3,
         NUM_DEFAULT = 4,
-        MAX = (ushort)(1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 256 * 2 | 256 * 4 | 256 * 8),
-        SUBDATA_BIT = (ushort)(256 * 16 | 256 * 32 | 256 * 64 | 256 * 128)
+        MAX = (ushort)(1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 256 * 2 | 256 * 4),
+        SUBDATA_BIT = (ushort)(256 * 8 | 256 * 16 | 256 * 32 | 256 * 64 | 256 * 128)
     }
 
     public static class MaterialHelpers
