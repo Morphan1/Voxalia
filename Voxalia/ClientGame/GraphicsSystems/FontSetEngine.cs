@@ -424,7 +424,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.Uniform3(3, ref col);
             VBO.Build();
             VBO.Render();
-            VBO.Destroy();
             Engine.GLFonts.Shaders.ColorMultShader.Bind();
         }
 

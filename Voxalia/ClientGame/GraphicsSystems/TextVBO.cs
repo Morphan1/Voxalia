@@ -71,16 +71,34 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.DeleteBuffer(VBO);
             GL.DeleteBuffer(VBONormals);
             GL.DeleteBuffer(VBOTexCoords);
-            GL.DeleteBuffer(VBOIndices);
             GL.DeleteBuffer(VBOColors);
+            GL.DeleteBuffer(VBOIndices);
             GL.DeleteVertexArray(VAO);
+            hasBuffers = false;
         }
+
+        public void BuildBuffers()
+        {
+            GL.GenBuffers(1, out VBO);
+            GL.GenBuffers(1, out VBONormals);
+            GL.GenBuffers(1, out VBOTexCoords);
+            GL.GenBuffers(1, out VBOColors);
+            GL.GenBuffers(1, out VBOIndices);
+            GL.GenVertexArrays(1, out VAO);
+            hasBuffers = true;
+        }
+
+        bool hasBuffers = false;
 
         /// <summary>
         /// Turns the local VBO build information into an actual internal GPU-side VBO.
         /// </summary>
         public void Build()
         {
+            if (!hasBuffers)
+            {
+                BuildBuffers();
+            }
             Positions = Vecs.ToArray();
             Normals = Norms.ToArray();
             TexCoords = Texs.ToArray();
@@ -93,37 +111,31 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Cols = new List<Vector4>(100);
             GL.BindVertexArray(0);
             // Vertex buffer
-            GL.GenBuffers(1, out VBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(Positions.Length * Vector3.SizeInBytes),
                     Positions, BufferUsageHint.StaticDraw);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             // Normal buffer
-            GL.GenBuffers(1, out VBONormals);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBONormals);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(Normals.Length * Vector3.SizeInBytes),
                     Normals, BufferUsageHint.StaticDraw);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             // TexCoord buffer
-            GL.GenBuffers(1, out VBOTexCoords);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBOTexCoords);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(TexCoords.Length * Vector3.SizeInBytes),
                     TexCoords, BufferUsageHint.StaticDraw);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             // Color buffer
-            GL.GenBuffers(1, out VBOColors);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBOColors);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(Colors.Length * Vector4.SizeInBytes),
                     Colors, BufferUsageHint.StaticDraw);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             // Index buffer
-            GL.GenBuffers(1, out VBOIndices);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, VBOIndices);
             GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(Indices.Length * sizeof(uint)),
                     Indices, BufferUsageHint.StaticDraw);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             // VAO
-            GL.GenVertexArrays(1, out VAO);
             GL.BindVertexArray(VAO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);

@@ -74,7 +74,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Commands.ExecuteCommands(contents);
             }
             SysConsole.Output(OutputType.INIT, "Generating window...");
-            Window = new GameWindow(800, 600, GraphicsMode.Default, Program.GameName + " v" + Program.GameVersion,
+            Window = new GameWindow(CVars.r_width.ValueI, CVars.r_height.ValueI, GraphicsMode.Default, Program.GameName + " v" + Program.GameVersion,
                 GameWindowFlags.Default, DisplayDevice.Default, 4, 3, GraphicsContextFlags.ForwardCompatible);
             Window.WindowBorder = WindowBorder.Fixed;
             Window.Load += new EventHandler<EventArgs>(Window_Load);
