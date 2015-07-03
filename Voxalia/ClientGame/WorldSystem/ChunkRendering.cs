@@ -95,25 +95,65 @@ namespace Voxalia.ClientGame.WorldSystem
                                 }
                                 if (!((Material)xm.BlockMaterial).IsOpaque())
                                 {
-                                    int tID_XP = ((Material)c.BlockMaterial).TextureID(MaterialSide.XP);
+                                    int tID_XM = ((Material)c.BlockMaterial).TextureID(MaterialSide.XM);
                                     for (int i = 0; i < 6; i++)
                                     {
                                         Norms.Add(new Vector3(0, 0, 1));
                                     }
-                                    TCoords.Add(new Vector3(0, 1, tID_XP));
+                                    TCoords.Add(new Vector3(0, 1, tID_XM));
                                     Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
-                                    TCoords.Add(new Vector3(1, 1, tID_XP));
+                                    TCoords.Add(new Vector3(1, 1, tID_XM));
                                     Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
-                                    TCoords.Add(new Vector3(0, 0, tID_XP));
+                                    TCoords.Add(new Vector3(0, 0, tID_XM));
                                     Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
-                                    TCoords.Add(new Vector3(1, 1, tID_XP));
+                                    TCoords.Add(new Vector3(1, 1, tID_XM));
                                     Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
-                                    TCoords.Add(new Vector3(1, 0, tID_XP));
+                                    TCoords.Add(new Vector3(1, 0, tID_XM));
                                     Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
-                                    TCoords.Add(new Vector3(0, 0, tID_XP));
+                                    TCoords.Add(new Vector3(0, 0, tID_XM));
                                     Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
                                 }
-                                // TODO: zm, yp, ym
+                                if (!((Material)yp.BlockMaterial).IsOpaque())
+                                {
+                                    int tID_YP = ((Material)c.BlockMaterial).TextureID(MaterialSide.XP);
+                                    for (int i = 0; i < 6; i++)
+                                    {
+                                        Norms.Add(new Vector3(0, 0, 1));
+                                    }
+                                    TCoords.Add(new Vector3(0, 1, tID_YP));
+                                    Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
+                                    TCoords.Add(new Vector3(1, 1, tID_YP));
+                                    Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z));
+                                    TCoords.Add(new Vector3(0, 0, tID_YP));
+                                    Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
+                                    TCoords.Add(new Vector3(1, 1, tID_YP));
+                                    Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
+                                    TCoords.Add(new Vector3(1, 0, tID_YP));
+                                    Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
+                                    TCoords.Add(new Vector3(0, 0, tID_YP));
+                                    Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
+                                }
+                                if (!((Material)ym.BlockMaterial).IsOpaque())
+                                {
+                                    int tID_YM = ((Material)c.BlockMaterial).TextureID(MaterialSide.YM);
+                                    for (int i = 0; i < 6; i++)
+                                    {
+                                        Norms.Add(new Vector3(0, 0, 1));
+                                    }
+                                    TCoords.Add(new Vector3(0, 0, tID_YM));
+                                    Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
+                                    TCoords.Add(new Vector3(1, 1, tID_YM));
+                                    Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
+                                    TCoords.Add(new Vector3(0, 1, tID_YM));
+                                    Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
+                                    TCoords.Add(new Vector3(0, 0, tID_YM));
+                                    Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
+                                    TCoords.Add(new Vector3(1, 0, tID_YM));
+                                    Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
+                                    TCoords.Add(new Vector3(1, 1, tID_YM));
+                                    Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
+                                }
+                                // TODO: zm
                                 // TODO: Else, handle special case direction data
                             }
                         }
