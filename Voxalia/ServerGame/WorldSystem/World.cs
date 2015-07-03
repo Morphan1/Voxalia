@@ -518,22 +518,54 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Dictionary<Location, Chunk> LoadedChunks = new Dictionary<Location, Chunk>();
 
-        public Chunk LoadChunk(Location pos)
+        public Material GetBlockMaterial(Location pos)
         {
-            pos.X = (int)pos.X - (int)pos.X % 30;
-            pos.Y = (int)pos.Y - (int)pos.Y % 30;
-            pos.Z = (int)pos.Z - (int)pos.Z % 30;
+            Chunk ch = LoadChunk(ChunkLocFor(pos));
+            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
+            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
+            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+            SysConsole.Output(OutputType.INFO, "X:" + x + "Y:" + y + "Z:" + z);
+            return (Material)ch.GetBlockAt(x, y, z);
+        }
+
+        public void SetBlockMaterial(Location pos, Material mat, bool broadcast = true, bool regen = true)
+        {
+            Chunk ch = LoadChunk(ChunkLocFor(pos));
+            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
+            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
+            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+            ch.SetBlockAt(x, y, z, (ushort)mat);
+            if (regen)
+            {
+                ch.AddToWorld();
+            }
+            if (broadcast)
+            {
+                SendToAll(new BlockEditPacketOut(pos, mat));
+            }
+        }
+
+        public Location ChunkLocFor(Location worldPos)
+        {
+            worldPos.X = Math.Floor(worldPos.X / 30.0);
+            worldPos.Y = Math.Floor(worldPos.Y / 30.0);
+            worldPos.Z = Math.Floor(worldPos.Z / 30.0);
+            return worldPos;
+        }
+
+        public Chunk LoadChunk(Location cpos)
+        {
             Chunk chunk;
-            if (LoadedChunks.TryGetValue(pos, out chunk))
+            if (LoadedChunks.TryGetValue(cpos, out chunk))
             {
                 return chunk;
             }
             // TODO: Actually load from file
             chunk = new Chunk();
             chunk.OwningWorld = this;
-            chunk.WorldPosition = pos;
+            chunk.WorldPosition = cpos;
             PopulateChunk(chunk);
-            LoadedChunks.Add(pos, chunk);
+            LoadedChunks.Add(cpos, chunk);
             chunk.AddToWorld();
             return chunk;
         }

@@ -138,11 +138,16 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public Client TheClient;
 
+        public Location ChunkLocFor(Location pos)
+        {
+            pos.X = Math.Floor(pos.X / 30.0);
+            pos.Y = Math.Floor(pos.Y / 30.0);
+            pos.Z = Math.Floor(pos.Z / 30.0);
+            return pos;
+        }
+
         public Chunk GetChunk(Location pos)
         {
-            pos.X = (int)pos.X - (int)pos.X % 30;
-            pos.Y = (int)pos.Y - (int)pos.Y % 30;
-            pos.Z = (int)pos.Z - (int)pos.Z % 30;
             Chunk chunk;
             if (LoadedChunks.TryGetValue(pos, out chunk))
             {
@@ -155,6 +160,29 @@ namespace Voxalia.ClientGame.WorldSystem
             return chunk;
         }
 
+        public Material GetBlockMaterial(Location pos)
+        {
+            Chunk ch = GetChunk(ChunkLocFor(pos));
+            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
+            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
+            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+            return (Material)ch.GetBlockAt(x, y, z);
+        }
+
+        public void SetBlockMaterial(Location pos, Material mat, bool broadcast = true, bool regen = true)
+        {
+            Chunk ch = GetChunk(ChunkLocFor(pos));
+            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
+            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
+            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+            ch.SetBlockAt(x, y, z, (ushort)mat);
+            if (regen)
+            {
+                ch.AddToWorld();
+                ch.CreateVBO();
+            }
+        }
+
         public void Render()
         {
             TheClient.Rendering.SetColor(Color4.White);
@@ -164,7 +192,7 @@ namespace Voxalia.ClientGame.WorldSystem
             GL.UniformMatrix4(7, false, ref mat);
             foreach (Chunk chunk in LoadedChunks.Values)
             {
-                if (TheClient.CFrust.ContainsBox(chunk.WorldPosition, chunk.WorldPosition + new Location(30, 30, 30)))
+                if (TheClient.CFrust.ContainsBox(chunk.WorldPosition * 30, chunk.WorldPosition * 30 + new Location(30, 30, 30)))
                 {
                     chunk.Render();
                 }

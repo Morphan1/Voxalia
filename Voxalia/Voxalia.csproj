@@ -137,6 +137,7 @@
     <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddJointPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AnimationPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\BlockEditPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\ChunkInfoPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\CVarSetPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\DespawnEntityPacketIn.cs" />
@@ -206,6 +207,7 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\BaseGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BowItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BulletItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\FistItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\MinigunGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\ShotgunGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\FlashLightItem.cs" />
@@ -235,6 +237,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddJointPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AnimationPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\BlockEditPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\ChunkInfoPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\CVarSetPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\DespawnEntityPacketOut.cs" />

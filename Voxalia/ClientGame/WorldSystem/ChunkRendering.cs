@@ -36,7 +36,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 List<Vector3> Vertices = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6); // TODO: Make this an array?
                 List<Vector3> TCoords = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6);
                 List<Vector3> Norms = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6);
-                Vector3 ppos = WorldPosition.ToOVector();
+                Vector3 ppos = WorldPosition.ToOVector() * 30;
                 for (int x = 0; x < CHUNK_SIZE; x++)
                 {
                     for (int y = 0; y < CHUNK_SIZE; y++)
@@ -137,6 +137,10 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             catch (Exception ex)
             {
+                if (ex is ThreadAbortException)
+                {
+                    throw ex;
+                }
                 SysConsole.Output(OutputType.ERROR, "Generating ChunkVBO...: " + ex.ToString());
             }
         }

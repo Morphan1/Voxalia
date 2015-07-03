@@ -134,6 +134,7 @@ namespace Voxalia.ServerGame.EntitySystem
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
             GiveItem(new ItemStack("open_hand", TheServer, 1, "items/common/open_hand_ico", "Open Hand", "Grab things!", Color.White.ToArgb(), "items/common/hand.dae", true));
+            GiveItem(new ItemStack("fist", TheServer, 1, "items/common/fist_ico", "Fist", "Hit things!", Color.White.ToArgb(), "items/common/fist.dae", true));
             GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol_ico", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/silenced_pistol.dae", false));
             GiveItem(new ItemStack("shotgun_gun", TheServer, 1, "items/weapons/shotgun_ico", "Shotgun", "It shoots many bullets!", Color.White.ToArgb(), "items/weapons/shotgun.dae", false));
             GiveItem(new ItemStack("bow", TheServer, 1, "items/weapons/bow_ico", "Bow", "It shoots arrows!", Color.White.ToArgb(), "items/weapons/bow.dae", false));
@@ -234,6 +235,15 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool IgnoreThis(BroadPhaseEntry entry)
         {
+            if (entry is EntityCollidable && ((EntityCollidable)entry).Entity.Tag == this)
+            {
+                return false;
+            }
+            return TheWorld.Collision.ShouldCollide(entry);
+        }
+
+        public bool IgnorePlayers(BroadPhaseEntry entry)
+        {
             if (entry.CollisionRules.Group == CollisionUtil.Player)
             {
                 return false;
@@ -264,7 +274,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Direction.Pitch = -89.9f;
             }
             bool fly = false;
-            CollisionResult crGround = TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.1f, HalfSize.Y - 0.1f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
+            CollisionResult crGround = TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.1f, HalfSize.Y - 0.1f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnorePlayers);
             if (Upward && !fly && !pup && crGround.Hit && GetVelocity().Z < 1f)
             {
                 Vector3 imp = (Location.UnitZ * GetMass() * 7f).ToBVector();
@@ -386,16 +396,14 @@ namespace Voxalia.ServerGame.EntitySystem
             base.Tick();
         }
 
-        public void TryChunk(Location pos)
+        public void TryChunk(Location worldPos)
         {
-            pos.X = (int)pos.X - (int)pos.X % 30;
-            pos.Y = (int)pos.Y - (int)pos.Y % 30;
-            pos.Z = (int)pos.Z - (int)pos.Z % 30;
-            if (!ChunksAwareOf.Contains(pos))
+            worldPos = TheWorld.ChunkLocFor(worldPos);
+            if (!ChunksAwareOf.Contains(worldPos))
             {
-                Chunk chk = TheWorld.LoadChunk(pos);
+                Chunk chk = TheWorld.LoadChunk(worldPos);
                 ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk));
-                ChunksAwareOf.Add(pos);
+                ChunksAwareOf.Add(worldPos);
             }
         }
 

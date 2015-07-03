@@ -39,7 +39,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public StaticMesh CalculateChunkShape()
         {
             List<Vector3> Vertices = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6); // TODO: Make this an array?
-            Vector3 ppos = WorldPosition.ToBVector();
+            Vector3 ppos = WorldPosition.ToBVector() * 30;
             for (int x = 0; x < CHUNK_SIZE; x++)
             {
                 for (int y = 0; y < CHUNK_SIZE; y++)
@@ -96,11 +96,13 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void AddToWorld()
         {
+            // TODO: Asynchronize
+            StaticMesh tworldObject = CalculateChunkShape();
             if (worldObject != null)
             {
                 OwningWorld.PhysicsWorld.Remove(worldObject);
             }
-            worldObject = CalculateChunkShape();
+            worldObject = tworldObject;
             if (worldObject != null)
             {
                 OwningWorld.PhysicsWorld.Add(worldObject);
