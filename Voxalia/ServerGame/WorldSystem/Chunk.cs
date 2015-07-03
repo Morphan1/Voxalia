@@ -65,7 +65,25 @@ namespace Voxalia.ServerGame.WorldSystem
                                 Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
                                 Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
                             }
-                            // TODO: zm, yp, ym, xp, xm
+                            if (!((Material)xp.BlockMaterial).IsOpaque())
+                            {
+                                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
+                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z));
+                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
+                                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
+                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
+                                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
+                            }
+                            if (!((Material)xm.BlockMaterial).IsOpaque())
+                            {
+                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
+                                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
+                                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
+                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
+                                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
+                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
+                            }
+                            // TODO: zm, yp, ym
                             // TODO: Else, handle special case direction data
                         }
                     }
