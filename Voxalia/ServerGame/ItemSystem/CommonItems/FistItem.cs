@@ -26,7 +26,8 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void Click(PlayerEntity player, ItemStack item)
         {
-            CollisionResult cr = player.TheWorld.Collision.RayTrace(player.GetPosition(), player.GetPosition() + player.ForwardVector() * 5, player.IgnoreThis);
+            Location eye = player.GetEyePosition();
+            CollisionResult cr = player.TheWorld.Collision.RayTrace(eye, eye + player.ForwardVector() * 5, player.IgnoreThis);
             if (cr.Hit)
             {
                 if (cr.HitEnt != null)
