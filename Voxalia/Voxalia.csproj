@@ -273,6 +273,7 @@
     <Compile Include="ServerGame\WorldSystem\World.cs" />
     <Compile Include="Shared\AABB.cs" />
     <Compile Include="Shared\AnimationEngine.cs" />
+    <Compile Include="Shared\BlockInternal.cs" />
     <Compile Include="Shared\DataReader.cs" />
     <Compile Include="Shared\DataWriter.cs" />
     <Compile Include="Shared\ItemStackBase.cs" />

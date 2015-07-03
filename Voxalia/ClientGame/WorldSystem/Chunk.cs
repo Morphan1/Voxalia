@@ -20,19 +20,19 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public Location WorldPosition;
 
-        public ushort[] BlocksInternal = new ushort[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+        public BlockInternal[] BlocksInternal = new BlockInternal[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 
         public int BlockIndex(int x, int y, int z)
         {
             return z * CHUNK_SIZE * CHUNK_SIZE + y * CHUNK_SIZE + x;
         }
 
-        public void SetBlockAt(int x, int y, int z, ushort mat)
+        public void SetBlockAt(int x, int y, int z, BlockInternal mat)
         {
             BlocksInternal[BlockIndex(x, y, z)] = mat;
         }
 
-        public ushort GetBlockAt(int x, int y, int z)
+        public BlockInternal GetBlockAt(int x, int y, int z)
         {
             return BlocksInternal[BlockIndex(x, y, z)];
         }
@@ -47,24 +47,17 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     for (int z = 0; z < CHUNK_SIZE; z++)
                     {
-                        ushort c = GetBlockAt(x, y, z);
-                        ushort zp = z + 1 < CHUNK_SIZE ? GetBlockAt(x, y, z + 1) : (ushort)0;
-                        ushort zm = z - 1 > 0 ? GetBlockAt(x, y, z - 1) : (ushort)0;
-                        ushort yp = y + 1 < CHUNK_SIZE ? GetBlockAt(x, y + 1, z) : (ushort)0;
-                        ushort ym = y - 1 > 0 ? GetBlockAt(x, y - 1, z) : (ushort)0;
-                        ushort xp = x + 1 < CHUNK_SIZE ? GetBlockAt(x + 1, y, z) : (ushort)0;
-                        ushort xm = x - 1 > 0 ? GetBlockAt(x - 1, y, z) : (ushort)0;
-                        ushort cm = MaterialHelpers.GetMaterialHardMat(c);
-                        ushort zpm = MaterialHelpers.GetMaterialHardMat(zp);
-                        ushort zmm = MaterialHelpers.GetMaterialHardMat(zm);
-                        ushort ypm = MaterialHelpers.GetMaterialHardMat(yp);
-                        ushort ymm = MaterialHelpers.GetMaterialHardMat(ym);
-                        ushort xpm = MaterialHelpers.GetMaterialHardMat(xp);
-                        ushort xmm = MaterialHelpers.GetMaterialHardMat(xm);
-                        if (((Material)cm).IsOpaque() || ((Material)cm).IsSolid()) // TODO: Better check. OccupiesFullBlock()?
+                        BlockInternal c = GetBlockAt(x, y, z);
+                        BlockInternal zp = z + 1 < CHUNK_SIZE ? GetBlockAt(x, y, z + 1) : BlockInternal.AIR;
+                        BlockInternal zm = z - 1 > 0 ? GetBlockAt(x, y, z - 1) : BlockInternal.AIR;
+                        BlockInternal yp = y + 1 < CHUNK_SIZE ? GetBlockAt(x, y + 1, z) : BlockInternal.AIR;
+                        BlockInternal ym = y - 1 > 0 ? GetBlockAt(x, y - 1, z) : BlockInternal.AIR;
+                        BlockInternal xp = x + 1 < CHUNK_SIZE ? GetBlockAt(x + 1, y, z) : BlockInternal.AIR;
+                        BlockInternal xm = x - 1 > 0 ? GetBlockAt(x - 1, y, z) : BlockInternal.AIR;
+                        if (((Material)c.BlockMaterial).IsOpaque() || ((Material)c.BlockMaterial).IsSolid()) // TODO: Better check. OccupiesFullBlock()?
                         {
                             Vector3 pos = new Vector3(ppos.X + x, ppos.Y + y, ppos.Z + z);
-                            if (!((Material)zpm).IsOpaque())
+                            if (!((Material)zp.BlockMaterial).IsOpaque())
                             {
                                 Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
                                 Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));

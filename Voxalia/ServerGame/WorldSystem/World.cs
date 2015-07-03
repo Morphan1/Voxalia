@@ -525,7 +525,7 @@ namespace Voxalia.ServerGame.WorldSystem
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
             SysConsole.Output(OutputType.INFO, "X:" + x + "Y:" + y + "Z:" + z);
-            return (Material)ch.GetBlockAt(x, y, z);
+            return (Material)ch.GetBlockAt(x, y, z).BlockMaterial;
         }
 
         public void SetBlockMaterial(Location pos, Material mat, bool broadcast = true, bool regen = true)
@@ -534,7 +534,7 @@ namespace Voxalia.ServerGame.WorldSystem
             int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
-            ch.SetBlockAt(x, y, z, (ushort)mat);
+            ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, 0));
             if (regen)
             {
                 ch.AddToWorld();
@@ -576,14 +576,14 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 for (int i = 0; i < chunk.BlocksInternal.Length; i++)
                 {
-                    chunk.BlocksInternal[i] = (ushort)Material.STONE;
+                    chunk.BlocksInternal[i] = new BlockInternal((ushort)Material.STONE, 0);
                 }
             }
             else
             {
                 for (int i = 0; i < chunk.BlocksInternal.Length; i++)
                 {
-                    chunk.BlocksInternal[i] = (ushort)Material.AIR;
+                    chunk.BlocksInternal[i] = new BlockInternal((ushort)Material.AIR, 0);
                 }
             }
         }

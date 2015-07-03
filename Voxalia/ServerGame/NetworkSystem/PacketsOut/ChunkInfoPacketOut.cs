@@ -12,10 +12,14 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         public ChunkInfoPacketOut(Chunk chunk)
         {
             ID = 24;
-            byte[] data_orig = new byte[chunk.BlocksInternal.Length * 2];
+            byte[] data_orig = new byte[chunk.BlocksInternal.Length * 3];
             for (int i = 0; i < chunk.BlocksInternal.Length; i++)
             {
-                Utilities.UshortToBytes(chunk.BlocksInternal[i]).CopyTo(data_orig, i * 2);
+                Utilities.UshortToBytes(chunk.BlocksInternal[i].BlockMaterial).CopyTo(data_orig, i * 2);
+            }
+            for (int i = 0; i < chunk.BlocksInternal.Length; i++)
+            {
+                data_orig[chunk.BlocksInternal.Length * 2 + i] = chunk.BlocksInternal[i].BlockData;
             }
             byte[] gdata = FileHandler.GZip(data_orig);
             DataStream ds = new DataStream(gdata.Length + 12);

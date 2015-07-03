@@ -26,7 +26,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             int z = dr.ReadInt();
             byte[] data_unzipped = dr.ReadBytes(data.Length - 12);
             byte[] data_orig = FileHandler.UnGZip(data_unzipped);
-            if (data_orig.Length != Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 2)
+            if (data_orig.Length != Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 3)
             {
                 SysConsole.Output(OutputType.WARNING, "Invalid chunk size!");
                 return;
@@ -42,7 +42,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
         {
             for (int i = 0; i < chk.BlocksInternal.Length; i++)
             {
-                chk.BlocksInternal[i] = Utilities.BytesToUshort(Utilities.BytesPartial(data_orig, i * 2, 2));
+                chk.BlocksInternal[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(data_orig, i * 2, 2));
+            }
+            for (int i = 0; i < chk.BlocksInternal.Length; i++)
+            {
+                chk.BlocksInternal[i].BlockData = data_orig[chk.BlocksInternal.Length * 2 + i];
             }
             TheClient.RunImmediately.Add(new Task(() => { chk.AddToWorld(); chk.CreateVBO(); }));
         }

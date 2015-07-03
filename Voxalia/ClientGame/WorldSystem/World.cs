@@ -166,7 +166,7 @@ namespace Voxalia.ClientGame.WorldSystem
             int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
-            return (Material)ch.GetBlockAt(x, y, z);
+            return (Material)ch.GetBlockAt(x, y, z).BlockMaterial;
         }
 
         public void SetBlockMaterial(Location pos, Material mat, bool broadcast = true, bool regen = true)
@@ -175,7 +175,7 @@ namespace Voxalia.ClientGame.WorldSystem
             int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
-            ch.SetBlockAt(x, y, z, (ushort)mat);
+            ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, 0));
             if (regen)
             {
                 ch.AddToWorld();

@@ -12,15 +12,11 @@ namespace Voxalia.Shared
         GRASS = 2,
         DIRT = 3,
         NUM_DEFAULT = 4,
-        MAX = (ushort)(1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 256 * 2 | 256 * 4),
-        SUBDATA_BIT = (ushort)(256 * 8 | 256 * 16 | 256 * 32 | 256 * 64 | 256 * 128)
+        MAX = ushort.MaxValue
     }
 
     public static class MaterialHelpers
     {
-        public static ushort MAX_BIT = (ushort)Material.MAX;
-        public static ushort SUBDATA_BIT = (ushort)Material.SUBDATA_BIT;
-
         public static List<MaterialInfo> ALL_MATS = new List<MaterialInfo>((int)Material.NUM_DEFAULT);
 
         static MaterialHelpers()
@@ -31,17 +27,7 @@ namespace Voxalia.Shared
             };
             ALL_MATS.AddRange(mats);
         }
-
-        public static ushort GetMaterialSubData(ushort input)
-        {
-            return (ushort)(input & SUBDATA_BIT);
-        }
-
-        public static ushort GetMaterialHardMat(ushort input)
-        {
-            return (ushort)(input & MAX_BIT);
-        }
-
+        
         public static bool IsSolid(this Material mat)
         {
             return ALL_MATS[(int)mat].Solid;
@@ -55,16 +41,6 @@ namespace Voxalia.Shared
         public static int TextureID(this Material mat, MaterialSide side)
         {
             return ALL_MATS[(int)mat].TID[(int)side];
-        }
-
-        public static Material GetHardMaterial(this Material mat)
-        {
-            return (Material)GetMaterialHardMat((ushort)mat);
-        }
-
-        public static ushort GetSubData(this Material mat)
-        {
-            return GetMaterialSubData((ushort)mat);
         }
     }
 
