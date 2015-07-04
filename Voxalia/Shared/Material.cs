@@ -17,14 +17,20 @@ namespace Voxalia.Shared
 
     public static class MaterialHelpers
     {
+        public static int MAX_TEXTURES = 64;
+
         public static List<MaterialInfo> ALL_MATS = new List<MaterialInfo>((int)Material.NUM_DEFAULT);
 
         static MaterialHelpers()
         {
             MaterialInfo[] mats = new MaterialInfo[] {
-                new MaterialInfo(0) { Solid = false, Opaque = false },
-                new MaterialInfo(1) { Solid = true, Opaque = true }
+                new MaterialInfo(0) { Solid = false, Opaque = false }, // AIR
+                new MaterialInfo(1), // STONE
+                new MaterialInfo(2), // GRASS
+                new MaterialInfo(3) // DIRT
             };
+            mats[2].TID[(int)MaterialSide.TOP] = MaterialHelpers.MAX_TEXTURES; // grass_top
+            mats[2].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
             ALL_MATS.AddRange(mats);
         }
         

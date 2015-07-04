@@ -105,6 +105,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public AnimationEngine Animations;
         public SoundEngine Sounds;
         public ParticleEngine Particles;
+        public TextureBlock TBlock;
 
         public PlayerEntity Player;
 
@@ -119,6 +120,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Textures = new TextureEngine();
             Textures.InitTextureSystem();
             ItemFrame = Textures.GetTexture("ui/item_frame");
+            TBlock = new TextureBlock();
+            TBlock.Generate(Textures);
             SysConsole.Output(OutputType.INIT, "Loading shaders...");
             Shaders = new ShaderEngine();
             GLVendor = GL.GetString(StringName.Vendor);

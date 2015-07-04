@@ -190,6 +190,10 @@ namespace Voxalia.ClientGame.WorldSystem
             Matrix4 mat = Matrix4.Identity;
             GL.UniformMatrix4(2, false, ref mat);
             GL.UniformMatrix4(7, false, ref mat);
+            if (TheClient.RenderTextures)
+            {
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+            }
             foreach (Chunk chunk in LoadedChunks.Values)
             {
                 if (TheClient.CFrust.ContainsBox(chunk.WorldPosition * 30, chunk.WorldPosition * 30 + new Location(30, 30, 30)))

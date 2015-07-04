@@ -155,6 +155,7 @@
     <Compile Include="ClientGame\GraphicsSystems\Renderer.cs" />
     <Compile Include="ClientGame\GraphicsSystems\RenderSurface4Part.cs" />
     <Compile Include="ClientGame\GraphicsSystems\ShaderEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\TextureBlock.cs" />
     <Compile Include="ClientGame\GraphicsSystems\TextureEngine.cs" />
     <Compile Include="ClientGame\GraphicsSystems\TextVBO.cs" />
     <Compile Include="ClientGame\GraphicsSystems\VBO.cs" />

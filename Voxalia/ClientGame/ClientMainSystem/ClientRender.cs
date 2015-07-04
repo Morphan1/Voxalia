@@ -35,6 +35,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_main = Shaders.GetShader("test");
             s_mainssao = Shaders.GetShader("final_ssao");
             s_fbo = Shaders.GetShader("fbo");
+            s_fbov = Shaders.GetShader("fbo_vox");
             s_shadowadder = Shaders.GetShader("shadowadder");
             s_transponly = Shaders.GetShader("transponly");
             generateLightHelpers();
@@ -94,6 +95,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         Shader s_main;
         Shader s_mainssao;
         Shader s_fbo;
+        Shader s_fbov;
         Shader s_shadowadder;
         Shader s_transponly;
         RenderSurface4Part RS4P;
@@ -132,6 +134,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Frustum CFrust = null;
 
         public int LightsC = 0;
+
+        bool FBO = false;
 
         void Window_RenderFrame(object sender, FrameEventArgs e)
         {
@@ -179,7 +183,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
                             }
                         }
                         SetViewport();
+                        s_fbov.Bind();
+                        VBO.BonesIdentity();
+                        GL.UniformMatrix4(1, false, ref combined);
                         s_fbo.Bind();
+                        FBO = true;
                         VBO.BonesIdentity();
                         RenderingShadows = false;
                         CFrust = camFrust;
@@ -191,6 +199,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         Render3D(false);
                         RenderLights = false;
                         RS4P.Unbind();
+                        FBO = false;
                         GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
                         GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
                         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
@@ -363,8 +372,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Rendering.SetMinimumLight(1f);
                 Particles.Render();
             }
-            Textures.White.Bind();
+            if (FBO)
+            {
+                s_fbov.Bind();
+            }
             TheWorld.Render();
+            if (FBO)
+            {
+                s_fbo.Bind();
+            }
             Textures.White.Bind();
             for (int i = 0; i < TheWorld.Joints.Count; i++)
             {
