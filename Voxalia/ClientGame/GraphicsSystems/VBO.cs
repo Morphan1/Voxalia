@@ -36,6 +36,21 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public List<Vector4> BoneIDs2;
         public List<Vector4> BoneWeights2;
 
+        public void CleanLists()
+        {
+            Vertices = null;
+            Indices = null;
+            Normals = null;
+            TexCoords = null;
+            Colors = null;
+            BoneIDs = null;
+            BoneWeights = null;
+            BoneIDs2 = null;
+            BoneWeights2 = null;
+        }
+
+        int vC;
+
         public void AddSide(Location normal, TextureCoordinates tc)
         {
             // TODO: IMPROVE!
@@ -208,6 +223,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 return;
             }
+            vC = Vertices.Count;
             GL.BindVertexArray(0);
             Vector3[] vecs = Vertices.ToArray();
             uint[] inds = Indices.ToArray();
@@ -344,7 +360,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 Tex.Bind();
             }
             GL.BindVertexArray(_VAO);
-            GL.DrawElements(PrimitiveType.Triangles, Vertices.Count, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.DrawElements(PrimitiveType.Triangles, vC, DrawElementsType.UnsignedInt, IntPtr.Zero);
             GL.BindVertexArray(0);
         }
     }

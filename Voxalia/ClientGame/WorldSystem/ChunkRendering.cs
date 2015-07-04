@@ -73,6 +73,26 @@ namespace Voxalia.ClientGame.WorldSystem
                                     TCoords.Add(new Vector3(0, 0, tID_TOP));
                                     Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
                                 }
+                                if (!((Material)zm.BlockMaterial).IsOpaque())
+                                {
+                                    int tID_BOTTOM = ((Material)c.BlockMaterial).TextureID(MaterialSide.BOTTOM);
+                                    for (int i = 0; i < 6; i++)
+                                    {
+                                        Norms.Add(new Vector3(0, 0, 1));
+                                    }
+                                    TCoords.Add(new Vector3(0, 0, tID_BOTTOM));
+                                    Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
+                                    TCoords.Add(new Vector3(1, 1, tID_BOTTOM));
+                                    Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z));
+                                    TCoords.Add(new Vector3(0, 1, tID_BOTTOM));
+                                    Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
+                                    TCoords.Add(new Vector3(0, 0, tID_BOTTOM));
+                                    Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
+                                    TCoords.Add(new Vector3(1, 0, tID_BOTTOM));
+                                    Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
+                                    TCoords.Add(new Vector3(1, 1, tID_BOTTOM));
+                                    Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z));
+                                }
                                 if (!((Material)xp.BlockMaterial).IsOpaque())
                                 {
                                     int tID_XP = ((Material)c.BlockMaterial).TextureID(MaterialSide.XP);
@@ -153,7 +173,6 @@ namespace Voxalia.ClientGame.WorldSystem
                                     TCoords.Add(new Vector3(1, 1, tID_YM));
                                     Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
                                 }
-                                // TODO: zm
                                 // TODO: Else, handle special case direction data
                             }
                         }
@@ -205,7 +224,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         OwningWorld.TheClient.RunImmediately.Add(new Task(() => tV.Destroy()));
                     }
                     _VBO = tVBO;
-                    OwningWorld.TheClient.RunImmediately.Add(new Task(() => tVBO.GenerateVBO()));
+                    OwningWorld.TheClient.RunImmediately.Add(new Task(() => { tVBO.GenerateVBO(); tVBO.CleanLists(); }));
                 }
             }
             catch (Exception ex)
