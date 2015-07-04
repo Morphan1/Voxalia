@@ -26,6 +26,7 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new ShotgunGunItem());
             Register(new BulletItem());
             Register(new FistItem());
+            Register(new BlockItem());
             Generic = new GenericItem();
             Register(Generic);
         }

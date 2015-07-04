@@ -88,6 +88,18 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        public int GetSlotForItem(ItemStack item)
+        {
+            for (int i = 0; i < Items.Count; i++)
+            {
+                if (Items[i] == item)
+                {
+                    return i + 1;
+                }
+            }
+            return -1;
+        }
+
         public void Kick(string message)
         {
             if (pkick)
@@ -135,6 +147,7 @@ namespace Voxalia.ServerGame.EntitySystem
             SetPosition(new Location(0, 0, 50));
             GiveItem(new ItemStack("open_hand", TheServer, 1, "items/common/open_hand_ico", "Open Hand", "Grab things!", Color.White.ToArgb(), "items/common/hand.dae", true));
             GiveItem(new ItemStack("fist", TheServer, 1, "items/common/fist_ico", "Fist", "Hit things!", Color.White.ToArgb(), "items/common/fist.dae", true));
+            GiveItem(new ItemStack("block", TheServer, 10, "blocks/solid/grass_side", "Grass", "Grassy!", Color.White.ToArgb(), "items/block.dae", false) { Datum = 2 });
             GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol_ico", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/silenced_pistol.dae", false));
             GiveItem(new ItemStack("shotgun_gun", TheServer, 1, "items/weapons/shotgun_ico", "Shotgun", "It shoots many bullets!", Color.White.ToArgb(), "items/weapons/shotgun.dae", false));
             GiveItem(new ItemStack("bow", TheServer, 1, "items/weapons/bow_ico", "Bow", "It shoots arrows!", Color.White.ToArgb(), "items/weapons/bow.dae", false));
@@ -211,11 +224,6 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public void RemoveItem(int item)
         {
-            ItemStack its = GetItemForSlot(item);
-            if (item == cItem)
-            {
-                its.Info.SwitchFrom(this, its);
-            }
             while (item < 0)
             {
                 item += Items.Count + 1;
@@ -223,6 +231,11 @@ namespace Voxalia.ServerGame.EntitySystem
             while (item > Items.Count)
             {
                 item -= Items.Count + 1;
+            }
+            ItemStack its = GetItemForSlot(item);
+            if (item == cItem) // TODO: ensure cItem is wrapped
+            {
+                its.Info.SwitchFrom(this, its);
             }
             Items.RemoveAt(item - 1);
             Network.SendPacket(new RemoveItemPacketOut(item - 1));

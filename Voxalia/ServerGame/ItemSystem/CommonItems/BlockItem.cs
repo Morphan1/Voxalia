@@ -1,0 +1,76 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Voxalia.Shared;
+using Voxalia.ServerGame.WorldSystem;
+using Voxalia.ServerGame.EntitySystem;
+
+namespace Voxalia.ServerGame.ItemSystem.CommonItems
+{
+    public class BlockItem: BaseItemInfo
+    {
+        public BlockItem()
+            : base()
+        {
+            Name = "block";
+        }
+
+        public override void PrepItem(PlayerEntity player, ItemStack item)
+        {
+        }
+
+        public override void AltClick(PlayerEntity player, ItemStack item)
+        {
+            Location eye = player.GetEyePosition();
+            CollisionResult cr = player.TheWorld.Collision.RayTrace(eye, eye + player.ForwardVector() * 5, player.IgnoreThis);
+            if (cr.Hit)
+            {
+                if (cr.HitEnt != null)
+                {
+                    // TODO: Damage
+                }
+                else
+                {
+                    Location block = cr.Position + cr.Normal * 0.01;
+                    Material mat = player.TheWorld.GetBlockMaterial(block);
+                    if (mat == Material.AIR) // TODO: IsPlaceableIn
+                    {
+                        player.TheWorld.SetBlockMaterial(block, (Material)item.Datum);
+                        item.Count = item.Count - 1;
+                        if (item.Count <= 0)
+                        {
+                            player.RemoveItem(player.cItem);
+                        }
+                    }
+                }
+            }
+        }
+
+        public override void Click(PlayerEntity player, ItemStack item)
+        {
+            // TODO: Break?
+        }
+
+        public override void ReleaseClick(PlayerEntity player, ItemStack item)
+        {
+        }
+
+        public override void Use(EntitySystem.PlayerEntity player, ItemStack item)
+        {
+        }
+
+        public override void SwitchFrom(PlayerEntity player, ItemStack item)
+        {
+            AltClick(player, item);
+        }
+
+        public override void SwitchTo(PlayerEntity player, ItemStack item)
+        {
+        }
+
+        public override void Tick(PlayerEntity player, ItemStack item)
+        {
+        }
+    }
+}
