@@ -7,3 +7,4 @@ debug/
 *.pak
 clientdefaultsettings.cfg
 serverdefaultsettings.cfg
+x64/
