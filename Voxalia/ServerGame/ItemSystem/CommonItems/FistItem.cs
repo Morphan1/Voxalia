@@ -32,14 +32,12 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             {
                 if (cr.HitEnt != null)
                 {
-                    SysConsole.Output(OutputType.INFO, "HIT: " + cr.HitEnt.Tag);
                     // TODO: Damage
                 }
                 else
                 {
                     Location block = cr.Position - cr.Normal * 0.01;
                     Material mat = player.TheWorld.GetBlockMaterial(block);
-                    SysConsole.Output(OutputType.INFO, "Pos:" + cr.Position + ", norm:" + cr.Normal + ", mat: " + mat);
                     if (mat != Material.AIR) // TODO: IsBreakable
                     {
                         player.TheWorld.SetBlockMaterial(block, Material.AIR);
