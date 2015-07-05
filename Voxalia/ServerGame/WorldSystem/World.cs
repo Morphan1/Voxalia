@@ -524,7 +524,6 @@ namespace Voxalia.ServerGame.WorldSystem
             int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
-            SysConsole.Output(OutputType.INFO, "X:" + x + "Y:" + y + "Z:" + z);
             return (Material)ch.GetBlockAt(x, y, z).BlockMaterial;
         }
 
@@ -543,6 +542,11 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 SendToAll(new BlockEditPacketOut(pos, mat));
             }
+        }
+
+        public Location GetBlockLocation(Location worldPos)
+        {
+            return new Location(Math.Floor(worldPos.X), Math.Floor(worldPos.Y), Math.Floor(worldPos.Z));
         }
 
         public Location ChunkLocFor(Location worldPos)

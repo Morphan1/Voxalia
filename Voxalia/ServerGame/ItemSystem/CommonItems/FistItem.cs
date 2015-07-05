@@ -56,7 +56,6 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void SwitchFrom(PlayerEntity player, ItemStack item)
         {
-            AltClick(player, item);
         }
 
         public override void SwitchTo(PlayerEntity player, ItemStack item)

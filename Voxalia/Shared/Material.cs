@@ -29,7 +29,7 @@ namespace Voxalia.Shared
                 new MaterialInfo(2), // GRASS
                 new MaterialInfo(3) // DIRT
             };
-            mats[2].TID[(int)MaterialSide.TOP] = MaterialHelpers.MAX_TEXTURES; // grass_top
+            mats[2].TID[(int)MaterialSide.TOP] = MaterialHelpers.MAX_TEXTURES - 1; // grass_top
             mats[2].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
             ALL_MATS.AddRange(mats);
         }
