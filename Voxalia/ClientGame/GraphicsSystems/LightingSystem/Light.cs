@@ -88,7 +88,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             GL.DrawBuffer(DrawBufferMode.Back);
         }
 
-        public Matrix4 GetMatrix()
+        public virtual Matrix4 GetMatrix()
         {
             return Matrix4.LookAt(eye, target, up) *
                 Matrix4.CreatePerspectiveFieldOfView(FOV * (float)Math.PI / 180f, 1, 0.1f, maxrange);

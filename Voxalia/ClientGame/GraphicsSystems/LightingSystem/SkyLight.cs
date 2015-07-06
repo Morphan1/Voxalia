@@ -7,7 +7,7 @@ using OpenTK;
 
 namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 {
-    public class SpotLight: LightObject
+    public class SkyLight: LightObject
     {
         int Texsize;
 
@@ -19,14 +19,14 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 
         float Width;
 
-        public SpotLight(Location pos, int tsize, float radius, Location col, Location dir, float size)
+        public SkyLight(Location pos, int tsize, float radius, Location col, Location dir, float size)
         {
             EyePos = pos;
             Texsize = tsize;
             Radius = radius;
             Color = col;
             Width = size;
-            InternalLights.Add(new Light());
+            InternalLights.Add(new LightOrtho());
             if (dir.Z == 1 || dir.Z == -1)
             {
                 InternalLights[0].up = new Vector3(0, 1, 0);

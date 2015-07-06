@@ -14,6 +14,8 @@ using Voxalia.ClientGame.JointSystem;
 using Voxalia.ClientGame.EntitySystem;
 using Voxalia.ClientGame.OtherSystems;
 using BEPUutilities.Threading;
+using Voxalia.ClientGame.GraphicsSystems;
+using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -35,7 +37,7 @@ namespace Voxalia.ClientGame.WorldSystem
         public List<Entity> Tickers = new List<Entity>();
 
         public List<Entity> ShadowCasters = new List<Entity>();
-
+        
         /// <summary>
         /// Builds the physics world.
         /// </summary>
@@ -196,7 +198,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             foreach (Chunk chunk in LoadedChunks.Values)
             {
-                if (TheClient.CFrust.ContainsBox(chunk.WorldPosition * 30, chunk.WorldPosition * 30 + new Location(30, 30, 30)))
+                if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(chunk.WorldPosition * 30, chunk.WorldPosition * 30 + new Location(30, 30, 30)))
                 {
                     chunk.Render();
                 }

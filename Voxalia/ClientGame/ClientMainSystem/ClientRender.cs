@@ -165,15 +165,22 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         LightsC = 0;
                         for (int i = 0; i < Lights.Count; i++)
                         {
-                            if (camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                            if (Lights[i] is SkyLight || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                             {
                                 // TODO: If movement_near_light
-                                if ((Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
+                                if (Lights[i] is SkyLight || (Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
                                 {
                                     LightsC++;
                                     for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                                     {
-                                        CFrust = new Frustum(Lights[i].InternalLights[x].GetMatrix());
+                                        if (Lights[i].InternalLights[x] is LightOrtho)
+                                        {
+                                            CFrust = null;
+                                        }
+                                        else
+                                        {
+                                            CFrust = new Frustum(Lights[i].InternalLights[x].GetMatrix());
+                                        }
                                         Lights[i].InternalLights[x].Attach();
                                         // TODO: Render settings
                                         Render3D(true);
@@ -222,6 +229,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         mat = Matrix4.Identity;
                         GL.UniformMatrix4(2, false, ref mat);
                         GL.Uniform3(10, CameraPos.ToOVector());
+                        GL.Uniform1(13, CVars.r_shadowblur.ValueF);
                         bool first = true;
                         GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
                         GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 1 });
@@ -231,13 +239,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         GL.Disable(EnableCap.CullFace);
                         for (int i = 0; i < Lights.Count; i++)
                         {
-                            if (camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                            if (Lights[i] is SkyLight || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                             {
                                 // TODO: if Light_in_Frustrum
                                 double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
                                 double d2 = CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance;
                                 double maxrangemult = 0;
-                                if (d1 < d2 * 4)
+                                if (d1 < d2 * 4 || Lights[i] is SkyLight)
                                 {
                                     maxrangemult = 1;
                                 }
@@ -260,9 +268,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                         GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
                                         Vector3 col = Lights[i].InternalLights[x].color * (float)maxrangemult;
                                         GL.Uniform3(8, ref col);
-                                        GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
+                                        if (Lights[i].InternalLights[x] is LightOrtho)
+                                        {
+                                            GL.Uniform1(9, 0f);
+                                        }
+                                        else
+                                        {
+                                            GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
+                                        }
                                         GL.Uniform1(12, 1f / (float)Lights[i].InternalLights[x].texsize);
-                                        GL.Uniform1(13, CVars.r_shadowblur.ValueF);
                                         Rendering.RenderRectangle(-1, -1, 1, 1);
                                         first = !first;
                                         GL.ActiveTexture(TextureUnit.Texture0);

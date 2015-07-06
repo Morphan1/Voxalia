@@ -160,7 +160,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Building the sound system...");
             Sounds = new SoundEngine();
             Sounds.Init(CVars);
-            SysConsole.Output(OutputType.INIT, "Building physics world...");
+            SysConsole.Output(OutputType.INIT, "Building game world...");
             BuildWorld();
             SysConsole.Output(OutputType.INIT, "Spawning the player...");
             Player = new PlayerEntity(TheWorld);
