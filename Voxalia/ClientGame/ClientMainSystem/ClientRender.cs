@@ -165,7 +165,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         LightsC = 0;
                         for (int i = 0; i < Lights.Count; i++)
                         {
-                            if (Lights[i] is SkyLight || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                            if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                             {
                                 // TODO: If movement_near_light
                                 if (Lights[i] is SkyLight || (Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
@@ -173,11 +173,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     LightsC++;
                                     for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                                     {
-                                        if (Lights[i].InternalLights[x] is LightOrtho)
+                                        /*if (Lights[i].InternalLights[x] is LightOrtho)
                                         {
                                             CFrust = null;
                                         }
-                                        else
+                                        else*/
                                         {
                                             CFrust = new Frustum(Lights[i].InternalLights[x].GetMatrix());
                                         }
@@ -239,7 +239,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         GL.Disable(EnableCap.CullFace);
                         for (int i = 0; i < Lights.Count; i++)
                         {
-                            if (Lights[i] is SkyLight || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                            if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                             {
                                 // TODO: if Light_in_Frustrum
                                 double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();

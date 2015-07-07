@@ -5,6 +5,7 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
+using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 {
@@ -12,7 +13,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
     {
         public override OpenTK.Matrix4 GetMatrix()
         {
-            return /*Matrix4.LookAt(eye, target, up) * */Matrix4.CreateOrthographic(FOV, FOV, 0.1f, maxrange);
+            return Matrix4.LookAt(eye, target, up) * Matrix4.CreateOrthographic(FOV, FOV, 1f, maxrange);
         }
     }
 }

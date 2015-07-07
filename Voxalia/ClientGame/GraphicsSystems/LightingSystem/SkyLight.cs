@@ -35,6 +35,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             {
                 InternalLights[0].up = new Vector3(0, 0, 1);
             }
+            Direction = dir;
             InternalLights[0].Create(Texsize, pos.ToOVector(), (pos + dir).ToOVector(), Width, Radius, Color.ToOVector());
             MaxDistance = radius;
         }
