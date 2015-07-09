@@ -147,20 +147,21 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
                 }
-                CameraFinalTarget = Player.GetPosition() + Player.ForwardVector() * 100f;
-                CameraFinalTarget = TheWorld.Collision.RayTrace(Player.GetPosition(), CameraFinalTarget, IgnorePlayer).Position;
-                CameraDistance = (Player.GetPosition() - CameraFinalTarget).Length();
+                PlayerEyePosition = Player.GetEyePosition();
+                CameraFinalTarget = PlayerEyePosition + Player.ForwardVector() * 100f;
+                CameraFinalTarget = TheWorld.Collision.RayTrace(PlayerEyePosition, CameraFinalTarget, IgnorePlayer).Position;
+                CameraDistance = (PlayerEyePosition - CameraFinalTarget).Length();
             }
         }
 
+        public Location PlayerEyePosition;
+
         bool IgnorePlayer(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)
         {
-            if (entry is BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)
+            if (entry is BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable
+                && ((BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)entry).Entity.Tag == Player)
             {
-                if (((BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)entry).Entity.Tag == Player)
-                {
-                    return false;
-                }
+                return false;
             }
             return TheWorld.Collision.ShouldCollide(entry);
         }

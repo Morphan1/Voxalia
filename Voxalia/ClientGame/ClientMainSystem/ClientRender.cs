@@ -149,7 +149,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.1f, 0.1f, 0.1f, 1f });
                     GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
                     GL.Enable(EnableCap.DepthTest);
-                    CameraPos = Player.GetEyePosition();
+                    CameraPos = PlayerEyePosition;
                     sortEntities();
                     if (CVars.r_lighting.ValueB)
                     {
@@ -396,6 +396,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 s_fbo.Bind();
             }
             Textures.White.Bind();
+            Location cpos = CameraFinalTarget + (((CameraFinalTarget - PlayerEyePosition) / CameraDistance) * 0.1f);
+            // TODO: 5 -> Variable length (Server controlled?)
+            if (TheWorld.GetBlockMaterial(cpos) != Material.AIR && CameraDistance < 5)
+            {
+                Location cft = cpos.GetBlockLocation();
+                GL.LineWidth(3);
+                Rendering.SetColor(Color4.Blue);
+                Rendering.SetMinimumLight(1.0f);
+                Rendering.RenderLineBox(cft, cft + Location.One);
+                Rendering.SetColor(Color4.White);
+                GL.LineWidth(1);
+            }
+            Rendering.SetMinimumLight(0.0f);
             for (int i = 0; i < TheWorld.Joints.Count; i++)
             {
                 // TODO: Only render if set to

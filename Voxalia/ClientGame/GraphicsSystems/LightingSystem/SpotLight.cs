@@ -27,7 +27,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             Color = col;
             Width = size;
             InternalLights.Add(new Light());
-            if (dir.Z == 1 || dir.Z == -1)
+            if (dir.Z >= 1 || dir.Z <= -1)
             {
                 InternalLights[0].up = new Vector3(0, 1, 0);
             }
