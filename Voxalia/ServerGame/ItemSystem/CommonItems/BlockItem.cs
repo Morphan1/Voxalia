@@ -27,28 +27,35 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             CollisionResult cr = player.TheWorld.Collision.RayTrace(eye, eye + player.ForwardVector() * 5, player.IgnoreThis);
             if (cr.Hit)
             {
-                Location block = player.TheWorld.GetBlockLocation(cr.Position + cr.Normal * 0.5);
-                Material mat = player.TheWorld.GetBlockMaterial(block);
-                if (mat == Material.AIR) // TODO: IsPlaceableIn
+                if (cr.HitEnt != null)
                 {
-                    CollisionResult hit = player.TheWorld.Collision.CuboidLineTrace(new Location(0.41, 0.41, 0.41), block + new Location(0.5),
-                        block + new Location(0.5, 0.5, 0.501), player.TheWorld.Collision.ShouldCollide);
-                    if (!hit.Hit)
+                    // TODO: ???
+                }
+                else
+                {
+                    Location block = player.TheWorld.GetBlockLocation(cr.Position + cr.Normal * 0.5);
+                    Material mat = player.TheWorld.GetBlockMaterial(block);
+                    if (mat == Material.AIR) // TODO: IsPlaceableIn
                     {
-                        player.TheWorld.SetBlockMaterial(block, (Material)item.Datum);
-                        item.Count = item.Count - 1;
-                        if (item.Count <= 0)
+                        CollisionResult hit = player.TheWorld.Collision.CuboidLineTrace(new Location(0.41, 0.41, 0.41), block + new Location(0.5),
+                            block + new Location(0.5, 0.5, 0.501), player.TheWorld.Collision.ShouldCollide);
+                        if (!hit.Hit)
                         {
-                            player.RemoveItem(player.cItem);
+                            player.TheWorld.SetBlockMaterial(block, (Material)item.Datum);
+                            item.Count = item.Count - 1;
+                            if (item.Count <= 0)
+                            {
+                                player.RemoveItem(player.cItem);
+                            }
+                            else
+                            {
+                                player.Network.SendPacket(new SetItemPacketOut(player.Items.IndexOf(item), item));
+                            }
                         }
                         else
                         {
-                            player.Network.SendPacket(new SetItemPacketOut(player.Items.IndexOf(item), item));
+                            SysConsole.Output(OutputType.INFO, "HIT: " + (hit.HitEnt == null ? "Null" : hit.HitEnt.Tag));
                         }
-                    }
-                    else
-                    {
-                        SysConsole.Output(OutputType.INFO, "HIT: " + (hit.HitEnt == null ? "Null" : hit.HitEnt.Tag));
                     }
                 }
             }

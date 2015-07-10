@@ -397,7 +397,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             Textures.White.Bind();
             Location mov = (CameraFinalTarget - PlayerEyePosition) / CameraDistance;
-            Location cpos = CameraFinalTarget + (mov * 0.1f);
+            Location cpos = CameraFinalTarget + (mov * 0.01f);
+            Location cpos2 = CameraFinalTarget - (mov * 0.01f);
             // TODO: 5 -> Variable length (Server controlled?)
             if (TheWorld.GetBlockMaterial(cpos) != Material.AIR && CameraDistance < 5)
             {
@@ -406,8 +407,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Rendering.SetColor(Color4.Blue);
                 Rendering.SetMinimumLight(1.0f);
                 Rendering.RenderLineBox(cft - mov * 0.01f, cft + Location.One - mov * 0.01f);
-                Rendering.SetColor(Color4.White);
+                Rendering.SetColor(Color4.Cyan);
                 GL.LineWidth(1);
+                Location cft2 = cpos2.GetBlockLocation();
+                Rendering.RenderLineBox(cft2, cft2 + Location.One);
+                Rendering.SetColor(Color4.White);
             }
             Rendering.SetMinimumLight(0.0f);
             for (int i = 0; i < TheWorld.Joints.Count; i++)
