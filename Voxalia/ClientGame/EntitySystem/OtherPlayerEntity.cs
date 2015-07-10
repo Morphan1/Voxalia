@@ -46,7 +46,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
         }
 
-        public Location HalfSize = new Location(0.5f, 0.5f, 0.9f);
+        public Location HalfSize = new Location(0.55f, 0.55f, 1.3f);
 
         public Location Direction = new Location(0, 0, 0);
 

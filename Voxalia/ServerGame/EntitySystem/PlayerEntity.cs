@@ -22,7 +22,7 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class PlayerEntity: EntityLiving
     {
-        public Location HalfSize = new Location(0.5f, 0.5f, 0.9f);
+        public Location HalfSize = new Location(0.55f, 0.55f, 1.3f);
 
         public Connection Network;
 
