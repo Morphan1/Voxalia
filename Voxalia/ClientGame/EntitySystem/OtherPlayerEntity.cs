@@ -104,7 +104,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Direction.Pitch = -89.9f;
             }
             bool fly = false;
-            bool on_ground = TheClient.TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.1f, HalfSize.Y - 0.1f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis).Hit;
+            bool on_ground = TheClient.TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.01f, HalfSize.Y - 0.01f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis).Hit;
             if (Upward && !fly && !pup && on_ground && GetVelocity().Z < 1f)
             {
                 Body.ApplyImpulse(new Vector3(0, 0, 0), (Location.UnitZ * GetMass() * 7f).ToBVector());
@@ -165,6 +165,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
                 Flashlight.Reposition(GetEyePosition() + Utilities.ForwardVector_Deg(Direction.Yaw, 0) * 0.3f);
             }
+            base.SetOrientation(Quaternion.Identity);
             aHTime += TheClient.Delta;
             aTTime += TheClient.Delta;
             aLTime += TheClient.Delta;

@@ -287,7 +287,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Direction.Pitch = -89.9f;
             }
             bool fly = false;
-            CollisionResult crGround = TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.1f, HalfSize.Y - 0.1f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnorePlayers);
+            CollisionResult crGround = TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.01f, HalfSize.Y - 0.01f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnorePlayers);
             if (Upward && !fly && !pup && crGround.Hit && GetVelocity().Z < 1f)
             {
                 Vector3 imp = (Location.UnitZ * GetMass() * 7f).ToBVector();
@@ -353,10 +353,7 @@ namespace Voxalia.ServerGame.EntitySystem
             CursorMarker.SetPosition(GetPosition() + ForwardVector() * 0.5f);
             CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(Direction.Pitch * Utilities.PI180)) * // TODO: is the pitch really needed for this?
                 Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(Direction.Yaw * Utilities.PI180)));
-            /*if (!Utilities.IsCloseTo((float)base.GetAngles().Z, 0, 1))
-            {
-                base.SetAngles(new Location(0, 0, 0));
-            }*/ // TODO: Does this need to be readded? Can it be made more efficient via quaternions?
+            base.SetOrientation(Quaternion.Identity);
             PlayerUpdatePacketOut pupo = new PlayerUpdatePacketOut(this);
             for (int i = 0; i < TheServer.Players.Count; i++)
             {
