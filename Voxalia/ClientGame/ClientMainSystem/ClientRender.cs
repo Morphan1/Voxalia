@@ -397,8 +397,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             Textures.White.Bind();
             Location mov = (CameraFinalTarget - PlayerEyePosition) / CameraDistance;
-            Location cpos = CameraFinalTarget + (mov * 0.01f);
-            Location cpos2 = CameraFinalTarget - (mov * 0.01f);
+            Location cpos = CameraFinalTarget - (CameraImpactNormal * 0.01f);
+            Location cpos2 = CameraFinalTarget + (CameraImpactNormal * 0.01f);
             // TODO: 5 -> Variable length (Server controlled?)
             if (TheWorld.GetBlockMaterial(cpos) != Material.AIR && CameraDistance < 5)
             {

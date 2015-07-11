@@ -149,12 +149,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 PlayerEyePosition = Player.GetEyePosition();
                 CameraFinalTarget = PlayerEyePosition + Player.ForwardVector() * 100f;
-                CameraFinalTarget = TheWorld.Collision.RayTrace(PlayerEyePosition, CameraFinalTarget, IgnorePlayer).Position;
+                CollisionResult cr = TheWorld.Collision.RayTrace(PlayerEyePosition, CameraFinalTarget, IgnorePlayer);
+                CameraFinalTarget = cr.Position;
+                CameraImpactNormal = cr.Hit ? cr.Normal.Normalize() : Location.Zero;
                 CameraDistance = (PlayerEyePosition - CameraFinalTarget).Length();
             }
         }
 
         public Location PlayerEyePosition;
+
+        public Location CameraImpactNormal;
 
         bool IgnorePlayer(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)
         {
