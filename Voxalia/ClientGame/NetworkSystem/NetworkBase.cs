@@ -376,8 +376,14 @@ namespace Voxalia.ClientGame.NetworkSystem
                     throw ex;
                 }
                 SysConsole.Output(OutputType.ERROR, "Networking / connect internal: " + ex.ToString());
-                ConnectionSocket.Close(5);
-                ChunkSocket.Close(5);
+                if (ConnectionSocket != null)
+                {
+                    ConnectionSocket.Close(5);
+                }
+                if (ChunkSocket != null)
+                {
+                    ChunkSocket.Close(5);
+                }
             }
         }
 
