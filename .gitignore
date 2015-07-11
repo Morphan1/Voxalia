@@ -8,3 +8,5 @@ debug/
 clientdefaultsettings.cfg
 serverdefaultsettings.cfg
 x64/
+*.ttf
+LICENSE/

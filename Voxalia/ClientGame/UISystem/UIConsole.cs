@@ -395,9 +395,9 @@ namespace Voxalia.ClientGame.UISystem
         public static void Draw()
         {
             // Render the console texture
-            TypingLoc.Y = ((Client.Central.Window.Height / 2) - Client.Central.FontSets.Standard.font_default.Internal_Font.Height) - 5;
-            ConsoleTextLoc.Y = (-(Lines + 2) * Client.Central.FontSets.Standard.font_default.Internal_Font.Height) - 5 - ScrolledLine * (int)Client.Central.FontSets.Standard.font_default.Height;
-            ScrollTextLoc.Y = ((Client.Central.Window.Height / 2) - Client.Central.FontSets.Standard.font_default.Internal_Font.Height * 2) - 5;
+            TypingLoc.Y = ((Client.Central.Window.Height / 2) - Client.Central.FontSets.Standard.font_default.Height) - 5;
+            ConsoleTextLoc.Y = (-(Lines + 2) * Client.Central.FontSets.Standard.font_default.Height) - 5 - ScrolledLine * (int)Client.Central.FontSets.Standard.font_default.Height;
+            ScrollTextLoc.Y = ((Client.Central.Window.Height / 2) - Client.Central.FontSets.Standard.font_default.Height * 2) - 5;
             if (Open)
             {
                 ConsoleTextLoc.Y += Client.Central.Window.Height / 2;

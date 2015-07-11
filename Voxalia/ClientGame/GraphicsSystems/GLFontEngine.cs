@@ -55,6 +55,18 @@ namespace Voxalia.ClientGame.GraphicsSystems
             FontFamily[] families = FontFamily.Families;
             FontFamily family = FontFamily.GenericMonospace;
             int family_priority = 0;
+            string fname = "courierprime";
+            try
+            {
+                PrivateFontCollection pfc = new PrivateFontCollection();
+                pfc.AddFontFile("data/fonts/" + fname + ".ttf");
+                family = pfc.Families[0];
+                family_priority = 100;
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output(OutputType.WARNING, "Loading " + fname + ": " + ex.ToString());
+            }
             for (int i = 0; i < families.Length; i++)
             {
                 if (family_priority < 20 && families[i].Name.ToLower() == "dejavu serif")
