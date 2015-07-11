@@ -55,7 +55,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             FontFamily[] families = FontFamily.Families;
             FontFamily family = FontFamily.GenericMonospace;
             int family_priority = 0;
-            string fname = "courierprime";
+            string fname = "sourcecodepro";
             try
             {
                 PrivateFontCollection pfc = new PrivateFontCollection();
