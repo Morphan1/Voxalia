@@ -8,7 +8,8 @@ debug/
 clientdefaultsettings.cfg
 serverdefaultsettings.cfg
 x64/
-*.ttf
-LICENSE/
-LICENSE-CPRIME/
-LICENSE-SCP/
+models/
+fonts/
+sounds/
+textures/
+animations/
