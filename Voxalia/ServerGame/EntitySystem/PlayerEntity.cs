@@ -436,6 +436,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Location GetEyePosition()
         {
+            return GetPosition() + new Location(0, 0, HalfSize.Z * 1.8);
+            /*
             if (tAnim != null)
             {
                 SingleAnimationNode head = tAnim.GetNode("head");
@@ -446,7 +448,7 @@ namespace Voxalia.ServerGame.EntitySystem
             else
             {
                 return GetPosition() + new Location(0, 0, HalfSize.Z * 1.8f);
-            }
+            }*/
         }
 
         public override Location GetPosition()

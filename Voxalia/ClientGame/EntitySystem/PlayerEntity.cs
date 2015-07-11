@@ -208,17 +208,19 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Location GetEyePosition()
         {
+            return GetPosition() + new Location(0, 0, HalfSize.Z * 1.8);
+            /*
             if (tAnim != null)
             {
                 SingleAnimationNode head = tAnim.GetNode("head");
                 Matrix m4 = head.GetBoneTotalMatrix(0);
                 m4.Transpose();
-                return GetPosition() + Location.FromBVector(m4.Translation); // TODO: * PlayerAngleMat?
+                return GetPosition() + Location.FromBVector(m4.Translation);
             }
             else
             {
                 return GetPosition() + new Location(0, 0, HalfSize.Z * 1.8f);
-            }
+            }*/
         }
 
         public override Location GetPosition()
