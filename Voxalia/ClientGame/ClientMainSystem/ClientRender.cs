@@ -33,7 +33,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.CullFace(CullFaceMode.Front);
             s_shadow = Shaders.GetShader("shadow");
             s_main = Shaders.GetShader("test");
-            s_mainssao = Shaders.GetShader("final_ssao");
             s_fbo = Shaders.GetShader("fbo");
             s_fbov = Shaders.GetShader("fbo_vox");
             s_shadowadder = Shaders.GetShader("shadowadder");
@@ -93,7 +92,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         Shader s_shadow;
         Shader s_main;
-        Shader s_mainssao;
         Shader s_fbo;
         Shader s_fbov;
         Shader s_shadowadder;
@@ -287,14 +285,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         }
                         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                         GL.DrawBuffer(DrawBufferMode.Back);
-                        if (CVars.r_ssao.ValueB)
-                        {
-                            s_mainssao.Bind();
-                        }
-                        else
-                        {
-                            s_main.Bind();
-                        }
+                        s_main.Bind();
                         GL.Uniform3(5, ambient.ToOVector());
                         GL.Uniform3(8, CameraFinalTarget.ToOVector());
                         GL.Uniform1(9, CVars.r_dof_strength.ValueF);
