@@ -495,14 +495,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
             FontSets.Standard.DrawColoredText("^@^e^0" + Player.Health + "/" + Player.MaxHealth + " = " + percent + "%", new Location(5, Window.Height - FontSets.Standard.font_default.Height - 5, 0));
             int cX = Window.Width / 2;
             int cY = Window.Height / 2;
+            int move = (int)Player.GetVelocity().LengthSquared() / 5;
+            if (move > 20)
+            {
+                move = 20;
+            }
             Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_tl").Bind();
-            Rendering.RenderRectangle(cX - CVars.r_reticlescale.ValueI, cY - CVars.r_reticlescale.ValueI, cX, cY);
+            Rendering.RenderRectangle(cX - CVars.r_reticlescale.ValueI - move, cY - CVars.r_reticlescale.ValueI - move, cX - move, cY - move);
             Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_tr").Bind();
-            Rendering.RenderRectangle(cX, cY - CVars.r_reticlescale.ValueI, cX + CVars.r_reticlescale.ValueI, cY);
+            Rendering.RenderRectangle(cX + move, cY - CVars.r_reticlescale.ValueI - move, cX + CVars.r_reticlescale.ValueI + move, cY - move);
             Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_bl").Bind();
-            Rendering.RenderRectangle(cX - CVars.r_reticlescale.ValueI, cY, cX, cY + CVars.r_reticlescale.ValueI);
+            Rendering.RenderRectangle(cX - CVars.r_reticlescale.ValueI - move, cY + move, cX - move, cY + CVars.r_reticlescale.ValueI + move);
             Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_br").Bind();
-            Rendering.RenderRectangle(cX, cY, cX + CVars.r_reticlescale.ValueI, cY + CVars.r_reticlescale.ValueI);
+            Rendering.RenderRectangle(cX + move, cY + move, cX + CVars.r_reticlescale.ValueI + move, cY + CVars.r_reticlescale.ValueI + move);
             UIConsole.Draw();
         }
 
