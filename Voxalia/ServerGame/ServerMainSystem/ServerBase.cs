@@ -46,6 +46,8 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         public AnimationEngine Animations;
 
+        public Scheduler Schedule = new Scheduler();
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>

@@ -412,7 +412,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (!ChunksAwareOf.Contains(worldPos))
             {
                 Chunk chk = TheWorld.LoadChunk(worldPos);
-                ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk));
+                TheServer.Schedule.AddSyncTask(new System.Threading.Tasks.Task(() => { ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk)); } ), Utilities.UtilRandom.NextDouble() * 5);
                 ChunksAwareOf.Add(worldPos);
             }
         }

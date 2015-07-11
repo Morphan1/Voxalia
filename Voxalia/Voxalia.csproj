@@ -331,6 +331,7 @@
     <Compile Include="Shared\Location.cs" />
     <Compile Include="Shared\Material.cs" />
     <Compile Include="Shared\ModelHandler.cs" />
+    <Compile Include="Shared\Scheduler.cs" />
     <Compile Include="Shared\VoxEnums.cs" />
     <Compile Include="Shared\SysConsole.cs" />
     <Compile Include="Shared\UnknownFileException.cs" />

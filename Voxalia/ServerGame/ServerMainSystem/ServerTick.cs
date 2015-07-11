@@ -110,8 +110,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 pts = CVars.g_timescale.ValueD;
                 Networking.Tick(); // TODO: Asynchronize network ticking
                 ConsoleHandler.CheckInput(); // TODO: Asynchronize command ticking
-                Commands.Tick(delta); // TODO: Asynchronize command ticking
-                TickWorlds(delta); // TODO: Asynchronize world ticking
+                Commands.Tick(Delta); // TODO: Asynchronize command ticking
+                TickWorlds(Delta); // TODO: Asynchronize world ticking
+                Schedule.RunAllSyncTasks(Delta);
             }
             catch (Exception ex)
             {
