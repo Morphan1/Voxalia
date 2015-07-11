@@ -32,7 +32,8 @@ namespace Voxalia.ClientGame.CommandSystem
             r_fov, r_znear, r_zfar,
             r_ssao, r_dof_strength,
             r_lightmaxdistance,
-            r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur;
+            r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur,
+            r_reticle, r_reticlescale;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch;
@@ -72,6 +73,8 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality_flashlight = Register("r_shadowquality_flashlight", "512", CVarFlag.Numeric); // What texture size to use for flashlight shadows.
             r_shadowquality_max = Register("r_shadowquality_max", "2048", CVarFlag.Numeric); // What maximum light texture size to accept from the server.
             r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric); // What factor to use for shadow blurring. Smaller = blurrier.
+            r_reticle = Register("r_reticle", "1", CVarFlag.Textual); // What reticle to use.
+            r_reticlescale = Register("r_reticlescale", "32", CVarFlag.Numeric); // How big the reticle should be.
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What volume the music should be.
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What pitch the music should be.
