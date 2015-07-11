@@ -28,11 +28,11 @@ namespace Voxalia.ClientGame.CommandSystem
         public CVar n_first;
 
         // Renderer CVars
-        public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_lighting, r_renderwireframe,
+        public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_vsync, r_lighting, r_renderwireframe,
             r_fov, r_znear, r_zfar,
             r_ssao, r_dof_strength,
             r_lightmaxdistance,
-            r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur,
+            r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun,
             r_reticle, r_reticlescale;
 
         // Audio CVars
@@ -61,7 +61,8 @@ namespace Voxalia.ClientGame.CommandSystem
             r_fullscreen = Register("r_fullscreen", "false", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use fullscreen mode.
             r_width = Register("r_width", "800", CVarFlag.Numeric | CVarFlag.Delayed); // What width the window should be.
             r_height = Register("r_height", "600", CVarFlag.Numeric | CVarFlag.Delayed); // What height the window should be.
-            r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed); // What AA mode to use (0 = none).
+            r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed); // What AA mode to use (0 = none). // TODO: IMPLEMENT
+            r_vsync = Register("r_vsync", "true", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use vertical synchronization mode. // TODO: IMPLEMENT
             r_lighting = Register("r_lighting", "true", CVarFlag.Boolean); // Whether to enable 3D lighting (Otherwise, use FullBright).
             r_renderwireframe = Register("r_renderwireframe", "false", CVarFlag.Boolean); // Whether to render a wireframe.
             r_fov = Register("r_fov", "70", CVarFlag.Numeric); // What Field of Vision range value to use.
@@ -73,6 +74,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality_flashlight = Register("r_shadowquality_flashlight", "512", CVarFlag.Numeric); // What texture size to use for flashlight shadows.
             r_shadowquality_max = Register("r_shadowquality_max", "2048", CVarFlag.Numeric); // What maximum light texture size to accept from the server.
             r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric); // What factor to use for shadow blurring. Smaller = blurrier.
+            r_shadowquality_sun = Register("r_shadowquality_sun", "2048", CVarFlag.Numeric | CVarFlag.Delayed); // What texture size to use for the sun.
             r_reticle = Register("r_reticle", "1", CVarFlag.Textual); // What reticle to use.
             r_reticlescale = Register("r_reticlescale", "32", CVarFlag.Numeric); // How big the reticle should be.
             // Audio CVars
