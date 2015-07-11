@@ -540,6 +540,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             if (broadcast)
             {
+                // TODO: Send per-person based on chunk awareness details
                 SendToAll(new BlockEditPacketOut(pos, mat));
             }
         }
