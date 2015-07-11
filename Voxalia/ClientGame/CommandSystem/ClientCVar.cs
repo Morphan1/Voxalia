@@ -33,7 +33,8 @@ namespace Voxalia.ClientGame.CommandSystem
             r_ssao, r_dof_strength,
             r_lightmaxdistance,
             r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun,
-            r_reticle, r_reticlescale;
+            r_reticle, r_reticlescale,
+            r_highlight_targetblock, r_highlight_placeblock;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch;
@@ -77,6 +78,8 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality_sun = Register("r_shadowquality_sun", "2048", CVarFlag.Numeric | CVarFlag.Delayed); // What texture size to use for the sun.
             r_reticle = Register("r_reticle", "1", CVarFlag.Textual); // What reticle to use.
             r_reticlescale = Register("r_reticlescale", "32", CVarFlag.Numeric); // How big the reticle should be.
+            r_highlight_targetblock = Register("r_highlight_targetblock", "true", CVarFlag.Boolean); // Whether to highlight the targeted block.
+            r_highlight_placeblock = Register("r_highlight_placeblock", "true", CVarFlag.Boolean); // Whether to highlight the targeted placement block.
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What volume the music should be.
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What pitch the music should be.

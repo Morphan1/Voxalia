@@ -402,15 +402,21 @@ namespace Voxalia.ClientGame.ClientMainSystem
             // TODO: 5 -> Variable length (Server controlled?)
             if (TheWorld.GetBlockMaterial(cpos) != Material.AIR && CameraDistance < 5)
             {
-                Location cft = cpos.GetBlockLocation();
-                GL.LineWidth(3);
-                Rendering.SetColor(Color4.Blue);
-                Rendering.SetMinimumLight(1.0f);
-                Rendering.RenderLineBox(cft - mov * 0.01f, cft + Location.One - mov * 0.01f);
-                Rendering.SetColor(Color4.Cyan);
-                GL.LineWidth(1);
-                Location cft2 = cpos2.GetBlockLocation();
-                Rendering.RenderLineBox(cft2, cft2 + Location.One);
+                if (CVars.r_highlight_targetblock.ValueB)
+                {
+                    Location cft = cpos.GetBlockLocation();
+                    GL.LineWidth(3);
+                    Rendering.SetColor(Color4.Blue);
+                    Rendering.SetMinimumLight(1.0f);
+                    Rendering.RenderLineBox(cft - mov * 0.01f, cft + Location.One - mov * 0.01f);
+                    GL.LineWidth(1);
+                }
+                if (CVars.r_highlight_placeblock.ValueB)
+                {
+                    Rendering.SetColor(Color4.Cyan);
+                    Location cft2 = cpos2.GetBlockLocation();
+                    Rendering.RenderLineBox(cft2, cft2 + Location.One);
+                }
                 Rendering.SetColor(Color4.White);
             }
             Rendering.SetMinimumLight(0.0f);
