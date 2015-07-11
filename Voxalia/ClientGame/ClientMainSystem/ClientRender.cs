@@ -464,56 +464,59 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public void Render2D()
         {
             GL.Disable(EnableCap.CullFace);
-            FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
-                + "\n" + Player.GetPosition()
-                + "\n" + Player.GetVelocity() + " == " + Player.GetVelocity().Length()
-                + "\nLight source(s): " + LightsC
-                + "\nEntities: " + TheWorld.Entities.Count
-                + "\nFLAGS: " + Player.ServerFlags, new Location(0, 0, 0));
-            int center = Window.Width / 2;
-            if (RenderExtraItems > 0)
+            if (CVars.r_hud.ValueB)
             {
-                RenderExtraItems -= gDelta;
-                if (RenderExtraItems < 0)
+                FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
+                    + "\n" + Player.GetPosition()
+                    + "\n" + Player.GetVelocity() + " == " + Player.GetVelocity().Length()
+                    + "\nLight source(s): " + LightsC
+                    + "\nEntities: " + TheWorld.Entities.Count
+                    + "\nFLAGS: " + Player.ServerFlags, new Location(0, 0, 0));
+                int center = Window.Width / 2;
+                if (RenderExtraItems > 0)
                 {
-                    RenderExtraItems = 0;
+                    RenderExtraItems -= gDelta;
+                    if (RenderExtraItems < 0)
+                    {
+                        RenderExtraItems = 0;
+                    }
+                    RenderItem(GetItemForSlot(QuickBarPos - 5), new Location(center - (32 + 32 + 32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
+                    RenderItem(GetItemForSlot(QuickBarPos - 4), new Location(center - (32 + 32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
+                    RenderItem(GetItemForSlot(QuickBarPos - 3), new Location(center - (32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
+                    RenderItem(GetItemForSlot(QuickBarPos + 3), new Location(center + (32 + 32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
+                    RenderItem(GetItemForSlot(QuickBarPos + 4), new Location(center + (32 + 32 + 32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
+                    RenderItem(GetItemForSlot(QuickBarPos + 5), new Location(center + (32 + 32 + 32 + 32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
                 }
-                RenderItem(GetItemForSlot(QuickBarPos - 5), new Location(center - (32 + 32 + 32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
-                RenderItem(GetItemForSlot(QuickBarPos - 4), new Location(center - (32 + 32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
-                RenderItem(GetItemForSlot(QuickBarPos - 3), new Location(center - (32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
-                RenderItem(GetItemForSlot(QuickBarPos + 3), new Location(center + (32 + 32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
-                RenderItem(GetItemForSlot(QuickBarPos + 4), new Location(center + (32 + 32 + 32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
-                RenderItem(GetItemForSlot(QuickBarPos + 5), new Location(center + (32 + 32 + 32 + 32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos - 2), new Location(center - (32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos - 1), new Location(center - (32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos + 1), new Location(center + (32 + 1), Window.Height - (32 + 16), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos + 2), new Location(center + (32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos), new Location(center - (32 + 1), Window.Height - 64, 0), 64);
+                string it = "^%^e^7" + GetItemForSlot(QuickBarPos).DisplayName;
+                float size = FontSets.Standard.MeasureFancyText(it);
+                FontSets.Standard.DrawColoredText(it, new Location(center - size / 2f, Window.Height - 64 - FontSets.Standard.font_default.Height - 5, 0));
+                float percent = 0;
+                if (Player.MaxHealth != 0)
+                {
+                    percent = (float)Math.Round((Player.Health / Player.MaxHealth) * 10000) / 100f;
+                }
+                FontSets.Standard.DrawColoredText("^@^e^0" + Player.Health + "/" + Player.MaxHealth + " = " + percent + "%", new Location(5, Window.Height - FontSets.Standard.font_default.Height - 5, 0));
+                int cX = Window.Width / 2;
+                int cY = Window.Height / 2;
+                int move = (int)Player.GetVelocity().LengthSquared() / 5;
+                if (move > 20)
+                {
+                    move = 20;
+                }
+                Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_tl").Bind();
+                Rendering.RenderRectangle(cX - CVars.r_reticlescale.ValueI - move, cY - CVars.r_reticlescale.ValueI - move, cX - move, cY - move);
+                Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_tr").Bind();
+                Rendering.RenderRectangle(cX + move, cY - CVars.r_reticlescale.ValueI - move, cX + CVars.r_reticlescale.ValueI + move, cY - move);
+                Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_bl").Bind();
+                Rendering.RenderRectangle(cX - CVars.r_reticlescale.ValueI - move, cY + move, cX - move, cY + CVars.r_reticlescale.ValueI + move);
+                Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_br").Bind();
+                Rendering.RenderRectangle(cX + move, cY + move, cX + CVars.r_reticlescale.ValueI + move, cY + CVars.r_reticlescale.ValueI + move);
             }
-            RenderItem(GetItemForSlot(QuickBarPos - 2), new Location(center - (32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
-            RenderItem(GetItemForSlot(QuickBarPos - 1), new Location(center - (32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
-            RenderItem(GetItemForSlot(QuickBarPos + 1), new Location(center + (32 + 1), Window.Height - (32 + 16), 0), 32);
-            RenderItem(GetItemForSlot(QuickBarPos + 2), new Location(center + (32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
-            RenderItem(GetItemForSlot(QuickBarPos), new Location(center - (32 + 1), Window.Height - 64, 0), 64);
-            string it = "^%^e^7" + GetItemForSlot(QuickBarPos).DisplayName;
-            float size = FontSets.Standard.MeasureFancyText(it);
-            FontSets.Standard.DrawColoredText(it, new Location(center - size / 2f, Window.Height - 64 - FontSets.Standard.font_default.Height - 5, 0));
-            float percent = 0;
-            if (Player.MaxHealth != 0)
-            {
-                percent = (float)Math.Round((Player.Health / Player.MaxHealth) * 10000) / 100f;
-            }
-            FontSets.Standard.DrawColoredText("^@^e^0" + Player.Health + "/" + Player.MaxHealth + " = " + percent + "%", new Location(5, Window.Height - FontSets.Standard.font_default.Height - 5, 0));
-            int cX = Window.Width / 2;
-            int cY = Window.Height / 2;
-            int move = (int)Player.GetVelocity().LengthSquared() / 5;
-            if (move > 20)
-            {
-                move = 20;
-            }
-            Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_tl").Bind();
-            Rendering.RenderRectangle(cX - CVars.r_reticlescale.ValueI - move, cY - CVars.r_reticlescale.ValueI - move, cX - move, cY - move);
-            Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_tr").Bind();
-            Rendering.RenderRectangle(cX + move, cY - CVars.r_reticlescale.ValueI - move, cX + CVars.r_reticlescale.ValueI + move, cY - move);
-            Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_bl").Bind();
-            Rendering.RenderRectangle(cX - CVars.r_reticlescale.ValueI - move, cY + move, cX - move, cY + CVars.r_reticlescale.ValueI + move);
-            Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_br").Bind();
-            Rendering.RenderRectangle(cX + move, cY + move, cX + CVars.r_reticlescale.ValueI + move, cY + CVars.r_reticlescale.ValueI + move);
             UIConsole.Draw();
         }
 
