@@ -185,7 +185,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         if (_VBO != null)
                         {
                             VBO tV = _VBO;
-                            OwningWorld.TheClient.RunImmediately.Add(new Task(() => tV.Destroy()));
+                            OwningWorld.TheClient.Schedule.AddSyncTask(new Task(() => tV.Destroy()));
                         }
                         _VBO = null;
                     }
@@ -221,10 +221,10 @@ namespace Voxalia.ClientGame.WorldSystem
                     if (_VBO != null)
                     {
                         VBO tV = _VBO;
-                        OwningWorld.TheClient.RunImmediately.Add(new Task(() => tV.Destroy()));
+                        OwningWorld.TheClient.Schedule.AddSyncTask(new Task(() => tV.Destroy()));
                     }
                     _VBO = tVBO;
-                    OwningWorld.TheClient.RunImmediately.Add(new Task(() => { tVBO.GenerateVBO(); tVBO.CleanLists(); }));
+                    OwningWorld.TheClient.Schedule.AddSyncTask(new Task(() => { tVBO.GenerateVBO(); tVBO.CleanLists(); }));
                 }
             }
             catch (Exception ex)

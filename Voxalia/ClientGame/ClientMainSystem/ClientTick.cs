@@ -107,15 +107,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public double Delta;
 
-        void ScheduleCheck()
-        {
-            for (int i = 0; i < RunImmediately.Count; i++)
-            {
-                RunImmediately[i].RunSynchronously();
-            }
-            RunImmediately.Clear();
-        }
-
         void Window_UpdateFrame(object sender, FrameEventArgs e)
         {
             lock (TickLock)
@@ -130,7 +121,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         opsat -= 1;
                         OncePerSecondActions();
                     }
-                    ScheduleCheck();
                     Textures.Update(GlobalTickTimeLocal);
                     Shaders.Update(GlobalTickTimeLocal);
                     Models.Update(GlobalTickTimeLocal);
@@ -141,7 +131,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Network.Tick();
                     TickWorld(Delta);
                     Sounds.Update(CameraPos, CameraTarget - CameraPos, CameraUp, Player.GetVelocity(), Window.Focused);
-                    ScheduleCheck();
+                    Schedule.RunAllSyncTasks(Delta);
                 }
                 catch (Exception ex)
                 {

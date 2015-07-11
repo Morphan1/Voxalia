@@ -412,6 +412,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (!ChunksAwareOf.Contains(worldPos))
             {
                 Chunk chk = TheWorld.LoadChunk(worldPos);
+                // TODO: Remove schedule call, make this all instant... whenever the engine can handle a massive pile of chunks sending at once >.>
                 TheServer.Schedule.AddSyncTask(new System.Threading.Tasks.Task(() => { ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk)); } ), Utilities.UtilRandom.NextDouble() * 5);
                 ChunksAwareOf.Add(worldPos);
             }

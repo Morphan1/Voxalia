@@ -24,6 +24,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
     /// </summary>
     public partial class Client
     {
+        public Scheduler Schedule = new Scheduler();
+
         /// <summary>
         /// The primary running client.
         /// </summary>
@@ -52,8 +54,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public string Username = "Player" + new Random().Next(1000);
 
         public Texture ItemFrame;
-
-        public List<Task> RunImmediately = new List<Task>();
 
         /// <summary>
         /// Start up and run the server.
