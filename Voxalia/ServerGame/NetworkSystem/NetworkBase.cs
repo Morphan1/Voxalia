@@ -59,11 +59,14 @@ namespace Voxalia.ServerGame.NetworkSystem
             }
         }
 
-        public void Tick()
+        public void Tick(double delta)
         {
             for (int i = 0; i < Connections.Count; i++)
             {
-                Connections[i].Tick();
+                if (Connections[i].Alive)
+                {
+                    Connections[i].Tick(delta);
+                }
                 if (!Connections[i].Alive)
                 {
                     Connections.RemoveAt(i);

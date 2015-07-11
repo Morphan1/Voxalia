@@ -38,25 +38,52 @@ namespace Voxalia.ClientGame.NetworkSystem
 
         public bool IsAlive = false;
 
+        bool norep = false;
+
         public void Disconnect()
         {
-            if (ConnectionThread != null)
+            if (norep)
             {
-                ConnectionThread.Abort();
+                return;
+            }
+            norep = true;
+            if (ConnectionThread != null && ConnectionThread.IsAlive)
+            {
+                try
+                {
+                    ConnectionThread.Abort();
+                }
+                catch (Exception ex)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Disconnecting: " + ex.ToString());
+                }
                 ConnectionThread = null;
             }
-            // TODO: Send disconnect packet
             if (ConnectionSocket != null)
             {
-                ConnectionSocket.Close(2);
+                if (IsAlive)
+                {
+                    try
+                    {
+                        SendPacket(new DisconnectPacketOut());
+                    }
+                    catch (Exception ex)
+                    {
+                        SysConsole.Output(OutputType.WARNING, "Disconnecting: " + ex.ToString());
+                    }
+                }
+                Socket csock = ConnectionSocket;
+                TheClient.Schedule.AddSyncTask(new System.Threading.Tasks.Task(() => { csock.Close(2); }), 2);
                 ConnectionSocket = null;
             }
             if (ChunkSocket != null)
             {
-                ChunkSocket.Close(2);
+                Socket csock = ChunkSocket;
+                TheClient.Schedule.AddSyncTask(new System.Threading.Tasks.Task(() => { csock.Close(2); }), 2);
                 ChunkSocket = null;
             }
             IsAlive = false;
+            norep = false;
         }
 
         public void Connect(string IP, string port)

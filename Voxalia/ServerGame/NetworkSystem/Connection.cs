@@ -71,11 +71,11 @@ namespace Voxalia.ServerGame.NetworkSystem
             }
         }
 
-        public void Tick()
+        public void Tick(double delta)
         {
             try
             {
-                Time += TheServer.Delta;
+                Time += delta;
                 if (!GotBase && Time >= MaxTime)
                 {
                     throw new Exception("Connection timed out!");
@@ -134,6 +134,9 @@ namespace Voxalia.ServerGame.NetworkSystem
                                 break;
                             case 3:
                                 packet = new HoldItemPacketIn();
+                                break;
+                            case 4:
+                                packet = new DisconnectPacketIn();
                                 break;
                             default:
                                 throw new Exception("Invalid packet ID: " + packetID);
