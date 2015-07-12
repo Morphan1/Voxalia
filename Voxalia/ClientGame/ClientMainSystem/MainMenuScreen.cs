@@ -25,8 +25,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Menus.Add(new UIMenuButton("ui/menus/buttons/basic", "Singleplayer", () => {
                 UIConsole.WriteLine("SP!");
             }, 10, 300, 350, 70, TheClient.FontSets.SlightlyBigger));
-            Menus.Add(new UIMenuButton("ui/menus/buttons/basic", "Multiplayer", () =>
-            {
+            Menus.Add(new UIMenuButton("ui/menus/buttons/basic", "Multiplayer", () => {
                 UIConsole.WriteLine("MP!");
             }, 10, 400, 350, 70, TheClient.FontSets.SlightlyBigger));
             Mouse = TheClient.Textures.GetTexture("ui/mouse_cursor");

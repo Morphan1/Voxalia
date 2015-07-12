@@ -40,7 +40,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     Material mat = player.TheWorld.GetBlockMaterial(block);
                     if (mat != Material.AIR) // TODO: IsBreakable
                     {
-                        player.TheWorld.SetBlockMaterial(block, Material.AIR);
+                        player.TheWorld.BreakNaturally(block);
                     }
                 }
             }

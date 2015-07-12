@@ -12,6 +12,7 @@ using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.NetworkSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using BEPUutilities.Threading;
+using Voxalia.ServerGame.ItemSystem;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -542,6 +543,26 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 // TODO: Send per-person based on chunk awareness details
                 SendToAll(new BlockEditPacketOut(pos, mat));
+            }
+        }
+
+        public void BreakNaturally(Location pos)
+        {
+            Chunk ch = LoadChunk(ChunkLocFor(pos));
+            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
+            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
+            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+            BlockInternal bi = ch.GetBlockAt(x, y, z);
+            if (bi.BlockMaterial != (ushort)Material.AIR)
+            {
+                ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0));
+                ch.AddToWorld();
+                SendToAll(new BlockEditPacketOut(pos, Material.AIR));
+                // TODO: Proper method to get an item for a block, including correct name and desc. and all
+                // TODO: BlockItemEntity
+                ItemEntity ie = new ItemEntity(new ItemStack("block", TheServer, 1, "blocks/solid/grass_side", "Grass", "Grassy!", System.Drawing.Color.White.ToArgb(), "items/block.dae", false) { Datum = 2 }, this);
+                ie.SetPosition(pos);
+                SpawnEntity(ie);
             }
         }
 
