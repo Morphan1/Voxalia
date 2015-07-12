@@ -121,6 +121,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         opsat -= 1;
                         OncePerSecondActions();
                     }
+                    Schedule.RunAllSyncTasks(Delta);
                     Textures.Update(GlobalTickTimeLocal);
                     Shaders.Update(GlobalTickTimeLocal);
                     Models.Update(GlobalTickTimeLocal);
@@ -131,7 +132,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Network.Tick();
                     TickWorld(Delta);
                     Sounds.Update(CameraPos, CameraTarget - CameraPos, CameraUp, Player.GetVelocity(), Window.Focused);
-                    Schedule.RunAllSyncTasks(Delta);
+                    CScreen.Tick();
+                    Schedule.RunAllSyncTasks(0);
                 }
                 catch (Exception ex)
                 {

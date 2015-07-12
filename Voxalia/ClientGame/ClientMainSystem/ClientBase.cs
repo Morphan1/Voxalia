@@ -55,6 +55,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Texture ItemFrame;
 
+        public Screen CScreen;
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
@@ -170,6 +172,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Network = new NetworkBase(this);
             SysConsole.Output(OutputType.INIT, "Playing background music...");
             BackgroundMusic();
+            SysConsole.Output(OutputType.INIT, "Setting up game screen...");
+            CScreen = new GameScreen() { TheClient = this };
         }
 
         public ActiveSound CurrentMusic = null;
