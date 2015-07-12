@@ -107,7 +107,7 @@ namespace Voxalia.ClientGame.UISystem
             ScrollText = "^1" + Utilities.CopyText("/\\ ", 150);
             ScrollTextLoc = new Location(5, 0, 0);
             MaxWidth = Client.Central.Window.Width - 10;
-            ConsoleTexture = Client.Central.Textures.GetTexture("hud/console");
+            ConsoleTexture = Client.Central.Textures.GetTexture("ui/hud/console");
             WriteLine("Console loaded!");
             Write(pre_waiting);
         }

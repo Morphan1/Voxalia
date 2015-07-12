@@ -175,17 +175,21 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Setting up screens...");
             TheMainMenuScreen = new MainMenuScreen() { TheClient = this };
             TheGameScreen = new GameScreen() { TheClient = this };
-            CScreen = TheMainMenuScreen;
+            TheMainMenuScreen.Init();
+            TheGameScreen.Init();
+            ShowMainMenu();
         }
 
         public void ShowGame()
         {
             CScreen = TheGameScreen;
+            CScreen.SwitchTo();
         }
 
         public void ShowMainMenu()
         {
             CScreen = TheMainMenuScreen;
+            CScreen.SwitchTo();
         }
 
         GameScreen TheGameScreen;

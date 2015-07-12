@@ -510,13 +510,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     move = 20;
                 }
-                Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_tl").Bind();
+                Textures.GetTexture("ui/hud/reticles/" + CVars.r_reticle.Value + "_tl").Bind();
                 Rendering.RenderRectangle(cX - CVars.r_reticlescale.ValueI - move, cY - CVars.r_reticlescale.ValueI - move, cX - move, cY - move);
-                Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_tr").Bind();
+                Textures.GetTexture("ui/hud/reticles/" + CVars.r_reticle.Value + "_tr").Bind();
                 Rendering.RenderRectangle(cX + move, cY - CVars.r_reticlescale.ValueI - move, cX + CVars.r_reticlescale.ValueI + move, cY - move);
-                Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_bl").Bind();
+                Textures.GetTexture("ui/hud/reticles/" + CVars.r_reticle.Value + "_bl").Bind();
                 Rendering.RenderRectangle(cX - CVars.r_reticlescale.ValueI - move, cY + move, cX - move, cY + CVars.r_reticlescale.ValueI + move);
-                Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_br").Bind();
+                Textures.GetTexture("ui/hud/reticles/" + CVars.r_reticle.Value + "_br").Bind();
                 Rendering.RenderRectangle(cX + move, cY + move, cX + CVars.r_reticlescale.ValueI + move, cY + CVars.r_reticlescale.ValueI + move);
             }
         }
