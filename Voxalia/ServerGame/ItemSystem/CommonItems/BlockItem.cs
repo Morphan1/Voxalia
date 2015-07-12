@@ -17,12 +17,18 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Name = "block";
         }
 
-        public override void PrepItem(PlayerEntity player, ItemStack item)
+        public override void PrepItem(Entity entity, ItemStack item)
         {
         }
 
-        public override void AltClick(PlayerEntity player, ItemStack item)
+        public override void AltClick(Entity entity, ItemStack item)
         {
+            if (!(entity is PlayerEntity))
+            {
+                // TODO: non-player support
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)entity;
             Location eye = player.GetEyePosition();
             CollisionResult cr = player.TheWorld.Collision.RayTrace(eye, eye + player.ForwardVector() * 5, player.IgnoreThis);
             if (cr.Hit)
@@ -45,44 +51,40 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                             item.Count = item.Count - 1;
                             if (item.Count <= 0)
                             {
-                                player.RemoveItem(player.cItem);
+                                player.Items.RemoveItem(player.Items.cItem);
                             }
                             else
                             {
-                                player.Network.SendPacket(new SetItemPacketOut(player.Items.IndexOf(item), item));
+                                player.Network.SendPacket(new SetItemPacketOut(player.Items.Items.IndexOf(item), item));
                             }
-                        }
-                        else
-                        {
-                            SysConsole.Output(OutputType.INFO, "HIT: " + (hit.HitEnt == null ? "Null" : hit.HitEnt.Tag));
                         }
                     }
                 }
             }
         }
 
-        public override void Click(PlayerEntity player, ItemStack item)
+        public override void Click(Entity entity, ItemStack item)
         {
             // TODO: Break?
         }
 
-        public override void ReleaseClick(PlayerEntity player, ItemStack item)
+        public override void ReleaseClick(Entity entity, ItemStack item)
         {
         }
 
-        public override void Use(EntitySystem.PlayerEntity player, ItemStack item)
+        public override void Use(Entity entity, ItemStack item)
         {
         }
 
-        public override void SwitchFrom(PlayerEntity player, ItemStack item)
+        public override void SwitchFrom(Entity entity, ItemStack item)
         {
         }
 
-        public override void SwitchTo(PlayerEntity player, ItemStack item)
+        public override void SwitchTo(Entity entity, ItemStack item)
         {
         }
 
-        public override void Tick(PlayerEntity player, ItemStack item)
+        public override void Tick(Entity entity, ItemStack item)
         {
         }
     }

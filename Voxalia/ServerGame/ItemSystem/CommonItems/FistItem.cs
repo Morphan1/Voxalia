@@ -16,16 +16,22 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Name = "fist";
         }
 
-        public override void PrepItem(PlayerEntity player, ItemStack item)
+        public override void PrepItem(Entity player, ItemStack item)
         {
         }
 
-        public override void AltClick(PlayerEntity player, ItemStack item)
+        public override void AltClick(Entity player, ItemStack item)
         {
         }
 
-        public override void Click(PlayerEntity player, ItemStack item)
+        public override void Click(Entity ent, ItemStack item)
         {
+            if (!(ent is PlayerEntity))
+            {
+                // TODO: update to generic entity
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)ent;
             Location eye = player.GetEyePosition();
             CollisionResult cr = player.TheWorld.Collision.RayTrace(eye, eye + player.ForwardVector() * 5, player.IgnoreThis);
             if (cr.Hit)
@@ -46,23 +52,23 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
         }
 
-        public override void ReleaseClick(PlayerEntity player, ItemStack item)
+        public override void ReleaseClick(Entity player, ItemStack item)
         {
         }
 
-        public override void Use(EntitySystem.PlayerEntity player, ItemStack item)
+        public override void Use(Entity player, ItemStack item)
         {
         }
 
-        public override void SwitchFrom(PlayerEntity player, ItemStack item)
+        public override void SwitchFrom(Entity player, ItemStack item)
         {
         }
 
-        public override void SwitchTo(PlayerEntity player, ItemStack item)
+        public override void SwitchTo(Entity player, ItemStack item)
         {
         }
 
-        public override void Tick(PlayerEntity player, ItemStack item)
+        public override void Tick(Entity player, ItemStack item)
         {
         }
     }

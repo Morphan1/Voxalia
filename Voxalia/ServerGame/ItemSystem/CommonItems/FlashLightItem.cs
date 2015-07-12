@@ -31,38 +31,56 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             player.FlashLightOn = true;
         }
 
-        public override void Click(PlayerEntity player, ItemStack item)
+        public override void Click(Entity entity, ItemStack item)
         {
+            if (!(entity is PlayerEntity))
+            {
+                // TODO: non-player support
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)entity;
             On(player);
         }
 
-        public override void AltClick(PlayerEntity player, ItemStack item)
+        public override void AltClick(Entity entity, ItemStack item)
         {
+            if (!(entity is PlayerEntity))
+            {
+                // TODO: non-player support
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)entity;
             Off(player);
         }
 
-        public override void ReleaseClick(PlayerEntity player, ItemStack item)
+        public override void ReleaseClick(Entity entity, ItemStack item)
         {
         }
 
-        public override void PrepItem(PlayerEntity player, ItemStack item)
+        public override void PrepItem(Entity entity, ItemStack item)
         {
         }
 
-        public override void SwitchFrom(PlayerEntity player, ItemStack item)
+        public override void SwitchFrom(Entity entity, ItemStack item)
         {
+            if (!(entity is PlayerEntity))
+            {
+                // TODO: non-player support
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)entity;
             Off(player);
         }
 
-        public override void SwitchTo(PlayerEntity player, ItemStack item)
+        public override void SwitchTo(Entity entity, ItemStack item)
         {
         }
 
-        public override void Use(PlayerEntity player, ItemStack item)
+        public override void Use(Entity entity, ItemStack item)
         {
         }
 
-        public override void Tick(PlayerEntity player, ItemStack item)
+        public override void Tick(Entity entity, ItemStack item)
         {
         }
     }

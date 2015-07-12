@@ -54,51 +54,11 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool FlashLightOn = false;
 
-        public List<ItemStack> Items = new List<ItemStack>();
-
-        public int cItem = 0;
+        public PlayerInventory Items;
 
         public SingleAnimation hAnim = null;
         public SingleAnimation tAnim = null;
         public SingleAnimation lAnim = null;
-
-        /// <summary>
-        /// Returns an item in the quick bar.
-        /// Can return air.
-        /// </summary>
-        /// <param name="slot">The slot, any number is permitted</param>
-        /// <returns>A valid item</returns>
-        public ItemStack GetItemForSlot(int slot)
-        {
-            while (slot < 0)
-            {
-                slot += Items.Count + 1;
-            }
-            while (slot > Items.Count)
-            {
-                slot -= Items.Count + 1;
-            }
-            if (slot == 0)
-            {
-                return new ItemStack("Air", TheServer, 1, "clear", "Air", "An empty slot.", Color.White.ToArgb(), "blank.dae", true);
-            }
-            else
-            {
-                return Items[slot - 1];
-            }
-        }
-
-        public int GetSlotForItem(ItemStack item)
-        {
-            for (int i = 0; i < Items.Count; i++)
-            {
-                if (Items[i] == item)
-                {
-                    return i + 1;
-                }
-            }
-            return -1;
-        }
 
         public void Kick(string message)
         {
@@ -117,7 +77,7 @@ namespace Voxalia.ServerGame.EntitySystem
             SysConsole.Output(OutputType.INFO, "Kicking " + this.ToString() + ": " + message);
             if (IsSpawned)
             {
-                ItemStack it = GetItemForSlot(cItem);
+                ItemStack it = Items.GetItemForSlot(Items.cItem);
                 it.Info.SwitchFrom(this, it);
                 HookItem.RemoveHook(this);
                 TheWorld.DespawnEntity(this);
@@ -146,20 +106,21 @@ namespace Voxalia.ServerGame.EntitySystem
             Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
-            GiveItem(new ItemStack("open_hand", TheServer, 1, "items/common/open_hand_ico", "Open Hand", "Grab things!", Color.White.ToArgb(), "items/common/hand.dae", true));
-            GiveItem(new ItemStack("fist", TheServer, 1, "items/common/fist_ico", "Fist", "Hit things!", Color.White.ToArgb(), "items/common/fist.dae", true));
-            GiveItem(new ItemStack("block", TheServer, 10, "blocks/solid/grass_side", "Grass", "Grassy!", Color.White.ToArgb(), "items/block.dae", false) { Datum = 2 });
-            GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol_ico", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/silenced_pistol.dae", false));
-            GiveItem(new ItemStack("shotgun_gun", TheServer, 1, "items/weapons/shotgun_ico", "Shotgun", "It shoots many bullets!", Color.White.ToArgb(), "items/weapons/shotgun.dae", false));
-            GiveItem(new ItemStack("bow", TheServer, 1, "items/weapons/bow_ico", "Bow", "It shoots arrows!", Color.White.ToArgb(), "items/weapons/bow.dae", false));
-            GiveItem(new ItemStack("hook", TheServer, 1, "items/common/hook_ico", "Grappling Hook", "Grab distant things!", Color.White.ToArgb(), "items/common/hook.dae", true));
-            GiveItem(new ItemStack("flashlight", TheServer, 1, "items/common/flashlight_ico", "Flashlight", "Lights things up!", Color.White.ToArgb(), "items/common/flashlight.dae", false));
-            GiveItem(new ItemStack("rifle_gun", TheServer, 1, "items/weapons/rifle_ico", "Assault Rifle", "It shoots rapid-fire bullets!", Color.White.ToArgb(), "items/weapons/m4a1.dae", false));
-            GiveItem(new ItemStack("minigun_gun", TheServer, 1, "items/weapons/minigun_ico", "Minigun", "It shoots ^ivery^r rapid-fire bullets!", Color.White.ToArgb(), "items/weapons/minigun.dae", false));
-            GiveItem(new ItemStack("bullet", "9mm_ammo", TheServer, 100, "items/weapons/ammo/9mm_round_ico", "9mm Ammo", "Nine whole millimeters!", Color.White.ToArgb(), "items/weapons/ammo/9mm_round.dae", false));
-            GiveItem(new ItemStack("bullet", "shotgun_ammo", TheServer, 100, "items/weapons/ammo/shotgun_shell_ico", "Shotgun Ammo", "Always travels in packs!", Color.White.ToArgb(), "items/weapons/ammo/shotgun_shell.dae", false));
-            GiveItem(new ItemStack("bullet", "rifle_ammo", TheServer, 100, "items/weapons/ammo/rifle_round_ico", "Assault Rifle Ammo", "Very rapid!", Color.White.ToArgb(), "items/weapons/ammo/rifle_round.dae", false));
-            GiveItem(new ItemStack("bullet", "minigun_ammo", TheServer, 2000, "items/weapons/ammo/minigun_round_ico", "Minigun Ammo", "Very very rapid!", Color.White.ToArgb(), "items/weapons/ammo/minigun_round.dae", false));
+            Items = new PlayerInventory(this);
+            Items.GiveItem(new ItemStack("open_hand", TheServer, 1, "items/common/open_hand_ico", "Open Hand", "Grab things!", Color.White.ToArgb(), "items/common/hand.dae", true));
+            Items.GiveItem(new ItemStack("fist", TheServer, 1, "items/common/fist_ico", "Fist", "Hit things!", Color.White.ToArgb(), "items/common/fist.dae", true));
+            Items.GiveItem(new ItemStack("block", TheServer, 10, "blocks/solid/grass_side", "Grass", "Grassy!", Color.White.ToArgb(), "items/block.dae", false) { Datum = 2 });
+            Items.GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol_ico", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/silenced_pistol.dae", false));
+            Items.GiveItem(new ItemStack("shotgun_gun", TheServer, 1, "items/weapons/shotgun_ico", "Shotgun", "It shoots many bullets!", Color.White.ToArgb(), "items/weapons/shotgun.dae", false));
+            Items.GiveItem(new ItemStack("bow", TheServer, 1, "items/weapons/bow_ico", "Bow", "It shoots arrows!", Color.White.ToArgb(), "items/weapons/bow.dae", false));
+            Items.GiveItem(new ItemStack("hook", TheServer, 1, "items/common/hook_ico", "Grappling Hook", "Grab distant things!", Color.White.ToArgb(), "items/common/hook.dae", true));
+            Items.GiveItem(new ItemStack("flashlight", TheServer, 1, "items/common/flashlight_ico", "Flashlight", "Lights things up!", Color.White.ToArgb(), "items/common/flashlight.dae", false));
+            Items.GiveItem(new ItemStack("rifle_gun", TheServer, 1, "items/weapons/rifle_ico", "Assault Rifle", "It shoots rapid-fire bullets!", Color.White.ToArgb(), "items/weapons/m4a1.dae", false));
+            Items.GiveItem(new ItemStack("minigun_gun", TheServer, 1, "items/weapons/minigun_ico", "Minigun", "It shoots ^ivery^r rapid-fire bullets!", Color.White.ToArgb(), "items/weapons/minigun.dae", false));
+            Items.GiveItem(new ItemStack("bullet", "9mm_ammo", TheServer, 100, "items/weapons/ammo/9mm_round_ico", "9mm Ammo", "Nine whole millimeters!", Color.White.ToArgb(), "items/weapons/ammo/9mm_round.dae", false));
+            Items.GiveItem(new ItemStack("bullet", "shotgun_ammo", TheServer, 100, "items/weapons/ammo/shotgun_shell_ico", "Shotgun Ammo", "Always travels in packs!", Color.White.ToArgb(), "items/weapons/ammo/shotgun_shell.dae", false));
+            Items.GiveItem(new ItemStack("bullet", "rifle_ammo", TheServer, 100, "items/weapons/ammo/rifle_round_ico", "Assault Rifle Ammo", "Very rapid!", Color.White.ToArgb(), "items/weapons/ammo/rifle_round.dae", false));
+            Items.GiveItem(new ItemStack("bullet", "minigun_ammo", TheServer, 2000, "items/weapons/ammo/minigun_round_ico", "Minigun Ammo", "Very very rapid!", Color.White.ToArgb(), "items/weapons/ammo/minigun_round.dae", false));
             SetHealth(Health);
             CGroup = CollisionUtil.Player;
         }
@@ -213,38 +174,6 @@ namespace Voxalia.ServerGame.EntitySystem
                 lAnim = TheServer.Animations.GetAnimation(anim);
             }
             TheWorld.SendToAll(new AnimationPacketOut(this, anim, mode));
-        }
-
-        public void GiveItem(ItemStack item)
-        {
-            // TODO: stacking
-            item.Info.PrepItem(this, item);
-            Items.Add(item);
-            Network.SendPacket(new SpawnItemPacketOut(Items.Count - 1, item));
-        }
-
-        public void RemoveItem(int item)
-        {
-            while (item < 0)
-            {
-                item += Items.Count + 1;
-            }
-            while (item > Items.Count)
-            {
-                item -= Items.Count + 1;
-            }
-            ItemStack its = GetItemForSlot(item);
-            if (item == cItem) // TODO: ensure cItem is wrapped
-            {
-                its.Info.SwitchFrom(this, its);
-            }
-            Items.RemoveAt(item - 1);
-            Network.SendPacket(new RemoveItemPacketOut(item - 1));
-            if (item <= cItem)
-            {
-                cItem--;
-                Network.SendPacket(new SetHeldItemPacketOut(cItem));
-            }
         }
 
         public bool IgnoreThis(BroadPhaseEntry entry)
@@ -373,7 +302,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 SetAnimation("human/" + StanceName() + "/idle01", 1);
                 SetAnimation("human/" + StanceName() + "/idle01", 2);
             }
-            ItemStack cit = GetItemForSlot(cItem);
+            ItemStack cit = Items.GetItemForSlot(Items.cItem);
             if (Click)
             {
                 cit.Info.Click(this, cit);

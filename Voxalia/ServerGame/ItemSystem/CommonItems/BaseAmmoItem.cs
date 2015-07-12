@@ -13,35 +13,35 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Name = name;
         }
 
-        public override void PrepItem(PlayerEntity player, ItemStack item)
+        public override void PrepItem(Entity player, ItemStack item)
         {
         }
 
-        public override void Click(PlayerEntity player, ItemStack item)
+        public override void Click(Entity player, ItemStack item)
         {
         }
 
-        public override void AltClick(PlayerEntity player, ItemStack item)
+        public override void AltClick(Entity player, ItemStack item)
         {
         }
 
-        public override void ReleaseClick(PlayerEntity player, ItemStack item)
+        public override void ReleaseClick(Entity player, ItemStack item)
         {
         }
 
-        public override void Use(PlayerEntity player, ItemStack item)
+        public override void Use(Entity player, ItemStack item)
         {
         }
 
-        public override void SwitchFrom(PlayerEntity player, ItemStack item)
+        public override void SwitchFrom(Entity player, ItemStack item)
         {
         }
 
-        public override void SwitchTo(PlayerEntity player, ItemStack item)
+        public override void SwitchTo(Entity player, ItemStack item)
         {
         }
 
-        public override void Tick(PlayerEntity player, ItemStack item)
+        public override void Tick(Entity player, ItemStack item)
         {
         }
     }

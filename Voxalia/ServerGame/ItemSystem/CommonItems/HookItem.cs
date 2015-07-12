@@ -17,8 +17,14 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Name = "hook";
         }
 
-        public override void Click(PlayerEntity player, ItemStack item)
+        public override void Click(Entity entity, ItemStack item)
         {
+            if (!(entity is PlayerEntity))
+            {
+                // TODO: non-player support
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)entity;
             if (player.LastClick + 0.2 > player.TheWorld.GlobalTickTime)
             {
                 return;
@@ -65,8 +71,14 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             player.Hooks.Add(new HookInfo() { Joint = jd, Hit = player, IsBar = false });
         }
 
-        public override void AltClick(PlayerEntity player, ItemStack item)
+        public override void AltClick(Entity entity, ItemStack item)
         {
+            if (!(entity is PlayerEntity))
+            {
+                // TODO: non-player support
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)entity;
             if (player.LastAltClick + 0.2 > player.TheWorld.GlobalTickTime)
             {
                 return;
@@ -74,7 +86,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             RemoveHook(player);
         }
 
-        public override void ReleaseClick(PlayerEntity player, ItemStack item)
+        public override void ReleaseClick(Entity entity, ItemStack item)
         {
         }
 
@@ -97,23 +109,23 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
         }
 
-        public override void PrepItem(PlayerEntity player, ItemStack item)
+        public override void PrepItem(Entity entity, ItemStack item)
         {
         }
 
-        public override void SwitchFrom(PlayerEntity player, ItemStack item)
+        public override void SwitchFrom(Entity entity, ItemStack item)
         {
         }
 
-        public override void SwitchTo(PlayerEntity player, ItemStack item)
+        public override void SwitchTo(Entity entity, ItemStack item)
         {
         }
 
-        public override void Use(PlayerEntity player, ItemStack item)
+        public override void Use(Entity entity, ItemStack item)
         {
         }
 
-        public override void Tick(PlayerEntity player, ItemStack item)
+        public override void Tick(Entity entity, ItemStack item)
         {
         }
     }

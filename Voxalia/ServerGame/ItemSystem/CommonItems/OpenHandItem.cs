@@ -16,12 +16,18 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Name = "open_hand";
         }
 
-        public override void PrepItem(EntitySystem.PlayerEntity player, ItemStack item)
+        public override void PrepItem(Entity entity, ItemStack item)
         {
         }
 
-        public override void AltClick(EntitySystem.PlayerEntity player, ItemStack item)
+        public override void AltClick(Entity entity, ItemStack item)
         {
+            if (!(entity is PlayerEntity))
+            {
+                // TODO: non-player support
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)entity;
             if (player.GrabJoint != null)
             {
                 player.TheWorld.DestroyJoint(player.GrabJoint);
@@ -29,8 +35,14 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             player.GrabJoint = null;
         }
 
-        public override void Click(EntitySystem.PlayerEntity player, ItemStack item)
+        public override void Click(Entity entity, ItemStack item)
         {
+            if (!(entity is PlayerEntity))
+            {
+                // TODO: non-player support
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)entity;
             Location end = player.GetEyePosition() + player.ForwardVector() * 2;
             CollisionResult cr = player.TheWorld.Collision.CuboidLineTrace(new Location(0.1, 0.1, 0.1), player.GetEyePosition(), end, player.IgnoreThis);
             if (cr.Hit && cr.HitEnt != null)
@@ -57,24 +69,24 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         }
 
-        public override void ReleaseClick(PlayerEntity player, ItemStack item)
+        public override void ReleaseClick(Entity entity, ItemStack item)
         {
         }
 
-        public override void Use(EntitySystem.PlayerEntity player, ItemStack item)
+        public override void Use(Entity entity, ItemStack item)
         {
         }
 
-        public override void SwitchFrom(PlayerEntity player, ItemStack item)
+        public override void SwitchFrom(Entity entity, ItemStack item)
         {
-            AltClick(player, item);
+            AltClick(entity, item);
         }
 
-        public override void SwitchTo(PlayerEntity player, ItemStack item)
+        public override void SwitchTo(Entity entity, ItemStack item)
         {
         }
 
-        public override void Tick(PlayerEntity player, ItemStack item)
+        public override void Tick(Entity entity, ItemStack item)
         {
         }
     }

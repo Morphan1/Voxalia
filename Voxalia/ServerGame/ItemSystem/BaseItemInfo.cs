@@ -10,20 +10,20 @@ namespace Voxalia.ServerGame.ItemSystem
     {
         public string Name;
 
-        public abstract void PrepItem(PlayerEntity player, ItemStack item);
+        public abstract void PrepItem(Entity player, ItemStack item);
 
-        public abstract void Click(PlayerEntity player, ItemStack item);
+        public abstract void Click(Entity player, ItemStack item);
 
-        public abstract void AltClick(PlayerEntity player, ItemStack item);
+        public abstract void AltClick(Entity player, ItemStack item);
 
-        public abstract void ReleaseClick(PlayerEntity player, ItemStack item);
+        public abstract void ReleaseClick(Entity player, ItemStack item);
 
-        public abstract void Use(PlayerEntity player, ItemStack item);
+        public abstract void Use(Entity player, ItemStack item);
 
-        public abstract void SwitchFrom(PlayerEntity player, ItemStack item);
+        public abstract void SwitchFrom(Entity player, ItemStack item);
 
-        public abstract void SwitchTo(PlayerEntity player, ItemStack item);
+        public abstract void SwitchTo(Entity player, ItemStack item);
 
-        public abstract void Tick(PlayerEntity player, ItemStack item);
+        public abstract void Tick(Entity player, ItemStack item);
     }
 }

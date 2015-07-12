@@ -33,7 +33,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             if (user is PlayerEntity)
             {
-                ((PlayerEntity)user).GiveItem(Stack);
+                ((PlayerEntity)user).Items.GiveItem(Stack);
                 TheWorld.DespawnEntity(this);
                 return true;
             }

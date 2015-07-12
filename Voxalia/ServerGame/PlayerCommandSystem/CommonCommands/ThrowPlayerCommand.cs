@@ -19,7 +19,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 
         public override void Execute(PlayerCommandEntry entry)
         {
-            ItemStack stack = entry.Player.GetItemForSlot(entry.Player.cItem);
+            ItemStack stack = entry.Player.Items.GetItemForSlot(entry.Player.Items.cItem);
             if (stack.IsBound)
             {
                 if (stack.Info == entry.Player.TheServer.Items.GetInfoFor("open_hand"))
@@ -45,7 +45,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             ie.SetOrientation(entry.Player.GetOrientation());
             ie.SetVelocity(fvel * 10);
             entry.Player.TheWorld.SpawnEntity(ie);
-            entry.Player.RemoveItem(entry.Player.cItem);
+            entry.Player.Items.RemoveItem(entry.Player.Items.cItem);
         }
     }
 }

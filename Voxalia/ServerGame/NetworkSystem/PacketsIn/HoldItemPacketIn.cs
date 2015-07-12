@@ -18,19 +18,19 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             }
             if (Player.Flags.HasFlag(YourStatusFlags.RELOADING))
             {
-                Player.Network.SendPacket(new SetHeldItemPacketOut(Player.cItem));
+                Player.Network.SendPacket(new SetHeldItemPacketOut(Player.Items.cItem));
                 return true; // Permit but ignore
             }
             int dat = Utilities.BytesToInt(data);
-            dat = dat % (Player.Items.Count + 1);
+            dat = dat % (Player.Items.Items.Count + 1);
             while (dat < 0)
             {
-                dat += Player.Items.Count + 1;
+                dat += Player.Items.Items.Count + 1;
             }
-            ItemStack old = Player.GetItemForSlot(Player.cItem);
+            ItemStack old = Player.Items.GetItemForSlot(Player.Items.cItem);
             old.Info.SwitchFrom(Player, old);
-            Player.cItem = dat;
-            ItemStack newit = Player.GetItemForSlot(Player.cItem);
+            Player.Items.cItem = dat;
+            ItemStack newit = Player.Items.GetItemForSlot(Player.Items.cItem);
             newit.Info.SwitchTo(Player, newit);
             return true;
         }

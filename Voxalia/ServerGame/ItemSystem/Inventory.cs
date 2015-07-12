@@ -1,0 +1,81 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Voxalia.ServerGame.WorldSystem;
+using System.Drawing;
+
+namespace Voxalia.ServerGame.ItemSystem
+{
+    public class Inventory
+    {
+        public World TheWorld;
+
+        public Inventory(World tworld)
+        {
+            TheWorld = tworld;
+        }
+
+        public List<ItemStack> Items = new List<ItemStack>();
+
+        /// <summary>
+        /// Returns an item in the quick bar.
+        /// Can return air.
+        /// </summary>
+        /// <param name="slot">The slot, any number is permitted</param>
+        /// <returns>A valid item</returns>
+        public ItemStack GetItemForSlot(int slot)
+        {
+            while (slot < 0)
+            {
+                slot += Items.Count + 1;
+            }
+            while (slot > Items.Count)
+            {
+                slot -= Items.Count + 1;
+            }
+            if (slot == 0)
+            {
+                return new ItemStack("Air", TheWorld.TheServer, 1, "clear", "Air", "An empty slot.", Color.White.ToArgb(), "blank.dae", true);
+            }
+            else
+            {
+                return Items[slot - 1];
+            }
+        }
+
+        public int GetSlotForItem(ItemStack item)
+        {
+            for (int i = 0; i < Items.Count; i++)
+            {
+                if (Items[i] == item)
+                {
+                    return i + 1;
+                }
+            }
+            return -1;
+        }
+
+        public virtual ItemStack GiveItem(ItemStack item)
+        {
+            // TODO: stacking
+            Items.Add(item);
+            return item;
+        }
+
+        public virtual void RemoveItem(int item)
+        {
+            while (item < 0)
+            {
+                item += Items.Count + 1;
+            }
+            while (item > Items.Count)
+            {
+                item -= Items.Count + 1;
+            }
+            ItemStack its = GetItemForSlot(item);
+            Items.RemoveAt(item - 1);
+        }
+
+    }
+}

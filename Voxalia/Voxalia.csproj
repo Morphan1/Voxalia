@@ -263,7 +263,10 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\OpenHandItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\PistolGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\RifleGunItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\EntityInventory.cs" />
+    <Compile Include="ServerGame\ItemSystem\Inventory.cs" />
     <Compile Include="ServerGame\ItemSystem\ItemRegistry.cs" />
+    <Compile Include="ServerGame\ItemSystem\PlayerInventory.cs" />
     <Compile Include="ServerGame\JointSystem\BaseFJoint.cs" />
     <Compile Include="ServerGame\JointSystem\BaseJoint.cs" />
     <Compile Include="ServerGame\JointSystem\InternalBaseJoint.cs" />
