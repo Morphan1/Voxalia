@@ -58,7 +58,22 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public virtual ItemStack GiveItem(ItemStack item)
         {
-            // TODO: stacking
+            for (int i = 0; i < Items.Count; i++)
+            {
+                if (Items[i].Datum == item.Datum &&
+                    Items[i].Name == item.Name &&
+                    Items[i].DisplayName == item.DisplayName &&
+                    Items[i].Description == item.Description &&
+                    Items[i].DrawColor == item.DrawColor &&
+                    Items[i].Image == item.Image &&
+                    Items[i].Model == item.Model &&
+                    Items[i].IsBound == item.IsBound)
+                    // TODO: Better match logic
+                {
+                    Items[i].Count += item.Count;
+                    return Items[i];
+                }
+            }
             Items.Add(item);
             return item;
         }
