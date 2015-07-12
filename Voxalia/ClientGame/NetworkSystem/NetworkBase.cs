@@ -108,6 +108,8 @@ namespace Voxalia.ClientGame.NetworkSystem
 
         int recdsofar2 = 0;
 
+        bool pLive = false;
+
         public void TickSocket(Socket sock, ref byte[] rd, ref int rdsf)
         {
             int avail = sock.Available;
@@ -246,10 +248,20 @@ namespace Voxalia.ClientGame.NetworkSystem
             // TODO: Connection timeout
             if (!IsAlive)
             {
+                if (pLive)
+                {
+                    TheClient.ShowMainMenu();
+                    pLive = false;
+                }
                 return;
             }
             try
             {
+                if (!pLive)
+                {
+                    TheClient.ShowGame();
+                    pLive = true;
+                }
                 TickSocket(ConnectionSocket, ref recd, ref recdsofar);
                 TickSocket(ChunkSocket, ref recd2, ref recdsofar2);
             }

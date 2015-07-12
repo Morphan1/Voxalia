@@ -172,9 +172,25 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Network = new NetworkBase(this);
             SysConsole.Output(OutputType.INIT, "Playing background music...");
             BackgroundMusic();
-            SysConsole.Output(OutputType.INIT, "Setting up game screen...");
-            CScreen = new GameScreen() { TheClient = this };
+            SysConsole.Output(OutputType.INIT, "Setting up screens...");
+            TheMainMenuScreen = new MainMenuScreen() { TheClient = this };
+            TheGameScreen = new GameScreen() { TheClient = this };
+            CScreen = TheMainMenuScreen;
         }
+
+        public void ShowGame()
+        {
+            CScreen = TheGameScreen;
+        }
+
+        public void ShowMainMenu()
+        {
+            CScreen = TheMainMenuScreen;
+        }
+
+        GameScreen TheGameScreen;
+
+        MainMenuScreen TheMainMenuScreen;
 
         public ActiveSound CurrentMusic = null;
 

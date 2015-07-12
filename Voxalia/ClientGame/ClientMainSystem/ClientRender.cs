@@ -144,6 +144,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 try
                 {
                     CScreen.Render();
+                    UIConsole.Draw();
                 }
                 catch (Exception ex)
                 {
@@ -356,11 +357,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Render3DWires();
                 }
             }
+            Establish2D();
+            Render2D();
+        }
+
+        public void Establish2D()
+        {
             GL.Disable(EnableCap.DepthTest);
             Shaders.ColorMultShader.Bind();
             Ortho = Matrix4.CreateOrthographicOffCenter(0, Window.Width, Window.Height, 0, -1, 1);
             GL.UniformMatrix4(1, false, ref Ortho);
-            Render2D();
         }
 
         public void Render3D(bool shadows_only)
@@ -513,7 +519,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Textures.GetTexture("hud/reticles/" + CVars.r_reticle.Value + "_br").Bind();
                 Rendering.RenderRectangle(cX + move, cY + move, cX + CVars.r_reticlescale.ValueI + move, cY + CVars.r_reticlescale.ValueI + move);
             }
-            UIConsole.Draw();
         }
 
         /// <summary>
