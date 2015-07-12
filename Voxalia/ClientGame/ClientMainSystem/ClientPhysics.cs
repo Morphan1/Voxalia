@@ -28,7 +28,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Lights.Remove(TheSun);
             }
             // TODO: Radius, Size -> max view rad * 2
-            TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, 30 * 6, Location.One, new Location(0, 0, -1), 30 * 8);
+            TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, 30 * 12, Location.One, new Location(0, 0, -1), 30 * 8);
             Lights.Add(TheSun);
             TheWorld = new World();
             TheWorld.BuildWorld();
