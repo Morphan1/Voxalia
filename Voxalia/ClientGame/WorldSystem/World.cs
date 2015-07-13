@@ -23,6 +23,7 @@ namespace Voxalia.ClientGame.WorldSystem
     {
         /// <summary>
         /// The physics world in which all physics-related activity takes place.
+        /// 
         /// </summary>
         public Space PhysicsWorld;
 
@@ -148,7 +149,7 @@ namespace Voxalia.ClientGame.WorldSystem
             return pos;
         }
 
-        public Chunk GetChunk(Location pos)
+        public Chunk LoadChunk(Location pos)
         {
             Chunk chunk;
             if (LoadedChunks.TryGetValue(pos, out chunk))
@@ -162,18 +163,37 @@ namespace Voxalia.ClientGame.WorldSystem
             return chunk;
         }
 
+        public Chunk GetChunk(Location pos)
+        {
+            Chunk chunk;
+            if (LoadedChunks.TryGetValue(pos, out chunk))
+            {
+                return chunk;
+            }
+            return null;
+        }
+
         public Material GetBlockMaterial(Location pos)
         {
+            return (Material)GetBlockInternal(pos).BlockMaterial;
+        }
+
+        public BlockInternal GetBlockInternal(Location pos)
+        {
             Chunk ch = GetChunk(ChunkLocFor(pos));
+            if (ch == null)
+            {
+                return BlockInternal.AIR;
+            }
             int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
-            return (Material)ch.GetBlockAt(x, y, z).BlockMaterial;
+            return ch.GetBlockAt(x, y, z);
         }
 
         public void SetBlockMaterial(Location pos, Material mat, bool broadcast = true, bool regen = true)
         {
-            Chunk ch = GetChunk(ChunkLocFor(pos));
+            Chunk ch = LoadChunk(ChunkLocFor(pos));
             int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;

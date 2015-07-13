@@ -33,7 +33,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             TheClient.Schedule.AddSyncTask(new Task(() =>
             {
-                Chunk chk = TheClient.TheWorld.GetChunk(new Location(x, y, z));
+                Chunk chk = TheClient.TheWorld.LoadChunk(new Location(x, y, z));
                 Task.Factory.StartNew(() => parsechunk2(chk, data_orig));
             }));
         }
@@ -48,7 +48,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 chk.BlocksInternal[i].BlockData = data_orig[chk.BlocksInternal.Length * 2 + i];
             }
-            TheClient.Schedule.AddSyncTask(new Task(() => { chk.AddToWorld(); chk.CreateVBO(); }));
+            TheClient.Schedule.AddSyncTask(new Task(() => { chk.AddToWorld(); chk.CreateVBO(); chk.UpdateSurroundingsFully(); }));
         }
     }
 }

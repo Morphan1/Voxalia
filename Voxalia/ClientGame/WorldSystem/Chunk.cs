@@ -37,6 +37,19 @@ namespace Voxalia.ClientGame.WorldSystem
             return BlocksInternal[BlockIndex(x, y, z)];
         }
 
+        static Location[] slocs = new Location[] { new Location(1, 0, 0), new Location(-1, 0, 0), new Location(0, 1, 0),
+            new Location(0, -1, 0), new Location(0, 0, 1), new Location(0, 0, -1) };
+
+        public void UpdateSurroundingsFully()
+        {
+            foreach (Location loc in slocs)
+            {
+                Chunk ch = OwningWorld.GetChunk(WorldPosition + loc);
+                ch.AddToWorld();
+                ch.CreateVBO();
+            }
+        }
+
         public StaticMesh CalculateChunkShape()
         {
             List<Vector3> Vertices = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6); // TODO: Make this an array?
@@ -48,12 +61,12 @@ namespace Voxalia.ClientGame.WorldSystem
                     for (int z = 0; z < CHUNK_SIZE; z++)
                     {
                         BlockInternal c = GetBlockAt(x, y, z);
-                        BlockInternal zp = z + 1 < CHUNK_SIZE ? GetBlockAt(x, y, z + 1) : BlockInternal.AIR;
-                        BlockInternal zm = z - 1 > 0 ? GetBlockAt(x, y, z - 1) : BlockInternal.AIR;
-                        BlockInternal yp = y + 1 < CHUNK_SIZE ? GetBlockAt(x, y + 1, z) : BlockInternal.AIR;
-                        BlockInternal ym = y - 1 > 0 ? GetBlockAt(x, y - 1, z) : BlockInternal.AIR;
-                        BlockInternal xp = x + 1 < CHUNK_SIZE ? GetBlockAt(x + 1, y, z) : BlockInternal.AIR;
-                        BlockInternal xm = x - 1 > 0 ? GetBlockAt(x - 1, y, z) : BlockInternal.AIR;
+                        BlockInternal zp = z + 1 < CHUNK_SIZE ? GetBlockAt(x, y, z + 1) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, y, 30));
+                        BlockInternal zm = z - 1 > 0 ? GetBlockAt(x, y, z - 1) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, y, -1));
+                        BlockInternal yp = y + 1 < CHUNK_SIZE ? GetBlockAt(x, y + 1, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, 30, z));
+                        BlockInternal ym = y - 1 > 0 ? GetBlockAt(x, y - 1, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, -1, z));
+                        BlockInternal xp = x + 1 < CHUNK_SIZE ? GetBlockAt(x + 1, y, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(30, y, z));
+                        BlockInternal xm = x - 1 > 0 ? GetBlockAt(x - 1, y, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(-1, y, z));
                         if (((Material)c.BlockMaterial).IsOpaque() || ((Material)c.BlockMaterial).IsSolid()) // TODO: Better check. OccupiesFullBlock()?
                         {
                             Vector3 pos = new Vector3(ppos.X + x, ppos.Y + y, ppos.Z + z);

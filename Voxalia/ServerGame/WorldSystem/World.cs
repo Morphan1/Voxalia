@@ -599,6 +599,29 @@ namespace Voxalia.ServerGame.WorldSystem
             return chunk;
         }
 
+        public Chunk GetChunk(Location cpos)
+        {
+            Chunk chunk;
+            if (LoadedChunks.TryGetValue(cpos, out chunk))
+            {
+                return chunk;
+            }
+            return null;
+        }
+
+        public BlockInternal GetBlockInternal_NoLoad(Location pos)
+        {
+            Chunk ch = GetChunk(ChunkLocFor(pos));
+            if (ch == null)
+            {
+                return BlockInternal.AIR;
+            }
+            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
+            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
+            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+            return ch.GetBlockAt(x, y, z);
+        }
+
         public void PopulateChunk(Chunk chunk)
         {
             for (int x = 0; x < 30; x++)
