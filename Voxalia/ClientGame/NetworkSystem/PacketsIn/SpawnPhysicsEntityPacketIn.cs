@@ -16,6 +16,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             int len = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + 4 + 1;
             if (data.Length != len
                 && data.Length != len + 4 * 6 + 4 * 6
+                && data.Length != len + 2
                 && data.Length != len + 4 + 1)
             {
                 return false;
@@ -61,6 +62,13 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 byte moder = data[start + 4];
                 me.mode = (ModelCollisionMode)moder;
                 ce = me;
+            }
+            else if (type == 3)
+            {
+                int start = len - (4 + 1);
+                Material mat = (Material)Utilities.BytesToUshort(Utilities.BytesPartial(data, start, 2));
+                BlockItemEntity bie = new BlockItemEntity(TheClient.TheWorld, mat);
+                ce = bie;
             }
             else
             {

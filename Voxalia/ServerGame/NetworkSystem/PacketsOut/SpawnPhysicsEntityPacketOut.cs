@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         public SpawnPhysicsEntityPacketOut(PhysicsEntity e)
         {
             ID = 2;
-            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + (e is CubeEntity ? 4 * 6 + 4 * 6: (e is ModelEntity ? 4 + 1: 0)) + 4 + 1];
+            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + (e is CubeEntity ? 4 * 6 + 4 * 6: (e is CubeEntity ? 2: (e is ModelEntity ? 4 + 1: 0))) + 4 + 1];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
@@ -39,11 +39,11 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 new Location(5, 5, 5).ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
-            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is CubeEntity ? 0 : (e is PlayerEntity ? 1: 2));
+            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is CubeEntity ? 0 : (e is PlayerEntity ? 1 : (e is BlockItemEntity ? 3: 2)));
+            int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
             if (e is CubeEntity)
             {
                 CubeEntity ce = (CubeEntity)e;
-                int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
                 NetStringManager strings = ce.TheServer.Networking.Strings;
                 Utilities.IntToBytes(strings.IndexForString(ce.Textures[0])).CopyTo(Data, start);
                 Utilities.IntToBytes(strings.IndexForString(ce.Textures[1])).CopyTo(Data, start + 4);
@@ -58,10 +58,14 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 Utilities.IntToBytes(strings.IndexForString(ce.TexCoords[4])).CopyTo(Data, start + 4 * 6 + 4 * 4);
                 Utilities.IntToBytes(strings.IndexForString(ce.TexCoords[5])).CopyTo(Data, start + 4 * 6 + 4 * 5);
             }
+            else if (e is BlockItemEntity)
+            {
+                BlockItemEntity bie = (BlockItemEntity)e;
+                Utilities.UshortToBytes((ushort)bie.Mat).CopyTo(Data, start);
+            }
             else if (e is ModelEntity)
             {
                 ModelEntity me = (ModelEntity)e;
-                int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
                 NetStringManager strings = me.TheServer.Networking.Strings;
                 Utilities.IntToBytes(strings.IndexForString(me.model)).CopyTo(Data, start);
                 Data[start + 4] = (byte)me.mode;

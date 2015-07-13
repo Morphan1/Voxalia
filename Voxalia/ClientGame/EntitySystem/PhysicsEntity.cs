@@ -271,7 +271,6 @@ namespace Voxalia.ClientGame.EntitySystem
 
         /// <summary>
         /// Sets the mass of this entity.
-        /// WARNING: This respawns the entity!
         /// </summary>
         /// <param name="mass">The new mass value</param>
         public virtual void SetMass(float mass)

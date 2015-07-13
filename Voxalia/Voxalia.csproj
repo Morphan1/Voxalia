@@ -134,6 +134,7 @@
     <Compile Include="ClientGame\CommandSystem\UICommands\LeftwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\ForwardCommand.cs" />
     <Compile Include="ClientGame\EntitySystem\BasicPrimitiveEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\BlockItemEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\Entity.cs" />
     <Compile Include="ClientGame\EntitySystem\EntityAnimated.cs" />
@@ -226,6 +227,7 @@
     <Compile Include="ServerGame\CommandSystem\ServerCVar.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerOutputter.cs" />
     <Compile Include="ServerGame\EntitySystem\ArrowEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\BlockItemEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\BulletEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\CuboidalEntity.cs" />

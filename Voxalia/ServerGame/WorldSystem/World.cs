@@ -551,10 +551,11 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void BreakNaturally(Location pos)
         {
+            pos = pos.GetBlockLocation();
             Chunk ch = LoadChunk(ChunkLocFor(pos));
-            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
-            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
-            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+            int x = (int)pos.X - (int)ch.WorldPosition.X * 30;
+            int y = (int)pos.Y - (int)ch.WorldPosition.Y * 30;
+            int z = (int)pos.Z - (int)ch.WorldPosition.Z * 30;
             BlockInternal bi = ch.GetBlockAt(x, y, z);
             if (bi.BlockMaterial != (ushort)Material.AIR)
             {
@@ -562,11 +563,9 @@ namespace Voxalia.ServerGame.WorldSystem
                 ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0));
                 ch.AddToWorld();
                 SendToAll(new BlockEditPacketOut(pos, Material.AIR));
-                // TODO: BlockItemEntity
-                ItemEntity ie = new ItemEntity(new ItemStack("block", TheServer, 1, "blocks/solid/grass_side" /*mat.TextureID(MaterialSide.XP)*/,
-                    mat.ToString(), "A solid block of " + mat.ToString().ToLower(), System.Drawing.Color.White.ToArgb(), "items/block.dae", false) { Datum = bi.BlockMaterial }, this);
-                ie.SetPosition(pos);
-                SpawnEntity(ie);
+                BlockItemEntity bie = new BlockItemEntity(this, mat);
+                bie.SetPosition(pos);
+                SpawnEntity(bie);
             }
         }
 
