@@ -563,7 +563,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 SendToAll(new BlockEditPacketOut(pos, Material.AIR));
                 // TODO: Proper method to get an item for a block, including correct name and desc. and all
                 // TODO: BlockItemEntity
-                ItemEntity ie = new ItemEntity(new ItemStack("block", TheServer, 1, "blocks/solid/grass_side", "Grass", "Grassy!", System.Drawing.Color.White.ToArgb(), "items/block.dae", false) { Datum = 2 }, this);
+                ItemEntity ie = new ItemEntity(new ItemStack("block", TheServer, 1, "blocks/solid/grass_side", "Grass", "Grassy!", System.Drawing.Color.White.ToArgb(), "items/block.dae", false) { Datum = bi.BlockMaterial }, this);
                 ie.SetPosition(pos);
                 SpawnEntity(ie);
             }
