@@ -27,7 +27,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 TheSun.Destroy();
                 Lights.Remove(TheSun);
             }
-            // TODO: Radius, Size -> max view rad * 2
+            // TODO: Radius -> max view rad * 2
+            // TODO: Size -> max view rad * 2 + 30 * 2
             TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, 30 * 12, Location.One, new Location(0, 0, -1), 30 * 8);
             Lights.Add(TheSun);
             TheWorld = new World();
@@ -37,7 +38,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void TickWorld(double delta)
         {
-            // TODO: Z+ -> max view rad
+            // TODO: Z+ -> max view rad + 30
             TheSun.Reposition(Player.GetPosition() + new Location(0, 0, 30 * 4));
             TheWorld.TickWorld(delta);
         }
