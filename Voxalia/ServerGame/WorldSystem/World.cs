@@ -558,12 +558,13 @@ namespace Voxalia.ServerGame.WorldSystem
             BlockInternal bi = ch.GetBlockAt(x, y, z);
             if (bi.BlockMaterial != (ushort)Material.AIR)
             {
+                Material mat = (Material)bi.BlockMaterial;
                 ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0));
                 ch.AddToWorld();
                 SendToAll(new BlockEditPacketOut(pos, Material.AIR));
-                // TODO: Proper method to get an item for a block, including correct name and desc. and all
                 // TODO: BlockItemEntity
-                ItemEntity ie = new ItemEntity(new ItemStack("block", TheServer, 1, "blocks/solid/grass_side", "Grass", "Grassy!", System.Drawing.Color.White.ToArgb(), "items/block.dae", false) { Datum = bi.BlockMaterial }, this);
+                ItemEntity ie = new ItemEntity(new ItemStack("block", TheServer, 1, "blocks/solid/grass_side" /*mat.TextureID(MaterialSide.XP)*/,
+                    mat.ToString(), "A solid block of " + mat.ToString().ToLower(), System.Drawing.Color.White.ToArgb(), "items/block.dae", false) { Datum = bi.BlockMaterial }, this);
                 ie.SetPosition(pos);
                 SpawnEntity(ie);
             }
