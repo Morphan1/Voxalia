@@ -24,17 +24,28 @@ namespace Voxalia.ClientGame.EntitySystem
             SetMass(5);
         }
 
-        //public VBO vbo;
+        public VBO vbo = null;
 
         public override void SpawnBody()
         {
-            // Create VBO
+            vbo = new VBO();
+            vbo.Prepare();
+            vbo.AddSide(new Location(0, 0, 1), new TextureCoordinates(), true, (int)Mat);
+            vbo.AddSide(new Location(0, 0, -1), new TextureCoordinates(), true, (int)Mat);
+            vbo.AddSide(new Location(0, 1, 0), new TextureCoordinates(), true, (int)Mat);
+            vbo.AddSide(new Location(0, -1, 0), new TextureCoordinates(), true, (int)Mat);
+            vbo.AddSide(new Location(1, 0, 0), new TextureCoordinates(), true, (int)Mat);
+            vbo.AddSide(new Location(-1, 0, 0), new TextureCoordinates(), true, (int)Mat);
+            vbo.GenerateVBO();
             base.SpawnBody();
         }
 
         public override void DestroyBody()
         {
-            // Delete VBO
+            if (vbo != null)
+            {
+                vbo.Destroy();
+            }
             base.DestroyBody();
         }
 
@@ -42,7 +53,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             Matrix4 mat = GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
-            TheClient.Models.GetModel("cube").Draw();
+            vbo.Render(false);
         }
     }
 }

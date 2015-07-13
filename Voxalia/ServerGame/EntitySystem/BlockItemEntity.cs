@@ -34,4 +34,3 @@ namespace Voxalia.ServerGame.EntitySystem
         }
     }
 }
-

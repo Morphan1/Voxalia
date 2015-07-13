@@ -564,7 +564,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 ch.AddToWorld();
                 SendToAll(new BlockEditPacketOut(pos, Material.AIR));
                 BlockItemEntity bie = new BlockItemEntity(this, mat);
-                bie.SetPosition(pos);
+                bie.SetPosition(pos + new Location(0.5f));
                 SpawnEntity(bie);
             }
         }

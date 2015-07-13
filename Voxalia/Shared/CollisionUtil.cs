@@ -73,9 +73,7 @@ namespace Voxalia.Shared
             CollisionGroup.DefineCollisionRule(Solid, Trigger, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(NonSolid, Trigger, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Trigger, Trigger, CollisionRule.NoBroadPhase);
-            // Item Vs. Player,Trigger,NonSolid (All)
-            CollisionGroup.DefineCollisionRule(Item, Player, CollisionRule.NoBroadPhase);
-            CollisionGroup.DefineCollisionRule(Player, Item, CollisionRule.NoBroadPhase);
+            // Item Vs. Trigger,NonSolid (All)
             CollisionGroup.DefineCollisionRule(Item, Trigger, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Trigger, Item, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Item, NonSolid, CollisionRule.NoBroadPhase);
