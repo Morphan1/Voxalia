@@ -18,16 +18,20 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void CreateVBO()
         {
-            if (rendering != null && rendering.ThreadState == ThreadState.Running)
+            if (rendering != null && rendering.Status != TaskStatus.Canceled && rendering.Status != TaskStatus.RanToCompletion && rendering.Status != TaskStatus.Faulted && rendering.Status != TaskStatus.Created)
             {
-                rendering.Abort();
-                rendering = null;
+                Task orend = rendering;
+                rendering = new Task(() => VBOHInternal());
+                orend.ContinueWith((o) => rendering.Start());
             }
-            rendering = new Thread(new ThreadStart(VBOHInternal));
-            rendering.Start();
+            else
+            {
+                rendering = new Task(() => VBOHInternal());
+                rendering.Start();
+            }
         }
 
-        public Thread rendering = null;
+        public Task rendering = null;
 
         void VBOHInternal()
         {

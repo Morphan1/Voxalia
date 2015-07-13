@@ -148,30 +148,32 @@ namespace Voxalia.ClientGame.WorldSystem
 
         StaticMesh worldObject = null;
 
-        public Thread adding = null;
+        public Task adding = null;
 
         public void AddToWorld()
         {
-            if (adding != null && adding.ThreadState == ThreadState.Running)
+            if (adding != null && adding.Status != TaskStatus.Canceled && adding.Status != TaskStatus.RanToCompletion && adding.Status != TaskStatus.Faulted && adding.Status != TaskStatus.Created)
             {
-                adding.Abort();
-                adding = null;
+                Task oadd = adding;
+                adding = new Task(() => AddInternal());
+                oadd.ContinueWith((o) => adding.Start());
             }
-            adding = new Thread(new ThreadStart(AddInternal));
-            adding.Start();
+            else
+            {
+                adding = new Task(() => AddInternal());
+                adding.Start();
+            }
         }
 
         public void Destroy()
         {
-            if (adding != null && adding.ThreadState == ThreadState.Running)
+            while (adding != null && adding.Status != TaskStatus.Canceled && adding.Status != TaskStatus.RanToCompletion && adding.Status != TaskStatus.Faulted && adding.Status != TaskStatus.Created)
             {
-                adding.Abort();
-                adding = null;
+                Thread.Sleep(1);
             }
-            if (rendering != null && rendering.ThreadState == ThreadState.Running)
+            while (rendering != null && rendering.Status != TaskStatus.Canceled && rendering.Status != TaskStatus.RanToCompletion && rendering.Status != TaskStatus.Faulted && rendering.Status != TaskStatus.Created)
             {
-                rendering.Abort();
-                rendering = null;
+                Thread.Sleep(1);
             }
             if (worldObject != null)
             {
