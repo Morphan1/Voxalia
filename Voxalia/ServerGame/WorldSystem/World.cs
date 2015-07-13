@@ -541,11 +541,64 @@ namespace Voxalia.ServerGame.WorldSystem
             if (regen)
             {
                 ch.AddToWorld();
+                TrySurroundings(ch, pos, x, y, z);
             }
             if (broadcast)
             {
                 // TODO: Send per-person based on chunk awareness details
                 SendToAll(new BlockEditPacketOut(pos, mat));
+            }
+        }
+
+        public void TrySurroundings(Chunk ch, Location pos, int x, int y, int z)
+        {
+            if (x == 0)
+            {
+                ch = GetChunk(ChunkLocFor(pos + new Location(-1, 0, 0)));
+                if (ch != null)
+                {
+                    ch.AddToWorld();
+                }
+            }
+            if (y == 0)
+            {
+                ch = GetChunk(ChunkLocFor(pos + new Location(0, -1, 0)));
+                if (ch != null)
+                {
+                    ch.AddToWorld();
+                }
+            }
+            if (z == 0)
+            {
+                ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, -1)));
+                if (ch != null)
+                {
+                    ch.AddToWorld();
+                }
+            }
+            if (x == Chunk.CHUNK_SIZE - 1)
+            {
+                ch = GetChunk(ChunkLocFor(pos + new Location(1, 0, 0)));
+                if (ch != null)
+                {
+                    ch.AddToWorld();
+                }
+            }
+            if (y == Chunk.CHUNK_SIZE - 1)
+            {
+                ch = GetChunk(ChunkLocFor(pos + new Location(0, 1, 0)));
+                if (ch != null)
+                {
+                    ch.AddToWorld();
+                }
+            }
+            if (z == Chunk.CHUNK_SIZE - 1)
+            {
+                ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, 1)));
+                if (ch != null)
+                {
+                    ch.AddToWorld();
+                }
             }
         }
 
@@ -562,6 +615,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 Material mat = (Material)bi.BlockMaterial;
                 ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0));
                 ch.AddToWorld();
+                TrySurroundings(ch, pos, x, y, z);
                 SendToAll(new BlockEditPacketOut(pos, Material.AIR));
                 BlockItemEntity bie = new BlockItemEntity(this, mat);
                 bie.SetPosition(pos + new Location(0.5f));
@@ -582,6 +636,9 @@ namespace Voxalia.ServerGame.WorldSystem
             return worldPos;
         }
 
+        static Location[] slocs = new Location[] { new Location(1, 0, 0), new Location(-1, 0, 0), new Location(0, 1, 0),
+            new Location(0, -1, 0), new Location(0, 0, 1), new Location(0, 0, -1) };
+
         public Chunk LoadChunk(Location cpos)
         {
             Chunk chunk;
@@ -596,6 +653,14 @@ namespace Voxalia.ServerGame.WorldSystem
             PopulateChunk(chunk);
             LoadedChunks.Add(cpos, chunk);
             chunk.AddToWorld();
+            foreach (Location loc in slocs)
+            {
+                Chunk ch = GetChunk(cpos + loc);
+                if (ch != null)
+                {
+                    ch.AddToWorld();
+                }
+            }
             return chunk;
         }
 

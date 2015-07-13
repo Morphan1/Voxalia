@@ -191,7 +191,7 @@ namespace Voxalia.ClientGame.WorldSystem
             return ch.GetBlockAt(x, y, z);
         }
 
-        public void SetBlockMaterial(Location pos, Material mat, bool broadcast = true, bool regen = true)
+        public void SetBlockMaterial(Location pos, Material mat, bool regen = true)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos));
             int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
@@ -202,6 +202,61 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 ch.AddToWorld();
                 ch.CreateVBO();
+                if (x == 0)
+                {
+                    ch = GetChunk(ChunkLocFor(pos + new Location(-1, 0, 0)));
+                    if (ch != null)
+                    {
+                        ch.AddToWorld();
+                        ch.CreateVBO();
+                    }
+                }
+                if (y == 0)
+                {
+                    ch = GetChunk(ChunkLocFor(pos + new Location(0, -1, 0)));
+                    if (ch != null)
+                    {
+                        ch.AddToWorld();
+                        ch.CreateVBO();
+                    }
+                }
+                if (z == 0)
+                {
+                    ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, -1)));
+                    if (ch != null)
+                    {
+                        ch.AddToWorld();
+                        ch.CreateVBO();
+                    }
+                }
+                if (x == Chunk.CHUNK_SIZE - 1)
+                {
+                    ch = GetChunk(ChunkLocFor(pos + new Location(1, 0, 0)));
+                    if (ch != null)
+                    {
+                        ch.AddToWorld();
+                        ch.CreateVBO();
+                    }
+                }
+
+                if (y == Chunk.CHUNK_SIZE - 1)
+                {
+                    ch = GetChunk(ChunkLocFor(pos + new Location(0, 1, 0)));
+                    if (ch != null)
+                    {
+                        ch.AddToWorld();
+                        ch.CreateVBO();
+                    }
+                }
+                if (z == Chunk.CHUNK_SIZE - 1)
+                {
+                    ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, 1)));
+                    if (ch != null)
+                    {
+                        ch.AddToWorld();
+                        ch.CreateVBO();
+                    }
+                }
             }
         }
 
