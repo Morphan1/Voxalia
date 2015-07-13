@@ -30,12 +30,12 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             vbo = new VBO();
             vbo.Prepare();
-            vbo.AddSide(new Location(0, 0, 1), new TextureCoordinates(), true, (int)Mat);
-            vbo.AddSide(new Location(0, 0, -1), new TextureCoordinates(), true, (int)Mat);
-            vbo.AddSide(new Location(0, 1, 0), new TextureCoordinates(), true, (int)Mat);
-            vbo.AddSide(new Location(0, -1, 0), new TextureCoordinates(), true, (int)Mat);
-            vbo.AddSide(new Location(1, 0, 0), new TextureCoordinates(), true, (int)Mat);
-            vbo.AddSide(new Location(-1, 0, 0), new TextureCoordinates(), true, (int)Mat);
+            vbo.AddSide(new Location(0, 0, 1), new TextureCoordinates(), true, Mat.TextureID(MaterialSide.TOP));
+            vbo.AddSide(new Location(0, 0, -1), new TextureCoordinates(), true, Mat.TextureID(MaterialSide.BOTTOM));
+            vbo.AddSide(new Location(0, 1, 0), new TextureCoordinates(), true, Mat.TextureID(MaterialSide.YP));
+            vbo.AddSide(new Location(0, -1, 0), new TextureCoordinates(), true, Mat.TextureID(MaterialSide.YM));
+            vbo.AddSide(new Location(1, 0, 0), new TextureCoordinates(), true, Mat.TextureID(MaterialSide.XP));
+            vbo.AddSide(new Location(-1, 0, 0), new TextureCoordinates(), true, Mat.TextureID(MaterialSide.XM));
             vbo.GenerateVBO();
             base.SpawnBody();
         }
@@ -51,9 +51,21 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
+            if (TheClient.FBO)
+            { 
+                 // TODO: Remove this block
+                TheClient.s_fbov.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+            }
             Matrix4 mat = GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
             vbo.Render(false);
+            if (TheClient.FBO)
+            {
+                // TODO: Remove this block
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                TheClient.s_fbo.Bind();
+            }
         }
     }
 }

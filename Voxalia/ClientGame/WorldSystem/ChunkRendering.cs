@@ -78,7 +78,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     int tID_BOTTOM = ((Material)c.BlockMaterial).TextureID(MaterialSide.BOTTOM);
                                     for (int i = 0; i < 6; i++)
                                     {
-                                        Norms.Add(new Vector3(0, 0, 1));
+                                        Norms.Add(new Vector3(0, 0, -1));
                                     }
                                     TCoords.Add(new Vector3(0, 0, tID_BOTTOM));
                                     Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
@@ -98,7 +98,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     int tID_XP = ((Material)c.BlockMaterial).TextureID(MaterialSide.XP);
                                     for (int i = 0; i < 6; i++)
                                     {
-                                        Norms.Add(new Vector3(0, 0, 1));
+                                        Norms.Add(new Vector3(1, 0, 0));
                                     }
                                     TCoords.Add(new Vector3(0, 0, tID_XP));
                                     Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
@@ -118,7 +118,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     int tID_XM = ((Material)c.BlockMaterial).TextureID(MaterialSide.XM);
                                     for (int i = 0; i < 6; i++)
                                     {
-                                        Norms.Add(new Vector3(0, 0, 1));
+                                        Norms.Add(new Vector3(-1, 0, 0));
                                     }
                                     TCoords.Add(new Vector3(0, 1, tID_XM));
                                     Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
@@ -138,7 +138,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     int tID_YP = ((Material)c.BlockMaterial).TextureID(MaterialSide.XP);
                                     for (int i = 0; i < 6; i++)
                                     {
-                                        Norms.Add(new Vector3(0, 0, 1));
+                                        Norms.Add(new Vector3(0, 1, 0));
                                     }
                                     TCoords.Add(new Vector3(0, 1, tID_YP));
                                     Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
@@ -158,7 +158,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     int tID_YM = ((Material)c.BlockMaterial).TextureID(MaterialSide.YM);
                                     for (int i = 0; i < 6; i++)
                                     {
-                                        Norms.Add(new Vector3(0, 0, 1));
+                                        Norms.Add(new Vector3(0, -1, 0));
                                     }
                                     TCoords.Add(new Vector3(0, 0, tID_YM));
                                     Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));

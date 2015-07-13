@@ -92,8 +92,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         Shader s_shadow;
         Shader s_main;
-        Shader s_fbo;
-        Shader s_fbov;
+        public Shader s_fbo;
+        public Shader s_fbov;
         Shader s_shadowadder;
         Shader s_transponly;
         RenderSurface4Part RS4P;
@@ -133,7 +133,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public int LightsC = 0;
 
-        bool FBO = false;
+        public bool FBO = false;
 
         void Window_RenderFrame(object sender, FrameEventArgs e)
         {
@@ -184,11 +184,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
                             LightsC++;
                             for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                             {
-                                /*if (Lights[i].InternalLights[x] is LightOrtho)
+                                if (Lights[i].InternalLights[x] is LightOrtho)
                                 {
                                     CFrust = null;
                                 }
-                                else*/
+                                else
                                 {
                                     CFrust = new Frustum(Lights[i].InternalLights[x].GetMatrix());
                                 }
@@ -252,7 +252,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                     {
-                        // TODO: if Light_in_Frustrum
                         double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
                         double d2 = CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance;
                         double maxrangemult = 0;
