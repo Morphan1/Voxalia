@@ -14,15 +14,22 @@ namespace Voxalia.ServerGame.ItemSystem
     {
         public Server TheServer;
 
-        public ItemStack(string name, string secondary_name, Server tserver, int count, string tex, string display, string descrip, int color, string model, bool bound)
+        public ItemStack(string name, string secondary_name, Server tserver, int count, string tex, string display, string descrip, int color, string model, bool bound, params string[] attrs)
         {
             TheServer = tserver;
             Load(name, secondary_name, count, tex, display, descrip, color, model);
             IsBound = bound;
+            if (attrs != null)
+            {
+                for (int i = 0; i < attrs.Length; i += 2)
+                {
+                    Attributes.Add(attrs[i], attrs[i + 1]);
+                }
+            }
         }
 
-        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, int color, string model, bool bound)
-            : this(name, null, tserver, count, tex, display, descrip, color, model, bound)
+        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, int color, string model, bool bound, params string[] attrs)
+            : this(name, null, tserver, count, tex, display, descrip, color, model, bound, attrs)
         {
         }
 
@@ -32,7 +39,29 @@ namespace Voxalia.ServerGame.ItemSystem
             Load(data);
         }
 
+        public float GetAttributeF(string attr, float def)
+        {
+            string outp;
+            if (Attributes.TryGetValue(attr, out outp))
+            {
+                return Utilities.StringToFloat(outp);
+            }
+            return def;
+        }
+
+        public int GetAttributeI(string attr, int def)
+        {
+            string outp;
+            if (Attributes.TryGetValue(attr, out outp))
+            {
+                return Utilities.StringToInt(outp);
+            }
+            return def;
+        }
+
         public BaseItemInfo Info = null;
+
+        public Dictionary<string, string> Attributes = new Dictionary<string, string>();
 
         public bool IsBound = false;
 

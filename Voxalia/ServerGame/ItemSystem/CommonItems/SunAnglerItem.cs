@@ -26,7 +26,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             PlayerEntity player = (PlayerEntity)entity;
-            player.TheWorld.SendToAll(new SunAnglePacketOut((float)-player.Direction.Yaw, (float)-player.Direction.Pitch));
+            player.TheWorld.SendToAll(new SunAnglePacketOut(180f + (float)player.Direction.Yaw, (float)-player.Direction.Pitch));
         }
 
         public override void AltClick(Entity entity, ItemStack item)

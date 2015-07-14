@@ -53,17 +53,21 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             PlayerEntity player = (PlayerEntity)entity;
-            if (item.Datum != 0 && !player.WaitingForClickRelease && (player.TheWorld.GlobalTickTime - player.LastGunShot >= FireRate))
+            float fireRate = FireRate * item.GetAttributeF("firerate_mod", 1f);
+            if (item.Datum != 0 && !player.WaitingForClickRelease && (player.TheWorld.GlobalTickTime - player.LastGunShot >= fireRate))
             {
-                for (int i = 0; i < Shots; i++)
+                float spread = Spread * item.GetAttributeF("spread_mod", 1f);
+                float speed = Speed * item.GetAttributeF("speed_mod", 1f);
+                int shots = (int)((float)Shots * item.GetAttributeF("shots_mod", 1f));
+                for (int i = 0; i < shots; i++)
                 {
                     BulletEntity be = new BulletEntity(player.TheWorld);
                     be.SetPosition(player.GetEyePosition());
                     be.NoCollide.Add(player.EID);
                     Location ang = player.Direction;
-                    ang.Yaw += Utilities.UtilRandom.NextDouble() * Spread * 2 - Spread;
-                    ang.Pitch += Utilities.UtilRandom.NextDouble() * Spread * 2 - Spread;
-                    be.SetVelocity(Utilities.ForwardVector_Deg(ang.Yaw, ang.Pitch) * Speed);
+                    ang.Yaw += Utilities.UtilRandom.NextDouble() * spread * 2 - spread;
+                    ang.Pitch += Utilities.UtilRandom.NextDouble() * spread * 2 - spread;
+                    be.SetVelocity(Utilities.ForwardVector_Deg(ang.Yaw, ang.Pitch) * speed);
                     be.Size = RoundSize;
                     be.Damage = ImpactDamage;
                     be.SplashSize = SplashSize;
@@ -90,7 +94,8 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             {
                 return false;
             }
-            if (item.Datum < ClipSize)
+            int clipSize = (int)((float)ClipSize * item.GetAttributeF("clipsize_mod", 1f));
+            if (item.Datum < clipSize)
             {
                 for (int i = 0; i < player.Items.Items.Count; i++)
                 {
@@ -99,7 +104,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     {
                         if (itemStack.Count > 0)
                         {
-                            int reloading = ClipSize - item.Datum;
+                            int reloading = clipSize - item.Datum;
                             if (reloading > itemStack.Count)
                             {
                                 reloading = itemStack.Count;
@@ -119,6 +124,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                         player.Flags |= YourStatusFlags.RELOADING;
                         player.WaitingForClickRelease = true;
                         player.LastGunShot = player.TheWorld.GlobalTickTime + ReloadDelay;
+                        UpdatePlayer(player);
                         return true;
                     }
                 }

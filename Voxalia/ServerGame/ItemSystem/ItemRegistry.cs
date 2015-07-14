@@ -19,7 +19,6 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new BowItem());
             Register(new FlashLightItem());
             Register(new HookItem());
-            Register(new MinigunGunItem());
             Register(new OpenHandItem());
             Register(new PistolGunItem());
             Register(new RifleGunItem());

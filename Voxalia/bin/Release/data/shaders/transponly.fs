@@ -7,6 +7,8 @@ layout (location = 1) in vec3 f_texcoord;
 
 out vec4 color;
 
+// TOD: maybe apply ambient/difuse/specular lighting?
+
 void main()
 {
 	vec4 tcolor = texture(tex, vec2(f_texcoord.x, f_texcoord.y));
