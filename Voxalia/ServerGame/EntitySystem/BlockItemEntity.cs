@@ -21,6 +21,8 @@ namespace Voxalia.ServerGame.EntitySystem
             Mat = mat;
         }
 
+        // TODO: If settled (deactivated) for too long (minutes?), or loaded in via chunkload, revert to a block
+
         public bool Use(Entity user)
         {
             if (user is PlayerEntity)

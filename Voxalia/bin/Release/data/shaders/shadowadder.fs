@@ -79,6 +79,7 @@ void main()
 	}
 	else
 	{
+#ifdef MCM_GOOD_GRAPHICS
 		vec2 dz_duv;
 		vec3 duvdist_dx = dFdx(fs.xyz);
 		vec3 duvdist_dy = dFdy(fs.xyz);
@@ -105,6 +106,9 @@ void main()
 			}
 		}
 		depth = depth / depth_count;
+#else
+        depth = textureProj(tex, fs - vec4(0.0, 0.0, 0.0001, 0.0));
+#endif
 	}
 	float min_depth = renderhint.z;
 	depth = max(depth, min_depth);
