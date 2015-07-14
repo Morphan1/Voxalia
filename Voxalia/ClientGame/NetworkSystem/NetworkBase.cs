@@ -231,6 +231,9 @@ namespace Voxalia.ClientGame.NetworkSystem
                     case 25:
                         packet = new BlockEditPacketIn();
                         break;
+                    case 26:
+                        packet = new SunAnglePacketIn();
+                        break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);
                 }
