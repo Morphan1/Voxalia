@@ -42,6 +42,8 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.V, "+stand_tall");
             BindKey(Key.Space, "+upward");
             BindKey(Key.LShift, "+walk");
+            BindKey(Key.F1, "toggle u_showhud");
+            BindKey(Key.F2, "toggle r_highlight_targetblock;toggle r_highlight_placeblock");
             BindKey(Key.F12, "screenshot");
             BindKey(Key.F35, "+attack");
             BindKey(Key.F34, "+secondary");
@@ -49,8 +51,8 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.B, "drop");
             BindKey(Key.G, "throw");
             BindKey(Key.R, "reload");
+            BindKey(Key.T, "talk");
             BindKey(Key.Escape, "quit");
-            BindKey(Key.LControl, "capture");
             BindKey(Key.F32, "itemnext");
             BindKey(Key.F31, "itemprev");
             namestokeys = new Dictionary<string, Key>();

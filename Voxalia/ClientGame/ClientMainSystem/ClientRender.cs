@@ -465,7 +465,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public void Render2D()
         {
             GL.Disable(EnableCap.CullFace);
-            if (CVars.r_hud.ValueB)
+            if (CVars.u_showhud.ValueB)
             {
                 FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
                     + "\n" + Player.GetPosition()
@@ -509,14 +509,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     move = 20;
                 }
-                Textures.GetTexture("ui/hud/reticles/" + CVars.r_reticle.Value + "_tl").Bind();
-                Rendering.RenderRectangle(cX - CVars.r_reticlescale.ValueI - move, cY - CVars.r_reticlescale.ValueI - move, cX - move, cY - move);
-                Textures.GetTexture("ui/hud/reticles/" + CVars.r_reticle.Value + "_tr").Bind();
-                Rendering.RenderRectangle(cX + move, cY - CVars.r_reticlescale.ValueI - move, cX + CVars.r_reticlescale.ValueI + move, cY - move);
-                Textures.GetTexture("ui/hud/reticles/" + CVars.r_reticle.Value + "_bl").Bind();
-                Rendering.RenderRectangle(cX - CVars.r_reticlescale.ValueI - move, cY + move, cX - move, cY + CVars.r_reticlescale.ValueI + move);
-                Textures.GetTexture("ui/hud/reticles/" + CVars.r_reticle.Value + "_br").Bind();
-                Rendering.RenderRectangle(cX + move, cY + move, cX + CVars.r_reticlescale.ValueI + move, cY + CVars.r_reticlescale.ValueI + move);
+                Textures.GetTexture("ui/hud/reticles/" + CVars.u_reticle.Value + "_tl").Bind();
+                Rendering.RenderRectangle(cX - CVars.u_reticlescale.ValueI - move, cY - CVars.u_reticlescale.ValueI - move, cX - move, cY - move);
+                Textures.GetTexture("ui/hud/reticles/" + CVars.u_reticle.Value + "_tr").Bind();
+                Rendering.RenderRectangle(cX + move, cY - CVars.u_reticlescale.ValueI - move, cX + CVars.u_reticlescale.ValueI + move, cY - move);
+                Textures.GetTexture("ui/hud/reticles/" + CVars.u_reticle.Value + "_bl").Bind();
+                Rendering.RenderRectangle(cX - CVars.u_reticlescale.ValueI - move, cY + move, cX - move, cY + CVars.u_reticlescale.ValueI + move);
+                Textures.GetTexture("ui/hud/reticles/" + CVars.u_reticle.Value + "_br").Bind();
+                Rendering.RenderRectangle(cX + move, cY + move, cX + CVars.u_reticlescale.ValueI + move, cY + CVars.u_reticlescale.ValueI + move);
             }
         }
 

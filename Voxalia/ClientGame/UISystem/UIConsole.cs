@@ -443,7 +443,7 @@ namespace Voxalia.ClientGame.UISystem
             }
             else
             {
-                if (Client.Central.CVars.r_hud.ValueB)
+                if (Client.Central.CVars.u_showhud.ValueB)
                 {
                     ConsoleTextLoc.Y += (int)(Client.Central.FontSets.Standard.font_default.Height * (2 + extralines)) + 4;
                     Client.Central.FontSets.Standard.DrawColoredText(ConsoleText, ConsoleTextLoc, (int)(Client.Central.Window.Height / 2 - Client.Central.FontSets.Standard.font_default.Height * 3), 1, true);

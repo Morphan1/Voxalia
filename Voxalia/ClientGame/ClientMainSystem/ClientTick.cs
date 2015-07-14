@@ -85,6 +85,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         cvarsave.Append("set \"" + CVars.system.CVarList[i].Name + "\" \"" + val + "\";\n");
                     }
                 }
+                // TODO: Keybinds
                 SaveStr = cvarsave.ToString();
                 Thread thread = new Thread(new ThreadStart(SaveCFG));
                 thread.Start();

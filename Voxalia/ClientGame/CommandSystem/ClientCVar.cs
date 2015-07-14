@@ -33,14 +33,13 @@ namespace Voxalia.ClientGame.CommandSystem
             r_dof_strength,
             r_lightmaxdistance,
             r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun,
-            r_reticle, r_reticlescale,
-            r_highlight_targetblock, r_highlight_placeblock, r_hud;
+            r_highlight_targetblock, r_highlight_placeblock;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch;
 
         // UI CVars
-        public CVar u_mouse_sensitivity;
+        public CVar u_mouse_sensitivity, u_reticle, u_reticlescale, u_showhud;
 
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
@@ -75,11 +74,8 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality_max = Register("r_shadowquality_max", "2048", CVarFlag.Numeric); // What maximum light texture size to accept from the server.
             r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric); // What factor to use for shadow blurring. Smaller = blurrier.
             r_shadowquality_sun = Register("r_shadowquality_sun", "2048", CVarFlag.Numeric | CVarFlag.Delayed); // What texture size to use for the sun.
-            r_reticle = Register("r_reticle", "1", CVarFlag.Textual); // What reticle to use.
-            r_reticlescale = Register("r_reticlescale", "32", CVarFlag.Numeric); // How big the reticle should be.
-            r_highlight_targetblock = Register("r_highlight_targetblock", "true", CVarFlag.Boolean); // Whether to highlight the targeted block.
-            r_highlight_placeblock = Register("r_highlight_placeblock", "true", CVarFlag.Boolean); // Whether to highlight the targeted placement block.
-            r_hud = Register("r_hud", "true", CVarFlag.Boolean); // Whether to render the HUD.
+            r_highlight_targetblock = Register("r_highlight_targetblock", "true", CVarFlag.Boolean); // Whether to highlight the targeted block. // TODO: u_?
+            r_highlight_placeblock = Register("r_highlight_placeblock", "true", CVarFlag.Boolean); // Whether to highlight the targeted placement block. // TODO: u_?
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What volume the music should be.
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What pitch the music should be.
@@ -87,6 +83,9 @@ namespace Voxalia.ClientGame.CommandSystem
             a_globalpitch = Register("a_globalpitch", "1", CVarFlag.Numeric); // What pitch all sounds should be.
             // UI CVars
             u_mouse_sensitivity = Register("u_mouse_sensitivity", "1", CVarFlag.Numeric); // How sensitive the mouse is.
+            u_reticle = Register("u_reticle", "1", CVarFlag.Textual); // What reticle to use.
+            u_reticlescale = Register("u_reticlescale", "32", CVarFlag.Numeric); // How big the reticle should be.
+            u_showhud = Register("u_showhud", "true", CVarFlag.Boolean); // Whether to render the HUD.
         }
 
         CVar Register(string name, string value, CVarFlag flags)
