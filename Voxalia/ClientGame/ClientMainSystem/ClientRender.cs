@@ -38,7 +38,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_shadowadder = Shaders.GetShader("shadowadder");
             s_transponly = Shaders.GetShader("transponly");
             generateLightHelpers();
-            ambient = new Location(0.02f);
+            ambient = new Location(0.1f);
         }
 
         public void destroyLightHelpers()

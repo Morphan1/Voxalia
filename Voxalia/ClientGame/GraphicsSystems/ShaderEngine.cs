@@ -160,7 +160,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 throw new Exception("Error creating VertexShader. Error status: " + VS_Status + ", info: " + VS_Info);
             }
             int FragmentObject = GL.CreateShader(ShaderType.FragmentShader);
-            if (MCM_GOOD_GRAPHICS && ClientMainSystem.Client.Central.CVars.r_good_graphics.ValueB)
+            if (MCM_GOOD_GRAPHICS && ClientMainSystem.Client.Central.CVars.r_good_graphics.ValueB) // TODO: CVars reference
             {
                 FS = FS.Replace("#INCLUDE_STATEMENTS_HERE", "#define MCM_GOOD_GRAPHICS");
             }

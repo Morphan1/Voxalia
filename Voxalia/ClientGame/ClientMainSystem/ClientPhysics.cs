@@ -36,10 +36,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheWorld.TheClient = this;
         }
 
+        public Location SunAngle = new Location(0, -75, 0);
+
         public void TickWorld(double delta)
         {
             // TODO: Z+ -> max view rad + 30
-            TheSun.Reposition(Player.GetPosition().GetBlockLocation() + new Location(0, 0, 30 * 4));
+            TheSun.Direction = Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch);
+            TheSun.Reposition(Player.GetPosition().GetBlockLocation() - TheSun.Direction * 30 * 4);
             TheWorld.TickWorld(delta);
         }
     }
