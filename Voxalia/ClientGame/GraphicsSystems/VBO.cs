@@ -230,11 +230,31 @@ namespace Voxalia.ClientGame.GraphicsSystems
             uint[] inds = Indices.ToArray();
             Vector3[] norms = Normals.ToArray();
             Vector3[] texs = TexCoords.ToArray();
-            Vector4[] cols = Colors.ToArray();
-            Vector4[] ids = BoneIDs.ToArray();
-            Vector4[] weights = BoneWeights.ToArray();
-            Vector4[] ids2 = BoneIDs2.ToArray();
-            Vector4[] weights2 = BoneWeights2.ToArray();
+            Vector4[] cols = null;
+            if (Colors != null)
+            {
+                cols = Colors.ToArray();
+            }
+            Vector4[] ids = null;
+            if (BoneIDs != null)
+            {
+                ids = BoneIDs.ToArray();
+            }
+            Vector4[] weights = null;
+            if (BoneWeights != null)
+            {
+                weights = BoneWeights.ToArray();
+            }
+            Vector4[] ids2 = null;
+            if (BoneIDs2 != null)
+            {
+                ids2 = BoneIDs2.ToArray();
+            }
+            Vector4[] weights2 = null;
+            if (BoneWeights2 != null)
+            {
+                weights2 = BoneWeights2.ToArray();
+            }
             // Vertex buffer
             GL.GenBuffers(1, out _VertexVBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _VertexVBO);
@@ -254,35 +274,50 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     texs, BufferUsageHint.StaticDraw);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             // Color buffer
-            GL.GenBuffers(1, out _ColorVBO);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _ColorVBO);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(cols.Length * Vector4.SizeInBytes),
-                    cols, BufferUsageHint.StaticDraw);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            if (cols != null)
+            {
+                GL.GenBuffers(1, out _ColorVBO);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _ColorVBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(cols.Length * Vector4.SizeInBytes),
+                        cols, BufferUsageHint.StaticDraw);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            }
             // Weight buffer
-            GL.GenBuffers(1, out _BoneWeightVBO);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeightVBO);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(weights.Length * Vector4.SizeInBytes),
-                    weights, BufferUsageHint.StaticDraw);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            if (weights != null)
+            {
+                GL.GenBuffers(1, out _BoneWeightVBO);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeightVBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(weights.Length * Vector4.SizeInBytes),
+                        weights, BufferUsageHint.StaticDraw);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            }
             // ID buffer
-            GL.GenBuffers(1, out _BoneIDVBO);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneIDVBO);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(ids.Length * Vector4.SizeInBytes),
-                    ids, BufferUsageHint.StaticDraw);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            if (ids != null)
+            {
+                GL.GenBuffers(1, out _BoneIDVBO);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneIDVBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(ids.Length * Vector4.SizeInBytes),
+                        ids, BufferUsageHint.StaticDraw);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            }
             // Weight2 buffer
-            GL.GenBuffers(1, out _BoneWeight2VBO);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeight2VBO);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(weights2.Length * Vector4.SizeInBytes),
-                    weights2, BufferUsageHint.StaticDraw);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            if (weights2 != null)
+            {
+                GL.GenBuffers(1, out _BoneWeight2VBO);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeight2VBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(weights2.Length * Vector4.SizeInBytes),
+                        weights2, BufferUsageHint.StaticDraw);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            }
             // ID2 buffer
-            GL.GenBuffers(1, out _BoneID2VBO);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneID2VBO);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(ids2.Length * Vector4.SizeInBytes),
-                    ids2, BufferUsageHint.StaticDraw);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            if (ids2 != null)
+            {
+                GL.GenBuffers(1, out _BoneID2VBO);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneID2VBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(ids2.Length * Vector4.SizeInBytes),
+                        ids2, BufferUsageHint.StaticDraw);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            }
             // Index buffer
             GL.GenBuffers(1, out _IndexVBO);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IndexVBO);
@@ -298,35 +333,80 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 0, 0);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _TexCoordVBO);
             GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 0, 0);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _ColorVBO);
-            GL.VertexAttribPointer(3, 4, VertexAttribPointerType.Float, false, 0, 0);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeightVBO);
-            GL.VertexAttribPointer(4, 4, VertexAttribPointerType.Float, false, 0, 0);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneIDVBO);
-            GL.VertexAttribPointer(5, 4, VertexAttribPointerType.Float, false, 0, 0);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeight2VBO);
-            GL.VertexAttribPointer(6, 4, VertexAttribPointerType.Float, false, 0, 0);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneID2VBO);
-            GL.VertexAttribPointer(7, 4, VertexAttribPointerType.Float, false, 0, 0);
+            if (cols != null)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _ColorVBO);
+                GL.VertexAttribPointer(3, 4, VertexAttribPointerType.Float, false, 0, 0);
+            }
+            if (weights != null)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeightVBO);
+                GL.VertexAttribPointer(4, 4, VertexAttribPointerType.Float, false, 0, 0);
+            }
+            if (ids != null)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneIDVBO);
+                GL.VertexAttribPointer(5, 4, VertexAttribPointerType.Float, false, 0, 0);
+            }
+            if (weights2 != null)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeight2VBO);
+                GL.VertexAttribPointer(6, 4, VertexAttribPointerType.Float, false, 0, 0);
+            }
+            if (ids2 != null)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneID2VBO);
+                GL.VertexAttribPointer(7, 4, VertexAttribPointerType.Float, false, 0, 0);
+            }
             GL.EnableVertexAttribArray(0);
             GL.EnableVertexAttribArray(1);
             GL.EnableVertexAttribArray(2);
-            GL.EnableVertexAttribArray(3);
-            GL.EnableVertexAttribArray(4);
-            GL.EnableVertexAttribArray(5);
-            GL.EnableVertexAttribArray(6);
-            GL.EnableVertexAttribArray(7);
+            if (cols != null)
+            {
+                GL.EnableVertexAttribArray(3);
+            }
+            if (weights != null)
+            {
+                GL.EnableVertexAttribArray(4);
+            }
+            if (ids != null)
+            {
+                GL.EnableVertexAttribArray(5);
+            }
+            if (weights2 != null)
+            {
+                GL.EnableVertexAttribArray(6);
+            }
+            if (ids2 != null)
+            {
+                GL.EnableVertexAttribArray(7);
+            }
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IndexVBO);
             // Clean up
             GL.BindVertexArray(0);
             GL.DisableVertexAttribArray(0);
             GL.DisableVertexAttribArray(1);
             GL.DisableVertexAttribArray(2);
-            GL.DisableVertexAttribArray(3);
-            GL.DisableVertexAttribArray(4);
-            GL.DisableVertexAttribArray(5);
-            GL.DisableVertexAttribArray(6);
-            GL.DisableVertexAttribArray(7);
+            if (cols != null)
+            {
+                GL.DisableVertexAttribArray(3);
+            }
+            if (weights != null)
+            {
+                GL.DisableVertexAttribArray(4);
+            }
+            if (ids != null)
+            {
+                GL.DisableVertexAttribArray(5);
+            }
+            if (weights2 != null)
+            {
+                GL.DisableVertexAttribArray(6);
+            }
+            if (ids2 != null)
+            {
+                GL.DisableVertexAttribArray(7);
+            }
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             generated = true;

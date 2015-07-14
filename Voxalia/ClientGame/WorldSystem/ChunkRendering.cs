@@ -196,30 +196,20 @@ namespace Voxalia.ClientGame.WorldSystem
                     return;
                 }
                 List<uint> inds = new List<uint>(Vertices.Count); // TODO: VBO Array input instead of a list
-                List<Vector4> bWeight = new List<Vector4>(Vertices.Count);
-                List<Vector4> bID = new List<Vector4>(Vertices.Count);
-                List<Vector4> bWeight2 = new List<Vector4>(Vertices.Count);
-                List<Vector4> bID2 = new List<Vector4>(Vertices.Count);
-                List<Vector4> Colors = new List<Vector4>(Vertices.Count);
                 for (uint i = 0; i < Vertices.Count; i++)
                 {
                     inds.Add(i);
-                    bWeight.Add(Vector4.Zero);
-                    bID.Add(Vector4.Zero);
-                    bWeight2.Add(Vector4.Zero);
-                    bID2.Add(Vector4.Zero);
-                    Colors.Add(Vector4.One);
                 }
                 VBO tVBO = new VBO();
                 tVBO.Indices = inds;
                 tVBO.Vertices = Vertices;
-                tVBO.TexCoords = TCoords;
-                tVBO.BoneWeights = bWeight;
-                tVBO.BoneIDs = bID;
-                tVBO.BoneWeights2 = bWeight2;
-                tVBO.BoneIDs2 = bID2;
-                tVBO.Colors = Colors;
                 tVBO.Normals = Norms;
+                tVBO.TexCoords = TCoords;
+                tVBO.BoneWeights = null;
+                tVBO.BoneIDs = null;
+                tVBO.BoneWeights2 = null;
+                tVBO.BoneIDs2 = null;
+                tVBO.Colors = null;
                 lock (OwningWorld.TheClient.TickLock)
                 {
                     if (_VBO != null)
