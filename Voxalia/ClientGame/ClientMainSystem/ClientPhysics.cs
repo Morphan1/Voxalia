@@ -39,7 +39,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public void TickWorld(double delta)
         {
             // TODO: Z+ -> max view rad + 30
-            TheSun.Reposition(Player.GetPosition() + new Location(0, 0, 30 * 4));
+            TheSun.Reposition(Player.GetPosition().GetBlockLocation() + new Location(0, 0, 30 * 4));
             TheWorld.TickWorld(delta);
         }
     }

@@ -264,6 +264,7 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             TheClient.Rendering.SetColor(Color4.White);
             TheClient.Rendering.SetMinimumLight(0f);
+            // TODO: Reduce specular
             Matrix4 mat = Matrix4.Identity;
             GL.UniformMatrix4(2, false, ref mat);
             GL.UniformMatrix4(7, false, ref mat);

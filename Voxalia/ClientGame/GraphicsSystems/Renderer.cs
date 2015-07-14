@@ -309,7 +309,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 * Matrix4.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
                  * Matrix4.CreateTranslation(start.ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
-            Client.Central.Models.Cylinder.Draw(); // TODO: Models reference in constructor
+            Client.Central.Models.Cylinder.Draw(); // TODO: Models reference in constructor - or client reference?
         }
 
         public void SetColor(Color4 c)
