@@ -23,7 +23,7 @@ namespace Voxalia
         /// <summary>
         /// The version of the game.
         /// </summary>
-        public static string GameVersion = "0.0.2";
+        public static string GameVersion = "0.0.3";
 
         /// <summary>
         /// A handle for the console window.
