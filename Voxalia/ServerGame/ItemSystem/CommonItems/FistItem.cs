@@ -40,13 +40,14 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 {
                     // TODO: Damage
                 }
-                else
+                else if (player.TheWorld.GlobalTickTime - player.LastBlockBreak >= 0.2)
                 {
                     Location block = cr.Position - cr.Normal * 0.01;
                     Material mat = player.TheWorld.GetBlockMaterial(block);
                     if (mat != Material.AIR) // TODO: IsBreakable
                     {
                         player.TheWorld.BreakNaturally(block);
+                        player.LastBlockBreak = player.TheWorld.GlobalTickTime;
                     }
                 }
             }

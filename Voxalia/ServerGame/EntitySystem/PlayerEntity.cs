@@ -357,6 +357,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public double LastGunShot = 0;
 
+        public double LastBlockBreak = 0;
+
+        public double LastBlockPlace = 0;
+
         public bool WasClicking = false;
 
         public double LastAltClick = 0;
