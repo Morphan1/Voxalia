@@ -250,7 +250,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
-            if (TheClient.RenderingShadows)
+            if (TheClient.RenderingShadows || !TheClient.CVars.g_firstperson.ValueB)
             {
                 OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
                     * PlayerAngleMat

@@ -40,6 +40,7 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.X, "stance crouch");
             BindKey(Key.C, "stance stand");
             BindKey(Key.V, "+stand_tall");
+            BindKey(Key.P, "toggle g_firstperson");
             BindKey(Key.Space, "+upward");
             BindKey(Key.LShift, "+walk");
             BindKey(Key.F1, "toggle u_showhud");

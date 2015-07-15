@@ -160,7 +160,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.1f, 0.1f, 0.1f, 1f });
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
             GL.Enable(EnableCap.DepthTest);
-            CameraPos = PlayerEyePosition;
+            if (CVars.g_firstperson.ValueB)
+            {
+                CameraPos = PlayerEyePosition;
+            }
+            else
+            {
+                CameraPos = PlayerEyePosition - Player.ForwardVector() * 2;
+            }
             sortEntities();
             if (CVars.r_lighting.ValueB)
             {
