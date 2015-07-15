@@ -281,7 +281,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
-            CursorMarker.SetPosition(GetPosition() + ForwardVector() * 0.5f);
+            CursorMarker.SetPosition(GetEyePosition() + ForwardVector() * 0.9f);
             CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(Direction.Pitch * Utilities.PI180)) * // TODO: is the pitch really needed for this?
                 Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(Direction.Yaw * Utilities.PI180)));
             base.SetOrientation(Quaternion.Identity);
