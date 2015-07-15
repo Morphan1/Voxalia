@@ -227,7 +227,8 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
-            OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
+            OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(1.5f)
+                * OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
                 * PlayerEntity.PlayerAngleMat
                 * OpenTK.Matrix4.CreateTranslation(GetPosition().ToOVector());
             GL.UniformMatrix4(2, false, ref mat);
