@@ -39,7 +39,25 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_transponly = Shaders.GetShader("transponly");
             generateLightHelpers();
             ambient = new Location(0.1f);
+            skybox = new VBO[6];
+            for (int i = 0; i < 6; i++)
+            {
+                skybox[i] = new VBO();
+                skybox[i].Prepare();
+            }
+            skybox[0].AddSide(-Location.UnitZ, new TextureCoordinates());
+            skybox[1].AddSide(Location.UnitZ, new TextureCoordinates());
+            skybox[2].AddSide(-Location.UnitX, new TextureCoordinates());
+            skybox[3].AddSide(Location.UnitX, new TextureCoordinates());
+            skybox[4].AddSide(-Location.UnitY, new TextureCoordinates());
+            skybox[5].AddSide(Location.UnitY, new TextureCoordinates());
+            for (int i = 0; i < 6; i++)
+            {
+                skybox[i].GenerateVBO();
+            }
         }
+
+        VBO[] skybox;
 
         public void destroyLightHelpers()
         {
@@ -219,8 +237,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.UniformMatrix4(1, false, ref combined);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 RS4P.Bind();
-                // TODO: Render settings
                 RenderLights = true;
+                // TODO: Render settings
                 Render3D(false);
                 RenderLights = false;
                 RS4P.Unbind();
@@ -332,12 +350,37 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
-                ReverseEntitiesOrder();
-                s_transponly.Bind();
-                GL.UniformMatrix4(1, false, ref combined);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, RS4P.fbo);
                 GL.BlitFramebuffer(0, 0, Window.Width, Window.Height, 0, 0, Window.Width, Window.Height, ClearBufferMask.DepthBufferBit, BlitFramebufferFilter.Nearest);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
+                {
+                    Shaders.ColorMultShader.Bind();
+                    VBO.BonesIdentity();
+                    GL.UniformMatrix4(1, false, ref combined);
+                    Rendering.SetColor(Color4.White);
+                    float dist = 30 * 6;
+                    GL.Disable(EnableCap.CullFace);
+                    Matrix4 scale = Matrix4.CreateScale(dist, dist, dist) * Matrix4.CreateTranslation(CameraPos.ToOVector());
+                    GL.UniformMatrix4(2, false, ref scale);
+                    Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/bottom").Bind();
+                    skybox[0].Render(false);
+                    Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/top").Bind();
+                    skybox[1].Render(false);
+                    Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/xm").Bind();
+                    skybox[2].Render(false);
+                    Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/xp").Bind();
+                    skybox[3].Render(false);
+                    Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/ym").Bind();
+                    skybox[4].Render(false);
+                    Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/yp").Bind();
+                    skybox[5].Render(false);
+                    GL.BindTexture(TextureTarget.Texture2D, 0);
+                    GL.Enable(EnableCap.CullFace);
+                }
+                ReverseEntitiesOrder();
+                s_transponly.Bind();
+                VBO.BonesIdentity();
+                GL.UniformMatrix4(1, false, ref combined);
                 Render3D(false);
                 Shaders.ColorMultShader.Bind();
                 GL.UniformMatrix4(1, false, ref combined);
