@@ -24,7 +24,7 @@ namespace Voxalia.Shared
         static MaterialHelpers()
         {
             MaterialInfo[] mats = new MaterialInfo[] {
-                new MaterialInfo(0) { Solid = false, Opaque = false }, // AIR
+                new MaterialInfo(0) { Solid = false, Opaque = false, RendersAtAll = false }, // AIR
                 new MaterialInfo(1), // STONE
                 new MaterialInfo(2), // GRASS
                 new MaterialInfo(3) // DIRT
@@ -42,6 +42,11 @@ namespace Voxalia.Shared
         public static bool IsOpaque(this Material mat)
         {
             return ALL_MATS[(int)mat].Opaque;
+        }
+
+        public static bool RendersAtAll(this Material mat)
+        {
+            return ALL_MATS[(int)mat].RendersAtAll;
         }
 
         public static int TextureID(this Material mat, MaterialSide side)
@@ -101,6 +106,8 @@ namespace Voxalia.Shared
         public bool Solid = true;
 
         public bool Opaque = true;
+
+        public bool RendersAtAll = true;
 
         public int[] TID = new int[(int)MaterialSide.COUNT];
     }

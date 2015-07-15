@@ -64,70 +64,23 @@ namespace Voxalia.ClientGame.WorldSystem
                     for (int z = 0; z < CHUNK_SIZE; z++)
                     {
                         BlockInternal c = GetBlockAt(x, y, z);
-                        BlockInternal zp = z + 1 < CHUNK_SIZE ? GetBlockAt(x, y, z + 1) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, y, 30));
-                        BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, y, -1));
-                        BlockInternal yp = y + 1 < CHUNK_SIZE ? GetBlockAt(x, y + 1, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, 30, z));
-                        BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, -1, z));
-                        BlockInternal xp = x + 1 < CHUNK_SIZE ? GetBlockAt(x + 1, y, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(30, y, z));
-                        BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(-1, y, z));
-                        if (((Material)c.BlockMaterial).IsOpaque() || ((Material)c.BlockMaterial).IsSolid()) // TODO: Better check. OccupiesFullBlock()?
+                        if (((Material)c.BlockMaterial).IsSolid())
                         {
+                            BlockInternal zp = z + 1 < CHUNK_SIZE ? GetBlockAt(x, y, z + 1) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, y, 30));
+                            BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, y, -1));
+                            BlockInternal yp = y + 1 < CHUNK_SIZE ? GetBlockAt(x, y + 1, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, 30, z));
+                            BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, -1, z));
+                            BlockInternal xp = x + 1 < CHUNK_SIZE ? GetBlockAt(x + 1, y, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(30, y, z));
+                            BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(-1, y, z));
+                            bool zps = ((Material)zp.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[zp.BlockData].OccupiesTOP();
+                            bool zms = ((Material)zm.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[zm.BlockData].OccupiesBOTTOM();
+                            bool xps = ((Material)xp.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXP();
+                            bool xms = ((Material)xm.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXM();
+                            bool yps = ((Material)yp.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYP();
+                            bool yms = ((Material)ym.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYM();
                             Vector3 pos = new Vector3(ppos.X + x, ppos.Y + y, ppos.Z + z);
-                            if (!((Material)zp.BlockMaterial).IsOpaque())
-                            {
-                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
-                            }
-                            if (!((Material)zm.BlockMaterial).IsOpaque())
-                            {
-                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z));
-                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z));
-                                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
-                            }
-                            if (!((Material)xp.BlockMaterial).IsOpaque())
-                            {
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
-                            }
-                            if (!((Material)xm.BlockMaterial).IsOpaque())
-                            {
-                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
-                                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
-                                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
-                                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
-                            }
-                            if (!((Material)yp.BlockMaterial).IsOpaque())
-                            {
-                                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
-                            }
-                            if (!((Material)ym.BlockMaterial).IsOpaque())
-                            {
-                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
-                                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
-                                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
-                            }
-                            // TODO: Else, handle special case direction data
+                            List<Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
+                            Vertices.AddRange(vecsi);
                         }
                     }
                 }

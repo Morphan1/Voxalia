@@ -23,6 +23,8 @@ namespace Voxalia.Shared
 
         public abstract List<Vector3> GetNormals(Vector3 blockPos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM);
 
+        public abstract List<Vector3> GetTCoords(Vector3 blockPos, Material mat, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM);
+
         public abstract bool OccupiesXP();
 
         public abstract bool OccupiesYP();
