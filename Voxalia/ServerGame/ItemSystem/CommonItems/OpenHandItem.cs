@@ -66,7 +66,6 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             JointBallSocket jbs = new JointBallSocket(player.CursorMarker, pe, hit);
             player.TheWorld.AddJoint(jbs);
             player.GrabJoint = jbs;
-
         }
 
         public override void ReleaseClick(Entity entity, ItemStack item)

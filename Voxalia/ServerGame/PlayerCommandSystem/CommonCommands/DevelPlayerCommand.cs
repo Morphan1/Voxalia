@@ -25,7 +25,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             if (arg0 == "spawnVehicle")
             {
                 VehicleEntity ve = new VehicleEntity("failmobile", entry.Player.TheWorld);
-                ve.SetPosition(entry.Player.GetPosition());
+                ve.SetPosition(entry.Player.GetEyePosition());
                 entry.Player.TheWorld.SpawnEntity(ve);
             }
             else

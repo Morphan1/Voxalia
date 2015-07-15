@@ -33,26 +33,30 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     for (int x = 0; x < scene.Meshes[i].Bones.Count; x++)
                     {
+                        SysConsole.Output(OutputType.INFO, "BONE:" + x + "==" + scene.Meshes[i].Bones[x].Name);
                         if (scene.Meshes[i].Bones[x].Name.ToLower().Contains("wheel"))
                         {
                             Assimp.Vector3D apos;
                             Assimp.Vector3D ascale;
                             Assimp.Quaternion arot;
-                            scene.Meshes[i].Bones[x].OffsetMatrix.Decompose(out apos, out arot, out ascale);
+                            Assimp.Matrix4x4 mat = scene.RootNode.Transform;
+                            mat.Inverse();
+                            (scene.Meshes[i].Bones[x].OffsetMatrix * mat).Decompose(out ascale, out arot, out apos);
                             Location pos = GetPosition() + new Location(apos.X, apos.Y, apos.Z);
                             ModelEntity wheel = new ModelEntity("vehicles/" + vehName + "_wheel.dae", TheWorld);
                             wheel.SetPosition(pos);
-                            wheel.SetOrientation(new BEPUutilities.Quaternion(arot.X, arot.Y, arot.Z, arot.W));
+                            wheel.SetOrientation(BEPUutilities.Quaternion.Identity); // TODO: orient
+                            //wheel.SetOrientation(new BEPUutilities.Quaternion(arot.X, arot.Y, arot.Z, arot.W));
                             wheel.Gravity = Gravity;
                             wheel.CGroup = CGroup;
                             wheel.SetMass(5);
                             TheWorld.SpawnEntity(wheel);
+                            // TODO: better joint
+                            JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
                             //BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
                             //JointSpinner jbs = new JointSpinner(this, wheel, Location.FromBVector(forward));
-                            JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
                             TheWorld.AddJoint(jbs);
                         }
-
                     }
                 }
                 hasWheels = true;
