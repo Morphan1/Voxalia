@@ -48,6 +48,26 @@ namespace Voxalia.Shared
         {
             return ALL_MATS[(int)mat].TID[(int)side];
         }
+
+        public static string GetName(this Material mat)
+        {
+            string bname = ALL_MATS[(int)mat].Name;
+            if (bname != null)
+            {
+                return bname;
+            }
+            return mat.ToString();
+        }
+
+        public static string GetDescription(this Material mat)
+        {
+            string bdesc = ALL_MATS[(int)mat].Description;
+            if (bdesc != null)
+            {
+                return bdesc;
+            }
+            return "A standard block of " + mat.ToString().ToLower();
+        }
     }
 
     public enum MaterialSide : byte
@@ -71,6 +91,10 @@ namespace Voxalia.Shared
                 TID[i] = ID;
             }
         }
+
+        public string Name = null;
+
+        public string Description = null;
 
         public int ID = 0;
 

@@ -27,8 +27,8 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             if (user is PlayerEntity)
             {
-                ((PlayerEntity)user).Items.GiveItem(new ItemStack("block", TheServer, 1, "", Mat.ToString(),
-                    "A block of " + Mat.ToString(), Color.White.ToArgb(), "cube", false) { Datum = (ushort)Mat });
+                ((PlayerEntity)user).Items.GiveItem(new ItemStack("block", TheServer, 1, "", Mat.GetName(),
+                    Mat.GetDescription(), Color.White.ToArgb(), "cube", false) { Datum = (ushort)Mat });
                 TheWorld.DespawnEntity(this);
                 return true;
             }
