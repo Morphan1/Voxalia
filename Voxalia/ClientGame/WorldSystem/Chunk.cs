@@ -109,7 +109,7 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 Task oadd = adding;
                 adding = new Task(() => AddInternal());
-                oadd.ContinueWith((o) => adding.Start());
+                oadd.ContinueWith((o) => { if (adding.Status != TaskStatus.Running && adding.Status != TaskStatus.WaitingToRun) { adding.Start(); } });
             }
             else
             {

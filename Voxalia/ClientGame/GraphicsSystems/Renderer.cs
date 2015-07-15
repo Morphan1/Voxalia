@@ -26,7 +26,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GenerateBackgridVBO();
         }
 
-        VBO Square;
+        public VBO Square;
         VBO Line;
         VBO Box;
         VBO Backgrid;
@@ -333,11 +333,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="ymin">The lower bounds of the the rectangle: Y coordinate</param>
         /// <param name="xmax">The upper bounds of the the rectangle: X coordinate</param>
         /// <param name="ymax">The upper bounds of the the rectangle: Y coordinate</param>
-        public void RenderRectangle(int xmin, int ymin, int xmax, int ymax)
+        public void RenderRectangle(float xmin, float ymin, float xmax, float ymax)
         {
             Matrix4 mat = Matrix4.CreateScale(xmax - xmin, ymax - ymin, 1) * Matrix4.CreateTranslation(xmin, ymin, 0);
             GL.UniformMatrix4(2, false, ref mat);
-
             GL.BindVertexArray(Square._VAO);
             GL.DrawElements(PrimitiveType.Quads, 4, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }

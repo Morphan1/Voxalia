@@ -22,7 +22,7 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 Task orend = rendering;
                 rendering = new Task(() => VBOHInternal());
-                orend.ContinueWith((o) => rendering.Start());
+                orend.ContinueWith((o) => { if (rendering.Status != TaskStatus.Running && rendering.Status != TaskStatus.WaitingToRun) { rendering.Start(); } });
             }
             else
             {
