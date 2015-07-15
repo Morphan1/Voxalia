@@ -191,13 +191,13 @@ namespace Voxalia.ClientGame.WorldSystem
             return ch.GetBlockAt(x, y, z);
         }
 
-        public void SetBlockMaterial(Location pos, Material mat, bool regen = true)
+        public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, bool regen = true)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos));
             int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
-            ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, 0));
+            ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat));
             if (regen)
             {
                 ch.AddToWorld();

@@ -10,13 +10,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 12 + 2)
+            if (data.Length != 12 + 2 + 1)
             {
                 return false;
             }
             Location loc = Location.FromBytes(data, 0);
             ushort mat = Utilities.BytesToUshort(Utilities.BytesPartial(data, 12, 2));
-            TheClient.TheWorld.SetBlockMaterial(loc, (Material)mat);
+            byte dat = data[12 + 2];
+            TheClient.TheWorld.SetBlockMaterial(loc, (Material)mat, dat);
             return true;
         }
     }

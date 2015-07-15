@@ -332,6 +332,8 @@
     <Compile Include="Shared\AABB.cs" />
     <Compile Include="Shared\AnimationEngine.cs" />
     <Compile Include="Shared\BlockInternal.cs" />
+    <Compile Include="Shared\BlockShapeRegistry.cs" />
+    <Compile Include="Shared\BlockShapes\BSD0.cs" />
     <Compile Include="Shared\DataReader.cs" />
     <Compile Include="Shared\DataWriter.cs" />
     <Compile Include="Shared\ItemStackBase.cs" />
@@ -382,6 +384,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
