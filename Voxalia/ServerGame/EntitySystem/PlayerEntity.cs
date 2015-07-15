@@ -319,6 +319,12 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 cit.Info.AltClick(this, cit);
                 LastAltClick = TheWorld.GlobalTickTime;
+                WasAltClicking = true;
+            }
+            else if (WasAltClicking)
+            {
+                cit.Info.ReleaseAltClick(this, cit);
+                WasAltClicking = false;
             }
             cit.Info.Tick(this, cit);
             // TODO: Better system
@@ -357,9 +363,15 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public double LastGunShot = 0;
 
+        public double LastBlockBreak = 0;
+
+        public double LastBlockPlace = 0;
+
         public bool WasClicking = false;
 
         public double LastAltClick = 0;
+
+        public bool WasAltClicking = false;
 
         public float MoveSpeed = 10;
 

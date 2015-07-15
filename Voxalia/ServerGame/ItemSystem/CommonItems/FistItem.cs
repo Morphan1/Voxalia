@@ -40,19 +40,31 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 {
                     // TODO: Damage
                 }
-                else
+                else if (player.TheWorld.GlobalTickTime - player.LastBlockBreak >= 0.2)
                 {
                     Location block = cr.Position - cr.Normal * 0.01;
                     Material mat = player.TheWorld.GetBlockMaterial(block);
                     if (mat != Material.AIR) // TODO: IsBreakable
                     {
                         player.TheWorld.BreakNaturally(block);
+                        player.LastBlockBreak = player.TheWorld.GlobalTickTime;
                     }
                 }
             }
         }
 
-        public override void ReleaseClick(Entity player, ItemStack item)
+        public override void ReleaseClick(Entity entity, ItemStack item)
+        {
+            if (!(entity is PlayerEntity))
+            {
+                // TODO: non-player support
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)entity;
+            player.LastBlockBreak = 0;
+        }
+
+        public override void ReleaseAltClick(Entity player, ItemStack item)
         {
         }
 

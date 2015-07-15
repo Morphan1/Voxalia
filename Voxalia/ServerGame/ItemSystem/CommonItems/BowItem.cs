@@ -52,6 +52,10 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
         {
         }
 
+        public override void ReleaseAltClick(Entity entity, ItemStack item)
+        {
+        }
+
         public override void Use(Entity entity, ItemStack item)
         {
         }

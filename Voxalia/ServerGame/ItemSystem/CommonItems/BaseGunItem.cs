@@ -147,6 +147,10 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             player.WaitingForClickRelease = false;
         }
 
+        public override void ReleaseAltClick(Entity player, ItemStack item)
+        {
+        }
+
         public override void Use(Entity player, ItemStack item)
         {
         }

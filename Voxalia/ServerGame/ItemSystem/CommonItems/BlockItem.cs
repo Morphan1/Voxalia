@@ -37,7 +37,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 {
                     // TODO: ???
                 }
-                else
+                else if (player.TheWorld.GlobalTickTime - player.LastBlockPlace >= 0.2)
                 {
                     Location block = player.TheWorld.GetBlockLocation(cr.Position + cr.Normal * 0.5);
                     Material mat = player.TheWorld.GetBlockMaterial(block);
@@ -57,10 +57,22 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                             {
                                 player.Network.SendPacket(new SetItemPacketOut(player.Items.Items.IndexOf(item), item));
                             }
+                            player.LastBlockPlace = player.TheWorld.GlobalTickTime;
                         }
                     }
                 }
             }
+        }
+
+        public override void ReleaseAltClick(Entity entity, ItemStack item)
+        {
+            if (!(entity is PlayerEntity))
+            {
+                // TODO: non-player support
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)entity;
+            player.LastBlockPlace = 0;
         }
 
         public override void Click(Entity entity, ItemStack item)

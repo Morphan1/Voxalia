@@ -18,6 +18,8 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public abstract void ReleaseClick(Entity player, ItemStack item);
 
+        public abstract void ReleaseAltClick(Entity player, ItemStack item);
+
         public abstract void Use(Entity player, ItemStack item);
 
         public abstract void SwitchFrom(Entity player, ItemStack item);
