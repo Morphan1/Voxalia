@@ -37,7 +37,14 @@ namespace Voxalia.ClientGame.OtherSystems
 
         public override void SetTextureName(string name)
         {
-            Tex = TheClient.Textures.GetTexture(name);
+            if (name == null || name.Length == 0)
+            {
+                Tex = null;
+            }
+            else
+            {
+                Tex = TheClient.Textures.GetTexture(name);
+            }
         }
 
         public override string GetTextureName()
@@ -59,6 +66,17 @@ namespace Voxalia.ClientGame.OtherSystems
 
         public void Render(Location pos, Location size)
         {
+            if (Tex == null)
+            {
+                if (Name == "block")
+                {
+                    Tex = TheClient.Textures.GetTexture("blocks/icons/" + SecondaryName.ToLower());
+                }
+                else
+                {
+                    return;
+                }
+            }
             Tex.Bind();
             TheClient.Rendering.SetColor(GetColor());
             TheClient.Rendering.RenderRectangle((int)pos.X, (int)pos.Y, (int)(pos.X + size.X), (int)(pos.Y + size.Y));
