@@ -53,7 +53,18 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
         }
 
-        public override void ReleaseClick(Entity player, ItemStack item)
+        public override void ReleaseClick(Entity entity, ItemStack item)
+        {
+            if (!(entity is PlayerEntity))
+            {
+                // TODO: non-player support
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)entity;
+            player.LastBlockBreak = 0;
+        }
+
+        public override void ReleaseAltClick(Entity player, ItemStack item)
         {
         }
 

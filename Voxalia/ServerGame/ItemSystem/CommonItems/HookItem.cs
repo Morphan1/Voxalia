@@ -90,6 +90,10 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
         {
         }
 
+        public override void ReleaseAltClick(Entity entity, ItemStack item)
+        {
+        }
+
         public static void RemoveHook(PlayerEntity player)
         {
             if (player.Hooks.Count > 0)
