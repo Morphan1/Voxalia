@@ -56,6 +56,24 @@ namespace Voxalia.ServerGame.ItemSystem
             return -1;
         }
 
+        public bool ItemAttrsMatch(ItemStack i1, ItemStack i2)
+        {
+            Dictionary<string, string>.KeyCollection keys1 = i1.Attributes.Keys;
+            Dictionary<string, string>.KeyCollection keys2 = i2.Attributes.Keys;
+            if (keys1.Count != keys2.Count)
+            {
+                return false;
+            }
+            foreach (string str in keys1)
+            {
+                if (i1.Attributes[str] != i2.Attributes[str])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public virtual ItemStack GiveItem(ItemStack item)
         {
             for (int i = 0; i < Items.Count; i++)
@@ -67,6 +85,7 @@ namespace Voxalia.ServerGame.ItemSystem
                     Items[i].DrawColor == item.DrawColor &&
                     Items[i].Image == item.Image &&
                     Items[i].Model == item.Model &&
+                    ItemAttrsMatch(Items[i], item) &&
                     Items[i].IsBound == item.IsBound)
                     // TODO: Better match logic
                 {
