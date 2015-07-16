@@ -338,6 +338,10 @@
     <Compile Include="Shared\BlockShapes\BSD0.cs" />
     <Compile Include="Shared\BlockShapes\BSD1_5.cs" />
     <Compile Include="Shared\BlockShapes\BSD6_10.cs" />
+    <Compile Include="Shared\BlockShapes\BSD11_15.cs" />
+    <Compile Include="Shared\BlockShapes\BSD16_20.cs" />
+    <Compile Include="Shared\BlockShapes\BSD21_25.cs" />
+    <Compile Include="Shared\BlockShapes\BSD26_30.cs" />
     <Compile Include="Shared\DataReader.cs" />
     <Compile Include="Shared\DataWriter.cs" />
     <Compile Include="Shared\ItemStackBase.cs" />
