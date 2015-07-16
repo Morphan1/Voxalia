@@ -220,6 +220,8 @@ namespace Voxalia.ClientGame.EntitySystem
             WheelBody.CollisionInformation.CollisionRules.Specific.Add(Body.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
             Body.CollisionInformation.CollisionRules.Specific.Add(WheelBody.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
             WheelBody.Tag = this;
+            WheelBody.AngularDamping = 0.75f;
+            WheelBody.LinearDamping = 0.75f;
             TheWorld.PhysicsWorld.Add(WheelBody);
             bsj = new BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint(Body, WheelBody, WheelBody.Position);
             TheWorld.PhysicsWorld.Add(bsj);
