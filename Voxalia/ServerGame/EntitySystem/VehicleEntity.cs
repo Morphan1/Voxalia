@@ -50,6 +50,7 @@ namespace Voxalia.ServerGame.EntitySystem
                             wheel.Gravity = Gravity;
                             wheel.CGroup = CGroup;
                             wheel.SetMass(5);
+                            wheel.mode = ModelCollisionMode.SPHERE;
                             TheWorld.SpawnEntity(wheel);
                             // TODO: better joints
                             JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
