@@ -294,6 +294,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             if (TheClient.RenderingShadows || !TheClient.CVars.g_firstperson.ValueB)
             {
+                // TODO: debug mode ... match this on all living entities
                 /*
                 OpenTK.Matrix4 bodymat = GetTransformationMatrix();
                 Location loc = new Location(bodymat.ExtractTranslation());
