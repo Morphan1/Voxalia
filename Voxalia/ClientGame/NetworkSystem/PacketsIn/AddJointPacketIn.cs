@@ -103,9 +103,23 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     return false;
                 }
                 Location dir = Location.FromBytes(data, len);
-                JointSpinner jbs = new JointSpinner((PhysicsEntity)pe1, (PhysicsEntity)pe2, dir);
-                jbs.JID = JID;
-                TheClient.TheWorld.AddJoint(jbs);
+                JointSpinner js = new JointSpinner((PhysicsEntity)pe1, (PhysicsEntity)pe2, dir);
+                js.JID = JID;
+                TheClient.TheWorld.AddJoint(js);
+                return true;
+            }
+            else if (type == 6)
+            {
+                if (data.Length != len + 12 + 12)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
+                    return false;
+                }
+                Location a1 = Location.FromBytes(data, len);
+                Location a2 = Location.FromBytes(data, len + 12);
+                JointTwist jt = new JointTwist((PhysicsEntity)pe1, (PhysicsEntity)pe2, a1, a2);
+                jt.JID = JID;
+                TheClient.TheWorld.AddJoint(jt);
                 return true;
             }
             else

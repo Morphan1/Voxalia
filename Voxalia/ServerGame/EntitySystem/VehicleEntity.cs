@@ -33,7 +33,6 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     for (int x = 0; x < scene.Meshes[i].Bones.Count; x++)
                     {
-                        SysConsole.Output(OutputType.INFO, "BONE:" + x + "==" + scene.Meshes[i].Bones[x].Name);
                         string name = scene.Meshes[i].Bones[x].Name.ToLower();
                         if (name.Contains("wheel"))
                         {
@@ -54,11 +53,17 @@ namespace Voxalia.ServerGame.EntitySystem
                             TheWorld.SpawnEntity(wheel);
                             // TODO: better joints
                             JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
+                            //BEPUutilities.Vector3 side = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(1, 0, 0), wheel.GetOrientation());
                             BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
                             BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 0, 1), wheel.GetOrientation());
-                            JointTwist jt = new JointTwist(this, wheel, Location.FromBVector(forward), Location.FromBVector(up));
+                            JointTwist jt = new JointTwist(this, wheel, Location.FromBVector(forward), Location.FromBVector(forward));
+                            JointTwist jt2 = new JointTwist(this, wheel, Location.FromBVector(up), Location.FromBVector(up));
                             TheWorld.AddJoint(jbs);
                             TheWorld.AddJoint(jt);
+                            TheWorld.AddJoint(jt2);
+                            BEPUutilities.Vector3 angvel = new BEPUutilities.Vector3(10, 0, 0);
+                            wheel.Body.ApplyAngularImpulse(ref angvel);
+                            wheel.Body.ActivityInformation.Activate();
                         }
                     }
                 }

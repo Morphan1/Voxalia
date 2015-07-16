@@ -167,6 +167,7 @@
     <Compile Include="ClientGame\GraphicsSystems\VBO.cs" />
     <Compile Include="ClientGame\JointSystem\BaseFJoint.cs" />
     <Compile Include="ClientGame\JointSystem\BaseJoint.cs" />
+    <Compile Include="ClientGame\JointSystem\JointTwist.cs" />
     <Compile Include="ClientGame\JointSystem\InternalBaseJoint.cs" />
     <Compile Include="ClientGame\JointSystem\JointBallSocket.cs" />
     <Compile Include="ClientGame\JointSystem\JointDistance.cs" />
