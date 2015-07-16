@@ -29,7 +29,7 @@ namespace Voxalia.Shared.BlockShapes
             }
             if (!BOTTOM)
             {
-                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + Percent));
+                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X + Percent, pos.Y + 1, pos.Z));
                 Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
                 Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));

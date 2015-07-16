@@ -33,16 +33,21 @@ namespace Voxalia.Shared
             BSD[13] = new BSD11_15(0.50f);
             BSD[14] = new BSD11_15(0.34f);
             BSD[15] = new BSD11_15(0.13f);
-            BSD[16] = new BSD16_20(0.13f);
-            BSD[17] = new BSD16_20(0.84f);
-            BSD[18] = new BSD16_20(0.68f);
-            BSD[19] = new BSD16_20(0.50f);
-            BSD[20] = new BSD16_20(0.34f);
-            BSD[21] = new BSD21_25(0.13f);
-            BSD[22] = new BSD21_25(0.84f);
-            BSD[23] = new BSD21_25(0.68f);
-            BSD[24] = new BSD21_25(0.50f);
-            BSD[25] = new BSD21_25(0.34f);
+            BSD[16] = new BSD16_20(0.84f);
+            BSD[17] = new BSD16_20(0.68f);
+            BSD[18] = new BSD16_20(0.50f);
+            BSD[19] = new BSD16_20(0.34f);
+            BSD[20] = new BSD16_20(0.13f);
+            BSD[21] = new BSD21_25(0.84f);
+            BSD[22] = new BSD21_25(0.68f);
+            BSD[23] = new BSD21_25(0.50f);
+            BSD[24] = new BSD21_25(0.34f);
+            BSD[25] = new BSD21_25(0.13f);
+            BSD[26] = new BSD26_30(0.84f);
+            BSD[27] = new BSD26_30(0.68f);
+            BSD[28] = new BSD26_30(0.50f);
+            BSD[29] = new BSD26_30(0.34f);
+            BSD[30] = new BSD26_30(0.13f);
         }
     }
 
