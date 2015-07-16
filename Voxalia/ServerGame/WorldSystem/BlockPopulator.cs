@@ -7,6 +7,6 @@ namespace Voxalia.ServerGame.WorldSystem
 {
     public abstract class BlockPopulator
     {
-        public abstract void Populate(long seed, Chunk chunk);
+        public abstract void Populate(short seed, short seed2, Chunk chunk);
     }
 }

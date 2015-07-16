@@ -451,7 +451,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (TheWorld.SpawnPoints.Count == 0)
             {
                 SysConsole.Output(OutputType.WARNING, "No spawn points... generating one!");
-                TheWorld.SpawnEntity(new SpawnPointEntity(TheWorld));
+                TheWorld.SpawnEntity(new SpawnPointEntity(TheWorld) { Position = new Location(0, 0, 25) });
             }
             SpawnPointEntity spe = null;
             for (int i = 0; i < 10; i++)

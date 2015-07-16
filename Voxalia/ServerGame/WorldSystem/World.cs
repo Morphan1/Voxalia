@@ -489,9 +489,13 @@ namespace Voxalia.ServerGame.WorldSystem
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
             Seed = 100; // TODO: Generate or load
+            Random seedGen = new Random(Seed);
+            Seed2 = (short)seedGen.Next(short.MaxValue);
         }
 
-        public long Seed;
+        public short Seed;
+
+        public short Seed2;
 
         public void Tick(double delta)
         {
@@ -691,7 +695,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void PopulateChunk(Chunk chunk)
         {
-            Generator.Populate(Seed, chunk);
+            Generator.Populate(Seed, Seed2, chunk);
         }
     }
 }
