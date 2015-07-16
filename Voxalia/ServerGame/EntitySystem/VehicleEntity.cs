@@ -22,6 +22,20 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool hasWheels = false;
 
+        List<Assimp.Node> GetNodes(Assimp.Node node)
+        {
+            List<Assimp.Node> nodes = new List<Assimp.Node>();
+            nodes.Add(node);
+            if (node.HasChildren)
+            {
+                for (int i = 0; i < node.ChildCount; i++)
+                {
+                    nodes.AddRange(GetNodes(node.Children[i]));
+                }
+            }
+            return nodes;
+        }
+
         public override void Tick()
         {
             base.Tick();
@@ -29,43 +43,40 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 Assimp.Scene scene = TheServer.Models.GetModel(model).Original;
                 SetOrientation(BEPUutilities.Quaternion.Identity);
-                for (int i = 0; i < scene.Meshes.Count; i++)
+                List<Assimp.Node> nodes = GetNodes(scene.RootNode);
+                for (int i = 0; i < nodes.Count; i++)
                 {
-                    for (int x = 0; x < scene.Meshes[i].Bones.Count; x++)
+                    string name = nodes[i].Name.ToLower();
+                    if (name.Contains("wheel"))
                     {
-                        string name = scene.Meshes[i].Bones[x].Name.ToLower();
-                        if (name.Contains("wheel"))
-                        {
-                            Assimp.Vector3D apos;
-                            Assimp.Vector3D ascale;
-                            Assimp.Quaternion arot;
-                            Assimp.Matrix4x4 mat = scene.RootNode.Transform;
-                            mat.Inverse();
-                            (scene.Meshes[i].Bones[x].OffsetMatrix * mat).Decompose(out ascale, out arot, out apos);
-                            Location pos = GetPosition() + new Location(apos.X, apos.Y, apos.Z);
-                            ModelEntity wheel = new ModelEntity("vehicles/" + vehName + "_wheel.dae", TheWorld);
-                            wheel.SetPosition(pos);
-                            wheel.SetOrientation(BEPUutilities.Quaternion.Identity); // TODO: orient
-                            //wheel.SetOrientation(new BEPUutilities.Quaternion(arot.X, arot.Y, arot.Z, arot.W));
-                            wheel.Gravity = Gravity;
-                            wheel.CGroup = CGroup;
-                            wheel.SetMass(5);
-                            wheel.mode = ModelCollisionMode.SPHERE;
-                            TheWorld.SpawnEntity(wheel);
-                            // TODO: better joints
-                            JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
-                            //BEPUutilities.Vector3 side = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(1, 0, 0), wheel.GetOrientation());
-                            BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
-                            BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 0, 1), wheel.GetOrientation());
-                            JointTwist jt = new JointTwist(this, wheel, Location.FromBVector(forward), Location.FromBVector(forward));
-                            JointTwist jt2 = new JointTwist(this, wheel, Location.FromBVector(up), Location.FromBVector(up));
-                            TheWorld.AddJoint(jbs);
-                            TheWorld.AddJoint(jt);
-                            TheWorld.AddJoint(jt2);
-                            BEPUutilities.Vector3 angvel = new BEPUutilities.Vector3(10, 0, 0);
-                            wheel.Body.ApplyAngularImpulse(ref angvel);
-                            wheel.Body.ActivityInformation.Activate();
-                        }
+                        Assimp.Vector3D apos;
+                        Assimp.Vector3D ascale;
+                        Assimp.Quaternion arot;
+                        nodes[i].Transform.Decompose(out ascale, out arot, out apos);
+                        Location pos = GetPosition() + new Location(apos.X, apos.Y, apos.Z - 1 /* TODO: make the -1 not needed! */);
+                        ModelEntity wheel = new ModelEntity("vehicles/" + vehName + "_wheel.dae", TheWorld);
+                        wheel.SetPosition(pos);
+                        wheel.SetOrientation(BEPUutilities.Quaternion.Identity); // TODO: orient
+                        //wheel.SetOrientation(new BEPUutilities.Quaternion(arot.X, arot.Y, arot.Z, arot.W));
+                        wheel.Gravity = Gravity;
+                        wheel.CGroup = CGroup;
+                        wheel.SetMass(5);
+                        wheel.mode = ModelCollisionMode.SPHERE;
+                        TheWorld.SpawnEntity(wheel);
+                        // TODO: better joints
+                        JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
+                        //BEPUutilities.Vector3 side = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(1, 0, 0), wheel.GetOrientation());
+                        BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
+                        BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 0, 1), wheel.GetOrientation());
+                        JointTwist jt = new JointTwist(this, wheel, Location.FromBVector(forward), Location.FromBVector(forward));
+                        // TODO: For front wheels, remove the 'forward' JT and replace it with a motor - to allow turning!
+                        JointTwist jt2 = new JointTwist(this, wheel, Location.FromBVector(up), Location.FromBVector(up));
+                        TheWorld.AddJoint(jbs);
+                        TheWorld.AddJoint(jt);
+                        TheWorld.AddJoint(jt2);
+                        BEPUutilities.Vector3 angvel = new BEPUutilities.Vector3(10, 0, 0);
+                        wheel.Body.ApplyAngularImpulse(ref angvel);
+                        wheel.Body.ActivityInformation.Activate();
                     }
                 }
                 hasWheels = true;

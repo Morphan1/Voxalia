@@ -129,7 +129,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             model.Root = convert(scene.RootNode.Transform);
             foreach (Mesh mesh in scene.Meshes)
             {
-                if (mesh.Name.ToLower().Contains("collision"))
+                if (mesh.Name.ToLower().Contains("collision") || mesh.Name.ToLower().Contains("norender"))
                 {
                     continue;
                 }

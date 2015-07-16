@@ -61,7 +61,7 @@ namespace Voxalia.Shared
             }
             foreach (Mesh mesh in input.Meshes)
             {
-                if (!colOnly || mesh.Name.ToLower().Contains("collision"))
+                if ((!colOnly || mesh.Name.ToLower().Contains("collision")) && !mesh.Name.ToLower().Contains("nocollide"))
                 {
                     AddMesh(mesh, vertices);
                 }
@@ -84,7 +84,7 @@ namespace Voxalia.Shared
             }
             foreach (Mesh mesh in input.Meshes)
             {
-                if (!colOnly || mesh.Name.ToLower().Contains("collision"))
+                if ((!colOnly || mesh.Name.ToLower().Contains("collision")) && !mesh.Name.ToLower().Contains("nocollide"))
                 {
                     AddMesh(mesh, vertices, indices);
                 }
