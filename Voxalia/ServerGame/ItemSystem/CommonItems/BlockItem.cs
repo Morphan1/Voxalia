@@ -39,11 +39,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 }
                 else if (player.TheWorld.GlobalTickTime - player.LastBlockPlace >= 0.2)
                 {
-                    Location block = player.TheWorld.GetBlockLocation(cr.Position + cr.Normal * 0.5);
+                    Location block = player.TheWorld.GetBlockLocation(cr.Position + cr.Normal * 0.91f);
                     Material mat = player.TheWorld.GetBlockMaterial(block);
                     if (mat == Material.AIR) // TODO: IsPlaceableIn
                     {
-                        CollisionResult hit = player.TheWorld.Collision.CuboidLineTrace(new Location(0.41, 0.41, 0.41), block + new Location(0.5),
+                        CollisionResult hit = player.TheWorld.Collision.CuboidLineTrace(new Location(0.45, 0.45, 0.45), block + new Location(0.5),
                             block + new Location(0.5, 0.5, 0.501), player.TheWorld.Collision.ShouldCollide);
                         if (!hit.Hit)
                         {
