@@ -52,12 +52,13 @@ namespace Voxalia.ServerGame.EntitySystem
                             wheel.CGroup = CGroup;
                             wheel.SetMass(5);
                             TheWorld.SpawnEntity(wheel);
-                            // TODO: better joint
+                            // TODO: better joints
                             JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
-                            BEPUutilities.Vector3 side = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(1, 0, 0), wheel.GetOrientation());
-                            JointSpinner js = new JointSpinner(this, wheel, Location.FromBVector(side));
+                            BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
+                            BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 0, 1), wheel.GetOrientation());
+                            JointTwist jt = new JointTwist(this, wheel, Location.FromBVector(forward), Location.FromBVector(up));
                             TheWorld.AddJoint(jbs);
-                            TheWorld.AddJoint(js);
+                            TheWorld.AddJoint(jt);
                         }
                     }
                 }
