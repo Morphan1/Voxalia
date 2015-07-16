@@ -14,6 +14,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem
 
         public PlayerCommandEngine()
         {
+            Register(new BlockshapePlayerCommand());
             Register(new DevelPlayerCommand());
             Register(new DropPlayerCommand());
             Register(new ReloadPlayerCommand());

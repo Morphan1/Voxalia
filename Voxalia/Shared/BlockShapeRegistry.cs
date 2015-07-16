@@ -13,7 +13,16 @@ namespace Voxalia.Shared
 
         static BlockShapeRegistry()
         {
+            for (int i = 0; i < 256; i++)
+            {
+                BSD[i] = new BSD0();
+            }
             BSD[0] = new BSD0();
+            BSD[1] = new BSD1_5(0.84f);
+            BSD[2] = new BSD1_5(0.68f);
+            BSD[3] = new BSD1_5(0.50f);
+            BSD[4] = new BSD1_5(0.34f);
+            BSD[5] = new BSD1_5(0.13f);
         }
     }
 
