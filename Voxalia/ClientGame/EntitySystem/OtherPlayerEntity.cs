@@ -57,6 +57,10 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Upward = false;
         public bool Walk = false;
 
+        public ConvexShape WheelShape = null;
+
+        public float tmass = 100;
+
         public Model model;
 
         bool pup = false;
@@ -67,8 +71,9 @@ namespace Voxalia.ClientGame.EntitySystem
             : base (tworld, true, true)
         {
             HalfSize = half;
-            SetMass(100);
+            SetMass(tmass / 2f);
             Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
+            WheelShape = new SphereShape((float)HalfSize.X);
             CanRotate = false;
             EID = -1;
             model = TheClient.Models.GetModel("players/human_male_004.dae");
@@ -197,6 +202,39 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public float MoveSpeed = 10;
 
+        public BEPUphysics.Entities.Entity WheelBody;
+
+        public BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint bsj;
+
+        public override void SpawnBody()
+        {
+            base.SpawnBody();
+            WheelBody = new BEPUphysics.Entities.Entity(WheelShape, tmass / 2f);
+            WheelBody.Orientation = Quaternion.Identity;
+            WheelBody.Position = Body.Position + new Vector3(0, 0, -(float)HalfSize.Z);
+            WheelBody.CollisionInformation.CollisionRules.Specific.Add(Body.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
+            Body.CollisionInformation.CollisionRules.Specific.Add(WheelBody.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
+            WheelBody.Tag = this;
+            TheWorld.PhysicsWorld.Add(WheelBody);
+            bsj = new BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint(Body, WheelBody, WheelBody.Position);
+            TheWorld.PhysicsWorld.Add(bsj);
+        }
+
+        public override void DestroyBody()
+        {
+            if (bsj != null)
+            {
+                TheWorld.PhysicsWorld.Remove(bsj);
+                bsj = null;
+            }
+            base.DestroyBody();
+            if (WheelBody != null)
+            {
+                TheWorld.PhysicsWorld.Remove(WheelBody);
+                WheelBody = null;
+            }
+        }
+
         public Location GetEyePosition()
         {
             return GetPosition() + new Location(0, 0, HalfSize.Z * 1.8f);
@@ -209,12 +247,16 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override Location GetPosition()
         {
-            return base.GetPosition() - new Location(0, 0, HalfSize.Z);
+            return base.GetPosition() - new Location(0, 0, HalfSize.Z + HalfSize.X);
         }
 
         public override void SetPosition(Location pos)
         {
-            base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
+            base.SetPosition(pos + new Location(0, 0, HalfSize.Z + HalfSize.X));
+            if (WheelBody != null)
+            {
+                WheelBody.Position = pos.ToBVector() + new Vector3(0, 0, (float)HalfSize.X);
+            }
         }
 
         public double aHTime;
