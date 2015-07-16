@@ -326,6 +326,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
         }
 
+        public float Specular = 1;
+
+        public void SetSpecular(float spec)
+        {
+            if (Client.Central.RenderLights) // TODO: Pass client reference!
+            {
+                Specular = spec;
+                GL.Uniform1(6, spec);
+            }
+        }
+
         /// <summary>
         /// Renders a 2D rectangle.
         /// </summary>
