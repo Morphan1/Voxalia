@@ -34,7 +34,8 @@ namespace Voxalia.ServerGame.EntitySystem
                     for (int x = 0; x < scene.Meshes[i].Bones.Count; x++)
                     {
                         SysConsole.Output(OutputType.INFO, "BONE:" + x + "==" + scene.Meshes[i].Bones[x].Name);
-                        if (scene.Meshes[i].Bones[x].Name.ToLower().Contains("wheel"))
+                        string name = scene.Meshes[i].Bones[x].Name.ToLower();
+                        if (name.Contains("wheel"))
                         {
                             Assimp.Vector3D apos;
                             Assimp.Vector3D ascale;
@@ -51,11 +52,13 @@ namespace Voxalia.ServerGame.EntitySystem
                             wheel.CGroup = CGroup;
                             wheel.SetMass(5);
                             TheWorld.SpawnEntity(wheel);
-                            // TODO: better joint
+                            // TODO: better joints
                             JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
-                            //BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
-                            //JointSpinner jbs = new JointSpinner(this, wheel, Location.FromBVector(forward));
+                            BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
+                            BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 0, 1), wheel.GetOrientation());
+                            JointTwist jt = new JointTwist(this, wheel, Location.FromBVector(forward), Location.FromBVector(up));
                             TheWorld.AddJoint(jbs);
+                            TheWorld.AddJoint(jt);
                         }
                     }
                 }
