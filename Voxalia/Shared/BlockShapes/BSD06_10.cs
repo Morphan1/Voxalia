@@ -6,11 +6,11 @@ using BEPUutilities;
 
 namespace Voxalia.Shared.BlockShapes
 {
-    public class BSD6_10: BlockShapeDetails
+    public class BSD06_10: BlockShapeDetails
     {
         public float Percent;
 
-        public BSD6_10(float perc)
+        public BSD06_10(float perc)
         {
             Percent = 1 - perc;
         }
@@ -159,7 +159,7 @@ namespace Voxalia.Shared.BlockShapes
             }
             if (!YP)
             {
-                int tID_YP = mat.TextureID(MaterialSide.XP);
+                int tID_YP = mat.TextureID(MaterialSide.YP);
                 TCoords.Add(new Vector3(0, 1, tID_YP));
                 TCoords.Add(new Vector3(1, 1, tID_YP));
                 TCoords.Add(new Vector3(0, 0, tID_YP));

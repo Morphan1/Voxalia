@@ -159,7 +159,7 @@ namespace Voxalia.Shared.BlockShapes
             }
             if (!YP)
             {
-                int tID_YP = mat.TextureID(MaterialSide.XP);
+                int tID_YP = mat.TextureID(MaterialSide.YP);
                 TCoords.Add(new Vector3(0, 1, tID_YP));
                 TCoords.Add(new Vector3(1, 1, tID_YP));
                 TCoords.Add(new Vector3(0, 0, tID_YP));
