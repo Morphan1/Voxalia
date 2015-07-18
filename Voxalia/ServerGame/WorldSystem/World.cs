@@ -496,7 +496,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void LoadRegion(Location min, Location max)
         {
-            // TODO: callback for when all chunks are done
+            // TODO: callback for when all chunks are done loading
             Location minc = ChunkLocFor(min);
             Location maxc = ChunkLocFor(max);
             for (double x = minc.X; x <= maxc.X; x++)
