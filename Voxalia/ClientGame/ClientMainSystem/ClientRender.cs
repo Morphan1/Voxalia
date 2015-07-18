@@ -293,6 +293,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                             GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
                             for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                             {
+                                if (Lights[i].InternalLights[x].color.LengthSquared <= 0.01)
+                                {
+                                    continue;
+                                }
                                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
                                 GL.ActiveTexture(TextureUnit.Texture0);
                                 GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
@@ -381,13 +385,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         * Matrix4.CreateTranslation((Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch) * -200f).ToOVector()); // TODO: adjust based on view rad
                     Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
                     Textures.GetTexture("skies/planet").Bind(); // TODO: Store var? Make dynamic?
+                    Rendering.SetColor(new Color4(PlanetLight, PlanetLight, PlanetLight, 1));
                     rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
                         * Matrix4.CreateRotationY((float)((-PlanetAngle.Pitch - 90f) * Utilities.PI180))
                         * Matrix4.CreateRotationZ((float)((180f + PlanetAngle.Yaw) * Utilities.PI180))
                         * Matrix4.CreateTranslation((Utilities.ForwardVector_Deg(PlanetAngle.Yaw, PlanetAngle.Pitch) * -180f).ToOVector()); // TODO: adjust based on view rad
                     Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
                     GL.BindTexture(TextureTarget.Texture2D, 0);
-                    SysConsole.Output(OutputType.INFO, "SY:" + SunAngle + ", PL:" + PlanetAngle);
+                    Rendering.SetColor(Color4.White);
                     GL.Enable(EnableCap.CullFace);
                 }
                 ReverseEntitiesOrder();
