@@ -60,17 +60,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheSun.Reposition(Player.GetPosition().GetBlockLocation() - TheSun.Direction * 30 * 4);
             ThePlanet.Direction = Utilities.ForwardVector_Deg(PlanetAngle.Yaw, PlanetAngle.Pitch);
             ThePlanet.Reposition(Player.GetPosition().GetBlockLocation() - ThePlanet.Direction * 30 * 4);
-            Quaternion planetquat = Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), (float)(PlanetAngle.Pitch * Utilities.PI180))
-                * Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(PlanetAngle.Yaw * Utilities.PI180));
-            Quaternion sunquat = Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), (float)(SunAngle.Pitch * Utilities.PI180))
-                * Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(SunAngle.Yaw * Utilities.PI180));
-            SysConsole.Output(OutputType.INFO, SunAngle + " yields " + sunquat.X + "," + sunquat.Y + "," + sunquat.Z + "," + sunquat.W);
             Quaternion diff;
-            Quaternion.GetRelativeRotation(ref sunquat, ref planetquat, out diff);
+            Vector3 tsd = TheSun.Direction.ToBVector();
+            Vector3 tpd = ThePlanet.Direction.ToBVector();
+            Quaternion.GetQuaternionBetweenNormalizedVectors(ref tsd, ref tpd, out diff);
             float dist = Quaternion.GetAngleFromQuaternion(ref diff) / (float)Utilities.PI180;
             if (dist < 25)
             {
-                TheSun.InternalLights[0].color = new OpenTK.Vector3((float)SunLightDef.X * (dist / 5), (float)SunLightDef.Y * (dist / 20), (float)SunLightDef.Z * (dist / 20));
+                TheSun.InternalLights[0].color = new OpenTK.Vector3((float)Math.Min(SunLightDef.X * (dist / 5), 1), (float)Math.Min(SunLightDef.Y * (dist / 20), 1), (float)Math.Min(SunLightDef.Z * (dist / 20), 1));
                 ThePlanet.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
                 PlanetLight = 0.1f;
             }
