@@ -358,7 +358,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     VBO.BonesIdentity();
                     GL.UniformMatrix4(1, false, ref combined);
                     Rendering.SetColor(Color4.White);
-                    float dist = 30 * 6;
+                    float dist = 300; // TODO: View rad
                     GL.Disable(EnableCap.CullFace);
                     Matrix4 scale = Matrix4.CreateScale(dist, dist, dist) * Matrix4.CreateTranslation(CameraPos.ToOVector());
                     GL.UniformMatrix4(2, false, ref scale);
@@ -374,13 +374,20 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     skybox[4].Render(false);
                     Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/yp").Bind();
                     skybox[5].Render(false);
-                    Textures.GetTexture("skies/planet").Bind(); // TODO: Store var? Make dynamic?
+                    Textures.GetTexture("skies/sun").Bind(); // TODO: Store var? Make dynamic?
                     Matrix4 rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
                         * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
                         * Matrix4.CreateRotationZ((float)((180f + SunAngle.Yaw) * Utilities.PI180))
-                        * Matrix4.CreateTranslation((Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch) * -100f).ToOVector());
-                    Rendering.RenderRectangle(0, 0, 100, 100, rot);
+                        * Matrix4.CreateTranslation((Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch) * -200f).ToOVector()); // TODO: adjust based on view rad
+                    Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
+                    Textures.GetTexture("skies/planet").Bind(); // TODO: Store var? Make dynamic?
+                    rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
+                        * Matrix4.CreateRotationY((float)((-PlanetAngle.Pitch - 90f) * Utilities.PI180))
+                        * Matrix4.CreateRotationZ((float)((180f + PlanetAngle.Yaw) * Utilities.PI180))
+                        * Matrix4.CreateTranslation((Utilities.ForwardVector_Deg(PlanetAngle.Yaw, PlanetAngle.Pitch) * -180f).ToOVector()); // TODO: adjust based on view rad
+                    Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
                     GL.BindTexture(TextureTarget.Texture2D, 0);
+                    SysConsole.Output(OutputType.INFO, "SY:" + SunAngle + ", PL:" + PlanetAngle);
                     GL.Enable(EnableCap.CullFace);
                 }
                 ReverseEntitiesOrder();
