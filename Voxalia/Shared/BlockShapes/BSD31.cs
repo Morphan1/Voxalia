@@ -144,7 +144,7 @@ namespace Voxalia.Shared.BlockShapes
 
         public override bool OccupiesXP()
         {
-            return false;
+            return true;
         }
 
         public override bool OccupiesYP()
@@ -154,7 +154,7 @@ namespace Voxalia.Shared.BlockShapes
 
         public override bool OccupiesXM()
         {
-            return true;
+            return false;
         }
 
         public override bool OccupiesYM()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.WorldSystem;
+using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
@@ -33,6 +34,11 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 float h = QuickGenerator.GetHeight(entry.Player.TheWorld.Seed, entry.Player.TheWorld.Seed2, (float)Math.Floor(entry.Player.GetPosition().X), (float)Math.Floor(entry.Player.GetPosition().Y));
                 entry.Player.Network.SendMessage("Generate height: " + h + " ==  " + Math.Round(h));
+                BlockInternal bi = entry.Player.TheWorld.GetBlockInternal_NoLoad((entry.Player.GetPosition() + new Location(0, 0, -0.1)).GetBlockLocation());
+                entry.Player.Network.SendMessage("Mat: " + ((Material)bi.BlockMaterial) + ", data: " + ((int)bi.BlockData)
+                    + ", xp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXP() + ", xm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXM()
+                    + ", yp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYP() + ", ym: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYM()
+                    + ", zp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesTOP() + ", zm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesBOTTOM());
             }
             else
             {

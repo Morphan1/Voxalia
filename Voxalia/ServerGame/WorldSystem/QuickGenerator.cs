@@ -63,11 +63,11 @@ namespace Voxalia.ServerGame.WorldSystem
                             }
                             else if (topfyp > topf && topfyp - Math.Round(topfyp) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 34)); // TODO: 83
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 33)); // TODO: 83
                             }
                             else if (topfym > topf && topfym - Math.Round(topfym) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 33)); // TODO: 82
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 34)); // TODO: 82
                             }
                             else
                             {
@@ -86,11 +86,11 @@ namespace Voxalia.ServerGame.WorldSystem
                             }
                             else if (topfyp > topf && topfyp - Math.Round(topfyp) > 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 75));
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 74));
                             }
                             else if (topfym > topf && topfym - Math.Round(topfym) > 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 74));
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 75));
                             }
                         }
                     }
