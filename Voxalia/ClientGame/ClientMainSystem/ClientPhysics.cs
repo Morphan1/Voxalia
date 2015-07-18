@@ -49,7 +49,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Location SunAngle = new Location(0, -75, 0);
 
-        public Location PlanetAngle = new Location(0, -75, 90);
+        public Location PlanetAngle = new Location(0, -56, 90);
 
         public float PlanetLight = 1;
 
@@ -69,14 +69,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 TheSun.InternalLights[0].color = new OpenTK.Vector3((float)Math.Min(SunLightDef.X * (dist / 5), 1), (float)Math.Min(SunLightDef.Y * (dist / 20), 1), (float)Math.Min(SunLightDef.Z * (dist / 20), 1));
                 ThePlanet.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
-                PlanetLight = 0.1f;
             }
             else
             {
                 TheSun.InternalLights[0].color = SunLightDef.ToOVector();
                 ThePlanet.InternalLights[0].color = (PlanetLightDef * (dist / 180f)).ToOVector();
-                PlanetLight = (dist / 180f);
             }
+            PlanetLight = dist / 180f;
             // TODO: Set planet lightness by sun position (farther from planet = brighter!)
             // TODO: Set sun lightness by planet position (too closer to planet = darker, redder)
             TheWorld.TickWorld(delta);

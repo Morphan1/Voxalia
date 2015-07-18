@@ -491,6 +491,24 @@ namespace Voxalia.ServerGame.WorldSystem
             Seed = 100; // TODO: Generate or load
             Random seedGen = new Random(Seed);
             Seed2 = (short)seedGen.Next(short.MaxValue);
+            LoadRegion(new Location(-70), new Location(70));
+        }
+
+        public void LoadRegion(Location min, Location max)
+        {
+            // TODO: callback for when all chunks are done
+            Location minc = ChunkLocFor(min);
+            Location maxc = ChunkLocFor(max);
+            for (double x = minc.X; x <= maxc.X; x++)
+            {
+                for (double y = minc.Y; y <= maxc.Y; y++)
+                {
+                    for (double z = minc.Z; z <= maxc.Z; z++)
+                    {
+                        LoadChunk(new Location(x, y, z));
+                    }
+                }
+            }
         }
 
         public short Seed;
@@ -645,6 +663,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Chunk LoadChunk(Location cpos)
         {
+            // TODO: Callback for when chunk finished loading
             Chunk chunk;
             if (LoadedChunks.TryGetValue(cpos, out chunk))
             {
