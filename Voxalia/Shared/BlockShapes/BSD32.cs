@@ -8,6 +8,13 @@ namespace Voxalia.Shared.BlockShapes
 {
     public class BSD32: BlockShapeDetails
     {
+        public Vector3 Normal = new Vector3(-1, 0, 1);
+
+        public BSD32()
+        {
+            Normal.Normalize();
+        }
+
         public override List<Vector3> GetVertices(Vector3 pos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)
         {
             List<Vector3> Vertices = new List<Vector3>();
@@ -55,7 +62,7 @@ namespace Voxalia.Shared.BlockShapes
             List<Vector3> Norms = new List<Vector3>();
             for (int i = 0; i < 6; i++)
             {
-                Norms.Add(new Vector3(0, 0, 1));
+                Norms.Add(Normal);
             }
             if (!BOTTOM)
             {

@@ -50,6 +50,8 @@ namespace Voxalia.Shared
             BSD[30] = new BSD26_30(0.13f);
             BSD[31] = new BSD31();
             BSD[32] = new BSD32();
+            BSD[33] = new BSD33();
+            BSD[34] = new BSD34();
         }
     }
 

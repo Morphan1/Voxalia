@@ -344,6 +344,8 @@
     <Compile Include="Shared\BlockShapes\BSD26_30.cs" />
     <Compile Include="Shared\BlockShapes\BSD32.cs" />
     <Compile Include="Shared\BlockShapes\BSD31.cs" />
+    <Compile Include="Shared\BlockShapes\BSD33.cs" />
+    <Compile Include="Shared\BlockShapes\BSD34.cs" />
     <Compile Include="Shared\DataReader.cs" />
     <Compile Include="Shared\DataWriter.cs" />
     <Compile Include="Shared\ItemStackBase.cs" />

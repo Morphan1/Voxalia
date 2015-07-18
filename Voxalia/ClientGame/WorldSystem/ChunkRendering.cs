@@ -62,18 +62,18 @@ namespace Voxalia.ClientGame.WorldSystem
                                 bool xms = ((Material)xm.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXM();
                                 bool yps = ((Material)yp.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYP();
                                 bool yms = ((Material)ym.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYM();
-                                Vector3 pos = new Vector3(ppos.X + x, ppos.Y + y, ppos.Z + z);
-                                List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(new BEPUutilities.Vector3(pos.X, pos.Y, pos.Z), xps, xms, yps, yms, zps, zms);
+                                BEPUutilities.Vector3 pos = new BEPUutilities.Vector3(ppos.X + x, ppos.Y + y, ppos.Z + z);
+                                List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
                                     Vertices.Add(new Vector3(vecsi[i].X, vecsi[i].Y, vecsi[i].Z));
                                 }
-                                List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[c.BlockData].GetNormals(new BEPUutilities.Vector3(pos.X, pos.Y, pos.Z), xps, xms, yps, yms, zps, zms);
+                                List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[c.BlockData].GetNormals(pos, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < normsi.Count; i++)
                                 {
                                     Norms.Add(new Vector3(normsi[i].X, normsi[i].Y, normsi[i].Z));
                                 }
-                                List<BEPUutilities.Vector3> tci = BlockShapeRegistry.BSD[c.BlockData].GetTCoords(new BEPUutilities.Vector3(pos.X, pos.Y, pos.Z), (Material)c.BlockMaterial, xps, xms, yps, yms, zps, zms);
+                                List<BEPUutilities.Vector3> tci = BlockShapeRegistry.BSD[c.BlockData].GetTCoords(pos, (Material)c.BlockMaterial, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < tci.Count; i++)
                                 {
                                     TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
