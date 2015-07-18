@@ -374,6 +374,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     skybox[4].Render(false);
                     Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/yp").Bind();
                     skybox[5].Render(false);
+                    Textures.GetTexture("skies/planet").Bind(); // TODO: Store var? Make dynamic?
+                    Matrix4 rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
+                        * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
+                        * Matrix4.CreateRotationZ((float)((180f + SunAngle.Yaw) * Utilities.PI180))
+                        * Matrix4.CreateTranslation((Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch) * -100f).ToOVector());
+                    Rendering.RenderRectangle(0, 0, 100, 100, rot);
                     GL.BindTexture(TextureTarget.Texture2D, 0);
                     GL.Enable(EnableCap.CullFace);
                 }
