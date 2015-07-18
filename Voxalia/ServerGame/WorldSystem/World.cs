@@ -490,7 +490,7 @@ namespace Voxalia.ServerGame.WorldSystem
             Collision = new CollisionUtil(PhysicsWorld);
             Seed = 100; // TODO: Generate or load
             Random seedGen = new Random(Seed);
-            Seed2 = (short)seedGen.Next(short.MaxValue);
+            Seed2 = (short)(seedGen.Next((int)short.MaxValue * 2) - short.MaxValue);
             LoadRegion(new Location(-70), new Location(70));
         }
 
