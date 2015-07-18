@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Voxalia.ServerGame.EntitySystem;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
@@ -27,6 +28,11 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 VehicleEntity ve = new VehicleEntity("failmobile", entry.Player.TheWorld);
                 ve.SetPosition(entry.Player.GetEyePosition() + entry.Player.ForwardVector() * 5);
                 entry.Player.TheWorld.SpawnEntity(ve);
+            }
+            else if (arg0 == "chunkDebug")
+            {
+                float h = QuickGenerator.GetHeight(entry.Player.TheWorld.Seed, entry.Player.TheWorld.Seed2, (float)Math.Floor(entry.Player.GetPosition().X), (float)Math.Floor(entry.Player.GetPosition().Y));
+                entry.Player.Network.SendMessage("Generate height: " + h + " ==  " + Math.Round(h));
             }
             else
             {
