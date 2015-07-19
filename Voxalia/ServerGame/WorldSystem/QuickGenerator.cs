@@ -73,6 +73,10 @@ namespace Voxalia.ServerGame.WorldSystem
                             {
                                 chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 3));
                             }
+                            if (z > 0)
+                            {
+                                chunk.SetBlockAt(x, y, z - 1, new BlockInternal((ushort)Material.DIRT, 0));
+                            }
                         }
                         else
                         {
