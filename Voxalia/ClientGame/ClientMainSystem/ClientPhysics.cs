@@ -53,6 +53,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public float PlanetLight = 1;
 
+        public float PlanetSunDist = 0;
+
         public void TickWorld(double delta)
         {
             // TODO: Z+ -> max view rad + 30
@@ -64,18 +66,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Vector3 tsd = TheSun.Direction.ToBVector();
             Vector3 tpd = ThePlanet.Direction.ToBVector();
             Quaternion.GetQuaternionBetweenNormalizedVectors(ref tsd, ref tpd, out diff);
-            float dist = Quaternion.GetAngleFromQuaternion(ref diff) / (float)Utilities.PI180;
-            if (dist < 25)
+            PlanetSunDist = Quaternion.GetAngleFromQuaternion(ref diff) / (float)Utilities.PI180;
+            if (PlanetSunDist < 25)
             {
-                TheSun.InternalLights[0].color = new OpenTK.Vector3((float)Math.Min(SunLightDef.X * (dist / 5), 1), (float)Math.Min(SunLightDef.Y * (dist / 20), 1), (float)Math.Min(SunLightDef.Z * (dist / 20), 1));
+                TheSun.InternalLights[0].color = new OpenTK.Vector3((float)Math.Min(SunLightDef.X * (PlanetSunDist / 5), 1),
+                    (float)Math.Min(SunLightDef.Y * (PlanetSunDist / 20), 1), (float)Math.Min(SunLightDef.Z * (PlanetSunDist / 20), 1));
                 ThePlanet.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
             }
             else
             {
                 TheSun.InternalLights[0].color = SunLightDef.ToOVector();
-                ThePlanet.InternalLights[0].color = (PlanetLightDef * (dist / 180f)).ToOVector();
+                ThePlanet.InternalLights[0].color = (PlanetLightDef * (PlanetSunDist / 180f)).ToOVector();
             }
-            PlanetLight = dist / 180f;
+            PlanetLight = PlanetSunDist / 180f;
             if (SunAngle.Pitch < 20 && SunAngle.Pitch > -20)
             {
                 float rel = 20 + (float)SunAngle.Pitch;
