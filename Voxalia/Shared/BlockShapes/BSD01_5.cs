@@ -8,6 +8,12 @@ namespace Voxalia.Shared.BlockShapes
 {
     public class BSD01_5: BlockShapeDetails
     {
+        public override BEPUphysics.CollisionShapes.EntityShape GetShape(out Location offset)
+        {
+            offset = new Location(0.5, 0.5, Percent / 2);
+            return new BEPUphysics.CollisionShapes.ConvexShapes.BoxShape(1, 1, Percent);
+        }
+
         public float Percent;
 
         public BSD01_5(float perc)
