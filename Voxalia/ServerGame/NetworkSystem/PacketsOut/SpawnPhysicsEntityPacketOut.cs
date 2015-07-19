@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         public SpawnPhysicsEntityPacketOut(PhysicsEntity e)
         {
             ID = 2;
-            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + (e is CubeEntity ? 4 * 6 + 4 * 6: (e is BlockItemEntity ? 2: (e is ModelEntity ? 4 + 1: 0))) + 4 + 1];
+            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + (e is CubeEntity ? 4 * 6 + 4 * 6: (e is BlockItemEntity ? 3: (e is ModelEntity ? 4 + 1: 0))) + 4 + 1];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
@@ -37,7 +37,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             }
             else
             {
-                new Location(5, 5, 5).ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
+                // TODO: Warning message?
+                new Location(1, 1, 1).ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
             Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is CubeEntity ? 0 : (e is PlayerEntity ? 1 : (e is BlockItemEntity ? 3: 2)));
             int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
@@ -62,6 +63,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 BlockItemEntity bie = (BlockItemEntity)e;
                 Utilities.UshortToBytes((ushort)bie.Mat).CopyTo(Data, start);
+                Data[start + 2] = bie.Dat;
             }
             else if (e is ModelEntity)
             {

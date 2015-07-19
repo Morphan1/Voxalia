@@ -6,21 +6,43 @@ using System.Text;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
+using BEPUphysics.CollisionShapes;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
+using BEPUutilities;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
     public class BlockItemEntity : PhysicsEntity, EntityUseable
     {
         public Material Mat;
+        public byte Dat;
 
-        public BlockItemEntity(World tworld, Material mat)
+        public BlockItemEntity(World tworld, Material mat, byte dat, Location pos)
             : base(tworld, true)
         {
             SetMass(5);
             CGroup = CollisionUtil.Item;
-            Shape = new BoxShape(1, 1, 1);
+            Dat = dat;
+            if (dat == 0)
+            {
+                Shape = new BoxShape(1, 1, 1);
+                SetPosition(pos.GetBlockLocation() + new Location(0.5));
+            }
+            else
+            {
+                List<Vector3> vecs = BlockShapeRegistry.BSD[Dat].GetVertices(new Vector3(0, 0, 0), false, false, false, false, false, false);
+                int[] ints = new int[vecs.Count];
+                for (int i = 0; i < vecs.Count; i++)
+                {
+                    ints[i] = i;
+                }
+                Vector3 offs;
+                Shape = new MobileMeshShape(vecs.ToArray(), ints, new AffineTransform(new Vector3(0.95f, 0.95f, 0.95f),
+                    Quaternion.Identity, Vector3.Zero), MobileMeshSolidity.DoubleSided, out offs);
+                Location offset = Location.FromBVector(offs);
+                SetPosition(pos.GetBlockLocation() + offset);
+            }
             Mat = mat;
         }
 
