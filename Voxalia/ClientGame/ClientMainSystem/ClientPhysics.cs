@@ -43,8 +43,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Lights.Add(TheSun);
             Lights.Add(ThePlanet);
             TheWorld = new World();
-            TheWorld.BuildWorld();
             TheWorld.TheClient = this;
+            TheWorld.BuildWorld();
+            Player = new PlayerEntity(TheWorld);
+            TheWorld.SpawnEntity(Player);
         }
 
         public Location SunAngle = new Location(0, -75, 0);

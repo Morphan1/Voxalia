@@ -386,7 +386,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             worldPos = TheWorld.ChunkLocFor(worldPos);
             ChunkAwarenessInfo cai = new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult };
-            if (!ChunksAwareOf.ContainsKey(worldPos) || ChunksAwareOf[worldPos].LOD > posMult)
+            if (!ChunksAwareOf.ContainsKey(worldPos) || ChunksAwareOf[worldPos].LOD > posMult) // TODO: If aware of but nextTime > atime, cancel scheduled load and send sooner one
             {
                 Chunk chk = TheWorld.LoadChunk(worldPos);
                 // TODO: Remove schedule call, make this all instant... whenever the engine can handle a massive pile of chunks sending/loading at once >.>

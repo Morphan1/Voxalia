@@ -163,10 +163,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Sounds.Init(CVars);
             SysConsole.Output(OutputType.INIT, "Building game world...");
             BuildWorld();
-            SysConsole.Output(OutputType.INIT, "Spawning the player...");
-            Player = new PlayerEntity(TheWorld);
-            Player.SetPosition(new Location(0, 0, 10));
-            TheWorld.SpawnEntity(Player);
             SysConsole.Output(OutputType.INIT, "Preparing networking...");
             Network = new NetworkBase(this);
             SysConsole.Output(OutputType.INIT, "Playing background music...");
