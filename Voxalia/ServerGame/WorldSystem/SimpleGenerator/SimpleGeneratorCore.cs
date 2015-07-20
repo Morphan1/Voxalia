@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using Voxalia.Shared;
 
-namespace Voxalia.ServerGame.WorldSystem
+namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
 {
-    public class QuickGenerator: BlockPopulator
+    public class SimpleGeneratorCore: BlockPopulator
     {
-        public const float GlobalHeightMapSize = 50000;
+        public const float GlobalHeightMapSize = 2000;
         public const float LocalHeightMapSize = 400;
 
-        public static float GetHeight(short Seed, short seed2, float x, float y)
+        public override float GetHeight(short Seed, short seed2, float x, float y)
         {
-            float lheight = SimplexNoise.Generate((float)(seed2 + x) / GlobalHeightMapSize, (float)(seed2 + y) / GlobalHeightMapSize) * 50f - 25f;
-            float height = SimplexNoise.Generate((float)(Seed + x) / LocalHeightMapSize, (float)(Seed + y) / LocalHeightMapSize) * 6f - 3f;
+            float lheight = SimplexNoise.Generate((float)seed2 + (x / GlobalHeightMapSize), (float)Seed + (y / GlobalHeightMapSize)) * 50f - 10f;
+            float height = SimplexNoise.Generate((float)Seed + (x / LocalHeightMapSize), (float)seed2 + (y / LocalHeightMapSize)) * 6f - 3f;
             return lheight + height;
         }
 

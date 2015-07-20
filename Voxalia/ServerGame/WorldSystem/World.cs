@@ -13,6 +13,7 @@ using Voxalia.ServerGame.NetworkSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using BEPUutilities.Threading;
 using Voxalia.ServerGame.ItemSystem;
+using Voxalia.ServerGame.WorldSystem.SimpleGenerator;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -731,7 +732,8 @@ namespace Voxalia.ServerGame.WorldSystem
             return ch.GetBlockAt(x, y, z);
         }
 
-        public BlockPopulator Generator = new QuickGenerator();
+        public BlockPopulator Generator = new SimpleGeneratorCore();
+        public BiomeGenerator BiomeGen = new SimpleBiomeGenerator();
 
         public void PopulateChunk(Chunk chunk)
         {
