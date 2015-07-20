@@ -33,6 +33,12 @@ namespace Voxalia.ServerGame.WorldSystem
         }
 
         public BlockInternal[] BlocksInternal;
+
+        public int LODBlockIndex(int x, int y, int z, int lod)
+        {
+            int cs = Chunk.CHUNK_SIZE / lod;
+            return z * cs * cs * lod + y * cs * lod + x * lod;
+        }
         
         public int BlockIndex(int x, int y, int z)
         {
@@ -78,7 +84,7 @@ namespace Voxalia.ServerGame.WorldSystem
                             List<Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                             foreach (Vector3 vec in vecsi)
                             {
-                                Vertices.Add((vec - pos) * PosMultiplier + pos); // TODO: Remove 'pos' from GetVertices, add it here
+                                Vertices.Add((vec - ppos) * PosMultiplier + ppos);
                             }
                         }
                     }

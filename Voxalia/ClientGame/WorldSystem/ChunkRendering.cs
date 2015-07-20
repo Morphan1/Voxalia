@@ -63,7 +63,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                 List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
-                                    Vertices.Add(new Vector3(vecsi[i].X * PosMultiplier, vecsi[i].Y * PosMultiplier, vecsi[i].Z * PosMultiplier));
+                                    Vertices.Add(new Vector3((vecsi[i].X - ppos.X) * PosMultiplier + ppos.X, (vecsi[i].Y - ppos.Y) * PosMultiplier + ppos.Y, (vecsi[i].Z - ppos.Z) * PosMultiplier + ppos.Z));
                                 }
                                 List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[c.BlockData].GetNormals(pos, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < normsi.Count; i++)
@@ -96,7 +96,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                     return;
                 }
-                List<uint> inds = new List<uint>(Vertices.Count); // TODO: VBO Array input instead of a list
+                List<uint> inds = new List<uint>(Vertices.Count); // TODO: VBO Array input instead of a list?
                 for (uint i = 0; i < Vertices.Count; i++)
                 {
                     inds.Add(i);

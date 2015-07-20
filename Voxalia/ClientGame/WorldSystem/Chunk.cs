@@ -91,7 +91,7 @@ namespace Voxalia.ClientGame.WorldSystem
                             List<Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                             foreach (Vector3 vec in vecsi)
                             {
-                                Vertices.Add((vec - pos) * PosMultiplier + pos); // TODO: Remove 'pos' from GetVertices, add it here
+                                Vertices.Add((vec - ppos) * PosMultiplier + ppos);
                             }
                         }
                     }
