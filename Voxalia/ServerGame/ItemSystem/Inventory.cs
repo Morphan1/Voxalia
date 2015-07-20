@@ -26,13 +26,10 @@ namespace Voxalia.ServerGame.ItemSystem
         /// <returns>A valid item</returns>
         public ItemStack GetItemForSlot(int slot)
         {
+            slot = slot % (Items.Count + 1);
             while (slot < 0)
             {
                 slot += Items.Count + 1;
-            }
-            while (slot > Items.Count)
-            {
-                slot -= Items.Count + 1;
             }
             if (slot == 0)
             {

@@ -118,6 +118,7 @@
     <Compile Include="ClientGame\CommandSystem\ClientCommands.cs" />
     <Compile Include="ClientGame\CommandSystem\ClientCVar.cs" />
     <Compile Include="ClientGame\CommandSystem\ClientOutputter.cs" />
+    <Compile Include="ClientGame\CommandSystem\CommonCommands\ItemselComand.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\ItemprevCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\ItemnextCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\PlayCommand.cs" />

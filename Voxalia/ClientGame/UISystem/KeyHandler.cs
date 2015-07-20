@@ -56,6 +56,18 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.Escape, "quit");
             BindKey(Key.F32, "itemnext");
             BindKey(Key.F31, "itemprev");
+            BindKey(Key.Number1, "itemsel 0");
+            BindKey(Key.Number2, "itemsel 1");
+            BindKey(Key.Number3, "itemsel 2");
+            BindKey(Key.Number4, "itemsel 3");
+            BindKey(Key.Number5, "itemsel 4");
+            BindKey(Key.Number6, "itemsel 5");
+            BindKey(Key.Number7, "itemsel 6");
+            BindKey(Key.Number8, "itemsel 7");
+            BindKey(Key.Number9, "itemsel 8");
+            BindKey(Key.Number0, "itemsel 9");
+            BindKey(Key.Minus, "itemsel 10");
+            BindKey(Key.Plus, "itemsel 11");
             namestokeys = new Dictionary<string, Key>();
             keystonames = new Dictionary<Key, string>();
             RegKey("a", Key.A); RegKey("b", Key.B); RegKey("c", Key.C);
