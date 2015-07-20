@@ -686,7 +686,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 return chunk;
             }
             // TODO: Actually load from file
-            chunk = new Chunk();
+            chunk = new Chunk(1);
             chunk.LOADING = true;
             chunk.OwningWorld = this;
             chunk.WorldPosition = cpos;
@@ -717,7 +717,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 callback.Invoke(true);
                 return;
             }
-            Chunk ch = new Chunk();
+            Chunk ch = new Chunk(1);
             ch.LOADING = true;
             ch.OwningWorld = this;
             ch.WorldPosition = cpos;

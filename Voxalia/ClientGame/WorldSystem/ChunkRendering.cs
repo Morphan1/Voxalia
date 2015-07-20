@@ -34,24 +34,24 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             try
             {
-                List<Vector3> Vertices = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6); // TODO: Make this an array?
-                List<Vector3> TCoords = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6);
-                List<Vector3> Norms = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6);
+                List<Vector3> Vertices = new List<Vector3>(CSize * CSize * CSize * 6); // TODO: Make this an array?
+                List<Vector3> TCoords = new List<Vector3>(CSize * CSize * CSize * 6);
+                List<Vector3> Norms = new List<Vector3>(CSize * CSize * CSize * 6);
                 Vector3 ppos = WorldPosition.ToOVector() * 30;
-                for (int x = 0; x < CHUNK_SIZE; x++)
+                for (int x = 0; x < CSize; x++)
                 {
-                    for (int y = 0; y < CHUNK_SIZE; y++)
+                    for (int y = 0; y < CSize; y++)
                     {
-                        for (int z = 0; z < CHUNK_SIZE; z++)
+                        for (int z = 0; z < CSize; z++)
                         {
                             BlockInternal c = GetBlockAt(x, y, z);
                             if (((Material)c.BlockMaterial).RendersAtAll())
                             {
-                                BlockInternal zp = z + 1 < CHUNK_SIZE ? GetBlockAt(x, y, z + 1) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(x, y, 30));
+                                BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(x, y, 30));
                                 BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(x, y, -1));
-                                BlockInternal yp = y + 1 < CHUNK_SIZE ? GetBlockAt(x, y + 1, z) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(x, 30, z));
+                                BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(x, 30, z));
                                 BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(x, -1, z));
-                                BlockInternal xp = x + 1 < CHUNK_SIZE ? GetBlockAt(x + 1, y, z) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(30, y, z));
+                                BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(30, y, z));
                                 BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(-1, y, z));
                                 bool zps = ((Material)zp.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[zp.BlockData].OccupiesTOP();
                                 bool zms = ((Material)zm.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[zm.BlockData].OccupiesBOTTOM();
@@ -63,7 +63,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                 List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
-                                    Vertices.Add(new Vector3(vecsi[i].X, vecsi[i].Y, vecsi[i].Z));
+                                    Vertices.Add(new Vector3(vecsi[i].X * PosMultiplier, vecsi[i].Y * PosMultiplier, vecsi[i].Z * PosMultiplier));
                                 }
                                 List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[c.BlockData].GetNormals(pos, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < normsi.Count; i++)

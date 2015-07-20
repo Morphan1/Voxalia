@@ -28,7 +28,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 TheClient.Player.SetPosition(pos);
                 TheClient.Player.SetVelocity(vel);
-
             }
             byte st = data[12 + 12];
             PlayerStance stance = PlayerStance.STAND;

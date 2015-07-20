@@ -156,7 +156,7 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 return chunk;
             }
-            chunk = new Chunk();
+            chunk = new Chunk(1);
             chunk.OwningWorld = this;
             chunk.WorldPosition = pos;
             LoadedChunks.Add(pos, chunk);
