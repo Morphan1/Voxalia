@@ -60,7 +60,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public SingleAnimation tAnim = null;
         public SingleAnimation lAnim = null;
 
-        public int ViewRadiusInChunks = 5;
+        public int ViewRadiusInChunks = 8;
 
         public void Kick(string message)
         {
@@ -363,8 +363,8 @@ namespace Voxalia.ServerGame.EntitySystem
             Location pos = GetPosition();
             TrySet(pos, 1, 5, 1);
             TrySet(pos, ViewRadiusInChunks / 4, 5, 1);
-            TrySet(pos, ViewRadiusInChunks / 2, 15, 1);
-            TrySet(pos, ViewRadiusInChunks, 120, 1);
+            TrySet(pos, ViewRadiusInChunks / 2, 30, 2);
+            TrySet(pos, ViewRadiusInChunks, 60, 5);
             base.Tick();
         }
 
@@ -382,17 +382,24 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
-        public void TryChunk(Location worldPos, float atime, int posMult)
+        public void TryChunk(Location worldPos, float atime, int posMult) // TODO: Efficiency?
         {
             worldPos = TheWorld.ChunkLocFor(worldPos);
             ChunkAwarenessInfo cai = new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult };
             if (!ChunksAwareOf.ContainsKey(worldPos) || ChunksAwareOf[worldPos].LOD > posMult) // TODO: If aware of but nextTime > atime, cancel scheduled load and send sooner one
             {
+                if (ChunksAwareOf.ContainsKey(worldPos))
+                {
+                    if (ChunksAwareOf[worldPos].AddToWorld.Time > 0)
+                    {
+                        TheServer.Schedule.DescheduleSyncTask(ChunksAwareOf[worldPos].AddToWorld);
+                    }
+                }
                 Chunk chk = TheWorld.LoadChunk(worldPos);
                 // TODO: Remove schedule call, make this all instant... whenever the engine can handle a massive pile of chunks sending/loading at once >.>
-                TheServer.Schedule.ScheduleSyncTask(() => { if (!pkick) { ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult)); } }, Utilities.UtilRandom.NextDouble() * atime);
+                SyncScheduleItem item = TheServer.Schedule.ScheduleSyncTask(() => { if (!pkick) { ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult)); } }, Utilities.UtilRandom.NextDouble() * atime);
                 ChunksAwareOf.Remove(worldPos);
-                ChunksAwareOf.Add(worldPos, new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult });
+                ChunksAwareOf.Add(worldPos, new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult, AddToWorld = item });
                 // TODO: Add a note of whether the client has acknowledged the chunk's reception... (Also, chunk reception ack packet) so block edit notes can be delayed.
             }
         }
@@ -522,6 +529,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public Location ChunkPos;
 
         public int LOD;
+
+        public SyncScheduleItem AddToWorld;
 
         public override int GetHashCode()
         {

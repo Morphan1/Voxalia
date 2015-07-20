@@ -75,6 +75,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         BlockInternal c = GetBlockAt(x, y, z);
                         if (((Material)c.BlockMaterial).IsSolid())
                         {
+                            // TODO: Handle ALL blocks against the surface when low-LOD
                             BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, y, 30));
                             BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, y, -1));
                             BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : OwningWorld.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, 30, z));
@@ -87,11 +88,11 @@ namespace Voxalia.ClientGame.WorldSystem
                             bool xms = ((Material)xm.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXM();
                             bool yps = ((Material)yp.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYP();
                             bool yms = ((Material)ym.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYM();
-                            Vector3 pos = new Vector3(ppos.X + x, ppos.Y + y, ppos.Z + z);
+                            Vector3 pos = new Vector3(x, y, z);
                             List<Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                             foreach (Vector3 vec in vecsi)
                             {
-                                Vertices.Add((vec - ppos) * PosMultiplier + ppos);
+                                Vertices.Add(vec * PosMultiplier + ppos);
                             }
                         }
                     }

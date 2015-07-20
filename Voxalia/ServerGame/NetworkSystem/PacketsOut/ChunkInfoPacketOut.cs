@@ -16,9 +16,16 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             if (lod == 1)
             {
                 data_orig = new byte[chunk.BlocksInternal.Length * 3];
-                for (int i = 0; i < chunk.BlocksInternal.Length; i++)
+                int csize = Chunk.CHUNK_SIZE;
+                for (int x = 0; x < csize; x++)
                 {
-                    Utilities.UshortToBytes(chunk.BlocksInternal[i].BlockMaterial).CopyTo(data_orig, i * 2);
+                    for (int y = 0; y < csize; y++)
+                    {
+                        for (int z = 0; z < csize; z++)
+                        {
+                            Utilities.UshortToBytes(chunk.BlocksInternal[chunk.LODBlockIndex(x, y, z, lod)].BlockMaterial).CopyTo(data_orig, (z * csize * csize + y * csize + x) * 2);
+                        }
+                    }
                 }
                 for (int i = 0; i < chunk.BlocksInternal.Length; i++)
                 {

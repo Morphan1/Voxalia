@@ -48,9 +48,15 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 
         void parsechunk2(Chunk chk, byte[] data_orig, int posMult)
         {
-            for (int i = 0; i < chk.BlocksInternal.Length; i++)
+            for (int x = 0; x < chk.CSize; x++)
             {
-                chk.BlocksInternal[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(data_orig, i * 2, 2));
+                for (int y = 0; y < chk.CSize; y++)
+                {
+                    for (int z = 0; z < chk.CSize; z++)
+                    {
+                        chk.BlocksInternal[chk.BlockIndex(x, y, z)].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(data_orig, (z * chk.CSize * chk.CSize + y * chk.CSize + x) * 2, 2));
+                    }
+                }
             }
             if (posMult == 1)
             {

@@ -18,12 +18,22 @@ namespace Voxalia.Shared
             return new SyncScheduleItem() { MyAction = act, Time = delay, OwningEngine = this };
         }
 
-        public void ScheduleSyncTask(Action act, double delay = 0)
+        public void DescheduleSyncTask(SyncScheduleItem item)
         {
             lock (Locker)
             {
-                Tasks.Add(new SyncScheduleItem() { MyAction = act, Time = delay, OwningEngine = this });
+                Tasks.Remove(item);
             }
+        }
+
+        public SyncScheduleItem ScheduleSyncTask(Action act, double delay = 0)
+        {
+            SyncScheduleItem item = new SyncScheduleItem() { MyAction = act, Time = delay, OwningEngine = this };
+            lock (Locker)
+            {
+                Tasks.Add(item);
+            }
+            return item;
         }
 
         public void RunAllSyncTasks(double time)

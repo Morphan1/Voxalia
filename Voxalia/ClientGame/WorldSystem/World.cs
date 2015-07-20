@@ -154,12 +154,23 @@ namespace Voxalia.ClientGame.WorldSystem
             Chunk chunk;
             if (LoadedChunks.TryGetValue(pos, out chunk))
             {
-                return chunk;
+                if (chunk.PosMultiplier != posMult)
+                {
+                    LoadedChunks.Remove(pos);
+                    chunk = new Chunk(posMult);
+                    chunk.OwningWorld = this;
+                    chunk.WorldPosition = pos;
+                    chunk.Destroy();
+                    LoadedChunks.Add(pos, chunk);
+                }
             }
-            chunk = new Chunk(posMult);
-            chunk.OwningWorld = this;
-            chunk.WorldPosition = pos;
-            LoadedChunks.Add(pos, chunk);
+            else
+            {
+                chunk = new Chunk(posMult);
+                chunk.OwningWorld = this;
+                chunk.WorldPosition = pos;
+                LoadedChunks.Add(pos, chunk);
+            }
             return chunk;
         }
 
