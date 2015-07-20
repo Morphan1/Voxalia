@@ -9,23 +9,20 @@ namespace Voxalia.Shared
 {
     public class Scheduler
     {
-        public List<ScheduleItem> Tasks = new List<ScheduleItem>();
+        public List<SyncScheduleItem> Tasks = new List<SyncScheduleItem>();
 
         Object Locker = new Object();
 
-        public void ScheduleSyncTask(Action act)
+        public SyncScheduleItem GetSyncTask(Action act, double delay = 0)
         {
-            lock (Locker)
-            {
-                Tasks.Add(new ScheduleItem() { MyAction = act, Time = 0 });
-            }
+            return new SyncScheduleItem() { MyAction = act, Time = delay, OwningEngine = this };
         }
 
-        public void ScheduleSyncTask(Action act, double delay)
+        public void ScheduleSyncTask(Action act, double delay = 0)
         {
             lock (Locker)
             {
-                Tasks.Add(new ScheduleItem() { MyAction = act, Time = delay });
+                Tasks.Add(new SyncScheduleItem() { MyAction = act, Time = 0, OwningEngine = this });
             }
         }
 
@@ -63,18 +60,30 @@ namespace Voxalia.Shared
         }
     }
 
-    public class ScheduleItem
+    public abstract class ScheduleItem
+    {
+        public abstract void RunMe();
+
+        public Scheduler OwningEngine;
+    }
+
+    public class SyncScheduleItem: ScheduleItem
     {
         public Action MyAction;
 
         public double Time = 0;
+
+        public override void RunMe()
+        {
+            OwningEngine.ScheduleSyncTask(MyAction);
+        }
     }
 
-    public class ASyncScheduleItem
+    public class ASyncScheduleItem : ScheduleItem
     {
         public Action MyAction;
 
-        public ASyncScheduleItem FollowUp = null;
+        public ScheduleItem FollowUp = null;
 
         Object Locker = new Object();
 
@@ -88,7 +97,7 @@ namespace Voxalia.Shared
             }
         }
 
-        public void FollowWith(ASyncScheduleItem item)
+        public void FollowWith(ScheduleItem item)
         {
             lock (Locker)
             {
@@ -103,7 +112,7 @@ namespace Voxalia.Shared
             }
         }
 
-        public void RunMe()
+        public override void RunMe()
         {
             lock (Locker)
             {
