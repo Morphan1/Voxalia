@@ -111,16 +111,17 @@ namespace Voxalia.ClientGame.WorldSystem
                 tVBO.BoneWeights2 = null;
                 tVBO.BoneIDs2 = null;
                 tVBO.Colors = null;
-                lock (OwningWorld.TheClient.TickLock)
+                OwningWorld.TheClient.Schedule.ScheduleSyncTask(() =>
                 {
                     if (_VBO != null)
                     {
                         VBO tV = _VBO;
-                        OwningWorld.TheClient.Schedule.ScheduleSyncTask(() => tV.Destroy());
+                        tV.Destroy();
                     }
                     _VBO = tVBO;
-                    OwningWorld.TheClient.Schedule.ScheduleSyncTask(() => { tVBO.GenerateVBO(); tVBO.CleanLists(); });
-                }
+                    tVBO.GenerateVBO();
+                    tVBO.CleanLists();
+                });
             }
             catch (Exception ex)
             {

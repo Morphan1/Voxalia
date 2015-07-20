@@ -86,19 +86,37 @@ namespace Voxalia.ServerGame.WorldSystem
 
         StaticMesh worldObject = null;
 
+        public ASyncScheduleItem adding = null;
+        
         public void AddToWorld()
         {
-            // TODO: Asynchronize
+            if (adding != null)
+            {
+                ASyncScheduleItem item = OwningWorld.TheServer.Schedule.AddASyncTask(() => AddInternal());
+                adding.FollowWith(item);
+                adding = item;
+            }
+            else
+            {
+                adding = OwningWorld.TheServer.Schedule.StartASyncTask(() => AddInternal());
+            }
+        }
+
+        void AddInternal()
+        {
             StaticMesh tworldObject = CalculateChunkShape();
-            if (worldObject != null)
+            OwningWorld.TheServer.Schedule.ScheduleSyncTask(() =>
             {
-                OwningWorld.PhysicsWorld.Remove(worldObject);
-            }
-            worldObject = tworldObject;
-            if (worldObject != null)
-            {
-                OwningWorld.PhysicsWorld.Add(worldObject);
-            }
+                if (worldObject != null)
+                {
+                    OwningWorld.PhysicsWorld.Remove(worldObject);
+                }
+                worldObject = tworldObject;
+                if (worldObject != null)
+                {
+                    OwningWorld.PhysicsWorld.Add(worldObject);
+                }
+            });
         }
     }
 }

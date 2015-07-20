@@ -130,7 +130,7 @@ namespace Voxalia.ClientGame.WorldSystem
         void AddInternal()
         {
             StaticMesh tworldObject = CalculateChunkShape();
-            lock (OwningWorld.TheClient.TickLock)
+            OwningWorld.TheClient.Schedule.ScheduleSyncTask(() =>
             {
                 if (worldObject != null)
                 {
@@ -141,7 +141,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     OwningWorld.PhysicsWorld.Add(worldObject);
                 }
-            }
+            });
         }
     }
 }
