@@ -496,19 +496,8 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void LoadRegion(Location min, Location max)
         {
-            // TODO: callback for when all chunks are done loading
-            Location minc = ChunkLocFor(min);
-            Location maxc = ChunkLocFor(max);
-            for (double x = minc.X; x <= maxc.X; x++)
-            {
-                for (double y = minc.Y; y <= maxc.Y; y++)
-                {
-                    for (double z = minc.Z; z <= maxc.Z; z++)
-                    {
-                        LoadChunk(new Location(x, y, z));
-                    }
-                }
-            }
+            RegionLoader rl = new RegionLoader() { world = this };
+            rl.LoadRegion(min, max);
         }
 
         public short Seed;
@@ -670,20 +659,53 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             // TODO: Actually load from file
             chunk = new Chunk();
+            chunk.LOADING = true;
             chunk.OwningWorld = this;
             chunk.WorldPosition = cpos;
-            PopulateChunk(chunk);
             LoadedChunks.Add(cpos, chunk);
+            PopulateChunk(chunk);
+            AddChunkToWorld(chunk);
+            chunk.LOADING = false;
+            return chunk;
+        }
+
+        public void AddChunkToWorld(Chunk chunk)
+        {
             chunk.AddToWorld();
             foreach (Location loc in slocs)
             {
-                Chunk ch = GetChunk(cpos + loc);
+                Chunk ch = GetChunk(chunk.WorldPosition + loc);
                 if (ch != null)
                 {
                     ch.AddToWorld();
                 }
             }
-            return chunk;
+        }
+
+        public void LoadChunk_Background(Location cpos, Action callback = null)
+        {
+            if (LoadedChunks.ContainsKey(cpos))
+            {
+                return;
+            }
+            Chunk ch = new Chunk();
+            ch.LOADING = true;
+            ch.OwningWorld = this;
+            ch.WorldPosition = cpos;
+            LoadedChunks.Add(cpos, ch);
+            TheServer.Schedule.StartASyncTask(() =>
+            {
+                PopulateChunk(ch);
+                TheServer.Schedule.ScheduleSyncTask(() =>
+                {
+                    AddChunkToWorld(ch);
+                    ch.LOADING = false;
+                });
+                if (callback != null)
+                {
+                    callback.Invoke();
+                }
+            });
         }
 
         public Chunk GetChunk(Location cpos)

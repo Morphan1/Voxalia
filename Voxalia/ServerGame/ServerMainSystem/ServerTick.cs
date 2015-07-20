@@ -32,6 +32,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             {
                 Players[i].Network.SendMessage(message);
             }
+            SysConsole.Output(OutputType.INFO, "[Broadcast] " + message);
         }
 
         public void SendToAll(AbstractPacketOut packet)

@@ -330,6 +330,7 @@
     <Compile Include="ServerGame\WorldSystem\BlockPopulator.cs" />
     <Compile Include="ServerGame\WorldSystem\Chunk.cs" />
     <Compile Include="ServerGame\WorldSystem\QuickGenerator.cs" />
+    <Compile Include="ServerGame\WorldSystem\RegionLoader.cs" />
     <Compile Include="ServerGame\WorldSystem\World.cs" />
     <Compile Include="Shared\AABB.cs" />
     <Compile Include="Shared\AnimationEngine.cs" />

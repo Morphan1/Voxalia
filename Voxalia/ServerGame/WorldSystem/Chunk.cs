@@ -15,6 +15,8 @@ namespace Voxalia.ServerGame.WorldSystem
     {
         public const int CHUNK_SIZE = 30;
 
+        public bool LOADING = true;
+
         public World OwningWorld = null;
 
         public Location WorldPosition;
