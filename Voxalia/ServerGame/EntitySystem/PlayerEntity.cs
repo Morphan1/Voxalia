@@ -363,8 +363,8 @@ namespace Voxalia.ServerGame.EntitySystem
             Location pos = GetPosition();
             TrySet(pos, 1, 5, 1);
             TrySet(pos, ViewRadiusInChunks / 4, 5, 1);
-            TrySet(pos, ViewRadiusInChunks / 2, 15, 2);
-            TrySet(pos, ViewRadiusInChunks, 120, 5);
+            TrySet(pos, ViewRadiusInChunks / 2, 15, 1);
+            TrySet(pos, ViewRadiusInChunks, 120, 1);
             base.Tick();
         }
 
