@@ -73,13 +73,13 @@ namespace Voxalia.ClientGame.NetworkSystem
                     }
                 }
                 Socket csock = ConnectionSocket;
-                TheClient.Schedule.AddSyncTask(new System.Threading.Tasks.Task(() => { csock.Close(2); }), 2);
+                TheClient.Schedule.ScheduleSyncTask(() => csock.Close(2), 2);
                 ConnectionSocket = null;
             }
             if (ChunkSocket != null)
             {
                 Socket csock = ChunkSocket;
-                TheClient.Schedule.AddSyncTask(new System.Threading.Tasks.Task(() => { csock.Close(2); }), 2);
+                TheClient.Schedule.ScheduleSyncTask(() => csock.Close(2), 2);
                 ChunkSocket = null;
             }
             IsAlive = false;

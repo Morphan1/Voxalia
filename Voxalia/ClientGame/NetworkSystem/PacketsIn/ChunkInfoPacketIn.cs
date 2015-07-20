@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using Voxalia.Shared;
 using Voxalia.ClientGame.WorldSystem;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
@@ -13,7 +11,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            Task.Factory.StartNew(() => ParseData(data));
+            TheClient.Schedule.StartASyncTask(() => ParseData(data));
             return true;
         }
 
@@ -31,11 +29,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 SysConsole.Output(OutputType.WARNING, "Invalid chunk size!");
                 return;
             }
-            TheClient.Schedule.AddSyncTask(new Task(() =>
+            TheClient.Schedule.ScheduleSyncTask(() =>
             {
                 Chunk chk = TheClient.TheWorld.LoadChunk(new Location(x, y, z));
-                Task.Factory.StartNew(() => parsechunk2(chk, data_orig));
-            }));
+                TheClient.Schedule.StartASyncTask(() => parsechunk2(chk, data_orig));
+            });
         }
 
         void parsechunk2(Chunk chk, byte[] data_orig)
@@ -48,7 +46,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 chk.BlocksInternal[i].BlockData = data_orig[chk.BlocksInternal.Length * 2 + i];
             }
-            TheClient.Schedule.AddSyncTask(new Task(() => { chk.AddToWorld(); chk.CreateVBO(); chk.UpdateSurroundingsFully(); }));
+            TheClient.Schedule.ScheduleSyncTask(() => { chk.AddToWorld(); chk.CreateVBO(); chk.UpdateSurroundingsFully(); });
         }
     }
 }

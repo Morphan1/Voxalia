@@ -380,9 +380,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 Chunk chk = TheWorld.LoadChunk(worldPos);
                 // TODO: Remove schedule call, make this all instant... whenever the engine can handle a massive pile of chunks sending/loading at once >.>
-                TheServer.Schedule.AddSyncTask(new System.Threading.Tasks.Task(() => { if (!pkick) {
-                    ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk));
-                } }), Utilities.UtilRandom.NextDouble() * 5);
+                TheServer.Schedule.ScheduleSyncTask(() => { if (!pkick) { ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk)); } }, Utilities.UtilRandom.NextDouble() * 5);
                 ChunksAwareOf.Add(worldPos); // TODO: Add a note of whether the client has acknowledged the chunk's reception... (Also, chunk reception ack packet) so block edit notes can be delayed.
             }
         }

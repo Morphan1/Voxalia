@@ -7,8 +7,6 @@ using BEPUphysics;
 using BEPUphysics.CollisionShapes;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -101,33 +99,24 @@ namespace Voxalia.ClientGame.WorldSystem
 
         StaticMesh worldObject = null;
 
-        public Task adding = null;
+        public ASyncScheduleItem adding = null;
 
         public void AddToWorld()
         {
-            if (adding != null && adding.Status != TaskStatus.Canceled && adding.Status != TaskStatus.RanToCompletion && adding.Status != TaskStatus.Faulted && adding.Status != TaskStatus.Created)
+            if (adding != null)
             {
-                Task oadd = adding;
-                adding = new Task(() => AddInternal());
-                oadd.ContinueWith((o) => { if (adding.Status != TaskStatus.Running && adding.Status != TaskStatus.WaitingToRun && adding.Status != TaskStatus.RanToCompletion) { adding.Start(); } });
+                ASyncScheduleItem item = OwningWorld.TheClient.Schedule.AddASyncTask(() => AddInternal());
+                adding.FollowWith(item);
+                adding = item;
             }
             else
             {
-                adding = new Task(() => AddInternal());
-                adding.Start();
+                adding = OwningWorld.TheClient.Schedule.StartASyncTask(() => AddInternal());
             }
         }
 
         public void Destroy()
         {
-            while (adding != null && adding.Status != TaskStatus.Canceled && adding.Status != TaskStatus.RanToCompletion && adding.Status != TaskStatus.Faulted && adding.Status != TaskStatus.Created)
-            {
-                Thread.Sleep(1);
-            }
-            while (rendering != null && rendering.Status != TaskStatus.Canceled && rendering.Status != TaskStatus.RanToCompletion && rendering.Status != TaskStatus.Faulted && rendering.Status != TaskStatus.Created)
-            {
-                Thread.Sleep(1);
-            }
             if (worldObject != null)
             {
                 OwningWorld.PhysicsWorld.Remove(worldObject);

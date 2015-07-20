@@ -12,7 +12,7 @@ namespace Voxalia.Shared.BlockShapes
         {
             offset = new Location(0.5);
             return new BEPUphysics.CollisionShapes.ConvexShapes.BoxShape(1, 1, 1);
-        }
+        }
 
         public override List<Vector3> GetVertices(Vector3 pos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)
         {

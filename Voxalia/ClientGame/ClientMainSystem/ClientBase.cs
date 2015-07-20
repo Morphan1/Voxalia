@@ -15,7 +15,6 @@ using System.Diagnostics;
 using Voxalia.ClientGame.NetworkSystem;
 using Voxalia.ClientGame.AudioSystem;
 using Voxalia.ClientGame.GraphicsSystems.ParticleSystem;
-using System.Threading.Tasks;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {

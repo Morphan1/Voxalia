@@ -7,8 +7,6 @@ using Voxalia.Shared;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -18,20 +16,19 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void CreateVBO()
         {
-            if (rendering != null && rendering.Status != TaskStatus.Canceled && rendering.Status != TaskStatus.RanToCompletion && rendering.Status != TaskStatus.Faulted && rendering.Status != TaskStatus.Created)
+            if (rendering != null)
             {
-                Task orend = rendering;
-                rendering = new Task(() => VBOHInternal());
-                orend.ContinueWith((o) => { if (rendering.Status != TaskStatus.Running && rendering.Status != TaskStatus.WaitingToRun && rendering.Status != TaskStatus.RanToCompletion) { rendering.Start(); } });
+                ASyncScheduleItem item = OwningWorld.TheClient.Schedule.AddASyncTask(() => VBOHInternal());
+                rendering.FollowWith(item);
+                rendering = item;
             }
             else
             {
-                rendering = new Task(() => VBOHInternal());
-                rendering.Start();
+                rendering = OwningWorld.TheClient.Schedule.StartASyncTask(() => VBOHInternal());
             }
         }
 
-        public Task rendering = null;
+        public ASyncScheduleItem rendering = null;
 
         void VBOHInternal()
         {
@@ -93,7 +90,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         if (_VBO != null)
                         {
                             VBO tV = _VBO;
-                            OwningWorld.TheClient.Schedule.AddSyncTask(new Task(() => tV.Destroy()));
+                            OwningWorld.TheClient.Schedule.ScheduleSyncTask(() => tV.Destroy());
                         }
                         _VBO = null;
                     }
@@ -119,18 +116,14 @@ namespace Voxalia.ClientGame.WorldSystem
                     if (_VBO != null)
                     {
                         VBO tV = _VBO;
-                        OwningWorld.TheClient.Schedule.AddSyncTask(new Task(() => tV.Destroy()));
+                        OwningWorld.TheClient.Schedule.ScheduleSyncTask(() => tV.Destroy());
                     }
                     _VBO = tVBO;
-                    OwningWorld.TheClient.Schedule.AddSyncTask(new Task(() => { tVBO.GenerateVBO(); tVBO.CleanLists(); }));
+                    OwningWorld.TheClient.Schedule.ScheduleSyncTask(() => { tVBO.GenerateVBO(); tVBO.CleanLists(); });
                 }
             }
             catch (Exception ex)
             {
-                if (ex is ThreadAbortException)
-                {
-                    throw ex;
-                }
                 SysConsole.Output(OutputType.ERROR, "Generating ChunkVBO...: " + ex.ToString());
             }
         }

@@ -13,19 +13,19 @@ namespace Voxalia.Shared
 
         Object Locker = new Object();
 
-        public void AddSyncTask(Task t)
+        public void ScheduleSyncTask(Action act)
         {
             lock (Locker)
             {
-                Tasks.Add(new ScheduleItem() { task = t, time = 0 });
+                Tasks.Add(new ScheduleItem() { MyAction = act, Time = 0 });
             }
         }
 
-        public void AddSyncTask(Task t, double delay)
+        public void ScheduleSyncTask(Action act, double delay)
         {
             lock (Locker)
             {
-                Tasks.Add(new ScheduleItem() { task = t, time = delay });
+                Tasks.Add(new ScheduleItem() { MyAction = act, Time = delay });
             }
         }
 
@@ -35,27 +35,94 @@ namespace Voxalia.Shared
             {
                 for (int i = 0; i < Tasks.Count; i++)
                 {
-                    Tasks[i].time -= time;
-                    if (Tasks[i].time > 0)
+                    Tasks[i].Time -= time;
+                    if (Tasks[i].Time > 0)
                     {
                         continue;
                     }
-                    if (Tasks[i].task.IsCompleted || Tasks[i].task.IsCanceled)
-                    {
-                        Tasks.RemoveAt(i--);
-                        continue;
-                    }
-                    Tasks[i].task.RunSynchronously();
+                    Tasks[i].MyAction.Invoke();
                     Tasks.RemoveAt(i--);
                 }
             }
+        }
+
+        public ASyncScheduleItem StartASyncTask(Action a)
+        {
+            ASyncScheduleItem asyncer = new ASyncScheduleItem();
+            asyncer.MyAction = a;
+            asyncer.RunMe();
+            return asyncer;
+        }
+
+        public ASyncScheduleItem AddASyncTask(Action a, ASyncScheduleItem followUp = null)
+        {
+            ASyncScheduleItem asyncer = new ASyncScheduleItem();
+            asyncer.MyAction = a;
+            asyncer.FollowUp = followUp;
+            return asyncer;
         }
     }
 
     public class ScheduleItem
     {
-        public Task task;
+        public Action MyAction;
 
-        public double time = 0;
+        public double Time = 0;
+    }
+
+    public class ASyncScheduleItem
+    {
+        public Action MyAction;
+
+        public ASyncScheduleItem FollowUp = null;
+
+        Object Locker = new Object();
+
+        bool Done = false;
+
+        public bool IsDone()
+        {
+            lock (Locker)
+            {
+                return Done;
+            }
+        }
+
+        public void FollowWith(ASyncScheduleItem item)
+        {
+            lock (Locker)
+            {
+                if (Done)
+                {
+                    item.RunMe();
+                }
+                else
+                {
+                    FollowUp = item;
+                }
+            }
+        }
+
+        public void RunMe()
+        {
+            lock (Locker)
+            {
+                Done = false;
+            }
+            Task.Factory.StartNew(() => runInternal());
+        }
+
+        private void runInternal()
+        {
+            MyAction.Invoke();
+            lock (Locker)
+            {
+                Done = true;
+            }
+            if (FollowUp != null)
+            {
+                FollowUp.RunMe();
+            }
+        }
     }
 }
