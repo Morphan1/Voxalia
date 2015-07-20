@@ -385,16 +385,19 @@ namespace Voxalia.ServerGame.EntitySystem
         public void TryChunk(Location worldPos, float atime, int posMult)
         {
             worldPos = TheWorld.ChunkLocFor(worldPos);
-            if (!ChunksAwareOf.Contains(worldPos))
+            ChunkAwarenessInfo cai = new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult };
+            if (!ChunksAwareOf.ContainsKey(worldPos) || ChunksAwareOf[worldPos].LOD > posMult)
             {
                 Chunk chk = TheWorld.LoadChunk(worldPos);
                 // TODO: Remove schedule call, make this all instant... whenever the engine can handle a massive pile of chunks sending/loading at once >.>
                 TheServer.Schedule.ScheduleSyncTask(() => { if (!pkick) { ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult)); } }, Utilities.UtilRandom.NextDouble() * atime);
-                ChunksAwareOf.Add(worldPos); // TODO: Add a note of whether the client has acknowledged the chunk's reception... (Also, chunk reception ack packet) so block edit notes can be delayed.
+                ChunksAwareOf.Remove(worldPos);
+                ChunksAwareOf.Add(worldPos, new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult });
+                // TODO: Add a note of whether the client has acknowledged the chunk's reception... (Also, chunk reception ack packet) so block edit notes can be delayed.
             }
         }
 
-        public HashSet<Location> ChunksAwareOf = new HashSet<Location>();
+        public Dictionary<Location, ChunkAwarenessInfo> ChunksAwareOf = new Dictionary<Location, ChunkAwarenessInfo>();
 
         public double LastClick = 0;
 
@@ -511,6 +514,33 @@ namespace Voxalia.ServerGame.EntitySystem
         public string StanceName()
         {
             return Stance.ToString().ToLower();
+        }
+    }
+
+    public class ChunkAwarenessInfo
+    {
+        public Location ChunkPos;
+
+        public int LOD;
+
+        public override int GetHashCode()
+        {
+            return ChunkPos.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ChunkPos.Equals(((ChunkAwarenessInfo)obj).ChunkPos);
+        }
+
+        public static bool operator ==(ChunkAwarenessInfo cai, ChunkAwarenessInfo cai2)
+        {
+            return cai.Equals(cai2);
+        }
+
+        public static bool operator !=(ChunkAwarenessInfo cai, ChunkAwarenessInfo cai2)
+        {
+            return !cai.Equals(cai2);
         }
     }
 }
