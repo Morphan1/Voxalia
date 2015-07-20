@@ -60,6 +60,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public SingleAnimation tAnim = null;
         public SingleAnimation lAnim = null;
 
+        public int ViewRadiusInChunks = 5;
+
         public void Kick(string message)
         {
             if (pkick)
@@ -359,28 +361,35 @@ namespace Voxalia.ServerGame.EntitySystem
             cit.Info.Tick(this, cit);
             // TODO: Better system
             Location pos = GetPosition();
-            TryChunk(pos);
-            for (int x = -2; x < 3; x++)
-            {
-                for (int y = -2; y < 3; y++)
-                {
-                    for (int z = -2; z < 3; z++)
-                    {
-                        TryChunk(pos + new Location(30 * x, 30 * y, 30 * z));
-                    }
-                }
-            }
+            TrySet(pos, 1, 0);
+            TrySet(pos, ViewRadiusInChunks / 4, 1);
+            TrySet(pos, ViewRadiusInChunks / 2, 5);
+            TrySet(pos, ViewRadiusInChunks, 10);
             base.Tick();
         }
 
-        public void TryChunk(Location worldPos)
+        public void TrySet(Location pos, int VIEWRAD, float mintime)
+        {
+            for (int x = -VIEWRAD; x <= VIEWRAD; x++)
+            {
+                for (int y = -VIEWRAD; y <= VIEWRAD; y++)
+                {
+                    for (int z = -VIEWRAD; z <= VIEWRAD; z++)
+                    {
+                        TryChunk(pos + new Location(30 * x, 30 * y, 30 * z), mintime);
+                    }
+                }
+            }
+        }
+
+        public void TryChunk(Location worldPos, float mintime)
         {
             worldPos = TheWorld.ChunkLocFor(worldPos);
             if (!ChunksAwareOf.Contains(worldPos))
             {
                 Chunk chk = TheWorld.LoadChunk(worldPos);
                 // TODO: Remove schedule call, make this all instant... whenever the engine can handle a massive pile of chunks sending/loading at once >.>
-                TheServer.Schedule.ScheduleSyncTask(() => { if (!pkick) { ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk)); } }, Utilities.UtilRandom.NextDouble() * 5);
+                TheServer.Schedule.ScheduleSyncTask(() => { if (!pkick) { ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk)); } }, mintime + Utilities.UtilRandom.NextDouble() * 5);
                 ChunksAwareOf.Add(worldPos); // TODO: Add a note of whether the client has acknowledged the chunk's reception... (Also, chunk reception ack packet) so block edit notes can be delayed.
             }
         }

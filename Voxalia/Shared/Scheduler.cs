@@ -22,7 +22,7 @@ namespace Voxalia.Shared
         {
             lock (Locker)
             {
-                Tasks.Add(new SyncScheduleItem() { MyAction = act, Time = 0, OwningEngine = this });
+                Tasks.Add(new SyncScheduleItem() { MyAction = act, Time = delay, OwningEngine = this });
             }
         }
 

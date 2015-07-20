@@ -37,9 +37,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             // TODO: Radius -> max view rad * 2
             // TODO: Size -> max view rad * 2 + 30 * 2
-            TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, 30 * 12, SunLightDef, new Location(0, 0, -1), 30 * 8);
+            TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, 30 * 10, SunLightDef, new Location(0, 0, -1), 30 * 12);
             // TODO: Separate planet quality CVar?
-            ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 2, 30 * 12, PlanetLightDef, new Location(0, 0, -1), 30 * 8);
+            ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 2, 30 * 10, PlanetLightDef, new Location(0, 0, -1), 30 * 12);
             Lights.Add(TheSun);
             Lights.Add(ThePlanet);
             TheWorld = new World();
@@ -59,9 +59,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             // TODO: Z+ -> max view rad + 30
             TheSun.Direction = Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch);
-            TheSun.Reposition(Player.GetPosition().GetBlockLocation() - TheSun.Direction * 30 * 4);
+            TheSun.Reposition(Player.GetPosition().GetBlockLocation() - TheSun.Direction * 30 * 6);
             ThePlanet.Direction = Utilities.ForwardVector_Deg(PlanetAngle.Yaw, PlanetAngle.Pitch);
-            ThePlanet.Reposition(Player.GetPosition().GetBlockLocation() - ThePlanet.Direction * 30 * 4);
+            ThePlanet.Reposition(Player.GetPosition().GetBlockLocation() - ThePlanet.Direction * 30 * 6);
             Quaternion diff;
             Vector3 tsd = TheSun.Direction.ToBVector();
             Vector3 tpd = ThePlanet.Direction.ToBVector();

@@ -14,6 +14,7 @@ using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using BEPUutilities.Threading;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.WorldSystem.SimpleGenerator;
+using System.Threading;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -470,6 +471,8 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
+        public int MaxViewRadiusInChunks = 8;
+
         /// <summary>
         /// The physics world in which all physics-related activity takes place.
         /// </summary>
@@ -492,13 +495,37 @@ namespace Voxalia.ServerGame.WorldSystem
             Seed = 100; // TODO: Generate or load
             Random seedGen = new Random(Seed);
             Seed2 = (short)(seedGen.Next((int)short.MaxValue * 2) - short.MaxValue);
-            LoadRegion(new Location(-70), new Location(70));
+            LoadRegion(new Location(-MaxViewRadiusInChunks / 4 * 30), new Location(MaxViewRadiusInChunks / 4 * 30));
+            LoadRegion(new Location(-MaxViewRadiusInChunks / 2 * 30), new Location(MaxViewRadiusInChunks / 2 * 30));
+            LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30));
+            while (!AllChunksLoadedFully())
+            {
+                TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-world scheduler
+                Thread.Sleep(16);
+            }
+            SysConsole.Output(OutputType.INIT, "Finished building chunks!");
         }
 
-        public void LoadRegion(Location min, Location max)
+        private bool AllChunksLoadedFully()
+        {
+            foreach (Chunk chunk in LoadedChunks.Values)
+            {
+                if (chunk.LOADING)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public void LoadRegion(Location min, Location max, bool announce = true)
         {
             RegionLoader rl = new RegionLoader() { world = this };
             rl.LoadRegion(min, max);
+            if (announce)
+            {
+                SysConsole.Output(OutputType.INIT, "Done initially loading " + rl.Count + " chunks, building them now...");
+            }
         }
 
         public short Seed;
@@ -683,10 +710,11 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        public void LoadChunk_Background(Location cpos, Action callback = null)
+        public void LoadChunk_Background(Location cpos, Action<bool> callback = null)
         {
             if (LoadedChunks.ContainsKey(cpos))
             {
+                callback.Invoke(true);
                 return;
             }
             Chunk ch = new Chunk();
@@ -704,7 +732,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 });
                 if (callback != null)
                 {
-                    callback.Invoke();
+                    callback.Invoke(false);
                 }
             });
         }

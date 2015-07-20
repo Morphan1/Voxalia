@@ -11,6 +11,8 @@ namespace Voxalia.ServerGame.WorldSystem
     {
         public int Count = 0;
 
+        int c = 0;
+
         public Object Locker = new Object();
 
         public World world;
@@ -19,7 +21,6 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             Location minc = world.ChunkLocFor(min);
             Location maxc = world.ChunkLocFor(max);
-            int c = 0;
             for (double x = minc.X; x <= maxc.X; x++)
             {
                 for (double y = minc.Y; y <= maxc.Y; y++)
@@ -27,11 +28,18 @@ namespace Voxalia.ServerGame.WorldSystem
                     for (double z = minc.Z; z <= maxc.Z; z++)
                     {
                         c++;
-                        world.LoadChunk_Background(new Location(x, y, z), () =>
+                        world.LoadChunk_Background(new Location(x, y, z), (o) =>
                         {
                             lock (Locker)
                             {
-                                Count++;
+                                if (o)
+                                {
+                                    c--;
+                                }
+                                else
+                                {
+                                    Count++;
+                                }
                             }
                         });
                     }
@@ -48,7 +56,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     break;
                 }
-                Thread.Sleep(1);
+                Thread.Sleep(16);
             }
         }
     }
