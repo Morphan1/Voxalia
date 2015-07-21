@@ -262,7 +262,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public SpotLight Flashlight = null;
 
-        public float MoveSpeed = 20;
+        public float MoveSpeed = 30;
 
         public Location GetEyePosition()
         {

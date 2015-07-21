@@ -422,7 +422,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool WasAltClicking = false;
 
-        public float MoveSpeed = 20;
+        public float MoveSpeed = 30;
 
         public Location ForwardVector()
         {
