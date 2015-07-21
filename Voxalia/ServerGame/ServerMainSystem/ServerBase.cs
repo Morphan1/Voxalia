@@ -103,10 +103,10 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 // Delta time = Elapsed ticks * (ticks/second)
                 CurrentDelta = ((double)DeltaCounter.ElapsedTicks) / ((double)Stopwatch.Frequency);
                 // How much time should pass between each tick ideally
-                TARGETFPS = 30;// ServerCVar.g_fps.ValueD; // TODO: Use the CVar!
-                if (TARGETFPS < 1 || TARGETFPS > 100)
+                TARGETFPS = CVars.g_fps.ValueD;
+                if (TARGETFPS < 1 || TARGETFPS > 600)
                 {
-                    //ServerCVar.g_fps.Set("30"); // TODO: Use the CVar!
+                    CVars.g_fps.Set("30");
                     TARGETFPS = 30;
                 }
                 TargetDelta = (1d / TARGETFPS);
