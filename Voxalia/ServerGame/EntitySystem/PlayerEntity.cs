@@ -148,8 +148,8 @@ namespace Voxalia.ServerGame.EntitySystem
             WheelBody.CollisionInformation.CollisionRules.Specific.Add(Body.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
             Body.CollisionInformation.CollisionRules.Specific.Add(WheelBody.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
             WheelBody.Tag = this;
-            WheelBody.AngularDamping = 0.75f;
-            WheelBody.LinearDamping = 0.75f;
+            WheelBody.AngularDamping = 0.5f;
+            WheelBody.LinearDamping = 0.5f;
             TheWorld.PhysicsWorld.Add(WheelBody);
             bsj = new BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint(Body, WheelBody, WheelBody.Position);
             TheWorld.PhysicsWorld.Add(bsj);
@@ -301,14 +301,15 @@ namespace Voxalia.ServerGame.EntitySystem
                 intent_vel *= 0.3f;
             }
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
-            if (pvel.LengthSquared() > 4 * MoveSpeed * MoveSpeed)
+            if (pvel.LengthSquared() > MoveRateCap * MoveRateCap)
             {
-                pvel = pvel.Normalize() * 2 * MoveSpeed;
+                pvel = pvel.Normalize() * MoveRateCap;
             }
-            pvel *= MoveSpeed * (Walk ? 0.7f : 1f) * TheWorld.Delta;
+            pvel *= TheWorld.Delta * (crGround.Hit ? 1f : 0.1f);
             if (!fly)
             {
-                Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0) * (crGround.Hit ? 1f : 0.1f));
+                Vector3 move = new Vector3((float)pvel.X, (float)pvel.Y, 0);
+                Body.ApplyLinearImpulse(ref move);
                 Body.ActivityInformation.Activate();
             }
             else
@@ -422,7 +423,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool WasAltClicking = false;
 
-        public float MoveSpeed = 30;
+        public float MoveSpeed = 480;
+        public float MoveRateCap = 960;
 
         public Location ForwardVector()
         {

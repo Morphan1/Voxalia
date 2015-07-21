@@ -24,7 +24,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             Player.Walk = val.HasFlag(KeysPacketData.WALK);
             Player.Click = val.HasFlag(KeysPacketData.CLICK);
             Player.AltClick = val.HasFlag(KeysPacketData.ALTCLICK);
-            Player.Network.SendPacket(new YourPositionPacketOut(Player.GetPosition(), Player.GetVelocity(), Player.Stance));
+            Player.Network.SendPacket(new YourPositionPacketOut(Player.GetPosition(), Player.GetVelocity(), Location.FromBVector(Player.WheelBody.AngularVelocity), Player.Stance));
             Player.Direction.Yaw = Utilities.BytesToFloat(Utilities.BytesPartial(data, 2, 4));
             Player.Direction.Pitch = Utilities.BytesToFloat(Utilities.BytesPartial(data, 2 + 4, 4));
             return true;
