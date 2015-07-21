@@ -97,13 +97,49 @@ namespace Voxalia.Shared
 
         Object Locker = new Object();
 
+        bool Started = false;
+
         bool Done = false;
+
+        public bool HasStarted()
+        {
+            lock (Locker)
+            {
+                return Started;
+            }
+        }
 
         public bool IsDone()
         {
             lock (Locker)
             {
                 return Done;
+            }
+        }
+
+        public ASyncScheduleItem ReplaceOrFollowWith(ASyncScheduleItem item)
+        {
+            lock (Locker)
+            {
+                if (Started)
+                {
+                    if (Done)
+                    {
+                        item.RunMe();
+                        return item;
+                    }
+                    else
+                    {
+                        FollowUp = item;
+                        return item;
+                    }
+                }
+                else
+                {
+                    MyAction = item.MyAction;
+                    FollowUp = item.FollowUp;
+                    return this;
+                }
             }
         }
 
@@ -126,6 +162,7 @@ namespace Voxalia.Shared
         {
             lock (Locker)
             {
+                Started = true;
                 Done = false;
             }
             Task.Factory.StartNew(() => runInternal());

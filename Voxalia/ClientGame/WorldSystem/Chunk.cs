@@ -121,8 +121,7 @@ namespace Voxalia.ClientGame.WorldSystem
             if (adding != null)
             {
                 ASyncScheduleItem item = OwningWorld.TheClient.Schedule.AddASyncTask(() => AddInternal());
-                adding.FollowWith(item);
-                adding = item;
+                adding = adding.ReplaceOrFollowWith(item);
             }
             else
             {

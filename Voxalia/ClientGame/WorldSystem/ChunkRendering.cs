@@ -19,8 +19,7 @@ namespace Voxalia.ClientGame.WorldSystem
             if (rendering != null)
             {
                 ASyncScheduleItem item = OwningWorld.TheClient.Schedule.AddASyncTask(() => VBOHInternal());
-                rendering.FollowWith(item);
-                rendering = item;
+                rendering = rendering.ReplaceOrFollowWith(item);
             }
             else
             {
