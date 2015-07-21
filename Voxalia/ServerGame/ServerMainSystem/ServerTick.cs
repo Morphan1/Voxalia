@@ -96,9 +96,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
             try
             {
                 opsat += Delta;
-                if (opsat >= 1)
+                if (opsat >= 1.0)
                 {
-                    opsat -= 1;
+                    opsat -= 1.0;
                     OncePerSecondActions();
                 }
                 if (CVars.g_timescale.ValueD != pts) // TODO: Make this CVar per-world

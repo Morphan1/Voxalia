@@ -83,6 +83,15 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public bool IgnoreThis(BroadPhaseEntry entry)
         {
+            if (entry is EntityCollidable && ((EntityCollidable)entry).Entity.Tag == this)
+            {
+                return false;
+            }
+            return TheWorld.Collision.ShouldCollide(entry);
+        }
+
+        public bool IgnorePlayers(BroadPhaseEntry entry)
+        {
             if (entry.CollisionRules.Group == CollisionUtil.Player)
             {
                 return false;
@@ -113,11 +122,18 @@ namespace Voxalia.ClientGame.EntitySystem
                 Direction.Pitch = -89.9f;
             }
             bool fly = false;
-            bool on_ground = TheClient.TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.01f, HalfSize.Y - 0.01f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis).Hit;
-            if (Upward && !fly && !pup && on_ground && GetVelocity().Z < 1f)
+            CollisionResult crGround = TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.01f, HalfSize.Y - 0.01f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
+            if (Upward && !fly && !pup && crGround.Hit && GetVelocity().Z < 1f)
             {
-                Body.ApplyImpulse(new Vector3(0, 0, 0), (Location.UnitZ * GetMass() * 7f).ToBVector());
+                Vector3 imp = (Location.UnitZ * GetMass() * 7f).ToBVector();
+                Body.ApplyLinearImpulse(ref imp);
                 Body.ActivityInformation.Activate();
+                imp = -imp;
+                if (crGround.HitEnt != null)
+                {
+                    crGround.HitEnt.ApplyLinearImpulse(ref imp);
+                    crGround.HitEnt.ActivityInformation.Activate();
+                }
                 pup = true;
             }
             else if (!Upward)
@@ -159,13 +175,13 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 pvel = pvel.Normalize() * 2 * MoveSpeed;
             }
-            pvel *= MoveSpeed * (Walk ? 0.7f : 1f);
+            pvel *= MoveSpeed * (Walk ? 0.7f : 1f) * TheWorld.Delta;
             if (!fly)
             {
-                Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0) * (on_ground ? 1f : 0.1f));
+                Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0) * (crGround.Hit ? 1f : 0.1f));
                 Body.ActivityInformation.Activate();
             }
-            if (fly)
+            else
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
@@ -214,6 +230,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public override void SpawnBody()
         {
             base.SpawnBody();
+            Body.LinearDamping = 0;
+            Body.AngularDamping = 1;
             WheelBody = new BEPUphysics.Entities.Entity(WheelShape, tmass / 2f);
             WheelBody.Orientation = Quaternion.Identity;
             WheelBody.Position = Body.Position + new Vector3(0, 0, -(float)HalfSize.Z);
@@ -244,7 +262,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public SpotLight Flashlight = null;
 
-        public float MoveSpeed = 10;
+        public float MoveSpeed = 20;
 
         public Location GetEyePosition()
         {

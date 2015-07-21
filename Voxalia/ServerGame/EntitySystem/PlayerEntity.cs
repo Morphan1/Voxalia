@@ -140,6 +140,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public override void SpawnBody()
         {
             base.SpawnBody();
+            Body.LinearDamping = 0;
+            Body.AngularDamping = 1;
             WheelBody = new BEPUphysics.Entities.Entity(WheelShape, tmass / 2f);
             WheelBody.Orientation = Quaternion.Identity;
             WheelBody.Position = Body.Position + new Vector3(0, 0, -(float)HalfSize.Z);
@@ -250,7 +252,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Direction.Pitch = -89.9f;
             }
             bool fly = false;
-            CollisionResult crGround = TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.01f, HalfSize.Y - 0.01f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnorePlayers);
+            CollisionResult crGround = TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.01f, HalfSize.Y - 0.01f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
             if (Upward && !fly && !pup && crGround.Hit && GetVelocity().Z < 1f)
             {
                 Vector3 imp = (Location.UnitZ * GetMass() * 7f).ToBVector();
@@ -303,13 +305,13 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 pvel = pvel.Normalize() * 2 * MoveSpeed;
             }
-            pvel *= MoveSpeed * (Walk ? 0.7f : 1f);
+            pvel *= MoveSpeed * (Walk ? 0.7f : 1f) * TheWorld.Delta;
             if (!fly)
             {
                 Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0) * (crGround.Hit ? 1f : 0.1f));
                 Body.ActivityInformation.Activate();
             }
-            if (fly)
+            else
             {
                 SetPosition(GetPosition() + pvel / 200);
             }
@@ -420,7 +422,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool WasAltClicking = false;
 
-        public float MoveSpeed = 10;
+        public float MoveSpeed = 20;
 
         public Location ForwardVector()
         {

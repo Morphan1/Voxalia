@@ -20,9 +20,9 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Location dir = pos - TheClient.Player.GetPosition();
             if (dir.LengthSquared() < 20 * 20) // TODO: replace '20' with a CVar
             {
-                TheClient.Player.SetPosition(TheClient.Player.GetPosition() + dir / 15f); // TODO: Replace '15f' with a CVar
+                TheClient.Player.SetPosition(TheClient.Player.GetPosition() + dir / 120f); // TODO: Replace '120f' with a CVar * PacketDelta?
                 Location veldir = vel - TheClient.Player.GetVelocity();
-                TheClient.Player.SetVelocity(TheClient.Player.GetVelocity() + veldir / 15f); // TODO: Replace '15f' with a CVar
+                TheClient.Player.SetVelocity(TheClient.Player.GetVelocity() + veldir / 120f); // TODO: Replace '120f' with a CVar * PacketDelta?
             }
             else
             {
