@@ -570,13 +570,13 @@ namespace Voxalia.ServerGame.WorldSystem
             return (Material)ch.GetBlockAt(x, y, z).BlockMaterial;
         }
 
-        public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, bool broadcast = true, bool regen = true)
+        public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, byte locdat = 1, bool broadcast = true, bool regen = true)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos));
             int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
-            ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat));
+            ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat, locdat));
             if (regen)
             {
                 ch.AddToWorld();
@@ -652,7 +652,7 @@ namespace Voxalia.ServerGame.WorldSystem
             if (bi.BlockMaterial != (ushort)Material.AIR)
             {
                 Material mat = (Material)bi.BlockMaterial;
-                ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0));
+                ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0, 1));
                 ch.AddToWorld();
                 TrySurroundings(ch, pos, x, y, z);
                 SendToAll(new BlockEditPacketOut(pos, Material.AIR, 0));

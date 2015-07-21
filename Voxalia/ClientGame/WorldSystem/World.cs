@@ -208,7 +208,7 @@ namespace Voxalia.ClientGame.WorldSystem
             int x = (int)Math.Floor(((int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30) / (float)ch.PosMultiplier);
             int y = (int)Math.Floor(((int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30) / (float)ch.PosMultiplier);
             int z = (int)Math.Floor(((int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30) / (float)ch.PosMultiplier);
-            ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat));
+            ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat, 1));
             if (regen)
             {
                 ch.AddToWorld();

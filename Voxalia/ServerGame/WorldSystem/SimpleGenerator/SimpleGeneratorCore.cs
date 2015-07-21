@@ -31,19 +31,19 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     int top = (int)Math.Round(topf);
                     for (int z = 0; z < Math.Min(top - 5, 30); z++)
                     {
-                        chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.STONE, 0));
+                        chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.STONE, 0, 0));
                     }
                     for (int z = Math.Max(top - 5, 0); z < Math.Min(top - 1, 30); z++)
                     {
-                        chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.DIRT, 0));
+                        chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.DIRT, 0, 0));
                     }
                     for (int z = Math.Max(top - 1, 0); z < Math.Min(top, 30); z++)
                     {
-                        chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 0));
+                        chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 0, 0));
                     }
                     for (int z = Math.Max(top, 0); z < 30; z++)
                     {
-                        chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0));
+                        chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0, 0));
                     }
                     for (int z = Math.Max(top, 0); z < Math.Min(top + 1, 30); z++)
                     {
@@ -55,46 +55,46 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         {
                             if (topfxp > topf && topfxp - Math.Round(topfxp) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 32)); // TODO: 81
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 32, 0)); // TODO: 81
                             }
                             else if (topfxm > topf && topfxm - Math.Round(topfxm) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 31)); // TODO: 80
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 31, 0)); // TODO: 80
                             }
                             else if (topfyp > topf && topfyp - Math.Round(topfyp) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 33)); // TODO: 83
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 33, 0)); // TODO: 83
                             }
                             else if (topfym > topf && topfym - Math.Round(topfym) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 34)); // TODO: 82
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 34, 0)); // TODO: 82
                             }
                             else
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 3));
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 3, 0));
                             }
                             if (z > 0)
                             {
-                                chunk.SetBlockAt(x, y, z - 1, new BlockInternal((ushort)Material.DIRT, 0));
+                                chunk.SetBlockAt(x, y, z - 1, new BlockInternal((ushort)Material.DIRT, 0, 0));
                             }
                         }
                         else
                         {
                             if (topfxp > topf && topfxp - Math.Round(topfxp) > 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 73));
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 73, 0));
                             }
                             else if (topfxm > topf && topfxm - Math.Round(topfxm) > 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 72));
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 72, 0));
                             }
                             else if (topfyp > topf && topfyp - Math.Round(topfyp) > 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 74));
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 74, 0));
                             }
                             else if (topfym > topf && topfym - Math.Round(topfym) > 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 75));
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 75, 0));
                             }
                         }
                     }
