@@ -5,6 +5,12 @@ Voxalia, a game about blocks and such.
 
 Built within OpenTK, a C# binding of OpenGL for the 3D rendering.
 
+## Compiling
+
+- Open the .sln in Microsoft Visual C# 2010
+- Switch the configuration to Release|x64
+- Debug -> Build Solution!
+
 ### Licensing pre-note:
 
 This is an open source project, provided entirely freely, for everyone to use and contribute to.
