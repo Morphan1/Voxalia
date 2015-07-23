@@ -29,6 +29,35 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public ASyncScheduleItem rendering = null;
 
+        BlockInternal TryAll(Location pos, int x, int y, int z)
+        {
+            if (PosMultiplier == 1)
+            {
+                return OwningWorld.GetBlockInternal(pos);
+            }
+            else
+            {
+                int px = x == 0 ? 1 : x * PosMultiplier;
+                int py = y == 0 ? 1 : y * PosMultiplier;
+                int pz = z == 0 ? 1 : z * PosMultiplier;
+                for (int xe = 0; xe < px; xe++)
+                {
+                    for (int ye = 0; ye < py; ye++)
+                    {
+                        for (int ze = 0; ze < pz; ze++)
+                        {
+                            BlockInternal bi = OwningWorld.GetBlockInternal(pos + new Location(xe, ye, ze));
+                            if (bi.BlockMaterial == 0 || bi.BlockData != 0)
+                            {
+                                return BlockInternal.AIR;
+                            }
+                        }
+                    }
+                }
+                return new BlockInternal((ushort)1, (byte)0, (byte)0);
+            }
+        }
+
         void VBOHInternal()
         {
             try
@@ -47,12 +76,12 @@ namespace Voxalia.ClientGame.WorldSystem
                             if (((Material)c.BlockMaterial).RendersAtAll())
                             {
                                 // TODO: Handle ALL blocks against the surface when low-LOD
-                                BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(x * PosMultiplier, y * PosMultiplier, 30));
-                                BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(x * PosMultiplier, y * PosMultiplier, -1));
-                                BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(x * PosMultiplier, 30, z * PosMultiplier));
-                                BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(x * PosMultiplier, -1, z * PosMultiplier));
-                                BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(30, y * PosMultiplier, z * PosMultiplier));
-                                BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : OwningWorld.GetBlockInternal(new Location(ppos) + new Location(-1, y * PosMultiplier, z * PosMultiplier));
+                                BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : TryAll(new Location(ppos) + new Location(x * PosMultiplier, y * PosMultiplier, 30), 1, 1, 0);
+                                BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : TryAll(new Location(ppos) + new Location(x * PosMultiplier, y * PosMultiplier, -1), 1, 1, 0);
+                                BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : TryAll(new Location(ppos) + new Location(x * PosMultiplier, 30, z * PosMultiplier), 1, 0, 1);
+                                BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : TryAll(new Location(ppos) + new Location(x * PosMultiplier, -1, z * PosMultiplier), 1, 0, 1);
+                                BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : TryAll(new Location(ppos) + new Location(30, y * PosMultiplier, z * PosMultiplier), 0, 1, 1);
+                                BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : TryAll(new Location(ppos) + new Location(-1, y * PosMultiplier, z * PosMultiplier), 0, 1, 1);
                                 bool zps = ((Material)zp.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[zp.BlockData].OccupiesTOP();
                                 bool zms = ((Material)zm.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[zm.BlockData].OccupiesBOTTOM();
                                 bool xps = ((Material)xp.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXP();
