@@ -156,7 +156,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Loading particle effect engine...");
             Particles = new ParticleEngine(this);
             SysConsole.Output(OutputType.INIT, "Preparing mouse and keyboard handlers...");
-            MouseHandler.CaptureMouse();
             KeyHandler.Init();
             SysConsole.Output(OutputType.INIT, "Building the sound system...");
             Sounds = new SoundEngine();
