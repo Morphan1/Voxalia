@@ -28,17 +28,27 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public BlockInternal[] BlocksInternal;
 
+        /// <summary>
+        /// Asyncable (math only).
+        /// </summary>
         public int LODBlockIndex(int x, int y, int z, int lod)
         {
             int cs = CHUNK_SIZE / lod;
             return z * CHUNK_SIZE * CHUNK_SIZE * lod + y * CHUNK_SIZE * lod + x * lod;
         }
-        
+
+        /// <summary>
+        /// Asyncable (math only).
+        /// </summary>
         public int BlockIndex(int x, int y, int z)
         {
             return z * CHUNK_SIZE * CHUNK_SIZE + y * CHUNK_SIZE + x;
         }
 
+        /// <summary>
+        /// Asyncable (Edit session).
+        /// TODO: Edit session lock notes.
+        /// </summary>
         public void SetBlockAt(int x, int y, int z, BlockInternal mat)
         {
             BlocksInternal[BlockIndex(x, y, z)] = mat;
@@ -46,11 +56,20 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public double LastEdited = -1;
 
+        /// <summary>
+        /// Asyncable (Edit session).
+        /// TODO: Edit session lock notes.
+        /// </summary>
         public BlockInternal GetBlockAt(int x, int y, int z)
         {
             return BlocksInternal[BlockIndex(x, y, z)];
         }
 
+        /// <summary>
+        /// Asyncable (Edit session).
+        /// TODO: Local edit session lock.
+        /// </summary>
+        /// <returns></returns>
         public StaticMesh CalculateChunkShape()
         {
             List<Vector3> Vertices = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6); // TODO: Make this an array?
@@ -101,6 +120,11 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public ASyncScheduleItem adding = null;
         
+        /// <summary>
+        /// Sync only.
+        /// Probably.
+        /// TODO: Async? (Probably just a single local Add lock is sufficient).
+        /// </summary>
         public void AddToWorld(Action callback = null)
         {
             if (adding != null)
@@ -135,6 +159,10 @@ namespace Voxalia.ServerGame.WorldSystem
             });
         }
 
+        /// <summary>
+        /// Asyncable.
+        /// TODO: Local edit session lock.
+        /// </summary>
         public byte[] GetSaveData()
         {
             byte[] bytes = new byte[8 + BlocksInternal.Length * 4];
@@ -154,17 +182,27 @@ namespace Voxalia.ServerGame.WorldSystem
 
         Object SaveLock = new Object();
 
+        /// <summary>
+        /// Sync only.
+        /// </summary>
         public void UnloadSafely()
         {
             if (LastEdited >= 0)
             {
                 SaveToFile();
             }
+            if (worldObject != null)
+            {
+                OwningWorld.PhysicsWorld.Remove(worldObject);
+            }
         }
 
+        /// <summary>
+        /// Asyncable (just launches internals).
+        /// </summary>
         public void SaveToFile()
         {
-            LastEdited = -1;
+            LastEdited = -1; // TODO: Lock around something for touching LastEdited? ++ All other references to LastEdited.
             OwningWorld.TheServer.Schedule.StartASyncTask(() =>
             {
                 SaveToFileI();
@@ -186,6 +224,11 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
+        /// <summary>
+        /// Asyncable.
+        /// TODO: Local edit session lock.
+        /// Note: Set LOADING=true before calling, and LOADING=false when done.
+        /// </summary>
         public void LoadFromSaveData(byte[] data)
         {
             byte[] bytes = FileHandler.UnGZip(data);
