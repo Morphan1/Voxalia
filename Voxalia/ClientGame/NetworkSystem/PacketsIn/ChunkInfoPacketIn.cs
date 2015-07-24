@@ -72,7 +72,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     chk.BlocksInternal[i].BlockData = 0;
                 }
             }
-            TheClient.Schedule.ScheduleSyncTask(() => { chk.AddToWorld(); chk.CreateVBO(); chk.UpdateSurroundingsFully(); });
+            if (!TheClient.IsWaitingOnChunks())
+            {
+                TheClient.Schedule.ScheduleSyncTask(() => { chk.AddToWorld(); chk.CreateVBO(); chk.UpdateSurroundingsFully(); });
+            }
         }
     }
 }

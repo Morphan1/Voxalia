@@ -12,8 +12,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         public TeleportPacketOut(Location pos)
         {
             ID = 27;
-            Data = new byte[12];
-            pos.ToBytes().CopyTo(Data, 0);
+            Data = pos.ToBytes();
         }
     }
 }

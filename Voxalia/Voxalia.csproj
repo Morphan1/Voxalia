@@ -108,6 +108,7 @@
     <Compile Include="ClientGame\AudioSystem\OggDecodeStream.cs" />
     <Compile Include="ClientGame\AudioSystem\SoundEffect.cs" />
     <Compile Include="ClientGame\AudioSystem\SoundEngine.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\ChunkWaitingScreen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientBase.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientPhysics.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientRender.cs" />
@@ -190,6 +191,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\FlashLightPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\MessagePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\NetStringPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\OperationStatusPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PhysicsEntityUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PlayerUpdatePacketIn.cs" />
@@ -221,6 +223,7 @@
     <Compile Include="ClientGame\UISystem\UIConsole.cs" />
     <Compile Include="ClientGame\WorldSystem\Chunk.cs" />
     <Compile Include="ClientGame\WorldSystem\ChunkRendering.cs" />
+    <Compile Include="ClientGame\WorldSystem\LoadAllChunksSystem.cs" />
     <Compile Include="ClientGame\WorldSystem\World.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -304,6 +307,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\JointStatusPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\MessagePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\NetStringPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\OperationStatusPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PhysicsEntityUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PlayerUpdatePacketOut.cs" />

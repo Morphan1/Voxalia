@@ -15,6 +15,7 @@ using System.Diagnostics;
 using Voxalia.ClientGame.NetworkSystem;
 using Voxalia.ClientGame.AudioSystem;
 using Voxalia.ClientGame.GraphicsSystems.ParticleSystem;
+using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -169,26 +170,48 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Setting up screens...");
             TheMainMenuScreen = new MainMenuScreen() { TheClient = this };
             TheGameScreen = new GameScreen() { TheClient = this };
+            TheChunkWaitingScreen = new ChunkWaitingScreen() { TheClient = this };
             TheMainMenuScreen.Init();
             TheGameScreen.Init();
+            TheChunkWaitingScreen.Init();
             ShowMainMenu();
         }
 
         public void ShowGame()
         {
+            if (IsWaitingOnChunks())
+            {
+                new LoadAllChunksSystem(TheWorld).LoadAll();
+            }
+            SysConsole.Output(OutputType.INFO, "Showing game...");
             CScreen = TheGameScreen;
             CScreen.SwitchTo();
         }
 
         public void ShowMainMenu()
         {
+            SysConsole.Output(OutputType.INFO, "Showing menu...");
             CScreen = TheMainMenuScreen;
             CScreen.SwitchTo();
+        }
+
+        public void ShowChunkWaiting()
+        {
+            SysConsole.Output(OutputType.INFO, "Awaiting chunks...");
+            CScreen = TheChunkWaitingScreen;
+            CScreen.SwitchTo();
+        }
+
+        public bool IsWaitingOnChunks()
+        {
+            return CScreen is ChunkWaitingScreen;
         }
 
         GameScreen TheGameScreen;
 
         MainMenuScreen TheMainMenuScreen;
+
+        ChunkWaitingScreen TheChunkWaitingScreen;
 
         public ActiveSound CurrentMusic = null;
 

@@ -237,6 +237,9 @@ namespace Voxalia.ClientGame.NetworkSystem
                     case 27:
                         packet = new TeleportPacketIn();
                         break;
+                    case 28:
+                        packet = new OperationStatusPacketIn();
+                        break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);
                 }
@@ -265,7 +268,7 @@ namespace Voxalia.ClientGame.NetworkSystem
             {
                 if (!pLive)
                 {
-                    TheClient.ShowGame();
+                    TheClient.ShowChunkWaiting();
                     pLive = true;
                 }
                 TickSocket(ConnectionSocket, ref recd, ref recdsofar);

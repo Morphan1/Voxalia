@@ -116,16 +116,16 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public ASyncScheduleItem adding = null;
 
-        public void AddToWorld()
+        public void AddToWorld(Action callback = null)
         {
             if (adding != null)
             {
-                ASyncScheduleItem item = OwningWorld.TheClient.Schedule.AddASyncTask(() => AddInternal());
+                ASyncScheduleItem item = OwningWorld.TheClient.Schedule.AddASyncTask(() => AddInternal(callback));
                 adding = adding.ReplaceOrFollowWith(item);
             }
             else
             {
-                adding = OwningWorld.TheClient.Schedule.StartASyncTask(() => AddInternal());
+                adding = OwningWorld.TheClient.Schedule.StartASyncTask(() => AddInternal(callback));
             }
         }
 
@@ -141,7 +141,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
         }
 
-        void AddInternal()
+        void AddInternal(Action callback)
         {
             StaticMesh tworldObject = CalculateChunkShape();
             OwningWorld.TheClient.Schedule.ScheduleSyncTask(() =>
@@ -154,6 +154,10 @@ namespace Voxalia.ClientGame.WorldSystem
                 if (worldObject != null)
                 {
                     OwningWorld.PhysicsWorld.Add(worldObject);
+                }
+                if (callback != null)
+                {
+                    callback.Invoke();
                 }
             });
         }

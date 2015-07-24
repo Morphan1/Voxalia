@@ -25,4 +25,10 @@ namespace Voxalia.Shared
         SIXTYFOUR = 64,
         ONETWENTYEIGHT = 128
     }
+
+    public enum StatusOperation : byte
+    {
+        NONE = 0,
+        CHUNK_LOAD = 1
+    }
 }

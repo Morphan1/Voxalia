@@ -14,16 +14,16 @@ namespace Voxalia.ClientGame.WorldSystem
     {
         public VBO _VBO = null;
 
-        public void CreateVBO()
+        public void CreateVBO(Action callback = null)
         {
             if (rendering != null)
             {
-                ASyncScheduleItem item = OwningWorld.TheClient.Schedule.AddASyncTask(() => VBOHInternal());
+                ASyncScheduleItem item = OwningWorld.TheClient.Schedule.AddASyncTask(() => VBOHInternal(callback));
                 rendering = rendering.ReplaceOrFollowWith(item);
             }
             else
             {
-                rendering = OwningWorld.TheClient.Schedule.StartASyncTask(() => VBOHInternal());
+                rendering = OwningWorld.TheClient.Schedule.StartASyncTask(() => VBOHInternal(callback));
             }
         }
 
@@ -58,7 +58,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
         }
 
-        void VBOHInternal()
+        void VBOHInternal(Action callback)
         {
             try
             {
@@ -150,6 +150,10 @@ namespace Voxalia.ClientGame.WorldSystem
                     _VBO = tVBO;
                     tVBO.GenerateVBO();
                     tVBO.CleanLists();
+                    if (callback != null)
+                    {
+                        callback.Invoke();
+                    }
                 });
             }
             catch (Exception ex)
