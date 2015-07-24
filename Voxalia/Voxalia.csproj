@@ -203,6 +203,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPhysicsEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPrimitiveEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SunAnglePacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\TeleportPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourEIDPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourPositionPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourStatusPacketIn.cs" />
@@ -316,6 +317,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPhysicsEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPrimitiveEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SunAnglePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\TeleportPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourEIDPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourPositionPacketOut.cs" />
     <Compile Include="ServerGame\ItemSystem\ItemStack.cs" />
