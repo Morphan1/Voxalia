@@ -9,7 +9,7 @@ using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    public class VehicleEntity: ModelEntity
+    public class VehicleEntity: ModelEntity, EntityUseable
     {
         public string vehName;
 
@@ -81,6 +81,23 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 hasWheels = true;
             }
+        }
+
+        public bool Use(Entity user)
+        {
+            Location pos = GetPosition() + Location.UnitZ * 3;
+            if (user is PlayerEntity)
+            {
+                ((PlayerEntity)user).Teleport(pos);
+            }
+            else
+            {
+                user.SetPosition(pos);
+            }
+            user.SetOrientation(GetOrientation());
+            JointForceWeld jfw = new JointForceWeld(this, user);
+            TheWorld.AddJoint(jfw);
+            return true;
         }
     }
 }

@@ -462,6 +462,12 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        public void Teleport(Location pos)
+        {
+            SetPosition(pos);
+            Network.SendPacket(new TeleportPacketOut(pos));
+        }
+
         public Location GetCenter()
         {
             return base.GetPosition();
