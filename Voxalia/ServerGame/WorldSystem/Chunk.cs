@@ -44,6 +44,8 @@ namespace Voxalia.ServerGame.WorldSystem
             BlocksInternal[BlockIndex(x, y, z)] = mat;
         }
 
+        public double LastEdited = -1;
+
         public BlockInternal GetBlockAt(int x, int y, int z)
         {
             return BlocksInternal[BlockIndex(x, y, z)];
@@ -131,6 +133,81 @@ namespace Voxalia.ServerGame.WorldSystem
                     callback.Invoke();
                 }
             });
+        }
+
+        public byte[] GetSaveData()
+        {
+            byte[] bytes = new byte[8 + BlocksInternal.Length * 4];
+            Encoding.ASCII.GetBytes("VOX_").CopyTo(bytes, 0); // General Header
+            Utilities.IntToBytes(1).CopyTo(bytes, 4); // Saves Version
+            for (int i = 0; i < BlocksInternal.Length; i++)
+            {
+                Utilities.UshortToBytes(BlocksInternal[i].BlockMaterial).CopyTo(bytes, 8 + i * 2);
+                bytes[8 + BlocksInternal.Length * 2 + i] = BlocksInternal[i].BlockData;
+                bytes[8 + BlocksInternal.Length * 3 + i] = BlocksInternal[i].BlockLocalData;
+            }
+            for (int i = 0; i < BlocksInternal.Length; i++)
+            {
+            }
+            return FileHandler.GZip(bytes);
+        }
+
+        Object SaveLock = new Object();
+
+        public void UnloadSafely()
+        {
+            if (LastEdited >= 0)
+            {
+                SaveToFile();
+            }
+        }
+
+        public void SaveToFile()
+        {
+            LastEdited = -1;
+            OwningWorld.TheServer.Schedule.StartASyncTask(() =>
+            {
+                SaveToFileI();
+            });
+        }
+
+        void SaveToFileI()
+        {
+            lock (SaveLock)
+            {
+                try
+                {
+                    Program.Files.WriteBytes("saves/" + OwningWorld.Name.ToLower() + "/" + WorldPosition.Z + "/" + WorldPosition.Y + "/" + WorldPosition.X + ".chk", GetSaveData());
+                }
+                catch (Exception ex)
+                {
+                    SysConsole.Output(OutputType.ERROR, "Saving chunk to file: " + ex.ToString());
+                }
+            }
+        }
+
+        public void LoadFromSaveData(byte[] data)
+        {
+            byte[] bytes = FileHandler.UnGZip(data);
+            string engine = Encoding.ASCII.GetString(data, 0, 4);
+            if (engine != "VOX_")
+            {
+                throw new Exception("Invalid save data ENGINE format: " + engine + "!");
+            }
+            int revision = Utilities.BytesToInt(Utilities.BytesPartial(bytes, 4, 4));
+            if (revision == 1)
+            {
+                for (int i = 0; i < BlocksInternal.Length; i++)
+                {
+                    BlocksInternal[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(bytes, 8 + i * 2, 2));
+                    BlocksInternal[i].BlockData = bytes[8 + BlocksInternal.Length * 2 + i];
+                    BlocksInternal[i].BlockLocalData = bytes[8 + BlocksInternal.Length * 3 + i];
+                }
+            }
+            else
+            {
+                throw new Exception("Invalid save data VERSION format: " + revision + "!");
+            }
         }
     }
 }

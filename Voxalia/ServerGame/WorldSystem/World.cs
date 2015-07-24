@@ -15,6 +15,7 @@ using BEPUutilities.Threading;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.WorldSystem.SimpleGenerator;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -532,10 +533,30 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public short Seed2;
 
+        void OncePerSecondActions()
+        {
+            Parallel.ForEach(LoadedChunks.Values, (o) =>
+            {
+                if (o.LastEdited >= 0)
+                {
+                    o.SaveToFile();
+                }
+                // TODO: If distant from all players, unload
+            });
+        }
+
+        double opsat;
+
         public void Tick(double delta)
         {
             Delta = delta;
             GlobalTickTime += Delta;
+            opsat += Delta;
+            while (opsat > 1.0)
+            {
+                opsat -= 1.0;
+                OncePerSecondActions();
+            }
             PhysicsWorld.Update((float)delta); // TODO: More specific settings?
             // TODO: Async tick
             for (int i = 0; i < Tickers.Count; i++)
@@ -577,6 +598,7 @@ namespace Voxalia.ServerGame.WorldSystem
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
             ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat, locdat));
+            ch.LastEdited = GlobalTickTime;
             if (regen)
             {
                 ch.AddToWorld();
@@ -654,6 +676,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 Material mat = (Material)bi.BlockMaterial;
                 ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0, 1));
                 ch.AddToWorld();
+                ch.LastEdited = GlobalTickTime;
                 TrySurroundings(ch, pos, x, y, z);
                 SendToAll(new BlockEditPacketOut(pos, Material.AIR, 0));
                 BlockItemEntity bie = new BlockItemEntity(this, mat, bi.BlockData, pos);
@@ -766,6 +789,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public void PopulateChunk(Chunk chunk)
         {
             Generator.Populate(Seed, Seed2, chunk);
+            chunk.LastEdited = GlobalTickTime;
         }
     }
 }
