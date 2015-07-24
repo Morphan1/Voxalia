@@ -45,7 +45,7 @@ namespace Voxalia.ClientGame.WorldSystem
         public void BuildWorld()
         {
             ParallelLooper pl = new ParallelLooper();
-            for (int i =0; i < Environment.ProcessorCount; i++)
+            for (int i = 0; i < Environment.ProcessorCount; i++)
             {
                 pl.AddThread();
             }
@@ -301,6 +301,7 @@ namespace Voxalia.ClientGame.WorldSystem
             Joints.Add(joint);
             joint.One.Joints.Add(joint);
             joint.Two.Joints.Add(joint);
+            joint.Enabled = true;
             if (joint is BaseJoint)
             {
                 BaseJoint pjoint = (BaseJoint)joint;
