@@ -788,6 +788,18 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void PopulateChunk(Chunk chunk)
         {
+            try
+            {
+                if (Program.Files.Exists(chunk.GetFileName()))
+                {
+                    chunk.LoadFromSaveData(Program.Files.ReadBytes(chunk.GetFileName()));
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output(OutputType.ERROR, "Loading a chunk: " + ex.ToString());
+            }
             Generator.Populate(Seed, Seed2, chunk);
             chunk.LastEdited = GlobalTickTime;
         }

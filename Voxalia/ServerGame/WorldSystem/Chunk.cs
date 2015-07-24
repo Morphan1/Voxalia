@@ -174,9 +174,6 @@ namespace Voxalia.ServerGame.WorldSystem
                 bytes[8 + BlocksInternal.Length * 2 + i] = BlocksInternal[i].BlockData;
                 bytes[8 + BlocksInternal.Length * 3 + i] = BlocksInternal[i].BlockLocalData;
             }
-            for (int i = 0; i < BlocksInternal.Length; i++)
-            {
-            }
             return FileHandler.GZip(bytes);
         }
 
@@ -198,7 +195,7 @@ namespace Voxalia.ServerGame.WorldSystem
         }
 
         /// <summary>
-        /// Asyncable (just launches internals).
+        /// Asyncable (just launches async internals + 1 safe edit).
         /// </summary>
         public void SaveToFile()
         {
@@ -209,13 +206,21 @@ namespace Voxalia.ServerGame.WorldSystem
             });
         }
 
+        /// <summary>
+        /// Asyncable (math).
+        /// </summary>
+        public string GetFileName()
+        {
+            return "saves/" + OwningWorld.Name.ToLower() + "/" + WorldPosition.Z + "/" + WorldPosition.Y + "/" + WorldPosition.X + ".chk";
+        }
+
         void SaveToFileI()
         {
             lock (SaveLock)
             {
                 try
                 {
-                    Program.Files.WriteBytes("saves/" + OwningWorld.Name.ToLower() + "/" + WorldPosition.Z + "/" + WorldPosition.Y + "/" + WorldPosition.X + ".chk", GetSaveData());
+                    Program.Files.WriteBytes(GetFileName(), GetSaveData());
                 }
                 catch (Exception ex)
                 {
@@ -232,7 +237,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public void LoadFromSaveData(byte[] data)
         {
             byte[] bytes = FileHandler.UnGZip(data);
-            string engine = Encoding.ASCII.GetString(data, 0, 4);
+            string engine = Encoding.ASCII.GetString(bytes, 0, 4);
             if (engine != "VOX_")
             {
                 throw new Exception("Invalid save data ENGINE format: " + engine + "!");

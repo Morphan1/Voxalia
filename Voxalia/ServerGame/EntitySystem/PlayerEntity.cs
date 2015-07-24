@@ -370,7 +370,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 TrySet(pos, ViewRadiusInChunks / 2, 0, 1);
                 TrySet(pos, ViewRadiusInChunks, 0, 5);
                 loadedInitially = true;
-                Network.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 1));
+                ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 1));
             }
             else
             {
