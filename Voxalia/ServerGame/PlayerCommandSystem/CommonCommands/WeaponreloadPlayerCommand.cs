@@ -7,11 +7,11 @@ using Voxalia.ServerGame.ItemSystem.CommonItems;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
-    class ReloadPlayerCommand : AbstractPlayerCommand
+    class WeaponreloadPlayerCommand : AbstractPlayerCommand
     {
-        public ReloadPlayerCommand()
+        public WeaponreloadPlayerCommand()
         {
-            Name = "reload";
+            Name = "weaponreload";
             Silent = true;
         }
 

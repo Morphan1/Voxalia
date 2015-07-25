@@ -334,7 +334,7 @@
     <Compile Include="ServerGame\OtherSystems\ModelEngine.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\BlockshapePlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\DevelPlayerCommand.cs" />
-    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\ReloadPlayerCommand.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\WeaponreloadPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\ThrowPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\DropPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\StancePlayerCommand.cs" />

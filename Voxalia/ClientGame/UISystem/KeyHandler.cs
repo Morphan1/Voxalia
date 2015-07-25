@@ -51,7 +51,7 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.F, "use");
             BindKey(Key.B, "drop");
             BindKey(Key.G, "throw");
-            BindKey(Key.R, "reload");
+            BindKey(Key.R, "weaponreload");
             BindKey(Key.T, "talk");
             BindKey(Key.Escape, "quit");
             BindKey(Key.F32, "itemnext");
