@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Voxalia.ClientGame.UISystem.MenuSystem
+﻿namespace Voxalia.ClientGame.UISystem.MenuSystem
 {
     public abstract class UIMenuItem
     {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
+﻿namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 {
     public enum ParticleEffectType
     {

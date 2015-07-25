@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Voxalia.Shared;
-using Voxalia.ServerGame.ServerMainSystem;
 using BEPUutilities;
-using BEPUphysics;
 using Voxalia.ServerGame.JointSystem;
 using BEPUphysics.CollisionShapes;
 using BEPUphysics.CollisionRuleManagement;

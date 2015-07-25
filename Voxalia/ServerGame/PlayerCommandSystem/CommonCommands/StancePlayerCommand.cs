@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Voxalia.ServerGame.ServerMainSystem;
-using Voxalia.ServerGame.EntitySystem;
-using Voxalia.Shared;
+﻿using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {

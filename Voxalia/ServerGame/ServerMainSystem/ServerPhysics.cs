@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Voxalia.Shared;
-using BEPUphysics;
-using BEPUutilities;
-using BEPUphysics.Settings;
+﻿using System.Collections.Generic;
 using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.ServerMainSystem

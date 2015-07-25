@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Voxalia.Shared;
 using Voxalia.ClientGame.EntitySystem;
-using BEPUphysics;
 using BEPUutilities;
-using BEPUphysics.Settings;
 using Voxalia.ClientGame.WorldSystem;
-using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem

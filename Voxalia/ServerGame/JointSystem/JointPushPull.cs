@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Voxalia.ServerGame.EntitySystem;
-using Voxalia.Shared;
+﻿using Voxalia.ServerGame.EntitySystem;
 using BEPUphysics.Constraints.TwoEntity;
 using BEPUphysics.Constraints.TwoEntity.Motors;
 

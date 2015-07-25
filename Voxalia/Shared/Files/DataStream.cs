@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 
-namespace Voxalia.Shared
+namespace Voxalia.Shared.Files
 {
     /// <summary>
     /// Wraps a System.IO.MemoryStream.

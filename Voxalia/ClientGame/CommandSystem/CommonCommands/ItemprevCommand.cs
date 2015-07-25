@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Frenetic.CommandSystem;
+﻿using Frenetic.CommandSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
-using Voxalia.ClientGame.NetworkSystem.PacketsIn;
 using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.CommandSystem.CommonCommands

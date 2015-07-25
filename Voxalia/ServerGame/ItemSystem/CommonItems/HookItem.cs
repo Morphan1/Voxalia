@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Voxalia.ServerGame.EntitySystem;
+﻿using Voxalia.ServerGame.EntitySystem;
 using Voxalia.Shared;
 using Voxalia.ServerGame.JointSystem;
-using BEPUphysics.CollisionRuleManagement;
 using BEPUutilities;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems

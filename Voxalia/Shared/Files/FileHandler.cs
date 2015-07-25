@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.IO;
 using System.IO.Compression;
 
-namespace Voxalia.Shared
+namespace Voxalia.Shared.Files
 {
     /// <summary>
     /// Handles the file system cleanly.

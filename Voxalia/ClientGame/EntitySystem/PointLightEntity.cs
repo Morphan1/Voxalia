@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Voxalia.ClientGame.ClientMainSystem;
-using Voxalia.Shared;
-using Voxalia.ClientGame.GraphicsSystems;
+﻿using Voxalia.Shared;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 using Voxalia.ClientGame.WorldSystem;
 

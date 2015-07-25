@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
 using BEPUphysics;
@@ -12,7 +10,6 @@ using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.NetworkSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using BEPUutilities.Threading;
-using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.WorldSystem.SimpleGenerator;
 using System.Threading;
 using System.Threading.Tasks;

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Voxalia.Shared;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.ClientMainSystem;
 using Frenetic;
-using OpenTK;
 using OpenTK.Graphics;
+using System.Linq;
 
 namespace Voxalia.ClientGame.UISystem
 {

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Frenetic;
+﻿using Frenetic;
 using Frenetic.CommandSystem;
-using Voxalia.Shared;
+using Voxalia.Shared.Files;
 
 namespace Voxalia.ClientGame.CommandSystem
 {

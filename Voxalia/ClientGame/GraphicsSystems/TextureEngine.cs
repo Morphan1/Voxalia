@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
-using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared;
 using Frenetic;
+using Voxalia.Shared.Files;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {

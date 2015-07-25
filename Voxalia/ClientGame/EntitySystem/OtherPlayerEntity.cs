@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Voxalia.Shared;
-using Voxalia.ClientGame.ClientMainSystem;
-using Voxalia.ClientGame.UISystem;
-using Voxalia.ClientGame.NetworkSystem.PacketsOut;
-using BEPUphysics.Entities.Prefabs;
+﻿using Voxalia.Shared;
 using BEPUutilities;
-using BEPUphysics.EntityStateManagement;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems;
-using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
-using BEPUphysics.CollisionShapes;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ClientGame.WorldSystem;
 

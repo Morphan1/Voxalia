@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Voxalia.Shared;
-using OpenTK;
+﻿using Voxalia.Shared;
 using OpenTK.Input;
 using Voxalia.ClientGame.ClientMainSystem;
 using System.Drawing;

@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Voxalia.Shared;
-using Voxalia.ClientGame.ClientMainSystem;
+﻿using Voxalia.Shared;
 using Voxalia.ClientGame.UISystem;
-using Voxalia.ClientGame.NetworkSystem.PacketsIn;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
-using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
-using BEPUphysics.EntityStateManagement;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
 using Voxalia.ClientGame.GraphicsSystems;

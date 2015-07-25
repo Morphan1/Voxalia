@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
+﻿namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     public class PingPacketOut: AbstractPacketOut
     {

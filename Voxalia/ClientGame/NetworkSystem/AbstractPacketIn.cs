@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Voxalia.ClientGame.ClientMainSystem;
+﻿using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.NetworkSystem
 {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Voxalia.ClientGame.NetworkSystem
+﻿namespace Voxalia.ClientGame.NetworkSystem
 {
     public abstract class AbstractPacketOut
     {

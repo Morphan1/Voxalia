@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Voxalia.ClientGame.UISystem;
-using Voxalia.Shared;
+﻿using Voxalia.ClientGame.UISystem;
+using Voxalia.Shared.Files;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Voxalia.ClientGame.ClientMainSystem;
-using OpenTK;
 using OpenTK.Input;
 
 namespace Voxalia.ClientGame.UISystem.MenuSystem

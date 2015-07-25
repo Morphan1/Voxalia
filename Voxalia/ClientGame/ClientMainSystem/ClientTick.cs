@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using OpenTK;
 using Voxalia.Shared;
 using Voxalia.ClientGame.UISystem;
-using Voxalia.ClientGame.EntitySystem;
 using Voxalia.ClientGame.OtherSystems;
 using System.Drawing;
-using Voxalia.ClientGame.JointSystem;
 using System.Threading;
 using Frenetic;
 using Frenetic.TagHandlers.Common;
+using System.Linq;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {

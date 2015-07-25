@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Voxalia.Shared;
 using Voxalia.ClientGame.ClientMainSystem;
 using OpenTK;
@@ -9,13 +7,9 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using BEPUphysics;
 using BEPUphysics.Settings;
-using BEPUutilities;
 using Voxalia.ClientGame.JointSystem;
 using Voxalia.ClientGame.EntitySystem;
-using Voxalia.ClientGame.OtherSystems;
 using BEPUutilities.Threading;
-using Voxalia.ClientGame.GraphicsSystems;
-using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 
 namespace Voxalia.ClientGame.WorldSystem
 {

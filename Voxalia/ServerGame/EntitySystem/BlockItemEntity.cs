@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Drawing;
-using System.Text;
+﻿using System.Drawing;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
-using BEPUphysics.CollisionShapes;
-using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
-using BEPUutilities;
 
 namespace Voxalia.ServerGame.EntitySystem
 {

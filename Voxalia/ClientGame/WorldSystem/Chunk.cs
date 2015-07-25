@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Voxalia.Shared;
-using BEPUphysics;
-using BEPUphysics.CollisionShapes;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries;
 

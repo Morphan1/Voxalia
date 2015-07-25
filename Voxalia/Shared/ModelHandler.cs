@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Assimp;
 using Assimp.Configs;
-using BEPUphysics;
 using BEPUutilities;
 using BEPUphysics.CollisionShapes;
-using BEPUphysics.Entities;
-using BEPUphysics.Entities.Prefabs;
+using Voxalia.Shared.Files;
 
 namespace Voxalia.Shared
 {

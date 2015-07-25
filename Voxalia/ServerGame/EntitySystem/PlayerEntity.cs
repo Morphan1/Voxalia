@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using Voxalia.Shared;
-using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.NetworkSystem;
-using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
-using BEPUphysics.EntityStateManagement;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
@@ -363,7 +357,8 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             cit.Info.Tick(this, cit);
             Location pos = GetPosition();
-            if (!loadedInitially) // TODO: Move to a separate method that's called only once
+            // TODO: Move to a separate method that's called once on startup + at every teleport... also, asyncify
+            if (!loadedInitially)
             {
                 TrySet(pos, 1, 0, 1);
                 TrySet(pos, ViewRadiusInChunks / 4, 0, 1);
@@ -374,7 +369,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             else
             {
-                // TODO: Better system
+                // TODO: Better system -> async?
                 TrySet(pos, 1, 5, 1);
                 TrySet(pos, ViewRadiusInChunks / 4, 5, 1);
                 TrySet(pos, ViewRadiusInChunks / 2, 15, 1);

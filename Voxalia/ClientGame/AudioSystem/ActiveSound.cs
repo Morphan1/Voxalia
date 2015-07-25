@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK;
-using OpenTK.Audio;
+﻿using OpenTK;
 using OpenTK.Audio.OpenAL;
 using Voxalia.Shared;
 

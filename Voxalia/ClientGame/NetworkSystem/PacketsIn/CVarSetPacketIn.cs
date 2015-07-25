@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Voxalia.Shared;
+﻿using Voxalia.Shared;
 using Frenetic;
+using Voxalia.Shared.Files;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {

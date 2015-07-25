@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Voxalia.ClientGame.ClientMainSystem
+﻿namespace Voxalia.ClientGame.ClientMainSystem
 {
     public abstract class Screen
     {

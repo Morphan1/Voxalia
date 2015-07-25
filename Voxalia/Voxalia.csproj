@@ -381,8 +381,8 @@
     <Compile Include="Shared\BlockShapes\BSD73.cs" />
     <Compile Include="Shared\BlockShapes\BSD74.cs" />
     <Compile Include="Shared\BlockShapes\BSD75.cs" />
-    <Compile Include="Shared\DataReader.cs" />
-    <Compile Include="Shared\DataWriter.cs" />
+    <Compile Include="Shared\Files\DataReader.cs" />
+    <Compile Include="Shared\Files\DataWriter.cs" />
     <Compile Include="Shared\ItemStackBase.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\AbstractPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\SayPlayerCommand.cs" />
@@ -393,8 +393,8 @@
     <Compile Include="ServerGame\ServerMainSystem\ServerTick.cs" />
     <Compile Include="Shared\CollisionUtil.cs" />
     <Compile Include="Shared\ConsoleHandler.cs" />
-    <Compile Include="Shared\DataStream.cs" />
-    <Compile Include="Shared\FileHandler.cs" />
+    <Compile Include="Shared\Files\DataStream.cs" />
+    <Compile Include="Shared\Files\FileHandler.cs" />
     <Compile Include="Shared\Location.cs" />
     <Compile Include="Shared\Material.cs" />
     <Compile Include="Shared\ModelHandler.cs" />
@@ -402,9 +402,9 @@
     <Compile Include="Shared\SimplexNoise.cs" />
     <Compile Include="Shared\VoxEnums.cs" />
     <Compile Include="Shared\SysConsole.cs" />
-    <Compile Include="Shared\UnknownFileException.cs" />
+    <Compile Include="Shared\Files\UnknownFileException.cs" />
     <Compile Include="Shared\Utilities.cs" />
-    <Compile Include="Shared\ZipStorer.cs" />
+    <Compile Include="Shared\Files\ZipStorer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
