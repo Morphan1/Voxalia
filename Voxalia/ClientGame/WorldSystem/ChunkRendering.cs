@@ -123,6 +123,10 @@ namespace Voxalia.ClientGame.WorldSystem
                         }
                         _VBO = null;
                     }
+                    if (callback != null)
+                    {
+                        callback.Invoke();
+                    }
                     return;
                 }
                 List<uint> inds = new List<uint>(Vertices.Count); // TODO: VBO Array input instead of a list?

@@ -11,7 +11,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            TheClient.Schedule.StartASyncTask(() => ParseData(data));
+            if (TheClient.IsWaitingOnChunks())
+            {
+                ParseData(data);
+            }
+            else
+            {
+                TheClient.Schedule.StartASyncTask(() => ParseData(data));
+            }
             return true;
         }
 
@@ -39,11 +46,20 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 SysConsole.Output(OutputType.WARNING, "Invalid LOD'ed chunk size! (LOD = " + posMult + ", Expected " + (csize * csize * csize * 2) + ", got " + data_orig.Length + ")");
                 return;
             }
-            TheClient.Schedule.ScheduleSyncTask(() =>
+            Action act = () =>
             {
                 Chunk chk = TheClient.TheWorld.LoadChunk(new Location(x, y, z), posMult);
+                chk.LOADING = true;
                 TheClient.Schedule.StartASyncTask(() => parsechunk2(chk, data_orig, posMult));
-            });
+            };
+            if (TheClient.IsWaitingOnChunks())
+            {
+                act.Invoke();
+            }
+            else
+            {
+                TheClient.Schedule.ScheduleSyncTask(act);
+            }
         }
 
         void parsechunk2(Chunk chk, byte[] data_orig, int posMult)
@@ -72,6 +88,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     chk.BlocksInternal[i].BlockData = 0;
                 }
             }
+            chk.LOADING = false;
             if (!TheClient.IsWaitingOnChunks())
             {
                 TheClient.Schedule.ScheduleSyncTask(() => { chk.AddToWorld(); chk.CreateVBO(); chk.UpdateSurroundingsFully(); });

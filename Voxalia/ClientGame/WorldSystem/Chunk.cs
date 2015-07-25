@@ -141,6 +141,8 @@ namespace Voxalia.ClientGame.WorldSystem
             }
         }
 
+        public bool LOADING = false;
+
         void AddInternal(Action callback)
         {
             StaticMesh tworldObject = CalculateChunkShape();

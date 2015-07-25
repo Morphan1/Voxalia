@@ -155,7 +155,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public byte FBOid = 0;
 
-        void Window_RenderFrame(object sender, FrameEventArgs e)
+        public void Window_RenderFrame(object sender, FrameEventArgs e)
         {
             lock (TickLock)
             {

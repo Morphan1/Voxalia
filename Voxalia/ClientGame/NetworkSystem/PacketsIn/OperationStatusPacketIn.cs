@@ -3,11 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Voxalia.Shared;
+using Voxalia.ClientGame.WorldSystem;
+using System.Threading;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
     public class OperationStatusPacketIn: AbstractPacketIn
     {
+        public bool ChunksStillLoading()
+        {
+            foreach (Chunk chunk in TheClient.TheWorld.LoadedChunks.Values)
+            {
+                if (chunk.LOADING)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public override bool ParseBytesAndExecute(byte[] data)
         {
             if (data.Length != 2)
@@ -19,7 +33,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 case StatusOperation.CHUNK_LOAD:
                     if (data[1] == 1)
                     {
-                        TheClient.ShowGame();
+                        TheClient.Schedule.StartASyncTask(() =>
+                        {
+                            while (ChunksStillLoading())
+                            {
+                                Thread.Sleep(16);
+                            }
+                            TheClient.ShowGame();
+                        });
                     }
                     else if (data[1] == 0)
                     {

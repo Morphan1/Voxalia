@@ -8,6 +8,8 @@ using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.UISystem;
 using Voxalia.ClientGame.UISystem.MenuSystem;
+using Voxalia.ClientGame.WorldSystem;
+using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -16,6 +18,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public UIMenu Menus;
 
         public Texture Mouse;
+
+        public LoadAllChunksSystem LACS = null;
 
         public override void Init()
         {
@@ -45,6 +49,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Menus.RenderAll(TheClient.gDelta);
             Mouse.Bind();
             TheClient.Rendering.RenderRectangle(MouseHandler.MouseX(), MouseHandler.MouseY(), MouseHandler.MouseX() + 16, MouseHandler.MouseY() + 16);
+            if (LACS == null)
+            {
+                TheClient.FontSets.SlightlyBigger.DrawColoredText("^!^e^0Chunks Loaded: " + TheClient.TheWorld.LoadedChunks.Count, new Location(20, 20, 0));
+            }
+            else
+            {
+                lock (LACS.Locker)
+                {
+                    TheClient.FontSets.SlightlyBigger.DrawColoredText("^!^e^0Chunks Loaded: " + LACS.Count
+                        + "\nChunks Solidified: " + LACS.c + ": " + ((LACS.c / (float)LACS.Count) * 100) + "%"
+                        + "\nChunks Rendered: " + LACS.rC + ": " + ((LACS.rC / (float)LACS.Count) * 100) + "%", new Location(20, 20, 0));
+                }
+            }
         }
     }
 }

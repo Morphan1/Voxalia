@@ -181,11 +181,27 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             if (IsWaitingOnChunks())
             {
-                new LoadAllChunksSystem(TheWorld).LoadAll();
+                SysConsole.Output(OutputType.INFO, "Solidifying and rendering chunks...");
+                TheChunkWaitingScreen.LACS = new LoadAllChunksSystem(TheWorld);
+                TheChunkWaitingScreen.LACS.LoadAll(() =>
+                {
+                    Schedule.ScheduleSyncTask(() =>
+                    {
+                        // TODO: handle cancel-button cancelling neatly
+                        SysConsole.Output(OutputType.INFO, "Showing game...");
+                        CScreen = TheGameScreen;
+                        CScreen.SwitchTo();
+                        TheChunkWaitingScreen.LACS = null;
+                    });
+                });
+
             }
-            SysConsole.Output(OutputType.INFO, "Showing game...");
-            CScreen = TheGameScreen;
-            CScreen.SwitchTo();
+            else
+            {
+                SysConsole.Output(OutputType.INFO, "Showing game...");
+                CScreen = TheGameScreen;
+                CScreen.SwitchTo();
+            }
         }
 
         public void ShowMainMenu()
