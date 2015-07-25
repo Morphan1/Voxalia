@@ -7,6 +7,8 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using System.IO;
+using System.Threading;
+using System.Globalization;
 
 namespace Voxalia
 {
@@ -71,6 +73,7 @@ namespace Voxalia
             LaunchFlags = new List<char>();
             LaunchSettings = new List<KeyValuePair<string, string>>();
             bool in_setting = false;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i].StartsWith("--") && args[i].Length > 2)
