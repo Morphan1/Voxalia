@@ -64,20 +64,30 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
-            if (TheClient.FBO)
+            // TODO: Remove this block
+            if (TheClient.FBOid == 1)
             { 
-                 // TODO: Remove this block
                 TheClient.s_fbov.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+            }
+            else if (TheClient.FBOid == 2)
+            {
+                TheClient.s_colormultvox.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
             }
             Matrix4 mat = Matrix4.CreateTranslation(-Offset.ToOVector()) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
             vbo.Render(false);
-            if (TheClient.FBO)
+            // TODO: Remove this block
+            if (TheClient.FBOid == 1)
             {
-                // TODO: Remove this block
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 TheClient.s_fbo.Bind();
+            }
+            else if (TheClient.FBOid == 2)
+            {
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                TheClient.Shaders.ColorMultShader.Bind();
             }
         }
     }

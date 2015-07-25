@@ -37,6 +37,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_fbov = Shaders.GetShader("fbo_vox");
             s_shadowadder = Shaders.GetShader("shadowadder");
             s_transponly = Shaders.GetShader("transponly");
+            s_colormultvox = Shaders.GetShader("colormultvox");
             generateLightHelpers();
             ambient = new Location(0.1f);
             skybox = new VBO[6];
@@ -114,6 +115,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_fbov;
         Shader s_shadowadder;
         Shader s_transponly;
+        public Shader s_colormultvox;
         RenderSurface4Part RS4P;
 
         public Location CameraUp = Location.UnitZ;
@@ -151,7 +153,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public int LightsC = 0;
 
-        public bool FBO = false;
+        public byte FBOid = 0;
 
         void Window_RenderFrame(object sender, FrameEventArgs e)
         {
@@ -230,8 +232,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 VBO.BonesIdentity();
                 GL.UniformMatrix4(1, false, ref combined);
                 s_fbo.Bind();
-                FBO = true;
-                VBO.BonesIdentity();
+                FBOid = 1;
                 RenderingShadows = false;
                 CFrust = camFrust;
                 GL.UniformMatrix4(1, false, ref combined);
@@ -242,7 +243,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Render3D(false);
                 RenderLights = false;
                 RS4P.Unbind();
-                FBO = false;
+                FBOid = 0;
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
@@ -361,71 +362,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Shaders.ColorMultShader.Bind();
                     VBO.BonesIdentity();
                     GL.UniformMatrix4(1, false, ref combined);
-                    Rendering.SetColor(Color4.White);
-                    float dist = 300; // TODO: View rad
-                    GL.Disable(EnableCap.CullFace);
-                    Matrix4 scale = Matrix4.CreateScale(dist, dist, dist) * Matrix4.CreateTranslation(CameraPos.ToOVector());
-                    GL.UniformMatrix4(2, false, ref scale);
-                    Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/bottom").Bind();
-                    skybox[0].Render(false);
-                    Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/top").Bind();
-                    skybox[1].Render(false);
-                    Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/xm").Bind();
-                    skybox[2].Render(false);
-                    Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/xp").Bind();
-                    skybox[3].Render(false);
-                    Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/ym").Bind();
-                    skybox[4].Render(false);
-                    Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/yp").Bind();
-                    skybox[5].Render(false);
-                    Textures.GetTexture("skies/sun").Bind(); // TODO: Store var? Make dynamic?
-                    Matrix4 rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
-                        * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
-                        * Matrix4.CreateRotationZ((float)((180f + SunAngle.Yaw) * Utilities.PI180))
-                        * Matrix4.CreateTranslation((CameraPos + TheSun.Direction * -200f).ToOVector()); // TODO: adjust based on view rad
-                    Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
-                    Textures.GetTexture("skies/planet").Bind(); // TODO: Store var? Make dynamic?
-                    Rendering.SetColor(new Color4(PlanetLight, PlanetLight, PlanetLight, 1));
-                    rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
-                        * Matrix4.CreateRotationY((float)((-PlanetAngle.Pitch - 90f) * Utilities.PI180))
-                        * Matrix4.CreateRotationZ((float)((180f + PlanetAngle.Yaw) * Utilities.PI180))
-                        * Matrix4.CreateTranslation((CameraPos + ThePlanet.Direction * -180f).ToOVector()); // TODO: adjust based on view rad
-                    Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
-                    if (PlanetSunDist > 10)
-                    {
-                        Location rel = CameraPos + TheSun.Direction * -200f;
-                        Vector4 vec = new Vector4((float)rel.X, (float)rel.Y, (float)rel.Z, 1f);
-                        vec = Vector4.Transform(vec, combined);
-                        Matrix4 ident = Matrix4.Identity;
-                        GL.UniformMatrix4(1, false, ref ident);
-                        Location sunpos = new Location(vec.X / vec.W, vec.Y / vec.W, vec.Z / vec.W);
-                        if (sunpos.X >= -1 && sunpos.X <= 1 && sunpos.Y >= -1 && sunpos.Y <= 1 && sunpos.Z <= 1 && sunpos.Z >= -1)
-                        {
-                            CollisionResult trace = TheWorld.Collision.RayTrace(CameraPos, CameraPos + TheSun.Direction * -200f, Player.IgnoreThis);
-                            if (!trace.Hit)
-                            {
-                                Location start = new Location(sunpos.X, sunpos.Y, 0);
-                                Location targ = new Location(0, 0, 0);
-                                Rendering.SetColor(Color4.Yellow);
-                                Textures.GetTexture("effects/lensflare/01").Bind(); // TODO: Store
-                                Location one = (targ - start) / 2 + start;
-                                float s1 = 0.1f;
-                                Rendering.RenderRectangle((float)one.X - s1, (float)one.Y - s1, (float)one.X + s1, (float)one.Y + s1, Matrix4.CreateTranslation(0, 0, 0.3f));
-                                Textures.GetTexture("effects/lensflare/02").Bind(); // TODO: Store
-                                Location two = targ;
-                                float s2 = 0.2f;
-                                Rendering.RenderRectangle((float)two.X - s2, (float)two.Y - s2, (float)two.X + s2, (float)two.Y + s2, Matrix4.CreateTranslation(0, 0, 0.2f));
-                                Textures.GetTexture("effects/lensflare/03").Bind(); // TODO: Store
-                                Location three = (targ - start) / 2 + targ;
-                                float s3 = 0.1f;
-                                Rendering.RenderRectangle((float)three.X - s3, (float)three.Y - s3, (float)three.X + s3, (float)three.Y + s3, Matrix4.CreateTranslation(0, 0, 0.1f));
-                                // Can see sun, probably!
-                            }
-                        }
-                    }
-                    GL.BindTexture(TextureTarget.Texture2D, 0);
-                    Rendering.SetColor(Color4.White);
-                    GL.Enable(EnableCap.CullFace);
+                    RenderSky(combined);
                 }
                 ReverseEntitiesOrder();
                 s_transponly.Bind();
@@ -442,15 +379,32 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else
             {
-                ReverseEntitiesOrder();
-                Shaders.ColorMultShader.Bind();
+                SetViewport();
                 Location CameraTarget = CameraPos + Player.ForwardVector();
                 Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
                 Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
                 Matrix4 combined = view * proj;
+                GL.ActiveTexture(TextureUnit.Texture0);
+                ReverseEntitiesOrder();
+                s_colormultvox.Bind();
+                RenderLights = false;
+                RenderTextures = true;
+                RenderingShadows = false;
                 GL.UniformMatrix4(1, false, ref combined);
+                Matrix4 def = Matrix4.Identity;
+                GL.UniformMatrix4(2, false, ref def);
+                VBO.BonesIdentity();
+                Shaders.ColorMultShader.Bind();
+                GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref def);
+                VBO.BonesIdentity();
                 CFrust = new Frustum(combined);
+                RenderSky(combined);
+                GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref def);
+                FBOid = 2;
                 Render3D(false);
+                FBOid = 0;
                 if (CVars.r_renderwireframe.ValueB)
                 {
                     Render3DWires();
@@ -458,6 +412,77 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             Establish2D();
             Render2D();
+        }
+
+        public void RenderSky(Matrix4 combined)
+        {
+            {
+                Rendering.SetColor(Color4.White);
+                float dist = 300; // TODO: View rad
+                GL.Disable(EnableCap.CullFace);
+                Matrix4 scale = Matrix4.CreateScale(dist, dist, dist) * Matrix4.CreateTranslation(CameraPos.ToOVector());
+                GL.UniformMatrix4(2, false, ref scale);
+                Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/bottom").Bind();
+                skybox[0].Render(false);
+                Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/top").Bind();
+                skybox[1].Render(false);
+                Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/xm").Bind();
+                skybox[2].Render(false);
+                Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/xp").Bind();
+                skybox[3].Render(false);
+                Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/ym").Bind();
+                skybox[4].Render(false);
+                Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/yp").Bind();
+                skybox[5].Render(false);
+                Textures.GetTexture("skies/sun").Bind(); // TODO: Store var? Make dynamic?
+                Matrix4 rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
+                    * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
+                    * Matrix4.CreateRotationZ((float)((180f + SunAngle.Yaw) * Utilities.PI180))
+                    * Matrix4.CreateTranslation((CameraPos + TheSun.Direction * -200f).ToOVector()); // TODO: adjust based on view rad
+                Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
+                Textures.GetTexture("skies/planet").Bind(); // TODO: Store var? Make dynamic?
+                Rendering.SetColor(new Color4(PlanetLight, PlanetLight, PlanetLight, 1));
+                rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
+                    * Matrix4.CreateRotationY((float)((-PlanetAngle.Pitch - 90f) * Utilities.PI180))
+                    * Matrix4.CreateRotationZ((float)((180f + PlanetAngle.Yaw) * Utilities.PI180))
+                    * Matrix4.CreateTranslation((CameraPos + ThePlanet.Direction * -180f).ToOVector()); // TODO: adjust based on view rad
+                Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
+                if (PlanetSunDist > 10)
+                {
+                    Location rel = CameraPos + TheSun.Direction * -200f;
+                    Vector4 vec = new Vector4((float)rel.X, (float)rel.Y, (float)rel.Z, 1f);
+                    vec = Vector4.Transform(vec, combined);
+                    Matrix4 ident = Matrix4.Identity;
+                    GL.UniformMatrix4(1, false, ref ident);
+                    Location sunpos = new Location(vec.X / vec.W, vec.Y / vec.W, vec.Z / vec.W);
+                    if (sunpos.X >= -1 && sunpos.X <= 1 && sunpos.Y >= -1 && sunpos.Y <= 1 && sunpos.Z <= 1 && sunpos.Z >= -1)
+                    {
+                        CollisionResult trace = TheWorld.Collision.RayTrace(CameraPos, CameraPos + TheSun.Direction * -200f, Player.IgnoreThis);
+                        if (!trace.Hit)
+                        {
+                            Location start = new Location(sunpos.X, sunpos.Y, 0);
+                            Location targ = new Location(0, 0, 0);
+                            Rendering.SetColor(Color4.Yellow);
+                            Textures.GetTexture("effects/lensflare/01").Bind(); // TODO: Store
+                            Location one = (targ - start) / 2 + start;
+                            float s1 = 0.1f;
+                            Rendering.RenderRectangle((float)one.X - s1, (float)one.Y - s1, (float)one.X + s1, (float)one.Y + s1, Matrix4.CreateTranslation(0, 0, 0.3f));
+                            Textures.GetTexture("effects/lensflare/02").Bind(); // TODO: Store
+                            Location two = targ;
+                            float s2 = 0.2f;
+                            Rendering.RenderRectangle((float)two.X - s2, (float)two.Y - s2, (float)two.X + s2, (float)two.Y + s2, Matrix4.CreateTranslation(0, 0, 0.2f));
+                            Textures.GetTexture("effects/lensflare/03").Bind(); // TODO: Store
+                            Location three = (targ - start) / 2 + targ;
+                            float s3 = 0.1f;
+                            Rendering.RenderRectangle((float)three.X - s3, (float)three.Y - s3, (float)three.X + s3, (float)three.Y + s3, Matrix4.CreateTranslation(0, 0, 0.1f));
+                            // Can see sun, probably!
+                        }
+                    }
+                }
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+                Rendering.SetColor(Color4.White);
+                GL.Enable(EnableCap.CullFace);
+            }
         }
 
         public void Establish2D()
@@ -487,14 +512,22 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Rendering.SetMinimumLight(1f);
                 Particles.Render();
             }
-            if (FBO)
+            if (FBOid == 1)
             {
                 s_fbov.Bind();
             }
+            else if (FBOid == 2)
+            {
+                s_colormultvox.Bind();
+            }
             TheWorld.Render();
-            if (FBO)
+            if (FBOid == 1)
             {
                 s_fbo.Bind();
+            }
+            else if (FBOid == 2)
+            {
+                Shaders.ColorMultShader.Bind();
             }
             Textures.White.Bind();
             Location mov = (CameraFinalTarget - PlayerEyePosition) / CameraDistance;
