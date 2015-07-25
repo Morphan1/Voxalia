@@ -7,7 +7,7 @@ Built within OpenTK, a C# binding of OpenGL for the 3D rendering.
 
 ## Compiling
 
-- Open the .sln in Microsoft Visual C# 2010
+- Open the .sln in Microsoft Visual Studio 2015
 - Switch the configuration to Release|x64
 - Debug -> Build Solution!
 
