@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Voxalia.Shared
 {
-    class Utilities
+    public class Utilities
     {
         /// <summary>
         /// A UTF-8 without BOM encoding.
@@ -509,5 +509,10 @@ namespace Voxalia.Shared
             // Valid if all tests above passed
             return true;
         }
+    }
+
+    public class IntHolder
+    {
+        public int Value = 0;
     }
 }

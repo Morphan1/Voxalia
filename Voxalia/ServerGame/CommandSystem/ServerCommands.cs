@@ -6,7 +6,6 @@ using Voxalia.ServerGame.ServerMainSystem;
 using Frenetic;
 using Frenetic.CommandSystem;
 using Voxalia.ServerGame.CommandSystem.CommonCommands;
-using Voxalia.ServerGame.CommandSystem.MapCommands;
 using Voxalia.ServerGame.CommandSystem.PlayerCommands;
 
 namespace Voxalia.ServerGame.CommandSystem
@@ -44,10 +43,11 @@ namespace Voxalia.ServerGame.CommandSystem
             CommandSystem.Init();
 
             // Common Commands
+            CommandSystem.RegisterCommand(new QuitCommand(TheServer));
             CommandSystem.RegisterCommand(new SayCommand(TheServer));
 
-            // Map Commands
-            CommandSystem.RegisterCommand(new LoadCommand(TheServer));
+            // World Commands
+            // ...
             
             // Player Management Commands
             CommandSystem.RegisterCommand(new KickCommand(TheServer));

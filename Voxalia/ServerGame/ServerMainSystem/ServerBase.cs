@@ -48,6 +48,14 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         public Scheduler Schedule = new Scheduler();
 
+        bool TickMe = true;
+
+        public void ShutDownQuickly()
+        {
+            TickMe = false;
+            ConsoleHandler.Close();
+        }
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
@@ -93,7 +101,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             double CurrentDelta = 0d;
             double TargetDelta = 0d;
             int targettime = 0;
-            while (true)
+            while (TickMe)
             {
                 // Update the tick time usage counter
                 Counter.Reset();
@@ -137,6 +145,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
                     Thread.Sleep(targettime);
                 }
             }
+            SysConsole.Output(OutputType.INFO, "[Shutdown] Reached end of server functionality.");
             // TODO: Clean up?
         }
 

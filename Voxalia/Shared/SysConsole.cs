@@ -24,10 +24,13 @@ namespace Voxalia.Shared
         {
             lock (ConsoleLock)
             {
-                ConsoleOutputThread.Abort();
-                if (Waiting.Length > 0)
+                lock (WriteLock)
                 {
-                    WriteInternal(Waiting);
+                    ConsoleOutputThread.Abort();
+                    if (Waiting.Length > 0)
+                    {
+                        WriteInternal(Waiting);
+                    }
                 }
             }
         }

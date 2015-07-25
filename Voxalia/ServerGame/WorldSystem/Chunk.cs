@@ -182,27 +182,39 @@ namespace Voxalia.ServerGame.WorldSystem
         /// <summary>
         /// Sync only.
         /// </summary>
-        public void UnloadSafely()
+        public void UnloadSafely(Action callback = null)
         {
-            if (LastEdited >= 0)
-            {
-                SaveToFile();
-            }
             if (worldObject != null)
             {
                 OwningWorld.PhysicsWorld.Remove(worldObject);
+                worldObject = null;
+            }
+            if (LastEdited >= 0)
+            {
+                SaveToFile(callback);
+            }
+            else
+            {
+                if (callback != null)
+                {
+                    callback.Invoke();
+                }
             }
         }
 
         /// <summary>
         /// Asyncable (just launches async internals + 1 safe edit).
         /// </summary>
-        public void SaveToFile()
+        public void SaveToFile(Action callback = null)
         {
             LastEdited = -1; // TODO: Lock around something for touching LastEdited? ++ All other references to LastEdited.
             OwningWorld.TheServer.Schedule.StartASyncTask(() =>
             {
                 SaveToFileI();
+                if (callback != null)
+                {
+                    callback.Invoke();
+                }
             });
         }
 

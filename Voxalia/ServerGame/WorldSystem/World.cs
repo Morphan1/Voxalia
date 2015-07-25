@@ -803,5 +803,24 @@ namespace Voxalia.ServerGame.WorldSystem
             Generator.Populate(Seed, Seed2, chunk);
             chunk.LastEdited = GlobalTickTime;
         }
+
+        /// <summary>
+        /// Does not return until fully unloaded.
+        /// </summary>
+        public void UnloadFully()
+        {
+            // TODO: Transfer all players to the default world.
+            IntHolder counter = new IntHolder();
+            IntHolder total = new IntHolder();
+            foreach (Chunk chunk in LoadedChunks.Values)
+            {
+                total.Value++;
+                chunk.UnloadSafely(() => { counter.Value++; });
+            }
+            while (counter.Value < total.Value)
+            {
+                Thread.Sleep(16);
+            }
+        }
     }
 }

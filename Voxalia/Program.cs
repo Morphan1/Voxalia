@@ -115,6 +115,8 @@ namespace Voxalia
                 File.WriteAllText("GLOBALERR_" + DateTime.Now.ToFileTimeUtc().ToString() + ".txt", ex.GetType().Name + ": " + ex.Message + "\n" + Environment.StackTrace + "\n\n" + ex.StackTrace.ToString());
             }
             SysConsole.ShutDown();
+            Console.WriteLine("Final shutdown - terminating process.");
+            Process.GetCurrentProcess().Kill();
         }
     }
 }

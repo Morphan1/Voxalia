@@ -28,6 +28,8 @@ namespace Voxalia.Shared
 
         public static int RecCommandInputMax = 100;
 
+        static Thread thread;
+
         /// <summary>
         /// Prepare the console listener.
         /// </summary>
@@ -35,10 +37,15 @@ namespace Voxalia.Shared
         {
             CommandInput = new List<string>();
             RecCommandInput = new List<string>();
-            Thread thread = new Thread(new ThreadStart(ListenLoop));
+            thread = new Thread(new ThreadStart(ListenLoop));
             thread.Name = "System_ConsoleListener";
             HandlerActive = true;
             thread.Start();
+        }
+
+        public static void Close()
+        {
+            thread.Abort();
         }
 
         static void ListenLoop()
