@@ -15,8 +15,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public PhysicsEntity(World tworld, bool ticks)
             : base(tworld, ticks)
         {
-            Vector3 grav = TheWorld.PhysicsWorld.ForceUpdater.Gravity;
-            Gravity = new Location(grav.X, grav.Y, grav.Z);
+            Gravity = Location.FromBVector(TheWorld.PhysicsWorld.ForceUpdater.Gravity);
             CGroup = CollisionUtil.Solid;
         }
 
@@ -90,6 +89,7 @@ namespace Voxalia.ServerGame.EntitySystem
             CollisionResult cr = TheWorld.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
             if (cr.Hit && cr.HitEnt != null)
             {
+                SysConsole.Output(OutputType.WARNING, "Hit poorly implemented water!");
                 // TODO: grab factors from the entity
                 PhysicsEntity pe = (PhysicsEntity)cr.HitEnt.Tag;
                 if (GetVelocity().Z > 2f)

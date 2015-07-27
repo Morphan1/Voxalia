@@ -43,11 +43,11 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 pl.AddThread();
             }
-            PhysicsWorld = new Space(pl);
-            // Set the world's general default gravity
-            PhysicsWorld.ForceUpdater.Gravity = new BEPUutilities.Vector3(0, 0, -9.8f);
             // Minimize penetration
             CollisionDetectionSettings.AllowedPenetration = 0.001f;
+            PhysicsWorld = new Space(pl);
+            // Set the world's general default gravity
+            PhysicsWorld.ForceUpdater.Gravity = new BEPUutilities.Vector3(0, 0, -9.8f * 3f / 2f);
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
         }
