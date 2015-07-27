@@ -211,7 +211,7 @@ namespace Voxalia.Shared
 
         public static void Output(Exception ex)
         {
-            Output(OutputType.ERROR, ex.GetType().Name + ": " + ex.Message + "\n" + Environment.StackTrace);
+            Output(OutputType.ERROR, ex.ToString() + "\n\n" + Environment.StackTrace);
         }
 
         /// <summary>

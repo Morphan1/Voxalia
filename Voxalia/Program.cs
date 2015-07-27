@@ -64,7 +64,7 @@ namespace Voxalia
             catch (Exception ex)
             {
                 SysConsole.Output(ex);
-                File.WriteAllText("GLOBALERR_" + DateTime.Now.ToFileTimeUtc().ToString() + ".txt", ex.ToString());
+                File.WriteAllText("GLOBALERR_" + DateTime.Now.ToFileTimeUtc().ToString() + ".txt", ex.ToString() + "\n\n" + Environment.StackTrace);
             }
             SysConsole.ShutDown();
             Console.WriteLine("Final shutdown - terminating process.");
