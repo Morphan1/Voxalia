@@ -73,6 +73,10 @@ namespace Voxalia.ClientGame.AudioSystem
             {
                 throw new ArgumentException("Must be between 0 and 1", "volume");
             }
+            if (volume == 0)
+            {
+                return null;
+            }
             ActiveSound actsfx = new ActiveSound(sfx);
             actsfx.Position = pos;
             actsfx.Pitch = pitch * CVars.a_globalpitch.ValueF;

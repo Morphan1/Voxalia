@@ -276,6 +276,7 @@ namespace Voxalia.ClientGame.WorldSystem
             GL.UniformMatrix4(7, false, ref mat);
             if (TheClient.RenderTextures)
             {
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
             }
             foreach (Chunk chunk in LoadedChunks.Values)
