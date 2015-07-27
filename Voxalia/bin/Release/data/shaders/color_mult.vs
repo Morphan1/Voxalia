@@ -45,7 +45,12 @@ void main()
 	}
 	//pos1 = simplebone_matrix * pos1;
 	pos1 *= simplebone_matrix;
-	f_color = color * v_color;
+	f_color = color;
+    if (f_color == vec4(0.0, 0.0, 0.0, 1.0))
+    {
+        f_color = vec4(1.0);
+    }
+    f_color = f_color * v_color;
 	f_texcoord = texcoord;
 	gl_Position = projection * model_matrix * vec4(pos1.xyz, 1.0);
 }
