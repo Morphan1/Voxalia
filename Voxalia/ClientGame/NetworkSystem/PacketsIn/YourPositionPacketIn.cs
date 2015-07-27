@@ -14,6 +14,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Location vel = Location.FromBytes(data, 12);
             Location avel = Location.FromBytes(data, 12 + 12);
             Location dir = pos - TheClient.Player.GetPosition();
+            TheClient.Player.ServerLocation = pos;
             if (dir.LengthSquared() < 20 * 20) // TODO: replace '20' with a CVar
             {
                 TheClient.Player.SetPosition(TheClient.Player.GetPosition() + dir / 120f); // TODO: Replace '120f' with a CVar * PacketDelta?

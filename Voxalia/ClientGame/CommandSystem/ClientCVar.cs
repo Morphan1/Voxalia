@@ -21,7 +21,7 @@ namespace Voxalia.ClientGame.CommandSystem
         public CVar g_timescale, g_firstperson;
 
         // Network CVars
-        public CVar n_first;
+        public CVar n_first, n_debugmovement;
 
         // Renderer CVars
         public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_vsync, r_lighting, r_renderwireframe,
@@ -55,6 +55,7 @@ namespace Voxalia.ClientGame.CommandSystem
             g_firstperson = Register("g_firstperson", "true", CVarFlag.Boolean); // Whether to be in FirstPerson view mode.
             // Network CVars
             n_first = Register("n_first", "ipv4", CVarFlag.Textual); // Whether to prefer IPv4 or IPv6.
+            n_debugmovement = Register("n_debugmovement", "false", CVarFlag.Boolean); // Whether to debug movement networking.
             // Renderer CVars
             r_fullscreen = Register("r_fullscreen", "false", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use fullscreen mode.
             r_width = Register("r_width", "800", CVarFlag.Numeric | CVarFlag.Delayed); // What width the window should be.

@@ -103,7 +103,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             Network = conn;
             SetMass(tmass / 2f);
-            Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)(HalfSize.Z * 2f) - 1);
+            Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)(HalfSize.Z * 2f));
             WheelShape = new SphereShape((float)HalfSize.X);
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
@@ -138,6 +138,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Body.AngularDamping = 1;
             WheelBody = new BEPUphysics.Entities.Entity(WheelShape, tmass / 2f);
             WheelBody.Orientation = Quaternion.Identity;
+            WheelBody.CollisionInformation.CollisionRules.Group = CollisionUtil.Solid;
             WheelBody.Position = Body.Position + new Vector3(0, 0, -(float)HalfSize.Z);
             WheelBody.CollisionInformation.CollisionRules.Specific.Add(Body.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
             Body.CollisionInformation.CollisionRules.Specific.Add(WheelBody.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
@@ -285,7 +286,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 movement = Utilities.RotateVector(movement, Direction.Yaw * Utilities.PI180, fly ? Direction.Pitch * Utilities.PI180 : 0).Normalize();
             }
-            Location intent_vel = movement * MoveSpeed * (Walk ? 0.7f : 1f);
+            Location intent_vel = movement * MoveSpeed * (Walk ? 0.7f : 1f) * GetMass() / 50;
             if (Stance == PlayerStance.CROUCH)
             {
                 intent_vel *= 0.5f;
@@ -377,7 +378,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             base.Tick();
         }
-
+        
         bool loadedInitially = false;
 
         public void TrySet(Location pos, int VIEWRAD, float atime, int posMult)

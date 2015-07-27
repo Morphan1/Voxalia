@@ -1,4 +1,5 @@
-﻿using Voxalia.Shared;
+﻿using System;
+using Voxalia.Shared;
 using Voxalia.ClientGame.UISystem;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 using BEPUutilities;
@@ -42,6 +43,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public Location HalfSize = new Location(0.55f, 0.55f, 1.3f);
 
         public Location Direction = new Location(0, 0, 0);
+
+        public Location ServerLocation = new Location(0, 0, 0);
 
         public bool Forward = false;
         public bool Backward = false;
@@ -153,7 +156,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 movement = Utilities.RotateVector(movement, Direction.Yaw * Utilities.PI180, fly ? Direction.Pitch * Utilities.PI180 : 0).Normalize();
             }
-            Location intent_vel = movement * MoveSpeed * (Walk ? 0.7f : 1f);
+            Location intent_vel = movement * MoveSpeed * (Walk ? 0.7f : 1f * GetMass() / 50);
             if (Stance == PlayerStance.CROUCH)
             {
                 intent_vel *= 0.5f;
@@ -215,7 +218,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 }
             }
         }
-
+        
         public BEPUphysics.Entities.Entity WheelBody;
 
         public BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint bsj;
@@ -227,6 +230,7 @@ namespace Voxalia.ClientGame.EntitySystem
             Body.AngularDamping = 1;
             WheelBody = new BEPUphysics.Entities.Entity(WheelShape, tmass / 2f);
             WheelBody.Orientation = Quaternion.Identity;
+            WheelBody.CollisionInformation.CollisionRules.Group = CollisionUtil.Solid;
             WheelBody.Position = Body.Position + new Vector3(0, 0, -(float)HalfSize.Z);
             WheelBody.CollisionInformation.CollisionRules.Specific.Add(Body.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
             Body.CollisionInformation.CollisionRules.Specific.Add(WheelBody.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
@@ -315,6 +319,10 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
+            if (TheClient.CVars.n_debugmovement.ValueB)
+            {
+                TheClient.Rendering.RenderLineBox(ServerLocation + new Location(-0.2), ServerLocation + new Location(0.2));
+            }
             if (TheClient.RenderingShadows || !TheClient.CVars.g_firstperson.ValueB)
             {
                 // TODO: debug mode ... match this on all living entities

@@ -170,7 +170,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Items.Clear();
             QuickBarPos = 0;
             BuildWorld();
-            TheWorld.SpawnEntity(Player);
         }
     }
 }

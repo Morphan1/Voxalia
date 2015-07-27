@@ -37,6 +37,7 @@ namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
             }
             entry.Good("Generating new server...");
             TheClient.LocalServer = new Server();
+            Server.Central = TheClient.LocalServer;
             Task.Factory.StartNew(() => { TheClient.LocalServer.StartUp(); });
         }
     }
