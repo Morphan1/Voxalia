@@ -34,10 +34,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// <summary>
         /// Starts up a new server.
         /// </summary>
-        public static void Init()
+        public static void Init(string args)
         {
             Central = new Client();
-            Central.StartUp();
+            Central.StartUp(args);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// <summary>
         /// Start up and run the server.
         /// </summary>
-        public void StartUp()
+        public void StartUp(string args)
         {
             SysConsole.Output(OutputType.INIT, "Launching as new client, this is " + (this == Central ? "" : "NOT ") + "the Central client.");
             SysConsole.Output(OutputType.INIT, "Loading command system...");
@@ -75,6 +75,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 string contents = Program.Files.ReadText("clientdefaultsettings.cfg");
                 Commands.ExecuteCommands(contents);
             }
+            Commands.ExecuteCommands(args);
             SysConsole.Output(OutputType.INIT, "Generating window...");
             Window = new GameWindow(CVars.r_width.ValueI, CVars.r_height.ValueI, GraphicsMode.Default, Program.GameName + " v" + Program.GameVersion,
                 GameWindowFlags.Default, DisplayDevice.Default, 4, 3, GraphicsContextFlags.ForwardCompatible);

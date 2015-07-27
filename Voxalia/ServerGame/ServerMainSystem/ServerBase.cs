@@ -24,7 +24,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// <summary>
         /// Starts up a new server.
         /// </summary>
-        public static void Init()
+        public static void Init(string args)
         {
             Central = new Server();
             Central.StartUp();
