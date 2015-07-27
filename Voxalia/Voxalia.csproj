@@ -132,6 +132,7 @@
     <Compile Include="ClientGame\CommandSystem\CommonCommands\ReloadCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\ConnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\DisconnectCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\NetworkCommands\StartlocalserverCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\AttackCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BindCommand.cs" />

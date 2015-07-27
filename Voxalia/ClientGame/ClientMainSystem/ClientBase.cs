@@ -13,6 +13,7 @@ using Voxalia.ClientGame.NetworkSystem;
 using Voxalia.ClientGame.AudioSystem;
 using Voxalia.ClientGame.GraphicsSystems.ParticleSystem;
 using Voxalia.ClientGame.WorldSystem;
+using Voxalia.ServerGame.ServerMainSystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -21,6 +22,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
     /// </summary>
     public partial class Client
     {
+        public Server LocalServer = null;
+
         public Scheduler Schedule = new Scheduler();
 
         /// <summary>
@@ -238,7 +241,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             SoundEffect mus = Sounds.GetSound(CMusic);
             CurrentMusic = Sounds.Play(mus, true, Location.NaN, CVars.a_musicpitch.ValueF, CVars.a_musicvolume.ValueF);
-            CurrentMusic.IsBackground = true;
+            if (CurrentMusic != null)
+            {
+                CurrentMusic.IsBackground = true;
+            }
         }
     }
 }

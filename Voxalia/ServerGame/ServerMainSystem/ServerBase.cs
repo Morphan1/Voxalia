@@ -7,6 +7,7 @@ using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.PlayerCommandSystem;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.OtherSystems;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.ServerMainSystem
 {
@@ -45,6 +46,22 @@ namespace Voxalia.ServerGame.ServerMainSystem
         public Scheduler Schedule = new Scheduler();
 
         bool TickMe = true;
+
+        public void ShutDown()
+        {
+            SysConsole.Output(OutputType.INFO, "[Shutdown] Starting to close server...");
+            foreach (World world in LoadedWorlds)
+            {
+                foreach (PlayerEntity player in world.Players)
+                {
+                    player.Kick("Server shutting down.");
+                }
+                SysConsole.Output(OutputType.INFO, "[Shutdown] Unloading world: " + world.Name);
+                world.UnloadFully();
+            }
+            SysConsole.Output(OutputType.INFO, "[Shutdown] Closing server...");
+            ShutDownQuickly();
+        }
 
         public void ShutDownQuickly()
         {
