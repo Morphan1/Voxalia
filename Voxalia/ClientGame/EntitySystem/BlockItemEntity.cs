@@ -70,7 +70,10 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             Matrix4 mat = Matrix4.CreateTranslation(-Offset.ToOVector()) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
+            float spec = TheClient.Rendering.Specular;
+            TheClient.Rendering.SetSpecular(0);
             vbo.Render(false);
+            TheClient.Rendering.SetSpecular(spec);
             // TODO: Remove this block
             if (TheClient.FBOid == 1)
             {
