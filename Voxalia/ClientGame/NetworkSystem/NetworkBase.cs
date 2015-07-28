@@ -7,6 +7,7 @@ using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.NetworkSystem.PacketsIn;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared.Files;
+using System.Threading.Tasks;
 
 namespace Voxalia.ClientGame.NetworkSystem
 {
@@ -243,40 +244,67 @@ namespace Voxalia.ClientGame.NetworkSystem
                 }
                 packet.TheClient = TheClient;
                 packet.ChunkN = sock == ChunkSocket;
-                if (!packet.ParseBytesAndExecute(data))
+                TheClient.Schedule.ScheduleSyncTask(() =>
                 {
-                    throw new Exception("Imperfect packet data for packet " + packetID);
-                }
+                    if (!packet.ParseBytesAndExecute(data))
+                    {
+                        SysConsole.Output(OutputType.ERROR, "Bad packet (ID=" + packetID + ") data!");
+                    }
+                });
             }
         }
 
-        public void Tick()
+        public void LaunchTicker()
+        {
+            TheClient.Schedule.StartASyncTask(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        if (!Tick())
+                        {
+                            return;
+                        }
+                        Thread.Sleep(16);
+                    }
+                    catch (Exception ex)
+                    {
+                        SysConsole.Output(OutputType.ERROR, "Connection: " + ex.ToString());
+                    }
+                }
+            });
+        }
+
+        bool Tick()
         {
             // TODO: Connection timeout
             if (!IsAlive)
             {
                 if (pLive)
                 {
-                    TheClient.ShowMainMenu();
+                    TheClient.Schedule.ScheduleSyncTask(() => { TheClient.ShowMainMenu(); });
                     pLive = false;
                 }
-                return;
+                return false;
             }
             try
             {
                 if (!pLive)
                 {
-                    TheClient.ShowChunkWaiting();
+                    TheClient.Schedule.ScheduleSyncTask(() => { TheClient.ShowChunkWaiting(); });
                     pLive = true;
                 }
                 TickSocket(ConnectionSocket, ref recd, ref recdsofar);
                 TickSocket(ChunkSocket, ref recd2, ref recdsofar2);
+                return true;
             }
             catch (Exception ex)
             {
                 SysConsole.Output(OutputType.ERROR, "Forcibly disconnected from server: " + ex.GetType().Name + ": " + ex.Message);
                 SysConsole.Output(OutputType.INFO, ex.ToString()); // TODO: Make me 'debug only'!
                 Disconnect();
+                return false;
             }
         }
 
@@ -414,6 +442,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                 ChunkSocket.Blocking = false;
                 SysConsole.Output(OutputType.INFO, "Connected to " + address.ToString() + ":" + tport);
                 IsAlive = true;
+                LaunchTicker();
             }
             catch (Exception ex)
             {
