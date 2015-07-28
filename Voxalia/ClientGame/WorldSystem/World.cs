@@ -10,6 +10,7 @@ using BEPUphysics.Settings;
 using Voxalia.ClientGame.JointSystem;
 using Voxalia.ClientGame.EntitySystem;
 using BEPUutilities.Threading;
+using BEPUphysics.BroadPhaseEntries;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -50,7 +51,26 @@ namespace Voxalia.ClientGame.WorldSystem
             PhysicsWorld.ForceUpdater.Gravity = new BEPUutilities.Vector3(0, 0, -9.8f * 3f / 2f);
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
+            chunkGroup = new StaticGroup(ChunkShapes);
+            PhysicsWorld.Add(chunkGroup);
         }
+
+        public void AddChunk(StaticMesh mesh)
+        {
+            PhysicsWorld.Remove(chunkGroup);
+            ChunkShapes.Add(mesh);
+            chunkGroup = new StaticGroup(ChunkShapes);
+            PhysicsWorld.Add(chunkGroup);
+        }
+
+        public void RemoveChunkQuiet(StaticMesh mesh)
+        {
+            ChunkShapes.Remove(mesh);
+        }
+
+        public List<Collidable> ChunkShapes = new List<Collidable>();
+
+        public StaticGroup chunkGroup;
 
         /// <summary>
         /// Ticks the physics world.
@@ -150,11 +170,15 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 if (chunk.PosMultiplier != posMult)
                 {
+                    Chunk ch = chunk;
                     LoadedChunks.Remove(pos);
                     chunk = new Chunk(posMult);
                     chunk.OwningWorld = this;
+                    chunk.adding = ch.adding;
+                    chunk.worldObject = ch.worldObject;
+                    chunk.rendering = ch.rendering;
+                    chunk._VBO = ch._VBO;
                     chunk.WorldPosition = pos;
-                    chunk.Destroy();
                     LoadedChunks.Add(pos, chunk);
                 }
             }

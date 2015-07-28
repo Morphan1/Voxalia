@@ -108,7 +108,7 @@ namespace Voxalia.ClientGame.WorldSystem
             return sm;
         }
 
-        StaticMesh worldObject = null;
+        public StaticMesh worldObject = null;
 
         public ASyncScheduleItem adding = null;
 
@@ -138,6 +138,8 @@ namespace Voxalia.ClientGame.WorldSystem
         }
 
         public bool LOADING = false;
+        public bool PROCESSED = false;
+        public bool PRED = false;
 
         void AddInternal(Action callback)
         {
@@ -146,12 +148,12 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 if (worldObject != null)
                 {
-                    OwningWorld.PhysicsWorld.Remove(worldObject);
+                    OwningWorld.RemoveChunkQuiet(worldObject);
                 }
                 worldObject = tworldObject;
                 if (worldObject != null)
                 {
-                    OwningWorld.PhysicsWorld.Add(worldObject);
+                    OwningWorld.AddChunk(worldObject);
                 }
                 if (callback != null)
                 {

@@ -42,6 +42,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     {
                         TheClient.ShowChunkWaiting();
                     }
+                    else if (data[1] == 2)
+                    {
+                        TheClient.ProcessChunks();
+                    }
                     else
                     {
                         return false;

@@ -45,6 +45,7 @@ namespace Voxalia.ClientGame.WorldSystem
                             rC++;
                         }
                     });
+                    chunk.PROCESSED = true;
                 }
                 while (true)
                 {

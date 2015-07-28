@@ -48,6 +48,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 Chunk chk = TheClient.TheWorld.LoadChunk(new Location(x, y, z), posMult);
                 chk.LOADING = true;
+                chk.PROCESSED = false;
                 TheClient.Schedule.StartASyncTask(() => parsechunk2(chk, data_orig, posMult));
             };
             if (TheClient.IsWaitingOnChunks())
@@ -87,9 +88,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 }
             }
             chk.LOADING = false;
+            chk.PRED = true;
             if (!TheClient.IsWaitingOnChunks())
             {
-                TheClient.Schedule.ScheduleSyncTask(() => { chk.AddToWorld(); chk.CreateVBO(); chk.UpdateSurroundingsFully(); });
+                //TheClient.Schedule.ScheduleSyncTask(() => { chk.AddToWorld(); chk.CreateVBO(); chk.UpdateSurroundingsFully(); });
             }
         }
     }

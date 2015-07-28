@@ -14,6 +14,7 @@ using Voxalia.ClientGame.AudioSystem;
 using Voxalia.ClientGame.GraphicsSystems.ParticleSystem;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.ServerGame.ServerMainSystem;
+using System.Threading;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -216,6 +217,56 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INFO, "Awaiting chunks...");
             CScreen = TheChunkWaitingScreen;
             CScreen.SwitchTo();
+        }
+
+        byte pMode = 0;
+
+        public void ProcessChunks()
+        {
+            if (pMode != 0)
+            {
+                return;
+            }
+            pMode = 1;
+            Schedule.StartASyncTask(() =>
+            {
+                while (true)
+                {
+                    Thread.Sleep(16);
+                    if (pMode == 2)
+                    {
+                        break;
+                    }
+                    Schedule.ScheduleSyncTask(() =>
+                    {
+                        bool ready = true;
+                        foreach (Chunk chunk in TheWorld.LoadedChunks.Values)
+                        {
+                            if (!chunk.PRED)
+                            {
+                                ready = false;
+                            }
+                        }
+                        if (ready)
+                        {
+                            pMode = 2;
+                        }
+                    });
+                }
+                Schedule.ScheduleSyncTask(() =>
+                {
+                    foreach (Chunk chunk in TheWorld.LoadedChunks.Values)
+                    {
+                        if (!chunk.PROCESSED)
+                        {
+                            Schedule.ScheduleSyncTask(() => { chunk.AddToWorld(); }, Utilities.UtilRandom.NextDouble() * 10);
+                            Schedule.ScheduleSyncTask(() => { chunk.CreateVBO(); }, Utilities.UtilRandom.NextDouble() * 10);
+                            chunk.PROCESSED = true;
+                        }
+                    }
+                    pMode = 0;
+                });
+            });
         }
 
         public bool IsWaitingOnChunks()

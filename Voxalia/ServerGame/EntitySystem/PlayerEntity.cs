@@ -389,9 +389,10 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     // TODO: Better system -> async?
                     TrySet(pos, 1, 5, 1);
-                    TrySet(pos, ViewRadiusInChunks / 4, 5, 1);
-                    TrySet(pos, ViewRadiusInChunks / 2, 15, 1);
-                    TrySet(pos, ViewRadiusInChunks, 30, 5);
+                    TrySet(pos, ViewRadiusInChunks / 4, 0, 1);
+                    TrySet(pos, ViewRadiusInChunks / 2, 0, 1);
+                    TrySet(pos, ViewRadiusInChunks, 0, 5);
+                    ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
                 }
                 pChunkLoc = cpos;
             }

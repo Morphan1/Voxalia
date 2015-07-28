@@ -142,12 +142,12 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (worldObject != null)
                 {
-                    OwningWorld.PhysicsWorld.Remove(worldObject);
+                    OwningWorld.RemoveChunkQuiet(worldObject);
                 }
                 worldObject = tworldObject;
                 if (worldObject != null)
                 {
-                    OwningWorld.PhysicsWorld.Add(worldObject);
+                    OwningWorld.AddChunk(worldObject);
                 }
                 if (callback != null)
                 {
@@ -178,12 +178,13 @@ namespace Voxalia.ServerGame.WorldSystem
 
         /// <summary>
         /// Sync only.
+        /// Call OwningWorld.AddChunk(null) to recalculate after done.
         /// </summary>
         public void UnloadSafely(Action callback = null)
         {
             if (worldObject != null)
             {
-                OwningWorld.PhysicsWorld.Remove(worldObject);
+                OwningWorld.RemoveChunkQuiet(worldObject);
                 worldObject = null;
             }
             if (LastEdited >= 0)

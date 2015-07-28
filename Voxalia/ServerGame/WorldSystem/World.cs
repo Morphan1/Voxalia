@@ -13,6 +13,7 @@ using BEPUutilities.Threading;
 using Voxalia.ServerGame.WorldSystem.SimpleGenerator;
 using System.Threading;
 using System.Threading.Tasks;
+using BEPUphysics.BroadPhaseEntries;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -490,6 +491,8 @@ namespace Voxalia.ServerGame.WorldSystem
             PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f * 3f / 2f);
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
+            chunkGroup = new StaticGroup(ChunkShapes);
+            PhysicsWorld.Add(chunkGroup);
             Seed = 100; // TODO: Generate or load
             Random seedGen = new Random(Seed);
             Seed2 = (short)(seedGen.Next((int)short.MaxValue * 2) - short.MaxValue);
@@ -503,6 +506,26 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             SysConsole.Output(OutputType.INIT, "Finished building chunks!");
         }
+
+        public void AddChunk(StaticMesh mesh)
+        {
+            PhysicsWorld.Remove(chunkGroup);
+            if (mesh != null)
+            {
+                ChunkShapes.Add(mesh);
+            }
+            chunkGroup = new StaticGroup(ChunkShapes);
+            PhysicsWorld.Add(chunkGroup);
+        }
+
+        public void RemoveChunkQuiet(StaticMesh mesh)
+        {
+            ChunkShapes.Remove(mesh);
+        }
+
+        public List<Collidable> ChunkShapes = new List<Collidable>();
+
+        public StaticGroup chunkGroup;
 
         private bool AllChunksLoadedFully()
         {
