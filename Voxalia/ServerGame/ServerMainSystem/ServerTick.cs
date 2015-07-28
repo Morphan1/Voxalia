@@ -42,8 +42,13 @@ namespace Voxalia.ServerGame.ServerMainSystem
             }
         }
 
+        public int TPS = 0;
+        int tpsc = 0;
+
         public void OncePerSecondActions()
         {
+            TPS = tpsc;
+            tpsc = 0;
             if (CVars.system.Modified)
             {
                 CVars.system.Modified = false;
@@ -91,6 +96,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// </summary>
         public void Tick(double delta)
         {
+            tpsc++;
             Delta = delta * CVars.g_timescale.ValueD;
             try
             {

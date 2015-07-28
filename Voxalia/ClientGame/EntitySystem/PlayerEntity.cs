@@ -120,8 +120,13 @@ namespace Voxalia.ClientGame.EntitySystem
             CollisionResult crGround = TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.01f, HalfSize.Y - 0.01f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
             if (Upward && !fly && !pup && crGround.Hit && GetVelocity().Z < 1f)
             {
-                Vector3 imp = (Location.UnitZ * GetMass() * 15f).ToBVector();
+                Vector3 imp = (Location.UnitZ * GetMass() * 5f).ToBVector();
+                Body.LinearMomentum = Vector3.Zero;
+                Body.LinearVelocity = new Vector3(WheelBody.LinearVelocity.X, WheelBody.LinearVelocity.Y, 0);
+                WheelBody.LinearMomentum = Vector3.Zero;
+                WheelBody.LinearVelocity = new Vector3(WheelBody.LinearVelocity.X, WheelBody.LinearVelocity.Y, 0);
                 Body.ApplyLinearImpulse(ref imp);
+                WheelBody.LinearVelocity = Body.LinearVelocity;
                 Body.ActivityInformation.Activate();
                 imp = -imp;
                 if (crGround.HitEnt != null)
@@ -166,6 +171,10 @@ namespace Voxalia.ClientGame.EntitySystem
                 intent_vel *= 0.3f;
             }
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
+            if (!fly)
+            {
+                pvel.Z = 0;
+            }
             if (pvel.LengthSquared() > MoveRateCap * MoveRateCap)
             {
                 pvel = pvel.Normalize() * MoveRateCap;
