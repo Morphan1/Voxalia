@@ -120,7 +120,7 @@ namespace Voxalia.ClientGame.EntitySystem
             CollisionResult crGround = TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.01f, HalfSize.Y - 0.01f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
             if (Upward && !fly && !pup && crGround.Hit && GetVelocity().Z < 1f)
             {
-                Vector3 imp = (Location.UnitZ * GetMass() * 5f).ToBVector();
+                Vector3 imp = (Location.UnitZ * GetMass() * 8f).ToBVector();
                 Body.LinearMomentum = Vector3.Zero;
                 Body.LinearVelocity = new Vector3(WheelBody.LinearVelocity.X, WheelBody.LinearVelocity.Y, 0);
                 WheelBody.LinearMomentum = Vector3.Zero;
