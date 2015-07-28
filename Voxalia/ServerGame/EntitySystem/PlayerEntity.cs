@@ -339,7 +339,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             if (GetVelocity().LengthSquared() > 1)
             {
-                SetAnimation("human/" + StanceName() +  "/walk_lowquality", 1);
+                SetAnimation("human/" + StanceName() + "/walk_lowquality", 1);
                 SetAnimation("human/" + StanceName() + "/walk_lowquality", 2);
             }
             else
@@ -372,26 +372,33 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             cit.Info.Tick(this, cit);
             Location pos = GetPosition();
-            // TODO: Move to a separate method that's called once on startup + at every teleport... also, asyncify
-            if (!loadedInitially)
+            Location cpos = TheWorld.ChunkLocFor(pos);
+            if (cpos != pChunkLoc)
             {
-                TrySet(pos, 1, 0, 1);
-                TrySet(pos, ViewRadiusInChunks / 4, 0, 1);
-                TrySet(pos, ViewRadiusInChunks / 2, 0, 1);
-                TrySet(pos, ViewRadiusInChunks, 0, 5);
-                loadedInitially = true;
-                ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 1));
-            }
-            else
-            {
-                // TODO: Better system -> async?
-                TrySet(pos, 1, 5, 1);
-                TrySet(pos, ViewRadiusInChunks / 4, 5, 1);
-                TrySet(pos, ViewRadiusInChunks / 2, 15, 1);
-                TrySet(pos, ViewRadiusInChunks, 30, 5);
+                // TODO: Move to a separate method that's called once on startup + at every teleport... also, asyncify
+                if (!loadedInitially)
+                {
+                    TrySet(pos, 1, 0, 1);
+                    TrySet(pos, ViewRadiusInChunks / 4, 0, 1);
+                    TrySet(pos, ViewRadiusInChunks / 2, 0, 1);
+                    TrySet(pos, ViewRadiusInChunks, 0, 5);
+                    loadedInitially = true;
+                    ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 1));
+                }
+                else
+                {
+                    // TODO: Better system -> async?
+                    TrySet(pos, 1, 5, 1);
+                    TrySet(pos, ViewRadiusInChunks / 4, 5, 1);
+                    TrySet(pos, ViewRadiusInChunks / 2, 15, 1);
+                    TrySet(pos, ViewRadiusInChunks, 30, 5);
+                }
+                pChunkLoc = cpos;
             }
             base.Tick();
         }
+
+        Location pChunkLoc = new Location(0.5);
         
         bool loadedInitially = false;
 

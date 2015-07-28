@@ -140,6 +140,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 tVBO.BoneWeights2 = null;
                 tVBO.BoneIDs2 = null;
                 tVBO.Colors = null;
+                tVBO.oldvert();
                 OwningWorld.TheClient.Schedule.ScheduleSyncTask(() =>
                 {
                     if (_VBO != null)

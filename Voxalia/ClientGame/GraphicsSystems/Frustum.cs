@@ -90,7 +90,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="radius">The radius of the sphere</param>
         /// <returns>Whether it intersects</returns>
         public bool ContainsSphere(Location point, float radius)
-        { // TODO: Improve accuracy
+        {
+            // TODO: Fix
             /*
             double dist;
             for (int i = 0; i < 6; i++)

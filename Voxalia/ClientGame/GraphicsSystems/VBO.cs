@@ -209,6 +209,19 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
         }
 
+        public void oldvert()
+        {
+            verts = Vertices.ToArray();
+            indices = Indices.ToArray();
+            normals = Normals.ToArray();
+            texts = TexCoords.ToArray();
+        }
+
+        Vector3[] verts = null;
+        uint[] indices = null;
+        Vector3[] normals = null;
+        Vector3[] texts = null;
+
         public void GenerateVBO()
         {
             if (generated)
@@ -221,10 +234,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             vC = Vertices.Count;
             GL.BindVertexArray(0);
-            Vector3[] vecs = Vertices.ToArray();
-            uint[] inds = Indices.ToArray();
-            Vector3[] norms = Normals.ToArray();
-            Vector3[] texs = TexCoords.ToArray();
+            Vector3[] vecs = verts == null ? Vertices.ToArray() : verts;
+            uint[] inds = indices == null ? Indices.ToArray() : indices;
+            Vector3[] norms = normals == null ? Normals.ToArray() : normals;
+            Vector3[] texs = texts == null ? TexCoords.ToArray() : texts;
             Vector4[] cols = null;
             if (Colors != null)
             {

@@ -195,7 +195,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         TheChunkWaitingScreen.LACS = null;
                     });
                 });
-
             }
             else
             {
