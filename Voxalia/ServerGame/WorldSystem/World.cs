@@ -753,6 +753,9 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
+        /// <summary>
+        /// Designed for startup time.
+        /// </summary>
         public void LoadChunk_Background(Location cpos, Action<bool> callback = null)
         {
             if (LoadedChunks.ContainsKey(cpos))
@@ -770,8 +773,10 @@ namespace Voxalia.ServerGame.WorldSystem
                 PopulateChunk(ch);
                 TheServer.Schedule.ScheduleSyncTask(() =>
                 {
-                    AddChunkToWorld(ch);
-                    ch.LOADING = false;
+                    ch.AddToWorld(() =>
+                    {
+                        ch.LOADING = false;
+                    });
                 });
                 if (callback != null)
                 {
