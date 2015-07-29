@@ -220,7 +220,11 @@ namespace Voxalia.ClientGame.UISystem
                 {
                     if (_BindsValid)
                     {
-                        KeyPresses.Enqueue(e.DeltaPrecise < 0 ? Key.F31 : Key.F32);
+                        Key k = e.DeltaPrecise < 0 ? Key.F31 : Key.F32;
+                        if (!KeyPresses.Contains(k))
+                        {
+                            KeyPresses.Enqueue(k);
+                        }
                     }
                 }
             }
