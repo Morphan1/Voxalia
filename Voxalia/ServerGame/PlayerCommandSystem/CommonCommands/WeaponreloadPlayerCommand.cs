@@ -18,6 +18,10 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 ((BaseGunItem)item.Info).Reload(entry.Player, item);
             }
+            else if (item.Info is BowItem)
+            {
+                entry.Player.ItemStartClickTime = -2;
+            }
             else
             {
                 entry.Player.Network.SendMessage("You can't reload that."); // TODO: Language, etc.

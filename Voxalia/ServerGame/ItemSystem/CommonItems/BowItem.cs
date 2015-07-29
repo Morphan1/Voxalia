@@ -34,6 +34,10 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             {
                 return;
             }
+            if (player.ItemStartClickTime == -2)
+            {
+                return;
+            }
             player.ItemStartClickTime = player.TheWorld.GlobalTickTime;
         }
 
@@ -51,6 +55,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             PlayerEntity player = (PlayerEntity)entity;
             if (player.ItemStartClickTime < 0)
             {
+                player.ItemStartClickTime = -1;
                 return;
             }
             double timeStretched = Math.Min(player.TheWorld.GlobalTickTime - player.ItemStartClickTime, 3) + 0.5;
