@@ -94,6 +94,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public double ItemCooldown = 0;
 
+        public double ItemStartClickTime = -1;
+
         public bool WaitingForClickRelease = false;
 
         public ConvexShape WheelShape = null;
