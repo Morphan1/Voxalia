@@ -52,9 +52,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INFO, "[Shutdown] Starting to close server...");
             foreach (World world in LoadedWorlds)
             {
-                foreach (PlayerEntity player in world.Players)
+                while (world.Players.Count > 0)
                 {
-                    player.Kick("Server shutting down.");
+                    world.Players[0].Kick("Server shutting down.");
                 }
                 SysConsole.Output(OutputType.INFO, "[Shutdown] Unloading world: " + world.Name);
                 world.UnloadFully();

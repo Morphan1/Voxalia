@@ -389,10 +389,13 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     // TODO: Better system -> async?
                     TrySet(pos, 1, 5, 1);
-                    TrySet(pos, ViewRadiusInChunks / 4, 0, 1);
-                    TrySet(pos, ViewRadiusInChunks / 2, 0, 1);
-                    TrySet(pos, ViewRadiusInChunks, 0, 5);
-                    ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
+                    TrySet(pos, ViewRadiusInChunks / 4, 20, 1);
+                    TrySet(pos, ViewRadiusInChunks / 2, 20, 1);
+                    TrySet(pos, ViewRadiusInChunks, 20, 5);
+                    TheServer.Schedule.ScheduleSyncTask(() =>
+                    {
+                        ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
+                    }, 21);
                 }
                 pChunkLoc = cpos;
             }
@@ -431,16 +434,17 @@ namespace Voxalia.ServerGame.EntitySystem
                         TheServer.Schedule.DescheduleSyncTask(acai.SendToClient);
                     }
                 }
-                Chunk chk = TheWorld.LoadChunk(worldPos);
                 if (atime == 0)
                 {
+                    Chunk chk = TheWorld.LoadChunk(worldPos);
                     ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult));
                     ChunksAwareOf.Remove(worldPos);
                     ChunksAwareOf.Add(worldPos, new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult, SendToClient = null });
                 }
                 else
                 {
-                    SyncScheduleItem item = TheServer.Schedule.ScheduleSyncTask(() => { if (!pkick) { ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult)); } }, Utilities.UtilRandom.NextDouble() * atime);
+                    
+                    SyncScheduleItem item = TheServer.Schedule.ScheduleSyncTask(() => { if (!pkick) { Chunk chk = TheWorld.LoadChunk(worldPos); ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult)); } }, Utilities.UtilRandom.NextDouble() * atime);
                     ChunksAwareOf.Remove(worldPos);
                     ChunksAwareOf.Add(worldPos, new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult, SendToClient = item });
                 }
