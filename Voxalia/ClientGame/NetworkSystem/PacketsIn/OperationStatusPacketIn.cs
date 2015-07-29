@@ -6,16 +6,17 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
     public class OperationStatusPacketIn: AbstractPacketIn
     {
-        public bool ChunksStillLoading()
+        public int ChunksStillLoading()
         {
+            int c = 0;
             foreach (Chunk chunk in TheClient.TheWorld.LoadedChunks.Values)
             {
                 if (chunk.LOADING)
                 {
-                    return true;
+                    c++;
                 }
             }
-            return false;
+            return c;
         }
 
         public override bool ParseBytesAndExecute(byte[] data)
@@ -31,9 +32,15 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     {
                         TheClient.Schedule.StartASyncTask(() =>
                         {
-                            while (ChunksStillLoading())
+                            int c = 1;
+                            while (c > 0)
                             {
+                                TheClient.Schedule.ScheduleSyncTask(() =>
+                                {
+                                    TheClient.TheChunkWaitingScreen.ChunksStillWaiting = ChunksStillLoading();
+                                });
                                 Thread.Sleep(16);
+                                c = TheClient.TheChunkWaitingScreen.ChunksStillWaiting;
                             }
                             TheClient.ShowGame();
                         });

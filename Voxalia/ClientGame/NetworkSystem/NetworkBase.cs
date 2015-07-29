@@ -150,6 +150,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                 }
                 rdsf -= len + 5;
                 AbstractPacketIn packet;
+                bool asyncable = false;
                 switch (packetID) // TODO: Packet registry?
                 {
                     case 0:
@@ -226,6 +227,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                         break;
                     case 24:
                         packet = new ChunkInfoPacketIn();
+                        asyncable = true;
                         break;
                     case 25:
                         packet = new BlockEditPacketIn();
@@ -244,13 +246,28 @@ namespace Voxalia.ClientGame.NetworkSystem
                 }
                 packet.TheClient = TheClient;
                 packet.ChunkN = sock == ChunkSocket;
-                TheClient.Schedule.ScheduleSyncTask(() =>
+                if (asyncable)
                 {
-                    if (!packet.ParseBytesAndExecute(data))
+                    // TODO: StartASyncTask?
+                    packet.ParseBytesAndExecute(data);
+                }
+                else
+                {
+                    TheClient.Schedule.ScheduleSyncTask(() =>
                     {
-                        SysConsole.Output(OutputType.ERROR, "Bad packet (ID=" + packetID + ") data!");
-                    }
-                });
+                        try
+                        {
+                            if (!packet.ParseBytesAndExecute(data))
+                            {
+                                SysConsole.Output(OutputType.ERROR, "Bad packet (ID=" + packetID + ") data!");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            SysConsole.Output(OutputType.ERROR, "Bad packet (ID=" + packetID + ") data: " + ex.ToString());
+                        }
+                    });
+                }
             }
         }
 

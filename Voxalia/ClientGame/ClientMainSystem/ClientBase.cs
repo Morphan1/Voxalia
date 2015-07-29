@@ -178,7 +178,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheChunkWaitingScreen.Init();
             ShowMainMenu();
         }
-
+        
         public void ShowGame()
         {
             if (IsWaitingOnChunks())
@@ -223,6 +223,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void ProcessChunks()
         {
+            SysConsole.Output(OutputType.INFO, "try process chunks");
             if (pMode != 0)
             {
                 return;
@@ -230,6 +231,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             pMode = 1;
             Schedule.StartASyncTask(() =>
             {
+                SysConsole.Output(OutputType.INFO, "start process chunks");
                 while (true)
                 {
                     Thread.Sleep(16);
@@ -245,6 +247,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                             if (!chunk.PRED)
                             {
                                 ready = false;
+                                break;
                             }
                         }
                         if (ready)
@@ -253,17 +256,21 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         }
                     });
                 }
+                SysConsole.Output(OutputType.INFO, "actually process chunks");
                 Schedule.ScheduleSyncTask(() =>
                 {
+                    int c = 0;
                     foreach (Chunk chunk in TheWorld.LoadedChunks.Values)
                     {
                         if (!chunk.PROCESSED)
                         {
+                            c++;
                             Schedule.ScheduleSyncTask(() => { chunk.AddToWorld(); }, Utilities.UtilRandom.NextDouble() * 10);
                             Schedule.ScheduleSyncTask(() => { chunk.CreateVBO(); }, Utilities.UtilRandom.NextDouble() * 10);
                             chunk.PROCESSED = true;
                         }
                     }
+                    SysConsole.Output(OutputType.INFO, "processed " + c + " chunks");
                     pMode = 0;
                 });
             });
@@ -278,7 +285,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         MainMenuScreen TheMainMenuScreen;
 
-        ChunkWaitingScreen TheChunkWaitingScreen;
+        public ChunkWaitingScreen TheChunkWaitingScreen;
 
         public ActiveSound CurrentMusic = null;
 

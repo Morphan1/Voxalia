@@ -30,22 +30,25 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 foreach (Chunk chunk in TheWorld.LoadedChunks.Values)
                 {
-                    Count++;
-                    chunk.AddToWorld(() =>
+                    if (!chunk.PROCESSED)
                     {
-                        lock (Locker)
+                        Count++;
+                        chunk.AddToWorld(() =>
                         {
-                            c++;
-                        }
-                    });
-                    chunk.CreateVBO(() =>
-                    {
-                        lock (Locker)
+                            lock (Locker)
+                            {
+                                c++;
+                            }
+                        });
+                        chunk.CreateVBO(() =>
                         {
-                            rC++;
-                        }
-                    });
-                    chunk.PROCESSED = true;
+                            lock (Locker)
+                            {
+                                rC++;
+                            }
+                        });
+                        chunk.PROCESSED = true;
+                    }
                 }
                 while (true)
                 {

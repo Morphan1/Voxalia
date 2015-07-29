@@ -7,13 +7,15 @@ using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
-    class ChunkWaitingScreen: Screen
+    public class ChunkWaitingScreen: Screen
     {
         public UIMenu Menus;
 
         public Texture Mouse;
 
         public LoadAllChunksSystem LACS = null;
+
+        public int ChunksStillWaiting = 0;
 
         public override void Init()
         {
@@ -45,7 +47,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheClient.Rendering.RenderRectangle(MouseHandler.MouseX(), MouseHandler.MouseY(), MouseHandler.MouseX() + 16, MouseHandler.MouseY() + 16);
             if (LACS == null)
             {
-                TheClient.FontSets.SlightlyBigger.DrawColoredText("^!^e^0Chunks Loaded: " + TheClient.TheWorld.LoadedChunks.Count, new Location(20, 20, 0));
+                TheClient.FontSets.SlightlyBigger.DrawColoredText("^!^e^0Chunks Loaded: " + TheClient.TheWorld.LoadedChunks.Count
+                    + "\nChunks that still need parsing: " + ChunksStillWaiting, new Location(20, 20, 0));
             }
             else
             {

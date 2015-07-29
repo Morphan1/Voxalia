@@ -35,7 +35,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 if (data_orig.Length != Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 3)
                 {
-                    SysConsole.Output(OutputType.WARNING, "Invalid chunk size!" + (Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 3) + ", got " + data_orig.Length + ")");
+                    SysConsole.Output(OutputType.WARNING, "Invalid chunk size! Expected " + (Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 3) + ", got " + data_orig.Length + ")");
                     return;
                 }
             }
