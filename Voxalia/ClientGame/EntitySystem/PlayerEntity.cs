@@ -185,6 +185,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 Vector3 move = new Vector3((float)pvel.X, (float)pvel.Y, 0);
                 Body.ApplyLinearImpulse(ref move);
                 Body.ActivityInformation.Activate();
+                WheelBody.ApplyLinearImpulse(ref move);
+                WheelBody.ActivityInformation.Activate();
             }
             else
             {
