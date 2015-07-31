@@ -111,10 +111,6 @@ void main()
         depth = textureProj(tex, fs - vec4(0.0, 0.0, 0.0001, 0.0));
 #endif
 	}
-	float min_depth = renderhint.z;
-	depth = max(depth, min_depth);
-	atten = max(atten, min_depth);
-	diffuse = vec4(max(diffuse.x, min_depth), max(diffuse.y, min_depth), max(diffuse.z, min_depth), diffuse.w);
 	color = vec4((prelight_color + (vec4(depth, depth, depth, 1.0) *
 		atten * (/*mix(vec4(1.0), diffuse, bvec4(1.0))*/diffuse * vec4(light_color, 1.0)) * diffuset) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, diffuset.w);

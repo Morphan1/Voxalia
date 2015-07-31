@@ -29,7 +29,8 @@ void main()
 {
 	vec4 shadow_light_color = texture(shtex, f_texcoord);
 	vec4 colortex_color = texture(colortex, f_texcoord);
-	vec4 light_color = regularize(vec4(ambient, 0.0) * colortex_color + shadow_light_color);
+	vec4 renderhint = texture(renderhinttex, f_texcoord);
+	vec4 light_color = regularize(vec4(ambient + renderhint.z, 0.0) * colortex_color + shadow_light_color);
 	light_color.w = 1.0;
 	color = light_color;
 }
