@@ -42,6 +42,11 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             if (Fades)
             {
                 Alpha -= (float)TheClient.gDelta / O_TTL;
+                if (Alpha <= 0)
+                {
+                    TTL = 0;
+                    return;
+                }
             }
             texture.Bind();
             TheClient.Rendering.SetColor(new Color4((byte)(255 * Color.X), (byte)(255 * Color.Y), (byte)(255 * Color.Z), (byte)(255 * Alpha)));

@@ -44,6 +44,23 @@ namespace Voxalia.ClientGame.EntitySystem
                 Matrix4 mat = matang4 * Matrix4.CreateTranslation(GetPosition().ToOVector());
                 GL.UniformMatrix4(2, false, ref mat);
                 model.Draw(); // TODO: Animation?
+                if (model.Name == "projectiles/arrow.dae")
+                {
+                    float offs = 0.1f;
+                    BEPUutilities.Vector3 offz;
+                    BEPUutilities.Quaternion.TransformZ(offs, ref Angles, out offz);
+                    BEPUutilities.Vector3 offx;
+                    BEPUutilities.Quaternion.TransformX(offs, ref Angles, out offx);
+                    TheClient.Particles.AddEffect(ParticleEffectType.LINE, ppos + Location.FromBVector(offz),
+                        Position + Location.FromBVector(offz), 0.01f, 3f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
+                    TheClient.Particles.AddEffect(ParticleEffectType.LINE, ppos - Location.FromBVector(offz),
+                        Position - Location.FromBVector(offz), 0.01f, 3f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
+                    TheClient.Particles.AddEffect(ParticleEffectType.LINE, ppos + Location.FromBVector(offx),
+                        Position + Location.FromBVector(offx), 0.01f, 3f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
+                    TheClient.Particles.AddEffect(ParticleEffectType.LINE, ppos - Location.FromBVector(offx),
+                        Position - Location.FromBVector(offx), 0.01f, 3f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
+                    ppos = Position;
+                }
             }
             else
             {

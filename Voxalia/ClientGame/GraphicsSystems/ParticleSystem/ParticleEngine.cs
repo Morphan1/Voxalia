@@ -18,9 +18,9 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public List<ParticleEffect> ActiveEffects;
 
-        public void AddEffect(ParticleEffectType type, Location one, Location two, float data, float ttl, Location color, bool fades, Texture texture)
+        public void AddEffect(ParticleEffectType type, Location one, Location two, float data, float ttl, Location color, bool fades, Texture texture, float salpha = 1)
         {
-            ActiveEffects.Add(new ParticleEffect(TheClient) { Type = type, One = one, Two = two, Data = data, TTL = ttl, O_TTL = ttl, Color = color, Alpha = 1, Fades = fades, texture = texture });
+            ActiveEffects.Add(new ParticleEffect(TheClient) { Type = type, One = one, Two = two, Data = data, TTL = ttl, O_TTL = ttl, Color = color, Alpha = salpha, Fades = fades, texture = texture });
         }
 
         public void Render()
