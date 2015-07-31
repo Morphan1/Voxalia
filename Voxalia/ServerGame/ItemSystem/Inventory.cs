@@ -50,6 +50,20 @@ namespace Voxalia.ServerGame.ItemSystem
             return -1;
         }
 
+        public bool ItemsMatch(ItemStack item, ItemStack item2)
+        {
+            return item2.Datum == item.Datum &&
+                    item2.Name == item.Name &&
+                    item2.DisplayName == item.DisplayName &&
+                    item2.Description == item.Description &&
+                    item2.DrawColor == item.DrawColor &&
+                    item2.Image == item.Image &&
+                    item2.Model == item.Model &&
+                    ItemAttrsMatch(item2, item) &&
+                    ItemSharedAttrsMatch(item2, item) &&
+                    item2.IsBound == item.IsBound;
+        }
+
         public bool ItemAttrsMatch(ItemStack i1, ItemStack i2)
         {
             Dictionary<string, string>.KeyCollection keys1 = i1.Attributes.Keys;
@@ -68,20 +82,30 @@ namespace Voxalia.ServerGame.ItemSystem
             return true;
         }
 
+
+        public bool ItemSharedAttrsMatch(ItemStack i1, ItemStack i2)
+        {
+            Dictionary<string, float>.KeyCollection keys1 = i1.SharedAttributes.Keys;
+            Dictionary<string, float>.KeyCollection keys2 = i2.SharedAttributes.Keys;
+            if (keys1.Count != keys2.Count)
+            {
+                return false;
+            }
+            foreach (string str in keys1)
+            {
+                if (i1.Attributes[str] != i2.Attributes[str])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public virtual ItemStack GiveItem(ItemStack item)
         {
             for (int i = 0; i < Items.Count; i++)
             {
-                if (Items[i].Datum == item.Datum &&
-                    Items[i].Name == item.Name &&
-                    Items[i].DisplayName == item.DisplayName &&
-                    Items[i].Description == item.Description &&
-                    Items[i].DrawColor == item.DrawColor &&
-                    Items[i].Image == item.Image &&
-                    Items[i].Model == item.Model &&
-                    ItemAttrsMatch(Items[i], item) &&
-                    Items[i].IsBound == item.IsBound)
-                    // TODO: Better match logic
+                if (ItemsMatch(item, Items[i]))
                 {
                     Items[i].Count += item.Count;
                     return Items[i];

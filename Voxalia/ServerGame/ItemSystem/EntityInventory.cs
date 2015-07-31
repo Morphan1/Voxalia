@@ -18,7 +18,6 @@ namespace Voxalia.ServerGame.ItemSystem
         public override ItemStack GiveItem(ItemStack item)
         {
             ItemStack it = base.GiveItem(item);
-            // TODO: if it == item?
             it.Info.PrepItem(Owner, it);
             return it;
         }

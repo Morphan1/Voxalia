@@ -68,7 +68,19 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 player.ItemStartClickTime = -1;
                 return;
             }
-            double timeStretched = Math.Min((player.TheWorld.GlobalTickTime - player.ItemStartClickTime) * DrawRate, 3) + DrawMinimum;
+            float drawRate = DrawRate;
+            float dw2 = 1;
+            if (item.SharedAttributes.TryGetValue("drawrate", out dw2))
+            {
+                drawRate *= dw2;
+            }
+            float drawMin = DrawMinimum;
+            float dm2 = 1;
+            if (item.SharedAttributes.TryGetValue("drawmin", out dm2))
+            {
+                drawMin *= dm2;
+            }
+            double timeStretched = Math.Min((player.TheWorld.GlobalTickTime - player.ItemStartClickTime) * drawRate, 3) + drawMin;
             player.ItemStartClickTime = -1;
             if (timeStretched < DrawMinimum + 0.25)
             {
