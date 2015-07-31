@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Collections.Generic;
 using Voxalia.Shared.Files;
 
 namespace Voxalia.Shared
@@ -34,6 +35,11 @@ namespace Voxalia.Shared
         public int Datum = 0;
 
         /// <summary>
+        /// Any attributes shared between all users of the item.
+        /// </summary>
+        public Dictionary<string, float> SharedAttributes = new Dictionary<string, float>();
+
+        /// <summary>
         /// How many of this item there are.
         /// </summary>
         public int Count;
@@ -64,6 +70,12 @@ namespace Voxalia.Shared
             dw.WriteFullString(Description);
             dw.WriteFullString(GetTextureName());
             dw.WriteFullString(GetModelName());
+            dw.WriteInt(SharedAttributes.Count);
+            foreach (string key in SharedAttributes.Keys)
+            {
+                dw.WriteFullString(key);
+                dw.WriteFloat(SharedAttributes[key]);
+            }
             return ds.ToArray();
         }
 
@@ -99,6 +111,13 @@ namespace Voxalia.Shared
             Description = dr.ReadFullString();
             SetTextureName(dr.ReadFullString());
             SetModelName(dr.ReadFullString());
+            int attribs = dr.ReadInt();
+            for (int i = 0; i < attribs; i++)
+            {
+                string cattrib = dr.ReadFullString();
+                float cvalue = dr.ReadFloat();
+                SharedAttributes.Add(cattrib, cvalue);
+            }
         }
     }
 }

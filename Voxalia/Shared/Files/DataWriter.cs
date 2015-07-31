@@ -11,7 +11,12 @@ namespace Voxalia.Shared.Files
 
         public void WriteInt(int x)
         {
-            base.OutStream.Write(Utilities.IntToBytes(x), 0, 4);
+            base.Write(Utilities.IntToBytes(x), 0, 4);
+        }
+
+        public void WriteFloat(float x)
+        {
+            base.Write(Utilities.FloatToBytes(x), 0, 4);
         }
 
         public void WriteBytes(byte[] bits)

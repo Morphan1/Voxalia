@@ -12,16 +12,26 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Name = "bow";
         }
 
+        public float DrawMinimum = 0.5f;
+
+        public float DrawRate = 1f;
+
+        public float FireStrength = 1f;
+
         public override void PrepItem(Entity entity, ItemStack item)
         {
+            if (!item.SharedAttributes.ContainsKey("charge"))
+            {
+                item.SharedAttributes.Add("charge", 1);
+                item.SharedAttributes.Add("drawrate", DrawRate);
+                item.SharedAttributes.Add("drawmin", DrawMinimum);
+            }
         }
 
         public override void Tick(Entity entity, ItemStack item)
         {
         }
-
-        public float Speed = 10;
-
+        
         public override void Click(Entity entity, ItemStack item)
         {
             if (!(entity is PlayerEntity))
@@ -58,9 +68,9 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 player.ItemStartClickTime = -1;
                 return;
             }
-            double timeStretched = Math.Min(player.TheWorld.GlobalTickTime - player.ItemStartClickTime, 3) + 0.5;
+            double timeStretched = Math.Min((player.TheWorld.GlobalTickTime - player.ItemStartClickTime) * DrawRate, 3) + DrawMinimum;
             player.ItemStartClickTime = -1;
-            if (timeStretched < 0.75)
+            if (timeStretched < DrawMinimum + 0.25)
             {
                 return;
             }
@@ -68,7 +78,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             ae.SetPosition(player.GetEyePosition());
             ae.NoCollide.Add(player.EID);
             Location forward = player.ForwardVector();
-            ae.SetVelocity(forward * timeStretched * 20);
+            ae.SetVelocity(forward * timeStretched * 20 * FireStrength);
             Matrix lookatlh = Utilities.LookAtLH(Location.Zero, forward, Location.UnitZ);
             lookatlh.Transpose();
             ae.Angles = Quaternion.CreateFromRotationMatrix(lookatlh);
