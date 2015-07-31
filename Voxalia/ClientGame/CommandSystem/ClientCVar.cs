@@ -61,7 +61,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_width = Register("r_width", "800", CVarFlag.Numeric | CVarFlag.Delayed); // What width the window should be.
             r_height = Register("r_height", "600", CVarFlag.Numeric | CVarFlag.Delayed); // What height the window should be.
             r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed); // What AA mode to use (0 = none). // TODO: IMPLEMENT
-            r_vsync = Register("r_vsync", "true", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use vertical synchronization mode. // TODO: IMPLEMENT
+            r_vsync = Register("r_vsync", "true", CVarFlag.Boolean); // Whether to use vertical synchronization mode.
             r_lighting = Register("r_lighting", "true", CVarFlag.Boolean); // Whether to enable 3D lighting (Otherwise, use FullBright).
             r_renderwireframe = Register("r_renderwireframe", "false", CVarFlag.Boolean); // Whether to render a wireframe.
             r_fov = Register("r_fov", "70", CVarFlag.Numeric); // What Field of Vision range value to use.

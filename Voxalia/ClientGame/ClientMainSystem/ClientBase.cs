@@ -92,6 +92,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Window.Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonDown);
             Window.Mouse.ButtonUp += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonUp);
             Window.Closed += new EventHandler<EventArgs>(Window_Closed);
+            Window.VSync = VSyncMode.Adaptive;
             Window.Run(60, 60);
         }
 
@@ -152,6 +153,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Loading rendering helper...");
             Rendering = new Renderer(Textures, Shaders);
             Rendering.Init();
+            SysConsole.Output(OutputType.INIT, "Loading general graphics settings...");
+            CVars.r_vsync.OnChanged += new EventHandler(onVsyncChanged);
+            onVsyncChanged(CVars.r_vsync, null);
             SysConsole.Output(OutputType.INIT, "Loading UI Console...");
             UIConsole.InitConsole();
             SysConsole.Output(OutputType.INIT, "Preparing rendering engine...");
@@ -177,6 +181,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheGameScreen.Init();
             TheChunkWaitingScreen.Init();
             ShowMainMenu();
+        }
+
+        public void onVsyncChanged(object obj, EventArgs e)
+        {
+            Window.VSync = CVars.r_vsync.ValueB ? VSyncMode.Adaptive : VSyncMode.Off;
         }
         
         public void ShowGame()
