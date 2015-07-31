@@ -92,7 +92,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Window.Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonDown);
             Window.Mouse.ButtonUp += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonUp);
             Window.Closed += new EventHandler<EventArgs>(Window_Closed);
-            Window.VSync = VSyncMode.Adaptive;
+            onVsyncChanged(CVars.r_vsync, null);
             Window.Run(60, 60);
         }
 
