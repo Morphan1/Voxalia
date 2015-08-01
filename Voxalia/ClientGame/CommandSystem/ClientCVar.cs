@@ -28,7 +28,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_fov, r_znear, r_zfar,
             r_dof_strength,
             r_lightmaxdistance,
-            r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun,
+            r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun, r_shadowpace,
             r_highlight_targetblock, r_highlight_placeblock,
             r_good_graphics, r_skybox;
 
@@ -57,7 +57,7 @@ namespace Voxalia.ClientGame.CommandSystem
             n_first = Register("n_first", "ipv4", CVarFlag.Textual); // Whether to prefer IPv4 or IPv6.
             n_debugmovement = Register("n_debugmovement", "false", CVarFlag.Boolean); // Whether to debug movement networking.
             // Renderer CVars
-            r_fullscreen = Register("r_fullscreen", "false", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use fullscreen mode.
+            r_fullscreen = Register("r_fullscreen", "false", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use fullscreen mode. // TODO: Callback to auto-set
             r_width = Register("r_width", "800", CVarFlag.Numeric | CVarFlag.Delayed); // What width the window should be.
             r_height = Register("r_height", "600", CVarFlag.Numeric | CVarFlag.Delayed); // What height the window should be.
             r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed); // What AA mode to use (0 = none). // TODO: IMPLEMENT
@@ -72,10 +72,11 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality_flashlight = Register("r_shadowquality_flashlight", "512", CVarFlag.Numeric); // What texture size to use for flashlight shadows.
             r_shadowquality_max = Register("r_shadowquality_max", "2048", CVarFlag.Numeric); // What maximum light texture size to accept from the server.
             r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric); // What factor to use for shadow blurring. Smaller = blurrier.
-            r_shadowquality_sun = Register("r_shadowquality_sun", "2048", CVarFlag.Numeric | CVarFlag.Delayed); // What texture size to use for the sun.
+            r_shadowquality_sun = Register("r_shadowquality_sun", "2048", CVarFlag.Numeric | CVarFlag.Delayed); // What texture size to use for the sun. // TODO: Callback to auto-set
+            r_shadowpace = Register("r_shadowpace", "2", CVarFlag.Numeric); // How rapidly to rerender shadows, in frames.
             r_highlight_targetblock = Register("r_highlight_targetblock", "true", CVarFlag.Boolean); // Whether to highlight the targeted block. // TODO: u_?
             r_highlight_placeblock = Register("r_highlight_placeblock", "true", CVarFlag.Boolean); // Whether to highlight the targeted placement block. // TODO: u_?
-            r_good_graphics = Register("r_good_graphics", "true", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use 'good' graphics.
+            r_good_graphics = Register("r_good_graphics", "true", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use 'good' graphics. // TODO: Callback to auto-set
             r_skybox = Register("r_skybox", "default", CVarFlag.ServerControl | CVarFlag.Textual); // What skybox to use.
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What volume the music should be.

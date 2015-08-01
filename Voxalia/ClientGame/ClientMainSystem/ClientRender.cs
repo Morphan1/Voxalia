@@ -154,6 +154,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public byte FBOid = 0;
 
+        int rTicks = 1000;
+
         public void Window_RenderFrame(object sender, FrameEventArgs e)
         {
             lock (TickLock)
@@ -196,35 +198,40 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
                 Matrix4 combined = view * proj;
                 Frustum camFrust = new Frustum(combined);
-                s_shadow.Bind();
-                VBO.BonesIdentity();
-                RenderingShadows = true;
-                LightsC = 0;
-                for (int i = 0; i < Lights.Count; i++)
+                rTicks++;
+                if (rTicks >= CVars.r_shadowpace.ValueI)
                 {
-                    if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                    s_shadow.Bind();
+                    VBO.BonesIdentity();
+                    RenderingShadows = true;
+                    LightsC = 0;
+                    for (int i = 0; i < Lights.Count; i++)
                     {
-                        // TODO: If movement_near_light
-                        if (Lights[i] is SkyLight || (Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
+                        if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                         {
-                            LightsC++;
-                            for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                            // TODO: If movement_near_light
+                            if (Lights[i] is SkyLight || (Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
                             {
-                                if (Lights[i].InternalLights[x] is LightOrtho)
+                                LightsC++;
+                                for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                                 {
-                                    CFrust = null;
+                                    if (Lights[i].InternalLights[x] is LightOrtho)
+                                    {
+                                        CFrust = null;
+                                    }
+                                    else
+                                    {
+                                        CFrust = new Frustum(Lights[i].InternalLights[x].GetMatrix());
+                                    }
+                                    Lights[i].InternalLights[x].Attach();
+                                    // TODO: Render settings
+                                    Render3D(true);
+                                    Lights[i].InternalLights[x].Complete();
                                 }
-                                else
-                                {
-                                    CFrust = new Frustum(Lights[i].InternalLights[x].GetMatrix());
-                                }
-                                Lights[i].InternalLights[x].Attach();
-                                // TODO: Render settings
-                                Render3D(true);
-                                Lights[i].InternalLights[x].Complete();
                             }
                         }
                     }
+                    rTicks = 0;
                 }
                 SetViewport();
                 s_fbov.Bind();
