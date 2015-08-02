@@ -73,7 +73,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 for (int i = 0; i < CVars.system.CVarList.Count; i++)
                 {
                     if (!CVars.system.CVarList[i].Flags.HasFlag(CVarFlag.ServerControl)
-                        && !CVars.system.CVarList[i].Flags.HasFlag(CVarFlag.ReadOnly))
+                        && !CVars.system.CVarList[i].Flags.HasFlag(CVarFlag.ReadOnly)
+                        && !CVars.system.CVarList[i].Flags.HasFlag(CVarFlag.DoNotSave))
                     {
                         string val = CVars.system.CVarList[i].Value;
                         if (val.Contains('\"'))

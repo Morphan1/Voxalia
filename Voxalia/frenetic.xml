@@ -882,6 +882,12 @@
             This flag is on a client, but controlled by the server.
             </summary>
         </member>
+        <member name="F:Frenetic.CVarFlag.DoNotSave">
+            <summary>
+            This flag should not be saved across system restarts.
+            Useful for scripts to use when tracking temporary data.
+            </summary>
+        </member>
         <member name="T:Frenetic.CVar">
             <summary>
             Represents a name:value pair within a complex system.
@@ -1048,13 +1054,14 @@
             <param name="flags">The flags to set on this CVar</param>
             <returns>The registered CVar</returns>
         </member>
-        <member name="M:Frenetic.CVarSystem.AbsoluteSet(System.String,System.String,System.Boolean)">
+        <member name="M:Frenetic.CVarSystem.AbsoluteSet(System.String,System.String,System.Boolean,Frenetic.CVarFlag)">
             <summary>
             Sets the value of an existing CVar, or generates a new one.
             </summary>
             <param name="CVar">The name of the CVar</param>
             <param name="value">The value to set it to</param>
             <param name="force">Whether to force a server send</param>
+            <param name="flags_if_new">What flags to set if the CVar is new</param>
             <returns>The set CVar</returns>
         </member>
         <member name="M:Frenetic.CVarSystem.AbsoluteGet(System.String,System.String)">
