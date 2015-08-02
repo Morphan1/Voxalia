@@ -198,8 +198,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
                 Matrix4 combined = view * proj;
                 Frustum camFrust = new Frustum(combined);
-                rTicks++;
-                if (rTicks >= CVars.r_shadowpace.ValueI)
+                if (rTicks == 0)
                 {
                     s_shadow.Bind();
                     VBO.BonesIdentity();
@@ -231,7 +230,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                             }
                         }
                     }
-                    rTicks = 0;
                 }
                 SetViewport();
                 s_fbov.Bind();
@@ -364,24 +362,20 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, RS4P.fbo);
                 GL.BlitFramebuffer(0, 0, Window.Width, Window.Height, 0, 0, Window.Width, Window.Height, ClearBufferMask.DepthBufferBit, BlitFramebufferFilter.Nearest);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
-                {
-                    Shaders.ColorMultShader.Bind();
-                    VBO.BonesIdentity();
-                    GL.UniformMatrix4(1, false, ref combined);
-                    RenderSky(combined);
-                }
                 ReverseEntitiesOrder();
                 s_transponly.Bind();
                 VBO.BonesIdentity();
                 GL.UniformMatrix4(1, false, ref combined);
                 Render3D(false);
                 Shaders.ColorMultShader.Bind();
+                VBO.BonesIdentity();
                 GL.UniformMatrix4(1, false, ref combined);
                 GL.Enable(EnableCap.CullFace);
                 if (CVars.r_renderwireframe.ValueB)
                 {
                     Render3DWires();
                 }
+                RenderSky(combined);
             }
             else
             {
@@ -405,7 +399,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.UniformMatrix4(2, false, ref def);
                 VBO.BonesIdentity();
                 CFrust = new Frustum(combined);
-                RenderSky(combined);
                 GL.UniformMatrix4(1, false, ref combined);
                 GL.UniformMatrix4(2, false, ref def);
                 FBOid = 2;
@@ -415,6 +408,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     Render3DWires();
                 }
+                RenderSky(combined);
             }
             Establish2D();
             Render2D();

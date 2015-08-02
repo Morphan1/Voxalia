@@ -53,38 +53,43 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void TickWorld(double delta)
         {
-            // TODO: Z+ -> max view rad + 30
-            TheSun.Direction = Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch);
-            TheSun.Reposition(Player.GetPosition().GetBlockLocation() - TheSun.Direction * 30 * 6);
-            ThePlanet.Direction = Utilities.ForwardVector_Deg(PlanetAngle.Yaw, PlanetAngle.Pitch);
-            ThePlanet.Reposition(Player.GetPosition().GetBlockLocation() - ThePlanet.Direction * 30 * 6);
-            Quaternion diff;
-            Vector3 tsd = TheSun.Direction.ToBVector();
-            Vector3 tpd = ThePlanet.Direction.ToBVector();
-            Quaternion.GetQuaternionBetweenNormalizedVectors(ref tsd, ref tpd, out diff);
-            PlanetSunDist = Quaternion.GetAngleFromQuaternion(ref diff) / (float)Utilities.PI180;
-            if (PlanetSunDist < 25)
+            rTicks++;
+            if (rTicks >= CVars.r_shadowpace.ValueI)
             {
-                TheSun.InternalLights[0].color = new OpenTK.Vector3((float)Math.Min(SunLightDef.X * (PlanetSunDist / 5), 1),
-                    (float)Math.Min(SunLightDef.Y * (PlanetSunDist / 20), 1), (float)Math.Min(SunLightDef.Z * (PlanetSunDist / 20), 1));
-                ThePlanet.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
-            }
-            else
-            {
-                TheSun.InternalLights[0].color = SunLightDef.ToOVector();
-                ThePlanet.InternalLights[0].color = (PlanetLightDef * (PlanetSunDist / 180f)).ToOVector();
-            }
-            PlanetLight = PlanetSunDist / 180f;
-            if (SunAngle.Pitch < 20 && SunAngle.Pitch > -20)
-            {
-                float rel = 20 + (float)SunAngle.Pitch;
-                if (rel == 0)
+                // TODO: Z+ -> max view rad + 30
+                TheSun.Direction = Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch);
+                TheSun.Reposition(Player.GetPosition().GetBlockLocation() - TheSun.Direction * 30 * 6);
+                ThePlanet.Direction = Utilities.ForwardVector_Deg(PlanetAngle.Yaw, PlanetAngle.Pitch);
+                ThePlanet.Reposition(Player.GetPosition().GetBlockLocation() - ThePlanet.Direction * 30 * 6);
+                Quaternion diff;
+                Vector3 tsd = TheSun.Direction.ToBVector();
+                Vector3 tpd = ThePlanet.Direction.ToBVector();
+                Quaternion.GetQuaternionBetweenNormalizedVectors(ref tsd, ref tpd, out diff);
+                PlanetSunDist = Quaternion.GetAngleFromQuaternion(ref diff) / (float)Utilities.PI180;
+                if (PlanetSunDist < 25)
                 {
-                    rel = 0.00001f;
+                    TheSun.InternalLights[0].color = new OpenTK.Vector3((float)Math.Min(SunLightDef.X * (PlanetSunDist / 5), 1),
+                        (float)Math.Min(SunLightDef.Y * (PlanetSunDist / 20), 1), (float)Math.Min(SunLightDef.Z * (PlanetSunDist / 20), 1));
+                    ThePlanet.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
                 }
-                rel = 1f / (rel / 5f);
-                rel = Math.Max(Math.Min(rel, 1f), 0f);
-                TheSun.InternalLights[0].color = new OpenTK.Vector3(TheSun.InternalLights[0].color.X, TheSun.InternalLights[0].color.Y * rel, TheSun.InternalLights[0].color.Z * rel);
+                else
+                {
+                    TheSun.InternalLights[0].color = SunLightDef.ToOVector();
+                    ThePlanet.InternalLights[0].color = (PlanetLightDef * (PlanetSunDist / 180f)).ToOVector();
+                }
+                PlanetLight = PlanetSunDist / 180f;
+                if (SunAngle.Pitch < 20 && SunAngle.Pitch > -20)
+                {
+                    float rel = 20 + (float)SunAngle.Pitch;
+                    if (rel == 0)
+                    {
+                        rel = 0.00001f;
+                    }
+                    rel = 1f / (rel / 5f);
+                    rel = Math.Max(Math.Min(rel, 1f), 0f);
+                    TheSun.InternalLights[0].color = new OpenTK.Vector3(TheSun.InternalLights[0].color.X, TheSun.InternalLights[0].color.Y * rel, TheSun.InternalLights[0].color.Z * rel);
+                }
+                rTicks = 0;
             }
             TheWorld.TickWorld(delta);
         }
