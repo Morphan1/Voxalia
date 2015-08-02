@@ -112,6 +112,6 @@ void main()
 #endif
 	}
 	color = vec4((prelight_color + (vec4(depth, depth, depth, 1.0) *
-		atten * (/*mix(vec4(1.0), diffuse, bvec4(1.0))*/diffuse * vec4(light_color, 1.0)) * diffuset) +
+		atten * (diffuse * vec4(light_color, 1.0)) * diffuset) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, diffuset.w);
 }
