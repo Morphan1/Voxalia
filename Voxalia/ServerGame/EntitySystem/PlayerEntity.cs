@@ -227,6 +227,9 @@ namespace Voxalia.ServerGame.EntitySystem
             return TheWorld.Collision.ShouldCollide(entry);
         }
 
+        public float ItemSpeedMod = 1;
+        public bool ItemDoSpeedMod = false;
+
         public override void Tick()
         {
             if (!IsSpawned)
@@ -306,6 +309,10 @@ namespace Voxalia.ServerGame.EntitySystem
             else if (Stance == PlayerStance.CRAWL)
             {
                 intent_vel *= 0.3f;
+            }
+            if (ItemDoSpeedMod)
+            {
+                intent_vel *= ItemSpeedMod;
             }
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
             if (!fly)

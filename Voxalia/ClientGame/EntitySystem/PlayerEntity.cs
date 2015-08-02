@@ -10,6 +10,7 @@ using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ClientGame.WorldSystem;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -95,7 +96,7 @@ namespace Voxalia.ClientGame.EntitySystem
         }
 
         public PlayerStance Stance = PlayerStance.STAND;
-
+        
         public override void Tick()
         {
             Direction.Yaw += MouseHandler.MouseDelta.X;
@@ -169,6 +170,15 @@ namespace Voxalia.ClientGame.EntitySystem
             else if (Stance == PlayerStance.CRAWL)
             {
                 intent_vel *= 0.3f;
+            }
+            if (Click)
+            {
+                ItemStack item = TheClient.GetItemForSlot(TheClient.QuickBarPos);
+                if (item.SharedAttributes.ContainsKey("charge") && item.SharedAttributes["charge"] == 1f)
+                {
+                    float speed = item.SharedAttributes["cspeedm"];
+                    intent_vel *= speed;
+                }
             }
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
             if (!fly)

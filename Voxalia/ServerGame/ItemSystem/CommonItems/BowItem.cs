@@ -20,11 +20,12 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void PrepItem(Entity entity, ItemStack item)
         {
-            if (!item.SharedAttributes.ContainsKey("charge"))
+            if (!item.SharedAttributes.ContainsKey("charge") || item.SharedAttributes["charge"] != 1f)
             {
-                item.SharedAttributes.Add("charge", 1);
+                item.SharedAttributes.Add("charge", 1f);
                 item.SharedAttributes.Add("drawrate", DrawRate);
                 item.SharedAttributes.Add("drawmin", DrawMinimum);
+                item.SharedAttributes.Add("cspeedm", 0.5f);
             }
         }
 
@@ -49,6 +50,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             player.ItemStartClickTime = player.TheWorld.GlobalTickTime;
+            player.ItemDoSpeedMod = true;
         }
 
         public override void AltClick(Entity entity, ItemStack item)
@@ -63,6 +65,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             PlayerEntity player = (PlayerEntity)entity;
+            player.ItemDoSpeedMod = false;
             if (player.ItemStartClickTime < 0)
             {
                 player.ItemStartClickTime = -1;
@@ -115,10 +118,19 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             PlayerEntity player = (PlayerEntity)entity;
             player.ItemStartClickTime = -1;
+            player.ItemDoSpeedMod = false;
         }
 
         public override void SwitchTo(Entity entity, ItemStack item)
         {
+            if (!(entity is PlayerEntity))
+            {
+                // TODO: non-player support
+                return;
+            }
+            PlayerEntity player = (PlayerEntity)entity;
+            player.ItemSpeedMod = item.SharedAttributes.ContainsKey("cspeedm") ? item.SharedAttributes["cspeedm"] : 1f;
+            player.ItemDoSpeedMod = false;
         }
     }
 }
