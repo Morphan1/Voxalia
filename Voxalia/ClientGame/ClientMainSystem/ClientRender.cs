@@ -417,7 +417,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public void RenderSkybox()
         {
             Rendering.SetMinimumLight(1);
-            float dist = 300; // TODO: View rad
+            float dist = 340; // TODO: View rad
             GL.Disable(EnableCap.CullFace);
             Matrix4 scale = Matrix4.CreateScale(dist, dist, dist) * Matrix4.CreateTranslation(CameraPos.ToOVector());
             GL.UniformMatrix4(2, false, ref scale);
@@ -437,7 +437,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Matrix4 rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
                 * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + SunAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation((CameraPos + TheSun.Direction * -dist).ToOVector()); // TODO: adjust based on view rad
+                * Matrix4.CreateTranslation((CameraPos + TheSun.Direction * -(dist * 0.96f)).ToOVector()); // TODO: adjust based on view rad
             Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
             Textures.GetTexture("skies/planet").Bind(); // TODO: Store var? Make dynamic?
             Rendering.SetColor(new Color4(PlanetLight, PlanetLight, PlanetLight, 1));
@@ -478,15 +478,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
                             Textures.GetTexture("effects/lensflare/01").Bind(); // TODO: Store
                             Location one = (targ - start) / 2 + start;
                             float s1 = 0.1f;
-                            Rendering.RenderRectangle((float)one.X - s1, (float)one.Y - s1, (float)one.X + s1, (float)one.Y + s1, Matrix4.CreateTranslation(0, 0, 0.95f));
+                            Rendering.RenderRectangle((float)one.X - s1, (float)one.Y - s1, (float)one.X + s1, (float)one.Y + s1, Matrix4.CreateTranslation(0, 0, 0.3f));
                             Textures.GetTexture("effects/lensflare/02").Bind(); // TODO: Store
                             Location two = targ;
                             float s2 = 0.2f;
-                            Rendering.RenderRectangle((float)two.X - s2, (float)two.Y - s2, (float)two.X + s2, (float)two.Y + s2, Matrix4.CreateTranslation(0, 0, 0.90f));
+                            Rendering.RenderRectangle((float)two.X - s2, (float)two.Y - s2, (float)two.X + s2, (float)two.Y + s2, Matrix4.CreateTranslation(0, 0, 0.2f));
                             Textures.GetTexture("effects/lensflare/03").Bind(); // TODO: Store
                             Location three = (targ - start) / 2 + targ;
                             float s3 = 0.1f;
-                            Rendering.RenderRectangle((float)three.X - s3, (float)three.Y - s3, (float)three.X + s3, (float)three.Y + s3, Matrix4.CreateTranslation(0, 0, 0.85f));
+                            Rendering.RenderRectangle((float)three.X - s3, (float)three.Y - s3, (float)three.X + s3, (float)three.Y + s3, Matrix4.CreateTranslation(0, 0, 0.1f));
                         }
                     }
                 }
