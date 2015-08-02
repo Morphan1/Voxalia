@@ -35,6 +35,11 @@ namespace Voxalia.ServerGame.CommandSystem
         {
             WriteLine(TextStyle.Color_Error + "Unknown command '" +
                 TextStyle.Color_Standout + basecommand + TextStyle.Color_Error + "'.");
+            if (queue.Outputsystem != null)
+            {
+                queue.Outputsystem.Invoke("Unknown command '" + TextStyle.Color_Standout
+                    + basecommand + TextStyle.Color_Error + "'.", MessageType.BAD);
+            }
         }
 
         public override string ReadTextFile(string name)

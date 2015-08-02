@@ -1,4 +1,5 @@
-﻿using Voxalia.Shared;
+﻿using System;
+using Voxalia.Shared;
 using System.Diagnostics;
 using System.Threading;
 using Voxalia.ServerGame.CommandSystem;
@@ -72,7 +73,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// <summary>
         /// Start up and run the server.
         /// </summary>
-        public void StartUp()
+        public void StartUp(Action loaded = null)
         {
             SysConsole.Output(OutputType.INIT, "Launching as new server, this is " + (this == Central ? "" : "NOT ") + "the Central server.");
             SysConsole.Output(OutputType.INIT, "Loading console input handler...");
@@ -104,6 +105,10 @@ namespace Voxalia.ServerGame.ServerMainSystem
             Networking.Init();
             SysConsole.Output(OutputType.INIT, "Building an initial world...");
             LoadWorld("default");
+            if (loaded != null)
+            {
+                loaded.Invoke();
+            }
             SysConsole.Output(OutputType.INIT, "Ticking...");
             // Tick
             double TARGETFPS = 40d;

@@ -20,6 +20,7 @@ namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
             Name = "startlocalserver";
             Description = "Launches you into a local game server";
             Arguments = "[port]";
+            Waitable = true;
         }
 
         public override void Execute(CommandEntry entry)
@@ -38,7 +39,7 @@ namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
             entry.Good("Generating new server...");
             TheClient.LocalServer = new Server();
             Server.Central = TheClient.LocalServer;
-            Task.Factory.StartNew(() => { TheClient.LocalServer.StartUp(); });
+            Task.Factory.StartNew(() => { TheClient.LocalServer.StartUp(() => { entry.Finished = true; }); });
         }
     }
 }

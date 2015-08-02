@@ -41,7 +41,7 @@
         </member>
         <member name="F:Frenetic.CommandSystem.AbstractCommand.Waitable">
             <summary>
-            Whether the command can be ~waited on.
+            Whether the command can be &amp;waited on.
             </summary>
         </member>
         <member name="F:Frenetic.CommandSystem.AbstractCommand.Asyncable">
@@ -86,7 +86,7 @@
             <param name="system">The command system to work from</param>
             <returns>The command system</returns>
         </member>
-        <member name="M:Frenetic.CommandSystem.CommandEntry.CreateInvalidOutput(System.String,System.Collections.Generic.List{Frenetic.CommandSystem.CommandEntry},System.Collections.Generic.List{System.String},Frenetic.CommandSystem.CommandEntry,Frenetic.CommandSystem.Commands,System.String,System.Int32)">
+        <member name="M:Frenetic.CommandSystem.CommandEntry.CreateInvalidOutput(System.String,System.Collections.Generic.List{Frenetic.CommandSystem.CommandEntry},System.Collections.Generic.List{System.String},Frenetic.CommandSystem.CommandEntry,Frenetic.CommandSystem.Commands,System.String,System.Int32,System.Boolean)">
             <summary>
             Create an entry that represents invalid output.
             </summary>
@@ -108,7 +108,12 @@
         </member>
         <member name="F:Frenetic.CommandSystem.CommandEntry.Finished">
             <summary>
-            Whether the waitable command entry is finished.
+            Whether the &amp;waitable command entry is finished.
+            </summary>
+        </member>
+        <member name="F:Frenetic.CommandSystem.CommandEntry.WaitFor">
+            <summary>
+            Whether the &amp;waitable command entry should be waited for.
             </summary>
         </member>
         <member name="M:Frenetic.CommandSystem.CommandEntry.#ctor(System.String,System.Collections.Generic.List{Frenetic.CommandSystem.CommandEntry},Frenetic.CommandSystem.CommandEntry,Frenetic.CommandSystem.AbstractCommand,System.Collections.Generic.List{System.String},System.String,System.Int32)">
