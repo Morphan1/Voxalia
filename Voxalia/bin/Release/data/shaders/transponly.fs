@@ -7,7 +7,7 @@ layout (location = 1) in vec3 f_texcoord;
 
 out vec4 color;
 
-// TOD: maybe apply ambient/difuse/specular lighting?
+// TOD: maybe apply ambient/diffuse/specular lighting?
 
 void main()
 {

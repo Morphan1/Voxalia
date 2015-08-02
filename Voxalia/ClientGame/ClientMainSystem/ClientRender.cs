@@ -178,7 +178,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public void renderGame()
         {
             RenderTextures = true;
-            GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.1f, 0.1f, 0.1f, 1f });
+            GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.1f, 1f, 1f, 1f });
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
             GL.Enable(EnableCap.DepthTest);
             if (CVars.g_firstperson.ValueB)

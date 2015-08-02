@@ -49,7 +49,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
-            SetVelocity(GetVelocity() + Gravity * TheWorld.Delta);
+            SetVelocity(GetVelocity() * 0.99f + Gravity * TheWorld.Delta);
             if (GetVelocity().LengthSquared() > 0)
             {
                 CollisionResult cr = TheWorld.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + GetVelocity() * TheWorld.Delta, FilterHandle);

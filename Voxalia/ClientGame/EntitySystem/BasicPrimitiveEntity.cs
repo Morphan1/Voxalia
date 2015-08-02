@@ -52,13 +52,13 @@ namespace Voxalia.ClientGame.EntitySystem
                     BEPUutilities.Vector3 offx;
                     BEPUutilities.Quaternion.TransformX(offs, ref Angles, out offx);
                     TheClient.Particles.AddEffect(ParticleEffectType.LINE, ppos + Location.FromBVector(offz),
-                        Position + Location.FromBVector(offz), 0.01f, 3f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
+                        Position + Location.FromBVector(offz), 0.01f, 1f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
                     TheClient.Particles.AddEffect(ParticleEffectType.LINE, ppos - Location.FromBVector(offz),
-                        Position - Location.FromBVector(offz), 0.01f, 3f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
+                        Position - Location.FromBVector(offz), 0.01f, 1f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
                     TheClient.Particles.AddEffect(ParticleEffectType.LINE, ppos + Location.FromBVector(offx),
-                        Position + Location.FromBVector(offx), 0.01f, 3f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
+                        Position + Location.FromBVector(offx), 0.01f, 1f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
                     TheClient.Particles.AddEffect(ParticleEffectType.LINE, ppos - Location.FromBVector(offx),
-                        Position - Location.FromBVector(offx), 0.01f, 3f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
+                        Position - Location.FromBVector(offx), 0.01f, 1f, Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
                     ppos = Position;
                 }
             }

@@ -35,7 +35,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Tick()
         {
-            SetVelocity(Velocity + Gravity * TheClient.Delta);
+            SetVelocity(Velocity * 0.99f + Gravity * TheClient.Delta);
             if (Velocity.LengthSquared() > 0)
             {
                 CollisionResult cr = TheClient.TheWorld.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + Velocity * TheClient.Delta, FilterHandle);
