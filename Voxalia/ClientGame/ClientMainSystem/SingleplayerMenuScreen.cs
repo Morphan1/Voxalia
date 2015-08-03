@@ -21,6 +21,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Menus.Add(new UIMenuButton("ui/menus/buttons/basic", "Back", () => {
                 TheClient.ShowMainMenu();
             }, 10, TheClient.Window.Height - 100, 350, 70, TheClient.FontSets.SlightlyBigger));
+            float start = 150;
+            List<string> found = Program.Files.ListFolders("saves");
+            foreach (string str in found)
+            {
+                if (str.LastIndexOf('/') == "/saves/".Length - 1)
+                {
+                    Menus.Add(new UIMenuButton("ui/menus/buttons/basic", "== " + str.Substring("/saves/".Length) + " ==", () => {
+                        UIConsole.WriteLine("OPEN " + str);
+                    }, 10, start, 600, 70, TheClient.FontSets.SlightlyBigger));
+                    start += 100;
+                }
+            }
         }
 
         public override void Tick()

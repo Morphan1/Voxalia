@@ -200,6 +200,10 @@ namespace Voxalia.Shared.Files
         {
             List<string> folds = new List<string>();
             string fname = "/" + CleanFileName("/" + filepath);
+            while (fname.Contains("//"))
+            {
+                fname = fname.Replace("//", "/");
+            }
             if (fname.EndsWith("/"))
             {
                 fname = fname.Substring(0, fname.Length - 1);
