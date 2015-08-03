@@ -25,6 +25,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             SetTexture(1, "blocks/solid/stone");
             SetTexture(2, "blocks/solid/grass_side");
             SetTexture(3, "blocks/solid/dirt");
+            SetTexture(4, "blocks/liquid/water");
             SetTexture(MaterialHelpers.MAX_TEXTURES - 1, "blocks/solid/grass");
             GL.BindTexture(TextureTarget.Texture2DArray, 0);
         }

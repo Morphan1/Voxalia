@@ -8,7 +8,8 @@ namespace Voxalia.Shared
         STONE = 1,
         GRASS = 2,
         DIRT = 3,
-        NUM_DEFAULT = 4,
+        WATER = 4,
+        NUM_DEFAULT = 5,
         MAX = ushort.MaxValue
     }
 
@@ -21,10 +22,11 @@ namespace Voxalia.Shared
         static MaterialHelpers()
         {
             MaterialInfo[] mats = new MaterialInfo[] {
-                new MaterialInfo(0) { Solid = false, Opaque = false, RendersAtAll = false }, // AIR
-                new MaterialInfo(1), // STONE
-                new MaterialInfo(2), // GRASS
-                new MaterialInfo(3) // DIRT
+                new MaterialInfo((int)Material.AIR) { Solid = false, Opaque = false, RendersAtAll = false },
+                new MaterialInfo((int)Material.STONE),
+                new MaterialInfo((int)Material.GRASS),
+                new MaterialInfo((int)Material.DIRT),
+                new MaterialInfo((int)Material.WATER) { Solid = false, Opaque = false },
             };
             mats[2].TID[(int)MaterialSide.TOP] = MaterialHelpers.MAX_TEXTURES - 1; // grass_top
             mats[2].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
