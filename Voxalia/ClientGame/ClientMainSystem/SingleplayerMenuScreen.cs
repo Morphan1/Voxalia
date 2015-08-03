@@ -27,9 +27,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 if (str.LastIndexOf('/') == "/saves/".Length - 1)
                 {
-                    Menus.Add(new UIMenuButton("ui/menus/buttons/basic", "== " + str.Substring("/saves/".Length) + " ==", () => {
+                    Menus.Add(new UIMenuButton("ui/menus/buttons/sp", "== " + str.Substring("/saves/".Length) + " ==", () => {
                         UIConsole.WriteLine("OPEN " + str);
-                    }, 10, start, 600, 70, TheClient.FontSets.SlightlyBigger));
+                    }, 10, start, 600, 70, TheClient.FontSets.Standard));
                     start += 100;
                 }
             }
