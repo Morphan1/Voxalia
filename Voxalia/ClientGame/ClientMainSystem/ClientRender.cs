@@ -156,6 +156,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         int rTicks = 1000;
 
+        public bool shouldRedrawShadows = false;
+
         public void Window_RenderFrame(object sender, FrameEventArgs e)
         {
             lock (TickLock)
@@ -198,8 +200,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
                 Matrix4 combined = view * proj;
                 Frustum camFrust = new Frustum(combined);
-                if (rTicks == 0)
+                if (shouldRedrawShadows)
                 {
+                    shouldRedrawShadows = false;
                     s_shadow.Bind();
                     VBO.BonesIdentity();
                     RenderingShadows = true;

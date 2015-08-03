@@ -90,6 +90,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(TheSun.InternalLights[0].color.X, TheSun.InternalLights[0].color.Y * rel, TheSun.InternalLights[0].color.Z * rel);
                 }
                 rTicks = 0;
+                shouldRedrawShadows = true;
             }
             TheWorld.TickWorld(delta);
         }
