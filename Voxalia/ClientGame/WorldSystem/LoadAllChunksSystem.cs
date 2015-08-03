@@ -5,9 +5,9 @@ namespace Voxalia.ClientGame.WorldSystem
 {
     public class LoadAllChunksSystem
     {
-        public World TheWorld;
+        public Region TheWorld;
 
-        public LoadAllChunksSystem(World tworld)
+        public LoadAllChunksSystem(Region tworld)
         {
             TheWorld = tworld;
         }

@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public Material Mat;
         public byte Dat;
 
-        public BlockItemEntity(World tworld, Material mat, byte dat, Location pos)
+        public BlockItemEntity(WorldSystem.Region tworld, Material mat, byte dat, Location pos)
             : base(tworld, true)
         {
             SetMass(5);

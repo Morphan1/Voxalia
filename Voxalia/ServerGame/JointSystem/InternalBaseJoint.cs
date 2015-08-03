@@ -16,7 +16,7 @@ namespace Voxalia.ServerGame.JointSystem
 
         public bool Enabled = false;
 
-        public virtual bool ApplyVar(World tworld, string var, string value)
+        public virtual bool ApplyVar(Region tworld, string var, string value)
         {
             switch (var)
             {

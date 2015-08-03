@@ -12,7 +12,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Object Locker = new Object();
 
-        public World world;
+        public Region world;
 
         public void LoadRegion(Location min, Location max)
         {

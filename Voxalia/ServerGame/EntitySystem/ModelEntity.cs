@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Location scale = Location.One;
 
-        public ModelEntity(string mod, World tworld)
+        public ModelEntity(string mod, Region tworld)
             : base(tworld, true)
         {
             model = mod;

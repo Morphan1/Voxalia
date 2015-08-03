@@ -9,7 +9,7 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public string vehName;
 
-        public VehicleEntity(string vehicle, World tworld)
+        public VehicleEntity(string vehicle, Region tworld)
             : base("vehicles/" + vehicle + "_base.dae", tworld)
         {
             vehName = vehicle;

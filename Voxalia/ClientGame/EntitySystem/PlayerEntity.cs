@@ -64,7 +64,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public ConvexShape WheelShape = null;
 
-        public PlayerEntity(World tworld)
+        public PlayerEntity(Region tworld)
             : base(tworld, true, true)
         {
             SetMass(tmass / 2f);

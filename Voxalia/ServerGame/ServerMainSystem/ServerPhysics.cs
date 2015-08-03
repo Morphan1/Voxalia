@@ -12,12 +12,12 @@ namespace Voxalia.ServerGame.ServerMainSystem
         {
         }
 
-        public List<World> LoadedWorlds = new List<World>();
+        public List<Region> LoadedWorlds = new List<Region>();
 
         public void LoadWorld(string name)
         {
             // TODO: Actually load from file!
-            World world = new World();
+            Region world = new Region();
             world.Name = name.ToLower();
             world.TheServer = this;
             world.BuildWorld();

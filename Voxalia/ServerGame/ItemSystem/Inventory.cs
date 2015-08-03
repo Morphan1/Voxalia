@@ -6,9 +6,9 @@ namespace Voxalia.ServerGame.ItemSystem
 {
     public class Inventory
     {
-        public World TheWorld;
+        public WorldSystem.Region TheWorld;
 
-        public Inventory(World tworld)
+        public Inventory(WorldSystem.Region tworld)
         {
             TheWorld = tworld;
         }

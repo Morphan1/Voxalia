@@ -14,7 +14,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public bool LOADING = true;
 
-        public World OwningWorld = null;
+        public Region OwningRegion = null;
 
         public Location WorldPosition;
 
@@ -80,12 +80,12 @@ namespace Voxalia.ServerGame.WorldSystem
                         BlockInternal c = GetBlockAt(x, y, z);
                         if (((Material)c.BlockMaterial).IsSolid())
                         {
-                            BlockInternal zp = z + 1 < CHUNK_SIZE ? GetBlockAt(x, y, z + 1) : OwningWorld.GetBlockInternal_NoLoad(Location.FromBVector(ppos) + new Location(x, y, 30));
-                            BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : OwningWorld.GetBlockInternal_NoLoad(Location.FromBVector(ppos) + new Location(x, y, -1));
-                            BlockInternal yp = y + 1 < CHUNK_SIZE ? GetBlockAt(x, y + 1, z) : OwningWorld.GetBlockInternal_NoLoad(Location.FromBVector(ppos) + new Location(x, 30, z));
-                            BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : OwningWorld.GetBlockInternal_NoLoad(Location.FromBVector(ppos) + new Location(x, -1, z));
-                            BlockInternal xp = x + 1 < CHUNK_SIZE ? GetBlockAt(x + 1, y, z) : OwningWorld.GetBlockInternal_NoLoad(Location.FromBVector(ppos) + new Location(30, y, z));
-                            BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : OwningWorld.GetBlockInternal_NoLoad(Location.FromBVector(ppos) + new Location(-1, y, z));
+                            BlockInternal zp = z + 1 < CHUNK_SIZE ? GetBlockAt(x, y, z + 1) : OwningRegion.GetBlockInternal_NoLoad(Location.FromBVector(ppos) + new Location(x, y, 30));
+                            BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : OwningRegion.GetBlockInternal_NoLoad(Location.FromBVector(ppos) + new Location(x, y, -1));
+                            BlockInternal yp = y + 1 < CHUNK_SIZE ? GetBlockAt(x, y + 1, z) : OwningRegion.GetBlockInternal_NoLoad(Location.FromBVector(ppos) + new Location(x, 30, z));
+                            BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : OwningRegion.GetBlockInternal_NoLoad(Location.FromBVector(ppos) + new Location(x, -1, z));
+                            BlockInternal xp = x + 1 < CHUNK_SIZE ? GetBlockAt(x + 1, y, z) : OwningRegion.GetBlockInternal_NoLoad(Location.FromBVector(ppos) + new Location(30, y, z));
+                            BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : OwningRegion.GetBlockInternal_NoLoad(Location.FromBVector(ppos) + new Location(-1, y, z));
                             bool zps = ((Material)zp.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[zp.BlockData].OccupiesTOP();
                             bool zms = ((Material)zm.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[zm.BlockData].OccupiesBOTTOM();
                             bool xps = ((Material)xp.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXP();
@@ -126,28 +126,28 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             if (adding != null)
             {
-                ASyncScheduleItem item = OwningWorld.TheServer.Schedule.AddASyncTask(() => AddInternal(callback));
+                ASyncScheduleItem item = OwningRegion.TheServer.Schedule.AddASyncTask(() => AddInternal(callback));
                 adding = adding.ReplaceOrFollowWith(item);
             }
             else
             {
-                adding = OwningWorld.TheServer.Schedule.StartASyncTask(() => AddInternal(callback));
+                adding = OwningRegion.TheServer.Schedule.StartASyncTask(() => AddInternal(callback));
             }
         }
 
         void AddInternal(Action callback)
         {
             StaticMesh tworldObject = CalculateChunkShape();
-            OwningWorld.TheServer.Schedule.ScheduleSyncTask(() =>
+            OwningRegion.TheServer.Schedule.ScheduleSyncTask(() =>
             {
                 if (worldObject != null)
                 {
-                    OwningWorld.RemoveChunkQuiet(worldObject);
+                    OwningRegion.RemoveChunkQuiet(worldObject);
                 }
                 worldObject = tworldObject;
                 if (worldObject != null)
                 {
-                    OwningWorld.AddChunk(worldObject);
+                    OwningRegion.AddChunk(worldObject);
                 }
                 if (callback != null)
                 {
@@ -184,7 +184,7 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             if (worldObject != null)
             {
-                OwningWorld.RemoveChunkQuiet(worldObject);
+                OwningRegion.RemoveChunkQuiet(worldObject);
                 worldObject = null;
             }
             if (LastEdited >= 0)
@@ -206,7 +206,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public void SaveToFile(Action callback = null)
         {
             LastEdited = -1; // TODO: Lock around something for touching LastEdited? ++ All other references to LastEdited.
-            OwningWorld.TheServer.Schedule.StartASyncTask(() =>
+            OwningRegion.TheServer.Schedule.StartASyncTask(() =>
             {
                 SaveToFileI();
                 if (callback != null)
@@ -221,7 +221,7 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public string GetFileName()
         {
-            return "saves/" + OwningWorld.Name.ToLower() + "/chunks/" + WorldPosition.Z + "/" + WorldPosition.Y + "/" + WorldPosition.X + ".chk";
+            return "saves/" + OwningRegion.Name.ToLower() + "/chunks/" + WorldPosition.Z + "/" + WorldPosition.Y + "/" + WorldPosition.X + ".chk";
         }
 
         void SaveToFileI()

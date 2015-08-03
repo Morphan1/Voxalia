@@ -20,7 +20,7 @@ namespace Voxalia.ServerGame.JointSystem
             return new RevoluteAngularJoint(Ent1.Body, Ent2.Body, Direction.ToBVector());
         }
 
-        public override bool ApplyVar(World tworld, string var, string value)
+        public override bool ApplyVar(Region tworld, string var, string value)
         {
             switch (var)
             {

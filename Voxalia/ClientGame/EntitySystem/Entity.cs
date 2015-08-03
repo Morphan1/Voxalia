@@ -14,7 +14,7 @@ namespace Voxalia.ClientGame.EntitySystem
     {
         public OpenTK.Graphics.Color4 Color;
 
-        public Entity(World tworld, bool tickme, bool cast_shadows)
+        public Entity(Region tworld, bool tickme, bool cast_shadows)
         {
             TheWorld = tworld;
             TheClient = tworld.TheClient;
@@ -43,7 +43,7 @@ namespace Voxalia.ClientGame.EntitySystem
         /// </summary>
         public Client TheClient = null;
 
-        public World TheWorld = null;
+        public Region TheWorld = null;
 
         /// <summary>
         /// Draw the entity in the 3D world.

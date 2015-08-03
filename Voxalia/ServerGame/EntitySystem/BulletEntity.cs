@@ -7,7 +7,7 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class BulletEntity: PrimitiveEntity
     {
-        public BulletEntity(World tworld)
+        public BulletEntity(Region tworld)
             : base(tworld)
         {
             Collide += new EventHandler<CollisionEventArgs>(OnCollide);

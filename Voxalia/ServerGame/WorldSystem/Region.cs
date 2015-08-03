@@ -17,7 +17,7 @@ using BEPUphysics.BroadPhaseEntries;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
-    public class World
+    public class Region
     {
         /// <summary>
         /// How much time has elapsed since the last tick started.
@@ -731,7 +731,7 @@ namespace Voxalia.ServerGame.WorldSystem
             // TODO: Actually load from file
             chunk = new Chunk();
             chunk.LOADING = true;
-            chunk.OwningWorld = this;
+            chunk.OwningRegion = this;
             chunk.WorldPosition = cpos;
             LoadedChunks.Add(cpos, chunk);
             PopulateChunk(chunk);
@@ -765,7 +765,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             Chunk ch = new Chunk();
             ch.LOADING = true;
-            ch.OwningWorld = this;
+            ch.OwningRegion = this;
             ch.WorldPosition = cpos;
             LoadedChunks.Add(cpos, ch);
             TheServer.Schedule.StartASyncTask(() =>

@@ -11,7 +11,7 @@ namespace Voxalia.ClientGame.EntitySystem
 {
     public abstract class PhysicsEntity: Entity
     {
-        public PhysicsEntity(World tworld, bool ticks, bool cast_shadows)
+        public PhysicsEntity(Region tworld, bool ticks, bool cast_shadows)
             : base(tworld, ticks, cast_shadows)
         {
             Gravity = Location.FromBVector(TheWorld.PhysicsWorld.ForceUpdater.Gravity);

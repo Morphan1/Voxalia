@@ -8,7 +8,7 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public ItemStack Stack;
 
-        public ItemEntity(ItemStack stack, World tworld)
+        public ItemEntity(ItemStack stack, Region tworld)
             : base(stack.Model, tworld)
         {
             Stack = stack;

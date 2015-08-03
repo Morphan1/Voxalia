@@ -14,7 +14,7 @@ using BEPUphysics.BroadPhaseEntries;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
-    public class World
+    public class Region
     {
         /// <summary>
         /// The physics world in which all physics-related activity takes place.
@@ -173,7 +173,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     Chunk ch = chunk;
                     LoadedChunks.Remove(pos);
                     chunk = new Chunk(posMult);
-                    chunk.OwningWorld = this;
+                    chunk.OwningRegion = this;
                     chunk.adding = ch.adding;
                     chunk.worldObject = ch.worldObject;
                     chunk.rendering = ch.rendering;
@@ -185,7 +185,7 @@ namespace Voxalia.ClientGame.WorldSystem
             else
             {
                 chunk = new Chunk(posMult);
-                chunk.OwningWorld = this;
+                chunk.OwningRegion = this;
                 chunk.WorldPosition = pos;
                 LoadedChunks.Add(pos, chunk);
             }

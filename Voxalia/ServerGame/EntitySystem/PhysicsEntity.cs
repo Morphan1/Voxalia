@@ -12,7 +12,7 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public abstract class PhysicsEntity: Entity
     {
-        public PhysicsEntity(World tworld, bool ticks)
+        public PhysicsEntity(Region tworld, bool ticks)
             : base(tworld, ticks)
         {
             Gravity = Location.FromBVector(TheWorld.PhysicsWorld.ForceUpdater.Gravity);

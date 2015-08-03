@@ -9,7 +9,7 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class ArrowEntity: PrimitiveEntity
     {
-        public ArrowEntity(World tworld)
+        public ArrowEntity(Region tworld)
             : base(tworld)
         {
             Collide += new EventHandler<CollisionEventArgs>(OnCollide);

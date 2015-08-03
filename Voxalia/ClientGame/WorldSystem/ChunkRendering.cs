@@ -14,12 +14,12 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (rendering != null)
             {
-                ASyncScheduleItem item = OwningWorld.TheClient.Schedule.AddASyncTask(() => VBOHInternal(callback));
+                ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(() => VBOHInternal(callback));
                 rendering = rendering.ReplaceOrFollowWith(item);
             }
             else
             {
-                rendering = OwningWorld.TheClient.Schedule.StartASyncTask(() => VBOHInternal(callback));
+                rendering = OwningRegion.TheClient.Schedule.StartASyncTask(() => VBOHInternal(callback));
             }
         }
 
@@ -29,7 +29,7 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (PosMultiplier == 1)
             {
-                return OwningWorld.GetBlockInternal(pos);
+                return OwningRegion.GetBlockInternal(pos);
             }
             else
             {
@@ -42,7 +42,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     {
                         for (int ze = 0; ze < pz; ze++)
                         {
-                            BlockInternal bi = OwningWorld.GetBlockInternal(pos + new Location(xe, ye, ze));
+                            BlockInternal bi = OwningRegion.GetBlockInternal(pos + new Location(xe, ye, ze));
                             if (bi.BlockMaterial == 0 || bi.BlockData != 0)
                             {
                                 return BlockInternal.AIR;
@@ -110,12 +110,12 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 if (Vertices.Count == 0)
                 {
-                    lock (OwningWorld.TheClient.TickLock)
+                    lock (OwningRegion.TheClient.TickLock)
                     {
                         if (_VBO != null)
                         {
                             VBO tV = _VBO;
-                            OwningWorld.TheClient.Schedule.ScheduleSyncTask(() => tV.Destroy());
+                            OwningRegion.TheClient.Schedule.ScheduleSyncTask(() => tV.Destroy());
                         }
                         _VBO = null;
                     }
@@ -141,7 +141,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 tVBO.BoneIDs2 = null;
                 tVBO.Colors = null;
                 tVBO.oldvert();
-                OwningWorld.TheClient.Schedule.ScheduleSyncTask(() =>
+                OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                 {
                     if (_VBO != null)
                     {
@@ -167,7 +167,7 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (_VBO != null && _VBO.generated)
             {
-                _VBO.Render(OwningWorld.TheClient.RenderTextures);
+                _VBO.Render(OwningRegion.TheClient.RenderTextures);
             }
         }
     }

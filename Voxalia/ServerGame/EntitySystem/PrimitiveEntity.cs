@@ -22,7 +22,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public List<long> NoCollide = new List<long>();
 
-        public PrimitiveEntity(World tworld)
+        public PrimitiveEntity(Region tworld)
             : base(tworld, true)
         {
         }

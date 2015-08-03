@@ -4,7 +4,7 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class SpawnPointEntity: PrimitiveEntity
     {
-        public SpawnPointEntity(World tworld)
+        public SpawnPointEntity(Region tworld)
             : base(tworld)
         {
             network = false;

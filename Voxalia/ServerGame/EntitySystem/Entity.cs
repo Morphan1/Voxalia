@@ -12,9 +12,9 @@ namespace Voxalia.ServerGame.EntitySystem
     /// </summary>
     public abstract class Entity
     {
-        public World TheWorld;
+        public Region TheWorld;
 
-        public Entity(World tworld, bool tickme)
+        public Entity(Region tworld, bool tickme)
         {
             TheWorld = tworld;
             TheServer = tworld.TheServer;

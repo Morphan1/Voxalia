@@ -5,7 +5,7 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public abstract class TargetEntity: PrimitiveEntity, EntityTargettable
     {
-        public TargetEntity(World tworld)
+        public TargetEntity(Region tworld)
             : base(tworld)
         {
             network = false;

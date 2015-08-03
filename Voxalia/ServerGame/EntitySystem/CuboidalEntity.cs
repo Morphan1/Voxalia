@@ -18,7 +18,7 @@ namespace Voxalia.ServerGame.EntitySystem
             TexCoords = "1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f".Split('|');
         }
 
-        public CuboidalEntity(Location half, World tworld, bool ticks, float mass)
+        public CuboidalEntity(Location half, Region tworld, bool ticks, float mass)
             : base(tworld, ticks)
         {
             DefTexs();

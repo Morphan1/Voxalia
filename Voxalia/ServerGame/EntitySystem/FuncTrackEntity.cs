@@ -6,7 +6,7 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     class FuncTrackEntity: CubeEntity, EntityTargettable
     {
-        public FuncTrackEntity(Location half, World tworld, float mass)
+        public FuncTrackEntity(Location half, Region tworld, float mass)
             : base(half, tworld, mass)
         {
         }

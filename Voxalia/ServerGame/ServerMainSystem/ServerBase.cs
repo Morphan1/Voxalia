@@ -51,7 +51,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
         public void ShutDown()
         {
             SysConsole.Output(OutputType.INFO, "[Shutdown] Starting to close server...");
-            foreach (World world in LoadedWorlds)
+            foreach (Region world in LoadedWorlds)
             {
                 while (world.Players.Count > 0)
                 {

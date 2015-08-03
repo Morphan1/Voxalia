@@ -14,7 +14,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public SkyLight ThePlanet = null;
 
         // Note: the client only has one world loaded at any given time.
-        public World TheWorld = null;
+        public Region TheWorld = null;
 
         public Location SunLightDef = Location.One;
 
@@ -36,7 +36,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 2, 30 * 10, PlanetLightDef, new Location(0, 0, -1), 30 * 12);
             Lights.Add(TheSun);
             Lights.Add(ThePlanet);
-            TheWorld = new World();
+            TheWorld = new Region();
             TheWorld.TheClient = this;
             TheWorld.BuildWorld();
             Player = new PlayerEntity(TheWorld);
