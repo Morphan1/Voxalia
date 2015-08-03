@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.IO;
 using System.IO.Compression;
 
@@ -41,7 +42,7 @@ namespace Voxalia.Shared.Files
                 }
                 else
                 {
-                    Files.Add(new PakkedFile(file.Replace(BaseDirectory, "")));
+                    Files.Add(new PakkedFile(file.Replace(BaseDirectory, "").ToLower()));
                 }
             }
             int id = 0;
@@ -57,7 +58,6 @@ namespace Voxalia.Shared.Files
                     {
                         continue;
                     }
-                    SysConsole.Output(OutputType.INIT, "--> " + name);
                     Files.Add(new PakkedFile(name, id, zent));
                 }
                 id++;
@@ -192,17 +192,36 @@ namespace Voxalia.Shared.Files
         {
             return encoding.GetString(ReadBytes(filename)).Replace("\r", "");
         }
-
+        
         /// <summary>
-        /// Makes all directories along the filepath.
+        /// Returns a list of all folders that contain the filepath.
         /// </summary>
-        public void MakeDirs(string filepath)
+        public List<string> ListFolders(string filepath)
         {
-            string fname = BaseDirectory + CleanFileName(filepath) + "/";
-            if (!Directory.Exists(fname))
+            List<string> folds = new List<string>();
+            string fname = "/" + CleanFileName("/" + filepath);
+            if (fname.EndsWith("/"))
             {
-                Directory.CreateDirectory(fname);
+                fname = fname.Substring(0, fname.Length - 1);
             }
+            string fn2 = fname + "/";
+            if (fn2 == "//")
+            {
+                fn2 = "/";
+            }
+            for (int i = 0; i < Files.Count; i++)
+            {
+                string fina = "/" + Files[i].Name;
+                if (fina.StartsWith(fn2))
+                {
+                    string fold = "/" + (Files[i].Name.LastIndexOf('/') <= 0 ? "": Files[i].Name.Substring(0, Files[i].Name.LastIndexOf('/')));
+                    if (fold.StartsWith(fn2) && !folds.Contains(fold))
+                    {
+                        folds.Add(fold);
+                    }
+                }
+            }
+            return folds;
         }
 
         /// <summary>
