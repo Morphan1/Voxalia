@@ -10,9 +10,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
     public class ChunkWaitingScreen: Screen
     {
         public UIMenu Menus;
-
-        public Texture Mouse;
-
+        
         public LoadAllChunksSystem LACS = null;
 
         public int ChunksStillWaiting = 0;
@@ -24,7 +22,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 UIConsole.WriteLine("Cancel!");
             }, 10, 300, 350, 70, TheClient.FontSets.SlightlyBigger));
-            Mouse = TheClient.Textures.GetTexture("ui/mouse_cursor");
         }
 
         public override void Tick()
@@ -43,8 +40,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0.5f, 0.5f, 1 });
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1 });
             Menus.RenderAll(TheClient.gDelta);
-            Mouse.Bind();
-            TheClient.Rendering.RenderRectangle(MouseHandler.MouseX(), MouseHandler.MouseY(), MouseHandler.MouseX() + 16, MouseHandler.MouseY() + 16);
             if (LACS == null)
             {
                 TheClient.FontSets.SlightlyBigger.DrawColoredText("^!^e^0Chunks Loaded: " + TheClient.TheWorld.LoadedChunks.Count

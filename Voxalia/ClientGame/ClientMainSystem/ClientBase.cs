@@ -177,9 +177,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheMainMenuScreen = new MainMenuScreen() { TheClient = this };
             TheGameScreen = new GameScreen() { TheClient = this };
             TheChunkWaitingScreen = new ChunkWaitingScreen() { TheClient = this };
+            TheSingleplayerMenuScreen = new SingleplayerMenuScreen() { TheClient = this };
             TheMainMenuScreen.Init();
             TheGameScreen.Init();
             TheChunkWaitingScreen.Init();
+            TheSingleplayerMenuScreen.Init();
             ShowMainMenu();
         }
 
@@ -192,14 +194,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             if (IsWaitingOnChunks())
             {
-                SysConsole.Output(OutputType.INFO, "Solidifying and rendering chunks...");
                 TheChunkWaitingScreen.LACS = new LoadAllChunksSystem(TheWorld);
                 TheChunkWaitingScreen.LACS.LoadAll(() =>
                 {
                     Schedule.ScheduleSyncTask(() =>
                     {
                         // TODO: handle cancel-button cancelling neatly
-                        SysConsole.Output(OutputType.INFO, "Showing game...");
                         CScreen = TheGameScreen;
                         CScreen.SwitchTo();
                         TheChunkWaitingScreen.LACS = null;
@@ -208,22 +208,25 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else
             {
-                SysConsole.Output(OutputType.INFO, "Showing game...");
                 CScreen = TheGameScreen;
                 CScreen.SwitchTo();
             }
         }
 
+        public void ShowSingleplayer()
+        {
+            CScreen = TheSingleplayerMenuScreen;
+            CScreen.SwitchTo();
+        }
+
         public void ShowMainMenu()
         {
-            SysConsole.Output(OutputType.INFO, "Showing menu...");
             CScreen = TheMainMenuScreen;
             CScreen.SwitchTo();
         }
 
         public void ShowChunkWaiting()
         {
-            SysConsole.Output(OutputType.INFO, "Awaiting chunks...");
             CScreen = TheChunkWaitingScreen;
             CScreen.SwitchTo();
         }
@@ -289,6 +292,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         GameScreen TheGameScreen;
 
         MainMenuScreen TheMainMenuScreen;
+
+        SingleplayerMenuScreen TheSingleplayerMenuScreen;
 
         public ChunkWaitingScreen TheChunkWaitingScreen;
 
