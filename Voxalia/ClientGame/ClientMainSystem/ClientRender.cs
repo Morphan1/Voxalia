@@ -456,43 +456,40 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public void RenderSkyflare(Matrix4 combined)
         {
             {
-                Rendering.SetColor(Color4.White);
-                float dist = 200; // TODO: View rad * 0.75 or something
                 if (PlanetSunDist > 10)
                 {
                     Location rel = CameraPos + TheSun.Direction * -200f;
                     Vector4 vec = new Vector4((float)rel.X, (float)rel.Y, (float)rel.Z, 1f);
                     vec = Vector4.Transform(vec, combined);
-                    Matrix4 ident = Matrix4.Identity;
-                    GL.UniformMatrix4(1, false, ref ident);
-                    GL.UniformMatrix4(2, false, ref ident);
+                    float dist = 200; // TODO: View rad * 0.75 or something
                     Location sunpos = new Location(vec.X / vec.W, vec.Y / vec.W, vec.Z / vec.W);
                     if (sunpos.X >= -1 && sunpos.X <= 1 && sunpos.Y >= -1 && sunpos.Y <= 1 && sunpos.Z <= 1 && sunpos.Z >= -1)
                     {
                         CollisionResult trace = TheWorld.Collision.RayTrace(CameraPos, CameraPos + TheSun.Direction * -dist, Player.IgnoreThis);
                         if (!trace.Hit)
                         {
+                            Rendering.SetColor(Color4.Yellow);
+                            Matrix4 ident = Matrix4.Identity;
+                            GL.UniformMatrix4(1, false, ref ident);
+                            GL.UniformMatrix4(2, false, ref ident);
                             Location start = new Location(sunpos.X, sunpos.Y, 0);
                             Location targ = new Location(0, 0, 0);
-                            Rendering.SetColor(Color4.Yellow);
-                            Textures.GetTexture("effects/lensflare/01").Bind(); // TODO: Store
-                            Location one = (targ - start) / 2 + start;
-                            float s1 = 0.1f;
-                            Rendering.RenderRectangle((float)one.X - s1, (float)one.Y - s1, (float)one.X + s1, (float)one.Y + s1, Matrix4.CreateTranslation(0, 0, 0.3f));
-                            Textures.GetTexture("effects/lensflare/02").Bind(); // TODO: Store
-                            Location two = targ;
-                            float s2 = 0.2f;
-                            Rendering.RenderRectangle((float)two.X - s2, (float)two.Y - s2, (float)two.X + s2, (float)two.Y + s2, Matrix4.CreateTranslation(0, 0, 0.2f));
-                            Textures.GetTexture("effects/lensflare/03").Bind(); // TODO: Store
-                            Location three = (targ - start) / 2 + targ;
-                            float s3 = 0.1f;
-                            Rendering.RenderRectangle((float)three.X - s3, (float)three.Y - s3, (float)three.X + s3, (float)three.Y + s3, Matrix4.CreateTranslation(0, 0, 0.1f));
+                            GL.Disable(EnableCap.CullFace);
+                            int c = 6;
+                            Location move = (targ - start) / (c / 2);
+                            for (int i = 0; i < c; i++)
+                            {
+                                Textures.GetTexture("effects/lensflare/0" + (i + 1)).Bind(); // TODO: Store better
+                                Location fs = start + move * (i + 1);
+                                float s = 0.2f - ((float)i) * 0.025f;
+                                Rendering.RenderRectangle((float)fs.X - s, (float)fs.Y - s, (float)fs.X + s, (float)fs.Y + s, Matrix4.CreateTranslation(0, 0, 0.1f * c - 0.1f * i));
+                            }
+                            GL.BindTexture(TextureTarget.Texture2D, 0);
+                            Rendering.SetColor(Color4.White);
+                            GL.Enable(EnableCap.CullFace);
                         }
                     }
                 }
-                GL.BindTexture(TextureTarget.Texture2D, 0);
-                Rendering.SetColor(Color4.White);
-                GL.Enable(EnableCap.CullFace);
             }
         }
 
