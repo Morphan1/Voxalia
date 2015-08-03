@@ -477,6 +477,8 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public Space PhysicsWorld;
 
+        public YAMLConfiguration Config;
+
         public void BuildWorld()
         {
             ParallelLooper pl = new ParallelLooper();
@@ -493,7 +495,19 @@ namespace Voxalia.ServerGame.WorldSystem
             Collision = new CollisionUtil(PhysicsWorld);
             chunkGroup = new StaticGroup(ChunkShapes);
             PhysicsWorld.Add(chunkGroup);
-            Seed = 100; // TODO: Generate or load
+            string fname = "saves/" + Name + "/region.yml";
+            if (Program.Files.Exists(fname))
+            {
+                Config = new YAMLConfiguration(Program.Files.ReadText(fname));
+            }
+            else
+            {
+                Config = new YAMLConfiguration("");
+                Config.Set("general.seed", 100); // TODO: Random-generate?
+            }
+            Config.Changed += new EventHandler(configChanged);
+            CFGEdited = true;
+            Seed = (short)Config.ReadInt("general.seed", 100); // TODO: Generate or load
             Random seedGen = new Random(Seed);
             Seed2 = (short)(seedGen.Next((int)short.MaxValue * 2) - short.MaxValue);
             LoadRegion(new Location(-MaxViewRadiusInChunks / 4 * 30), new Location(MaxViewRadiusInChunks / 4 * 30));
@@ -505,6 +519,13 @@ namespace Voxalia.ServerGame.WorldSystem
                 Thread.Sleep(16);
             }
             SysConsole.Output(OutputType.INIT, "Finished building chunks!");
+        }
+
+        bool CFGEdited = false;
+
+        void configChanged(object sender, EventArgs e)
+        {
+            CFGEdited = true;
         }
 
         public void AddChunk(StaticMesh mesh)
@@ -563,6 +584,14 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
                 // TODO: If distant from all players, unload
             });
+            if (CFGEdited)
+            {
+                string cfg = Config.SaveToString();
+                TheServer.Schedule.StartASyncTask(() =>
+                {
+                    Program.Files.WriteText("saves/" + Name + "/region.yml", cfg);
+                });
+            }
         }
 
         double opsat;
@@ -846,6 +875,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 Thread.Sleep(16);
             }
+            OncePerSecondActions();
         }
     }
 }

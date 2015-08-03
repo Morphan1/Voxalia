@@ -108,6 +108,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="YamlDotNet">
+      <HintPath>.\YamlDotNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientGame\AudioSystem\ActiveSound.cs" />
@@ -409,6 +412,7 @@
     <Compile Include="Shared\Files\UnknownFileException.cs" />
     <Compile Include="Shared\Utilities.cs" />
     <Compile Include="Shared\Files\ZipStorer.cs" />
+    <Compile Include="Shared\YAMLConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
