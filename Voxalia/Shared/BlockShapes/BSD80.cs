@@ -189,7 +189,7 @@ namespace Voxalia.Shared.BlockShapes
 
         public override bool OccupiesXM()
         {
-            return true;
+            return false;
         }
 
         public override bool OccupiesYM()

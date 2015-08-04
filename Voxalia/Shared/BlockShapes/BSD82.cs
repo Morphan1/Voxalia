@@ -195,7 +195,7 @@ namespace Voxalia.Shared.BlockShapes
 
         public override bool OccupiesYM()
         {
-            return true;
+            return false;
         }
 
         public override bool OccupiesTOP()
