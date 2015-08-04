@@ -52,19 +52,19 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         {
                             if (topfxp > topf && topfxp - Math.Round(topfxp) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 32, 0)); // TODO: 81
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 80, 0));
                             }
                             else if (topfxm > topf && topfxm - Math.Round(topfxm) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 31, 0)); // TODO: 80
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 81, 0));
                             }
                             else if (topfyp > topf && topfyp - Math.Round(topfyp) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 33, 0)); // TODO: 83
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 82, 0));
                             }
                             else if (topfym > topf && topfym - Math.Round(topfym) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 34, 0)); // TODO: 82
+                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 83, 0));
                             }
                             else
                             {
