@@ -15,6 +15,7 @@ namespace Voxalia.ServerGame.ItemSystem
             Infos = new Dictionary<string, BaseItemInfo>();
             Register(new BowItem());
             Register(new FlashLightItem());
+            Register(new FlashantilightItem());
             Register(new HookItem());
             Register(new OpenHandItem());
             Register(new PistolGunItem());
