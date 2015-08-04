@@ -57,6 +57,8 @@ namespace Voxalia.Shared
             // ...
             BSD[80] = new BSD80();
             BSD[81] = new BSD81();
+            BSD[82] = new BSD82();
+            BSD[83] = new BSD83();
             // ...
         }
     }
