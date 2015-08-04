@@ -6,6 +6,7 @@
         CYLINDER = 2,
         LINEBOX = 3,
         BOX = 4,
-        SPHERE = 5
+        SPHERE = 5,
+        SQUARE = 6
     }
 }

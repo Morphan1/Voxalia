@@ -40,6 +40,12 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             TheClient = tclient;
         }
 
+        public Location GetCPos()
+        {
+            float rel = TTL / O_TTL;
+            return (EndPos - One) * (1 - rel);
+        }
+
         public void Render()
         {
             TTL -= (float)TheClient.gDelta;
@@ -103,6 +109,11 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                         Matrix4 mat = Matrix4.CreateScale(Two.ToOVector()) * Matrix4.CreateTranslation((cpos + One).ToOVector());
                         GL.UniformMatrix4(2, false, ref mat);
                         TheClient.Models.Sphere.Draw();
+                    }
+                    break;
+                case ParticleEffectType.SQUARE:
+                    {
+                        TheClient.Rendering.RenderBillboard(cpos + One, Two, TheClient.CameraPos);
                     }
                     break;
                 default:

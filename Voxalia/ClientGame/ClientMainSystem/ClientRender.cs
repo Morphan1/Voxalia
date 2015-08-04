@@ -366,6 +366,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BlitFramebuffer(0, 0, Window.Width, Window.Height, 0, 0, Window.Width, Window.Height, ClearBufferMask.DepthBufferBit, BlitFramebufferFilter.Nearest);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
                 ReverseEntitiesOrder();
+                Particles.Sort();
                 s_transponly.Bind();
                 VBO.BonesIdentity();
                 GL.UniformMatrix4(1, false, ref combined);
@@ -402,9 +403,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.UniformMatrix4(2, false, ref def);
                 VBO.BonesIdentity();
                 CFrust = new Frustum(combined);
-                GL.UniformMatrix4(1, false, ref combined);
-                GL.UniformMatrix4(2, false, ref def);
                 FBOid = 2;
+                Particles.Sort();
                 Render3D(false);
                 FBOid = 0;
                 if (CVars.r_renderwireframe.ValueB)

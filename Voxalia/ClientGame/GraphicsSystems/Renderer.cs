@@ -354,6 +354,19 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.DrawElements(PrimitiveType.Quads, 4, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
 
+        public void RenderBillboard(Location pos, Location scale, Location facing)
+        {
+            Location relang = Utilities.VectorToAngles(pos - facing);
+            Matrix4 mat = Matrix4.CreateTranslation(-0.5f, -0.5f, 0f)
+                * Matrix4.CreateScale(scale.ToOVector())
+                * Matrix4.CreateRotationY((float)((relang.Y - 90) * Utilities.PI180))
+                * Matrix4.CreateRotationZ((float)(relang.Z * Utilities.PI180))
+                * Matrix4.CreateTranslation((pos + new Location(0.5f, 0.5f, 0f)).ToOVector());
+            GL.UniformMatrix4(2, false, ref mat);
+            GL.BindVertexArray(Square._VAO);
+            GL.DrawElements(PrimitiveType.Quads, 4, DrawElementsType.UnsignedInt, IntPtr.Zero);
+        }
+
         /// <summary>
         /// Renders a 2D backgrid.
         /// </summary>

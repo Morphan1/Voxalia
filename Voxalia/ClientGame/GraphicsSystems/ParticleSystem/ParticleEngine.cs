@@ -26,7 +26,6 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
         public void Render()
         {
             TheClient.Rendering.SetMinimumLight(1);
-            ActiveEffects = ActiveEffects.OrderBy(o => -(o.One - TheClient.CameraPos).LengthSquared()).ToList();
             for (int i = 0; i < ActiveEffects.Count; i++)
             {
                 ActiveEffects[i].Render();
