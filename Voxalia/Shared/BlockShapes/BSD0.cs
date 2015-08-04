@@ -71,7 +71,7 @@ namespace Voxalia.Shared.BlockShapes
             return Vertices;
         }
 
-        public override List<BEPUutilities.Vector3> GetNormals(Vector3 blockPos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)
+        public override List<Vector3> GetNormals(Vector3 blockPos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)
         {
             List<Vector3> Norms = new List<Vector3>();
             if (!TOP)

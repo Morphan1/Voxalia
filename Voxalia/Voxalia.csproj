@@ -374,6 +374,8 @@
     <Compile Include="Shared\AnimationEngine.cs" />
     <Compile Include="Shared\BlockInternal.cs" />
     <Compile Include="Shared\BlockShapeRegistry.cs" />
+    <Compile Include="Shared\BlockShapes\BSD81.cs" />
+    <Compile Include="Shared\BlockShapes\BSD80.cs" />
     <Compile Include="Shared\BlockShapes\BSD0.cs" />
     <Compile Include="Shared\BlockShapes\BSD01_5.cs" />
     <Compile Include="Shared\BlockShapes\BSD06_10.cs" />
