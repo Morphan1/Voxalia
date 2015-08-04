@@ -60,6 +60,11 @@ void main()
 	{
 		vec4 fst = f_spos / f_spos.w;
 		atten *= 1 - (fst.x * fst.x + fst.y * fst.y);
+        if (atten < 0)
+        {
+            color = prelight_color;
+            return;
+        }
 	}
 	vec3 L = light_path / light_length;
 	vec3 V_Base = position - eye_pos;
