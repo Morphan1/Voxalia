@@ -49,7 +49,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             {
                 return;
             }
-            player.ItemStartClickTime = player.TheWorld.GlobalTickTime;
+            player.ItemStartClickTime = player.TheRegion.GlobalTickTime;
             player.ItemDoSpeedMod = true;
         }
 
@@ -83,13 +83,18 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             {
                 drawMin = dm2;
             }
-            double timeStretched = Math.Min((player.TheWorld.GlobalTickTime - player.ItemStartClickTime) * drawRate, 3) + drawMin;
+            double timeStretched = Math.Min((player.TheRegion.GlobalTickTime - player.ItemStartClickTime) * drawRate, 3) + drawMin;
             player.ItemStartClickTime = -1;
             if (timeStretched < DrawMinimum + 0.25)
             {
                 return;
             }
-            ArrowEntity ae = new ArrowEntity(player.TheWorld);
+            SpawnArrow(player, item, timeStretched);
+        }
+
+        public virtual ArrowEntity SpawnArrow(PlayerEntity player, ItemStack item, double timeStretched)
+        {
+            ArrowEntity ae = new ArrowEntity(player.TheRegion);
             ae.SetPosition(player.GetEyePosition());
             ae.NoCollide.Add(player.EID);
             Location forward = player.ForwardVector();
@@ -98,7 +103,8 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             lookatlh.Transpose();
             ae.Angles = Quaternion.CreateFromRotationMatrix(lookatlh);
             ae.Angles *= Quaternion.CreateFromAxisAngle(Vector3.UnitX, 90f * (float)Utilities.PI180);
-            player.TheWorld.SpawnEntity(ae);
+            player.TheRegion.SpawnEntity(ae);
+            return ae;
         }
 
         public override void ReleaseAltClick(Entity entity, ItemStack item)

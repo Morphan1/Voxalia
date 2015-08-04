@@ -33,7 +33,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 return;
             }
             loopsSoFar = 0;
-            List<Entity> ents = TheWorld.GetTargets(Target);
+            List<Entity> ents = TheRegion.GetTargets(Target);
             if (ents.Count == 0)
             {
                 return;
@@ -44,7 +44,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return;
             }
-            ents = TheWorld.GetTargets(((TargetPositionEntity)t1).Target);
+            ents = TheRegion.GetTargets(((TargetPositionEntity)t1).Target);
             if (ents.Count == 0)
             {
                 return;
@@ -84,7 +84,7 @@ namespace Voxalia.ServerGame.EntitySystem
                                 active = false;
                             }
                         }
-                        List<Entity> ents = TheWorld.GetTargets(((TargetPositionEntity)nextInLine).Target);
+                        List<Entity> ents = TheRegion.GetTargets(((TargetPositionEntity)nextInLine).Target);
                         if (ents.Count == 0)
                         {
                             SysConsole.Output(OutputType.WARNING, "Incomplete FuncTrack chain!"); // TODO: Debug mode only

@@ -26,7 +26,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             PlayerEntity player = (PlayerEntity)entity;
             if (player.GrabJoint != null)
             {
-                player.TheWorld.DestroyJoint(player.GrabJoint);
+                player.TheRegion.DestroyJoint(player.GrabJoint);
             }
             player.GrabJoint = null;
         }
@@ -40,7 +40,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             PlayerEntity player = (PlayerEntity)entity;
             Location end = player.GetEyePosition() + player.ForwardVector() * 5;
-            CollisionResult cr = player.TheWorld.Collision.CuboidLineTrace(new Location(0.1, 0.1, 0.1), player.GetEyePosition(), end, player.IgnoreThis);
+            CollisionResult cr = player.TheRegion.Collision.CuboidLineTrace(new Location(0.1, 0.1, 0.1), player.GetEyePosition(), end, player.IgnoreThis);
             if (cr.Hit && cr.HitEnt != null)
             {
                 // TODO: handle static world impact
@@ -60,7 +60,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
         {
             AltClick(player, null);
             JointBallSocket jbs = new JointBallSocket(player.CursorMarker, pe, hit);
-            player.TheWorld.AddJoint(jbs);
+            player.TheRegion.AddJoint(jbs);
             player.GrabJoint = jbs;
         }
 

@@ -50,14 +50,14 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             PlayerEntity player = (PlayerEntity)entity;
             float fireRate = FireRate * item.GetAttributeF("firerate_mod", 1f);
-            if (item.Datum != 0 && !player.WaitingForClickRelease && (player.TheWorld.GlobalTickTime - player.LastGunShot >= fireRate))
+            if (item.Datum != 0 && !player.WaitingForClickRelease && (player.TheRegion.GlobalTickTime - player.LastGunShot >= fireRate))
             {
                 float spread = Spread * item.GetAttributeF("spread_mod", 1f);
                 float speed = Speed * item.GetAttributeF("speed_mod", 1f);
                 int shots = (int)((float)Shots * item.GetAttributeF("shots_mod", 1f));
                 for (int i = 0; i < shots; i++)
                 {
-                    BulletEntity be = new BulletEntity(player.TheWorld);
+                    BulletEntity be = new BulletEntity(player.TheRegion);
                     be.SetPosition(player.GetEyePosition());
                     be.NoCollide.Add(player.EID);
                     Location ang = player.Direction;
@@ -68,13 +68,13 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     be.Damage = ImpactDamage;
                     be.SplashSize = SplashSize;
                     be.SplashDamage = SplashMaxDamage;
-                    player.TheWorld.SpawnEntity(be);
+                    player.TheRegion.SpawnEntity(be);
                 }
                 if (ShotPerClick)
                 {
                     player.WaitingForClickRelease = true;
                 }
-                player.LastGunShot = player.TheWorld.GlobalTickTime;
+                player.LastGunShot = player.TheRegion.GlobalTickTime;
                 item.Datum -= 1;
                 player.Network.SendPacket(new SetItemPacketOut(player.Items.Items.IndexOf(item), item));
             }
@@ -119,7 +119,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                         }
                         player.Flags |= YourStatusFlags.RELOADING;
                         player.WaitingForClickRelease = true;
-                        player.LastGunShot = player.TheWorld.GlobalTickTime + ReloadDelay;
+                        player.LastGunShot = player.TheRegion.GlobalTickTime + ReloadDelay;
                         UpdatePlayer(player);
                         return true;
                     }
@@ -178,12 +178,12 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             PlayerEntity player = (PlayerEntity)entity;
-            if (player.Flags.HasFlag(YourStatusFlags.RELOADING) && (player.TheWorld.GlobalTickTime - player.LastGunShot >= FireRate))
+            if (player.Flags.HasFlag(YourStatusFlags.RELOADING) && (player.TheRegion.GlobalTickTime - player.LastGunShot >= FireRate))
             {
                 player.Flags &= ~YourStatusFlags.RELOADING;
                 UpdatePlayer(player);
             }
-            else if (!player.Flags.HasFlag(YourStatusFlags.RELOADING) && (player.TheWorld.GlobalTickTime - player.LastGunShot < FireRate))
+            else if (!player.Flags.HasFlag(YourStatusFlags.RELOADING) && (player.TheRegion.GlobalTickTime - player.LastGunShot < FireRate))
             {
                 player.Flags |= YourStatusFlags.RELOADING;
                 UpdatePlayer(player);

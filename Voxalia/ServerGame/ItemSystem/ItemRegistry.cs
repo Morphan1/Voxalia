@@ -13,6 +13,7 @@ namespace Voxalia.ServerGame.ItemSystem
         public ItemRegistry()
         {
             Infos = new Dictionary<string, BaseItemInfo>();
+            Register(new ExplodobowItem());
             Register(new BowItem());
             Register(new FlashLightItem());
             Register(new FlashantilightItem());

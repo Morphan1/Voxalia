@@ -12,11 +12,11 @@ namespace Voxalia.ServerGame.EntitySystem
     /// </summary>
     public abstract class Entity
     {
-        public Region TheWorld;
+        public Region TheRegion;
 
         public Entity(Region tworld, bool tickme)
         {
-            TheWorld = tworld;
+            TheRegion = tworld;
             TheServer = tworld.TheServer;
             Ticks = tickme;
         }

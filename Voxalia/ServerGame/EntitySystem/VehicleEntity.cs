@@ -50,7 +50,7 @@ namespace Voxalia.ServerGame.EntitySystem
                         Assimp.Quaternion arot;
                         nodes[i].Transform.Decompose(out ascale, out arot, out apos);
                         Location pos = GetPosition() + new Location(apos.X, apos.Y, apos.Z - 1 /* TODO: make the -1 not needed! */);
-                        ModelEntity wheel = new ModelEntity("vehicles/" + vehName + "_wheel.dae", TheWorld);
+                        ModelEntity wheel = new ModelEntity("vehicles/" + vehName + "_wheel.dae", TheRegion);
                         wheel.SetPosition(pos);
                         wheel.SetOrientation(BEPUutilities.Quaternion.Identity); // TODO: orient
                         //wheel.SetOrientation(new BEPUutilities.Quaternion(arot.X, arot.Y, arot.Z, arot.W));
@@ -58,7 +58,7 @@ namespace Voxalia.ServerGame.EntitySystem
                         wheel.CGroup = CGroup;
                         wheel.SetMass(5);
                         wheel.mode = ModelCollisionMode.SPHERE;
-                        TheWorld.SpawnEntity(wheel);
+                        TheRegion.SpawnEntity(wheel);
                         // TODO: better joints
                         JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
                         //BEPUutilities.Vector3 side = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(1, 0, 0), wheel.GetOrientation());
@@ -67,9 +67,9 @@ namespace Voxalia.ServerGame.EntitySystem
                         JointTwist jt = new JointTwist(this, wheel, Location.FromBVector(forward), Location.FromBVector(forward));
                         // TODO: For front wheels, remove the 'forward' JT and replace it with a motor - to allow turning!
                         JointTwist jt2 = new JointTwist(this, wheel, Location.FromBVector(up), Location.FromBVector(up));
-                        TheWorld.AddJoint(jbs);
-                        TheWorld.AddJoint(jt);
-                        TheWorld.AddJoint(jt2);
+                        TheRegion.AddJoint(jbs);
+                        TheRegion.AddJoint(jt);
+                        TheRegion.AddJoint(jt2);
                         BEPUutilities.Vector3 angvel = new BEPUutilities.Vector3(10, 0, 0);
                         wheel.Body.ApplyAngularImpulse(ref angvel);
                         wheel.Body.ActivityInformation.Activate();
@@ -92,7 +92,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             user.SetOrientation(GetOrientation());
             JointForceWeld jfw = new JointForceWeld(this, user);
-            TheWorld.AddJoint(jfw);
+            TheRegion.AddJoint(jfw);
             return true;
         }
     }

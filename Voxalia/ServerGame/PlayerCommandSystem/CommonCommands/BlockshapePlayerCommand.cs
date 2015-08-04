@@ -18,14 +18,14 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             }
             byte dat = (byte)Utilities.StringToInt(entry.InputArguments[0]);
             Location eye = entry.Player.GetEyePosition();
-            CollisionResult cr = entry.Player.TheWorld.Collision.RayTrace(eye, eye + entry.Player.ForwardVector() * 5, entry.Player.IgnoreThis);
+            CollisionResult cr = entry.Player.TheRegion.Collision.RayTrace(eye, eye + entry.Player.ForwardVector() * 5, entry.Player.IgnoreThis);
             if (cr.Hit && cr.HitEnt == null)
             {
                 Location block = cr.Position - cr.Normal * 0.01;
-                Material mat = entry.Player.TheWorld.GetBlockMaterial(block);
+                Material mat = entry.Player.TheRegion.GetBlockMaterial(block);
                 if (mat != Material.AIR)
                 {
-                    entry.Player.TheWorld.SetBlockMaterial(block, mat, dat);
+                    entry.Player.TheRegion.SetBlockMaterial(block, mat, dat);
                     entry.Player.Network.SendMessage("Set.");
                     return;
                 }

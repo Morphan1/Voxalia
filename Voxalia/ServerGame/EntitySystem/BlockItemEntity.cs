@@ -32,14 +32,14 @@ namespace Voxalia.ServerGame.EntitySystem
             if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
             {
                 pActive = Body.ActivityInformation.IsActive;
-                TheWorld.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
             }
             if (!pActive && GetMass() > 0)
             {
-                deltat += TheWorld.Delta;
+                deltat += TheRegion.Delta;
                 if (deltat > 2.0)
                 {
-                    TheWorld.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                    TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
                 }
             }
             base.Tick();
@@ -53,7 +53,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 ((PlayerEntity)user).Items.GiveItem(new ItemStack("block", Mat.ToString(), TheServer, 1, "", Mat.GetName(),
                     Mat.GetDescription(), Color.White.ToArgb(), "cube", false) { Datum = (ushort)Mat });
-                TheWorld.DespawnEntity(this);
+                TheRegion.DespawnEntity(this);
                 return true;
             }
             return false;

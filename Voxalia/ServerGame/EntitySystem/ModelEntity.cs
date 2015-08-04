@@ -30,14 +30,14 @@ namespace Voxalia.ServerGame.EntitySystem
             if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
             {
                 pActive = Body.ActivityInformation.IsActive;
-                TheWorld.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
             }
             if (!pActive && GetMass() > 0)
             {
-                deltat += TheWorld.Delta;
+                deltat += TheRegion.Delta;
                 if (deltat > 2.0)
                 {
-                    TheWorld.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                    TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
                 }
             }
             base.Tick();

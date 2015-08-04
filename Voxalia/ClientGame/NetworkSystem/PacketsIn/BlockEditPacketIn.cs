@@ -1,4 +1,6 @@
 ﻿using Voxalia.Shared;
+using Voxalia.Shared.Files;
+using System.Collections.Generic;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
@@ -6,14 +8,28 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 12 + 2 + 1)
+            if (data.Length < 4)
             {
                 return false;
             }
-            Location loc = Location.FromBytes(data, 0);
-            ushort mat = Utilities.BytesToUshort(Utilities.BytesPartial(data, 12, 2));
-            byte dat = data[12 + 2];
-            TheClient.TheWorld.SetBlockMaterial(loc, (Material)mat, dat);
+            DataStream datums = new DataStream(data);
+            DataReader dr = new DataReader(datums);
+            int len = dr.ReadInt();
+            List<Location> locs = new List<Location>();
+            List<Material> mats = new List<Material>();
+            for (int i = 0; i < len; i++)
+            {
+                locs.Add(Location.FromBytes(dr.ReadBytes(12), 0));
+            }
+            for (int i = 0; i < len; i++)
+            {
+                mats.Add((Material)Utilities.BytesToUshort(dr.ReadBytes(2)));
+            }
+            byte[] dats = dr.ReadBytes(len);
+            for (int i = 0; i < len; i++)
+            {
+                TheClient.TheWorld.SetBlockMaterial(locs[i], mats[i], dats[i], true); // TODO: Regen in PBAE not SBM.
+            }
             return true;
         }
     }

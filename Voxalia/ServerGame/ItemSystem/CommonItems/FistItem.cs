@@ -28,21 +28,21 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             PlayerEntity player = (PlayerEntity)ent;
             Location eye = player.GetEyePosition();
-            CollisionResult cr = player.TheWorld.Collision.RayTrace(eye, eye + player.ForwardVector() * 5, player.IgnoreThis);
+            CollisionResult cr = player.TheRegion.Collision.RayTrace(eye, eye + player.ForwardVector() * 5, player.IgnoreThis);
             if (cr.Hit)
             {
                 if (cr.HitEnt != null)
                 {
                     // TODO: Damage
                 }
-                else if (player.TheWorld.GlobalTickTime - player.LastBlockBreak >= 0.2)
+                else if (player.TheRegion.GlobalTickTime - player.LastBlockBreak >= 0.2)
                 {
                     Location block = cr.Position - cr.Normal * 0.01;
-                    Material mat = player.TheWorld.GetBlockMaterial(block);
+                    Material mat = player.TheRegion.GetBlockMaterial(block);
                     if (mat != Material.AIR) // TODO: IsBreakable
                     {
-                        player.TheWorld.BreakNaturally(block);
-                        player.LastBlockBreak = player.TheWorld.GlobalTickTime;
+                        player.TheRegion.BreakNaturally(block);
+                        player.LastBlockBreak = player.TheRegion.GlobalTickTime;
                     }
                 }
             }

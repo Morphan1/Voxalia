@@ -17,13 +17,13 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public static void Off(PlayerEntity player)
         {
-            player.TheWorld.SendToAll(new FlashLightPacketOut(player, false, 0, Location.Zero));
+            player.TheRegion.SendToAll(new FlashLightPacketOut(player, false, 0, Location.Zero));
             player.FlashLightOn = false;
         }
 
         public void On(PlayerEntity player)
         {
-            player.TheWorld.SendToAll(new FlashLightPacketOut(player, true, Distance, Color));
+            player.TheRegion.SendToAll(new FlashLightPacketOut(player, true, Distance, Color));
             player.FlashLightOn = true;
         }
 

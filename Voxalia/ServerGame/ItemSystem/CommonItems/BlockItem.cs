@@ -25,24 +25,24 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             PlayerEntity player = (PlayerEntity)entity;
             Location eye = player.GetEyePosition();
-            CollisionResult cr = player.TheWorld.Collision.RayTrace(eye, eye + player.ForwardVector() * 5, player.IgnoreThis);
+            CollisionResult cr = player.TheRegion.Collision.RayTrace(eye, eye + player.ForwardVector() * 5, player.IgnoreThis);
             if (cr.Hit)
             {
                 if (cr.HitEnt != null)
                 {
                     // TODO: ???
                 }
-                else if (player.TheWorld.GlobalTickTime - player.LastBlockPlace >= 0.2)
+                else if (player.TheRegion.GlobalTickTime - player.LastBlockPlace >= 0.2)
                 {
-                    Location block = player.TheWorld.GetBlockLocation(cr.Position + cr.Normal * 0.91f);
-                    Material mat = player.TheWorld.GetBlockMaterial(block);
+                    Location block = player.TheRegion.GetBlockLocation(cr.Position + cr.Normal * 0.91f);
+                    Material mat = player.TheRegion.GetBlockMaterial(block);
                     if (mat == Material.AIR) // TODO: IsPlaceableIn
                     {
-                        CollisionResult hit = player.TheWorld.Collision.CuboidLineTrace(new Location(0.45, 0.45, 0.45), block + new Location(0.5),
-                            block + new Location(0.5, 0.5, 0.501), player.TheWorld.Collision.ShouldCollide);
+                        CollisionResult hit = player.TheRegion.Collision.CuboidLineTrace(new Location(0.45, 0.45, 0.45), block + new Location(0.5),
+                            block + new Location(0.5, 0.5, 0.501), player.TheRegion.Collision.ShouldCollide);
                         if (!hit.Hit)
                         {
-                            player.TheWorld.SetBlockMaterial(block, (Material)item.Datum);
+                            player.TheRegion.SetBlockMaterial(block, (Material)item.Datum);
                             item.Count = item.Count - 1;
                             if (item.Count <= 0)
                             {
@@ -52,7 +52,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                             {
                                 player.Network.SendPacket(new SetItemPacketOut(player.Items.Items.IndexOf(item), item));
                             }
-                            player.LastBlockPlace = player.TheWorld.GlobalTickTime;
+                            player.LastBlockPlace = player.TheRegion.GlobalTickTime;
                         }
                     }
                 }

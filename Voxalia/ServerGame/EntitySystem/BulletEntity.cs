@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.EntitySystem
             : base(tworld)
         {
             Collide += new EventHandler<CollisionEventArgs>(OnCollide);
-            Gravity = Location.FromBVector(TheWorld.PhysicsWorld.ForceUpdater.Gravity);
+            Gravity = Location.FromBVector(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
         }
 
         public void OnCollide(object sender, CollisionEventArgs args)
@@ -33,7 +33,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 // TODO: Apply Splash Damage
                 // TODO: Apply Splash Impulses
             }
-            TheWorld.DespawnEntity(this);
+            TheRegion.DespawnEntity(this);
         }
 
         public override void Recalculate()

@@ -146,7 +146,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 Targetables.Add((EntityTargettable)e);
             }
-            e.TheWorld = this;
+            e.TheRegion = this;
             AbstractPacketOut packet = null;
             if (e is PhysicsEntity && !(e is PlayerEntity))
             {
@@ -656,7 +656,7 @@ namespace Voxalia.ServerGame.WorldSystem
             if (broadcast)
             {
                 // TODO: Send per-person based on chunk awareness details
-                SendToAll(new BlockEditPacketOut(pos, mat, dat));
+                SendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { mat }, new byte[] { dat }));
             }
         }
 
@@ -712,7 +712,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        public void BreakNaturally(Location pos)
+        public void BreakNaturally(Location pos, bool regen = true, bool transmit = true)
         {
             pos = pos.GetBlockLocation();
             Chunk ch = LoadChunk(ChunkLocFor(pos));
@@ -727,7 +727,10 @@ namespace Voxalia.ServerGame.WorldSystem
                 ch.AddToWorld();
                 ch.LastEdited = GlobalTickTime;
                 TrySurroundings(ch, pos, x, y, z);
-                SendToAll(new BlockEditPacketOut(pos, Material.AIR, 0));
+                if (transmit)
+                {
+                    SendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { Material.AIR }, new byte[] { 0 }));
+                }
                 BlockItemEntity bie = new BlockItemEntity(this, mat, bi.BlockData, pos);
                 SpawnEntity(bie);
             }
@@ -876,6 +879,91 @@ namespace Voxalia.ServerGame.WorldSystem
                 Thread.Sleep(16);
             }
             OncePerSecondActions();
+        }
+
+        public List<Location> GetBlocksInRadius(Location pos, float rad)
+        {
+            int min = (int)Math.Floor(-rad);
+            int max = (int)Math.Ceiling(rad);
+            List<Location> posset = new List<Location>();
+            for (int x = min; x < max; x++)
+            {
+                for (int y = min; y < max; y++)
+                {
+                    for (int z = min; z < max; z++)
+                    {
+                        Location post = new Location(pos.X + x, pos.Y + y, pos.Z + z);
+                        if ((post - pos).LengthSquared() <= rad * rad)
+                        {
+                            posset.Add(post);
+                        }
+                    }
+                }
+            }
+            return posset;
+        }
+
+        public List<PlayerEntity> GetPlayersInRadius(Location pos, float rad)
+        {
+            List<PlayerEntity> pes = new List<PlayerEntity>();
+            foreach (PlayerEntity pe in Players)
+            {
+                if ((pe.GetPosition() - pos).LengthSquared() <= rad * rad)
+                {
+                    pes.Add(pe);
+                }
+            }
+            return pes;
+        }
+
+        public List<Entity> GetEntitiesInRadius(Location pos, float rad)
+        {
+            List<Entity> es = new List<Entity>();
+            // TODO: Efficiency
+            foreach (Entity e in Entities)
+            {
+                if ((e.GetPosition() - pos).LengthSquared() <= rad * rad)
+                {
+                    es.Add(e);
+                }
+            }
+            return es;
+        }
+
+        public void Explode(Location pos, float rad = 5f, bool effect = true, bool breakblock = true, bool applyforce = true, bool doDamage = true)
+        {
+            if (breakblock)
+            {
+                List<Location> hits = GetBlocksInRadius(pos, rad / 3);
+                foreach (Location loc in hits)
+                {
+                    BreakNaturally(loc, true, true); // TODO: Regen + transmit in Explode() not Break().
+                }
+            }
+            if (effect)
+            {
+                ParticleEffectPacketOut pepo = new ParticleEffectPacketOut(ParticleEffectType.EXPLOSION, rad + 30, pos);
+                foreach (PlayerEntity pe in GetPlayersInRadius(pos, rad))
+                {
+                    pe.Network.SendPacket(pepo);
+                }
+                // TODO: Sound effect?
+            }
+            if (applyforce)
+            {
+                foreach (Entity e in GetEntitiesInRadius(pos, rad))
+                {
+                    // TODO: Generic entity 'ApplyForce' method
+                    if (e is PhysicsEntity)
+                    {
+                        ((PhysicsEntity)e).Body.ApplyImpulse(Vector3.Zero, new Vector3(rad, rad, rad * 3));
+                    }
+                }
+            }
+            if (doDamage)
+            {
+                // TODO: DO DAMAGE!
+            }
         }
     }
 }

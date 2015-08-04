@@ -23,7 +23,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                     {
                         BEPUutilities.Vector3 launchvec = (entry.Player.ForwardVector() * 100).ToBVector(); // TODO: Strength limits
                         PhysicsEntity pe = entry.Player.GrabJoint.Ent2;
-                        entry.Player.TheWorld.DestroyJoint(entry.Player.GrabJoint);
+                        entry.Player.TheRegion.DestroyJoint(entry.Player.GrabJoint);
                         entry.Player.GrabJoint = null;
                         pe.Body.ApplyLinearImpulse(ref launchvec);
                         pe.Body.ActivityInformation.Activate();
@@ -33,13 +33,13 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 entry.Player.Network.SendMessage("^1Can't throw this."); // TODO: Language, entry.output, etc.
                 return;
             }
-            ItemEntity ie = new ItemEntity(stack, entry.Player.TheWorld);
+            ItemEntity ie = new ItemEntity(stack, entry.Player.TheRegion);
             // TODO: Animate player
             Location fvel = entry.Player.ForwardVector();
             ie.SetPosition(entry.Player.GetEyePosition() + fvel);
             ie.SetOrientation(entry.Player.GetOrientation());
             ie.SetVelocity(fvel * 10);
-            entry.Player.TheWorld.SpawnEntity(ie);
+            entry.Player.TheRegion.SpawnEntity(ie);
             entry.Player.Items.RemoveItem(entry.Player.Items.cItem);
         }
     }

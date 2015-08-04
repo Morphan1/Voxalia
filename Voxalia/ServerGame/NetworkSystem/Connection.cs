@@ -230,7 +230,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                             }
                             player.ChunkNetwork = this;
                             PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
-                            player.TheWorld.SpawnEntity(player);
+                            player.TheRegion.SpawnEntity(player);
                             player.LastPingByte = 0;
                             player.LastCPingByte = 0;
                             SendPacket(new PingPacketOut(0));

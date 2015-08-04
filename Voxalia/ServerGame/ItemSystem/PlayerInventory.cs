@@ -6,7 +6,7 @@ namespace Voxalia.ServerGame.ItemSystem
     public class PlayerInventory: EntityInventory
     {
         public PlayerInventory(PlayerEntity player)
-            : base(player.TheWorld, player)
+            : base(player.TheRegion, player)
         {
         }
 

@@ -21,7 +21,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (user is PlayerEntity)
             {
                 ((PlayerEntity)user).Items.GiveItem(Stack);
-                TheWorld.DespawnEntity(this);
+                TheRegion.DespawnEntity(this);
                 return true;
             }
             return false;

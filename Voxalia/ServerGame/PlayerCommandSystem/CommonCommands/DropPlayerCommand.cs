@@ -25,20 +25,20 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 if (stack.Info == entry.Player.TheServer.Items.GetInfoFor("open_hand")
                     && entry.Player.GrabJoint != null)
                 {
-                    entry.Player.TheWorld.DestroyJoint(entry.Player.GrabJoint);
+                    entry.Player.TheRegion.DestroyJoint(entry.Player.GrabJoint);
                     entry.Player.GrabJoint = null;
                     return;
                 }
                 entry.Player.Network.SendMessage("^1Can't drop this."); // TODO: Language, entry.output, etc.
                 return;
             }
-            ItemEntity ie = new ItemEntity(stack, entry.Player.TheWorld);
+            ItemEntity ie = new ItemEntity(stack, entry.Player.TheRegion);
             // TODO: Animate player
             Location fvel = entry.Player.ForwardVector();
             ie.SetPosition(entry.Player.GetEyePosition() + fvel);
             ie.SetOrientation(entry.Player.GetOrientation());
             ie.SetVelocity(fvel);
-            entry.Player.TheWorld.SpawnEntity(ie);
+            entry.Player.TheRegion.SpawnEntity(ie);
             entry.Player.Items.RemoveItem(entry.Player.Items.cItem);
         }
     }

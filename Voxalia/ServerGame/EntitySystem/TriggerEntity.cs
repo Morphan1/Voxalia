@@ -39,7 +39,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public void Activate(Entity activator)
         {
-            TheWorld.Trigger(Target, this, activator);
+            TheRegion.Trigger(Target, this, activator);
         }
 
         public override List<KeyValuePair<string, string>> GetVariables()

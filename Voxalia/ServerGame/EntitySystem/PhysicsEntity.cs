@@ -15,7 +15,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public PhysicsEntity(Region tworld, bool ticks)
             : base(tworld, ticks)
         {
-            Gravity = Location.FromBVector(TheWorld.PhysicsWorld.ForceUpdater.Gravity);
+            Gravity = Location.FromBVector(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
             CGroup = CollisionUtil.Solid;
         }
 
@@ -86,7 +86,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
             Vector3 sweep = new Vector3(0, 0, -0.001f);
-            CollisionResult cr = TheWorld.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
+            CollisionResult cr = TheRegion.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
             if (cr.Hit && cr.HitEnt != null)
             {
                 SysConsole.Output(OutputType.WARNING, "Hit poorly implemented water!");
@@ -115,7 +115,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     return;
                 }
-                Vector3 impulse = -(TheWorld.PhysicsWorld.ForceUpdater.Gravity + TheWorld.GravityNormal.ToBVector() * 0.4f) * GetMass() * (float)TheWorld.Delta;
+                Vector3 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * GetMass() * (float)TheRegion.Delta;
                 Body.ApplyLinearImpulse(ref impulse);
                 Body.ActivityInformation.Activate();
             }
@@ -169,14 +169,14 @@ namespace Voxalia.ServerGame.EntitySystem
             // TODO: Other settings
             // TODO: Gravity
             SetFriction(Friction);
-            TheWorld.PhysicsWorld.Add(Body);
+            TheRegion.PhysicsWorld.Add(Body);
             for (int i = 0; i < Joints.Count; i++)
             {
                 if (Joints[i] is BaseJoint)
                 {
                     BaseJoint joint = (BaseJoint)Joints[i];
                     joint.CurrentJoint = joint.GetBaseJoint();
-                    TheWorld.PhysicsWorld.Add(joint.CurrentJoint);
+                    TheRegion.PhysicsWorld.Add(joint.CurrentJoint);
                 }
             }
         }
@@ -196,10 +196,10 @@ namespace Voxalia.ServerGame.EntitySystem
                 if (Joints[i] is BaseJoint)
                 {
                     BaseJoint joint = (BaseJoint)Joints[i];
-                    TheWorld.PhysicsWorld.Remove(joint.CurrentJoint);
+                    TheRegion.PhysicsWorld.Remove(joint.CurrentJoint);
                 }
             }
-            TheWorld.PhysicsWorld.Remove(Body);
+            TheRegion.PhysicsWorld.Remove(Body);
             Body = null;
         }
 

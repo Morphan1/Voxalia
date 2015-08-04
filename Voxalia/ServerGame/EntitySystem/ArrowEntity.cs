@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.EntitySystem
             : base(tworld)
         {
             Collide += new EventHandler<CollisionEventArgs>(OnCollide);
-            Vector3 grav = TheWorld.PhysicsWorld.ForceUpdater.Gravity;
+            Vector3 grav = TheRegion.PhysicsWorld.ForceUpdater.Gravity;
             Gravity = Location.FromBVector(grav);
             Scale = new Location(0.05f, 0.05f, 0.05f);
         }
@@ -31,7 +31,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 if (!StuckTo.IsSpawned)
                 {
-                    TheWorld.DespawnEntity(this);
+                    TheRegion.DespawnEntity(this);
                 }
             }
             else
@@ -68,12 +68,12 @@ namespace Voxalia.ServerGame.EntitySystem
                 SetPosition(args.Info.Position + (GetVelocity() / len) * 0.05f);
                 SetVelocity(Location.Zero);
                 Gravity = Location.Zero;
-                TheWorld.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
+                TheRegion.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
                 if (args.Info.HitEnt != null)
                 {
                     PhysicsEntity pe = (PhysicsEntity)args.Info.HitEnt.Tag;
                     JointForceWeld jfw = new JointForceWeld(pe, this);
-                    TheWorld.AddJoint(jfw);
+                    TheRegion.AddJoint(jfw);
                 }
             }
         }

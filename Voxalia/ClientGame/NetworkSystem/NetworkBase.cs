@@ -241,6 +241,9 @@ namespace Voxalia.ClientGame.NetworkSystem
                     case 28:
                         packet = new OperationStatusPacketIn();
                         break;
+                    case 29:
+                        packet = new ParticleEffectPacketIn();
+                        break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);
                 }

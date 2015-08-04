@@ -76,7 +76,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 ItemStack it = Items.GetItemForSlot(Items.cItem);
                 it.Info.SwitchFrom(this, it);
                 HookItem.RemoveHook(this);
-                TheWorld.DespawnEntity(this);
+                TheRegion.DespawnEntity(this);
             }
         }
 
@@ -120,6 +120,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol_ico", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/silenced_pistol.dae", false));
             Items.GiveItem(new ItemStack("shotgun_gun", TheServer, 1, "items/weapons/shotgun_ico", "Shotgun", "It shoots many bullets!", Color.White.ToArgb(), "items/weapons/shotgun.dae", false));
             Items.GiveItem(new ItemStack("bow", TheServer, 1, "items/weapons/bow_ico", "Bow", "It shoots arrows!", Color.White.ToArgb(), "items/weapons/bow.dae", false));
+            Items.GiveItem(new ItemStack("explodobow", TheServer, 1, "items/weapons/bow_ico", "ExplodoBow", "It shoots arrows that go boom!", Color.White.ToArgb(), "items/weapons/bow.dae", false));
             Items.GiveItem(new ItemStack("rifle_gun", TheServer, 1, "items/weapons/rifle_ico", "Assault Rifle", "It shoots rapid-fire bullets!", Color.White.ToArgb(), "items/weapons/m4a1.dae", false));
             Items.GiveItem(new ItemStack("rifle_gun", TheServer, 1, "items/weapons/minigun_ico", "Minigun", "It shoots ^ivery^r rapid-fire bullets!", Color.White.ToArgb(), "items/weapons/minigun.dae", false,
                 "firerate_mod", "0.1", "spread_mod", "5", "clipsize_mod", "10", "shots_mod", "3"));
@@ -148,16 +149,16 @@ namespace Voxalia.ServerGame.EntitySystem
             WheelBody.Tag = this;
             WheelBody.AngularDamping = 0.9f;
             WheelBody.LinearDamping = 0.9f;
-            TheWorld.PhysicsWorld.Add(WheelBody);
+            TheRegion.PhysicsWorld.Add(WheelBody);
             WheelBody.Gravity = Body.Gravity;
             bsj = new BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint(Body, WheelBody, WheelBody.Position);
-            TheWorld.PhysicsWorld.Add(bsj);
+            TheRegion.PhysicsWorld.Add(bsj);
             if (CursorMarker == null)
             {
-                CursorMarker = new CubeEntity(new Location(0.01, 0.01, 0.01), TheWorld, 0);
+                CursorMarker = new CubeEntity(new Location(0.01, 0.01, 0.01), TheRegion, 0);
                 CursorMarker.CGroup = CollisionUtil.NonSolid;
                 CursorMarker.Visible = false;
-                TheWorld.SpawnEntity(CursorMarker);
+                TheRegion.SpawnEntity(CursorMarker);
             }
         }
 
@@ -165,18 +166,18 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             if (bsj != null)
             {
-                TheWorld.PhysicsWorld.Remove(bsj);
+                TheRegion.PhysicsWorld.Remove(bsj);
                 bsj = null;
             }
             base.DestroyBody();
             if (WheelBody != null)
             {
-                TheWorld.PhysicsWorld.Remove(WheelBody);
+                TheRegion.PhysicsWorld.Remove(WheelBody);
                 WheelBody = null;
             }
             if (CursorMarker.IsSpawned)
             {
-                TheWorld.DespawnEntity(CursorMarker);
+                TheRegion.DespawnEntity(CursorMarker);
                 CursorMarker = null;
             }
         }
@@ -207,7 +208,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 lAnim = TheServer.Animations.GetAnimation(anim);
             }
-            TheWorld.SendToAll(new AnimationPacketOut(this, anim, mode));
+            TheRegion.SendToAll(new AnimationPacketOut(this, anim, mode));
         }
 
         public bool IgnoreThis(BroadPhaseEntry entry)
@@ -216,7 +217,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return false;
             }
-            return TheWorld.Collision.ShouldCollide(entry);
+            return TheRegion.Collision.ShouldCollide(entry);
         }
 
         public bool IgnorePlayers(BroadPhaseEntry entry)
@@ -225,7 +226,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return false;
             }
-            return TheWorld.Collision.ShouldCollide(entry);
+            return TheRegion.Collision.ShouldCollide(entry);
         }
 
         public float ItemSpeedMod = 1;
@@ -237,7 +238,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return;
             }
-            if (TheWorld.Delta <= 0)
+            if (TheRegion.Delta <= 0)
             {
                 return;
             }
@@ -258,7 +259,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Direction.Pitch = -89.9f;
             }
             bool fly = false;
-            CollisionResult crGround = TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.01f, HalfSize.Y - 0.01f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
+            CollisionResult crGround = TheRegion.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.01f, HalfSize.Y - 0.01f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
             if (Upward && !fly && !pup && crGround.Hit && GetVelocity().Z < 1f)
             {
                 Vector3 imp = (Location.UnitZ * GetMass() * 8f).ToBVector();
@@ -324,7 +325,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 pvel = pvel.Normalize() * MoveRateCap;
             }
-            pvel *= TheWorld.Delta * (crGround.Hit ? 1f : 0.1f);
+            pvel *= TheRegion.Delta * (crGround.Hit ? 1f : 0.1f);
             if (!fly)
             {
                 Vector3 move = new Vector3((float)pvel.X, (float)pvel.Y, 0);
@@ -363,7 +364,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (Click)
             {
                 cit.Info.Click(this, cit);
-                LastClick = TheWorld.GlobalTickTime;
+                LastClick = TheRegion.GlobalTickTime;
                 WasClicking = true;
             }
             else if (WasClicking)
@@ -374,7 +375,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (AltClick)
             {
                 cit.Info.AltClick(this, cit);
-                LastAltClick = TheWorld.GlobalTickTime;
+                LastAltClick = TheRegion.GlobalTickTime;
                 WasAltClicking = true;
             }
             else if (WasAltClicking)
@@ -384,7 +385,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             cit.Info.Tick(this, cit);
             Location pos = GetPosition();
-            Location cpos = TheWorld.ChunkLocFor(pos);
+            Location cpos = TheRegion.ChunkLocFor(pos);
             if (cpos != pChunkLoc)
             {
                 // TODO: Move to a separate method that's called once on startup + at every teleport... also, asyncify
@@ -434,7 +435,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public void TryChunk(Location worldPos, float atime, int posMult) // TODO: Efficiency?
         {
-            worldPos = TheWorld.ChunkLocFor(worldPos);
+            worldPos = TheRegion.ChunkLocFor(worldPos);
             ChunkAwarenessInfo cai = new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult };
             if (!ChunksAwareOf.ContainsKey(worldPos) || ChunksAwareOf[worldPos].LOD > posMult) // TODO: Efficiency - TryGetValue?
             {
@@ -448,7 +449,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 if (atime == 0)
                 {
-                    Chunk chk = TheWorld.LoadChunk(worldPos);
+                    Chunk chk = TheRegion.LoadChunk(worldPos);
                     ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult));
                     ChunksAwareOf.Remove(worldPos);
                     ChunksAwareOf.Add(worldPos, new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult, SendToClient = null });
@@ -456,7 +457,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 else
                 {
                     
-                    SyncScheduleItem item = TheServer.Schedule.ScheduleSyncTask(() => { if (!pkick) { Chunk chk = TheWorld.LoadChunk(worldPos); ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult)); } }, Utilities.UtilRandom.NextDouble() * atime);
+                    SyncScheduleItem item = TheServer.Schedule.ScheduleSyncTask(() => { if (!pkick) { Chunk chk = TheRegion.LoadChunk(worldPos); ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult)); } }, Utilities.UtilRandom.NextDouble() * atime);
                     ChunksAwareOf.Remove(worldPos);
                     ChunksAwareOf.Add(worldPos, new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult, SendToClient = item });
                 }
@@ -566,16 +567,16 @@ namespace Voxalia.ServerGame.EntitySystem
         public override void Die()
         {
             SetHealth(MaxHealth);
-            if (TheWorld.SpawnPoints.Count == 0)
+            if (TheRegion.SpawnPoints.Count == 0)
             {
                 SysConsole.Output(OutputType.WARNING, "No spawn points... generating one!");
-                TheWorld.SpawnEntity(new SpawnPointEntity(TheWorld) { Position = new Location(0, 0, 25) });
+                TheRegion.SpawnEntity(new SpawnPointEntity(TheRegion) { Position = new Location(0, 0, 25) });
             }
             SpawnPointEntity spe = null;
             for (int i = 0; i < 10; i++)
             {
-                spe = TheWorld.SpawnPoints[Utilities.UtilRandom.Next(TheWorld.SpawnPoints.Count)];
-                if (!TheWorld.Collision.CuboidLineTrace(HalfSize, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.01f)).Hit)
+                spe = TheRegion.SpawnPoints[Utilities.UtilRandom.Next(TheRegion.SpawnPoints.Count)];
+                if (!TheRegion.Collision.CuboidLineTrace(HalfSize, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.01f)).Hit)
                 {
                     break;
                 }

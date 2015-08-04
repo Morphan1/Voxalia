@@ -49,10 +49,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
-            SetVelocity(GetVelocity() * 0.99f + Gravity * TheWorld.Delta);
+            SetVelocity(GetVelocity() * 0.99f + Gravity * TheRegion.Delta);
             if (GetVelocity().LengthSquared() > 0)
             {
-                CollisionResult cr = TheWorld.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + GetVelocity() * TheWorld.Delta, FilterHandle);
+                CollisionResult cr = TheRegion.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + GetVelocity() * TheRegion.Delta, FilterHandle);
                 Location vel = GetVelocity();
                 if (cr.Hit && Collide != null)
                 {
@@ -62,12 +62,12 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     if (vel == GetVelocity())
                     {
-                        SetVelocity((cr.Position - GetPosition()) / TheWorld.Delta);
+                        SetVelocity((cr.Position - GetPosition()) / TheRegion.Delta);
                     }
                     SetPosition(cr.Position);
                     if (network && vel != GetVelocity())
                     {
-                        TheWorld.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
+                        TheRegion.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
                     }
                 }
             }
