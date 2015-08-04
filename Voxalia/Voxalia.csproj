@@ -136,6 +136,7 @@
     <Compile Include="ClientGame\CommandSystem\CommonCommands\PlayCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\QuitCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\ReloadCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\GameCommands\TesteffectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\ConnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\DisconnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\StartlocalserverCommand.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="ClientGame\GraphicsSystems\ParticleSystem\ParticleEngine.cs" />
     <Compile Include="ClientGame\GraphicsSystems\ParticleSystem\ParticleEffect.cs" />
     <Compile Include="ClientGame\GraphicsSystems\ModelEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\ParticleSystem\ParticleHelper.cs" />
     <Compile Include="ClientGame\GraphicsSystems\Plane.cs" />
     <Compile Include="ClientGame\GraphicsSystems\Renderer.cs" />
     <Compile Include="ClientGame\GraphicsSystems\RenderSurface4Part.cs" />

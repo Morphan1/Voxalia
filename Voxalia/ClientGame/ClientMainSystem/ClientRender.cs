@@ -522,7 +522,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     TheWorld.Entities[i].Render();
                 }
                 Rendering.SetMinimumLight(1f);
-                Particles.Render();
+                Particles.Engine.Render();
             }
             if (FBOid == 1)
             {

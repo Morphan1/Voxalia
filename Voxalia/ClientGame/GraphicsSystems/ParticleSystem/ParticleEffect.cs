@@ -29,6 +29,10 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public Location Color;
 
+        public Location Color2;
+
+        public Location EndPos;
+
         public Texture texture;
 
         public ParticleEffect(Client tclient)
@@ -49,7 +53,11 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                 }
             }
             texture.Bind();
-            TheClient.Rendering.SetColor(new Color4((byte)(255 * Color.X), (byte)(255 * Color.Y), (byte)(255 * Color.Z), (byte)(255 * Alpha)));
+            Vector4 scolor = new Vector4((float)Color.X, (float)Color.Y, (float)Color.Z, Alpha);
+            Vector4 scolor2 = new Vector4((float)Color2.X, (float)Color2.Y, (float)Color2.Z, Alpha);
+            float rel = TTL / O_TTL;
+            TheClient.Rendering.SetColor(scolor * rel + scolor2 * (1 - rel));
+            Location cpos = (EndPos - One) * (1 - rel);
             switch (Type)
             {
                 case ParticleEffectType.LINE:
@@ -58,7 +66,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                         {
                             GL.LineWidth(Data);
                         }
-                        TheClient.Rendering.RenderLine(One, Two);
+                        TheClient.Rendering.RenderLine(cpos + One, cpos + Two);
                         if (Data != 1)
                         {
                             GL.LineWidth(1);
@@ -67,7 +75,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                     break;
                 case ParticleEffectType.CYLINDER:
                     {
-                        TheClient.Rendering.RenderCylinder(One, Two, Data);
+                        TheClient.Rendering.RenderCylinder(cpos + One, cpos + Two, Data);
                     }
                     break;
                 case ParticleEffectType.LINEBOX:
@@ -76,7 +84,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                         {
                             GL.LineWidth(Data);
                         }
-                        TheClient.Rendering.RenderLineBox(One, Two);
+                        TheClient.Rendering.RenderLineBox(cpos + One, cpos + Two);
                         if (Data != 1)
                         {
                             GL.LineWidth(1);
@@ -85,14 +93,14 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                     break;
                 case ParticleEffectType.BOX:
                     {
-                        Matrix4 mat = Matrix4.CreateScale(Two.ToOVector()) * Matrix4.CreateTranslation(One.ToOVector());
+                        Matrix4 mat = Matrix4.CreateScale(Two.ToOVector()) * Matrix4.CreateTranslation((cpos + One).ToOVector());
                         GL.UniformMatrix4(2, false, ref mat);
                         TheClient.Models.Cube.Draw();
                     }
                     break;
                 case ParticleEffectType.SPHERE:
                     {
-                        Matrix4 mat = Matrix4.CreateScale(Two.ToOVector()) * Matrix4.CreateTranslation(One.ToOVector());
+                        Matrix4 mat = Matrix4.CreateScale(Two.ToOVector()) * Matrix4.CreateTranslation((cpos + One).ToOVector());
                         GL.UniformMatrix4(2, false, ref mat);
                         TheClient.Models.Sphere.Draw();
                     }

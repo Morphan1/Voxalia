@@ -310,10 +310,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Client.Central.Models.Cylinder.Draw(); // TODO: Models reference in constructor - or client reference?
         }
 
+        public void SetColor(Vector4 col)
+        {
+            GL.Uniform4(3, ref col);
+        }
+
         public void SetColor(Color4 c)
         {
-            Vector4 col = new Vector4(c.R, c.G, c.B, c.A);
-            GL.Uniform4(3, ref col);
+            SetColor(new Vector4(c.R, c.G, c.B, c.A));
         }
 
         public void SetMinimumLight(float min)

@@ -121,7 +121,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             if (!scene.HasMeshes)
             {
-                throw new Exception("Scene has no meshes!");
+                throw new Exception("Scene has no meshes! (" + name + ")");
             }
             Model model = new Model(name);
             model.Engine = this;
@@ -140,11 +140,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 bool hasn = mesh.HasNormals;
                 if (!hasn)
                 {
-                    SysConsole.Output(OutputType.WARNING, "Mesh has no normals!");
+                    SysConsole.Output(OutputType.WARNING, "Mesh has no normals! (" + name + ")");
                 }
                 if (!hastc)
                 {
-                    SysConsole.Output(OutputType.WARNING, "Mesh has no texcoords!");
+                    SysConsole.Output(OutputType.WARNING, "Mesh has no texcoords! (" + name + ")");
                 }
                 for (int i = 0; i < mesh.Vertices.Count; i++)
                 {
@@ -180,13 +180,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                     else
                     {
-                        SysConsole.Output(OutputType.WARNING, "Mesh has face with " + face.Indices.Count + " vertices!");
+                        SysConsole.Output(OutputType.WARNING, "Mesh has face with " + face.Indices.Count + " vertices! (" + name + ")");
                     }
                 }
                 int bc = mesh.Bones.Count;
                 if (bc > 200)
                 {
-                    SysConsole.Output(OutputType.WARNING, "Mesh has " + bc + " bones!");
+                    SysConsole.Output(OutputType.WARNING, "Mesh has " + bc + " bones! (" + name + ")");
                     bc = 200;
                 }
                 modmesh.vbo.BoneIDs = new Vector4[modmesh.vbo.Vertices.Count].ToList();

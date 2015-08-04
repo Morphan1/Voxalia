@@ -3,6 +3,7 @@ using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.CommandSystem.UICommands;
 using Voxalia.ClientGame.CommandSystem.CommonCommands;
 using Voxalia.ClientGame.CommandSystem.NetworkCommands;
+using Voxalia.ClientGame.CommandSystem.GameCommands;
 
 namespace Voxalia.ClientGame.CommandSystem
 {
@@ -61,6 +62,9 @@ namespace Voxalia.ClientGame.CommandSystem
             CommandSystem.RegisterCommand(new ConnectCommand(TheClient));
             CommandSystem.RegisterCommand(new DisconnectCommand(TheClient));
             CommandSystem.RegisterCommand(new StartlocalserverCommand(TheClient));
+
+            // Game Commands
+            CommandSystem.RegisterCommand(new TesteffectCommand(TheClient));
         }
 
         /// <summary>
