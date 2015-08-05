@@ -24,11 +24,41 @@ namespace Voxalia.Shared.Files
         /// <summary>
         /// The base directory in which all data is stored.
         /// </summary>
-        public static string BaseDirectory = Environment.CurrentDirectory.Replace("\\", "/") + "/data/";
+        public string BaseDirectory = Environment.CurrentDirectory.Replace('\\', '/') + "/data/";
+
+        public List<string> SubDirectories = new List<string>();
+
+        public void LoadDir(string dir)
+        {
+            dir = dir.Replace('\\', '/');
+            dir = dir.Replace("..", "__error__");
+            string fdir = Environment.CurrentDirectory.Replace('\\', '/') + "/" + dir.ToLower() + "/";
+            if (SubDirectories.Contains(fdir))
+            {
+                SysConsole.Output(OutputType.WARNING, "Ignoring attempt to add same directory twice.");
+                return;
+            }
+            SubDirectories.Add(fdir);
+            foreach (PakFile pf in Paks)
+            {
+                pf.Storer.Dispose();
+            }
+            Paks.Clear();
+            Files.Clear();
+            Init();
+        }
 
         public void Init()
         {
-            string[] allfiles = Directory.GetFiles(BaseDirectory, "*.*", SearchOption.AllDirectories);
+            foreach (string str in SubDirectories)
+            {
+                load(str, Directory.GetFiles(str, "*.*", SearchOption.AllDirectories));
+            }
+            load(BaseDirectory, Directory.GetFiles(BaseDirectory, "*.*", SearchOption.AllDirectories));
+        }
+
+        void load(string pth, string[] allfiles)
+        {
             foreach (string tfile in allfiles)
             {
                 string file = tfile.Replace('\\', '/');
@@ -38,18 +68,17 @@ namespace Voxalia.Shared.Files
                 }
                 if (file.EndsWith(".pak"))
                 {
-                    Paks.Add(new PakFile(file.Replace(BaseDirectory, "")));
+                    Paks.Add(new PakFile(file.Replace(pth, "").ToLower(), file));
                 }
                 else
                 {
-                    Files.Add(new PakkedFile(file.Replace(BaseDirectory, "").ToLower()));
+                    Files.Add(new PakkedFile(file.Replace(pth, "").ToLower(), file));
                 }
             }
             int id = 0;
             foreach (PakFile pak in Paks)
             {
                 List<ZipStorer.ZipFileEntry> zents = pak.Storer.ReadCentralDir();
-                SysConsole.Output(OutputType.INIT, id + ") Pak " + pak.Name + " has " + zents.Count + " files.");
                 pak.FileListIndex = Files.Count;
                 foreach (ZipStorer.ZipFileEntry zent in zents)
                 {
@@ -58,7 +87,7 @@ namespace Voxalia.Shared.Files
                     {
                         continue;
                     }
-                    Files.Add(new PakkedFile(name, id, zent));
+                    Files.Add(new PakkedFile(name, "", id, zent));
                 }
                 id++;
             }
@@ -169,7 +198,7 @@ namespace Voxalia.Shared.Files
             }
             else
             {
-                return File.ReadAllBytes(BaseDirectory + file.Name);
+                return File.ReadAllBytes(file.Handle);
             }
         }
 
@@ -236,12 +265,34 @@ namespace Voxalia.Shared.Files
         public void WriteBytes(string filename, byte[] bytes)
         {
             string fname = CleanFileName(filename);
-            string dir = Path.GetDirectoryName(BaseDirectory + fname);
+            string finname;
+            if (SubDirectories.Count > 0)
+            {
+                finname = SubDirectories[0] + fname;
+            }
+            else
+            {
+                finname = BaseDirectory + fname;
+            }
+            string dir = Path.GetDirectoryName(finname);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
             }
-            File.WriteAllBytes(BaseDirectory + fname, bytes);
+            File.WriteAllBytes(finname, bytes);
+            for (int i = 0; i < Files.Count; i++)
+            {
+                if (Files[i] == null)
+                {
+                    // TODO: Find out why this can happen
+                    continue;
+                }
+                if (Files[i].Handle == finname)
+                {
+                    return;
+                }
+            }
+            Files.Insert(0, new PakkedFile(fname, finname));
         }
 
         /// <summary>
@@ -304,20 +355,24 @@ namespace Voxalia.Shared.Files
     {
         public string Name = null;
 
+        public string Handle = null;
+
         public bool IsPakked = false;
 
         public int PakIndex = -1;
 
         public ZipStorer.ZipFileEntry Entry;
 
-        public PakkedFile(string name)
+        public PakkedFile(string name, string handle)
         {
             Name = name;
+            Handle = handle;
         }
 
-        public PakkedFile(string name, int index, ZipStorer.ZipFileEntry entry)
+        public PakkedFile(string name, string handle, int index, ZipStorer.ZipFileEntry entry)
         {
             Name = name;
+            Handle = handle;
             IsPakked = true;
             PakIndex = index;
             Entry = entry;
@@ -327,12 +382,14 @@ namespace Voxalia.Shared.Files
     public class PakFile
     {
         public string Name = null;
+        public string Handle = null;
         public ZipStorer Storer = null;
         public int FileListIndex = 0;
-        public PakFile(string name)
+        public PakFile(string name, string handle)
         {
+            Handle = handle;
             Name = name;
-            Storer = ZipStorer.Open(FileHandler.BaseDirectory + name, FileAccess.Read);
+            Storer = ZipStorer.Open(handle, FileAccess.Read);
         }
     }
 }

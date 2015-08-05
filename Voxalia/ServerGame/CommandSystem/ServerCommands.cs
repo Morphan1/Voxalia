@@ -2,6 +2,7 @@
 using Frenetic.CommandSystem;
 using Voxalia.ServerGame.CommandSystem.CommonCommands;
 using Voxalia.ServerGame.CommandSystem.PlayerCommands;
+using Voxalia.ServerGame.CommandSystem.FileCommands;
 
 namespace Voxalia.ServerGame.CommandSystem
 {
@@ -40,6 +41,9 @@ namespace Voxalia.ServerGame.CommandSystem
             // Common Commands
             CommandSystem.RegisterCommand(new QuitCommand(TheServer));
             CommandSystem.RegisterCommand(new SayCommand(TheServer));
+
+            // File Commands
+            CommandSystem.RegisterCommand(new AddpathCommand(TheServer));
 
             // World Commands
             // ...

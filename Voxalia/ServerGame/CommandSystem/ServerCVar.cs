@@ -28,7 +28,7 @@ namespace Voxalia.ServerGame.CommandSystem
             system = new CVarSystem(output);
 
             // System CVars
-            s_filepath = Register("s_filepath", FileHandler.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly); // The current system environment filepath (The directory of /data).
+            s_filepath = Register("s_filepath", Program.Files.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly); // The current system environment filepath (The directory of /data).
             // Game CVars
             g_timescale = Register("g_timescale", "1", CVarFlag.Numeric); // The current game time scaling value.
             g_fps = Register("g_fps", "30", CVarFlag.Numeric); // What framerate to use.
