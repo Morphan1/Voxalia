@@ -7,8 +7,8 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class BulletEntity: PrimitiveEntity
     {
-        public BulletEntity(Region tworld)
-            : base(tworld)
+        public BulletEntity(Region tregion)
+            : base(tregion)
         {
             Collide += new EventHandler<CollisionEventArgs>(OnCollide);
             Gravity = Location.FromBVector(TheRegion.PhysicsWorld.ForceUpdater.Gravity);

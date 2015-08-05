@@ -6,8 +6,8 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class TargetPositionEntity: TargetEntity
     {
-        public TargetPositionEntity(Region tworld)
-            : base(tworld)
+        public TargetPositionEntity(Region tregion)
+            : base(tregion)
         {
         }
 

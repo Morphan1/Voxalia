@@ -6,8 +6,8 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public abstract class TriggerEntity : CuboidalEntity
     {
-        public TriggerEntity(Location halfsize, Region tworld)
-            : base(halfsize, tworld, false, 0)
+        public TriggerEntity(Location halfsize, Region tregion)
+            : base(halfsize, tregion, false, 0)
         {
             NetworkMe = false;
         }

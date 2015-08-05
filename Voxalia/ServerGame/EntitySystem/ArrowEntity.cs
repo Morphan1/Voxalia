@@ -9,8 +9,8 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class ArrowEntity: PrimitiveEntity
     {
-        public ArrowEntity(Region tworld)
-            : base(tworld)
+        public ArrowEntity(Region tregion)
+            : base(tregion)
         {
             Collide += new EventHandler<CollisionEventArgs>(OnCollide);
             Vector3 grav = TheRegion.PhysicsWorld.ForceUpdater.Gravity;

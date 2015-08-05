@@ -9,8 +9,8 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public string vehName;
 
-        public VehicleEntity(string vehicle, Region tworld)
-            : base("vehicles/" + vehicle + "_base.dae", tworld)
+        public VehicleEntity(string vehicle, Region tregion)
+            : base("vehicles/" + vehicle + "_base.dae", tregion)
         {
             vehName = vehicle;
             SetMass(100);

@@ -89,7 +89,7 @@ namespace Voxalia.ClientGame.NetworkSystem
         {
             Disconnect();
             Strings.Strings.Clear();
-            TheClient.ResetWorld();
+            TheClient.Resetregion();
             LastIP = IP;
             LastPort = port;
             ConnectionThread = new Thread(new ThreadStart(ConnectInternal));

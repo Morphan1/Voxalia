@@ -7,9 +7,9 @@ namespace Voxalia.ClientGame.WorldSystem
     {
         public Region TheWorld;
 
-        public LoadAllChunksSystem(Region tworld)
+        public LoadAllChunksSystem(Region tregion)
         {
-            TheWorld = tworld;
+            TheWorld = tregion;
         }
 
         public int Count = 0;

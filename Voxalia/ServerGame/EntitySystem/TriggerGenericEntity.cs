@@ -7,8 +7,8 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class TriggerGenericEntity: TriggerEntity, EntityUseable
     {
-        public TriggerGenericEntity(Location half, Region tworld)
-            : base(half, tworld)
+        public TriggerGenericEntity(Location half, Region tregion)
+            : base(half, tregion)
         {
         }
 

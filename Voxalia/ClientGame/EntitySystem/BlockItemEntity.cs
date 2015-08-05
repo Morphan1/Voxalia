@@ -12,8 +12,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public Material Mat;
         public byte Dat;
 
-        public BlockItemEntity(Region tworld, Material tmat, byte dat)
-            : base(tworld, false, true)
+        public BlockItemEntity(Region tregion, Material tmat, byte dat)
+            : base(tregion, false, true)
         {
             Mat = tmat;
             Dat = dat;

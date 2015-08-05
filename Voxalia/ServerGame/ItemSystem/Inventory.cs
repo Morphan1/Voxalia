@@ -8,9 +8,9 @@ namespace Voxalia.ServerGame.ItemSystem
     {
         public WorldSystem.Region TheWorld;
 
-        public Inventory(WorldSystem.Region tworld)
+        public Inventory(WorldSystem.Region tregion)
         {
-            TheWorld = tworld;
+            TheWorld = tregion;
         }
 
         public List<ItemStack> Items = new List<ItemStack>();

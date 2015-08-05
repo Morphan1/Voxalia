@@ -8,8 +8,8 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public ItemStack Stack;
 
-        public ItemEntity(ItemStack stack, Region tworld)
-            : base(stack.Model, tworld)
+        public ItemEntity(ItemStack stack, Region tregion)
+            : base(stack.Model, tregion)
         {
             Stack = stack;
             SetMass(5 * stack.Count); // TODO: Weight property for items!

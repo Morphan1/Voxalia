@@ -10,8 +10,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public Location Color = Location.One;
         public float Radius = 10;
 
-        public PointLightEntity(Region tworld)
-            : base(tworld)
+        public PointLightEntity(Region tregion)
+            : base(tregion)
         {
             network = false; // TODO: Maybe network?
         }

@@ -21,7 +21,7 @@ namespace Voxalia.ServerGame.JointSystem
             return new TwistJoint(Ent1.Body, Ent2.Body, AxisOne.ToBVector(), AxisTwo.ToBVector());
         }
 
-        public override bool ApplyVar(Region tworld, string var, string value)
+        public override bool ApplyVar(Region tregion, string var, string value)
         {
             switch (var)
             {
@@ -32,7 +32,7 @@ namespace Voxalia.ServerGame.JointSystem
                     AxisTwo = Location.FromString(value);
                     return true;
                 default:
-                    return base.ApplyVar(tworld, var, value);
+                    return base.ApplyVar(tregion, var, value);
             }
         }
 

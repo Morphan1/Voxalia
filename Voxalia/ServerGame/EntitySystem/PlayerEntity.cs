@@ -100,8 +100,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public ConvexShape WheelShape = null;
 
-        public PlayerEntity(WorldSystem.Region tworld, Connection conn)
-            : base(tworld, true, 100f)
+        public PlayerEntity(WorldSystem.Region tregion, Connection conn)
+            : base(tregion, true, 100f)
         {
             Network = conn;
             SetMass(tmass / 2f);

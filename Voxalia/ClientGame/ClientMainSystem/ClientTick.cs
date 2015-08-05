@@ -165,7 +165,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public double CameraDistance;
 
-        public void ResetWorld()
+        public void Resetregion()
         {
             Items.Clear();
             QuickBarPos = 0;

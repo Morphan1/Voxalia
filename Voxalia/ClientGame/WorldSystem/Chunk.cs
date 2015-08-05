@@ -143,14 +143,14 @@ namespace Voxalia.ClientGame.WorldSystem
 
         void AddInternal(Action callback)
         {
-            StaticMesh tworldObject = CalculateChunkShape();
+            StaticMesh tregionObject = CalculateChunkShape();
             OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
             {
                 if (worldObject != null)
                 {
                     OwningRegion.RemoveChunkQuiet(worldObject);
                 }
-                worldObject = tworldObject;
+                worldObject = tregionObject;
                 if (worldObject != null)
                 {
                     OwningRegion.AddChunk(worldObject);

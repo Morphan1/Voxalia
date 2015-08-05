@@ -5,8 +5,8 @@ namespace Voxalia.ServerGame.ItemSystem
 {
     public class EntityInventory: Inventory
     {
-        public EntityInventory(Region tworld, Entity owner)
-            : base(tworld)
+        public EntityInventory(Region tregion, Entity owner)
+            : base(tregion)
         {
             Owner = owner;
         }

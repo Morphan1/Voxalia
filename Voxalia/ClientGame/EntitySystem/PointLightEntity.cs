@@ -12,8 +12,8 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public int texturesize = 256;
 
-        public PointLightEntity(Region tworld)
-            : base(tworld, false)
+        public PointLightEntity(Region tregion)
+            : base(tregion, false)
         {
         }
 

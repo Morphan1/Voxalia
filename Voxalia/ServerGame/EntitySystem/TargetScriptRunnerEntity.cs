@@ -8,8 +8,8 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class TargetScriptRunnerEntity: TargetEntity
     {
-        public TargetScriptRunnerEntity(Region tworld)
-            : base(tworld)
+        public TargetScriptRunnerEntity(Region tregion)
+            : base(tregion)
         {
         }
 

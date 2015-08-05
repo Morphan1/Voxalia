@@ -55,8 +55,8 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public PlayerStance Stance = PlayerStance.STAND;
 
-        public OtherPlayerEntity(Region tworld, Location half)
-            : base (tworld, true, true)
+        public OtherPlayerEntity(Region tregion, Location half)
+            : base (tregion, true, true)
         {
             HalfSize = half;
             SetMass(tmass / 2f);

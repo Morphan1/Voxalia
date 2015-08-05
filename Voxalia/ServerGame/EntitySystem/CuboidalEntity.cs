@@ -18,8 +18,8 @@ namespace Voxalia.ServerGame.EntitySystem
             TexCoords = "1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f|1/1/0/0/f/f".Split('|');
         }
 
-        public CuboidalEntity(Location half, Region tworld, bool ticks, float mass)
-            : base(tworld, ticks)
+        public CuboidalEntity(Location half, Region tregion, bool ticks, float mass)
+            : base(tregion, ticks)
         {
             DefTexs();
             HalfSize = half;

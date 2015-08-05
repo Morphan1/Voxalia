@@ -7,8 +7,8 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class CubeEntity: CuboidalEntity
     {
-        public CubeEntity(Location half, Region tworld, float mass)
-            : base(half, tworld, true, mass)
+        public CubeEntity(Location half, Region tregion, float mass)
+            : base(half, tregion, true, mass)
         {
             NetworkMe = true;
         }

@@ -23,8 +23,8 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public ModelCollisionMode mode = ModelCollisionMode.AABB;
 
-        public ModelEntity(string model_in, Region tworld)
-            : base(tworld, true, true)
+        public ModelEntity(string model_in, Region tregion)
+            : base(tregion, true, true)
         {
             mod = model_in;
         }

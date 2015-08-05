@@ -16,14 +16,14 @@ namespace Voxalia.ServerGame.JointSystem
 
         public bool Enabled = false;
 
-        public virtual bool ApplyVar(Region tworld, string var, string value)
+        public virtual bool ApplyVar(Region tregion, string var, string value)
         {
             switch (var)
             {
                 case "one":
-                    return tworld.JointTargets.TryGetValue(value, out One);
+                    return tregion.JointTargets.TryGetValue(value, out One);
                 case "two":
-                    return tworld.JointTargets.TryGetValue(value, out Two);
+                    return tregion.JointTargets.TryGetValue(value, out Two);
                 default:
                     return false;
             }

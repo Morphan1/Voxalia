@@ -14,10 +14,10 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public Region TheRegion;
 
-        public Entity(Region tworld, bool tickme)
+        public Entity(Region tregion, bool tickme)
         {
-            TheRegion = tworld;
-            TheServer = tworld.TheServer;
+            TheRegion = tregion;
+            TheServer = tregion.TheServer;
             Ticks = tickme;
         }
 

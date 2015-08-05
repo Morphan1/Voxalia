@@ -14,10 +14,10 @@ namespace Voxalia.ClientGame.EntitySystem
     {
         public OpenTK.Graphics.Color4 Color;
 
-        public Entity(Region tworld, bool tickme, bool cast_shadows)
+        public Entity(Region tregion, bool tickme, bool cast_shadows)
         {
-            TheWorld = tworld;
-            TheClient = tworld.TheClient;
+            TheWorld = tregion;
+            TheClient = tregion.TheClient;
             Ticks = tickme;
             Color = new OpenTK.Graphics.Color4((float)Utilities.UtilRandom.NextDouble(), (float)Utilities.UtilRandom.NextDouble(), 0f, 1f);
             CastShadows = cast_shadows;

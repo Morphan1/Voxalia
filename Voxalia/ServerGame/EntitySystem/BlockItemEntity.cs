@@ -11,8 +11,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public Material Mat;
         public byte Dat;
 
-        public BlockItemEntity(WorldSystem.Region tworld, Material mat, byte dat, Location pos)
-            : base(tworld, true)
+        public BlockItemEntity(WorldSystem.Region tregion, Material mat, byte dat, Location pos)
+            : base(tregion, true)
         {
             SetMass(5);
             CGroup = CollisionUtil.Item;

@@ -10,8 +10,8 @@ namespace Voxalia.ClientGame.EntitySystem
 {
     public class CubeEntity : PhysicsEntity
     {
-        public CubeEntity(Region tworld, Location halfsize)
-            : base(tworld, true, true)
+        public CubeEntity(Region tregion, Location halfsize)
+            : base(tregion, true, true)
         {
             HalfSize = halfsize;
             Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);

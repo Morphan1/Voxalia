@@ -10,8 +10,8 @@ namespace Voxalia.ClientGame.EntitySystem
 {
     public class BasicPrimitiveEntity: PrimitiveEntity
     {
-        public BasicPrimitiveEntity(Region tworld, bool cast_shadows)
-            : base(tworld, cast_shadows)
+        public BasicPrimitiveEntity(Region tregion, bool cast_shadows)
+            : base(tregion, cast_shadows)
         {
         }
 

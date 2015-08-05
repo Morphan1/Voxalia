@@ -4,8 +4,8 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public abstract class EntityLiving: PhysicsEntity, EntityDamageable
     {
-        public EntityLiving(Region tworld, bool ticks, float maxhealth)
-            : base(tworld, ticks)
+        public EntityLiving(Region tregion, bool ticks, float maxhealth)
+            : base(tregion, ticks)
         {
             MaxHealth = maxhealth;
             Health = maxhealth;
