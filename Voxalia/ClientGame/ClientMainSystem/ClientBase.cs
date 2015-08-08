@@ -23,8 +23,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
     /// </summary>
     public partial class Client
     {
+        /// <summary>
+        /// The linked server if playing singleplayer.
+        /// </summary>
         public Server LocalServer = null;
 
+        /// <summary>
+        /// The scheduling engine used for general client tasks.
+        /// </summary>
         public Scheduler Schedule = new Scheduler();
 
         /// <summary>
@@ -46,16 +52,34 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// </summary>
         public GameWindow Window;
 
+        /// <summary>
+        /// Handles all command line (console) input from the client via Frenetic.
+        /// </summary>
         public ClientCommands Commands;
 
+        /// <summary>
+        /// Handles all client-editable variables.
+        /// </summary>
         public ClientCVar CVars;
 
+        /// <summary>
+        /// Handles client-to-server networking.
+        /// </summary>
         public NetworkBase Network;
 
+        /// <summary>
+        /// The username the player will connect under.
+        /// </summary>
         public string Username = "Player" + new Random().Next(1000);
 
+        /// <summary>
+        /// The texture of an Item Frame, for UI rendering.
+        /// </summary>
         public Texture ItemFrame;
 
+        /// <summary>
+        /// The current 'Screen' object.
+        /// </summary>
         public Screen CScreen;
 
         /// <summary>
@@ -92,33 +116,84 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Window.Mouse.WheelChanged += new EventHandler<MouseWheelEventArgs>(KeyHandler.Mouse_Wheel);
             Window.Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonDown);
             Window.Mouse.ButtonUp += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonUp);
-            Window.Closed += new EventHandler<EventArgs>(Window_Closed);
             onVsyncChanged(CVars.r_vsync, null);
             Window.Run(60, 60);
         }
-
-        void Window_Closed(object sender, EventArgs e)
-        {
-            Process.GetCurrentProcess().Kill();
-        }
-
+        
+        /// <summary>
+        /// The system that manages textures (images) on the client.
+        /// </summary>
         public TextureEngine Textures;
+
+        /// <summary>
+        /// The system that manages OpenGL shaders on the client.
+        /// </summary>
         public ShaderEngine Shaders;
+
+        /// <summary>
+        /// The system that manages internal render-ready fonts on the client.
+        /// </summary>
         public GLFontEngine Fonts;
+
+        /// <summary>
+        /// The system that manages text rendering systems ("Font Sets") on the client.
+        /// </summary>
         public FontSetEngine FontSets;
+        
+        /// <summary>
+        /// The system that manages misc. rendering tasks for the client.
+        /// </summary>
         public Renderer Rendering;
+        
+        /// <summary>
+        /// The system that manages 3D models on the client.
+        /// </summary>
         public ModelEngine Models;
+
+        /// <summary>
+        /// The system that manages 3D model animation sets on the client.
+        /// </summary>
         public AnimationEngine Animations;
+
+        /// <summary>
+        /// The system that manages sounds (audio) on the client.
+        /// </summary>
         public SoundEngine Sounds;
+
+        /// <summary>
+        /// The system that manages particle effects (quick simple 3D-rendered-only objects) for the client.
+        /// </summary>
         public ParticleHelper Particles;
+
+        /// <summary>
+        /// The system that manages block textures on the client.
+        /// </summary>
         public TextureBlock TBlock;
 
+        /// <summary>
+        /// The current PlayerEntity in the game.
+        /// Can be null if not in a game.
+        /// </summary>
         public PlayerEntity Player;
 
+        /// <summary>
+        /// OpenGL's "vendor" string.
+        /// </summary>
         public string GLVendor;
+
+        /// <summary>
+        /// OpenGL's "version" string.
+        /// </summary>
         public string GLVersion;
+
+        /// <summary>
+        /// OpenGL's "renderer" string.
+        /// </summary>
         public string GLRenderer;
 
+        /// <summary>
+        /// Called when the window is loading, only to be used by the startup process.
+        /// </summary>
         void Window_Load(object sender, EventArgs e)
         {
             SysConsole.Output(OutputType.INIT, "Window generated!");
@@ -186,11 +261,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
             ShowMainMenu();
         }
 
+        /// <summary>
+        /// Called or call when the value of the VSync CVar changes, or VSync needs to be recalculated.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="e"></param>
         public void onVsyncChanged(object obj, EventArgs e)
         {
             Window.VSync = CVars.r_vsync.ValueB ? VSyncMode.Adaptive : VSyncMode.Off;
         }
         
+        /// <summary>
+        /// Shows the 'game' screen to the client - delays until chunks are loaded.
+        /// </summary>
         public void ShowGame()
         {
             if (IsWaitingOnChunks())
@@ -214,26 +297,42 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
         }
 
+        /// <summary>
+        /// Shows the 'singleplayer' main menu screen to the client.
+        /// </summary>
         public void ShowSingleplayer()
         {
             CScreen = TheSingleplayerMenuScreen;
             CScreen.SwitchTo();
         }
 
+        /// <summary>
+        /// Shows the main menu screen to the client.
+        /// </summary>
         public void ShowMainMenu()
         {
             CScreen = TheMainMenuScreen;
             CScreen.SwitchTo();
         }
 
+        /// <summary>
+        /// Shows the 'waiting on chunks' menu screen to the client.
+        /// </summary>
         public void ShowChunkWaiting()
         {
             CScreen = TheChunkWaitingScreen;
             CScreen.SwitchTo();
         }
 
+        /// <summary>
+        /// For use by ProcessChunks() alone.
+        /// </summary>
         byte pMode = 0;
 
+        /// <summary>
+        /// Loads all unloaded but waiting chunks.
+        /// ASync.
+        /// </summary>
         public void ProcessChunks()
         {
             if (pMode != 0)
@@ -285,23 +384,47 @@ namespace Voxalia.ClientGame.ClientMainSystem
             });
         }
 
+        /// <summary>
+        /// Returns whether the client is currently on the 'chunk waiting' screen.
+        /// </summary>
         public bool IsWaitingOnChunks()
         {
             return CScreen is ChunkWaitingScreen;
         }
 
+        /// <summary>
+        /// The "Game" screen.
+        /// </summary>
         GameScreen TheGameScreen;
 
+        /// <summary>
+        /// The main menu screen.
+        /// </summary>
         MainMenuScreen TheMainMenuScreen;
 
+        /// <summary>
+        /// The "singleplayer" main menu screen.
+        /// </summary>
         SingleplayerMenuScreen TheSingleplayerMenuScreen;
 
+        /// <summary>
+        /// The "waiting on chunks" main menu screen.
+        /// </summary>
         public ChunkWaitingScreen TheChunkWaitingScreen;
 
+        /// <summary>
+        /// The current sound object for the playing background music.
+        /// </summary>
         public ActiveSound CurrentMusic = null;
 
-        public string CMusic = "music/epic/bcdenizen";
+        /// <summary>
+        /// The requested music name.
+        /// </summary>
+        public string CMusic = "music/happy/bcfindinghope";
 
+        /// <summary>
+        /// Plays the backgrond music. Will restart music if already playing.
+        /// </summary>
         void BackgroundMusic()
         {
             if (CurrentMusic != null)
