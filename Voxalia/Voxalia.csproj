@@ -399,6 +399,8 @@
     <Compile Include="Shared\BlockShapes\BSD73.cs" />
     <Compile Include="Shared\BlockShapes\BSD74.cs" />
     <Compile Include="Shared\BlockShapes\BSD75.cs" />
+    <Compile Include="Shared\Collision\FullChunkObject.cs" />
+    <Compile Include="Shared\Collision\FullChunkShape.cs" />
     <Compile Include="Shared\Files\DataReader.cs" />
     <Compile Include="Shared\Files\DataWriter.cs" />
     <Compile Include="Shared\ItemStackBase.cs" />
