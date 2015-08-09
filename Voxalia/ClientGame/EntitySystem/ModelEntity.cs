@@ -6,6 +6,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ClientGame.WorldSystem;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.EntitySystem
 {

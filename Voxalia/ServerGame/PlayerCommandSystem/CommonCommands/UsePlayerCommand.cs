@@ -3,6 +3,7 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.EntitySystem;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {

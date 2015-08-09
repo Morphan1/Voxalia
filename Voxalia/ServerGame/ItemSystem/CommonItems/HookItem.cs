@@ -2,6 +2,7 @@
 using Voxalia.Shared;
 using Voxalia.ServerGame.JointSystem;
 using BEPUutilities;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {

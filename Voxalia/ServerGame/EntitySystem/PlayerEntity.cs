@@ -11,6 +11,7 @@ using Voxalia.ServerGame.ItemSystem.CommonItems;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.WorldSystem;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.EntitySystem
 {

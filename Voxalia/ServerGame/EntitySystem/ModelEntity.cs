@@ -4,6 +4,7 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.WorldSystem;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.EntitySystem
 {

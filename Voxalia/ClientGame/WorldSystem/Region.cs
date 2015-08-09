@@ -11,6 +11,7 @@ using Voxalia.ClientGame.JointSystem;
 using Voxalia.ClientGame.EntitySystem;
 using BEPUutilities.Threading;
 using BEPUphysics.BroadPhaseEntries;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.WorldSystem
 {

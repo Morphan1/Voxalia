@@ -1,4 +1,4 @@
-﻿namespace Voxalia.Shared
+﻿namespace Voxalia.Shared.Collision
 {
     public class AABB
     {

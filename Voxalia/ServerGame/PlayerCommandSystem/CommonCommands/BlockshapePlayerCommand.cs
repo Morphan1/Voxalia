@@ -1,4 +1,5 @@
 ﻿using Voxalia.Shared;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {

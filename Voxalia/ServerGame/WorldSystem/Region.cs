@@ -14,6 +14,7 @@ using Voxalia.ServerGame.WorldSystem.SimpleGenerator;
 using System.Threading;
 using System.Threading.Tasks;
 using BEPUphysics.BroadPhaseEntries;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.WorldSystem
 {

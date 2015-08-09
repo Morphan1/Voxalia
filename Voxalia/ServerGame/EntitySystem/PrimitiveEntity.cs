@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Voxalia.Shared;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.ServerGame.WorldSystem;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.EntitySystem
 {

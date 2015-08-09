@@ -10,6 +10,7 @@ using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 using Voxalia.ClientGame.OtherSystems;
 using Voxalia.ClientGame.JointSystem;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {

@@ -1,5 +1,6 @@
 ﻿using Voxalia.Shared;
 using Voxalia.ServerGame.EntitySystem;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {

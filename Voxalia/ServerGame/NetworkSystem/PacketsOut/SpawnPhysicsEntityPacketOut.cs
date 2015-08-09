@@ -1,5 +1,6 @@
 ﻿using Voxalia.ServerGame.EntitySystem;
 using Voxalia.Shared;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {

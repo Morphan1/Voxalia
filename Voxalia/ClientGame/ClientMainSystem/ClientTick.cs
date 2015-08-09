@@ -10,6 +10,7 @@ using System.Threading;
 using Frenetic;
 using Frenetic.TagHandlers.Common;
 using System.Linq;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {

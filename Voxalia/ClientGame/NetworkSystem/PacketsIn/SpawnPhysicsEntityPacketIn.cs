@@ -1,6 +1,7 @@
 ﻿using Voxalia.Shared;
 using Voxalia.ClientGame.EntitySystem;
 using Voxalia.ClientGame.GraphicsSystems;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {

@@ -6,6 +6,7 @@ using BEPUphysics.BroadPhaseEntries;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ClientGame.WorldSystem;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.EntitySystem
 {

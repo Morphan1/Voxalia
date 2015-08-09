@@ -376,7 +376,7 @@
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleGeneratorCore.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionLoader.cs" />
     <Compile Include="ServerGame\WorldSystem\Region.cs" />
-    <Compile Include="Shared\AABB.cs" />
+    <Compile Include="Shared\Collision\AABB.cs" />
     <Compile Include="Shared\AnimationEngine.cs" />
     <Compile Include="Shared\BlockInternal.cs" />
     <Compile Include="Shared\BlockShapeRegistry.cs" />
@@ -409,7 +409,7 @@
     <Compile Include="ServerGame\ServerMainSystem\ServerPhysics.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerBase.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerTick.cs" />
-    <Compile Include="Shared\CollisionUtil.cs" />
+    <Compile Include="Shared\Collision\CollisionUtil.cs" />
     <Compile Include="Shared\ConsoleHandler.cs" />
     <Compile Include="Shared\Files\DataStream.cs" />
     <Compile Include="Shared\Files\FileHandler.cs" />
