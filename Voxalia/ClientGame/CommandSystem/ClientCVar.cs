@@ -27,6 +27,7 @@ namespace Voxalia.ClientGame.CommandSystem
         public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_vsync, r_lighting, r_renderwireframe,
             r_fov, r_znear, r_zfar,
             r_dof_strength,
+            r_maxfps,
             r_lightmaxdistance,
             r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun, r_shadowpace,
             r_highlight_targetblock, r_highlight_placeblock,
@@ -68,6 +69,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_znear = Register("r_znear", "0.1", CVarFlag.Numeric); // How close the near plane should be to the camera.
             r_zfar = Register("r_zfar", "1000", CVarFlag.Numeric); // How far the far plane should be from the camera.
             r_dof_strength = Register("r_dof_strength", "4", CVarFlag.Numeric); // How strong the Depth Of Field effect should be.
+            r_maxfps = Register("r_maxfps", "60", CVarFlag.Numeric | CVarFlag.Delayed); // What the FPS cap should be.
             r_lightmaxdistance = Register("r_lightmaxdistance", "35", CVarFlag.Numeric); // How far away a light can be from the camera before it is disabled.
             r_shadowquality_flashlight = Register("r_shadowquality_flashlight", "512", CVarFlag.Numeric); // What texture size to use for flashlight shadows.
             r_shadowquality_max = Register("r_shadowquality_max", "2048", CVarFlag.Numeric); // What maximum light texture size to accept from the server.
