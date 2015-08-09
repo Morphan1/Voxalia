@@ -16,7 +16,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
         public override ArrowEntity SpawnArrow(PlayerEntity player, ItemStack item, double timeStretched)
         {
             ArrowEntity ae = base.SpawnArrow(player, item, timeStretched);
-            ae.Collide += (o, o2) => { ae.TheRegion.Explode(ae.GetPosition()); };
+            ae.Collide += (o, o2) => { ae.TheRegion.Explode(ae.GetPosition(), 5); };
             return ae;
         }
     }

@@ -47,12 +47,20 @@ namespace Voxalia.ServerGame.EntitySystem
 
         // TODO: If settled (deactivated) for too long (minutes?), or loaded in via chunkload, revert to a block
 
+        /// <summary>
+        /// Gets the itemstack this block represents.
+        /// </summary>
+        public ItemStack GetItem()
+        {
+            return new ItemStack("block", Mat.ToString(), TheServer, 1, "", Mat.GetName(),
+                    Mat.GetDescription(), Color.White.ToArgb(), "cube", false) { Datum = (ushort)Mat };
+        }
+
         public bool Use(Entity user)
         {
             if (user is PlayerEntity)
             {
-                ((PlayerEntity)user).Items.GiveItem(new ItemStack("block", Mat.ToString(), TheServer, 1, "", Mat.GetName(),
-                    Mat.GetDescription(), Color.White.ToArgb(), "cube", false) { Datum = (ushort)Mat });
+                ((PlayerEntity)user).Items.GiveItem(GetItem());
                 TheRegion.DespawnEntity(this);
                 return true;
             }

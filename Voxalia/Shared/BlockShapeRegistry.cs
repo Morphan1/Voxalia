@@ -85,15 +85,15 @@ namespace Voxalia.Shared
 
         public virtual BEPUphysics.CollisionShapes.EntityShape GetShape(out Location offset)
         {
-            List<BEPUutilities.Vector3> vecs = GetVertices(new BEPUutilities.Vector3(0, 0, 0), false, false, false, false, false, false);
+            List<Vector3> vecs = GetVertices(new Vector3(0, 0, 0), false, false, false, false, false, false);
             int[] ints = new int[vecs.Count];
             for (int i = 0; i < vecs.Count; i++)
             {
                 ints[i] = i;
             }
-            BEPUutilities.Vector3 offs;
-            BEPUphysics.CollisionShapes.EntityShape Shape = new BEPUphysics.CollisionShapes.MobileMeshShape(vecs.ToArray(), ints, new AffineTransform(new BEPUutilities.Vector3(0.95f, 0.95f, 0.95f),
-                BEPUutilities.Quaternion.Identity, BEPUutilities.Vector3.Zero), BEPUphysics.CollisionShapes.MobileMeshSolidity.DoubleSided, out offs);
+            Vector3 offs;
+            BEPUphysics.CollisionShapes.MobileMeshShape Shape = new BEPUphysics.CollisionShapes.MobileMeshShape(vecs.ToArray(), ints, new AffineTransform(new Vector3(0.95f, 0.95f, 0.95f),
+                Quaternion.Identity, Vector3.Zero), BEPUphysics.CollisionShapes.MobileMeshSolidity.Solid, out offs);
             offset = Location.FromBVector(offs);
             return Shape;
         }

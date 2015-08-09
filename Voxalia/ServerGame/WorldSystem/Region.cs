@@ -951,12 +951,15 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             if (applyforce)
             {
-                foreach (Entity e in GetEntitiesInRadius(pos, rad))
+                foreach (Entity e in GetEntitiesInRadius(pos, rad * 5))
                 {
                     // TODO: Generic entity 'ApplyForce' method
                     if (e is PhysicsEntity)
                     {
-                        ((PhysicsEntity)e).Body.ApplyImpulse(Vector3.Zero, new Vector3(rad, rad, rad * 3));
+                        Location offs = e.GetPosition() - pos;
+                        float dpower = (float)((rad * 5) - offs.Length()); // TODO: Efficiency?
+                        Vector3 force = new Vector3(rad, rad, rad * 3) * dpower;
+                        ((PhysicsEntity)e).Body.ApplyLinearImpulse(ref force);
                     }
                 }
             }
