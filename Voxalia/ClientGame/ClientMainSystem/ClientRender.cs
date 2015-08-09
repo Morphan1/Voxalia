@@ -236,7 +236,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 SetViewport();
                 s_fbov.Bind();
-                VBO.BonesIdentity();
                 GL.UniformMatrix4(1, false, ref combined);
                 s_fbo.Bind();
                 FBOid = 1;

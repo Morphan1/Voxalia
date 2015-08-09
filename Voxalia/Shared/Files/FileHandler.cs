@@ -292,7 +292,7 @@ namespace Voxalia.Shared.Files
                     return;
                 }
             }
-            Files.Insert(0, new PakkedFile(fname, finname));
+            // TODO: Files.Insert(0, new PakkedFile(fname, finname));
         }
 
         /// <summary>

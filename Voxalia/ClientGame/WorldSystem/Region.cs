@@ -297,7 +297,6 @@ namespace Voxalia.ClientGame.WorldSystem
             TheClient.Rendering.SetSpecular(0f);
             Matrix4 mat = Matrix4.Identity;
             GL.UniformMatrix4(2, false, ref mat);
-            GL.UniformMatrix4(7, false, ref mat);
             if (TheClient.RenderTextures)
             {
                 GL.BindTexture(TextureTarget.Texture2D, 0);
