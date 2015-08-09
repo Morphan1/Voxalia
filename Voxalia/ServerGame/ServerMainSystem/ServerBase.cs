@@ -31,23 +31,54 @@ namespace Voxalia.ServerGame.ServerMainSystem
             Central.StartUp();
         }
 
+        /// <summary>
+        /// The system that handles all command line input from the server.
+        /// </summary>
         public ServerCommands Commands;
+
+        /// <summary>
+        /// The system that handles all variables the server admin can control.
+        /// </summary>
         public ServerCVar CVars;
 
+        /// <summary>
+        /// The system that handles all command line input from players on the server.
+        /// </summary>
         public PlayerCommandEngine PCEngine;
 
+        /// <summary>
+        /// The system that handles all server-to-client networking.
+        /// </summary>
         public NetworkBase Networking;
 
+        /// <summary>
+        /// The system that tracks all 'item types' for use by ItemStacks.
+        /// </summary>
         public ItemRegistry Items;
 
+        /// <summary>
+        /// The system that tracks all 3D models, for collision tracing purposes.
+        /// </summary>
         public ModelEngine Models;
 
+        /// <summary>
+        /// The system that handles 3D model animation, for collision tracing and positioning purposes.
+        /// </summary>
         public AnimationEngine Animations;
 
+        /// <summary>
+        /// The scheduling engine used for general server tasks.
+        /// </summary>
         public Scheduler Schedule = new Scheduler();
 
+        /// <summary>
+        /// Whether the server needs to keep ticking - setting this false will end the server central tick process soon.
+        /// </summary>
         bool TickMe = true;
 
+        /// <summary>
+        /// Shuts down the server, saving any necessary data.
+        /// </summary>
         public void ShutDown()
         {
             SysConsole.Output(OutputType.INFO, "[Shutdown] Starting to close server...");
@@ -64,6 +95,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
             ShutDownQuickly();
         }
 
+        /// <summary>
+        /// Tells the server to shut down, without saving anything.
+        /// </summary>
         public void ShutDownQuickly()
         {
             TickMe = false;
@@ -167,6 +201,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
             // TODO: Clean up?
         }
 
+        /// <summary>
+        /// Gets the player entity associated with a given playername.
+        /// </summary>
         public PlayerEntity GetPlayerFor(string name)
         {
             string namelow = name.ToLower();
