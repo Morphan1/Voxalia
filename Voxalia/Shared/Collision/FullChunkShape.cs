@@ -57,6 +57,9 @@ namespace Voxalia.Shared.Collision
                     BlockInternal bi = Blocks[BlockIndex((int)x, (int)y, (int)z)];
                     if (((Material)bi.BlockMaterial).IsSolid())
                     {
+                        // Location offs;
+                        // EntityShape es = BlockShapeRegistry.BSD[bi.BlockData].GetShape(out offs);
+                        // es.GetCollidableInstance().RayCast(...)
                         // TODO: Trace into the block shape if custom shaped!
                         hit.Normal = face;
                         hit.Location = new Vector3(x, y, z);

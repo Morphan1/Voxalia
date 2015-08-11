@@ -102,12 +102,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             Commands.ExecuteCommands(args);
             SysConsole.Output(OutputType.INIT, "Generating window...");
-            Window = new GameWindow(CVars.r_width.ValueI, CVars.r_height.ValueI, GraphicsMode.Default, Program.GameName + " v" + Program.GameVersion,
+            Window = new GameWindow(CVars.r_width.ValueI, CVars.r_height.ValueI, new GraphicsMode(24, 24, 0, 0), Program.GameName + " v" + Program.GameVersion,
                 GameWindowFlags.Default, DisplayDevice.Default, 4, 3, GraphicsContextFlags.ForwardCompatible);
             Window.WindowState = CVars.r_fullscreen.ValueB ? WindowState.Fullscreen : WindowState.Normal;
             Window.WindowBorder = WindowBorder.Fixed;
             Window.Load += new EventHandler<EventArgs>(Window_Load);
-            Window.UpdateFrame += new EventHandler<FrameEventArgs>(Window_UpdateFrame);
             Window.RenderFrame += new EventHandler<FrameEventArgs>(Window_RenderFrame);
             Window.Mouse.Move += new EventHandler<MouseMoveEventArgs>(MouseHandler.Window_MouseMove);
             Window.KeyDown += new EventHandler<KeyboardKeyEventArgs>(KeyHandler.PrimaryGameWindow_KeyDown);
@@ -117,7 +116,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Window.Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonDown);
             Window.Mouse.ButtonUp += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonUp);
             onVsyncChanged(CVars.r_vsync, null);
-            Window.Run(CVars.r_maxfps.ValueD, CVars.r_maxfps.ValueD);
+            Window.Run(1, CVars.r_maxfps.ValueD);
         }
         
         /// <summary>

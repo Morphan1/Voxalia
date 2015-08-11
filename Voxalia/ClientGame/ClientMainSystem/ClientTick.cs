@@ -107,12 +107,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public double GlobalTickTimeLocal = 0;
 
         public double Delta;
-
-        void Window_UpdateFrame(object sender, FrameEventArgs e)
+        
+        void tick (double delt)
         {
             lock (TickLock)
             {
-                Delta = e.Time * CVars.g_timescale.ValueD;
+                Delta = delt * CVars.g_timescale.ValueD;
                 GlobalTickTimeLocal += Delta;
                 try
                 {

@@ -174,6 +174,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     SysConsole.Output(OutputType.ERROR, "Rendering: " + ex.ToString());
                 }
+                try
+                {
+                    tick(e.Time);
+                }
+                catch (Exception ex)
+                {
+                    SysConsole.Output(OutputType.ERROR, "Renderticking: " + ex.ToString());
+                }
                 Window.SwapBuffers();
             }
         }
