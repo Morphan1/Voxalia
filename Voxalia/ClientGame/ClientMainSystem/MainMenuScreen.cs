@@ -14,10 +14,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public override void Init()
         {
             Menus = new UIMenu(TheClient);
-            Menus.Add(new UITextLink("^5S^7ingleplayer", "^!^e^5S^7ingleplayer", "^7^e^5S^!ingleplayer", () => {
+            Menus.Add(new UITextLink("^%S^7ingleplayer", "^%S^e^7ingleplayer", "^7^e^%S^0ingleplayer", () => {
                 TheClient.ShowSingleplayer();
             }, 10, 300, TheClient.FontSets.SlightlyBigger));
-            Menus.Add(new UITextLink("^5M^7ultiplayer", "^!^e^5M^7ultiplayer", "^7^e^5M^!ultiplayer", () => {
+            Menus.Add(new UITextLink("^%M^7ultiplayer", "^%M^e^7ultiplayer", "^7^e^%M^0ultiplayer", () => {
                 UIConsole.WriteLine("Multiplayer menu coming soon!");
             }, 10, 400, TheClient.FontSets.SlightlyBigger));
             Backg = TheClient.Textures.GetTexture("ui/menus/menuback");
