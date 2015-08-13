@@ -9,18 +9,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
     {
         public UIMenu Menus;
         
-        public Texture Topper;
+        public Texture Backg;
 
         public override void Init()
         {
             Menus = new UIMenu(TheClient);
-            Menus.Add(new UIMenuButton("ui/menus/buttons/basic", "Singleplayer", () => {
+            Menus.Add(new UIMenuButton("ui/menus/buttons/clear", "^5S^7ingleplayer", () => {
                 TheClient.ShowSingleplayer();
             }, 10, 300, 350, 70, TheClient.FontSets.SlightlyBigger));
-            Menus.Add(new UIMenuButton("ui/menus/buttons/basic", "Multiplayer", () => {
+            Menus.Add(new UIMenuButton("ui/menus/buttons/clear", "^5M^7ultiplayer", () => {
                 UIConsole.WriteLine("MP!");
             }, 10, 400, 350, 70, TheClient.FontSets.SlightlyBigger));
-            Topper = TheClient.Textures.GetTexture("ui/menus/voxalia_topper");
+            Backg = TheClient.Textures.GetTexture("ui/menus/menuback");
         }
 
         public override void Tick()
@@ -38,8 +38,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheClient.Establish2D();
             GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0.5f, 0.5f, 1 });
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1 });
-            Topper.Bind();
-            TheClient.Rendering.RenderRectangle(0, 0, 600, 300);
+            Backg.Bind();
+            TheClient.Rendering.RenderRectangle(0, 0, TheClient.Window.Width, TheClient.Window.Height);
             Menus.RenderAll(TheClient.gDelta);
         }
     }
