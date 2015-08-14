@@ -59,8 +59,8 @@ namespace Voxalia.ClientGame.CommandSystem
             n_debugmovement = Register("n_debugmovement", "false", CVarFlag.Boolean); // Whether to debug movement networking.
             // Renderer CVars
             r_fullscreen = Register("r_fullscreen", "false", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use fullscreen mode.
-            r_width = Register("r_width", "800", CVarFlag.Numeric | CVarFlag.Delayed); // What width the window should be.
-            r_height = Register("r_height", "600", CVarFlag.Numeric | CVarFlag.Delayed); // What height the window should be.
+            r_width = Register("r_width", "1280", CVarFlag.Numeric | CVarFlag.Delayed); // What width the window should be.
+            r_height = Register("r_height", "720", CVarFlag.Numeric | CVarFlag.Delayed); // What height the window should be.
             r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed); // What AA mode to use (0 = none). // TODO: IMPLEMENT
             r_vsync = Register("r_vsync", "true", CVarFlag.Boolean); // Whether to use vertical synchronization mode.
             r_lighting = Register("r_lighting", "true", CVarFlag.Boolean); // Whether to enable 3D lighting (Otherwise, use FullBright).
