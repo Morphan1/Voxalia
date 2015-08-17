@@ -4,7 +4,7 @@ using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.UISystem.MenuSystem
 {
-    public class UITextLink: UIMenuItem
+    public class UITextLink : UIMenuItem
     {
         public Action ClickedTask;
 
@@ -13,26 +13,26 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         public string TextHover;
 
         public string TextClick;
-        
+
         public bool Hovered = false;
 
         public bool Clicked = false;
-        
-        public float X;
 
-        public float Y;
+        public Func<float> XGet;
+
+        public Func<float> YGet;
 
         public FontSet TextFont;
 
-        public UITextLink(string btext, string btexthover, string btextclick, Action clicked, float x, float y, FontSet font)
+        public UITextLink(string btext, string btexthover, string btextclick, Action clicked, Func<float> xer, Func<float> yer, FontSet font)
         {
             ClickedTask = clicked;
             Text = btext;
             TextHover = btexthover;
             TextClick = btextclick;
-            X = x;
-            Y = y;
             TextFont = font;
+            XGet = xer;
+            YGet = yer;
         }
 
         public override void MouseEnter()
@@ -51,7 +51,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             Hovered = true;
             Clicked = true;
         }
-        
+
         public override void MouseLeftUp()
         {
             if (Clicked && Hovered)
@@ -78,12 +78,35 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             }
             float len = TextFont.MeasureFancyText(Text);
             float hei = TextFont.font_default.Height;
-            TextFont.DrawColoredText(tt, new Location(X, Y, 0));
+            TextFont.DrawColoredText(tt, new Location(GetX(), GetY(), 0));
+        }
+
+        public float GetWidth()
+        {
+            return TextFont.MeasureFancyText(Text);
+        }
+
+        public float GetHeight()
+        {
+            return TextFont.font_default.Height;
+        }
+
+        public float GetX()
+        {
+            return XGet.Invoke();
+        }
+
+        public float GetY()
+        {
+            return YGet.Invoke();
         }
 
         public override bool Contains(int x, int y)
         {
-            return x > X && x < X + TextFont.MeasureFancyText(Text) && y > Y && y < Y + TextFont.font_default.Height;
+            float tx = GetX();
+            float ty = GetY();
+            return x > tx && x < tx + TextFont.MeasureFancyText(Text)
+                && y > ty && y < ty + TextFont.font_default.Height;
         }
     }
 }
