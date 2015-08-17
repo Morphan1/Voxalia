@@ -15,6 +15,7 @@ using Voxalia.ClientGame.GraphicsSystems.ParticleSystem;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.ServerGame.ServerMainSystem;
 using System.Threading;
+using System.Drawing;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -436,6 +437,21 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 CurrentMusic.IsBackground = true;
             }
+        }
+
+        public void UpdateWindow()
+        {
+            if (CVars.r_width.ValueI < 1280)
+            {
+                CVars.r_width.Set("1280");
+            }
+            if (CVars.r_height.ValueI < 720)
+            {
+                CVars.r_height.Set("720");
+            }
+            Window.ClientSize = new Size(CVars.r_width.ValueI, CVars.r_height.ValueI);
+            Window.WindowState = CVars.r_fullscreen.ValueB ? WindowState.Fullscreen : WindowState.Normal;
+            SetViewport();
         }
     }
 }

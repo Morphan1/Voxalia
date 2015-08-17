@@ -1,7 +1,6 @@
 ﻿using Frenetic.CommandSystem;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.ClientGame.ClientMainSystem;
-using System.Drawing;
 using OpenTK;
 
 namespace Voxalia.ClientGame.CommandSystem.CommonCommands
@@ -39,9 +38,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             if (arg == "screen" || arg == "all")
             {
                 success = true;
-                TheClient.Window.ClientSize = new Size(TheClient.CVars.r_width.ValueI, TheClient.CVars.r_height.ValueI);
-                TheClient.Window.WindowState = TheClient.CVars.r_fullscreen.ValueB ? WindowState.Fullscreen : WindowState.Normal;
-                // TODO: Update all settings everywhere via (event/clientmethod/...?)
+                TheClient.UpdateWindow();
             }
             if (!success)
             {
