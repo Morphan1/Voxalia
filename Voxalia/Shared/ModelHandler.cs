@@ -93,10 +93,24 @@ namespace Voxalia.Shared
 
         public Matrix ReadMat(DataReader reader)
         {
-            return new Matrix(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(),
-                reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(),
-                reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(),
-                reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
+            float a1 = reader.ReadFloat();
+            float a2 = reader.ReadFloat();
+            float a3 = reader.ReadFloat();
+            float a4 = reader.ReadFloat();
+            float b1 = reader.ReadFloat();
+            float b2 = reader.ReadFloat();
+            float b3 = reader.ReadFloat();
+            float b4 = reader.ReadFloat();
+            float c1 = reader.ReadFloat();
+            float c2 = reader.ReadFloat();
+            float c3 = reader.ReadFloat();
+            float c4 = reader.ReadFloat();
+            float d1 = reader.ReadFloat();
+            float d2 = reader.ReadFloat();
+            float d3 = reader.ReadFloat();
+            float d4 = reader.ReadFloat();
+            return new Matrix(a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4, d1, d2, d3, d4);
+            //return new Matrix(a1, b1, c1, d1, a2, b2, c2, d2, a3, b3, c3, d3, a4, b4, c4, d4);
         }
 
         public List<Vector3> GetCollisionVertices(Model3D input)
