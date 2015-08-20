@@ -58,28 +58,24 @@ namespace ModelToVMDConverter
                 byte[] dat = UTF8.GetBytes(mesh.Name);
                 outstream.WriteInt(dat.Length);
                 outstream.BaseStream.Write(dat, 0, dat.Length);
+                outstream.WriteInt(mesh.VertexCount);
+                for (int v = 0; v < mesh.VertexCount; v++)
+                {
+                    WriteVector3D(mesh.Vertices[v], outstream);
+                }
                 outstream.WriteInt(mesh.FaceCount);
                 for (int f = 0; f < mesh.FaceCount; f++)
                 {
                     Face face = mesh.Faces[f];
-                    WriteVector3D(mesh.Vertices[face.Indices[0]], outstream);
-                    WriteVector3D(mesh.Vertices[face.Indices[face.IndexCount > 1 ? 1 : 0]], outstream);
-                    WriteVector3D(mesh.Vertices[face.Indices[face.IndexCount > 2 ? 2 : 0]], outstream);
+                    outstream.WriteInt(face.Indices[0]);
+                    outstream.WriteInt(face.Indices[face.IndexCount > 1 ? 1 : 0]);
+                    outstream.WriteInt(face.Indices[face.IndexCount > 2 ? 2 : 0]);
                 }
-                outstream.WriteInt(mesh.TextureCoordinateChannelCount);
-                for (int t = 0; t < mesh.TextureCoordinateChannelCount; t++)
+                outstream.WriteInt(mesh.TextureCoordinateChannels[0].Count);
+                for (int t = 0; t < mesh.TextureCoordinateChannels[0].Count; t++)
                 {
-                    List<Vector3D> tc = mesh.TextureCoordinateChannels[t];
-                    if (tc == null || tc.Count < 1)
-                    {
-                        outstream.WriteFloat(0f);
-                        outstream.WriteFloat(0f);
-                    }
-                    else
-                    {
-                        outstream.WriteFloat(tc[0].X);
-                        outstream.WriteFloat(tc[0].Y);
-                    }
+                    outstream.WriteFloat(mesh.TextureCoordinateChannels[0][t].X);
+                    outstream.WriteFloat(mesh.TextureCoordinateChannels[0][t].Y);
                 }
                 outstream.WriteInt(mesh.Normals.Count);
                 for (int n = 0; n < mesh.Normals.Count; n++)

@@ -13,6 +13,7 @@ namespace Voxalia.Shared
     public class Model3DMesh
     {
         public List<Vector3> Vertices;
+        public List<int> Indices;
         public List<Vector3> Normals;
         public List<Vector2> TexCoords;
         public List<Model3DBone> Bones;

@@ -157,7 +157,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     BEPUutilities.Vector3 vertex = mesh.Vertices[i];
                     modmesh.vbo.Vertices.Add(new Vector3(vertex.X, vertex.Y, vertex.Z));
-                    modmesh.vbo.Indices.Add((uint)modmesh.vbo.Indices.Count);
                     if (!hastc)
                     {
                         modmesh.vbo.TexCoords.Add(new Vector3(0, 0, 0));
@@ -176,6 +175,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         modmesh.vbo.Normals.Add(new Vector3(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z));
                     }
                     modmesh.vbo.Colors.Add(new Vector4(1, 1, 1, 1)); // TODO: From the mesh?
+                }
+                for (int i = 0; i < mesh.Indices.Count; i++)
+                {
+                    modmesh.vbo.Indices.Add((uint)mesh.Indices[i]);
                 }
                 int bc = mesh.Bones.Count;
                 if (bc > 200)

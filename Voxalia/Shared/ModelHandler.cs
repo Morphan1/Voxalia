@@ -28,7 +28,7 @@ namespace Voxalia.Shared
                 Model3DMesh mesh = new Model3DMesh();
                 mod.Meshes.Add(mesh);
                 mesh.Name = dr.ReadFullString();
-                int vertexCount = dr.ReadInt() * 3;
+                int vertexCount = dr.ReadInt();
                 mesh.Vertices = new List<Vector3>(vertexCount);
                 for (int v = 0; v < vertexCount; v++)
                 {
@@ -36,6 +36,12 @@ namespace Voxalia.Shared
                     float f2 = dr.ReadFloat();
                     float f3 = dr.ReadFloat();
                     mesh.Vertices.Add(new Vector3(f1, f2, f3));
+                }
+                int indiceCount = dr.ReadInt() * 3;
+                mesh.Indices = new List<int>(indiceCount);
+                for (int i = 0; i < indiceCount; i++)
+                {
+                    mesh.Indices.Add(dr.ReadInt());
                 }
                 int tcCount = dr.ReadInt();
                 mesh.TexCoords = new List<Vector2>(tcCount);
@@ -129,7 +135,10 @@ namespace Voxalia.Shared
             {
                 if ((!colOnly || mesh.Name.ToLower().Contains("collision")) && !mesh.Name.ToLower().Contains("nocollide"))
                 {
-                    vertices.AddRange(mesh.Vertices);
+                    for (int i = 0; i < mesh.Indices.Count; i ++)
+                    {
+                        vertices.Add(mesh.Vertices[mesh.Indices[i]]);
+                    }
                 }
             }
             return vertices;
