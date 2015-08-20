@@ -24,8 +24,7 @@ namespace Voxalia.ServerGame.OtherSystems
             {
                 return temp;
             }
-            Assimp.Scene scene = handler.LoadModel(FileHandler.encoding.GetBytes(ModelHandler.CubeData), "obj");
-            return new Model() { Name = nl, Original = scene };
+            return LoadModel("cube");
         }
 
         Model LoadModel(string name)
@@ -36,7 +35,7 @@ namespace Voxalia.ServerGame.OtherSystems
                 if (Program.Files.Exists(n))
                 {
                     byte[] dat = Program.Files.ReadBytes(n);
-                    Assimp.Scene scene = handler.LoadModel(dat, name.Substring(name.LastIndexOf('.') + 1));
+                    Model3D scene = handler.LoadModel(dat);
                     return new Model() { Name = name, Original = scene };
                 }
             }
@@ -51,6 +50,6 @@ namespace Voxalia.ServerGame.OtherSystems
     public class Model
     {
         public string Name;
-        public Assimp.Scene Original;
+        public Model3D Original;
     }
 }

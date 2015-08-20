@@ -2,7 +2,7 @@
 
 namespace Voxalia.Shared.Files
 {
-    class DataReader: BinaryReader
+    public class DataReader: BinaryReader
     {
         public DataReader(Stream stream)
             : base(stream, FileHandler.encoding)

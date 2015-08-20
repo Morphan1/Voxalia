@@ -41,11 +41,11 @@ namespace Voxalia.ClientGame.EntitySystem
             model.LoadSkin(TheClient.Textures);
             if (mode == ModelCollisionMode.PRECISE)
             {
-                Shape = TheClient.Models.Handler.MeshToBepu(model.OriginalModel);
+                Shape = TheClient.Models.Handler.MeshToBepu(model.Original);
             }
             else if (mode == ModelCollisionMode.AABB)
             {
-                List<BEPUutilities.Vector3> vecs = TheClient.Models.Handler.GetCollisionVertices(model.OriginalModel);
+                List<BEPUutilities.Vector3> vecs = TheClient.Models.Handler.GetCollisionVertices(model.Original);
                 Location zero = Location.FromBVector(vecs[0]);
                 AABB abox = new AABB() { Min = zero, Max = zero };
                 for (int v = 1; v < vecs.Count; v++)
@@ -59,7 +59,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             else
             {
-                List<BEPUutilities.Vector3> vecs = TheClient.Models.Handler.GetCollisionVertices(model.OriginalModel);
+                List<BEPUutilities.Vector3> vecs = TheClient.Models.Handler.GetCollisionVertices(model.Original);
                 Location zero = new Location(vecs[0].X, vecs[0].Y, vecs[0].Z);
                 double distSq = 0;
                 for (int v = 1; v < vecs.Count; v++)

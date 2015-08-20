@@ -5,7 +5,6 @@ using Voxalia.Shared;
 using Frenetic;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
-using Assimp;
 using Voxalia.Shared.Files;
 using System.Linq;
 
@@ -34,8 +33,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             AnimEngine = engine;
             Handler = new ModelHandler();
             LoadedModels = new List<Model>();
-            Cube = FromBytes("cube", FileHandler.encoding.GetBytes(ModelHandler.CubeData));
-            Cylinder = FromBytes("cylinder", FileHandler.encoding.GetBytes(ModelHandler.CylinderData));
             LoadedModels.Add(Cube);
             LoadedModels.Add(Cylinder);
             Sphere = GetModel("common/sphere_basic.dae");
@@ -96,12 +93,23 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             if (Loaded == null)
             {
-                Loaded = FromBytes("model.obj", FileHandler.encoding.GetBytes(ModelHandler.CubeData));
-                Loaded.Name = modelname;
+                if (norecurs)
+                {
+                    Loaded = new Model(modelname) { Engine = this, Root = Matrix4.Identity, Meshes = new List<ModelMesh>(), RootNode = null };
+                }
+                else
+                {
+                    norecurs = true;
+                    Model m = GetModel("cube");
+                    norecurs = false;
+                    Loaded = new Model(modelname) { Engine = this, Root = m.Root, RootNode = m.RootNode, Meshes = m.Meshes };
+                }
             }
             LoadedModels.Add(Loaded);
             return Loaded;
         }
+
+        bool norecurs = false;
 
         public AnimationEngine AnimEngine;
 
@@ -113,31 +121,30 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>A valid model</returns>
         public Model FromBytes(string name, byte[] data)
         {
-            Scene scene = Handler.LoadModel(data, name.Substring(name.LastIndexOf('.') + 1));
+            Model3D scene = Handler.LoadModel(data);
             return FromScene(scene, name, AnimEngine);
         }
 
-        public Model FromScene(Scene scene, string name, AnimationEngine engine)
+        public Model FromScene(Model3D scene, string name, AnimationEngine engine)
         {
-            if (!scene.HasMeshes)
+            if (scene.Meshes.Count == 0)
             {
                 throw new Exception("Scene has no meshes! (" + name + ")");
             }
             Model model = new Model(name);
             model.Engine = this;
-            model.OriginalModel = scene;
-            model.Root = convert(scene.RootNode.Transform);
-            foreach (Mesh mesh in scene.Meshes)
+            model.Original = scene;
+            model.Root = convert(scene.MatrixA);
+            foreach (Model3DMesh mesh in scene.Meshes)
             {
                 if (mesh.Name.ToLower().Contains("collision") || mesh.Name.ToLower().Contains("norender"))
                 {
                     continue;
                 }
-                ModelMesh modmesh = new ModelMesh(mesh.Name, mesh);
-                modmesh.Base = scene;
+                ModelMesh modmesh = new ModelMesh(mesh.Name);
                 modmesh.vbo.Prepare();
-                bool hastc = mesh.HasTextureCoords(0);
-                bool hasn = mesh.HasNormals;
+                bool hastc = mesh.TexCoords.Count == mesh.Vertices.Count;
+                bool hasn = mesh.Normals.Count == mesh.Vertices.Count;
                 if (!hasn)
                 {
                     SysConsole.Output(OutputType.WARNING, "Mesh has no normals! (" + name + ")");
@@ -148,16 +155,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 }
                 for (int i = 0; i < mesh.Vertices.Count; i++)
                 {
-                    Vector3D vertex = mesh.Vertices[i];
+                    BEPUutilities.Vector3 vertex = mesh.Vertices[i];
                     modmesh.vbo.Vertices.Add(new Vector3(vertex.X, vertex.Y, vertex.Z));
+                    modmesh.vbo.Indices.Add((uint)modmesh.vbo.Indices.Count);
                     if (!hastc)
                     {
                         modmesh.vbo.TexCoords.Add(new Vector3(0, 0, 0));
                     }
                     else
                     {
-                        Vector3D texCoord = mesh.TextureCoordinateChannels[0][i];
-                        modmesh.vbo.TexCoords.Add(new Vector3(texCoord.X, 1 - texCoord.Y, texCoord.Z));
+                        BEPUutilities.Vector2 texCoord = mesh.TexCoords[i];
+                        modmesh.vbo.TexCoords.Add(new Vector3(texCoord.X, 1 - texCoord.Y, 0));
                     }
                     if (!hasn)
                     {
@@ -168,20 +176,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         modmesh.vbo.Normals.Add(new Vector3(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z));
                     }
                     modmesh.vbo.Colors.Add(new Vector4(1, 1, 1, 1)); // TODO: From the mesh?
-                }
-                foreach (Face face in mesh.Faces)
-                {
-                    if (face.Indices.Count == 3)
-                    {
-                        for (int i = 2; i >= 0; i--)
-                        {
-                            modmesh.vbo.Indices.Add((uint)face.Indices[i]);
-                        }
-                    }
-                    else
-                    {
-                        SysConsole.Output(OutputType.WARNING, "Mesh has face with " + face.Indices.Count + " vertices! (" + name + ")");
-                    }
                 }
                 int bc = mesh.Bones.Count;
                 if (bc > 200)
@@ -196,39 +190,40 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 int[] pos = new int[modmesh.vbo.Vertices.Count];
                 for (int i = 0; i < bc; i++)
                 {
-                    for (int x = 0; x < mesh.Bones[i].VertexWeights.Count; x++)
+                    for (int x = 0; x < mesh.Bones[i].Weights.Count; x++)
                     {
-                        VertexWeight vw = mesh.Bones[i].VertexWeights[x];
-                        int spot = pos[vw.VertexID]++;
+                        int IDa = mesh.Bones[i].IDs[x];
+                        float Weighta = mesh.Bones[i].Weights[x];
+                        int spot = pos[IDa]++;
                         if (spot > 7)
                         {
                             //SysConsole.Output(OutputType.WARNING, "Too many bones influencing " + vw.VertexID + "!");
-                            ForceSet(modmesh.vbo.BoneWeights, vw.VertexID, 3, modmesh.vbo.BoneWeights[vw.VertexID][3] + vw.Weight);
+                            ForceSet(modmesh.vbo.BoneWeights, IDa, 3, modmesh.vbo.BoneWeights[IDa][3] + Weighta);
                         }
                         else if (spot > 3)
                         {
-                            ForceSet(modmesh.vbo.BoneIDs2, vw.VertexID, spot - 4, i);
-                            ForceSet(modmesh.vbo.BoneWeights2, vw.VertexID, spot - 4, vw.Weight);
+                            ForceSet(modmesh.vbo.BoneIDs2, IDa, spot - 4, i);
+                            ForceSet(modmesh.vbo.BoneWeights2, IDa, spot - 4, Weighta);
                         }
                         else
                         {
-                            ForceSet(modmesh.vbo.BoneIDs, vw.VertexID, spot, i);
-                            ForceSet(modmesh.vbo.BoneWeights, vw.VertexID, spot, vw.Weight);
+                            ForceSet(modmesh.vbo.BoneIDs, IDa, spot, i);
+                            ForceSet(modmesh.vbo.BoneWeights, IDa, spot, Weighta);
                         }
                     }
                 }
                 model.Meshes.Add(modmesh);
                 modmesh.GenerateVBO();
             }
-            model.RootNode = new ModelNode() { Internal = scene.RootNode, Parent = null, Name = scene.RootNode.Name.ToLower() };
+            model.RootNode = new ModelNode() { Parent = null, Name = scene.RootNode.Name.ToLower() };
             List<ModelNode> allNodes = new List<ModelNode>();
-            PopulateChildren(model.RootNode, scene, model, engine, allNodes);
+            PopulateChildren(model.RootNode, scene.RootNode, model, engine, allNodes);
             for (int i = 0; i < model.Meshes.Count; i++)
             {
-                for (int x = 0; x < model.Meshes[i].Original.Bones.Count; x++)
+                for (int x = 0; x < scene.Meshes[i].Bones.Count; x++)
                 {
                     ModelNode nodet = null;
-                    string nl = model.Meshes[i].Original.Bones[x].Name.ToLower();
+                    string nl = scene.Meshes[i].Bones[x].Name.ToLower();
                     for (int n = 0; n < allNodes.Count; n++)
                     {
                         if (allNodes[n].Name == nl)
@@ -237,7 +232,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             break;
                         }
                     }
-                    ModelBone mb = new ModelBone() { Internal = model.Meshes[i].Original.Bones[x], Offset = convert(model.Meshes[i].Original.Bones[x].OffsetMatrix) };
+                    ModelBone mb = new ModelBone() { Offset = convert(scene.Meshes[i].Bones[x].MatrixA) };
                     nodet.Bones.Add(mb);
                     model.Meshes[i].Bones.Add(mb);
                 }
@@ -245,7 +240,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
             return model;
         }
 
-        void PopulateChildren(ModelNode node, Scene original, Model model, AnimationEngine engine, List<ModelNode> allNodes)
+        Matrix4 convert(BEPUutilities.Matrix mat)
+        {
+            return new Matrix4(mat.M11, mat.M12, mat.M13, mat.M14, mat.M21, mat.M22, mat.M23, mat.M24,
+                mat.M31, mat.M32, mat.M33, mat.M34, mat.M41, mat.M42, mat.M43, mat.M44);
+        }
+
+        void PopulateChildren(ModelNode node, Model3DNode orin, Model model, AnimationEngine engine, List<ModelNode> allNodes)
         {
             allNodes.Add(node);
             if (engine.HeadBones.Contains(node.Name))
@@ -260,10 +261,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 node.Mode = 1;
             }
-            for (int i = 0; i < node.Internal.Children.Count; i++)
+            for (int i = 0; i < orin.Children.Count; i++)
             {
-                ModelNode child = new ModelNode() { Internal = node.Internal.Children[i], Parent = node, Name = node.Internal.Children[i].Name.ToLower() };
-                PopulateChildren(child, original, model, engine, allNodes);
+                ModelNode child = new ModelNode() { Parent = node, Name = orin.Children[i].Name.ToLower() };
+                PopulateChildren(child, orin.Children[i], model, engine, allNodes);
                 node.Children.Add(child);
             }
         }
@@ -275,18 +276,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             vecs[ind] = vec;
         }
 
-        Matrix4 convert(Matrix4x4 mat)
-        {
-            return new Matrix4(mat.A1, mat.A2, mat.A3, mat.A4,
-                mat.B1, mat.B2, mat.B3, mat.B4,
-                mat.C1, mat.C2, mat.C3, mat.C4,
-                mat.D1, mat.D2, mat.D3, mat.D4);
-            /*return new Matrix4(mat.A1, mat.B1, mat.C1, mat.D1,
-                mat.A2, mat.B2, mat.C2, mat.D2,
-                mat.A3, mat.B3, mat.C3, mat.D3,
-                mat.A4, mat.C4, mat.C4, mat.D4);*/
-        }
-
     }
 
     /// <summary>
@@ -294,7 +283,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
     /// </summary>
     public class Model
     {
-        public Scene OriginalModel;
+        public Model3D Original;
 
         public Model(string _name)
         {
@@ -355,15 +344,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             GL.UniformMatrix4(8, bones, false, set);
         }
-
-        Matrix4 convert(Matrix4x4 mat)
-        {
-            return new Matrix4(mat.A1, mat.A2, mat.A3, mat.A4,
-                mat.B1, mat.B2, mat.B3, mat.B4,
-                mat.C1, mat.C2, mat.C3, mat.C4,
-                mat.D1, mat.D2, mat.D3, mat.D4);
-        }
-
+        
         Matrix4 globalInverse = Matrix4.Identity;
 
         public void UpdateTransforms(ModelNode pNode, Matrix4 transf)
@@ -376,7 +357,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 BEPUutilities.Vector3 vec = pNodeAnim.lerpPos(time);
                 BEPUutilities.Quaternion quat = pNodeAnim.lerpRotate(time);
-                OpenTK.Quaternion oquat = new OpenTK.Quaternion(quat.X, quat.Y, quat.Z, quat.W);
+                Quaternion oquat = new Quaternion(quat.X, quat.Y, quat.Z, quat.W);
                 Matrix4 trans;
                 Matrix4.CreateTranslation(vec.X, vec.Y, vec.Z, out trans);
                 trans.Transpose();
@@ -524,14 +505,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
     public class ModelBone
     {
-        public Bone Internal = null;
         public Matrix4 Transform = Matrix4.Identity;
         public Matrix4 Offset;
     }
 
     public class ModelNode
     {
-        public Node Internal = null;
         public ModelNode Parent = null;
         public List<ModelNode> Children = new List<ModelNode>();
         public List<ModelBone> Bones = new List<ModelBone>();
@@ -545,16 +524,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// The name of this mesh.
         /// </summary>
         public string Name;
-
-        public Scene Base;
-
-        public Mesh Original;
-
+        
         public List<ModelBone> Bones = new List<ModelBone>();
 
-        public ModelMesh(string _name, Mesh orig)
+        public ModelMesh(string _name)
         {
-            Original = orig;
             Name = _name.ToLower();
             if (Name.EndsWith(".001"))
             {

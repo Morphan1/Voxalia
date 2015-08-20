@@ -78,9 +78,6 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AssimpNet">
-      <HintPath>.\AssimpNet.dll</HintPath>
-    </Reference>
     <Reference Include="BEPUphysics">
       <HintPath>.\BEPUphysics.dll</HintPath>
     </Reference>
@@ -377,6 +374,7 @@
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleGeneratorCore.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionLoader.cs" />
     <Compile Include="ServerGame\WorldSystem\Region.cs" />
+    <Compile Include="Shared\Model3D.cs" />
     <Compile Include="Shared\Collision\AABB.cs" />
     <Compile Include="Shared\AnimationEngine.cs" />
     <Compile Include="Shared\BlockInternal.cs" />

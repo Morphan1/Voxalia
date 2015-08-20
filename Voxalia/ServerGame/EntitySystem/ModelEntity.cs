@@ -79,7 +79,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void SpawnBody()
         {
-            Assimp.Scene smodel = TheServer.Models.GetModel(model).Original;
+            Model3D smodel = TheServer.Models.GetModel(model).Original;
             if (mode == ModelCollisionMode.PRECISE)
             {
                 Shape = TheServer.Models.handler.MeshToBepu(smodel);

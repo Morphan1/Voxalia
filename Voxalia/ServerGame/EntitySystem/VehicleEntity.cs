@@ -18,13 +18,13 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool hasWheels = false;
 
-        List<Assimp.Node> GetNodes(Assimp.Node node)
+        List<Model3DNode> GetNodes(Model3DNode node)
         {
-            List<Assimp.Node> nodes = new List<Assimp.Node>();
+            List<Model3DNode> nodes = new List<Model3DNode>();
             nodes.Add(node);
-            if (node.HasChildren)
+            if (node.Children.Count > 0)
             {
-                for (int i = 0; i < node.ChildCount; i++)
+                for (int i = 0; i < node.Children.Count; i++)
                 {
                     nodes.AddRange(GetNodes(node.Children[i]));
                 }
@@ -37,19 +37,21 @@ namespace Voxalia.ServerGame.EntitySystem
             base.Tick();
             if (!hasWheels) // TODO: Efficiency. We shouldn't have to check this every tick!
             {
-                Assimp.Scene scene = TheServer.Models.GetModel(model).Original;
+                Model3D scene = TheServer.Models.GetModel(model).Original;
                 SetOrientation(BEPUutilities.Quaternion.Identity);
-                List<Assimp.Node> nodes = GetNodes(scene.RootNode);
+                List<Model3DNode> nodes = GetNodes(scene.RootNode);
                 for (int i = 0; i < nodes.Count; i++)
                 {
                     string name = nodes[i].Name.ToLower();
                     if (name.Contains("wheel"))
                     {
+                        // TODO
+                        /*
                         Assimp.Vector3D apos;
                         Assimp.Vector3D ascale;
                         Assimp.Quaternion arot;
-                        nodes[i].Transform.Decompose(out ascale, out arot, out apos);
-                        Location pos = GetPosition() + new Location(apos.X, apos.Y, apos.Z - 1 /* TODO: make the -1 not needed! */);
+                        nodes[i].MatrixA.Decompose(out ascale, out arot, out apos);
+                        Location pos = GetPosition() + new Location(apos.X, apos.Y, apos.Z - 1);// TODO: make the -1 not needed!)
                         ModelEntity wheel = new ModelEntity("vehicles/" + vehName + "_wheel.dae", TheRegion);
                         wheel.SetPosition(pos);
                         wheel.SetOrientation(BEPUutilities.Quaternion.Identity); // TODO: orient
@@ -73,6 +75,7 @@ namespace Voxalia.ServerGame.EntitySystem
                         BEPUutilities.Vector3 angvel = new BEPUutilities.Vector3(10, 0, 0);
                         wheel.Body.ApplyAngularImpulse(ref angvel);
                         wheel.Body.ActivityInformation.Activate();
+                        */
                     }
                 }
                 hasWheels = true;

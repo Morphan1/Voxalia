@@ -337,11 +337,5 @@ namespace Voxalia.Shared
             }
             return combined;
         }
-
-        Matrix Convert(Assimp.Matrix4x4 mat)
-        {
-            return new Matrix(mat.A1, mat.A2, mat.A3, mat.A4, mat.B1, mat.B2, mat.B3, mat.B4,
-                mat.C1, mat.C2, mat.C3, mat.C4, mat.D1, mat.D2, mat.D3, mat.D4);
-        }
     }
 }
