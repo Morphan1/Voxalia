@@ -33,9 +33,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
             AnimEngine = engine;
             Handler = new ModelHandler();
             LoadedModels = new List<Model>();
-            LoadedModels.Add(Cube);
-            LoadedModels.Add(Cylinder);
-            Sphere = GetModel("common/sphere_basic.dae");
+            Cube = GetModel("cube");
+            Cylinder = GetModel("cylinder");
+            Sphere = GetModel("common/sphere_basic");
         }
 
         public void Update(double time)
@@ -50,19 +50,19 @@ namespace Voxalia.ClientGame.GraphicsSystems
             try
             {
                 filename = FileHandler.CleanFileName(filename);
-                if (!Program.Files.Exists("models/" + filename))
+                if (!Program.Files.Exists("models/" + filename + ".vmd"))
                 {
                     SysConsole.Output(OutputType.WARNING, "Cannot load model, file '" +
-                        TextStyle.Color_Standout + "models/" + filename  + TextStyle.Color_Warning +
+                        TextStyle.Color_Standout + "models/" + filename + ".vmd" + TextStyle.Color_Warning +
                         "' does not exist.");
                     return null;
                 }
-                return FromBytes(filename, Program.Files.ReadBytes("models/" + filename));
+                return FromBytes(filename, Program.Files.ReadBytes("models/" + filename + ".vmd"));
             }
             catch (Exception ex)
             {
                 SysConsole.Output(OutputType.ERROR, "Failed to load model from filename '" +
-                    TextStyle.Color_Standout + "models/" + filename + TextStyle.Color_Error + "'" + ex.ToString());
+                    TextStyle.Color_Standout + "models/" + filename + ".vmd" + TextStyle.Color_Error + "': " + ex.ToString());
                 return null;
             }
         }

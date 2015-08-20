@@ -73,7 +73,7 @@ namespace Voxalia.ClientGame.EntitySystem
             WheelShape = new SphereShape((float)HalfSize.X);
             CanRotate = false;
             EID = -1;
-            model = TheClient.Models.GetModel("players/human_male_004.dae");
+            model = TheClient.Models.GetModel("players/human_male_004");
             model.LoadSkin(TheClient.Textures);
             CGroup = CollisionUtil.Player;
         }

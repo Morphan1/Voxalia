@@ -14,9 +14,11 @@ namespace Voxalia.Shared
             {
                 throw new Exception("Model3D: Invalid header bits.");
             }
-            DataStream ds = new DataStream(data);
+            byte[] dat_filt = new byte[data.Length - "VMD001".Length];
+            Array.ConstrainedCopy(data, "VMD001".Length, dat_filt, 0, dat_filt.Length);
+            dat_filt = FileHandler.UnGZip(dat_filt);
+            DataStream ds = new DataStream(dat_filt);
             DataReader dr = new DataReader(ds);
-            dr.ReadBytes("VMD001".Length);
             Model3D mod = new Model3D();
             mod.MatrixA = ReadMat(dr);
             int meshCount = dr.ReadInt();

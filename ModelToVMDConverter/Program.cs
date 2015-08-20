@@ -51,6 +51,7 @@ namespace ModelToVMDConverter
             StreamWrapper outstream = new StreamWrapper(ms);
             WriteMatrix4x4(scene.RootNode.Transform, outstream);
             outstream.WriteInt(scene.MeshCount);
+            Console.WriteLine("Writing " + scene.MeshCount + " meshes...");
             for (int m = 0; m < scene.MeshCount; m++)
             {
                 Mesh mesh = scene.Meshes[m];
@@ -126,7 +127,7 @@ namespace ModelToVMDConverter
             {
                 for (int j = 0; j < 4; j++)
                 {
-                    outstream.WriteFloat(mat[i, j]);
+                    outstream.WriteFloat(mat[i + 1, j + 1]);
                 }
             }
         }
