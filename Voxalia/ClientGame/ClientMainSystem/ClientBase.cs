@@ -254,10 +254,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheGameScreen = new GameScreen() { TheClient = this };
             TheChunkWaitingScreen = new ChunkWaitingScreen() { TheClient = this };
             TheSingleplayerMenuScreen = new SingleplayerMenuScreen() { TheClient = this };
+            TheInventoryScreen = new InventoryScreen() { TheClient = this };
             TheMainMenuScreen.Init();
             TheGameScreen.Init();
             TheChunkWaitingScreen.Init();
             TheSingleplayerMenuScreen.Init();
+            TheInventoryScreen.Init();
             ShowMainMenu();
         }
 
@@ -295,6 +297,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 CScreen = TheGameScreen;
                 CScreen.SwitchTo();
             }
+        }
+
+        public void ShowInventory()
+        {
+            CScreen = TheInventoryScreen;
+            CScreen.SwitchTo();
         }
 
         /// <summary>
@@ -395,7 +403,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// <summary>
         /// The "Game" screen.
         /// </summary>
-        GameScreen TheGameScreen;
+        public GameScreen TheGameScreen;
 
         /// <summary>
         /// The main menu screen.
@@ -411,6 +419,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// The "waiting on chunks" main menu screen.
         /// </summary>
         public ChunkWaitingScreen TheChunkWaitingScreen;
+
+        /// <summary>
+        /// The in-game "inventory" menu screen.
+        /// </summary>
+        InventoryScreen TheInventoryScreen;
 
         /// <summary>
         /// The current sound object for the playing background music.

@@ -64,6 +64,7 @@ namespace Voxalia.ClientGame.CommandSystem
             CommandSystem.RegisterCommand(new StartlocalserverCommand(TheClient));
 
             // Game Commands
+            CommandSystem.RegisterCommand(new InventoryCommand(TheClient));
             CommandSystem.RegisterCommand(new TesteffectCommand(TheClient));
         }
 

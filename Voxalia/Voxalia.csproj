@@ -121,6 +121,7 @@
     <Compile Include="ClientGame\ClientMainSystem\ClientRender.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientTick.cs" />
     <Compile Include="ClientGame\ClientMainSystem\GameScreen.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\InventoryScreen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\MainMenuScreen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\Screen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\SingleplayerMenuScreen.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="ClientGame\CommandSystem\CommonCommands\PlayCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\QuitCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\ReloadCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\GameCommands\InventoryCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\GameCommands\TesteffectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\ConnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\DisconnectCommand.cs" />
@@ -230,6 +232,7 @@
     <Compile Include="ClientGame\OtherSystems\ItemStack.cs" />
     <Compile Include="ClientGame\UISystem\KeyHandler.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIMenu.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UILabel.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UITextLink.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIMenuButton.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIMenuItem.cs" />

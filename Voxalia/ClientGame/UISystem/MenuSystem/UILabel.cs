@@ -4,32 +4,19 @@ using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.UISystem.MenuSystem
 {
-    public class UITextLink : UIMenuItem
+    public class UILabel : UIMenuItem
     {
-        public Action ClickedTask;
-
         public string Text;
-
-        public string TextHover;
-
-        public string TextClick;
-
-        public bool Hovered = false;
-
-        public bool Clicked = false;
-
+        
         public Func<float> XGet;
 
         public Func<float> YGet;
 
         public FontSet TextFont;
 
-        public UITextLink(string btext, string btexthover, string btextclick, Action clicked, Func<float> xer, Func<float> yer, FontSet font)
+        public UILabel(string btext, Func<float> xer, Func<float> yer, FontSet font)
         {
-            ClickedTask = clicked;
             Text = btext;
-            TextHover = btexthover;
-            TextClick = btextclick;
             TextFont = font;
             XGet = xer;
             YGet = yer;
@@ -37,28 +24,18 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public override void MouseEnter()
         {
-            Hovered = true;
         }
 
         public override void MouseLeave()
         {
-            Hovered = false;
-            Clicked = false;
         }
 
         public override void MouseLeftDown()
         {
-            Hovered = true;
-            Clicked = true;
         }
 
         public override void MouseLeftUp()
         {
-            if (Clicked && Hovered)
-            {
-                ClickedTask.Invoke();
-            }
-            Clicked = false;
         }
 
         public override void Init()
@@ -67,16 +44,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public override void Render(double delta)
         {
-            string tt = Text;
-            if (Clicked)
-            {
-                tt = TextClick;
-            }
-            else if (Hovered)
-            {
-                tt = TextHover;
-            }
-            TextFont.DrawColoredText(tt, new Location(GetX(), GetY(), 0));
+            TextFont.DrawColoredText(Text, new Location(GetX(), GetY(), 0));
         }
 
         public float GetWidth()
