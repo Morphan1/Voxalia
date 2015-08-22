@@ -121,6 +121,7 @@
     <Compile Include="ClientGame\ClientMainSystem\ClientRender.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientTick.cs" />
     <Compile Include="ClientGame\ClientMainSystem\GameScreen.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\EquipmentScreen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\InventoryScreen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\MainMenuScreen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\Screen.cs" />

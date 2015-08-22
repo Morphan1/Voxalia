@@ -8,23 +8,23 @@ using OpenTK;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
-    class InventoryScreen: Screen
+    class EquipmentScreen: Screen
     {
         public UIMenu Menus;
-        public UILabel Label_Inventory;
-        public UITextLink Link_Equipment;
+        public UILabel Label_Equipment;
+        public UITextLink Link_Inventory;
         public UITextLink Link_Exit;
 
         public override void Init()
         {
             Menus = new UIMenu(TheClient);
-            Label_Inventory = new UILabel("^&Inventory", () => 20, () => 20, TheClient.FontSets.SlightlyBigger);
-            Menus.Add(Label_Inventory);
-            Link_Equipment = new UITextLink("Equipment", "^0^e^&Equipment", "^7^e^0Equipment", () =>
+            Link_Inventory = new UITextLink("Inventory", "^0^e^&Inventory", "^7^e^0Inventory", () =>
             {
-                TheClient.ShowEquipment();
-            }, () => Label_Inventory.GetX() + Label_Inventory.GetWidth() + 20, () => Label_Inventory.GetY(), TheClient.FontSets.SlightlyBigger);
-            Menus.Add(Link_Equipment);
+                TheClient.ShowInventory();
+            }, () => 20, () => 20, TheClient.FontSets.SlightlyBigger);
+            Menus.Add(Link_Inventory);
+            Label_Equipment = new UILabel("^&Equipment", () => Link_Inventory.GetX() + Link_Inventory.GetWidth() + 20, () => Link_Inventory.GetY(), TheClient.FontSets.SlightlyBigger);
+            Menus.Add(Label_Equipment);
             Link_Exit = new UITextLink("Exit", "^0^e^&Exit", "^7^e^0Exit", () =>
             {
                 TheClient.ShowGame();
