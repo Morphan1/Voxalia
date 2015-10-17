@@ -19,14 +19,14 @@ namespace Voxalia.Shared.BlockShapes
             {
                 Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X, pos.Y + Percent, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X + 1, pos.Y + Percent, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X, pos.Y + Percent, pos.Z + 1));
             }
             if (!BOTTOM)
             {
-                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X, pos.Y + Percent, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z));
                 Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
                 Vertices.Add(new Vector3(pos.X, pos.Y + Percent, pos.Z));
@@ -44,7 +44,7 @@ namespace Voxalia.Shared.BlockShapes
             }
             if (!XM)
             {
-                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
+                Vertices.Add(new Vector3(pos.X, pos.Y + Percent, pos.Z));
                 Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
                 Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X, pos.Y + Percent, pos.Z));
