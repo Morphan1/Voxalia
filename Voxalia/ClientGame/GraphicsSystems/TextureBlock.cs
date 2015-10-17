@@ -26,6 +26,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
             SetTexture(2, "blocks/solid/grass_side");
             SetTexture(3, "blocks/solid/dirt");
             SetTexture(4, "blocks/liquid/water");
+            SetTexture(5, "blocks/solid/db_top");
+            SetTexture(MaterialHelpers.MAX_TEXTURES - 6, "blocks/solid/db_ym");
+            SetTexture(MaterialHelpers.MAX_TEXTURES - 5, "blocks/solid/db_yp");
+            SetTexture(MaterialHelpers.MAX_TEXTURES - 4, "blocks/solid/db_xp");
+            SetTexture(MaterialHelpers.MAX_TEXTURES - 3, "blocks/solid/db_xm");
+            SetTexture(MaterialHelpers.MAX_TEXTURES - 2, "blocks/solid/db_bottom");
             SetTexture(MaterialHelpers.MAX_TEXTURES - 1, "blocks/solid/grass");
             GL.BindTexture(TextureTarget.Texture2DArray, 0);
         }

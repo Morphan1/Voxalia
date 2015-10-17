@@ -9,7 +9,8 @@ namespace Voxalia.Shared
         GRASS = 2,
         DIRT = 3,
         WATER = 4,
-        NUM_DEFAULT = 5,
+        DEBUG = 5,
+        NUM_DEFAULT = 6,
         MAX = ushort.MaxValue
     }
 
@@ -27,9 +28,15 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.GRASS),
                 new MaterialInfo((int)Material.DIRT),
                 new MaterialInfo((int)Material.WATER) { Solid = false, Opaque = false },
+                new MaterialInfo((int)Material.DEBUG)
             };
-            mats[2].TID[(int)MaterialSide.TOP] = MaterialHelpers.MAX_TEXTURES - 1; // grass_top
-            mats[2].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
+            mats[(int)Material.GRASS].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
+            mats[(int)Material.GRASS].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
+            mats[(int)Material.DEBUG].TID[(int)MaterialSide.BOTTOM] = MAX_TEXTURES - 2; // db_bottom
+            mats[(int)Material.DEBUG].TID[(int)MaterialSide.XM] = MAX_TEXTURES - 3; // db_xm
+            mats[(int)Material.DEBUG].TID[(int)MaterialSide.XP] = MAX_TEXTURES - 4; // db_xp
+            mats[(int)Material.DEBUG].TID[(int)MaterialSide.YP] = MAX_TEXTURES - 5; // db_yp
+            mats[(int)Material.DEBUG].TID[(int)MaterialSide.YM] = MAX_TEXTURES - 6; // db_ym
             ALL_MATS.AddRange(mats);
         }
         
