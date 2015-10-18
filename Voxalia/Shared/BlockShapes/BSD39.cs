@@ -82,26 +82,48 @@ namespace Voxalia.Shared.BlockShapes
             Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.15f, pos.Z));
             Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z));
             Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z + 1));
-            // 
-            /*
+            // -0.3939f, -0.9191f, 0f
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z + 1));
             Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z));
             Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z + 1));
-            //
+            // -0.9191f, -0.3939f, 0f
+            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z + 1));
             Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z + 1));
-            //
-            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z+ 1));
+            // -0.9191f, 0.3939f, 0f
+            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z));
             Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z + 1));
-            //
+            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z));
             Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z + 1));
+            // -0.3939f, 0.9191f, 0f
+            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z));
             Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z + 1));
-            //
+            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z));
             Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z + 1));
+            // 0.3939f, 0.9191f, 0f
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z));
             Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z + 1));
-            //
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z));
             Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z + 1));
+            // 0.9191f, 0.3939f, 0f
+            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z));
             Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z + 1));
-            */
+            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z + 1));
             return Vertices;
         }
         
@@ -128,9 +150,32 @@ namespace Voxalia.Shared.BlockShapes
             }
             for (int i = 0; i < 6; i++)
             {
+                Norms.Add(new Vector3(0.3939f, -0.9191f, 0f));
+            }
+            for (int i = 0; i < 6; i++)
+            {
+                Norms.Add(new Vector3(-0.3939f, -0.9191f, 0f));
+            }
+            for (int i = 0; i < 6; i++)
+            {
+                Norms.Add(new Vector3(-0.9191f, -0.3939f, 0f));
+            }
+            for (int i = 0; i < 6; i++)
+            {
+                Norms.Add(new Vector3(-0.9191f, 0.3939f, 0f));
+            }
+            for (int i = 0; i < 6; i++)
+            {
                 Norms.Add(new Vector3(-0.3939f, 0.9191f, 0f));
             }
-            
+            for (int i = 0; i < 6; i++)
+            {
+                Norms.Add(new Vector3(0.3939f, 0.9191f, 0f));
+            }
+            for (int i = 0; i < 6; i++)
+            {
+                Norms.Add(new Vector3(0.9191f, 0.3939f, 0f));
+            }
             return Norms;
         }
 
@@ -195,20 +240,64 @@ namespace Voxalia.Shared.BlockShapes
             }
             // 0.9191f, -0.3939f, 0f
             int tID_XP = mat.TextureID(MaterialSide.XP);
-            TCoords.Add(new Vector3(1, 1, tID_XP));
-            TCoords.Add(new Vector3(0.5f, 0, tID_XP));
-            TCoords.Add(new Vector3(1, 0, tID_XP));
-            TCoords.Add(new Vector3(1, 1, tID_XP));
             TCoords.Add(new Vector3(0.5f, 1, tID_XP));
+            TCoords.Add(new Vector3(0, 0, tID_XP));
             TCoords.Add(new Vector3(0.5f, 0, tID_XP));
+            TCoords.Add(new Vector3(0.5f, 1, tID_XP));
+            TCoords.Add(new Vector3(0, 1, tID_XP));
+            TCoords.Add(new Vector3(0, 0, tID_XP));
             // 0.3939f, -0.9191f, 0f
+            int tID_YM = mat.TextureID(MaterialSide.YM);
+            TCoords.Add(new Vector3(1, 1, tID_YM));
+            TCoords.Add(new Vector3(0.5f, 0, tID_YM));
+            TCoords.Add(new Vector3(1, 0, tID_YM));
+            TCoords.Add(new Vector3(1, 1, tID_YM));
+            TCoords.Add(new Vector3(0.5f, 1, tID_YM));
+            TCoords.Add(new Vector3(0.5f, 0, tID_YM));
+            // -0.3939f, -0.9191f, 0f
+            TCoords.Add(new Vector3(0.5f, 1, tID_YM));
+            TCoords.Add(new Vector3(0, 0, tID_YM));
+            TCoords.Add(new Vector3(0.5f, 0, tID_YM));
+            TCoords.Add(new Vector3(0.5f, 1, tID_YM));
+            TCoords.Add(new Vector3(0, 1, tID_YM));
+            TCoords.Add(new Vector3(0, 0, tID_YM));
+            // -0.9191f, -0.3939f, 0f
+            int tID_XM = mat.TextureID(MaterialSide.XM);
+            TCoords.Add(new Vector3(1, 1, tID_XM));
+            TCoords.Add(new Vector3(0.5f, 0, tID_XM));
+            TCoords.Add(new Vector3(1, 0, tID_XM));
+            TCoords.Add(new Vector3(1, 1, tID_XM));
+            TCoords.Add(new Vector3(0.5f, 1, tID_XM));
+            TCoords.Add(new Vector3(0.5f, 0, tID_XM));
+            // -0.9191f, 0.3939f, 0f
+            TCoords.Add(new Vector3(0, 1, tID_XM));
+            TCoords.Add(new Vector3(0.5f, 0, tID_XM));
+            TCoords.Add(new Vector3(0, 0, tID_XM));
+            TCoords.Add(new Vector3(0, 1, tID_XM));
+            TCoords.Add(new Vector3(0.5f, 1, tID_XM));
+            TCoords.Add(new Vector3(0.5f, 0, tID_XM));
+            // -0.3939f, 0.9191f, 0f
             int tID_YP = mat.TextureID(MaterialSide.YP);
-            TCoords.Add(new Vector3(1, 1, tID_YP));
-            TCoords.Add(new Vector3(0.5f, 0, tID_YP));
+            TCoords.Add(new Vector3(0.5f, 1, tID_YP));
             TCoords.Add(new Vector3(1, 0, tID_YP));
+            TCoords.Add(new Vector3(0.5f, 0, tID_YP));
+            TCoords.Add(new Vector3(0.5f, 1, tID_YP));
             TCoords.Add(new Vector3(1, 1, tID_YP));
+            TCoords.Add(new Vector3(1, 0, tID_YP));
+            // 0.3939f, 0.9191f, 0f
+            TCoords.Add(new Vector3(0, 1, tID_YP));
+            TCoords.Add(new Vector3(0.5f, 0, tID_YP));
+            TCoords.Add(new Vector3(0, 0, tID_YP));
+            TCoords.Add(new Vector3(0, 1, tID_YP));
             TCoords.Add(new Vector3(0.5f, 1, tID_YP));
             TCoords.Add(new Vector3(0.5f, 0, tID_YP));
+            // 0.9191f, 0.3939f, 0f
+            TCoords.Add(new Vector3(0.5f, 1, tID_XP));
+            TCoords.Add(new Vector3(1, 0, tID_XP));
+            TCoords.Add(new Vector3(0.5f, 0, tID_XP));
+            TCoords.Add(new Vector3(0.5f, 1, tID_XP));
+            TCoords.Add(new Vector3(1, 1, tID_XP));
+            TCoords.Add(new Vector3(1, 0, tID_XP));
             return TCoords;
         }
 
