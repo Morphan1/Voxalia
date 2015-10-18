@@ -50,12 +50,13 @@ namespace Voxalia.Shared
             BSD[33] = new BSD33();
             BSD[34] = new BSD34();
             // ...
-            BSD[39] = new BSD39();
+            BSD[39] = new BSD39a76(1f);
             // ...
             BSD[72] = new BSD72();
             BSD[73] = new BSD73();
             BSD[74] = new BSD74();
             BSD[75] = new BSD75();
+            BSD[76] = new BSD39a76(0.5f);
             // ...
             BSD[80] = new BSD80();
             BSD[81] = new BSD81();

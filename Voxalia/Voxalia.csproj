@@ -378,7 +378,7 @@
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleGeneratorCore.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionLoader.cs" />
     <Compile Include="ServerGame\WorldSystem\Region.cs" />
-    <Compile Include="Shared\BlockShapes\BSD39.cs" />
+    <Compile Include="Shared\BlockShapes\BSD39a76.cs" />
     <Compile Include="Shared\Model3D.cs" />
     <Compile Include="Shared\Collision\AABB.cs" />
     <Compile Include="Shared\AnimationEngine.cs" />

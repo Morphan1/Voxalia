@@ -3,12 +3,13 @@ using BEPUutilities;
 
 namespace Voxalia.Shared.BlockShapes
 {
-    public class BSD39: BlockShapeDetails
+    public class BSD39a76: BlockShapeDetails
     {
-        public override BEPUphysics.CollisionShapes.EntityShape GetShape(out Location offset)
+        public float Width = 1f;
+
+        public BSD39a76(float width)
         {
-            offset = new Location(0.5);
-            return new BEPUphysics.CollisionShapes.ConvexShapes.BoxShape(1, 1, 1);
+            Width = width;
         }
 
         public override List<Vector3> GetVertices(Vector3 pos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)
@@ -17,113 +18,113 @@ namespace Voxalia.Shared.BlockShapes
             if (!TOP)
             {
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.15f, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f + 0.5f * Width, pos.Y + 0.5f, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.15f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f - 0.5f * Width, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f - 0.5f * Width, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f - 0.5f * Width, pos.Y + 0.5f, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f - 0.5f * Width, pos.Y + 0.5f, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f + 0.5f * Width, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f + 0.5f * Width, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 0.5f + 0.5f * Width, pos.Y + 0.5f, pos.Z + 1));
             }
             if (!BOTTOM)
             {
-                Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.15f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f + 0.5f * Width, pos.Y + 0.5f, pos.Z));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.15f, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f - 0.5f * Width, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f - 0.5f * Width, pos.Z));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f - 0.5f * Width, pos.Y + 0.5f, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f - 0.5f * Width, pos.Y + 0.5f, pos.Z));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f + 0.5f * Width, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f + 0.5f * Width, pos.Z));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f + 0.5f * Width, pos.Y + 0.5f, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z));
                 Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z));
             }
             // 0.9191f, -0.3939f, 0f
-            Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.15f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.15f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.15f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.5f * Width, pos.Y + 0.5f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.5f * Width, pos.Y + 0.5f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.5f * Width, pos.Y + 0.5f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z + 1));
             // 0.3939f, -0.9191f, 0f
-            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.15f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.15f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.15f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f - 0.5f * Width, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f - 0.5f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f - 0.5f * Width, pos.Z + 1));
             // -0.3939f, -0.9191f, 0f
-            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.0f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f - 0.5f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f - 0.5f * Width, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f - 0.5f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z + 1));
             // -0.9191f, -0.3939f, 0f
-            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.15f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z+ 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.5f * Width, pos.Y + 0.5f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f - 0.35f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.5f * Width, pos.Y + 0.5f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.5f * Width, pos.Y + 0.5f, pos.Z+ 1));
             // -0.9191f, 0.3939f, 0f
-            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.0f, pos.Y + 0.5f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.5f * Width, pos.Y + 0.5f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.5f * Width, pos.Y + 0.5f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.5f * Width, pos.Y + 0.5f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z + 1));
             // -0.3939f, 0.9191f, 0f
-            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.15f, pos.Y + 0.85f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f + 0.5f * Width, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f - 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f + 0.5f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f + 0.5f * Width, pos.Z + 1));
             // 0.3939f, 0.9191f, 0f
-            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 1.0f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f + 0.5f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f + 0.5f * Width, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f, pos.Y + 0.5f + 0.5f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z + 1));
             // 0.9191f, 0.3939f, 0f
-            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X + 0.85f, pos.Y + 0.85f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 1.0f, pos.Y + 0.5f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.5f * Width, pos.Y + 0.5f, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.35f * Width, pos.Y + 0.5f + 0.35f * Width, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.5f * Width, pos.Y + 0.5f, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 0.5f + 0.5f * Width, pos.Y + 0.5f, pos.Z + 1));
             return Vertices;
         }
         
