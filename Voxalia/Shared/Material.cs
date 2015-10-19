@@ -10,7 +10,8 @@ namespace Voxalia.Shared
         DIRT = 3,
         WATER = 4,
         DEBUG = 5,
-        NUM_DEFAULT = 6,
+        LEAVES1 = 6,
+        NUM_DEFAULT = 7,
         MAX = ushort.MaxValue
     }
 
@@ -28,7 +29,8 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.GRASS),
                 new MaterialInfo((int)Material.DIRT),
                 new MaterialInfo((int)Material.WATER) { Solid = false, Opaque = false },
-                new MaterialInfo((int)Material.DEBUG)
+                new MaterialInfo((int)Material.DEBUG),
+                new MaterialInfo((int)Material.LEAVES1) { Opaque = false }
             };
             mats[(int)Material.GRASS].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
             mats[(int)Material.GRASS].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
