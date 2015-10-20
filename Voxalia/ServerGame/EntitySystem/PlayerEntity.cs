@@ -397,7 +397,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     TrySet(pos, 1, 0, 1);
                     TrySet(pos, ViewRadiusInChunks / 4, 0, 1);
                     TrySet(pos, ViewRadiusInChunks / 2, 0, 1);
-                    TrySet(pos, ViewRadiusInChunks, 0, 5);
+                    //TrySet(pos, ViewRadiusInChunks, 0, 5);
                     loadedInitially = true;
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 1));
                 }
@@ -405,9 +405,9 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     // TODO: Better system -> async?
                     TrySet(pos, 1, 5, 1);
-                    TrySet(pos, ViewRadiusInChunks / 4, 20, 1);
+                    TrySet(pos, ViewRadiusInChunks / 4, 20, 1); // TODO: Closer chunks -> send sooner?
                     TrySet(pos, ViewRadiusInChunks / 2, 20, 1);
-                    TrySet(pos, ViewRadiusInChunks, 20, 5);
+                    //TrySet(pos, ViewRadiusInChunks, 20, 5);
                     TheServer.Schedule.ScheduleSyncTask(() =>
                     {
                         ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
@@ -441,7 +441,7 @@ namespace Voxalia.ServerGame.EntitySystem
             worldPos = TheRegion.ChunkLocFor(worldPos);
             ChunkAwarenessInfo cai = new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult };
             if (!ChunksAwareOf.ContainsKey(worldPos) || ChunksAwareOf[worldPos].LOD > posMult) // TODO: Efficiency - TryGetValue?
-            {
+            { // TODO: Or ATime > awareOf.remTime?
                 if (ChunksAwareOf.ContainsKey(worldPos)) // TODO: Efficiency - TryGetValue?
                 {
                     ChunkAwarenessInfo acai = ChunksAwareOf[worldPos];
