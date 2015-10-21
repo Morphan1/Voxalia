@@ -2,6 +2,7 @@
 using Voxalia.Shared;
 using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.WorldSystem;
+using Voxalia.ServerGame.OtherSystems;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -10,7 +11,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public string vehName;
 
         public VehicleEntity(string vehicle, Region tregion)
-            : base("vehicles/" + vehicle + "_base.dae", tregion)
+            : base("vehicles/" + vehicle + "_base", tregion)
         {
             vehName = vehicle;
             SetMass(100);
@@ -37,7 +38,18 @@ namespace Voxalia.ServerGame.EntitySystem
             base.Tick();
             if (!hasWheels) // TODO: Efficiency. We shouldn't have to check this every tick!
             {
-                Model3D scene = TheServer.Models.GetModel(model).Original;
+                Model mod = TheServer.Models.GetModel(model);
+                if (mod == null) // TODO: mod should return a cube when all else fails?
+                {
+                    // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
+                    return;
+                }
+                Model3D scene = mod.Original;
+                if (scene == null) // TODO: Scene should return a cube when all else fails?
+                {
+                    // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
+                    return;
+                }
                 SetOrientation(BEPUutilities.Quaternion.Identity);
                 List<Model3DNode> nodes = GetNodes(scene.RootNode);
                 for (int i = 0; i < nodes.Count; i++)

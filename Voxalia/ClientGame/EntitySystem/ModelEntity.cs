@@ -32,12 +32,22 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Tick()
         {
+            if (Body == null)
+            {
+                // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
+                return;
+            }
             base.Tick();
         }
 
         public override void SpawnBody()
         {
             model = TheClient.Models.GetModel(mod);
+            if (model == null || model.Original == null) // TODO: smod should return a cube when all else fails?
+            {
+                // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
+                return;
+            }
             model.LoadSkin(TheClient.Textures);
             if (mode == ModelCollisionMode.PRECISE)
             {

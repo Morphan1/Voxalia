@@ -5,6 +5,7 @@ using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
+using Voxalia.ServerGame.OtherSystems;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -28,6 +29,11 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
+            if (Body == null)
+            {
+                // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
+                return;
+            }
             if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
             {
                 pActive = Body.ActivityInformation.IsActive;
@@ -79,7 +85,18 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void SpawnBody()
         {
-            Model3D smodel = TheServer.Models.GetModel(model).Original;
+            Model smod = TheServer.Models.GetModel(model);
+            if (smod == null) // TODO: smod should return a cube when all else fails?
+            {
+                // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
+                return;
+            }
+            Model3D smodel = smod.Original;
+            if (smodel == null) // TODO: smodel should return a cube when all else fails?
+            {
+                // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
+                return;
+            }
             if (mode == ModelCollisionMode.PRECISE)
             {
                 Shape = TheServer.Models.handler.MeshToBepu(smodel);
