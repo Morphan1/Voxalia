@@ -5,8 +5,8 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
 {
     public class SimpleGeneratorCore: BlockPopulator
     {
-        public const float GlobalHeightMapSize = 2000;
-        public const float LocalHeightMapSize = 400;
+        public const float GlobalHeightMapSize = 1500;
+        public const float LocalHeightMapSize = 40;
 
         public override float GetHeight(short Seed, short seed2, float x, float y)
         {

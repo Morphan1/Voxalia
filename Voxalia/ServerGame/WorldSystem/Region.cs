@@ -510,7 +510,7 @@ namespace Voxalia.ServerGame.WorldSystem
             CFGEdited = true;
             Seed = (short)Config.ReadInt("general.seed", 100); // TODO: Generate or load
             Random seedGen = new Random(Seed);
-            Seed2 = (short)(seedGen.Next((int)short.MaxValue * 2) - short.MaxValue);
+            Seed2 = (short)(seedGen.Next(short.MaxValue * 2) - short.MaxValue);
             LoadRegion(new Location(-MaxViewRadiusInChunks / 4 * 30), new Location(MaxViewRadiusInChunks / 4 * 30));
             LoadRegion(new Location(-MaxViewRadiusInChunks / 2 * 30), new Location(MaxViewRadiusInChunks / 2 * 30));
             LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30));

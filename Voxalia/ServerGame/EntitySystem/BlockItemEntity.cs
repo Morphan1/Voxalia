@@ -53,6 +53,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public ItemStack GetItem()
         {
+            // TODO: Proper texture / model / ...
             return new ItemStack("block", Mat.ToString(), TheServer, 1, "", Mat.GetName(),
                     Mat.GetDescription(), Color.White.ToArgb(), "cube", false) { Datum = (ushort)Mat };
         }
