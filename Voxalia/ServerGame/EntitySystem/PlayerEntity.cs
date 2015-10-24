@@ -151,7 +151,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Body.AngularDamping = 1.0f;
             Shape = CBody.Body.CollisionInformation.Shape;
             ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
-            Body.CollisionInformation.CollisionRules.Group = CollisionUtil.Solid;
+            Body.CollisionInformation.CollisionRules.Group = CollisionUtil.Player;
             TheRegion.PhysicsWorld.Add(CBody);
             if (CursorMarker == null)
             {
