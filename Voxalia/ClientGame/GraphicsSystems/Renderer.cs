@@ -281,6 +281,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="end">The ending point</param>
         public void RenderLine(Location start, Location end)
         {
+            // TODO: Efficiency!
             float len = (float)(end - start).Length();
             Location vecang = Utilities.VectorToAngles(start - end);
             Matrix4 mat = Matrix4.CreateScale(len, 1, 1)

@@ -5,8 +5,6 @@ layout (location = 1) in vec3 normal;
 layout (location = 2) in vec3 texcoord;
 layout (location = 3) in vec4 color;
 
-const int MAX_BONES = 200;
-
 layout (location = 1) uniform mat4 projection;
 layout (location = 2) uniform mat4 model_matrix;
 layout (location = 3) uniform vec4 v_color = vec4(1.0);
