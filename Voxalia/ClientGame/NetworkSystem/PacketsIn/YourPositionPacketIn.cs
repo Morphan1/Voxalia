@@ -15,19 +15,21 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Location avel = Location.FromBytes(data, 12 + 12);
             Location dir = pos - TheClient.Player.GetPosition();
             TheClient.Player.ServerLocation = pos;
+            if (dir.LengthSquared() > 100 * 100)
+            {
+                TheClient.Player.SetPosition(pos);
+            }
+            return true; // TODO: Restore + fix
             if (dir.LengthSquared() < 20 * 20) // TODO: replace '20' with a CVar
             {
                 TheClient.Player.SetPosition(TheClient.Player.GetPosition() + dir / 30f); // TODO: Replace '30f' with a CVar * PacketDelta?
                 Location veldir = vel - TheClient.Player.GetVelocity();
                 TheClient.Player.SetVelocity(TheClient.Player.GetVelocity() + veldir / 30f); // TODO: Replace '30f' with a CVar * PacketDelta?
-                Location aveldir = avel - Location.FromBVector(TheClient.Player.WheelBody.AngularVelocity);
-                TheClient.Player.WheelBody.AngularVelocity = TheClient.Player.WheelBody.AngularVelocity + (avel / 30f).ToBVector(); // TODO: Replace '30f' with a CVar * PacketDelta?
             }
             else
             {
                 TheClient.Player.SetPosition(pos);
                 TheClient.Player.SetVelocity(vel);
-                TheClient.Player.WheelBody.AngularVelocity = avel.ToBVector();
             }
             byte st = data[12 + 12 + 12];
             PlayerStance stance = PlayerStance.STAND;
@@ -39,7 +41,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 stance = PlayerStance.CROUCH;
             }
-            TheClient.Player.Stance = stance;
+            //TheClient.Player.Stance = stance;
             return true;
         }
     }

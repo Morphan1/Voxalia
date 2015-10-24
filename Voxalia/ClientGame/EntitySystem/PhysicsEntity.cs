@@ -15,7 +15,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public PhysicsEntity(Region tregion, bool ticks, bool cast_shadows)
             : base(tregion, ticks, cast_shadows)
         {
-            Gravity = Location.FromBVector(TheWorld.PhysicsWorld.ForceUpdater.Gravity);
+            Gravity = Location.FromBVector(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
             CGroup = CollisionUtil.Solid;
         }
 
@@ -113,7 +113,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 {
                     return;
                 }
-                Vector3 impulse = -(TheWorld.PhysicsWorld.ForceUpdater.Gravity + TheWorld.GravityNormal.ToBVector() * 0.4f) * GetMass() * (float)TheWorld.Delta;
+                Vector3 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * GetMass() * (float)TheRegion.Delta;
                 Body.ApplyLinearImpulse(ref impulse);
                 Body.ActivityInformation.Activate();
             }
@@ -167,14 +167,14 @@ namespace Voxalia.ClientGame.EntitySystem
             // TODO: Gravity
             Body.Tag = this;
             SetFriction(Friction);
-            TheWorld.PhysicsWorld.Add(Body);
+            TheRegion.PhysicsWorld.Add(Body);
             for (int i = 0; i < Joints.Count; i++)
             {
                 if (Joints[i] is BaseJoint)
                 {
                     BaseJoint joint = (BaseJoint)Joints[i];
                     joint.CurrentJoint = joint.GetBaseJoint();
-                    TheWorld.PhysicsWorld.Add(joint.CurrentJoint);
+                    TheRegion.PhysicsWorld.Add(joint.CurrentJoint);
                 }
             }
         }
@@ -193,10 +193,10 @@ namespace Voxalia.ClientGame.EntitySystem
                 if (Joints[i] is BaseJoint)
                 {
                     BaseJoint joint = (BaseJoint)Joints[i];
-                    TheWorld.PhysicsWorld.Remove(joint.CurrentJoint);
+                    TheRegion.PhysicsWorld.Remove(joint.CurrentJoint);
                 }
             }
-            TheWorld.PhysicsWorld.Remove(Body);
+            TheRegion.PhysicsWorld.Remove(Body);
             Body = null;
         }
 

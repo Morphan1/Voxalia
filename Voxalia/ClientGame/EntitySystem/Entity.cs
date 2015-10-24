@@ -16,7 +16,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Entity(Region tregion, bool tickme, bool cast_shadows)
         {
-            TheWorld = tregion;
+            TheRegion = tregion;
             TheClient = tregion.TheClient;
             Ticks = tickme;
             Color = new OpenTK.Graphics.Color4((float)Utilities.UtilRandom.NextDouble(), (float)Utilities.UtilRandom.NextDouble(), 0f, 1f);
@@ -43,7 +43,7 @@ namespace Voxalia.ClientGame.EntitySystem
         /// </summary>
         public Client TheClient = null;
 
-        public Region TheWorld = null;
+        public Region TheRegion = null;
 
         /// <summary>
         /// Draw the entity in the 3D world.

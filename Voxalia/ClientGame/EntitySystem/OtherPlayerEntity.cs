@@ -206,22 +206,22 @@ namespace Voxalia.ClientGame.EntitySystem
             WheelBody.Tag = this;
             WheelBody.AngularDamping = 0.75f;
             WheelBody.LinearDamping = 0.75f;
-            TheWorld.PhysicsWorld.Add(WheelBody);
+            TheRegion.PhysicsWorld.Add(WheelBody);
             bsj = new BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint(Body, WheelBody, WheelBody.Position);
-            TheWorld.PhysicsWorld.Add(bsj);
+            TheRegion.PhysicsWorld.Add(bsj);
         }
 
         public override void DestroyBody()
         {
             if (bsj != null)
             {
-                TheWorld.PhysicsWorld.Remove(bsj);
+                TheRegion.PhysicsWorld.Remove(bsj);
                 bsj = null;
             }
             base.DestroyBody();
             if (WheelBody != null)
             {
-                TheWorld.PhysicsWorld.Remove(WheelBody);
+                TheRegion.PhysicsWorld.Remove(WheelBody);
                 WheelBody = null;
             }
         }
