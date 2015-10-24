@@ -6,13 +6,12 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 12 + 12 + 12 + 1)
+            if (data.Length != 12 + 12)
             {
                 return false;
             }
             Location pos = Location.FromBytes(data, 0);
             Location vel = Location.FromBytes(data, 12);
-            Location avel = Location.FromBytes(data, 12 + 12);
             Location dir = pos - TheClient.Player.GetPosition();
             TheClient.Player.ServerLocation = pos;
             if (dir.LengthSquared() < 20 * 20) // TODO: replace '20' with a CVar
@@ -26,17 +25,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 TheClient.Player.SetPosition(pos);
                 TheClient.Player.SetVelocity(vel);
             }
-            byte st = data[12 + 12 + 12];
-            PlayerStance stance = PlayerStance.STAND;
-            if (st == 2)
-            {
-                stance = PlayerStance.CRAWL;
-            }
-            else if (st == 1)
-            {
-                stance = PlayerStance.CROUCH;
-            }
-            //TheClient.Player.Stance = stance;
             return true;
         }
     }
