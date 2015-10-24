@@ -210,7 +210,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             // TODO: Better variable control! (Server should command every detail!)
             CBody = new CharacterController(ServerLocation.ToBVector(), (float)HalfSize.Z * 2f, (float)HalfSize.Z * 1.1f,
-                (float)HalfSize.X, 0.01f, 10f, 1.0f, 1.3f, 5f, 2.5f, 1000f, 5f, 50f, 0.5f, 250f, 4.5f, 2.5f, 5000f);
+                (float)HalfSize.X, 0.01f, 10f, 1.0f, 1.3f, 5f, 2.5f, 1000f, 5f, 50f, 0.5f, 250f, 10f, 5f, 5000f);
             CBody.StanceManager.DesiredStance = Stance.Standing;
             CBody.ViewDirection = new Vector3(1f, 0f, 0f);
             CBody.Down = new Vector3(0f, 0f, -1f);
@@ -220,6 +220,7 @@ namespace Voxalia.ClientGame.EntitySystem
             Body.AngularDamping = 1.0f;
             Shape = CBody.Body.CollisionInformation.Shape;
             ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
+            Body.CollisionInformation.CollisionRules.Group = CollisionUtil.Solid;
             TheRegion.PhysicsWorld.Add(CBody);
         }
 
