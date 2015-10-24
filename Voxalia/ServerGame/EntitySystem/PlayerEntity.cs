@@ -12,6 +12,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
+using BEPUphysics.Character;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -98,16 +99,12 @@ namespace Voxalia.ServerGame.EntitySystem
         public double ItemStartClickTime = -1;
 
         public bool WaitingForClickRelease = false;
-
-        public ConvexShape WheelShape = null;
-
+        
         public PlayerEntity(WorldSystem.Region tregion, Connection conn)
             : base(tregion, true, 100f)
         {
             Network = conn;
             SetMass(tmass / 2f);
-            Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)(HalfSize.Z * 2f));
-            WheelShape = new SphereShape((float)HalfSize.X);
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
             Items = new PlayerInventory(this);
@@ -134,28 +131,27 @@ namespace Voxalia.ServerGame.EntitySystem
             CGroup = CollisionUtil.Player;
         }
 
-        public BEPUphysics.Entities.Entity WheelBody;
-
-        public BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint bsj;
+        public CharacterController CBody;
 
         public override void SpawnBody()
         {
-            base.SpawnBody();
-            Body.LinearDamping = 0;
-            Body.AngularDamping = 1;
-            WheelBody = new BEPUphysics.Entities.Entity(WheelShape, tmass / 2f);
-            WheelBody.Orientation = Quaternion.Identity;
-            WheelBody.CollisionInformation.CollisionRules.Group = CollisionUtil.Solid;
-            WheelBody.Position = Body.Position + new Vector3(0, 0, -(float)HalfSize.Z);
-            WheelBody.CollisionInformation.CollisionRules.Specific.Add(Body.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
-            Body.CollisionInformation.CollisionRules.Specific.Add(WheelBody.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
-            WheelBody.Tag = this;
-            WheelBody.AngularDamping = 0.9f;
-            WheelBody.LinearDamping = 0.9f;
-            TheRegion.PhysicsWorld.Add(WheelBody);
-            WheelBody.Gravity = Body.Gravity;
-            bsj = new BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint(Body, WheelBody, WheelBody.Position);
-            TheRegion.PhysicsWorld.Add(bsj);
+            if (CBody != null)
+            {
+                DestroyBody();
+            }
+            // TODO: Better variable control! (Server should command every detail!)
+            CBody = new CharacterController(WorldTransform.Translation, (float)HalfSize.Z * 2f, (float)HalfSize.Z * 1.1f,
+                (float)HalfSize.X, 0.01f, 10f, 1.0f, 1.3f, 5f, 2.5f, 1000f, 5f, 50f, 0.5f, 250f, 4.5f, 2.5f, 5000f);
+            CBody.StanceManager.DesiredStance = Stance.Standing;
+            CBody.ViewDirection = new Vector3(1f, 0f, 0f);
+            CBody.Down = new Vector3(0f, 0f, -1f);
+            CBody.Tag = this;
+            Body = CBody.Body;
+            Body.Tag = this;
+            Body.AngularDamping = 1.0f;
+            Shape = CBody.Body.CollisionInformation.Shape;
+            ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
+            TheRegion.PhysicsWorld.Add(CBody);
             if (CursorMarker == null)
             {
                 CursorMarker = new CubeEntity(new Location(0.01, 0.01, 0.01), TheRegion, 0);
@@ -167,17 +163,13 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void DestroyBody()
         {
-            if (bsj != null)
+            if (CBody == null)
             {
-                TheRegion.PhysicsWorld.Remove(bsj);
-                bsj = null;
+                return;
             }
-            base.DestroyBody();
-            if (WheelBody != null)
-            {
-                TheRegion.PhysicsWorld.Remove(WheelBody);
-                WheelBody = null;
-            }
+            TheRegion.PhysicsWorld.Remove(CBody);
+            CBody = null;
+            Body = null;
             if (CursorMarker.IsSpawned)
             {
                 TheRegion.DespawnEntity(CursorMarker);
@@ -261,90 +253,50 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 Direction.Pitch = -89.9f;
             }
+            CBody.ViewDirection = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch).ToBVector();
             bool fly = false;
-            CollisionResult crGround = TheRegion.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.01f, HalfSize.Y - 0.01f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis);
-            if (Upward && !fly && !pup && crGround.Hit && GetVelocity().Z < 1f)
+            if (Upward && !fly && !pup && CBody.SupportFinder.HasSupport)
             {
-                Vector3 imp = (Location.UnitZ * GetMass() * 8f).ToBVector();
-                Body.LinearMomentum = Vector3.Zero;
-                Body.LinearVelocity = new Vector3(WheelBody.LinearVelocity.X, WheelBody.LinearVelocity.Y, 0);
-                WheelBody.LinearMomentum = Vector3.Zero;
-                WheelBody.LinearVelocity = new Vector3(WheelBody.LinearVelocity.X, WheelBody.LinearVelocity.Y, 0);
-                Body.ApplyLinearImpulse(ref imp);
-                WheelBody.LinearVelocity = Body.LinearVelocity;
-                Body.ActivityInformation.Activate();
-                imp = -imp;
-                if (crGround.HitEnt != null)
-                {
-                    crGround.HitEnt.ApplyLinearImpulse(ref imp);
-                    crGround.HitEnt.ActivityInformation.Activate();
-                }
+                CBody.Jump();
                 pup = true;
             }
             else if (!Upward)
             {
                 pup = false;
             }
-            Location movement = new Location(0, 0, 0);
-            if (Leftward)
-            {
-                movement.Y = -1;
-            }
-            if (Rightward)
-            {
-                movement.Y = 1;
-            }
-            if (Backward)
-            {
-                movement.X = 1;
-            }
-            if (Forward)
-            {
-                movement.X = -1;
-            }
-            if (movement.LengthSquared() > 0)
-            {
-                movement = Utilities.RotateVector(movement, Direction.Yaw * Utilities.PI180, fly ? Direction.Pitch * Utilities.PI180 : 0).Normalize();
-            }
-            Location intent_vel = movement * MoveSpeed * (Walk ? 0.7f : 1f) * GetMass() / 50;
-            if (Stance == PlayerStance.CROUCH)
-            {
-                intent_vel *= 0.5f;
-            }
-            else if (Stance == PlayerStance.CRAWL)
-            {
-                intent_vel *= 0.3f;
-            }
+            // TODO: Adjust speed!
+            /*
             if (ItemDoSpeedMod)
             {
                 intent_vel *= ItemSpeedMod;
             }
-            Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
-            if (!fly)
+            */
+            Vector2 movement = new Vector2(0, 0);
+            if (Leftward)
             {
-                pvel.Z = 0;
+                movement.X = -1;
             }
-            if (pvel.LengthSquared() > MoveRateCap * MoveRateCap)
+            if (Rightward)
             {
-                pvel = pvel.Normalize() * MoveRateCap;
+                movement.X = 1;
             }
-            pvel *= TheRegion.Delta * (crGround.Hit ? 1f : 0.1f);
-            if (!fly)
+            if (Backward)
             {
-                Vector3 move = new Vector3((float)pvel.X, (float)pvel.Y, 0);
-                Body.ApplyLinearImpulse(ref move);
-                Body.ActivityInformation.Activate();
-                WheelBody.ApplyLinearImpulse(ref move);
-                WheelBody.ActivityInformation.Activate();
+                movement.Y = -1;
             }
-            else
+            if (Forward)
             {
-                SetPosition(GetPosition() + pvel / 200);
+                movement.Y = 1;
             }
+            if (movement.LengthSquared() > 0)
+            {
+                movement.Normalize();
+            }
+            CBody.HorizontalMotionConstraint.MovementDirection = movement;
             CursorMarker.SetPosition(GetEyePosition() + ForwardVector() * 0.9f);
             CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(Direction.Pitch * Utilities.PI180)) * // TODO: ensure pitch works properly
                 Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(Direction.Yaw * Utilities.PI180)));
-            base.SetOrientation(Quaternion.Identity);
+            //base.SetOrientation(Quaternion.Identity);
             PlayerUpdatePacketOut pupo = new PlayerUpdatePacketOut(this);
             for (int i = 0; i < TheServer.Players.Count; i++)
             {
@@ -353,8 +305,11 @@ namespace Voxalia.ServerGame.EntitySystem
                     TheServer.Players[i].Network.SendPacket(pupo);
                 }
             }
+            // TODO: Animation!
+            /*
             if (GetVelocity().LengthSquared() > 1)
             {
+                // TODO: Replicate animation automation on client?
                 SetAnimation("human/" + StanceName() + "/walk_lowquality", 1);
                 SetAnimation("human/" + StanceName() + "/walk_lowquality", 2);
             }
@@ -363,6 +318,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 SetAnimation("human/" + StanceName() + "/idle01", 1);
                 SetAnimation("human/" + StanceName() + "/idle01", 2);
             }
+            */
             ItemStack cit = Items.GetItemForSlot(Items.cItem);
             if (Click)
             {
@@ -415,7 +371,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 pChunkLoc = cpos;
             }
-            base.Tick();
+            //base.Tick();
         }
 
         Location pChunkLoc = new Location(0.5);
@@ -517,10 +473,6 @@ namespace Voxalia.ServerGame.EntitySystem
         public override void SetPosition(Location pos)
         {
             base.SetPosition(pos + new Location(0, 0, HalfSize.Z + HalfSize.X));
-            if (WheelBody != null)
-            {
-                WheelBody.Position = pos.ToBVector() + new Vector3(0, 0, (float)HalfSize.X);
-            }
         }
 
         public void Teleport(Location pos)
@@ -585,13 +537,6 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
             }
             SetPosition(spe.GetPosition());
-        }
-
-        public PlayerStance Stance = PlayerStance.STAND;
-
-        public string StanceName()
-        {
-            return Stance.ToString().ToLower();
         }
     }
 

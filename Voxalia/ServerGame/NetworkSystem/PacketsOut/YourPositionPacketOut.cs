@@ -6,6 +6,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public YourPositionPacketOut(Location pos, Location vel, Location avel, PlayerStance stance)
         {
+            // TODO: Refine!
             ID = 1;
             Data = new byte[12 + 12 + 12 + 1];
             pos.ToBytes().CopyTo(Data, 0);

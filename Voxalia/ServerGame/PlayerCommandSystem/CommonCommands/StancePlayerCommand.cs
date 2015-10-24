@@ -18,6 +18,8 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 return;
             }
             string stance = entry.InputArguments[0].ToLower();
+            // TOOD: Implement!
+            /*
             if (stance == "stand")
             {
                 entry.Player.Stance = PlayerStance.STAND;
@@ -33,7 +35,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             else
             {
                 entry.Player.Network.SendMessage("^r^1Unknown stance input."); // TODO: Languaging
-            }
+            }*/
         }
     }
 }

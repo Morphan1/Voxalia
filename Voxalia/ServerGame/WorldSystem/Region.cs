@@ -203,9 +203,9 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
                 ((PlayerEntity)e).Network.SendPacket(new YourEIDPacketOut(e.EID));
                 ((PlayerEntity)e).Network.SendPacket(new CVarSetPacketOut(TheServer.CVars.g_timescale, TheServer));
-                ((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 0);
+                /*((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 0);
                 ((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 1);
-                ((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 2);
+                ((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 2);*/
                 for (int i = 0; i < Entities.Count - 2; i++)
                 {
                     if (Entities[i] is PhysicsEntity)

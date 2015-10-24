@@ -214,7 +214,9 @@ namespace Voxalia.ClientGame.EntitySystem
             CBody.StanceManager.DesiredStance = Stance.Standing;
             CBody.ViewDirection = new Vector3(1f, 0f, 0f);
             CBody.Down = new Vector3(0f, 0f, -1f);
+            CBody.Tag = this;
             Body = CBody.Body;
+            Body.Tag = this;
             Body.AngularDamping = 1.0f;
             Shape = CBody.Body.CollisionInformation.Shape;
             ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
@@ -288,6 +290,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             if (TheClient.CVars.n_debugmovement.ValueB)
             {
+                TheClient.Rendering.RenderLine(ServerLocation, GetPosition());
                 TheClient.Rendering.RenderLineBox(ServerLocation + new Location(-0.2), ServerLocation + new Location(0.2));
             }
             if (TheClient.RenderingShadows || !TheClient.CVars.g_firstperson.ValueB)
