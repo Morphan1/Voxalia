@@ -424,7 +424,7 @@
     <Compile Include="Shared\ModelHandler.cs" />
     <Compile Include="Shared\Scheduler.cs" />
     <Compile Include="Shared\SimplexNoise.cs" />
-    <Compile Include="Shared\VoxEnums.cs" />
+    <Compile Include="Shared\NetworkEnums.cs" />
     <Compile Include="Shared\SysConsole.cs" />
     <Compile Include="Shared\Files\UnknownFileException.cs" />
     <Compile Include="Shared\Utilities.cs" />
