@@ -69,13 +69,13 @@ namespace Voxalia.ClientGame.AudioSystem
             {
                 throw new ArgumentException("Must be between 0 and 2", "pitch");
             }
-            if (volume <= 0 || volume > 1)
-            {
-                throw new ArgumentException("Must be between 0 and 1", "volume");
-            }
             if (volume == 0)
             {
                 return null;
+            }
+            if (volume <= 0 || volume > 1)
+            {
+                throw new ArgumentException("Must be between 0 and 1", "volume");
             }
             ActiveSound actsfx = new ActiveSound(sfx);
             actsfx.Position = pos;
