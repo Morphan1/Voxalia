@@ -138,41 +138,41 @@ namespace Voxalia.Shared.BlockShapes
                 TCoords.Add(new Vector3(1, 1, tID_BOTTOM));
             }
             int tID_XP = mat.TextureID(MaterialSide.XP);
-            TCoords.Add(new Vector3(0, 0, tID_XP));
+            TCoords.Add(new Vector3(1, 0, tID_XP));
             TCoords.Add(new Vector3(1, 1, tID_XP));
             TCoords.Add(new Vector3(0, 1, tID_XP));
             TCoords.Add(new Vector3(0, 0, tID_XP));
             TCoords.Add(new Vector3(1, 0, tID_XP));
-            TCoords.Add(new Vector3(1, 1, tID_XP));
+            TCoords.Add(new Vector3(0, 1, tID_XP));
             if (!XM)
             {
                 int tID_XM = mat.TextureID(MaterialSide.XM);
+                TCoords.Add(new Vector3(1, 1, tID_XM));
                 TCoords.Add(new Vector3(0, 1, tID_XM));
-                TCoords.Add(new Vector3(1, 1, tID_XM));
                 TCoords.Add(new Vector3(0, 0, tID_XM));
                 TCoords.Add(new Vector3(1, 1, tID_XM));
+                TCoords.Add(new Vector3(0, 0, tID_XM));
                 TCoords.Add(new Vector3(1, 0, tID_XM));
-                TCoords.Add(new Vector3(0, 0, tID_XM));
             }
             if (!YP)
             {
                 int tID_YP = mat.TextureID(MaterialSide.YP);
+                TCoords.Add(new Vector3(1, 1, tID_YP));
                 TCoords.Add(new Vector3(0, 1, tID_YP));
-                TCoords.Add(new Vector3(1, 1, tID_YP));
                 TCoords.Add(new Vector3(0, 0, tID_YP));
                 TCoords.Add(new Vector3(1, 1, tID_YP));
+                TCoords.Add(new Vector3(0, 0, tID_YP));
                 TCoords.Add(new Vector3(1, 0, tID_YP));
-                TCoords.Add(new Vector3(0, 0, tID_YP));
             }
             if (!YM)
             {
                 int tID_YM = mat.TextureID(MaterialSide.YM);
-                TCoords.Add(new Vector3(0, 0, tID_YM));
+                TCoords.Add(new Vector3(1, 0, tID_YM));
                 TCoords.Add(new Vector3(1, 1, tID_YM));
                 TCoords.Add(new Vector3(0, 1, tID_YM));
                 TCoords.Add(new Vector3(0, 0, tID_YM));
                 TCoords.Add(new Vector3(1, 0, tID_YM));
-                TCoords.Add(new Vector3(1, 1, tID_YM));
+                TCoords.Add(new Vector3(0, 1, tID_YM));
             }
             return TCoords;
         }
