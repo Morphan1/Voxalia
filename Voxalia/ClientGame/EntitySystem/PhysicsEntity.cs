@@ -52,7 +52,7 @@ namespace Voxalia.ClientGame.EntitySystem
         /// <summary>
         /// The position, rotation, etc. of this entity.
         /// </summary>
-        Matrix WorldTransform = Matrix.Identity;
+        public Matrix WorldTransform = Matrix.Identity;
 
         /// <summary>
         /// The linear velocity of this entity.

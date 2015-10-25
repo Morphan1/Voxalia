@@ -42,7 +42,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                         e.Leftward = (keys & 4) == 4;
                         e.Rightward = (keys & 8) == 8;
                         e.Upward = (keys & 16) == 16;
-                        // TODO: e.Stance = stance;
+                        e.CBody.StanceManager.DesiredStance = stance;
                         return true;
                     }
                 }

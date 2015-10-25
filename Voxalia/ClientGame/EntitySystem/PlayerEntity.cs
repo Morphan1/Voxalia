@@ -1,16 +1,12 @@
-﻿using System;
-using Voxalia.Shared;
+﻿using Voxalia.Shared;
 using Voxalia.ClientGame.UISystem;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
 using Voxalia.ClientGame.GraphicsSystems;
-using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
-using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ClientGame.WorldSystem;
-using Voxalia.ClientGame.OtherSystems;
 using Voxalia.Shared.Collision;
 using BEPUphysics.Character;
 

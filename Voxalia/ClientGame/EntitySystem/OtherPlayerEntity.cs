@@ -4,7 +4,7 @@ using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems;
 using BEPUphysics.BroadPhaseEntries;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
-using BEPUphysics.CollisionShapes.ConvexShapes;
+using BEPUphysics.Character;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.Shared.Collision;
 
@@ -45,9 +45,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Rightward = false;
         public bool Upward = false;
         public bool Walk = false;
-
-        public ConvexShape WheelShape = null;
-
+        
         public float tmass = 100;
 
         public Model model;
@@ -59,8 +57,6 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             HalfSize = half;
             SetMass(tmass / 2f);
-            Shape = new BoxShape((float)HalfSize.X * 2f, (float)HalfSize.Y * 2f, (float)HalfSize.Z * 2f);
-            WheelShape = new SphereShape((float)HalfSize.X);
             CanRotate = false;
             EID = -1;
             model = TheClient.Models.GetModel("players/human_male_004");
@@ -76,8 +72,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             return TheClient.TheWorld.Collision.ShouldCollide(entry);
         }
-
-        // TODO: Rewrite me!
+        
         public override void Tick()
         {
             while (Direction.Yaw < 0)
@@ -96,61 +91,39 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 Direction.Pitch = -89.9f;
             }
+            CBody.ViewDirection = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch).ToBVector();
             bool fly = false;
-            bool on_ground = TheClient.TheWorld.Collision.CuboidLineTrace(new Location(HalfSize.X - 0.01f, HalfSize.Y - 0.01f, 0.1f), GetPosition(), GetPosition() - new Location(0, 0, 0.1f), IgnoreThis).Hit;
-            if (Upward && !fly && !pup && on_ground && GetVelocity().Z < 1f)
+            if (Upward && !fly && !pup && CBody.SupportFinder.HasSupport && GetVelocity().Z < 1f)
             {
-                Body.ApplyImpulse(new Vector3(0, 0, 0), (Location.UnitZ * GetMass() * 7f).ToBVector());
-                Body.ActivityInformation.Activate();
+                CBody.Jump();
                 pup = true;
             }
             else if (!Upward)
             {
                 pup = false;
             }
-            Location movement = new Location(0, 0, 0);
+            Vector2 movement = new Vector2(0, 0);
             if (Leftward)
-            {
-                movement.Y = -1;
-            }
-            if (Rightward)
-            {
-                movement.Y = 1;
-            }
-            if (Backward)
-            {
-                movement.X = 1;
-            }
-            if (Forward)
             {
                 movement.X = -1;
             }
+            if (Rightward)
+            {
+                movement.X = 1;
+            }
+            if (Backward)
+            {
+                movement.Y = -1;
+            }
+            if (Forward)
+            {
+                movement.Y = 1;
+            }
             if (movement.LengthSquared() > 0)
             {
-                movement = Utilities.RotateVector(movement, Direction.Yaw * Utilities.PI180, fly ? Direction.Pitch * Utilities.PI180 : 0).Normalize();
+                movement.Normalize();
             }
-            Location intent_vel = movement * MoveSpeed * (Walk ? 0.7f : 1f);
-            Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
-            if (pvel.LengthSquared() > 4 * MoveSpeed * MoveSpeed)
-            {
-                pvel = pvel.Normalize() * 2 * MoveSpeed;
-            }
-            pvel *= MoveSpeed * (Walk ? 0.7f : 1f);
-            if (!fly)
-            {
-                Body.ApplyImpulse(new Vector3(0, 0, 0), new Vector3((float)pvel.X, (float)pvel.Y, 0) * (on_ground ? 1f : 0.1f));
-                Body.ActivityInformation.Activate();
-            }
-            if (fly)
-            {
-                SetPosition(GetPosition() + pvel / 200);
-            }
-            if (Flashlight != null)
-            {
-                Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
-                Flashlight.Reposition(GetEyePosition() + Utilities.ForwardVector_Deg(Direction.Yaw, 0) * 0.3f);
-            }
-            base.SetOrientation(Quaternion.Identity);
+            CBody.HorizontalMotionConstraint.MovementDirection = movement;
             aHTime += TheClient.Delta;
             aTTime += TheClient.Delta;
             aLTime += TheClient.Delta;
@@ -182,39 +155,41 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public float MoveSpeed = 10;
 
-        public BEPUphysics.Entities.Entity WheelBody;
-
-        public BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint bsj;
+        public CharacterController CBody;
 
         public override void SpawnBody()
         {
-            base.SpawnBody();
-            WheelBody = new BEPUphysics.Entities.Entity(WheelShape, tmass / 2f);
-            WheelBody.Orientation = Quaternion.Identity;
-            WheelBody.Position = Body.Position + new Vector3(0, 0, -(float)HalfSize.Z);
-            WheelBody.CollisionInformation.CollisionRules.Specific.Add(Body.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
-            Body.CollisionInformation.CollisionRules.Specific.Add(WheelBody.CollisionInformation.CollisionRules, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
-            WheelBody.Tag = this;
-            WheelBody.AngularDamping = 0.75f;
-            WheelBody.LinearDamping = 0.75f;
-            TheRegion.PhysicsWorld.Add(WheelBody);
-            bsj = new BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint(Body, WheelBody, WheelBody.Position);
-            TheRegion.PhysicsWorld.Add(bsj);
+            if (CBody != null)
+            {
+                DestroyBody();
+            }
+            // TODO: Better variable control! (Server should command every detail!)
+            CBody = new CharacterController(WorldTransform.Translation, (float)HalfSize.Z * 2f, (float)HalfSize.Z * 1.1f,
+                (float)HalfSize.X, 0.01f, 10f, 1.0f, 1.3f, 5f, 2.5f, 1000f, 5f, 50f, 0.5f, 250f, 10f, 5f, 5000f);
+            CBody.StanceManager.DesiredStance = Stance.Standing;
+            CBody.ViewDirection = new Vector3(1f, 0f, 0f);
+            CBody.Down = new Vector3(0f, 0f, -1f);
+            CBody.Tag = this;
+            Body = CBody.Body;
+            Body.Tag = this;
+            Body.AngularDamping = 1.0f;
+            Shape = CBody.Body.CollisionInformation.Shape;
+            ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
+            Body.CollisionInformation.CollisionRules.Group = CollisionUtil.Player;
+            CBody.StepManager.MaximumStepHeight = 0.05f;
+            CBody.StepManager.MinimumDownStepHeight = 0.05f;
+            TheRegion.PhysicsWorld.Add(CBody);
         }
 
         public override void DestroyBody()
         {
-            if (bsj != null)
+            if (CBody == null)
             {
-                TheRegion.PhysicsWorld.Remove(bsj);
-                bsj = null;
+                return;
             }
-            base.DestroyBody();
-            if (WheelBody != null)
-            {
-                TheRegion.PhysicsWorld.Remove(WheelBody);
-                WheelBody = null;
-            }
+            TheRegion.PhysicsWorld.Remove(CBody);
+            CBody = null;
+            Body = null;
         }
 
         public Location GetEyePosition()
@@ -235,10 +210,6 @@ namespace Voxalia.ClientGame.EntitySystem
         public override void SetPosition(Location pos)
         {
             base.SetPosition(pos + new Location(0, 0, HalfSize.Z + HalfSize.X));
-            if (WheelBody != null)
-            {
-                WheelBody.Position = pos.ToBVector() + new Vector3(0, 0, (float)HalfSize.X);
-            }
         }
 
         public double aHTime;
