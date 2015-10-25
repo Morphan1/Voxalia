@@ -466,6 +466,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void RenderSkyflare(Matrix4 combined)
         {
+            if (CVars.r_lensflare.ValueB)
             {
                 if (PlanetSunDist > 10)
                 {
