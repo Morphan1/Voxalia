@@ -30,22 +30,22 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// The mass of the entity.
         /// </summary>
-        float Mass = 0f;
+        internal float Mass = 0f;
 
         /// <summary>
         /// The friction value of the entity.
         /// </summary>
-        float Friction = 0.5f;
+        internal float Friction = 0.5f;
 
         /// <summary>
         /// The bounciness (restitution coefficient) of the entity.
         /// </summary>
-        float Bounciness = 0f;
+        internal float Bounciness = 0f;
 
         /// <summary>
         /// The gravity power of this entity.
         /// </summary>
-        public Location Gravity;
+        internal Location Gravity;
 
         /// <summary>
         /// Whether this entity can rotate. Only updated at SpawnBody().
@@ -55,17 +55,17 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// The position, rotation, etc. of this entity.
         /// </summary>
-        public Matrix WorldTransform = Matrix.Identity;
+        internal Matrix WorldTransform = Matrix.Identity;
 
         /// <summary>
         /// The linear velocity of this entity.
         /// </summary>
-        Location LVel = Location.Zero;
+        internal Location LVel = Location.Zero;
 
         /// <summary>
         /// The angular velocity of this entity.
         /// </summary>
-        Location AVel = Location.Zero;
+        internal Location AVel = Location.Zero;
 
         /// <summary>
         /// The shape of the entity.

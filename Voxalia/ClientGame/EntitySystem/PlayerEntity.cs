@@ -207,7 +207,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             // TODO: Better variable control! (Server should command every detail!)
             CBody = new CharacterController(ServerLocation.ToBVector(), (float)HalfSize.Z * 2f, (float)HalfSize.Z * 1.1f,
-                (float)HalfSize.X, 0.01f, 10f, 1.0f, 1.3f, 5f, 2.5f, 1000f, 5f, 50f, 0.5f, 250f, 10f, 5f, 5000f);
+                (float)HalfSize.X, 0.01f, Mass, 1.0f, 1.3f, 5f, 2.5f, 100f * Mass, 5f, 50f, 0.5f, 25f * Mass, 10f, 5f, 500f * Mass);
             CBody.StanceManager.DesiredStance = Stance.Standing;
             CBody.ViewDirection = new Vector3(1f, 0f, 0f);
             CBody.Down = new Vector3(0f, 0f, -1f);
