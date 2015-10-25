@@ -471,7 +471,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        public int MaxViewRadiusInChunks = 8;
+        public int MaxViewRadiusInChunks = 4;
 
         /// <summary>
         /// The physics world in which all physics-related activity takes place.

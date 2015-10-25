@@ -32,6 +32,9 @@ namespace Voxalia
         /// </summary>
         public static IntPtr ConsoleHandle;
         
+        /// <summary>
+        /// The primary global file handler.
+        /// </summary>
         public static FileHandler Files;
 
         /// <summary>

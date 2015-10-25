@@ -56,7 +56,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public SingleAnimation tAnim = null;
         public SingleAnimation lAnim = null;
 
-        public int ViewRadiusInChunks = 8;
+        public int ViewRadiusInChunks = 4;
 
         public void Kick(string message)
         {
@@ -381,8 +381,8 @@ namespace Voxalia.ServerGame.EntitySystem
                 if (!loadedInitially)
                 {
                     TrySet(pos, 1, 0, 1);
-                    TrySet(pos, ViewRadiusInChunks / 4, 0, 1);
                     TrySet(pos, ViewRadiusInChunks / 2, 0, 1);
+                    TrySet(pos, ViewRadiusInChunks, 0, 1);
                     //TrySet(pos, ViewRadiusInChunks, 0, 5);
                     loadedInitially = true;
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 1));
@@ -391,8 +391,8 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     // TODO: Better system -> async?
                     TrySet(pos, 1, 5, 1);
-                    TrySet(pos, ViewRadiusInChunks / 4, 20, 1); // TODO: Closer chunks -> send sooner?
-                    TrySet(pos, ViewRadiusInChunks / 2, 20, 1);
+                    TrySet(pos, ViewRadiusInChunks / 2, 20, 1); // TODO: Closer chunks -> send sooner?
+                    TrySet(pos, ViewRadiusInChunks, 20, 1);
                     //TrySet(pos, ViewRadiusInChunks, 20, 5);
                     TheServer.Schedule.ScheduleSyncTask(() =>
                     {
