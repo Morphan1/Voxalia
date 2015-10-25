@@ -1,5 +1,6 @@
 ﻿using Voxalia.ClientGame.EntitySystem;
 using Voxalia.Shared;
+using BEPUphysics.Character;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
@@ -21,14 +22,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             ang.Yaw = dX;
             ang.Pitch = dY;
             byte st = data[8 + 12 + 12 + 2 + 4 + 4];
-            PlayerStance stance = PlayerStance.STAND;
-            if (st == 2)
+            Stance stance = Stance.Standing;
+            if (st == 1)
             {
-                stance = PlayerStance.CRAWL;
-            }
-            else if (st == 1)
-            {
-                stance = PlayerStance.CROUCH;
+                stance = Stance.Crouching;
             }
             for (int i = 0; i < TheClient.TheWorld.Entities.Count; i++)
             {
@@ -45,7 +42,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                         e.Leftward = (keys & 4) == 4;
                         e.Rightward = (keys & 8) == 8;
                         e.Upward = (keys & 16) == 16;
-                        e.Stance = stance;
+                        // TODO: e.Stance = stance;
                         return true;
                     }
                 }

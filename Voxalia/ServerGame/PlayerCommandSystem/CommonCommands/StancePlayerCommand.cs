@@ -1,4 +1,5 @@
 ﻿using Voxalia.Shared;
+using BEPUphysics.Character;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
@@ -19,23 +20,18 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             }
             string stance = entry.InputArguments[0].ToLower();
             // TOOD: Implement!
-            /*
             if (stance == "stand")
             {
-                entry.Player.Stance = PlayerStance.STAND;
+                entry.Player.CBody.StanceManager.DesiredStance = Stance.Standing;
             }
             else if (stance == "crouch")
             {
-                entry.Player.Stance = PlayerStance.CROUCH;
-            }
-            else if (stance == "crawl")
-            {
-                entry.Player.Stance = PlayerStance.CRAWL;
+                entry.Player.CBody.StanceManager.DesiredStance = Stance.Crouching;
             }
             else
             {
                 entry.Player.Network.SendMessage("^r^1Unknown stance input."); // TODO: Languaging
-            }*/
+            }
         }
     }
 }

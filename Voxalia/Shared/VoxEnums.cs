@@ -2,13 +2,6 @@
 
 namespace Voxalia.Shared
 {
-    public enum PlayerStance : byte
-    {
-        STAND = 0,
-        CROUCH = 1,
-        CRAWL = 2
-    }
-
     [Flags]
     public enum YourStatusFlags : byte
     {

@@ -451,7 +451,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Location GetEyePosition()
         {
-            return GetPosition() + new Location(0, 0, HalfSize.Z * 1.8);
+            return GetPosition() + new Location(0, 0, HalfSize.Z * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8 : 1.1));
             /*
             if (tAnim != null)
             {

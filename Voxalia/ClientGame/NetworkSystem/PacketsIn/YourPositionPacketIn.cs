@@ -1,4 +1,5 @@
 ﻿using Voxalia.Shared;
+using BEPUphysics.Character;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
@@ -6,7 +7,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 12 + 12)
+            if (data.Length != 12 + 12 + 1)
             {
                 return false;
             }
@@ -25,6 +26,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 TheClient.Player.SetPosition(pos);
                 TheClient.Player.SetVelocity(vel);
             }
+            TheClient.Player.CBody.StanceManager.DesiredStance = data[12 + 12] == 0 ? Stance.Standing : Stance.Crouching;
             return true;
         }
     }

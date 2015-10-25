@@ -1,5 +1,6 @@
 ﻿using Voxalia.ServerGame.EntitySystem;
 using Voxalia.Shared;
+using BEPUphysics.Character;
 
 namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
@@ -17,7 +18,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             Utilities.UshortToBytes(dat).CopyTo(Data, 8 + 12 + 12);
             Utilities.FloatToBytes((float)player.Direction.Yaw).CopyTo(Data, 8 + 12 + 12 + 2);
             Utilities.FloatToBytes((float)player.Direction.Pitch).CopyTo(Data, 8 + 12 + 12 + 2 + 4);
-            Data[8 + 12 + 12 + 2 + 4 + 4] = 0; // Stance
+            Data[8 + 12 + 12 + 2 + 4 + 4] = (byte)(player.CBody.StanceManager.CurrentStance == Stance.Standing ? 0 : 1);
         }
     }
 }

@@ -53,9 +53,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public Model model;
 
         bool pup = false;
-
-        public PlayerStance Stance = PlayerStance.STAND;
-
+        
         public OtherPlayerEntity(Region tregion, Location half)
             : base (tregion, true, true)
         {
@@ -79,6 +77,7 @@ namespace Voxalia.ClientGame.EntitySystem
             return TheClient.TheWorld.Collision.ShouldCollide(entry);
         }
 
+        // TODO: Rewrite me!
         public override void Tick()
         {
             while (Direction.Yaw < 0)
@@ -131,14 +130,6 @@ namespace Voxalia.ClientGame.EntitySystem
                 movement = Utilities.RotateVector(movement, Direction.Yaw * Utilities.PI180, fly ? Direction.Pitch * Utilities.PI180 : 0).Normalize();
             }
             Location intent_vel = movement * MoveSpeed * (Walk ? 0.7f : 1f);
-            if (Stance == PlayerStance.CROUCH)
-            {
-                intent_vel *= 0.5f;
-            }
-            else if (Stance == PlayerStance.CRAWL)
-            {
-                intent_vel *= 0.3f;
-            }
             Location pvel = intent_vel - (fly ? Location.Zero : GetVelocity());
             if (pvel.LengthSquared() > 4 * MoveSpeed * MoveSpeed)
             {
