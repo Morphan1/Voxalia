@@ -9,7 +9,12 @@ Built within OpenTK, a C# binding of OpenGL for the 3D rendering.
 
 - Open the .sln in Microsoft Visual Studio 2015
 - Switch the configuration to Release|x64
-- Debug -> Build Solution!
+- Build -> Build Solution!
+
+## Also Included
+
+- ModelToVMDConvertor -> converts any given model format (via AssImp) to VMD, the model format used by Voxalia.
+- SkeletalAnimationExtractor -> converts .dae animated models to reusable anim files.
 
 ### Licensing pre-note:
 
