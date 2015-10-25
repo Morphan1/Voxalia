@@ -9,6 +9,7 @@ using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.Shared.Collision;
 using BEPUphysics.Character;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -294,8 +295,6 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             if (TheClient.RenderingShadows || !TheClient.CVars.g_firstperson.ValueB)
             {
-                // TODO: Restore player model rendering when the player model is de-flubbed
-                /*
                 OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(1.5f)
                     * OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
                     * PlayerAngleMat
@@ -303,7 +302,6 @@ namespace Voxalia.ClientGame.EntitySystem
                 GL.UniformMatrix4(2, false, ref mat);
                 TheClient.Rendering.SetMinimumLight(0.0f);
                 model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
-                */
             }
         }
     }
