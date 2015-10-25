@@ -268,7 +268,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Location GetEyePosition()
         {
-            return GetPosition() + new Location(0, 0, HalfSize.Z * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8: 1.1));
+            return GetPosition() + new Location(0, 0, HalfSize.Z * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8: 1.5));
             /*
             if (tAnim != null)
             {
@@ -285,7 +285,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override Location GetPosition()
         {
-            return base.GetPosition() - new Location(0, 0, HalfSize.Z + HalfSize.X);
+            return base.GetPosition() - new Location(0, 0, HalfSize.Z);
         }
 
         public Location ForwardVector()
@@ -295,7 +295,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void SetPosition(Location pos)
         {
-            base.SetPosition(pos + new Location(0, 0, HalfSize.Z + HalfSize.X));
+            base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
         }
 
         public override void SetVelocity(Location vel)
