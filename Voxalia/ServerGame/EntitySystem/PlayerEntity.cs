@@ -152,6 +152,8 @@ namespace Voxalia.ServerGame.EntitySystem
             Shape = CBody.Body.CollisionInformation.Shape;
             ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
             Body.CollisionInformation.CollisionRules.Group = CollisionUtil.Player;
+            CBody.StepManager.MaximumStepHeight = 0.05f;
+            CBody.StepManager.MinimumDownStepHeight = 0.05f;
             TheRegion.PhysicsWorld.Add(CBody);
             if (CursorMarker == null)
             {

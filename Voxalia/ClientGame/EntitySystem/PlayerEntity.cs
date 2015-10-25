@@ -221,6 +221,8 @@ namespace Voxalia.ClientGame.EntitySystem
             Shape = CBody.Body.CollisionInformation.Shape;
             ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
             Body.CollisionInformation.CollisionRules.Group = CollisionUtil.Player;
+            CBody.StepManager.MaximumStepHeight = 0.05f;
+            CBody.StepManager.MinimumDownStepHeight = 0.05f;
             TheRegion.PhysicsWorld.Add(CBody);
         }
 
@@ -243,7 +245,6 @@ namespace Voxalia.ClientGame.EntitySystem
         public Location GetEyePosition()
         {
             return GetPosition() + new Location(0, 0, HalfSize.Z * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8: 1.1));
-
             /*
             if (tAnim != null)
             {
