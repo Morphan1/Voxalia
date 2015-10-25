@@ -28,4 +28,5 @@ void main()
 	normal = vec4(f_normal, 1.0);
 	renderhint = vec4(specular_strength, specular_power, minimum_light, 1.0);
 	// TODO: 1 Additional renderhint - we have the slot, why not
+    // TODO: Maybe take advantage of normal.w as well?
 }
