@@ -141,7 +141,8 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             // TODO: Better variable control! (Server should command every detail!)
             CBody = new CharacterController(WorldTransform.Translation, (float)HalfSize.Z * 2f, (float)HalfSize.Z * 1.1f,
-                (float)HalfSize.X, 0.01f, Mass, 1.0f, 1.3f, 5f, 2.5f, 100f * Mass, 5f, 50f, 0.5f, 25f * Mass, 10f, 5f, 500f * Mass);
+                (float)HalfSize.X, CBRadius, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed,
+                CBTractionForce * Mass, CBSlideSpeed, CBSlideForce * Mass, CBAirSpeed, CBAirForce * Mass, CBJumpSpeed, CBSlideJumpSpeed, CBGlueForce * Mass);
             CBody.StanceManager.DesiredStance = Stance.Standing;
             CBody.ViewDirection = new Vector3(1f, 0f, 0f);
             CBody.Down = new Vector3(0f, 0f, -1f);
@@ -163,6 +164,32 @@ namespace Voxalia.ServerGame.EntitySystem
                 TheRegion.SpawnEntity(CursorMarker);
             }
         }
+
+        public float CBRadius = 0.01f;
+
+        public float CBMaxTractionSlope = 1.0f;
+
+        public float CBMaxSupportSlope = 1.3f;
+
+        public float CBStandSpeed = 5.0f;
+
+        public float CBCrouchSpeed = 2.5f;
+
+        public float CBSlideSpeed = 2f;
+
+        public float CBAirSpeed = 0.5f;
+
+        public float CBTractionForce = 100f;
+
+        public float CBSlideForce = 50f;
+
+        public float CBAirForce = 25f;
+
+        public float CBJumpSpeed = 10f;
+
+        public float CBSlideJumpSpeed = 5f;
+
+        public float CBGlueForce = 500f;
 
         public override void DestroyBody()
         {
