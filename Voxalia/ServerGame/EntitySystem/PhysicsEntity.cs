@@ -16,7 +16,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public PhysicsEntity(Region tregion, bool ticks)
             : base(tregion, ticks)
         {
-            Gravity = Location.FromBVector(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
+            Gravity = new Location(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
             CGroup = CollisionUtil.Solid;
         }
 
@@ -157,7 +157,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             Body = new BEPUphysics.Entities.Entity(Shape, Mass);
             Body.CollisionInformation.CollisionRules.Group = CGroup;
-            InternalOffset = Location.FromBVector(Body.Position);
+            InternalOffset = new Location(Body.Position);
             Body.AngularVelocity = new Vector3((float)AVel.X, (float)AVel.Y, (float)AVel.Z);
             Body.LinearVelocity = new Vector3((float)LVel.X, (float)LVel.Y, (float)LVel.Z);
             Body.WorldTransform = WorldTransform; // TODO: Position, Orientation

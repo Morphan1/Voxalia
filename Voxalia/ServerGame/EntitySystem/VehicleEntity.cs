@@ -78,9 +78,9 @@ namespace Voxalia.ServerGame.EntitySystem
                         //BEPUutilities.Vector3 side = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(1, 0, 0), wheel.GetOrientation());
                         BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
                         BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 0, 1), wheel.GetOrientation());
-                        JointTwist jt = new JointTwist(this, wheel, Location.FromBVector(forward), Location.FromBVector(forward));
+                        JointTwist jt = new JointTwist(this, wheel, new Location(forward), new Location(forward));
                         // TODO: For front wheels, remove the 'forward' JT and replace it with a motor - to allow turning!
-                        JointTwist jt2 = new JointTwist(this, wheel, Location.FromBVector(up), Location.FromBVector(up));
+                        JointTwist jt2 = new JointTwist(this, wheel, new Location(up), new Location(up));
                         TheRegion.AddJoint(jbs);
                         TheRegion.AddJoint(jt);
                         TheRegion.AddJoint(jt2);

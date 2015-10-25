@@ -72,12 +72,12 @@ namespace Voxalia.ClientGame.WorldSystem
                         if (((Material)c.BlockMaterial).IsSolid())
                         {
                             // TODO: Handle ALL blocks against the surface when low-LOD?
-                            BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : OwningRegion.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, y, 30));
-                            BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : OwningRegion.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, y, -1));
-                            BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : OwningRegion.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, 30, z));
-                            BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : OwningRegion.GetBlockInternal(Location.FromBVector(ppos) + new Location(x, -1, z));
-                            BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : OwningRegion.GetBlockInternal(Location.FromBVector(ppos) + new Location(30, y, z));
-                            BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : OwningRegion.GetBlockInternal(Location.FromBVector(ppos) + new Location(-1, y, z));
+                            BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(x, y, 30));
+                            BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(x, y, -1));
+                            BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(x, 30, z));
+                            BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(x, -1, z));
+                            BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(30, y, z));
+                            BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(-1, y, z));
                             bool zps = ((Material)zp.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[zp.BlockData].OccupiesTOP();
                             bool zms = ((Material)zm.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[zm.BlockData].OccupiesBOTTOM();
                             bool xps = ((Material)xp.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXP();

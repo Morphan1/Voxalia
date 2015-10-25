@@ -119,8 +119,8 @@ namespace Voxalia.Shared.Collision
             cr.Hit = hit;
             if (hit)
             {
-                cr.Normal = Location.FromBVector(rcr.HitData.Normal);
-                cr.Position = Location.FromBVector(rcr.HitData.Location);
+                cr.Normal = new Location(rcr.HitData.Normal);
+                cr.Position = new Location(rcr.HitData.Location);
                 if (rcr.HitObject is EntityCollidable)
                 {
                     cr.HitEnt = ((EntityCollidable)rcr.HitObject).Entity;
@@ -164,8 +164,8 @@ namespace Voxalia.Shared.Collision
             cr.Hit = hit;
             if (hit)
             {
-                cr.Normal = Location.FromBVector(rcr.HitData.Normal);
-                cr.Position = Location.FromBVector(rcr.HitData.Location);
+                cr.Normal = new Location(rcr.HitData.Normal);
+                cr.Position = new Location(rcr.HitData.Location);
                 if (rcr.HitObject is EntityCollidable)
                 {
                     cr.HitEnt = ((EntityCollidable)rcr.HitObject).Entity;

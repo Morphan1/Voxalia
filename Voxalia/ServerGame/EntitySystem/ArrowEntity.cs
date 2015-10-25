@@ -14,7 +14,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             Collide += new EventHandler<CollisionEventArgs>(OnCollide);
             Vector3 grav = TheRegion.PhysicsWorld.ForceUpdater.Gravity;
-            Gravity = Location.FromBVector(grav);
+            Gravity = new Location(grav);
             Scale = new Location(0.05f, 0.05f, 0.05f);
         }
 

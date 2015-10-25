@@ -275,7 +275,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 SingleAnimationNode head = tAnim.GetNode("head");
                 Matrix m4 = head.GetBoneTotalMatrix(0);
                 m4.Transpose();
-                return GetPosition() + Location.FromBVector(m4.Translation);
+                return GetPosition() + new Location(m4.Translation);
             }
             else
             {

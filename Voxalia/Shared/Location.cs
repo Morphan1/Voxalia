@@ -8,34 +8,42 @@ namespace Voxalia.Shared
         /// A Location of (0, 0, 0).
         /// </summary>
         public static Location Zero = new Location(0);
+
         /// <summary>
         /// A Location of (1, 1, 1).
         /// </summary>
         public static Location One = new Location(1);
+
         /// <summary>
         /// A location of (1, 0, 0).
         /// </summary>
         public static Location UnitX = new Location(1, 0, 0);
+
         /// <summary>
         /// A location of (0, 1, 0).
         /// </summary>
         public static Location UnitY = new Location(0, 1, 0);
+
         /// <summary>
         /// A location of (0, 0, 1).
         /// </summary>
         public static Location UnitZ = new Location(0, 0, 1);
+
         /// <summary>
         /// A location of (NaN, NaN, NaN).
         /// </summary>
         public static Location NaN = new Location(double.NaN, double.NaN, double.NaN);
+
         /// <summary>
         /// The X coordinate of this location.
         /// </summary>
         public double X;
+
         /// <summary>
         /// The Y coordinate of this location.
         /// </summary>
         public double Y;
+
         /// <summary>
         /// The Z coordinate of this location.
         /// </summary>
@@ -89,6 +97,11 @@ namespace Voxalia.Shared
             }
         }
 
+        /// <summary>
+        /// Gets or sets a coordinate from this Location.
+        /// This is a slow operation.
+        /// X = 0, Y = 1, Z = 2.
+        /// </summary>
         public double this[int index]
         {
             get
@@ -124,6 +137,9 @@ namespace Voxalia.Shared
             }
         }
 
+        /// <summary>
+        /// Constructs a Location, with all coordinates individually specified.
+        /// </summary>
         public Location(double _X, double _Y, double _Z)
         {
             X = _X;
@@ -131,6 +147,9 @@ namespace Voxalia.Shared
             Z = _Z;
         }
 
+        /// <summary>
+        /// Constructs a Location where all three coordinates are set to a single value.
+        /// </summary>
         public Location(double _Point)
         {
             X = _Point;
@@ -138,6 +157,9 @@ namespace Voxalia.Shared
             Z = _Point;
         }
 
+        /// <summary>
+        /// Constructs a Location from an OpenTK Vector3 structure, perfectly replicating it.
+        /// </summary>
         public Location(OpenTK.Vector3 vec)
         {
             X = vec.X;
@@ -145,6 +167,19 @@ namespace Voxalia.Shared
             Z = vec.Z;
         }
 
+        /// <summary>
+        /// Constructs a Location from a BEPUPhysics Vector3 structure, perfectly replicating it.
+        /// </summary>
+        public Location(BEPUutilities.Vector3 vec)
+        {
+            X = vec.X;
+            Y = vec.Y;
+            Z = vec.Z;
+        }
+
+        /// <summary>
+        /// Constructs a Location, with all coordinates individually specified.
+        /// </summary>
         public Location(float _X, float _Y, float _Z)
         {
             X = _X;
@@ -152,6 +187,9 @@ namespace Voxalia.Shared
             Z = _Z;
         }
 
+        /// <summary>
+        /// Constructs a Location where all three coordinates are set to a single value.
+        /// </summary>
         public Location(float _Point)
         {
             X = _Point;
@@ -255,7 +293,6 @@ namespace Voxalia.Shared
         /// Contains 12 bytes.
         /// Inverts .FromBytes()
         /// </summary>
-        /// <returns></returns>
         public byte[] ToBytes()
         {
             byte[] toret = new byte[12];
@@ -393,7 +430,7 @@ namespace Voxalia.Shared
         }
 
         /// <summary>
-        /// Converts the location to an OpenTK Vector3.
+        /// Converts the Location to an OpenTK Vector3.
         /// </summary>
         /// <returns>The created vector</returns>
         public OpenTK.Vector3 ToOVector()
@@ -401,16 +438,15 @@ namespace Voxalia.Shared
             return new OpenTK.Vector3((float)X, (float)Y, (float)Z);
         }
 
+        /// <summary>
+        /// Converts the Location to a BEPUPhysics Vector3.
+        /// </summary>
+        /// <returns></returns>
         public BEPUutilities.Vector3 ToBVector()
         {
             return new BEPUutilities.Vector3((float)X, (float)Y, (float)Z);
         }
-
-        public static Location FromBVector(BEPUutilities.Vector3 vec)
-        {
-            return new Location(vec.X, vec.Y, vec.Z);
-        }
-
+        
         /// <summary>
         /// Gets the location of the block this location is within.
         /// </summary>

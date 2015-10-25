@@ -104,11 +104,11 @@ namespace Voxalia.ServerGame.EntitySystem
             else if (mode == ModelCollisionMode.AABB)
             {
                 List<BEPUutilities.Vector3> vecs = TheServer.Models.handler.GetCollisionVertices(smodel);
-                Location zero = Location.FromBVector(vecs[0]);
+                Location zero = new Location(vecs[0]);
                 AABB abox = new AABB() { Min = zero, Max = zero };
                 for (int v = 1; v < vecs.Count; v++)
                 {
-                    abox.Include(Location.FromBVector(vecs[v]));
+                    abox.Include(new Location(vecs[v]));
                 }
                 Location size = abox.Max - abox.Min;
                 Location center = abox.Max - size / 2;

@@ -51,17 +51,17 @@ namespace Voxalia.ClientGame.EntitySystem
                     BEPUutilities.Quaternion.TransformZ(offs, ref Angles, out offz);
                     BEPUutilities.Vector3 offx;
                     BEPUutilities.Quaternion.TransformX(offs, ref Angles, out offx);
-                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, ppos + Location.FromBVector(offz),
-                        Position + Location.FromBVector(offz), ppos + Location.FromBVector(offz), 0.01f, 1f, Location.One,
+                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, ppos + new Location(offz),
+                        Position + new Location(offz), ppos + new Location(offz), 0.01f, 1f, Location.One,
                         Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
-                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, ppos - Location.FromBVector(offz),
-                        Position - Location.FromBVector(offz), ppos - Location.FromBVector(offz), 0.01f, 1f, Location.One,
+                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, ppos - new Location(offz),
+                        Position - new Location(offz), ppos - new Location(offz), 0.01f, 1f, Location.One,
                         Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
-                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, ppos + Location.FromBVector(offx),
-                        Position + Location.FromBVector(offx), ppos + Location.FromBVector(offx), 0.01f, 1f, Location.One,
+                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, ppos + new Location(offx),
+                        Position + new Location(offx), ppos + new Location(offx), 0.01f, 1f, Location.One,
                         Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
-                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, ppos - Location.FromBVector(offx),
-                        Position - Location.FromBVector(offx), ppos - Location.FromBVector(offx), 0.01f, 1f, Location.One,
+                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, ppos - new Location(offx),
+                        Position - new Location(offx), ppos - new Location(offx), 0.01f, 1f, Location.One,
                         Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
                     ppos = Position;
                 }
