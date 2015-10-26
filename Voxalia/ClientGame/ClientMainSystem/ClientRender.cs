@@ -38,6 +38,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_shadowadder = Shaders.GetShader("shadowadder");
             s_transponly = Shaders.GetShader("transponly");
             s_colormultvox = Shaders.GetShader("colormultvox");
+            s_colormultr = Shaders.GetShader("color_multr");
+            s_transponlyvox = Shaders.GetShader("transponlyvox");
             generateLightHelpers();
             ambient = new Location(0.1f);
             skybox = new VBO[6];
@@ -109,13 +111,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
-        Shader s_shadow;
-        Shader s_main;
+        public Shader s_shadow;
+        public Shader s_main;
         public Shader s_fbo;
         public Shader s_fbov;
-        Shader s_shadowadder;
-        Shader s_transponly;
+        public Shader s_shadowadder;
+        public Shader s_transponly;
         public Shader s_colormultvox;
+        public Shader s_colormultr;
+        public Shader s_transponlyvox;
         RenderSurface4Part RS4P;
 
         public Location CameraUp = Location.UnitZ;
@@ -375,13 +379,21 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
                 ReverseEntitiesOrder();
                 Particles.Sort();
+                s_transponlyvox.Bind();
+                Matrix4 def = Matrix4.Identity;
+                GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref def);
                 s_transponly.Bind();
                 VBO.BonesIdentity();
                 GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref def);
+                FBOid = 3;
                 Render3D(false);
-                Shaders.ColorMultShader.Bind();
+                FBOid = 0;
+                s_colormultr.Bind();
                 VBO.BonesIdentity();
                 GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref def);
                 GL.Enable(EnableCap.CullFace);
                 if (CVars.r_renderwireframe.ValueB)
                 {
@@ -406,7 +418,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Matrix4 def = Matrix4.Identity;
                 GL.UniformMatrix4(2, false, ref def);
                 VBO.BonesIdentity();
-                Shaders.ColorMultShader.Bind();
+                s_colormultr.Bind();
                 GL.UniformMatrix4(1, false, ref combined);
                 GL.UniformMatrix4(2, false, ref def);
                 VBO.BonesIdentity();
@@ -419,6 +431,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     Render3DWires();
                 }
+                RenderSkyflare(combined);
+                ReverseEntitiesOrder();
+                s_transponlyvox.Bind();
+                GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref def);
+                s_transponly.Bind();
+                VBO.BonesIdentity();
+                GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref def);
+                FBOid = 3;
+                Render3D(false);
+                FBOid = 0;
                 RenderSkyflare(combined);
             }
             Establish2D();
@@ -530,7 +554,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     TheWorld.Entities[i].Render();
                 }
-                Rendering.SetMinimumLight(1f);
+                if (FBOid == 1)
+                {
+                    Rendering.SetMinimumLight(1f);
+                }
                 Particles.Engine.Render();
             }
             if (FBOid == 1)
@@ -541,6 +568,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 s_colormultvox.Bind();
             }
+            else if (FBOid == 3)
+            {
+                s_transponlyvox.Bind();
+            }
             TheWorld.Render();
             if (FBOid == 1)
             {
@@ -548,7 +579,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (FBOid == 2)
             {
-                Shaders.ColorMultShader.Bind();
+                s_colormultr.Bind();
+            }
+            else if (FBOid == 3)
+            {
+                s_transponly.Bind();
             }
             Textures.White.Bind();
             Location mov = (CameraFinalTarget - PlayerEyePosition) / CameraDistance;
@@ -574,7 +609,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 Rendering.SetColor(Color4.White);
             }
-            Rendering.SetMinimumLight(0.0f);
+            if (FBOid == 1)
+            {
+                Rendering.SetMinimumLight(0f);
+            }
             for (int i = 0; i < TheWorld.Joints.Count; i++)
             {
                 // TODO: Only render if set to

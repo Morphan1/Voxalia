@@ -68,6 +68,11 @@ namespace Voxalia.ClientGame.EntitySystem
                 TheClient.s_colormultvox.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
             }
+            else if (TheClient.FBOid == 3)
+            {
+                TheClient.s_transponlyvox.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+            }
             Matrix4 mat = Matrix4.CreateTranslation(-Offset.ToOVector()) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
             float spec = TheClient.Rendering.Specular;
@@ -83,7 +88,12 @@ namespace Voxalia.ClientGame.EntitySystem
             else if (TheClient.FBOid == 2)
             {
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                TheClient.Shaders.ColorMultShader.Bind();
+                TheClient.s_colormultr.Bind();
+            }
+            else if (TheClient.FBOid == 3)
+            {
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                TheClient.s_transponly.Bind();
             }
         }
     }
