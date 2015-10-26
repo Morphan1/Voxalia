@@ -11,13 +11,14 @@ namespace Voxalia.Shared
         WATER = 4,
         DEBUG = 5,
         LEAVES1 = 6,
-        NUM_DEFAULT = 7,
+        CONCRETE = 7,
+        NUM_DEFAULT = 8,
         MAX = ushort.MaxValue
     }
 
     public static class MaterialHelpers
     {
-        public static int MAX_TEXTURES = 64;
+        public static int MAX_TEXTURES = 64; // Warning: Do not set this too high, this is used for texture block generation!
 
         public static List<MaterialInfo> ALL_MATS = new List<MaterialInfo>((int)Material.NUM_DEFAULT);
 
@@ -30,7 +31,8 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.DIRT),
                 new MaterialInfo((int)Material.WATER) { Solid = false, Opaque = false },
                 new MaterialInfo((int)Material.DEBUG),
-                new MaterialInfo((int)Material.LEAVES1) { Opaque = false }
+                new MaterialInfo((int)Material.LEAVES1) { Opaque = false },
+                new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f }
             };
             mats[(int)Material.GRASS].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
             mats[(int)Material.GRASS].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
@@ -81,6 +83,11 @@ namespace Voxalia.Shared
             }
             return "A standard block of " + mat.ToString().ToLower();
         }
+
+        public static float GetSpeedMod(this Material mat)
+        {
+            return ALL_MATS[(int)mat].SpeedMod;
+        }
     }
 
     public enum MaterialSide : byte
@@ -110,6 +117,8 @@ namespace Voxalia.Shared
         public string Description = null;
 
         public int ID = 0;
+
+        public float SpeedMod = 1f;
 
         public bool Solid = true;
 

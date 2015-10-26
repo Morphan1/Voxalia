@@ -28,6 +28,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             SetTexture(4, "blocks/liquid/water");
             SetTexture(5, "blocks/solid/db_top");
             SetTexture(6, "blocks/transparent/leaves_basic1");
+            SetTexture(7, "blocks/solid/concrete");
             SetTexture(MaterialHelpers.MAX_TEXTURES - 6, "blocks/solid/db_ym");
             SetTexture(MaterialHelpers.MAX_TEXTURES - 5, "blocks/solid/db_yp");
             SetTexture(MaterialHelpers.MAX_TEXTURES - 4, "blocks/solid/db_xp");

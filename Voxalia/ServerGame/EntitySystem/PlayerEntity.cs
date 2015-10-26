@@ -114,8 +114,12 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("flashlight", TheServer, 1, "items/common/flashlight_ico", "Flashlight", "Lights things up!", Color.White.ToArgb(), "items/common/flashlight.dae", false));
             Items.GiveItem(new ItemStack("flashantilight", TheServer, 1, "items/common/flashlight_ico", "Flashantilight", "Lights things down!", Color.White.ToArgb(), "items/common/flashlight.dae", false));
             Items.GiveItem(new ItemStack("sun_angler", TheServer, 1, "items/tools/sun_angler", "Sun Angler", "Moves the sun itself!", Color.White.ToArgb(), "items/tools/sun_angler.dae", false));
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/dirt", "Dirt", "Dirty!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.DIRT });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/stone", "Stone", "Gets things stoned!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.STONE });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/grass_side", "Grass", "Grassy!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.GRASS });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/db_top", "DebugBlock", "Not buggy!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.DEBUG });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/concrete", "Concrete", "Solid!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.CONCRETE });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/liquid/water", "Water", "Wet!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.WATER });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/transparent/leaves_basic1", "Leaves", "Transparent in parts!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.LEAVES1 });
             Items.GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol_ico", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/silenced_pistol.dae", false));
             Items.GiveItem(new ItemStack("shotgun_gun", TheServer, 1, "items/weapons/shotgun_ico", "Shotgun", "It shoots many bullets!", Color.White.ToArgb(), "items/weapons/shotgun.dae", false));
