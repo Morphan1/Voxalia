@@ -12,7 +12,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 return false;
             }
             BasicPrimitiveEntity bpe = new BasicPrimitiveEntity(TheClient.TheWorld, false);
-            bpe.model = TheClient.Models.GetModel("projectiles/arrow.dae");
+            bpe.model = TheClient.Models.GetModel("projectiles/arrow");
             bpe.Position = Location.FromBytes(data, 0);
             bpe.Velocity = Location.FromBytes(data, 12);
             bpe.Angles = Utilities.BytesToQuaternion(data, 12 + 12);

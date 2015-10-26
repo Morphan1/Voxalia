@@ -119,6 +119,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/db_top", "DebugBlock", "Not buggy!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.DEBUG });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/concrete", "Concrete", "Solid!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.CONCRETE });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/liquid/water", "Water", "Wet!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.WATER });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/liquid/smoke", "Smoke", "Gaseous!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.SMOKE });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/liquid/slipgoo", "Slip Goo", "Slippery!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.SLIPGOO });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/snow", "Snow", "Cold!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.SNOW });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/transparent/leaves_basic1", "Leaves", "Transparent in parts!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.LEAVES1 });
