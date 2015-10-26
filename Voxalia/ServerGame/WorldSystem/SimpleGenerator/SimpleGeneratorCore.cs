@@ -21,8 +21,8 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             {
                 for (int y = 0; y < 30; y++)
                 {
-                    float cx = (float)chunk.WorldPosition.X * 30 + x;
-                    float cy = (float)chunk.WorldPosition.Y * 30 + y;
+                    float cx = (float)chunk.WorldPosition.X * 30f + x;
+                    float cy = (float)chunk.WorldPosition.Y * 30f + y;
                     float hheight = GetHeight(Seed, seed2, cx, cy);
                     float topf = hheight - (float)chunk.WorldPosition.Z * 30;
                     int top = (int)Math.Round(topf);
@@ -93,6 +93,13 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             {
                                 chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 75, 0));
                             }
+                        }
+                    }
+                    if (top >= 0 && top < 30)
+                    {
+                        if (new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000)).Next(75) == 1) // TODO: Efficiency!
+                        {
+                            chunk.SetBlockAt(x, y, top, new BlockInternal((ushort)Material.DEBUG, 0, 0));
                         }
                     }
                 }

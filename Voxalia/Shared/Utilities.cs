@@ -507,6 +507,28 @@ namespace Voxalia.Shared
             // Valid if all tests above passed
             return true;
         }
+        
+        /// <summary>
+        /// Calculates a Halton Sequence result.
+        /// </summary>
+        /// <param name="basen">Should be prime</param>
+        static float HaltonSequence(int index, int basen)
+        {
+            if (basen <= 1)
+            {
+                return 0;
+            }
+            float res = 0;
+            float f = 1;
+            int i = index;
+            while (i > 0)
+            {
+                f = f / basen;
+                res = res + f * (i % basen);
+                i = (int)Math.Floor((float)i / basen);
+            }
+            return res;
+        }
     }
 
     public class IntHolder
