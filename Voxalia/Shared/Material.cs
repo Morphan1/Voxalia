@@ -13,7 +13,8 @@ namespace Voxalia.Shared
         LEAVES1 = 6,
         CONCRETE = 7,
         SLIPGOO = 8,
-        NUM_DEFAULT = 9,
+        SNOW = 9,
+        NUM_DEFAULT = 10,
         MAX = ushort.MaxValue
     }
 
@@ -27,14 +28,15 @@ namespace Voxalia.Shared
         {
             MaterialInfo[] mats = new MaterialInfo[] {
                 new MaterialInfo((int)Material.AIR) { Solid = false, Opaque = false, RendersAtAll = false },
-                new MaterialInfo((int)Material.STONE),
+                new MaterialInfo((int)Material.STONE) { SpeedMod = 1.09f },
                 new MaterialInfo((int)Material.GRASS),
                 new MaterialInfo((int)Material.DIRT),
                 new MaterialInfo((int)Material.WATER) { Solid = false, Opaque = false },
                 new MaterialInfo((int)Material.DEBUG),
-                new MaterialInfo((int)Material.LEAVES1) { Opaque = false },
-                new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f },
-                new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f }
+                new MaterialInfo((int)Material.LEAVES1) { Opaque = false, SpeedMod = 0.7f },
+                new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.15f },
+                new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f },
+                new MaterialInfo((int)Material.SNOW) { SpeedMod = 0.85f }
             };
             mats[(int)Material.GRASS].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
             mats[(int)Material.GRASS].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
