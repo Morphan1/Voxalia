@@ -96,7 +96,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     }
                     // Special case: trees.
                     // TODO: Separate generator?
-                    if (top >= -5 && top < 30)
+                    if (top >= -7 && top < 30)
                     {
                         if (new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000)).Next(75) == 1) // TODO: Efficiency!
                         {

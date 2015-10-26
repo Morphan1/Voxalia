@@ -435,6 +435,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                 }
             }
+            Matrix4 ident = Matrix4.Identity;
+            GL.UniformMatrix4(7, false, ref ident);
             GL.UniformMatrix4(8, bones, false, floats);
         }
 

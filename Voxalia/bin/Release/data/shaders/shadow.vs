@@ -42,7 +42,6 @@ void main()
 	{
 		pos1 = vec4(position, 1.0);
 	}
-	//pos1 = simplebone_matrix * pos1;
 	pos1 *= simplebone_matrix;
 	f_pos = projection * model_matrix * vec4(pos1.xyz, 1.0);
 	f_texcoord = texcoords;
