@@ -31,7 +31,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_lightmaxdistance,
             r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun, r_shadowpace,
             r_highlight_targetblock, r_highlight_placeblock,
-            r_good_graphics, r_skybox, r_lensflare;
+            r_good_graphics, r_skybox, r_lensflare, r_texturelinear;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch;
@@ -81,6 +81,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_good_graphics = Register("r_good_graphics", "true", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use 'good' graphics. // TODO: Callback to auto-set
             r_skybox = Register("r_skybox", "default", CVarFlag.ServerControl | CVarFlag.Textual); // What skybox to use.
             r_lensflare = Register("r_lensflare", "true", CVarFlag.Boolean); // Whether to render a lens flare from the sun.
+            r_texturelinear = Register("r_texturelinear", "false", CVarFlag.Boolean | CVarFlag.Delayed); // Whether textures are to use a linear blur or nearest-pixel mode.
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What volume the music should be.
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What pitch the music should be.
