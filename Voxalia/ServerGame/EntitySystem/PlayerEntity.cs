@@ -159,8 +159,8 @@ namespace Voxalia.ServerGame.EntitySystem
             Shape = CBody.Body.CollisionInformation.Shape;
             ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
             Body.CollisionInformation.CollisionRules.Group = CollisionUtil.Player;
-            CBody.StepManager.MaximumStepHeight = 0.05f;
-            CBody.StepManager.MinimumDownStepHeight = 0.05f;
+            CBody.StepManager.MaximumStepHeight = CBStepHeight;
+            CBody.StepManager.MinimumDownStepHeight = CBDownStepHeight;
             TheRegion.PhysicsWorld.Add(CBody);
             if (CursorMarker == null)
             {
@@ -170,6 +170,10 @@ namespace Voxalia.ServerGame.EntitySystem
                 TheRegion.SpawnEntity(CursorMarker);
             }
         }
+
+        public float CBStepHeight = 0.6f;
+
+        public float CBDownStepHeight = 0.6f;
 
         public float CBRadius = 0.01f;
 
