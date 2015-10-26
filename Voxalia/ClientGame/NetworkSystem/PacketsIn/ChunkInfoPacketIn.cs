@@ -87,6 +87,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     chk.BlocksInternal[i].BlockData = 0;
                 }
             }
+            chk.CalculateLighting();
             chk.LOADING = false;
             chk.PRED = true;
             if (!TheClient.IsWaitingOnChunks())

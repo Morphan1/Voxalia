@@ -61,7 +61,9 @@ namespace Voxalia.ClientGame.WorldSystem
                 List<Vector3> Vertices = new List<Vector3>(CSize * CSize * CSize * 6); // TODO: Make this an array?
                 List<Vector3> TCoords = new List<Vector3>(CSize * CSize * CSize * 6);
                 List<Vector3> Norms = new List<Vector3>(CSize * CSize * CSize * 6);
+                List<Vector4> Cols = new List<Vector4>(CSize * CSize * CSize * 6);
                 Vector3 ppos = WorldPosition.ToOVector() * 30;
+                bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 for (int x = 0; x < CSize; x++)
                 {
                     for (int y = 0; y < CSize; y++)
@@ -104,6 +106,21 @@ namespace Voxalia.ClientGame.WorldSystem
                                 {
                                     SysConsole.Output(OutputType.INFO, "v:" + vecsi.Count + ",n:" + normsi.Count + ",tci:" + tci.Count);
                                 }
+                                if (light)
+                                {
+                                    List<BEPUutilities.Vector4> lits = BlockShapeRegistry.BSD[c.BlockData].GetLights(pos, c, xp, xm, yp, ym, zp, zm, xps, xms, yps, yms, zps, yms);
+                                    for (int i = 0; i < lits.Count; i++)
+                                    {
+                                        Cols.Add(new Vector4(lits[i].X, lits[i].Y, lits[i].Z, lits[i].W));
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < vecsi.Count; i++)
+                                    {
+                                        Cols.Add(new Vector4(1f));
+                                    }
+                                }
                             }
                         }
                     }
@@ -135,11 +152,11 @@ namespace Voxalia.ClientGame.WorldSystem
                 tVBO.Vertices = Vertices;
                 tVBO.Normals = Norms;
                 tVBO.TexCoords = TCoords;
+                tVBO.Colors = Cols;
                 tVBO.BoneWeights = null;
                 tVBO.BoneIDs = null;
                 tVBO.BoneWeights2 = null;
                 tVBO.BoneIDs2 = null;
-                tVBO.Colors = null;
                 tVBO.oldvert();
                 OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                 {

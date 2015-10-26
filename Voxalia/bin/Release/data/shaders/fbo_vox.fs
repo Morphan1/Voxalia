@@ -10,6 +10,7 @@ layout (location = 6) uniform float specular_strength = 1.0;
 layout (location = 0) in vec4 f_position;
 layout (location = 1) in vec3 f_normal;
 layout (location = 2) in vec3 f_texcoord;
+layout (location = 3) in vec4 f_color;
 
 layout (location = 0) out vec4 color;
 layout (location = 1) out vec4 position;
@@ -18,7 +19,7 @@ layout (location = 3) out vec4 renderhint;
 
 void main()
 {
-	vec4 col = texture(s, f_texcoord);
+	vec4 col = texture(s, f_texcoord) * f_color;
 	if (col.w * v_color.w < 0.9)
 	{
 		discard;

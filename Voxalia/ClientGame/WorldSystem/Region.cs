@@ -230,15 +230,13 @@ namespace Voxalia.ClientGame.WorldSystem
             ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat, 1));
             if (regen)
             {
-                ch.AddToWorld();
-                ch.CreateVBO();
+                UpdateChunk(ch);
                 if (x == 0)
                 {
                     ch = GetChunk(ChunkLocFor(pos + new Location(-1, 0, 0)));
                     if (ch != null)
                     {
-                        ch.AddToWorld();
-                        ch.CreateVBO();
+                        UpdateChunk(ch);
                     }
                 }
                 if (y == 0)
@@ -246,8 +244,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     ch = GetChunk(ChunkLocFor(pos + new Location(0, -1, 0)));
                     if (ch != null)
                     {
-                        ch.AddToWorld();
-                        ch.CreateVBO();
+                        UpdateChunk(ch);
                     }
                 }
                 if (z == 0)
@@ -255,8 +252,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, -1)));
                     if (ch != null)
                     {
-                        ch.AddToWorld();
-                        ch.CreateVBO();
+                        UpdateChunk(ch);
                     }
                 }
                 if (x == ch.CSize - 1)
@@ -264,8 +260,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     ch = GetChunk(ChunkLocFor(pos + new Location(1, 0, 0)));
                     if (ch != null)
                     {
-                        ch.AddToWorld();
-                        ch.CreateVBO();
+                        UpdateChunk(ch);
                     }
                 }
 
@@ -274,8 +269,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     ch = GetChunk(ChunkLocFor(pos + new Location(0, 1, 0)));
                     if (ch != null)
                     {
-                        ch.AddToWorld();
-                        ch.CreateVBO();
+                        UpdateChunk(ch);
                     }
                 }
                 if (z == ch.CSize - 1)
@@ -283,11 +277,23 @@ namespace Voxalia.ClientGame.WorldSystem
                     ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, 1)));
                     if (ch != null)
                     {
-                        ch.AddToWorld();
-                        ch.CreateVBO();
+                        UpdateChunk(ch);
                     }
                 }
             }
+        }
+
+        public void UpdateChunk(Chunk ch)
+        {
+            TheClient.Schedule.StartASyncTask(() =>
+            {
+                ch.CalculateLighting();
+                TheClient.Schedule.ScheduleSyncTask(() =>
+                {
+                    ch.AddToWorld();
+                    ch.CreateVBO();
+                });
+            });
         }
 
         public void Render()

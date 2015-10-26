@@ -58,6 +58,33 @@ namespace Voxalia.ClientGame.WorldSystem
             }
         }
 
+        public void CalculateLighting()
+        {
+            if (OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB)
+            {
+                for (int x = 0; x < CSize; x++)
+                {
+                    for (int y = 0; y < CSize; y++)
+                    {
+                        byte light = 255;
+                        for (int z = CSize - 1; z >= 0; z--)
+                        {
+                            /*Material mat = (Material)GetBlockAt(x, y, z).BlockMaterial;
+                            if (mat.IsOpaque())
+                            {
+                                light = 0;
+                            }
+                            if (mat.RendersAtAll())
+                            {
+                                light /= 2;
+                            }*/
+                            BlocksInternal[BlockIndex(x, y, z)].BlockLocalData = light;
+                        }
+                    }
+                }
+            }
+        }
+
         public StaticMesh CalculateChunkShape()
         {
             List<Vector3> Vertices = new List<Vector3>(CSize * CSize * CSize * 6); // TODO: Make this an array?

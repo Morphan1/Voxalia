@@ -562,7 +562,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else
             {
+                if (FBOid == 1)
+                {
+                    Rendering.SetSpecular(0);
+                    Rendering.SetMinimumLight(1);
+                }
                 RenderSkybox();
+                if (FBOid == 1)
+                {
+                    Rendering.SetSpecular(1);
+                    Rendering.SetMinimumLight(0);
+                }
                 for (int i = 0; i < TheWorld.Entities.Count; i++)
                 {
                     TheWorld.Entities[i].Render();
@@ -570,6 +580,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 if (FBOid == 1)
                 {
                     Rendering.SetMinimumLight(1f);
+                    Rendering.SetSpecular(0);
                 }
                 Particles.Engine.Render();
             }
