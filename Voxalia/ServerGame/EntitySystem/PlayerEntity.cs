@@ -180,19 +180,19 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public float CBCrouchSpeed = 2.5f;
 
-        public float CBSlideSpeed = 2f;
+        public float CBSlideSpeed = 3f;
 
-        public float CBAirSpeed = 0.5f;
+        public float CBAirSpeed = 1f;
 
         public float CBTractionForce = 100f;
 
-        public float CBSlideForce = 50f;
+        public float CBSlideForce = 70f;
 
-        public float CBAirForce = 25f;
+        public float CBAirForce = 50f;
 
         public float CBJumpSpeed = 10f;
 
-        public float CBSlideJumpSpeed = 5f;
+        public float CBSlideJumpSpeed = 7f;
 
         public float CBGlueForce = 500f;
 
