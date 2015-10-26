@@ -251,9 +251,9 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public float CBAirForce = 50f;
 
-        public float CBJumpSpeed = 10f;
+        public float CBJumpSpeed = 8f;
 
-        public float CBSlideJumpSpeed = 7f;
+        public float CBSlideJumpSpeed = 3.5f;
 
         public float CBGlueForce = 500f;
 

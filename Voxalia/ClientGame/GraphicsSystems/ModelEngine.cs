@@ -35,7 +35,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             LoadedModels = new List<Model>();
             Cube = GetModel("cube");
             Cylinder = GetModel("cylinder");
-            Sphere = GetModel("common/sphere_basic");
+            Sphere = GetModel("sphere");
         }
 
         public void Update(double time)
