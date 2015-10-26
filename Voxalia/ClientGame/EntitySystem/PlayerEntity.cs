@@ -126,18 +126,18 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 pup = false;
             }
-            CBody.StandingSpeed = CBStandSpeed;
-            CBody.CrouchingSpeed = CBCrouchSpeed;
+            float speedmod = 1f;
             if (Click)
             {
                 ItemStack item = TheClient.GetItemForSlot(TheClient.QuickBarPos);
                 if (item.SharedAttributes.ContainsKey("charge") && item.SharedAttributes["charge"] == 1f)
                 {
-                    float speed = item.SharedAttributes["cspeedm"];
-                    CBody.StandingSpeed = CBStandSpeed * speed;
-                    CBody.CrouchingSpeed = CBCrouchSpeed * speed;
+                    speedmod *= item.SharedAttributes["cspeedm"];
                 }
             }
+            speedmod *= TheRegion.GetBlockMaterial(GetPosition() - new Location(0, 0, 0.5f)).GetSpeedMod();
+            CBody.StandingSpeed = CBStandSpeed * speedmod;
+            CBody.CrouchingSpeed = CBCrouchSpeed * speedmod;
             Vector2 movement = new Vector2(0, 0);
             if (Leftward)
             {

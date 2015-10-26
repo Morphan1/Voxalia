@@ -8,7 +8,6 @@ using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.ItemSystem.CommonItems;
-using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
@@ -298,13 +297,14 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 pup = false;
             }
-            CBody.StandingSpeed = CBStandSpeed;
-            CBody.CrouchingSpeed = CBCrouchSpeed;
+            float speedmod = 1;
             if (ItemDoSpeedMod)
             {
-                CBody.StandingSpeed = CBStandSpeed * ItemSpeedMod;
-                CBody.CrouchingSpeed = CBCrouchSpeed * ItemSpeedMod;
+                speedmod *= ItemSpeedMod;
             }
+            speedmod *= TheRegion.GetBlockMaterial(GetPosition() - new Location(0, 0, 0.5f)).GetSpeedMod();
+            CBody.StandingSpeed = CBStandSpeed * speedmod;
+            CBody.CrouchingSpeed = CBCrouchSpeed * speedmod;
             Vector2 movement = new Vector2(0, 0);
             if (Leftward)
             {
