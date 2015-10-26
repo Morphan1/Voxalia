@@ -19,6 +19,7 @@ void main(void)
 {
 	f_texcoord = texcoords;
 	f_position = mv_matrix * vec4(position.xyz, 1.0);
+    f_position /= f_position.w;
 	mat4 mv_mat_simple = mv_matrix;
 	mv_mat_simple[3][0] = 0.0;
 	mv_mat_simple[3][1] = 0.0;

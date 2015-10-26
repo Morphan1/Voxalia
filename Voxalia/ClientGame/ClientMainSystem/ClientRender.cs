@@ -36,6 +36,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_fbo = Shaders.GetShader("fbo");
             s_fbov = Shaders.GetShader("fbo_vox");
             s_shadowadder = Shaders.GetShader("shadowadder");
+            s_lightadder = Shaders.GetShader("lightadder");
             s_transponly = Shaders.GetShader("transponly");
             s_colormultvox = Shaders.GetShader("colormultvox");
             s_colormultr = Shaders.GetShader("color_multr");
@@ -89,7 +90,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             fbo_main = GL.GenFramebuffer();
             GL.BindTexture(TextureTarget.Texture2D, fbo_texture);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba32f, Window.Width, Window.Height, 0,
-                OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
+                PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -101,7 +102,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             fbo2_main = GL.GenFramebuffer();
             GL.BindTexture(TextureTarget.Texture2D, fbo2_texture);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba32f, Window.Width, Window.Height, 0,
-                OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
+                PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -116,6 +117,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_fbo;
         public Shader s_fbov;
         public Shader s_shadowadder;
+        public Shader s_lightadder;
         public Shader s_transponly;
         public Shader s_colormultvox;
         public Shader s_colormultr;
@@ -213,7 +215,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
                 Matrix4 combined = view * proj;
                 Frustum camFrust = new Frustum(combined);
-                if (shouldRedrawShadows)
+                if (shouldRedrawShadows && CVars.r_shadows.ValueB)
                 {
                     shouldRedrawShadows = false;
                     s_shadow.Bind();
@@ -269,7 +271,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-                s_shadowadder.Bind();
+                if (CVars.r_shadows.ValueB)
+                {
+                    s_shadowadder.Bind();
+                }
+                else
+                {
+                    s_lightadder.Bind();
+                }
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.PositionTexture);
                 GL.ActiveTexture(TextureUnit.Texture2);
@@ -320,8 +329,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
                                 GL.ActiveTexture(TextureUnit.Texture0);
                                 GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
-                                GL.ActiveTexture(TextureUnit.Texture4);
-                                GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
+                                if (CVars.r_shadows.ValueB)
+                                {
+                                    GL.ActiveTexture(TextureUnit.Texture4);
+                                    GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
+                                }
                                 Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
                                 GL.UniformMatrix4(3, false, ref smat);
                                 GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
@@ -335,7 +347,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 {
                                     GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
                                 }
-                                GL.Uniform1(12, 1f / (float)Lights[i].InternalLights[x].texsize);
+                                GL.Uniform1(12, 1f / Lights[i].InternalLights[x].texsize);
                                 Rendering.RenderRectangle(-1, -1, 1, 1);
                                 first = !first;
                                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -390,6 +402,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 FBOid = 3;
                 Render3D(false);
                 FBOid = 0;
+                RenderSkyflare(combined);
                 s_colormultr.Bind();
                 VBO.BonesIdentity();
                 GL.UniformMatrix4(1, false, ref combined);

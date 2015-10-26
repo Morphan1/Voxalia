@@ -29,7 +29,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_dof_strength,
             r_maxfps,
             r_lightmaxdistance,
-            r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun, r_shadowpace,
+            r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun, r_shadowpace, r_shadows,
             r_highlight_targetblock, r_highlight_placeblock,
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth;
 
@@ -76,6 +76,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric); // What factor to use for shadow blurring. Smaller = blurrier.
             r_shadowquality_sun = Register("r_shadowquality_sun", "2048", CVarFlag.Numeric | CVarFlag.Delayed); // What texture size to use for the sun. // TODO: Callback to auto-set
             r_shadowpace = Register("r_shadowpace", "2", CVarFlag.Numeric); // How rapidly to rerender shadows, in frames.
+            r_shadows = Register("r_shadows", "true", CVarFlag.Boolean); // Whether to render shadows at all.
             r_highlight_targetblock = Register("r_highlight_targetblock", "true", CVarFlag.Boolean); // Whether to highlight the targeted block. // TODO: u_?
             r_highlight_placeblock = Register("r_highlight_placeblock", "true", CVarFlag.Boolean); // Whether to highlight the targeted placement block. // TODO: u_?
             r_good_graphics = Register("r_good_graphics", "true", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use 'good' graphics. // TODO: Callback to auto-set
