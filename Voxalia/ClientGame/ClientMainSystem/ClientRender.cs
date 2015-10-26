@@ -476,11 +476,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
             Textures.GetTexture("skies/planet").Bind(); // TODO: Store var? Make dynamic?
             Rendering.SetColor(new Color4(PlanetLight, PlanetLight, PlanetLight, 1));
-            rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
+            rot = Matrix4.CreateTranslation(-150f, -150f, 0f)
                 * Matrix4.CreateRotationY((float)((-PlanetAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + PlanetAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation((CameraPos + ThePlanet.Direction * -(dist * 0.9f)).ToOVector()); // TODO: adjust based on view rad
-            Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
+                * Matrix4.CreateTranslation((CameraPos + ThePlanet.Direction * -(dist * 0.8f)).ToOVector()); // TODO: adjust based on view rad
+            Rendering.RenderRectangle(0, 0, 300, 300, rot); // TODO: Adjust scale based on view rad
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.Enable(EnableCap.CullFace);
             Matrix4 ident = Matrix4.Identity;
@@ -492,7 +492,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             if (CVars.r_lensflare.ValueB)
             {
-                if (PlanetSunDist > 10)
+                if (PlanetSunDist > 21f)
                 {
                     Location rel = CameraPos + TheSun.Direction * -200f;
                     Vector4 vec = new Vector4((float)rel.X, (float)rel.Y, (float)rel.Z, 1f);
