@@ -7,6 +7,7 @@ using BEPUphysics.BroadPhaseEntries;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 using Voxalia.ClientGame.WorldSystem;
+using Voxalia.ClientGame.OtherSystems;
 using Voxalia.Shared.Collision;
 using BEPUphysics.Character;
 using OpenTK.Graphics.OpenGL4;
@@ -125,18 +126,18 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 pup = false;
             }
-            // TODO: Adjust movement speed as needed
-            /*
+            CBody.StandingSpeed = CBStandSpeed;
+            CBody.CrouchingSpeed = CBCrouchSpeed;
             if (Click)
             {
                 ItemStack item = TheClient.GetItemForSlot(TheClient.QuickBarPos);
                 if (item.SharedAttributes.ContainsKey("charge") && item.SharedAttributes["charge"] == 1f)
                 {
                     float speed = item.SharedAttributes["cspeedm"];
-                    intent_vel *= speed;
+                    CBody.StandingSpeed = CBStandSpeed * speed;
+                    CBody.CrouchingSpeed = CBCrouchSpeed * speed;
                 }
             }
-            */
             Vector2 movement = new Vector2(0, 0);
             if (Leftward)
             {

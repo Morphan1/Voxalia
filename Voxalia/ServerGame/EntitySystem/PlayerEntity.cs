@@ -294,13 +294,13 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 pup = false;
             }
-            // TODO: Adjust speed!
-            /*
+            CBody.StandingSpeed = CBStandSpeed;
+            CBody.CrouchingSpeed = CBCrouchSpeed;
             if (ItemDoSpeedMod)
             {
-                intent_vel *= ItemSpeedMod;
+                CBody.StandingSpeed = CBStandSpeed * ItemSpeedMod;
+                CBody.CrouchingSpeed = CBCrouchSpeed * ItemSpeedMod;
             }
-            */
             Vector2 movement = new Vector2(0, 0);
             if (Leftward)
             {
