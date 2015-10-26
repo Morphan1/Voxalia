@@ -19,18 +19,19 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            // Default Textures
             GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
-            SetTexture(0, "clear");
-            SetTexture(1, "blocks/solid/stone");
-            SetTexture(2, "blocks/solid/grass_side");
-            SetTexture(3, "blocks/solid/dirt");
-            SetTexture(4, "blocks/liquid/water");
-            SetTexture(5, "blocks/solid/db_top");
-            SetTexture(6, "blocks/transparent/leaves_basic1");
-            SetTexture(7, "blocks/solid/concrete");
-            SetTexture(8, "blocks/liquid/slipgoo");
-            SetTexture(9, "blocks/solid/snow");
+            // Default Textures
+            SetTexture((int)Material.AIR, "clear");
+            SetTexture((int)Material.STONE, "blocks/solid/stone");
+            SetTexture((int)Material.GRASS, "blocks/solid/grass_side");
+            SetTexture((int)Material.DIRT, "blocks/solid/dirt");
+            SetTexture((int)Material.WATER, "blocks/liquid/water");
+            SetTexture((int)Material.DEBUG, "blocks/solid/db_top");
+            SetTexture((int)Material.LEAVES1, "blocks/transparent/leaves_basic1");
+            SetTexture((int)Material.CONCRETE, "blocks/solid/concrete");
+            SetTexture((int)Material.SLIPGOO, "blocks/liquid/slipgoo");
+            SetTexture((int)Material.SNOW, "blocks/solid/snow");
+            SetTexture((int)Material.SMOKE, "blocks/liquid/smoke");
             SetTexture(MaterialHelpers.MAX_TEXTURES - 6, "blocks/solid/db_ym");
             SetTexture(MaterialHelpers.MAX_TEXTURES - 5, "blocks/solid/db_yp");
             SetTexture(MaterialHelpers.MAX_TEXTURES - 4, "blocks/solid/db_xp");
