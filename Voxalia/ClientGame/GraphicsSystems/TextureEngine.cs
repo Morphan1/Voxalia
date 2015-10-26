@@ -155,8 +155,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         /// <param name="filename">The name of the file to use</param>
         /// <param name="depth">Where in the array to put it</param>
+        /// <param name="twidth">What width the texture must be at</param>
         /// <returns>The loaded texture, or null if it does not exist</returns>
-        public void LoadTextureIntoArray(string filename, int depth)
+        public void LoadTextureIntoArray(string filename, int depth, int twidth)
         {
             try
             {
@@ -169,7 +170,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     return;
                 }
                 Bitmap bmp = new Bitmap(Program.Files.ReadToStream("textures/" + filename + ".png"));
-                LockBitmapToTexture(bmp, depth);
+                Bitmap bmp2 = new Bitmap(bmp, new Size(twidth, twidth));
+                LockBitmapToTexture(bmp2, depth);
+                bmp2.Dispose();
                 bmp.Dispose();
             }
             catch (Exception ex)

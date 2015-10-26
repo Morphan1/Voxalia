@@ -10,14 +10,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public int TextureID;
 
+        public int TWidth;
+
         public void Generate(ClientCVar cvars, TextureEngine eng)
         {
             TEngine = eng;
             TextureID = GL.GenTexture();
+            TWidth = cvars.r_blocktexturewidth.ValueI;
             GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
-            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, 128, 128, MaterialHelpers.MAX_TEXTURES);
-            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)(cvars.r_texturelinear.ValueB ? TextureMinFilter.Linear: TextureMinFilter.Nearest));
-            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)(cvars.r_texturelinear.ValueB ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.MAX_TEXTURES);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)(cvars.r_blocktexturelinear.ValueB ? TextureMinFilter.Linear: TextureMinFilter.Nearest));
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)(cvars.r_blocktexturelinear.ValueB ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
             GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
@@ -45,7 +48,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         private void SetTexture(int ID, string texture)
         {
-            TEngine.LoadTextureIntoArray(texture, ID);
+            TEngine.LoadTextureIntoArray(texture, ID, TWidth);
         }
     }
 }
