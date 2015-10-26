@@ -135,9 +135,14 @@ namespace Voxalia.ClientGame.EntitySystem
                     speedmod *= item.SharedAttributes["cspeedm"];
                 }
             }
-            speedmod *= TheRegion.GetBlockMaterial(GetPosition() - new Location(0, 0, 0.5f)).GetSpeedMod();
+            speedmod *= TheRegion.GetBlockMaterial(GetPosition() - new Location(0, 0, 0.05f)).GetSpeedMod();
             CBody.StandingSpeed = CBStandSpeed * speedmod;
             CBody.CrouchingSpeed = CBCrouchSpeed * speedmod;
+            // TODO: FIX FRICTION
+            float frictionmod = 1f;
+            frictionmod *= TheRegion.GetBlockMaterial(GetPosition() - new Location(0, 0, 0.05f)).GetFrictionMod();
+            CBody.Body.Material.KineticFriction = Friction * frictionmod;
+            CBody.Body.Material.StaticFriction = Friction * frictionmod;
             Vector2 movement = new Vector2(0, 0);
             if (Leftward)
             {

@@ -12,7 +12,8 @@ namespace Voxalia.Shared
         DEBUG = 5,
         LEAVES1 = 6,
         CONCRETE = 7,
-        NUM_DEFAULT = 8,
+        SLIPGOO = 8,
+        NUM_DEFAULT = 9,
         MAX = ushort.MaxValue
     }
 
@@ -32,7 +33,8 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.WATER) { Solid = false, Opaque = false },
                 new MaterialInfo((int)Material.DEBUG),
                 new MaterialInfo((int)Material.LEAVES1) { Opaque = false },
-                new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f }
+                new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f },
+                new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f }
             };
             mats[(int)Material.GRASS].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
             mats[(int)Material.GRASS].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
@@ -88,6 +90,11 @@ namespace Voxalia.Shared
         {
             return ALL_MATS[(int)mat].SpeedMod;
         }
+
+        public static float GetFrictionMod(this Material mat)
+        {
+            return ALL_MATS[(int)mat].FrictionMod;
+        }
     }
 
     public enum MaterialSide : byte
@@ -125,6 +132,8 @@ namespace Voxalia.Shared
         public bool Opaque = true;
 
         public bool RendersAtAll = true;
+
+        public float FrictionMod = 1f;
 
         public int[] TID = new int[(int)MaterialSide.COUNT];
     }

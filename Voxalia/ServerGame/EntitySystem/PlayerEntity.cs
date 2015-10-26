@@ -119,6 +119,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/db_top", "DebugBlock", "Not buggy!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.DEBUG });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/concrete", "Concrete", "Solid!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.CONCRETE });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/liquid/water", "Water", "Wet!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.WATER });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/liquid/slipgoo", "Slip Goo", "Slippery!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.SLIPGOO });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/transparent/leaves_basic1", "Leaves", "Transparent in parts!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.LEAVES1 });
             Items.GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol_ico", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/silenced_pistol.dae", false));
             Items.GiveItem(new ItemStack("shotgun_gun", TheServer, 1, "items/weapons/shotgun_ico", "Shotgun", "It shoots many bullets!", Color.White.ToArgb(), "items/weapons/shotgun.dae", false));
@@ -302,9 +303,14 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 speedmod *= ItemSpeedMod;
             }
-            speedmod *= TheRegion.GetBlockMaterial(GetPosition() - new Location(0, 0, 0.5f)).GetSpeedMod();
+            speedmod *= TheRegion.GetBlockMaterial(GetPosition() - new Location(0, 0, 0.05f)).GetSpeedMod();
             CBody.StandingSpeed = CBStandSpeed * speedmod;
             CBody.CrouchingSpeed = CBCrouchSpeed * speedmod;
+            // TODO: FIX FRICTION
+            float frictionmod = 1f;
+            frictionmod *= TheRegion.GetBlockMaterial(GetPosition() - new Location(0, 0, 0.05f)).GetFrictionMod();
+            CBody.Body.Material.KineticFriction = Friction * frictionmod;
+            CBody.Body.Material.StaticFriction = Friction * frictionmod;
             Vector2 movement = new Vector2(0, 0);
             if (Leftward)
             {
