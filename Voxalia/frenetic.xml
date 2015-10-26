@@ -251,6 +251,7 @@
         <member name="F:Frenetic.CommandSystem.CommandQueue.CommandList">
             <summary>
             All commands in this queue, as strings.
+            TODO: Replace list with more efficient handler (Linked list, perhaps?)
             </summary>
         </member>
         <member name="F:Frenetic.CommandSystem.CommandQueue.Variables">
@@ -299,7 +300,7 @@
             Whether commands in the queue will parse tags.
             </summary>
         </member>
-        <member name="F:Frenetic.CommandSystem.CommandQueue.Determination">
+        <member name="F:Frenetic.CommandSystem.CommandQueue.Determinations">
             <summary>
             What was returned by the determine command for this queue.
             </summary>
@@ -390,7 +391,7 @@
         </member>
         <member name="T:Frenetic.CommandSystem.EntryFinisher">
             <summary>
-            A mini-class used for the callback for ~waitable commands.
+            A mini-class used for the callback for &amp;waitable commands.
             </summary>
         </member>
         <member name="F:Frenetic.CommandSystem.EntryFinisher.Entry">
@@ -938,6 +939,16 @@
             The system that generated this CVar.
             </summary>
         </member>
+        <member name="F:Frenetic.CVar.Description">
+            <summary>
+            An implementor can optionally apply a description to a CVar to show in Info() and any implementor-managed code.
+            </summary>
+        </member>
+        <member name="F:Frenetic.CVar.Tag">
+            <summary>
+            Any object can be attached to a CVar to mark it for the implementing engine.
+            </summary>
+        </member>
         <member name="M:Frenetic.CVar.#ctor(System.String,System.String,Frenetic.CVarFlag,Frenetic.CVarSystem)">
             <summary>
             Construct a CVar.
@@ -1045,13 +1056,14 @@
             </summary>
             <param name="_output">The outputter to use</param>
         </member>
-        <member name="M:Frenetic.CVarSystem.Register(System.String,System.String,Frenetic.CVarFlag)">
+        <member name="M:Frenetic.CVarSystem.Register(System.String,System.String,Frenetic.CVarFlag,System.String)">
             <summary>
             Registers a new CVar.
             </summary>
             <param name="CVar">The name of the CVar</param>
             <param name="value">The default value</param>
             <param name="flags">The flags to set on this CVar</param>
+            <param name="description">An optional description text for a CVar</param>
             <returns>The registered CVar</returns>
         </member>
         <member name="M:Frenetic.CVarSystem.AbsoluteSet(System.String,System.String,System.Boolean,Frenetic.CVarFlag)">

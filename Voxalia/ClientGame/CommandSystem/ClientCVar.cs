@@ -47,59 +47,59 @@ namespace Voxalia.ClientGame.CommandSystem
             system = new CVarSystem(output);
 
             // System CVars
-            s_filepath = Register("s_filepath", Program.Files.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly); // The current system environment filepath (The directory of /data).
-            s_glversion = Register("s_glversion", "UNKNOWN", CVarFlag.Textual | CVarFlag.ReadOnly); // What version of OpenGL is in use.
-            s_glrenderer = Register("s_glrenderer", "UNKNOWN", CVarFlag.Textual | CVarFlag.ReadOnly); // What renderer for OpenGL is in use.
-            s_glvendor = Register("s_glvendor", "UNKNOWN", CVarFlag.Textual | CVarFlag.ReadOnly); // What graphics card vendor made the device being used for rendering.
+            s_filepath = Register("s_filepath", Program.Files.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly, "The current system environment filepath (The directory of /data).");
+            s_glversion = Register("s_glversion", "UNKNOWN", CVarFlag.Textual | CVarFlag.ReadOnly, "What version of OpenGL is in use.");
+            s_glrenderer = Register("s_glrenderer", "UNKNOWN", CVarFlag.Textual | CVarFlag.ReadOnly, "What renderer for OpenGL is in use.");
+            s_glvendor = Register("s_glvendor", "UNKNOWN", CVarFlag.Textual | CVarFlag.ReadOnly, "What graphics card vendor made the device being used for rendering.");
             // Game CVars
-            g_timescale = Register("g_timescale", "1", CVarFlag.Numeric | CVarFlag.ServerControl); // The current game time scale value.
-            g_firstperson = Register("g_firstperson", "true", CVarFlag.Boolean); // Whether to be in FirstPerson view mode.
+            g_timescale = Register("g_timescale", "1", CVarFlag.Numeric | CVarFlag.ServerControl, "The current game time scale value.");
+            g_firstperson = Register("g_firstperson", "true", CVarFlag.Boolean, "Whether to be in FirstPerson view mode.");
             // Network CVars
-            n_first = Register("n_first", "ipv4", CVarFlag.Textual); // Whether to prefer IPv4 or IPv6.
-            n_debugmovement = Register("n_debugmovement", "false", CVarFlag.Boolean); // Whether to debug movement networking.
+            n_first = Register("n_first", "ipv4", CVarFlag.Textual, "Whether to prefer IPv4 or IPv6.");
+            n_debugmovement = Register("n_debugmovement", "false", CVarFlag.Boolean, "Whether to debug movement networking.");
             // Renderer CVars
-            r_fullscreen = Register("r_fullscreen", "false", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use fullscreen mode.
-            r_width = Register("r_width", "1280", CVarFlag.Numeric | CVarFlag.Delayed); // What width the window should be.
-            r_height = Register("r_height", "720", CVarFlag.Numeric | CVarFlag.Delayed); // What height the window should be.
-            r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed); // What AA mode to use (0 = none). // TODO: IMPLEMENT
-            r_vsync = Register("r_vsync", "true", CVarFlag.Boolean); // Whether to use vertical synchronization mode.
-            r_lighting = Register("r_lighting", "true", CVarFlag.Boolean); // Whether to enable 3D lighting (Otherwise, use FullBright).
-            r_renderwireframe = Register("r_renderwireframe", "false", CVarFlag.Boolean); // Whether to render a wireframe.
-            r_fov = Register("r_fov", "70", CVarFlag.Numeric); // What Field of Vision range value to use.
-            r_znear = Register("r_znear", "0.1", CVarFlag.Numeric); // How close the near plane should be to the camera.
-            r_zfar = Register("r_zfar", "1000", CVarFlag.Numeric); // How far the far plane should be from the camera.
-            r_dof_strength = Register("r_dof_strength", "4", CVarFlag.Numeric); // How strong the Depth Of Field effect should be.
-            r_maxfps = Register("r_maxfps", "60", CVarFlag.Numeric | CVarFlag.Delayed); // What the FPS cap should be.
-            r_lightmaxdistance = Register("r_lightmaxdistance", "35", CVarFlag.Numeric); // How far away a light can be from the camera before it is disabled.
-            r_fallbacklighting = Register("r_fallbacklighting", "true", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to calculate fallback block lighting.
-            r_shadowquality_flashlight = Register("r_shadowquality_flashlight", "512", CVarFlag.Numeric); // What texture size to use for flashlight shadows.
-            r_shadowquality_max = Register("r_shadowquality_max", "2048", CVarFlag.Numeric); // What maximum light texture size to accept from the server.
-            r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric); // What factor to use for shadow blurring. Smaller = blurrier.
-            r_shadowquality_sun = Register("r_shadowquality_sun", "2048", CVarFlag.Numeric | CVarFlag.Delayed); // What texture size to use for the sun. // TODO: Callback to auto-set
-            r_shadowpace = Register("r_shadowpace", "2", CVarFlag.Numeric); // How rapidly to rerender shadows, in frames.
-            r_shadows = Register("r_shadows", "true", CVarFlag.Boolean); // Whether to render shadows at all.
-            r_highlight_targetblock = Register("r_highlight_targetblock", "true", CVarFlag.Boolean); // Whether to highlight the targeted block. // TODO: u_?
-            r_highlight_placeblock = Register("r_highlight_placeblock", "true", CVarFlag.Boolean); // Whether to highlight the targeted placement block. // TODO: u_?
-            r_good_graphics = Register("r_good_graphics", "true", CVarFlag.Boolean | CVarFlag.Delayed); // Whether to use 'good' graphics. // TODO: Callback to auto-set
-            r_skybox = Register("r_skybox", "default", CVarFlag.ServerControl | CVarFlag.Textual); // What skybox to use.
-            r_lensflare = Register("r_lensflare", "true", CVarFlag.Boolean); // Whether to render a lens flare from the sun.
-            r_blocktexturelinear = Register("r_blocktexturelinear", "false", CVarFlag.Boolean | CVarFlag.Delayed); // Whether block textures are to use a linear blur or nearest-pixel mode.
-            r_blocktexturewidth = Register("r_blocktexturewidth", "128", CVarFlag.Numeric | CVarFlag.Delayed); // What texture width (pixels) block textures should use.
+            r_fullscreen = Register("r_fullscreen", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use fullscreen mode.");
+            r_width = Register("r_width", "1280", CVarFlag.Numeric | CVarFlag.Delayed, "What width the window should be.");
+            r_height = Register("r_height", "720", CVarFlag.Numeric | CVarFlag.Delayed, "What height the window should be.");
+            r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed, "What AA mode to use (0 = none)."); // TODO: IMPLEMENT
+            r_vsync = Register("r_vsync", "true", CVarFlag.Boolean, "Whether to use vertical synchronization mode.");
+            r_lighting = Register("r_lighting", "true", CVarFlag.Boolean, "Whether to enable 3D lighting (Otherwise, use FullBright).");
+            r_renderwireframe = Register("r_renderwireframe", "false", CVarFlag.Boolean, "Whether to render a wireframe.");
+            r_fov = Register("r_fov", "70", CVarFlag.Numeric, "What Field of Vision range value to use.");
+            r_znear = Register("r_znear", "0.1", CVarFlag.Numeric, "How close the near plane should be to the camera.");
+            r_zfar = Register("r_zfar", "1000", CVarFlag.Numeric, "How far the far plane should be from the camera.");
+            r_dof_strength = Register("r_dof_strength", "4", CVarFlag.Numeric, "How strong the Depth Of Field effect should be.");
+            r_maxfps = Register("r_maxfps", "60", CVarFlag.Numeric | CVarFlag.Delayed, "What the FPS cap should be.");
+            r_lightmaxdistance = Register("r_lightmaxdistance", "35", CVarFlag.Numeric, "How far away a light can be from the camera before it is disabled.");
+            r_fallbacklighting = Register("r_fallbacklighting", "true", CVarFlag.Boolean, "Whether to calculate fallback block lighting (Requires chunk reload).");
+            r_shadowquality_flashlight = Register("r_shadowquality_flashlight", "512", CVarFlag.Numeric, "What texture size to use for flashlight shadows.");
+            r_shadowquality_max = Register("r_shadowquality_max", "2048", CVarFlag.Numeric, "What maximum light texture size to accept from the server.");
+            r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric, "What factor to use for shadow blurring. Smaller = blurrier.");
+            r_shadowquality_sun = Register("r_shadowquality_sun", "2048", CVarFlag.Numeric | CVarFlag.Delayed, "What texture size to use for the sun."); // TODO: Callback to auto-set
+            r_shadowpace = Register("r_shadowpace", "2", CVarFlag.Numeric, "How rapidly to rerender shadows, in frames.");
+            r_shadows = Register("r_shadows", "true", CVarFlag.Boolean, "Whether to render shadows at all.");
+            r_highlight_targetblock = Register("r_highlight_targetblock", "true", CVarFlag.Boolean, "Whether to highlight the targeted block."); // TODO: u_?
+            r_highlight_placeblock = Register("r_highlight_placeblock", "true", CVarFlag.Boolean, "Whether to highlight the targeted placement block."); // TODO: u_?
+            r_good_graphics = Register("r_good_graphics", "true", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use 'good' graphics."); // TODO: Callback to auto-set
+            r_skybox = Register("r_skybox", "default", CVarFlag.ServerControl | CVarFlag.Textual, "What skybox to use.");
+            r_lensflare = Register("r_lensflare", "true", CVarFlag.Boolean, "Whether to render a lens flare from the sun.");
+            r_blocktexturelinear = Register("r_blocktexturelinear", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether block textures are to use a linear blur or nearest-pixel mode.");
+            r_blocktexturewidth = Register("r_blocktexturewidth", "128", CVarFlag.Numeric | CVarFlag.Delayed, "What texture width (pixels) block textures should use.");
             // Audio CVars
-            a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What volume the music should be.
-            a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric | CVarFlag.Delayed); // What pitch the music should be.
-            a_globalvolume = Register("a_globalvolume", "1", CVarFlag.Numeric); // What volume all sounds should be.
-            a_globalpitch = Register("a_globalpitch", "1", CVarFlag.Numeric); // What pitch all sounds should be.
+            a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric | CVarFlag.Delayed, "What volume the music should be.");
+            a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric | CVarFlag.Delayed, "What pitch the music should be.");
+            a_globalvolume = Register("a_globalvolume", "1", CVarFlag.Numeric, "What volume all sounds should be.");
+            a_globalpitch = Register("a_globalpitch", "1", CVarFlag.Numeric, "What pitch all sounds should be.");
             // UI CVars
-            u_mouse_sensitivity = Register("u_mouse_sensitivity", "1", CVarFlag.Numeric); // How sensitive the mouse is.
-            u_reticle = Register("u_reticle", "1", CVarFlag.Textual); // What reticle to use.
-            u_reticlescale = Register("u_reticlescale", "32", CVarFlag.Numeric); // How big the reticle should be.
-            u_showhud = Register("u_showhud", "true", CVarFlag.Boolean); // Whether to render the HUD.
+            u_mouse_sensitivity = Register("u_mouse_sensitivity", "1", CVarFlag.Numeric, "How sensitive the mouse is.");
+            u_reticle = Register("u_reticle", "1", CVarFlag.Textual, "What reticle to use.");
+            u_reticlescale = Register("u_reticlescale", "32", CVarFlag.Numeric, "How big the reticle should be.");
+            u_showhud = Register("u_showhud", "true", CVarFlag.Boolean, "Whether to render the HUD.");
         }
 
-        CVar Register(string name, string value, CVarFlag flags)
+        CVar Register(string name, string value, CVarFlag flags, string desc = null)
         {
-            return system.Register(name, value, flags);
+            return system.Register(name, value, flags, desc);
         }
     }
 }
