@@ -24,3 +24,4 @@ VoxaliaClientGame.dll
 VoxaliaServerGame.dll
 VoxaliaShared.dll
 VoxaliaServerSamplePlugin/bin/Release/
+Voxalia/bin/Release/data/plugins/

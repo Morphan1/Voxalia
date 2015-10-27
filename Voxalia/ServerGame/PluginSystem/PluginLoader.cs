@@ -23,16 +23,13 @@ namespace Voxalia.ServerGame.PluginSystem
             {
                 return new string[] { };
             }
-            string[] tf = Directory.GetFiles(bdir); // TODO: Replace with Program.Files method
+            string[] tf = Directory.GetFiles(bdir, "*.dll", SearchOption.TopDirectoryOnly); // TODO: Replace with Program.Files method
             List<string> res = new List<string>(tf.Length);
             foreach (string file in tf)
             {
-                if (file.EndsWith(".dll"))
-                {
-                    string f = file.Replace('\\', '/');
-                    f = f.Substring(f.LastIndexOf('/') + 1);
-                    res.Add(f.Substring(0, f.Length - ".dll".Length));
-                }
+                string f = file.Replace('\\', '/');
+                f = f.Substring(f.LastIndexOf('/') + 1);
+                res.Add(f.Substring(0, f.Length - ".dll".Length));
             }
             return res.ToArray();
         }
