@@ -107,15 +107,20 @@ namespace Voxalia.ClientGame.WorldSystem
                                 {
                                     SysConsole.Output(OutputType.INFO, "v:" + vecsi.Count + ",n:" + normsi.Count + ",tci:" + tci.Count);
                                 }
-                                if (light)
+                                // TODO: FIXME!
+                                /*if (light)
                                 {
                                     List<BEPUutilities.Vector4> lits = BlockShapeRegistry.BSD[c.BlockData].GetLights(pos, c, xp, xm, yp, ym, zp, zm, xps, xms, yps, yms, zps, yms);
+                                    if (lits.Count != vecsi.Count)
+                                    {
+                                        SysConsole.Output(OutputType.ERROR, "Wat: " + (Material)c.BlockMaterial + ", " + (int)c.BlockData + " at " + pos + "... l:" + lits.Count + "!= v:" + vecsi.Count);
+                                    }
                                     for (int i = 0; i < lits.Count; i++)
                                     {
                                         Cols.Add(new Vector4(lits[i].X, lits[i].Y, lits[i].Z, lits[i].W));
                                     }
                                 }
-                                else
+                                else*/
                                 {
                                     for (int i = 0; i < vecsi.Count; i++)
                                     {
@@ -147,6 +152,18 @@ namespace Voxalia.ClientGame.WorldSystem
                 for (uint i = 0; i < Vertices.Count; i++)
                 {
                     inds.Add(i);
+                }
+                if (Norms.Count != Vertices.Count)
+                {
+                    SysConsole.Output(OutputType.ERROR, "Normals invalid! Chunk at " + WorldPosition);
+                }
+                if (TCoords.Count != Vertices.Count)
+                {
+                    SysConsole.Output(OutputType.ERROR, "TexCoords invalid! Chunk at " + WorldPosition);
+                }
+                if (Cols.Count != Vertices.Count)
+                {
+                    SysConsole.Output(OutputType.ERROR, "Colors invalid! Chunk at " + WorldPosition + ", C: " + Cols.Count + ", V: " +Vertices.Count);
                 }
                 VBO tVBO = new VBO();
                 tVBO.Indices = inds;

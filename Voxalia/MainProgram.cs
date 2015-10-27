@@ -58,7 +58,7 @@ namespace Voxalia
             }
             SysConsole.ShutDown();
             Console.WriteLine("Final shutdown - terminating process.");
-            Process.GetCurrentProcess().Kill();
+            Environment.Exit(0);
         }
     }
 }

@@ -233,13 +233,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 return;
             }
-            vC = Vertices.Count;
             GL.BindVertexArray(0);
             Vector3[] vecs = verts == null ? Vertices.ToArray() : verts;
             uint[] inds = indices == null ? Indices.ToArray() : indices;
             Vector3[] norms = normals == null ? Normals.ToArray() : normals;
             Vector3[] texs = texts == null ? TexCoords.ToArray() : texts;
             Vector4[] cols = null;
+            vC = vecs.Length;
             if (Colors != null)
             {
                 cols = Colors.ToArray();
@@ -393,31 +393,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IndexVBO);
             // Clean up
             GL.BindVertexArray(0);
-            GL.DisableVertexAttribArray(0);
-            GL.DisableVertexAttribArray(1);
-            GL.DisableVertexAttribArray(2);
-            if (cols != null)
-            {
-                GL.DisableVertexAttribArray(3);
-            }
-            if (weights != null)
-            {
-                GL.DisableVertexAttribArray(4);
-            }
-            if (ids != null)
-            {
-                GL.DisableVertexAttribArray(5);
-            }
-            if (weights2 != null)
-            {
-                GL.DisableVertexAttribArray(6);
-            }
-            if (ids2 != null)
-            {
-                GL.DisableVertexAttribArray(7);
-            }
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             generated = true;
 
         }
