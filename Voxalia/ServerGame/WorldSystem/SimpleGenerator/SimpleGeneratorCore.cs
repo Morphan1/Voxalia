@@ -114,11 +114,16 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             cap = Math.Min(top + 7, 30);
                             for (int z = Math.Max(top + 3, 0); z < cap; z++)
                             {
-                                int xcap = Math.Min(x + 2, 30);
-                                for (int sx = Math.Max(x - 2, 0); sx < xcap; sx++)
+                                int width = 2;
+                                if (z == top + 3 || z == top + 6)
                                 {
-                                    int ycap = Math.Min(y + 2, 30);
-                                    for (int sy = Math.Max(y - 2, 0); sy < ycap; sy++)
+                                    width = 1;
+                                }
+                                int xcap = Math.Min(x + 1 + width, 30);
+                                for (int sx = Math.Max(x - width, 0); sx < xcap; sx++)
+                                {
+                                    int ycap = Math.Min(y + 1 + width, 30);
+                                    for (int sy = Math.Max(y - width, 0); sy < ycap; sy++)
                                     {
                                         if (sy != y || sx != x)
                                         {
