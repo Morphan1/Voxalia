@@ -17,3 +17,6 @@ saves/
 .vs/
 *.psess
 *.userprefs
+VoxaliaClientGame.dll
+VoxaliaServerGame.dll
+VoxaliaShared.dll

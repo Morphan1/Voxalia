@@ -49,6 +49,8 @@ namespace Voxalia.Shared
             mats[(int)Material.DEBUG].TID[(int)MaterialSide.XP] = MAX_TEXTURES - 4; // db_xp
             mats[(int)Material.DEBUG].TID[(int)MaterialSide.YP] = MAX_TEXTURES - 5; // db_yp
             mats[(int)Material.DEBUG].TID[(int)MaterialSide.YM] = MAX_TEXTURES - 6; // db_ym
+            mats[(int)Material.LOG].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 7; // wood_top
+            mats[(int)Material.LOG].TID[(int)MaterialSide.BOTTOM] = MAX_TEXTURES - 7; // wood_top
             ALL_MATS.AddRange(mats);
         }
         
