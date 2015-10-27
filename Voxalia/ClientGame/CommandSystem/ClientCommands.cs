@@ -4,6 +4,7 @@ using Voxalia.ClientGame.CommandSystem.UICommands;
 using Voxalia.ClientGame.CommandSystem.CommonCommands;
 using Voxalia.ClientGame.CommandSystem.NetworkCommands;
 using Voxalia.ClientGame.CommandSystem.GameCommands;
+using Voxalia.ClientGame.CommandSystem.TagBases;
 
 namespace Voxalia.ClientGame.CommandSystem
 {
@@ -66,6 +67,9 @@ namespace Voxalia.ClientGame.CommandSystem
             // Game Commands
             CommandSystem.RegisterCommand(new InventoryCommand(TheClient));
             CommandSystem.RegisterCommand(new TesteffectCommand(TheClient));
+
+            // Entity Tags
+            CommandSystem.TagSystem.Register(new PlayerTags(TheClient));
         }
 
         /// <summary>

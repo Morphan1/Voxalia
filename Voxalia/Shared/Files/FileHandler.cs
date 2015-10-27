@@ -185,7 +185,14 @@ namespace Voxalia.Shared.Files
             int ind = FileIndex(filename);
             if (ind == -1)
             {
-                throw new UnknownFileException(CleanFileName(filename));
+                if (File.Exists(filename))
+                {
+                    return File.ReadAllBytes(filename);
+                }
+                else
+                {
+                    throw new UnknownFileException(CleanFileName(filename));
+                }
             }
             PakkedFile file = Files[ind];
             if (file.IsPakked)
