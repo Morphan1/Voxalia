@@ -528,6 +528,13 @@
             </summary>
             <param name="command">The command to register</param>
         </member>
+        <member name="M:Frenetic.CommandSystem.Commands.UnregisterCommand(System.String)">
+            <summary>
+            Removes a command from the registered command list.
+            Silently fails if command is not registered.
+            </summary>
+            <param name="name">The name of the command to remove</param>
+        </member>
         <member name="M:Frenetic.CommandSystem.Commands.RegisterEvent(Frenetic.CommandSystem.ScriptEvent)">
             <summary>
             Registers a script event to the system.
@@ -1182,6 +1189,22 @@
             </summary>
             <param name="data">The data to be handled</param>
         </member>
+        <member name="T:Frenetic.TagHandlers.Common.CVarTags">
+            <summary>
+            Returns CVar information.
+            </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Common.CVarTags.#ctor">
+            <summary>
+            Construct the CVarTags - for internal use only.
+            </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Common.CVarTags.Handle(Frenetic.TagHandlers.TagData)">
+            <summary>
+            Handles a 'cvar' tag.
+            </summary>
+            <param name="data">The data to be handled</param>
+        </member>
         <member name="T:Frenetic.TagHandlers.Common.EscapeTags">
             <summary>
             Escapes questionable text input.
@@ -1205,6 +1228,22 @@
             </summary>
             <param name="data">The data to be handled</param>
         </member>
+        <member name="T:Frenetic.TagHandlers.Common.TernaryTags">
+            <summary>
+            Handles Ternary calculations.
+            </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Common.TernaryTags.#ctor">
+            <summary>
+            Construct the TernaryTags - for internal use only.
+            </summary>
+        </member>
+        <member name="M:Frenetic.TagHandlers.Common.TernaryTags.Handle(Frenetic.TagHandlers.TagData)">
+            <summary>
+            Handles the 'ternary' tag.
+            </summary>
+            <param name="data">The data to be handled</param>
+        </member>
         <member name="T:Frenetic.TagHandlers.Common.UnescapeTags">
             <summary>
             Unescapes questionable text input.
@@ -1224,7 +1263,7 @@
         </member>
         <member name="M:Frenetic.TagHandlers.Common.UnescapeTags.Handle(Frenetic.TagHandlers.TagData)">
             <summary>
-            Handles the unescape tag.
+            Handles the 'unescape' tag.
             </summary>
             <param name="data">The data to be handled</param>
         </member>

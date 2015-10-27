@@ -2,7 +2,10 @@ obj/
 debug/
 *.suo
 *.user
-*.pdb
+Voxalia.pdb
+ModelToVMDConverter/bin/Release/*.pdb
+SkeletalAnimationExtractor/bin/Release/*.pdb
+Voxalia/bin/Release/*.pdb
 *.exe
 *.pak
 clientdefaultsettings.cfg

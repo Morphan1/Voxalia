@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Voxalia.ServerGame.PluginSystem;
+﻿using Voxalia.ServerGame.PluginSystem;
 using Voxalia.Shared;
+using VoxaliaServerSamplePlugin.SampleCommands;
 
 namespace VoxaliaServerSamplePlugin
 {
@@ -11,20 +8,25 @@ namespace VoxaliaServerSamplePlugin
     {
         public static string OutputType = "SamplePlugin";
 
+        public static PluginManager Manager;
+
         public bool Load(PluginManager manager)
         {
             SysConsole.OutputCustom(OutputType, "Hello world!");
+            Manager = manager;
+            manager.TheServer.Commands.CommandSystem.RegisterCommand(new GreetingCommand(this)); // Set up
             return true;
         }
 
         public void Unload()
         {
             SysConsole.OutputCustom(OutputType, "Goodbye!");
+            Manager.TheServer.Commands.CommandSystem.UnregisterCommand("greeting"); // Clean up
         }
 
         public string Name { get { return "SamplePlugin"; } }
 
-        public string ShortDescription { get { return "A simple plugin that says hello and goodbye, to show plugins are made!"; } }
+        public string ShortDescription { get { return "A simple plugin that says hello and goodbye, to show how plugins are made!"; } }
 
         public string HelpLink { get { return "http://github.com/Voxalia/Voxalia"; } }
 
