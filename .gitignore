@@ -5,7 +5,6 @@ debug/
 Voxalia.pdb
 ModelToVMDConverter/bin/Release/*.pdb
 SkeletalAnimationExtractor/bin/Release/*.pdb
-Voxalia/bin/Release/*.pdb
 *.exe
 *.pak
 clientdefaultsettings.cfg
@@ -20,8 +19,7 @@ saves/
 .vs/
 *.psess
 *.userprefs
-VoxaliaClientGame.dll
-VoxaliaServerGame.dll
-VoxaliaShared.dll
 VoxaliaServerSamplePlugin/bin/Release/
 Voxalia/bin/Release/data/plugins/
+Voxalia/bin/Release/*.dll
+Voxalia/bin/Release/*.pdb
