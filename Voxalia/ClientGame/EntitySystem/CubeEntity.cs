@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ClientGame.WorldSystem;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -35,7 +36,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
-            Matrix4 mat = (Matrix4.CreateScale(HalfSize.ToOVector()) * GetOrientationMatrix() * Matrix4.CreateTranslation(GetPosition().ToOVector()));
+            Matrix4 mat = (Matrix4.CreateScale(ClientUtilities.Convert(HalfSize)) * GetOrientationMatrix() * Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition())));
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
             for (int i = 0; i < VBOs.Count; i++)

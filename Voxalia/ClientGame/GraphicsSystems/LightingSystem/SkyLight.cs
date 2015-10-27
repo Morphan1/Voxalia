@@ -1,5 +1,6 @@
 ﻿using Voxalia.Shared;
 using OpenTK;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 {
@@ -32,7 +33,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
                 InternalLights[0].up = new Vector3(0, 0, 1);
             }
             Direction = dir;
-            InternalLights[0].Create(Texsize, pos.ToOVector(), (pos + dir).ToOVector(), Width, Radius, Color.ToOVector());
+            InternalLights[0].Create(Texsize, ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + dir), Width, Radius, ClientUtilities.Convert(Color));
             MaxDistance = radius;
         }
 
@@ -45,8 +46,8 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
         {
             EyePos = pos;
             InternalLights[0].NeedsUpdate = true;
-            InternalLights[0].eye = EyePos.ToOVector();
-            InternalLights[0].target = (EyePos + Direction).ToOVector();
+            InternalLights[0].eye = ClientUtilities.Convert(EyePos);
+            InternalLights[0].target = ClientUtilities.Convert(EyePos + Direction);
         }
     }
 }

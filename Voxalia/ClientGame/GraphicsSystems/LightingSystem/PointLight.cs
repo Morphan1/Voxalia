@@ -1,5 +1,6 @@
 ﻿using Voxalia.Shared;
 using OpenTK;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 {
@@ -20,7 +21,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             for (int i = 0; i < 6; i++)
             {
                 InternalLights.Add(new Light());
-                InternalLights[i].Create(Texsize, pos.ToOVector(), (pos + Location.UnitX).ToOVector(), 90f, Radius, Color.ToOVector());
+                InternalLights[i].Create(Texsize, ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + Location.UnitX), 90f, Radius, ClientUtilities.Convert(Color));
             }
             InternalLights[4].up = new Vector3(0, 1, 0);
             InternalLights[5].up = new Vector3(0, 1, 0);
@@ -42,14 +43,14 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             for (int i = 0; i < 6; i++)
             {
                 InternalLights[i].NeedsUpdate = true;
-                InternalLights[i].eye = EyePos.ToOVector();
+                InternalLights[i].eye = ClientUtilities.Convert(EyePos);
             }
-            InternalLights[0].target = (EyePos + new Location(1, 0, 0)).ToOVector();
-            InternalLights[1].target = (EyePos + new Location(-1, 0, 0)).ToOVector();
-            InternalLights[2].target = (EyePos + new Location(0, 1, 0)).ToOVector();
-            InternalLights[3].target = (EyePos + new Location(0, -1, 0)).ToOVector();
-            InternalLights[4].target = (EyePos + new Location(0, 0, 1)).ToOVector();
-            InternalLights[5].target = (EyePos + new Location(0, 0, -1)).ToOVector();
+            InternalLights[0].target = ClientUtilities.Convert(EyePos + new Location(1, 0, 0));
+            InternalLights[1].target = ClientUtilities.Convert(EyePos + new Location(-1, 0, 0));
+            InternalLights[2].target = ClientUtilities.Convert(EyePos + new Location(0, 1, 0));
+            InternalLights[3].target = ClientUtilities.Convert(EyePos + new Location(0, -1, 0));
+            InternalLights[4].target = ClientUtilities.Convert(EyePos + new Location(0, 0, 1));
+            InternalLights[5].target = ClientUtilities.Convert(EyePos + new Location(0, 0, -1));
         }
     }
 }

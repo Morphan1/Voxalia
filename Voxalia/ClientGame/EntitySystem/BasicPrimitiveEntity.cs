@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.GraphicsSystems.ParticleSystem;
 using Voxalia.ClientGame.WorldSystem;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -41,7 +42,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 //matang.Transpose();
                 Matrix4 matang4 = new Matrix4(matang.M11, matang.M12, matang.M13, matang.M14, matang.M21, matang.M22, matang.M23, matang.M24,
                     matang.M31, matang.M32, matang.M33, matang.M34, matang.M41, matang.M42, matang.M43, matang.M44);
-                Matrix4 mat = matang4 * Matrix4.CreateTranslation(GetPosition().ToOVector());
+                Matrix4 mat = matang4 * Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
                 GL.UniformMatrix4(2, false, ref mat);
                 model.Draw(); // TODO: Animation?
                 if (model.Name == "projectiles/arrow.dae")

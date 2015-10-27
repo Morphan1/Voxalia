@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared;
 using Voxalia.ClientGame.ClientMainSystem;
 using System.Linq;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -268,7 +269,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             Engine.White.Bind();
             Location halfsize = (max - min) / 2;
-            Matrix4 mat = Matrix4.CreateScale(halfsize.ToOVector()) * (rot != null && rot.HasValue ? rot.Value : Matrix4.Identity) * Matrix4.CreateTranslation((min + halfsize).ToOVector());
+            Matrix4 mat = Matrix4.CreateScale(ClientUtilities.Convert(halfsize))
+                * (rot != null && rot.HasValue ? rot.Value : Matrix4.Identity)
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(min + halfsize));
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Box._VAO);
             GL.DrawElements(PrimitiveType.Lines, 24, DrawElementsType.UnsignedInt, IntPtr.Zero);
@@ -287,7 +290,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Matrix4 mat = Matrix4.CreateScale(len, 1, 1)
                 * Matrix4.CreateRotationY((float)(vecang.Y * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
-                * Matrix4.CreateTranslation(start.ToOVector());
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(start));
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Line._VAO);
             GL.DrawElements(PrimitiveType.Lines, 2, DrawElementsType.UnsignedInt, IntPtr.Zero);
@@ -306,7 +309,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 * Matrix4.CreateScale(len, width, width)
                 * Matrix4.CreateRotationY((float)(vecang.Y * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
-                 * Matrix4.CreateTranslation(start.ToOVector());
+                 * Matrix4.CreateTranslation(ClientUtilities.Convert(start));
             GL.UniformMatrix4(2, false, ref mat);
             Client.Central.Models.Cylinder.Draw(); // TODO: Models reference in constructor - or client reference?
         }
@@ -359,10 +362,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             Location relang = Utilities.VectorToAngles(pos - facing);
             Matrix4 mat = Matrix4.CreateTranslation(-0.5f, -0.5f, 0f)
-                * Matrix4.CreateScale(scale.ToOVector())
+                * Matrix4.CreateScale(ClientUtilities.Convert(scale))
                 * Matrix4.CreateRotationY((float)((relang.Y - 90) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)(relang.Z * Utilities.PI180))
-                * Matrix4.CreateTranslation((pos + new Location(0.5f, 0.5f, 0f)).ToOVector());
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(pos + new Location(0.5f, 0.5f, 0f)));
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Square._VAO);
             GL.DrawElements(PrimitiveType.Quads, 4, DrawElementsType.UnsignedInt, IntPtr.Zero);

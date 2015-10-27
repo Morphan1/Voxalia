@@ -152,6 +152,8 @@ namespace Voxalia.Shared
             Console.SetCursorPosition(pos + 1, Console.CursorTop);
         }
 
+        public static EventHandler<ConsoleCommandEventArgs> OnCommandInput;
+
         /// <summary>
         /// Checks for any console input, and handles appropriately.
         /// </summary>
@@ -170,9 +172,17 @@ namespace Voxalia.Shared
             {
                 for (int i = 0; i < commandsinput.Count; i++)
                 {
-                    Voxalia.ServerGame.ServerMainSystem.Server.Central.Commands.ExecuteCommands(Utilities.CleanStringInput(commandsinput[i]));
+                    if (OnCommandInput != null)
+                    {
+                        OnCommandInput(null, new ConsoleCommandEventArgs() { Command = Utilities.CleanStringInput(commandsinput[i]) });
+                    }
                 }
             }
         }
+    }
+
+    public class ConsoleCommandEventArgs: EventArgs
+    {
+        public string Command;
     }
 }

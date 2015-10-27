@@ -2,7 +2,7 @@
 
 namespace Voxalia.Shared.Files
 {
-    class DataWriter: BinaryWriter
+    public class DataWriter: BinaryWriter
     {
         public DataWriter(Stream stream)
             : base(stream, FileHandler.encoding)

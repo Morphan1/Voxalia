@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EE5A02F5-5105-4B5F-8580-1E8F6E091774}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Voxalia</RootNamespace>
+    <AssemblyName>VoxaliaClientGame</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BEPUphysics">
+      <HintPath>.\BEPUphysics.dll</HintPath>
+    </Reference>
+    <Reference Include="BEPUutilities">
+      <HintPath>.\BEPUutilities.dll</HintPath>
+    </Reference>
+    <Reference Include="csogg">
+      <HintPath>.\csogg.dll</HintPath>
+    </Reference>
+    <Reference Include="csvorbis">
+      <HintPath>.\csvorbis.dll</HintPath>
+    </Reference>
+    <Reference Include="Frenetic">
+      <HintPath>.\Frenetic.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>.\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="YamlDotNet">
+      <HintPath>.\YamlDotNet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClientGame\AudioSystem\ActiveSound.cs" />
+    <Compile Include="ClientGame\AudioSystem\NoiseDefault.cs" />
+    <Compile Include="ClientGame\AudioSystem\OggDecodeStream.cs" />
+    <Compile Include="ClientGame\AudioSystem\SoundEffect.cs" />
+    <Compile Include="ClientGame\AudioSystem\SoundEngine.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\ChunkWaitingScreen.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\ClientBase.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\ClientPhysics.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\ClientRender.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\ClientTick.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\GameScreen.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\EquipmentScreen.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\InventoryScreen.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\MainMenuScreen.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\Screen.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\SingleplayerMenuScreen.cs" />
+    <Compile Include="ClientGame\CommandSystem\ClientCommands.cs" />
+    <Compile Include="ClientGame\CommandSystem\ClientCVar.cs" />
+    <Compile Include="ClientGame\CommandSystem\ClientOutputter.cs" />
+    <Compile Include="ClientGame\CommandSystem\CommonCommands\ItemselComand.cs" />
+    <Compile Include="ClientGame\CommandSystem\CommonCommands\ItemprevCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\CommonCommands\ItemnextCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\CommonCommands\PlayCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\CommonCommands\QuitCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\CommonCommands\ReloadCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\GameCommands\InventoryCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\GameCommands\TesteffectCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\NetworkCommands\ConnectCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\NetworkCommands\DisconnectCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\NetworkCommands\StartlocalserverCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\AttackCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\BindCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\WalkCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\SecondaryCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\UpwardCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\RightwardCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\LeftwardCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\ForwardCommand.cs" />
+    <Compile Include="ClientGame\EntitySystem\BasicPrimitiveEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\BlockItemEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\CubeEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\Entity.cs" />
+    <Compile Include="ClientGame\EntitySystem\EntityAnimated.cs" />
+    <Compile Include="ClientGame\EntitySystem\ModelEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\OtherPlayerEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\PhysicsEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\PlayerEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\PointLightEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\PrimitiveEntity.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\FontSetEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\Frustum.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\GLFontEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\LightingSystem\Light.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\LightingSystem\LightObject.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\LightingSystem\LightOrtho.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\LightingSystem\PointLight.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\LightingSystem\SkyLight.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\LightingSystem\SpotLight.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\ParticleSystem\ParticleEffectType.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\ParticleSystem\ParticleEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\ParticleSystem\ParticleEffect.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\ModelEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\ParticleSystem\ParticleHelper.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\Plane.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\Renderer.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\RenderSurface4Part.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\ShaderEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\TextureBlock.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\TextureEngine.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\TextVBO.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\VBO.cs" />
+    <Compile Include="ClientGame\JointSystem\BaseFJoint.cs" />
+    <Compile Include="ClientGame\JointSystem\BaseJoint.cs" />
+    <Compile Include="ClientGame\JointSystem\JointTwist.cs" />
+    <Compile Include="ClientGame\JointSystem\InternalBaseJoint.cs" />
+    <Compile Include="ClientGame\JointSystem\JointBallSocket.cs" />
+    <Compile Include="ClientGame\JointSystem\JointDistance.cs" />
+    <Compile Include="ClientGame\JointSystem\JointForceWeld.cs" />
+    <Compile Include="ClientGame\JointSystem\JointPushPull.cs" />
+    <Compile Include="ClientGame\JointSystem\JointSlider.cs" />
+    <Compile Include="ClientGame\JointSystem\JointSpinner.cs" />
+    <Compile Include="ClientGame\NetworkSystem\AbstractPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\AbstractPacketOut.cs" />
+    <Compile Include="ClientGame\NetworkSystem\NetStringManager.cs" />
+    <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddJointPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\AnimationPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\BlockEditPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\ChunkInfoPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\CVarSetPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\DespawnEntityPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\DestroyJointPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\FlashLightPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\MessagePacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\NetStringPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\OperationStatusPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\ParticleEffectPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\PhysicsEntityUpdatePacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\PlayerUpdatePacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\PrimitiveEntityUpdatePacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\RemoveItemPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetHeldItemPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetItemPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnBulletPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnItemPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnLightPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPhysicsEntityPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPrimitiveEntityPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SunAnglePacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\TeleportPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourEIDPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourPositionPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourStatusPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsOut\CommandPacketOut.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsOut\DisconnectPacketOut.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsOut\HoldItemPacketOut.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsOut\KeysPacketOut.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
+    <Compile Include="ClientGame\OtherSystems\ClientUtilities.cs" />
+    <Compile Include="ClientGame\OtherSystems\ItemStack.cs" />
+    <Compile Include="ClientGame\UISystem\KeyHandler.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIMenu.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UILabel.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UITextLink.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIMenuButton.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIMenuItem.cs" />
+    <Compile Include="ClientGame\UISystem\MouseHandler.cs" />
+    <Compile Include="ClientGame\UISystem\UIConsole.cs" />
+    <Compile Include="ClientGame\WorldSystem\Chunk.cs" />
+    <Compile Include="ClientGame\WorldSystem\ChunkRendering.cs" />
+    <Compile Include="ClientGame\WorldSystem\LoadAllChunksSystem.cs" />
+    <Compile Include="ClientGame\WorldSystem\Region.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="VoxaliaServer.csproj">
+      <Project>{ee5a02f5-5105-4b5f-8580-1e8f6e091775}</Project>
+      <Name>VoxaliaServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="VoxaliaShared.csproj">
+      <Project>{ee5a02f5-5105-4b5f-8580-1e8f6e091776}</Project>
+      <Name>VoxaliaShared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

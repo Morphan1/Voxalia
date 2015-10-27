@@ -104,6 +104,11 @@ namespace Voxalia.ServerGame.ServerMainSystem
             ConsoleHandler.Close();
         }
 
+        public void CommandInputHandle(object sender, ConsoleCommandEventArgs e)
+        {
+            Commands.ExecuteCommands(e.Command);
+        }
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
@@ -112,6 +117,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Launching as new server, this is " + (this == Central ? "" : "NOT ") + "the Central server.");
             SysConsole.Output(OutputType.INIT, "Loading console input handler...");
             ConsoleHandler.Init();
+            ConsoleHandler.OnCommandInput += CommandInputHandle;
             SysConsole.Output(OutputType.INIT, "Loading command engine...");
             Commands = new ServerCommands();
             Commands.Init(new ServerOutputter(this), this);

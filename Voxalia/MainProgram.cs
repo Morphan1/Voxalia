@@ -15,28 +15,13 @@ namespace Voxalia
     /// <summary>
     /// Central program entry point.
     /// </summary>
-    class Program
+    class ManProgram
     {
-        /// <summary>
-        /// The name of the game.
-        /// </summary>
-        public static string GameName = "Voxalia";
-
-        /// <summary>
-        /// The version of the game.
-        /// </summary>
-        public static string GameVersion = "0.0.4";
-
         /// <summary>
         /// A handle for the console window.
         /// </summary>
         public static IntPtr ConsoleHandle;
         
-        /// <summary>
-        /// The primary global file handler.
-        /// </summary>
-        public static FileHandler Files;
-
         /// <summary>
         /// Central program entry point.
         /// Decides whether to lauch the server or the client.
@@ -44,6 +29,8 @@ namespace Voxalia
         /// <param name="args">The command line arguments</param>
         static void Main(string[] args)
         {
+            Program.GameName = "Voxalia";
+            Program.GameVersion = "0.0.4";
             ConsoleHandle = Process.GetCurrentProcess().MainWindowHandle;
             SysConsole.Init();
             StringBuilder arger = new StringBuilder();
@@ -53,8 +40,8 @@ namespace Voxalia
             }
             try
             {
-                Files = new FileHandler();
-                Files.Init();
+                Program.Files = new FileHandler();
+                Program.Files.Init();
                 if (args.Length > 0 && args[0] == "server")
                 {
                     Server.Init(arger.ToString().Substring("server".Length).Trim());

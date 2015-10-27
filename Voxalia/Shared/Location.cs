@@ -156,17 +156,7 @@ namespace Voxalia.Shared
             Y = _Point;
             Z = _Point;
         }
-
-        /// <summary>
-        /// Constructs a Location from an OpenTK Vector3 structure, perfectly replicating it.
-        /// </summary>
-        public Location(OpenTK.Vector3 vec)
-        {
-            X = vec.X;
-            Y = vec.Y;
-            Z = vec.Z;
-        }
-
+        
         /// <summary>
         /// Constructs a Location from a BEPUPhysics Vector3 structure, perfectly replicating it.
         /// </summary>
@@ -428,16 +418,7 @@ namespace Voxalia.Shared
             float Z = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index + 4 + 4, 4));
             return new Location(X, Y, Z);
         }
-
-        /// <summary>
-        /// Converts the Location to an OpenTK Vector3.
-        /// </summary>
-        /// <returns>The created vector</returns>
-        public OpenTK.Vector3 ToOVector()
-        {
-            return new OpenTK.Vector3((float)X, (float)Y, (float)Z);
-        }
-
+        
         /// <summary>
         /// Converts the Location to a BEPUPhysics Vector3.
         /// </summary>

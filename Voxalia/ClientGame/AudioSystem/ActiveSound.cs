@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using OpenTK.Audio.OpenAL;
 using Voxalia.Shared;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.AudioSystem
 {
@@ -46,7 +47,7 @@ namespace Voxalia.ClientGame.AudioSystem
                 }
                 if (!Position.IsNaN())
                 {
-                    Vector3 vec = Position.ToOVector();
+                    Vector3 vec = ClientUtilities.Convert(Position);
                     AL.Source(Src, ALSource3f.Position, ref vec);
                     AL.Source(Src, ALSourceb.SourceRelative, false);
                 }

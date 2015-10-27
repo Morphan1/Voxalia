@@ -7,6 +7,7 @@ using OpenTK.Graphics.OpenGL4;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.Shared.Collision;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -88,7 +89,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 Offset = InternalOffset;
             }
-            transform = Matrix4.CreateTranslation(Offset.ToOVector());
+            transform = Matrix4.CreateTranslation(ClientUtilities.Convert(Offset));
         }
 
         public override void Render()
@@ -98,7 +99,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 return;
             }
             Matrix4 orient = GetOrientationMatrix();
-            Matrix4 mat = transform * (Matrix4.CreateScale(scale.ToOVector()) * orient * Matrix4.CreateTranslation((GetPosition()).ToOVector()));
+            Matrix4 mat = transform * (Matrix4.CreateScale(ClientUtilities.Convert(scale)) * orient * Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition())));
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
             if (model.Meshes[0].vbo.Tex == null)

@@ -4,6 +4,7 @@ using Frenetic.CommandSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.UISystem;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
+using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.CommandSystem
 {

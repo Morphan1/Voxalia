@@ -212,7 +212,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 SetViewport();
                 CameraTarget = CameraPos + Player.ForwardVector();
                 Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
-                Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
+                Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(CameraPos), ClientUtilities.Convert(CameraTarget), ClientUtilities.Convert(CameraUp));
                 Matrix4 combined = view * proj;
                 Frustum camFrust = new Frustum(combined);
                 if (shouldRedrawShadows && CVars.r_shadows.ValueB)
@@ -293,7 +293,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.UniformMatrix4(1, false, ref mat);
                 mat = Matrix4.Identity;
                 GL.UniformMatrix4(2, false, ref mat);
-                GL.Uniform3(10, CameraPos.ToOVector());
+                GL.Uniform3(10, ClientUtilities.Convert(CameraPos));
                 GL.Uniform1(13, CVars.r_shadowblur.ValueF);
                 bool first = true;
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
@@ -359,8 +359,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 GL.DrawBuffer(DrawBufferMode.Back);
                 s_main.Bind();
-                GL.Uniform3(5, ambient.ToOVector());
-                GL.Uniform3(8, CameraFinalTarget.ToOVector());
+                GL.Uniform3(5, ClientUtilities.Convert(ambient));
+                GL.Uniform3(8, ClientUtilities.Convert(CameraFinalTarget));
                 GL.Uniform1(9, CVars.r_dof_strength.ValueF);
                 GL.Uniform1(10, CVars.r_zfar.ValueF - CVars.r_znear.ValueF);
                 GL.ActiveTexture(TextureUnit.Texture4);
@@ -419,7 +419,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 SetViewport();
                 Location CameraTarget = CameraPos + Player.ForwardVector();
                 Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
-                Matrix4 view = Matrix4.LookAt(CameraPos.ToOVector(), CameraTarget.ToOVector(), CameraUp.ToOVector());
+                Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(CameraPos), ClientUtilities.Convert(CameraTarget), ClientUtilities.Convert(CameraUp));
                 Matrix4 combined = view * proj;
                 GL.ActiveTexture(TextureUnit.Texture0);
                 ReverseEntitiesOrder();
@@ -467,7 +467,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Rendering.SetMinimumLight(1);
             float dist = 340; // TODO: View rad
             GL.Disable(EnableCap.CullFace);
-            Matrix4 scale = Matrix4.CreateScale(dist, dist, dist) * Matrix4.CreateTranslation(CameraPos.ToOVector());
+            Matrix4 scale = Matrix4.CreateScale(dist, dist, dist) * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos));
             GL.UniformMatrix4(2, false, ref scale);
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/bottom").Bind();
             skybox[0].Render(false);
@@ -485,14 +485,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Matrix4 rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
                 * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + SunAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation((CameraPos + TheSun.Direction * -(dist * 0.96f)).ToOVector()); // TODO: adjust based on view rad
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + TheSun.Direction * -(dist * 0.96f))); // TODO: adjust based on view rad
             Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
             Textures.GetTexture("skies/planet").Bind(); // TODO: Store var? Make dynamic?
             Rendering.SetColor(new Color4(PlanetLight, PlanetLight, PlanetLight, 1));
             rot = Matrix4.CreateTranslation(-150f, -150f, 0f)
                 * Matrix4.CreateRotationY((float)((-PlanetAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + PlanetAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation((CameraPos + ThePlanet.Direction * -(dist * 0.8f)).ToOVector()); // TODO: adjust based on view rad
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + ThePlanet.Direction * -(dist * 0.8f))); // TODO: adjust based on view rad
             Rendering.RenderRectangle(0, 0, 300, 300, rot); // TODO: Adjust scale based on view rad
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.Enable(EnableCap.CullFace);

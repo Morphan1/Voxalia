@@ -4,6 +4,7 @@ using Voxalia.Shared;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 {
@@ -99,14 +100,14 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                     break;
                 case ParticleEffectType.BOX:
                     {
-                        Matrix4 mat = Matrix4.CreateScale(Two.ToOVector()) * Matrix4.CreateTranslation((cpos + One).ToOVector());
+                        Matrix4 mat = Matrix4.CreateScale(ClientUtilities.Convert(Two)) * Matrix4.CreateTranslation(ClientUtilities.Convert(cpos + One));
                         GL.UniformMatrix4(2, false, ref mat);
                         TheClient.Models.Cube.Draw();
                     }
                     break;
                 case ParticleEffectType.SPHERE:
                     {
-                        Matrix4 mat = Matrix4.CreateScale(Two.ToOVector()) * Matrix4.CreateTranslation((cpos + One).ToOVector());
+                        Matrix4 mat = Matrix4.CreateScale(ClientUtilities.Convert(Two)) * Matrix4.CreateTranslation(ClientUtilities.Convert(cpos + One));
                         GL.UniformMatrix4(2, false, ref mat);
                         TheClient.Models.Sphere.Draw();
                     }

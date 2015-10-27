@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -51,7 +52,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             // TODO: IMPROVE!
             for (int i = 0; i < 6; i++)
             {
-                Normals.Add(normal.ToOVector());
+                Normals.Add(ClientUtilities.Convert(normal));
                 Colors.Add(new Vector4(1f, 1f, 1f, 1f));
                 Indices.Add((uint)Indices.Count);
                 BoneIDs.Add(new Vector4(0, 0, 0, 0));

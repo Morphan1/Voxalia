@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EE5A02F5-5105-4B5F-8580-1E8F6E091773}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{EE5A02F5-5105-4B5F-8580-1E8F6E091776}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Voxalia</RootNamespace>
-    <AssemblyName>Voxalia</AssemblyName>
+    <AssemblyName>VoxaliaShared</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -50,17 +50,8 @@
     <Reference Include="BEPUutilities">
       <HintPath>.\BEPUutilities.dll</HintPath>
     </Reference>
-    <Reference Include="csogg">
-      <HintPath>.\csogg.dll</HintPath>
-    </Reference>
-    <Reference Include="csvorbis">
-      <HintPath>.\csvorbis.dll</HintPath>
-    </Reference>
     <Reference Include="Frenetic">
       <HintPath>.\Frenetic.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK">
-      <HintPath>.\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -76,11 +67,52 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainProgram.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
+    <Compile Include="Shared\BlockShapes\BSD39a76.cs" />
+    <Compile Include="Shared\Model3D.cs" />
+    <Compile Include="Shared\Collision\AABB.cs" />
+    <Compile Include="Shared\AnimationEngine.cs" />
+    <Compile Include="Shared\BlockInternal.cs" />
+    <Compile Include="Shared\BlockShapeRegistry.cs" />
+    <Compile Include="Shared\BlockShapes\BSD83.cs" />
+    <Compile Include="Shared\BlockShapes\BSD82.cs" />
+    <Compile Include="Shared\BlockShapes\BSD81.cs" />
+    <Compile Include="Shared\BlockShapes\BSD80.cs" />
+    <Compile Include="Shared\BlockShapes\BSD0.cs" />
+    <Compile Include="Shared\BlockShapes\BSD01_5.cs" />
+    <Compile Include="Shared\BlockShapes\BSD06_10.cs" />
+    <Compile Include="Shared\BlockShapes\BSD11_15.cs" />
+    <Compile Include="Shared\BlockShapes\BSD16_20.cs" />
+    <Compile Include="Shared\BlockShapes\BSD21_25.cs" />
+    <Compile Include="Shared\BlockShapes\BSD26_30.cs" />
+    <Compile Include="Shared\BlockShapes\BSD32.cs" />
+    <Compile Include="Shared\BlockShapes\BSD31.cs" />
+    <Compile Include="Shared\BlockShapes\BSD33.cs" />
+    <Compile Include="Shared\BlockShapes\BSD34.cs" />
+    <Compile Include="Shared\BlockShapes\BSD72.cs" />
+    <Compile Include="Shared\BlockShapes\BSD73.cs" />
+    <Compile Include="Shared\BlockShapes\BSD74.cs" />
+    <Compile Include="Shared\BlockShapes\BSD75.cs" />
+    <Compile Include="Shared\Collision\FullChunkObject.cs" />
+    <Compile Include="Shared\Collision\FullChunkShape.cs" />
+    <Compile Include="Shared\Files\DataReader.cs" />
+    <Compile Include="Shared\Files\DataWriter.cs" />
+    <Compile Include="Shared\ItemStackBase.cs" />
+    <Compile Include="Shared\Collision\CollisionUtil.cs" />
+    <Compile Include="Shared\ConsoleHandler.cs" />
+    <Compile Include="Shared\Files\DataStream.cs" />
+    <Compile Include="Shared\Files\FileHandler.cs" />
+    <Compile Include="Shared\Location.cs" />
+    <Compile Include="Shared\Material.cs" />
+    <Compile Include="Shared\ModelHandler.cs" />
+    <Compile Include="Shared\Program.cs" />
+    <Compile Include="Shared\Scheduler.cs" />
+    <Compile Include="Shared\SimplexNoise.cs" />
+    <Compile Include="Shared\NetworkEnums.cs" />
+    <Compile Include="Shared\SysConsole.cs" />
+    <Compile Include="Shared\Files\UnknownFileException.cs" />
+    <Compile Include="Shared\Utilities.cs" />
+    <Compile Include="Shared\Files\ZipStorer.cs" />
+    <Compile Include="Shared\YAMLConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -104,20 +136,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="VoxaliaClient.csproj">
-      <Project>{ee5a02f5-5105-4b5f-8580-1e8f6e091774}</Project>
-      <Name>VoxaliaClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="VoxaliaServer.csproj">
-      <Project>{ee5a02f5-5105-4b5f-8580-1e8f6e091775}</Project>
-      <Name>VoxaliaServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="VoxaliaShared.csproj">
-      <Project>{ee5a02f5-5105-4b5f-8580-1e8f6e091776}</Project>
-      <Name>VoxaliaShared</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

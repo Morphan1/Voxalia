@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.Shared;
 using OpenTK;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -62,7 +63,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 List<Vector3> TCoords = new List<Vector3>(CSize * CSize * CSize * 6);
                 List<Vector3> Norms = new List<Vector3>(CSize * CSize * CSize * 6);
                 List<Vector4> Cols = new List<Vector4>(CSize * CSize * CSize * 6);
-                Vector3 ppos = WorldPosition.ToOVector() * 30;
+                Vector3 ppos = ClientUtilities.Convert(WorldPosition * 30);
                 bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 for (int x = 0; x < CSize; x++)
                 {
@@ -74,12 +75,12 @@ namespace Voxalia.ClientGame.WorldSystem
                             if (((Material)c.BlockMaterial).RendersAtAll())
                             {
                                 // TODO: Handle ALL blocks against the surface when low-LOD
-                                BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : TryAll(new Location(ppos) + new Location(x * PosMultiplier, y * PosMultiplier, 30), 1, 1, 0);
-                                BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : TryAll(new Location(ppos) + new Location(x * PosMultiplier, y * PosMultiplier, -1), 1, 1, 0);
-                                BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : TryAll(new Location(ppos) + new Location(x * PosMultiplier, 30, z * PosMultiplier), 1, 0, 1);
-                                BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : TryAll(new Location(ppos) + new Location(x * PosMultiplier, -1, z * PosMultiplier), 1, 0, 1);
-                                BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : TryAll(new Location(ppos) + new Location(30, y * PosMultiplier, z * PosMultiplier), 0, 1, 1);
-                                BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : TryAll(new Location(ppos) + new Location(-1, y * PosMultiplier, z * PosMultiplier), 0, 1, 1);
+                                BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : TryAll(ClientUtilities.Convert(ppos) + new Location(x * PosMultiplier, y * PosMultiplier, 30), 1, 1, 0);
+                                BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : TryAll(ClientUtilities.Convert(ppos) + new Location(x * PosMultiplier, y * PosMultiplier, -1), 1, 1, 0);
+                                BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(x * PosMultiplier, 30, z * PosMultiplier), 1, 0, 1);
+                                BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(x * PosMultiplier, -1, z * PosMultiplier), 1, 0, 1);
+                                BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(30, y * PosMultiplier, z * PosMultiplier), 0, 1, 1);
+                                BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(-1, y * PosMultiplier, z * PosMultiplier), 0, 1, 1);
                                 bool zps = ((Material)zp.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[zp.BlockData].OccupiesTOP();
                                 bool zms = ((Material)zm.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[zm.BlockData].OccupiesBOTTOM();
                                 bool xps = ((Material)xp.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXP();

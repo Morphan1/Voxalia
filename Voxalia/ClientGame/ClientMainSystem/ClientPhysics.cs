@@ -4,6 +4,7 @@ using Voxalia.ClientGame.EntitySystem;
 using BEPUutilities;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -74,8 +75,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 else
                 {
-                    TheSun.InternalLights[0].color = SunLightDef.ToOVector();
-                    ThePlanet.InternalLights[0].color = (PlanetLightDef * (PlanetSunDist / 180f)).ToOVector();
+                    TheSun.InternalLights[0].color = ClientUtilities.Convert(SunLightDef);
+                    ThePlanet.InternalLights[0].color = ClientUtilities.Convert(PlanetLightDef * (PlanetSunDist / 180f));
                 }
                 PlanetLight = PlanetSunDist / 180f;
                 if (SunAngle.Pitch < 20 && SunAngle.Pitch > -20)

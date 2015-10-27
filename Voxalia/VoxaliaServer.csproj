@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EE5A02F5-5105-4B5F-8580-1E8F6E091775}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Voxalia</RootNamespace>
+    <AssemblyName>VoxaliaServerGame</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BEPUphysics">
+      <HintPath>.\BEPUphysics.dll</HintPath>
+    </Reference>
+    <Reference Include="BEPUutilities">
+      <HintPath>.\BEPUutilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Frenetic">
+      <HintPath>.\Frenetic.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="YamlDotNet">
+      <HintPath>.\YamlDotNet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ServerGame\CommandSystem\CommonCommands\QuitCommand.cs" />
+    <Compile Include="ServerGame\CommandSystem\CommonCommands\SayCommand.cs" />
+    <Compile Include="ServerGame\CommandSystem\FileCommands\AddpathCommand.cs" />
+    <Compile Include="ServerGame\CommandSystem\PlayerCommands\KickCommand.cs" />
+    <Compile Include="ServerGame\CommandSystem\ServerCommands.cs" />
+    <Compile Include="ServerGame\CommandSystem\ServerCVar.cs" />
+    <Compile Include="ServerGame\CommandSystem\ServerOutputter.cs" />
+    <Compile Include="ServerGame\EntitySystem\ArrowEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\BlockItemEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\BulletEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\CubeEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\CuboidalEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\Entity.cs" />
+    <Compile Include="ServerGame\EntitySystem\EntityDamageable.cs" />
+    <Compile Include="ServerGame\EntitySystem\EntityLiving.cs" />
+    <Compile Include="ServerGame\EntitySystem\EntityTargettable.cs" />
+    <Compile Include="ServerGame\EntitySystem\EntityUseable.cs" />
+    <Compile Include="ServerGame\EntitySystem\FuncTrackEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\ItemEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\ModelEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\PhysicsEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\PointLightEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\PrimitiveEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\SpawnPointEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\TargetEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\TargetPositionEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\TargetScriptRunnerEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\TriggerEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\TriggerGenericEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\VehicleEntity.cs" />
+    <Compile Include="ServerGame\ItemSystem\BaseItemInfo.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\BaseAmmoItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\BaseGunItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\BowItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\BulletItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\BlockItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\ExplodobowItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\FistItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\ShotgunGunItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\FlashLightItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\GenericItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\HookItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\OpenHandItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\PistolGunItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\RifleGunItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\SunAnglerItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\EntityInventory.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\FlashantilightItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\Inventory.cs" />
+    <Compile Include="ServerGame\ItemSystem\ItemRegistry.cs" />
+    <Compile Include="ServerGame\ItemSystem\PlayerInventory.cs" />
+    <Compile Include="ServerGame\JointSystem\BaseFJoint.cs" />
+    <Compile Include="ServerGame\JointSystem\BaseJoint.cs" />
+    <Compile Include="ServerGame\JointSystem\InternalBaseJoint.cs" />
+    <Compile Include="ServerGame\JointSystem\JointBallSocket.cs" />
+    <Compile Include="ServerGame\JointSystem\JointDistance.cs" />
+    <Compile Include="ServerGame\JointSystem\JointForceWeld.cs" />
+    <Compile Include="ServerGame\JointSystem\JointPushPull.cs" />
+    <Compile Include="ServerGame\JointSystem\JointSlider.cs" />
+    <Compile Include="ServerGame\JointSystem\JointSpinner.cs" />
+    <Compile Include="ServerGame\JointSystem\JointTwist.cs" />
+    <Compile Include="ServerGame\NetworkSystem\AbstractPacketIn.cs" />
+    <Compile Include="ServerGame\NetworkSystem\AbstractPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\Connection.cs" />
+    <Compile Include="ServerGame\NetworkSystem\NetStringManager.cs" />
+    <Compile Include="ServerGame\NetworkSystem\NetworkBase.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsIn\CommandPacketIn.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsIn\DisconnectPacketIn.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsIn\HoldItemPacketIn.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsIn\KeysPacketIn.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddJointPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\AnimationPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\BlockEditPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\ChunkInfoPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\CVarSetPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\DespawnEntityPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\DestroyJointPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\FlashLightPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\JointStatusPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\MessagePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\NetStringPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\OperationStatusPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\ParticleEffectPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\PhysicsEntityUpdatePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\PlayerUpdatePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\PrimitiveEntityUpdatePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\RemoveItemPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetHeldItemPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetItemPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnBulletPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnItemPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnLightPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPhysicsEntityPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPrimitiveEntityPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SunAnglePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\TeleportPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourEIDPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourPositionPacketOut.cs" />
+    <Compile Include="ServerGame\ItemSystem\ItemStack.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourStatusPacketOut.cs" />
+    <Compile Include="ServerGame\OtherSystems\ModelEngine.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\BlockshapePlayerCommand.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\DevelPlayerCommand.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\WeaponreloadPlayerCommand.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\ThrowPlayerCommand.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\DropPlayerCommand.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\StancePlayerCommand.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\UsePlayerCommand.cs" />
+    <Compile Include="ServerGame\WorldSystem\BlockFlags.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biome.cs" />
+    <Compile Include="ServerGame\WorldSystem\BiomeGenerator.cs" />
+    <Compile Include="ServerGame\WorldSystem\BlockPopulator.cs" />
+    <Compile Include="ServerGame\WorldSystem\Chunk.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleFrozenLakeBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleColdMountainBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleDesertBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleForestBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleHellBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleIcyBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleLakeBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleLightForestHillBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleMountainBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimplePlainsBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleRainForestBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleSnowBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleSwampBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleBiomeGenerator.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleGeneratorCore.cs" />
+    <Compile Include="ServerGame\WorldSystem\RegionLoader.cs" />
+    <Compile Include="ServerGame\WorldSystem\Region.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\AbstractPlayerCommand.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\SayPlayerCommand.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\PlayerCommandEngine.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\PlayerCommandEntry.cs" />
+    <Compile Include="ServerGame\ServerMainSystem\ServerPhysics.cs" />
+    <Compile Include="ServerGame\ServerMainSystem\ServerBase.cs" />
+    <Compile Include="ServerGame\ServerMainSystem\ServerTick.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="VoxaliaShared.csproj">
+      <Project>{ee5a02f5-5105-4b5f-8580-1e8f6e091776}</Project>
+      <Name>VoxaliaShared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

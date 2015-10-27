@@ -7,6 +7,7 @@ using Voxalia.Shared;
 using OggDecoder;
 using Voxalia.ClientGame.CommandSystem;
 using Voxalia.Shared.Files;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.AudioSystem
 {
@@ -49,10 +50,10 @@ namespace Voxalia.ClientGame.AudioSystem
                     PlayingNow[i].Backgrounded = false;
                 }
             }
-            Vector3 pos = position.ToOVector();
-            Vector3 forw = forward.ToOVector();
-            Vector3 upvec = up.ToOVector();
-            Vector3 vel = velocity.ToOVector();
+            Vector3 pos = ClientUtilities.Convert(position);
+            Vector3 forw = ClientUtilities.Convert(forward);
+            Vector3 upvec = ClientUtilities.Convert(up);
+            Vector3 vel = ClientUtilities.Convert(velocity);
             AL.Listener(ALListener3f.Position, ref pos);
             AL.Listener(ALListenerfv.Orientation, ref forw, ref upvec);
             AL.Listener(ALListener3f.Velocity, ref vel);

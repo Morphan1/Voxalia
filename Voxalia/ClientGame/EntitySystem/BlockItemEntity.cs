@@ -4,6 +4,7 @@ using Voxalia.ClientGame.WorldSystem;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -73,7 +74,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 TheClient.s_transponlyvox.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
             }
-            Matrix4 mat = Matrix4.CreateTranslation(-Offset.ToOVector()) * GetTransformationMatrix();
+            Matrix4 mat = Matrix4.CreateTranslation(-ClientUtilities.Convert(Offset)) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
             float spec = TheClient.Rendering.Specular;
             TheClient.Rendering.SetSpecular(0);

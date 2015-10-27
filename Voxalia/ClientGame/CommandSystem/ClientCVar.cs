@@ -1,6 +1,7 @@
 ﻿using Frenetic;
 using Frenetic.CommandSystem;
 using Voxalia.Shared.Files;
+using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.CommandSystem
 {
