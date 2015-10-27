@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.ServerMainSystem
@@ -6,16 +7,40 @@ namespace Voxalia.ServerGame.ServerMainSystem
     // TODO: Rename or scrap file?
     public partial class Server
     {
-        public List<Region> LoadedWorlds = new List<Region>();
+        public List<Region> LoadedRegions = new List<Region>();
 
-        public void LoadWorld(string name)
+        /// <summary>
+        /// Fired when a region is going to be loaded; can be cancelled.
+        /// For purely listening to a region load after the fact, use <see cref="OnRegionLoaded"/>.
+        /// </summary>
+        public EventHandler<RegionLoadingEventArgs> OnRegionLoading;
+
+        /// <summary>
+        /// Fired when a region has been loaded; is purely informative.
+        /// For cancelling a region load, use <see cref="OnRegionLoading"/>.
+        /// </summary>
+        public EventHandler<RegionLoadedEventArgs> OnRegionLoaded;
+
+        public void LoadRegion(string name)
         {
-            // TODO: Actually load from file!
-            Region world = new Region();
-            world.Name = name.ToLower();
-            world.TheServer = this;
-            world.BuildWorld();
-            LoadedWorlds.Add(world);
+            if (OnRegionLoading != null)
+            {
+                RegionLoadingEventArgs e = new RegionLoadingEventArgs() { RegionName = name };
+                OnRegionLoading(this, e);
+                if (e.Cancelled)
+                {
+                    return;
+                }
+            }
+            Region region = new Region();
+            region.Name = name.ToLower();
+            region.TheServer = this;
+            region.BuildWorld();
+            LoadedRegions.Add(region);
+            if (OnRegionLoaded != null)
+            {
+                OnRegionLoaded(this, new RegionLoadedEventArgs() { TheRegion = region });
+            }
         }
 
         /// <summary>
@@ -23,10 +48,22 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// </summary>
         public void TickWorlds(double delta)
         {
-            for (int i = 0; i < LoadedWorlds.Count; i++)
+            for (int i = 0; i < LoadedRegions.Count; i++)
             {
-                LoadedWorlds[i].Tick(delta);
+                LoadedRegions[i].Tick(delta);
             }
         }
+    }
+
+    public class RegionLoadingEventArgs : EventArgs
+    {
+        public bool Cancelled = false;
+
+        public string RegionName = null;
+    }
+
+    public class RegionLoadedEventArgs : EventArgs
+    {
+        public Region TheRegion = null;
     }
 }

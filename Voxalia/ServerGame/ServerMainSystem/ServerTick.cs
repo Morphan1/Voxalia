@@ -109,9 +109,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 }
                 if (CVars.g_timescale.ValueD != pts) // TODO: Make this CVar per-world
                 {
-                    for (int i = 0; i < LoadedWorlds.Count; i++)
+                    for (int i = 0; i < LoadedRegions.Count; i++)
                     {
-                        LoadedWorlds[i].SendToAll(new CVarSetPacketOut(CVars.g_timescale, this));
+                        LoadedRegions[i].SendToAll(new CVarSetPacketOut(CVars.g_timescale, this));
                     }
                 }
                 pts = CVars.g_timescale.ValueD;

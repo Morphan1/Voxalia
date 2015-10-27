@@ -83,14 +83,14 @@ namespace Voxalia.ServerGame.ServerMainSystem
         public void ShutDown()
         {
             SysConsole.Output(OutputType.INFO, "[Shutdown] Starting to close server...");
-            foreach (Region world in LoadedWorlds)
+            foreach (Region region in LoadedRegions)
             {
-                while (world.Players.Count > 0)
+                while (region.Players.Count > 0)
                 {
-                    world.Players[0].Kick("Server shutting down.");
+                    region.Players[0].Kick("Server shutting down.");
                 }
-                SysConsole.Output(OutputType.INFO, "[Shutdown] Unloading world: " + world.Name);
-                world.UnloadFully();
+                SysConsole.Output(OutputType.INFO, "[Shutdown] Unloading world: " + region.Name);
+                region.UnloadFully();
             }
             SysConsole.Output(OutputType.INFO, "[Shutdown] Closing server...");
             ShutDownQuickly();
@@ -151,7 +151,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             Plugins = new PluginManager(this);
             Plugins.Init();
             SysConsole.Output(OutputType.INIT, "Building an initial world...");
-            LoadWorld("default");
+            LoadRegion("default");
             if (loaded != null)
             {
                 loaded.Invoke();

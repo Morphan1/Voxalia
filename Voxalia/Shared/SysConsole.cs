@@ -221,7 +221,7 @@ namespace Voxalia.Shared
 
         public static void OutputCustom(string type, string message)
         {
-            WriteLine("^r^7" + Utilities.DateTimeToString(DateTime.Now) + "[" + type + "^r^7] " + message);
+            WriteLine("^r^7" + Utilities.DateTimeToString(DateTime.Now) + " [" + type + "^r^7] " + message);
         }
 
         /// <summary>

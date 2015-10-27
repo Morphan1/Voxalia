@@ -183,7 +183,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                             }
                             // TODO: Additional details?
                             PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
-                            PlayerEntity player = new PlayerEntity(TheServer.LoadedWorlds[0], this); // TODO: Better world selection
+                            PlayerEntity player = new PlayerEntity(TheServer.LoadedRegions[0], this); // TODO: Better world selection
                             player.Name = name;
                             player.Host = host;
                             player.Port = port;

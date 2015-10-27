@@ -1,6 +1,7 @@
 ﻿using Voxalia.ServerGame.PluginSystem;
 using Voxalia.Shared;
 using VoxaliaServerSamplePlugin.SampleCommands;
+using Voxalia.ServerGame.ServerMainSystem;
 
 namespace VoxaliaServerSamplePlugin
 {
@@ -14,14 +15,24 @@ namespace VoxaliaServerSamplePlugin
         {
             SysConsole.OutputCustom(OutputType, "Hello world!");
             Manager = manager;
-            manager.TheServer.Commands.CommandSystem.RegisterCommand(new GreetingCommand(this)); // Set up
+            // Set up
+            manager.TheServer.Commands.CommandSystem.RegisterCommand(new GreetingCommand(this));
+            manager.TheServer.OnRegionLoaded += ReactToRegionLoaded;
             return true;
         }
 
         public void Unload()
         {
             SysConsole.OutputCustom(OutputType, "Goodbye!");
-            Manager.TheServer.Commands.CommandSystem.UnregisterCommand("greeting"); // Clean up
+            // Clean up
+            Manager.TheServer.Commands.CommandSystem.UnregisterCommand("greeting");
+            Manager.TheServer.OnRegionLoaded -= ReactToRegionLoaded;
+
+        }
+
+        public void ReactToRegionLoaded(object sender, RegionLoadedEventArgs e)
+        {
+            SysConsole.OutputCustom(OutputType, "I see the region " + e.TheRegion.Name + " has been loaded!");
         }
 
         public string Name { get { return "SamplePlugin"; } }
