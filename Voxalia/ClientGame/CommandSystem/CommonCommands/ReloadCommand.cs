@@ -28,11 +28,11 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             bool success = false;
             if (arg == "chunks" || arg == "all")
             {
+                // TODO: Goto load screen?
                 success = true;
-                foreach (Chunk chunk in TheClient.TheWorld.LoadedChunks.Values)
+                foreach (Chunk chunk in TheClient.TheRegion.LoadedChunks.Values)
                 {
-                    chunk.AddToWorld();
-                    chunk.CreateVBO();
+                    chunk.OwningRegion.UpdateChunk(chunk);
                 }
             }
             if (arg == "screen" || arg == "all")

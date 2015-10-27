@@ -29,7 +29,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             PhysicsEntity ce;
             if (type == 0)
             {
-                CubeEntity ce1 = new CubeEntity(TheClient.TheWorld, halfsize);
+                CubeEntity ce1 = new CubeEntity(TheClient.TheRegion, halfsize);
                 ce = ce1;
                 int start = len - (4 + 1);
                 NetStringManager strings = TheClient.Network.Strings;
@@ -48,13 +48,13 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 1)
             {
-                ce = new OtherPlayerEntity(TheClient.TheWorld, halfsize);
+                ce = new OtherPlayerEntity(TheClient.TheRegion, halfsize);
             }
             else if (type == 2)
             {
                 int start = len - (4 + 1);
                 NetStringManager strings = TheClient.Network.Strings;
-                ModelEntity me = new ModelEntity(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4))), TheClient.TheWorld);
+                ModelEntity me = new ModelEntity(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4))), TheClient.TheRegion);
                 byte moder = data[start + 4];
                 me.mode = (ModelCollisionMode)moder;
                 ce = me;
@@ -64,7 +64,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 int start = len - (4 + 1);
                 Material mat = (Material)Utilities.BytesToUshort(Utilities.BytesPartial(data, start, 2));
                 byte dat = data[start + 2];
-                BlockItemEntity bie = new BlockItemEntity(TheClient.TheWorld, mat, dat);
+                BlockItemEntity bie = new BlockItemEntity(TheClient.TheRegion, mat, dat);
                 ce = bie;
             }
             else
@@ -112,7 +112,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             ce.EID = eID;
             ce.SetFriction(fric);
             ce.SetBounciness(bounce);
-            TheClient.TheWorld.SpawnEntity(ce);
+            TheClient.TheRegion.SpawnEntity(ce);
             return true;
         }
     }

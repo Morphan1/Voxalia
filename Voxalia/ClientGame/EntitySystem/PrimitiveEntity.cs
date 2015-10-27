@@ -39,7 +39,7 @@ namespace Voxalia.ClientGame.EntitySystem
             SetVelocity(Velocity * 0.99f + Gravity * TheClient.Delta);
             if (Velocity.LengthSquared() > 0)
             {
-                CollisionResult cr = TheClient.TheWorld.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + Velocity * TheClient.Delta, FilterHandle);
+                CollisionResult cr = TheClient.TheRegion.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + Velocity * TheClient.Delta, FilterHandle);
                 SetPosition(cr.Position);
             }
         }

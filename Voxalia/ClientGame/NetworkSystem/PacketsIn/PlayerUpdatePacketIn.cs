@@ -27,11 +27,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 stance = Stance.Crouching;
             }
-            for (int i = 0; i < TheClient.TheWorld.Entities.Count; i++)
+            for (int i = 0; i < TheClient.TheRegion.Entities.Count; i++)
             {
-                if (TheClient.TheWorld.Entities[i] is OtherPlayerEntity)
+                if (TheClient.TheRegion.Entities[i] is OtherPlayerEntity)
                 {
-                    OtherPlayerEntity e = (OtherPlayerEntity)TheClient.TheWorld.Entities[i];
+                    OtherPlayerEntity e = (OtherPlayerEntity)TheClient.TheRegion.Entities[i];
                     if (e.EID == eID)
                     {
                         e.SetPosition(pos);

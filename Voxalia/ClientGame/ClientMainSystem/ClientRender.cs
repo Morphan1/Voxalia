@@ -143,12 +143,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void sortEntities()
         {
-            TheWorld.Entities = TheWorld.Entities.OrderBy(o => (o.GetPosition() - CameraPos).LengthSquared()).ToList();
+            TheRegion.Entities = TheRegion.Entities.OrderBy(o => (o.GetPosition() - CameraPos).LengthSquared()).ToList();
         }
 
         public void ReverseEntitiesOrder()
         {
-            TheWorld.Entities.Reverse();
+            TheRegion.Entities.Reverse();
         }
 
         public int gTicks = 0;
@@ -514,7 +514,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Location sunpos = new Location(vec.X / vec.W, vec.Y / vec.W, vec.Z / vec.W);
                     if (sunpos.X >= -1 && sunpos.X <= 1 && sunpos.Y >= -1 && sunpos.Y <= 1 && sunpos.Z <= 1 && sunpos.Z >= -1)
                     {
-                        CollisionResult trace = TheWorld.Collision.RayTrace(CameraPos, CameraPos + TheSun.Direction * -dist, Player.IgnoreThis);
+                        CollisionResult trace = TheRegion.Collision.RayTrace(CameraPos, CameraPos + TheSun.Direction * -dist, Player.IgnoreThis);
                         if (!trace.Hit)
                         {
                             Rendering.SetColor(Color4.Yellow);
@@ -555,9 +555,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.Enable(EnableCap.CullFace);
             if (shadows_only)
             {
-                for (int i = 0; i < TheWorld.ShadowCasters.Count; i++)
+                for (int i = 0; i < TheRegion.ShadowCasters.Count; i++)
                 {
-                    TheWorld.ShadowCasters[i].Render();
+                    TheRegion.ShadowCasters[i].Render();
                 }
             }
             else
@@ -573,9 +573,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Rendering.SetSpecular(1);
                     Rendering.SetMinimumLight(0);
                 }
-                for (int i = 0; i < TheWorld.Entities.Count; i++)
+                for (int i = 0; i < TheRegion.Entities.Count; i++)
                 {
-                    TheWorld.Entities[i].Render();
+                    TheRegion.Entities[i].Render();
                 }
                 if (FBOid == 1)
                 {
@@ -596,7 +596,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 s_transponlyvox.Bind();
             }
-            TheWorld.Render();
+            TheRegion.Render();
             if (FBOid == 1)
             {
                 s_fbo.Bind();
@@ -614,7 +614,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Location cpos = CameraFinalTarget - (CameraImpactNormal * 0.01f);
             Location cpos2 = CameraFinalTarget + (CameraImpactNormal * 0.91f);
             // TODO: 5 -> Variable length (Server controlled?)
-            if (TheWorld.GetBlockMaterial(cpos) != Material.AIR && CameraDistance < 5)
+            if (TheRegion.GetBlockMaterial(cpos) != Material.AIR && CameraDistance < 5)
             {
                 if (CVars.r_highlight_targetblock.ValueB)
                 {
@@ -637,12 +637,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 Rendering.SetMinimumLight(0f);
             }
-            for (int i = 0; i < TheWorld.Joints.Count; i++)
+            for (int i = 0; i < TheRegion.Joints.Count; i++)
             {
                 // TODO: Only render if set to
-                if (TheWorld.Joints[i] is JointDistance)
+                if (TheRegion.Joints[i] is JointDistance)
                 {
-                    Rendering.RenderLine(((JointDistance)TheWorld.Joints[i]).Ent1Pos + TheWorld.Joints[i].One.GetPosition(), ((JointDistance)TheWorld.Joints[i]).Ent2Pos + TheWorld.Joints[i].Two.GetPosition());
+                    Rendering.RenderLine(((JointDistance)TheRegion.Joints[i]).Ent1Pos + TheRegion.Joints[i].One.GetPosition(), ((JointDistance)TheRegion.Joints[i]).Ent2Pos + TheRegion.Joints[i].Two.GetPosition());
                 }
                 else
                 {
@@ -662,12 +662,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
             Textures.White.Bind();
             GL.Enable(EnableCap.CullFace);
-            for (int i = 0; i < TheWorld.Entities.Count; i++)
+            for (int i = 0; i < TheRegion.Entities.Count; i++)
             {
-                Rendering.SetColor(TheWorld.Entities[i].Color);
-                TheWorld.Entities[i].Render();
+                Rendering.SetColor(TheRegion.Entities[i].Color);
+                TheRegion.Entities[i].Render();
             }
-            TheWorld.Render();
+            TheRegion.Render();
             // TODO: Render joints?
             GL.Enable(EnableCap.DepthTest);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
@@ -687,7 +687,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     + "\n" + Player.GetPosition()
                     + "\n" + Player.GetVelocity() + " == " + Player.GetVelocity().Length()
                     + "\nLight source(s): " + LightsC
-                    + "\nEntities: " + TheWorld.Entities.Count
+                    + "\nEntities: " + TheRegion.Entities.Count
                     + "\nFLAGS: " + Player.ServerFlags, new Location(0, 0, 0));
                 int center = Window.Width / 2;
                 if (RenderExtraItems > 0)

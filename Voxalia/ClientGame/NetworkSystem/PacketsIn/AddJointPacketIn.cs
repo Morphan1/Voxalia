@@ -18,8 +18,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             long EID1 = Utilities.BytesToLong(Utilities.BytesPartial(data, 1, 8));
             long EID2 = Utilities.BytesToLong(Utilities.BytesPartial(data, 1 + 8, 8));
             long JID = Utilities.BytesToLong(Utilities.BytesPartial(data, 1 + 8 + 8, 8));
-            Entity pe1 = TheClient.TheWorld.GetEntity(EID1);
-            Entity pe2 = TheClient.TheWorld.GetEntity(EID2);
+            Entity pe1 = TheClient.TheRegion.GetEntity(EID1);
+            Entity pe2 = TheClient.TheRegion.GetEntity(EID2);
             if (pe1 == null || pe2 == null)
             {
                 SysConsole.Output(OutputType.WARNING, "Invalid EIDs " + EID1 + " and/or " + EID2);
@@ -35,7 +35,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 Location pos = Location.FromBytes(data, len);
                 JointBallSocket jbs = new JointBallSocket((PhysicsEntity)pe1, (PhysicsEntity)pe2, pos);
                 jbs.JID = JID;
-                TheClient.TheWorld.AddJoint(jbs);
+                TheClient.TheRegion.AddJoint(jbs);
                 return true;
             }
             else if (type == 1)
@@ -47,7 +47,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 }
                 JointSlider js = new JointSlider((PhysicsEntity)pe1, (PhysicsEntity)pe2);
                 js.JID = JID;
-                TheClient.TheWorld.AddJoint(js);
+                TheClient.TheRegion.AddJoint(js);
                 return true;
             }
             else if (type == 2)
@@ -63,7 +63,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 Location ent2pos = Location.FromBytes(data, len + 4 + 4 + 12);
                 JointDistance jd = new JointDistance((PhysicsEntity)pe1, (PhysicsEntity)pe2, min, max, ent1pos, ent2pos);
                 jd.JID = JID;
-                TheClient.TheWorld.AddJoint(jd);
+                TheClient.TheRegion.AddJoint(jd);
                 return true;
             }
             else if (type == 3)
@@ -76,7 +76,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 float stren = Utilities.BytesToFloat(Utilities.BytesPartial(data, len, 4));
                 JointPullPush jpp = new JointPullPush((PhysicsEntity)pe1, (PhysicsEntity)pe2, stren);
                 jpp.JID = JID;
-                TheClient.TheWorld.AddJoint(jpp);
+                TheClient.TheRegion.AddJoint(jpp);
                 return true;
             }
             else if (type == 4)
@@ -88,7 +88,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 }
                 JointForceWeld jfw = new JointForceWeld(pe1, pe2);
                 jfw.JID = JID;
-                TheClient.TheWorld.AddJoint(jfw);
+                TheClient.TheRegion.AddJoint(jfw);
                 return true;
             }
             else if (type == 5)
@@ -101,7 +101,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 Location dir = Location.FromBytes(data, len);
                 JointSpinner js = new JointSpinner((PhysicsEntity)pe1, (PhysicsEntity)pe2, dir);
                 js.JID = JID;
-                TheClient.TheWorld.AddJoint(js);
+                TheClient.TheRegion.AddJoint(js);
                 return true;
             }
             else if (type == 6)
@@ -115,7 +115,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 Location a2 = Location.FromBytes(data, len + 12);
                 JointTwist jt = new JointTwist((PhysicsEntity)pe1, (PhysicsEntity)pe2, a1, a2);
                 jt.JID = JID;
-                TheClient.TheWorld.AddJoint(jt);
+                TheClient.TheRegion.AddJoint(jt);
                 return true;
             }
             else

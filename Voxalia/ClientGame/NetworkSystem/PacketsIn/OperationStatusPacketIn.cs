@@ -9,7 +9,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
         public int ChunksStillLoading()
         {
             int c = 0;
-            foreach (Chunk chunk in TheClient.TheWorld.LoadedChunks.Values)
+            foreach (Chunk chunk in TheClient.TheRegion.LoadedChunks.Values)
             {
                 if (chunk.LOADING)
                 {

@@ -14,8 +14,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public SkyLight ThePlanet = null;
 
-        // Note: the client only has one world loaded at any given time.
-        public Region TheWorld = null;
+        // Note: the client only has one region loaded at any given time.
+        public Region TheRegion = null;
 
         public Location SunLightDef = Location.One;
 
@@ -37,11 +37,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 2, 30 * 10, PlanetLightDef, new Location(0, 0, -1), 30 * 12);
             Lights.Add(TheSun);
             Lights.Add(ThePlanet);
-            TheWorld = new Region();
-            TheWorld.TheClient = this;
-            TheWorld.BuildWorld();
-            Player = new PlayerEntity(TheWorld);
-            TheWorld.SpawnEntity(Player);
+            TheRegion = new Region();
+            TheRegion.TheClient = this;
+            TheRegion.BuildWorld();
+            Player = new PlayerEntity(TheRegion);
+            TheRegion.SpawnEntity(Player);
         }
 
         public Location SunAngle = new Location(0, -75, 0);
@@ -93,7 +93,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 rTicks = 0;
                 shouldRedrawShadows = true;
             }
-            TheWorld.TickWorld(delta);
+            TheRegion.TickWorld(delta);
         }
     }
 }

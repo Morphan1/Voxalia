@@ -42,7 +42,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Menus.RenderAll(TheClient.gDelta);
             if (LACS == null)
             {
-                TheClient.FontSets.SlightlyBigger.DrawColoredText("^!^e^0Chunks Loaded: " + TheClient.TheWorld.LoadedChunks.Count
+                TheClient.FontSets.SlightlyBigger.DrawColoredText("^!^e^0Chunks Loaded: " + TheClient.TheRegion.LoadedChunks.Count
                     + "\nChunks that still need parsing: " + ChunksStillWaiting, new Location(20, 20, 0));
             }
             else

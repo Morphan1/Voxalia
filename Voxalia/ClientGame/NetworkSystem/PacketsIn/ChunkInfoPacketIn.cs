@@ -46,7 +46,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             Action act = () =>
             {
-                Chunk chk = TheClient.TheWorld.LoadChunk(new Location(x, y, z), posMult);
+                Chunk chk = TheClient.TheRegion.LoadChunk(new Location(x, y, z), posMult);
                 chk.LOADING = true;
                 chk.PROCESSED = false;
                 TheClient.Schedule.StartASyncTask(() => parsechunk2(chk, data_orig, posMult));

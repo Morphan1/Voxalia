@@ -283,7 +283,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             if (IsWaitingOnChunks())
             {
-                TheChunkWaitingScreen.LACS = new LoadAllChunksSystem(TheWorld);
+                TheChunkWaitingScreen.LACS = new LoadAllChunksSystem(TheRegion);
                 TheChunkWaitingScreen.LACS.LoadAll(() =>
                 {
                     Schedule.ScheduleSyncTask(() =>
@@ -375,7 +375,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Schedule.ScheduleSyncTask(() =>
                     {
                         bool ready = true;
-                        foreach (Chunk chunk in TheWorld.LoadedChunks.Values)
+                        foreach (Chunk chunk in TheRegion.LoadedChunks.Values)
                         {
                             if (!chunk.PRED)
                             {
@@ -392,7 +392,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Schedule.ScheduleSyncTask(() =>
                 {
                     int c = 0;
-                    foreach (Chunk chunk in TheWorld.LoadedChunks.Values)
+                    foreach (Chunk chunk in TheRegion.LoadedChunks.Values)
                     {
                         if (!chunk.PROCESSED)
                         {

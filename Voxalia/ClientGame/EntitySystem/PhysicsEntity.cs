@@ -84,7 +84,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
             Vector3 sweep = new Vector3(0, 0, -0.001f);
-            CollisionResult cr = TheClient.TheWorld.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
+            CollisionResult cr = TheClient.TheRegion.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
             if (cr.Hit && cr.HitEnt != null)
             {
                 SysConsole.Output(OutputType.WARNING, "Hit poorly implemented water!");

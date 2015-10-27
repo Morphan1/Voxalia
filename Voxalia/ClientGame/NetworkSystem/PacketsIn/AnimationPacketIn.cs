@@ -15,7 +15,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             long EID = Utilities.BytesToLong(Utilities.BytesPartial(data, 0, 8));
             string anim = TheClient.Network.Strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, 8, 4)));
             byte mode = data[8 + 4];
-            Entity e = TheClient.TheWorld.GetEntity(EID);
+            Entity e = TheClient.TheRegion.GetEntity(EID);
             if (e != null && e is EntityAnimated)
             {
                 ((EntityAnimated)e).SetAnimation(anim, mode);

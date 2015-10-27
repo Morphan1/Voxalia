@@ -71,7 +71,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return false;
             }
-            return TheClient.TheWorld.Collision.ShouldCollide(entry);
+            return TheClient.TheRegion.Collision.ShouldCollide(entry);
         }
         
         public override void Tick()

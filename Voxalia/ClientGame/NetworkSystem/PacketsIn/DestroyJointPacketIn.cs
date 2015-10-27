@@ -11,11 +11,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 return false;
             }
             long JID = Utilities.BytesToLong(data);
-            for (int i = 0; i < TheClient.TheWorld.Joints.Count; i++)
+            for (int i = 0; i < TheClient.TheRegion.Joints.Count; i++)
             {
-                if (TheClient.TheWorld.Joints[i].JID == JID)
+                if (TheClient.TheRegion.Joints[i].JID == JID)
                 {
-                    TheClient.TheWorld.DestroyJoint(TheClient.TheWorld.Joints[i]);
+                    TheClient.TheRegion.DestroyJoint(TheClient.TheRegion.Joints[i]);
                     return true;
                 }
             }

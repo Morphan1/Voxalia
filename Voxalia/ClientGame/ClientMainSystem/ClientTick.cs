@@ -141,7 +141,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 PlayerEyePosition = Player.GetEyePosition();
                 CameraFinalTarget = PlayerEyePosition + Player.ForwardVector() * 100f;
-                CollisionResult cr = TheWorld.Collision.RayTrace(PlayerEyePosition, CameraFinalTarget, IgnorePlayer);
+                CollisionResult cr = TheRegion.Collision.RayTrace(PlayerEyePosition, CameraFinalTarget, IgnorePlayer);
                 CameraFinalTarget = cr.Position;
                 CameraImpactNormal = cr.Hit ? cr.Normal.Normalize() : Location.Zero;
                 CameraDistance = (PlayerEyePosition - CameraFinalTarget).Length();
@@ -159,7 +159,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 return false;
             }
-            return TheWorld.Collision.ShouldCollide(entry);
+            return TheRegion.Collision.ShouldCollide(entry);
         }
 
         public Location CameraFinalTarget;
