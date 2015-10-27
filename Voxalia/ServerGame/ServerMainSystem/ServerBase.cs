@@ -9,6 +9,7 @@ using Voxalia.ServerGame.PlayerCommandSystem;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.OtherSystems;
 using Voxalia.ServerGame.WorldSystem;
+using Voxalia.ServerGame.PluginSystem;
 
 namespace Voxalia.ServerGame.ServerMainSystem
 {
@@ -106,8 +107,13 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         public void CommandInputHandle(object sender, ConsoleCommandEventArgs e)
         {
-            Commands.ExecuteCommands(e.Command);
+            Schedule.ScheduleSyncTask(() =>
+            {
+                Commands.ExecuteCommands(e.Command);
+            });
         }
+
+        public PluginManager Plugins;
 
         /// <summary>
         /// Start up and run the server.
@@ -138,11 +144,12 @@ namespace Voxalia.ServerGame.ServerMainSystem
             Models = new ModelEngine();
             SysConsole.Output(OutputType.INIT, "Loading animation handler...");
             Animations = new AnimationEngine();
-            SysConsole.Output(OutputType.INIT, "Building physics world...");
-            BuildWorld();
             SysConsole.Output(OutputType.INIT, "Preparing networking...");
             Networking = new NetworkBase(this);
             Networking.Init();
+            SysConsole.Output(OutputType.INIT, "Loading plugins...");
+            Plugins = new PluginManager(this);
+            Plugins.Init();
             SysConsole.Output(OutputType.INIT, "Building an initial world...");
             LoadWorld("default");
             if (loaded != null)
@@ -204,7 +211,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 }
             }
             SysConsole.Output(OutputType.INFO, "[Shutdown] Reached end of server functionality.");
-            // TODO: Clean up?
+            SysConsole.Output(OutputType.INFO, "[Shutdown] Clearing plugins...");
+            Plugins.UnloadPlugins();
+            SysConsole.Output(OutputType.INFO, "[Shutdown] Exiting server main!");
         }
 
         /// <summary>

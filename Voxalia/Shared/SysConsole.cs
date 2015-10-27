@@ -209,9 +209,19 @@ namespace Voxalia.Shared
             Console.Write(">");// TODO + ConsoleHandler.read);
         }
 
+        public static void Output(string message, Exception ex)
+        {
+            Output(OutputType.ERROR, message + ": " + ex.ToString() + "\n\n" + Environment.StackTrace);
+        }
+
         public static void Output(Exception ex)
         {
             Output(OutputType.ERROR, ex.ToString() + "\n\n" + Environment.StackTrace);
+        }
+
+        public static void OutputCustom(string type, string message)
+        {
+            WriteLine("^r^7" + Utilities.DateTimeToString(DateTime.Now) + "[" + type + "^r^7] " + message);
         }
 
         /// <summary>

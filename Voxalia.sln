@@ -16,26 +16,14 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091776}.Debug|x64.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091776}.Debug|x86.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091776}.Release|x64.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091776}.Release|x64.Build.0 = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091776}.Release|x86.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091774}.Debug|x64.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091774}.Debug|x86.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091774}.Release|x64.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091774}.Release|x64.Build.0 = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091774}.Release|x86.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091775}.Debug|x64.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091775}.Debug|x86.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091775}.Release|x64.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091775}.Release|x64.Build.0 = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091775}.Release|x86.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091773}.Debug|x64.ActiveCfg = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091773}.Debug|x86.ActiveCfg = Release|x64
+		{EE5A02F5-5105-4B5F-8580-1E8F6E091776}.Release|x64.ActiveCfg = Release|Any CPU
+		{EE5A02F5-5105-4B5F-8580-1E8F6E091776}.Release|x64.Build.0 = Release|Any CPU
+		{EE5A02F5-5105-4B5F-8580-1E8F6E091774}.Release|x64.ActiveCfg = Release|Any CPU
+		{EE5A02F5-5105-4B5F-8580-1E8F6E091774}.Release|x64.Build.0 = Release|Any CPU
+		{EE5A02F5-5105-4B5F-8580-1E8F6E091775}.Release|x64.ActiveCfg = Release|Any CPU
+		{EE5A02F5-5105-4B5F-8580-1E8F6E091775}.Release|x64.Build.0 = Release|Any CPU
 		{EE5A02F5-5105-4B5F-8580-1E8F6E091773}.Release|x64.ActiveCfg = Release|x64
 		{EE5A02F5-5105-4B5F-8580-1E8F6E091773}.Release|x64.Build.0 = Release|x64
-		{EE5A02F5-5105-4B5F-8580-1E8F6E091773}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
