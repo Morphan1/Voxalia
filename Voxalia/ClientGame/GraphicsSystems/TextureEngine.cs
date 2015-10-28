@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Drawing.Imaging;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared;
@@ -12,7 +13,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
     public class TextureEngine
     {
         /// <summary>
+        /// What texture widths/heights are allowed.
+        /// </summary>
+        public static int[] AcceptableWidths = new int[] { 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192 };
+
+        /// <summary>
         /// A full list of currently loaded textures.
+        /// TODO: List->Dictionary?
         /// </summary>
         public List<Texture> LoadedTextures = null;
 
@@ -46,15 +53,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         public void InitTextureSystem()
         {
-            // Dispose existing textures
-            if (LoadedTextures != null)
-            {
-                for (int i = 0; i < LoadedTextures.Count; i++)
-                {
-                    LoadedTextures[i].Remove();
-                    i--;
-                }
-            }
             // Create a generic graphics object for later use
             EmptyBitmap = new Bitmap(1, 1);
             GenericGraphicsObject = Graphics.FromImage(EmptyBitmap);
@@ -67,6 +65,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
             LoadedTextures.Add(Black);
             Clear = GenerateForColor(Color.Transparent, "clear");
             LoadedTextures.Add(Clear);
+        }
+
+        public void Empty()
+        {
+            for (int i = 0; i < LoadedTextures.Count; i++)
+            {
+                LoadedTextures[i].Destroy();
+                LoadedTextures[i].Internal_Texture = -1;
+                LoadedTextures[i].Original_InternalID = -1;
+            }
+            LoadedTextures.Clear();
         }
 
         public void Update(double time)
@@ -129,6 +138,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     return null;
                 }
                 Bitmap bmp = new Bitmap(Program.Files.ReadToStream("textures/" + filename + ".png"));
+                if (!AcceptableWidths.Contains(bmp.Width) || !AcceptableWidths.Contains(bmp.Height))
+                {
+                    SysConsole.Output(OutputType.ERROR, "Cannot load texture, file '" +
+                        TextStyle.Color_Standout + "textures/" + filename + ".png" + TextStyle.Color_Error +
+                        "' is invalid: unreasonable width or height.");
+                    return null;
+                }
                 Texture texture = new Texture();
                 texture.Engine = this;
                 texture.Name = filename;
@@ -279,12 +295,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// The internal OpenGL texture ID.
         /// </summary>
-        public uint Internal_Texture = 0;
+        public int Internal_Texture = 0;
 
         /// <summary>
         /// The original OpenGL texture ID that formed this texture.
         /// </summary>
-        public uint Original_InternalID = 0;
+        public int Original_InternalID = 0;
 
         /// <summary>
         /// Whether the texture loaded properly.
@@ -302,14 +318,22 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public int Height;
 
         /// <summary>
+        /// Removes the texture from OpenGL.
+        /// </summary>
+        public void Destroy()
+        {
+            if (Original_InternalID > -1 && GL.IsTexture(Original_InternalID))
+            {
+                GL.DeleteTexture(Original_InternalID);
+            }
+        }
+
+        /// <summary>
         /// Removes the texture from the system.
         /// </summary>
         public void Remove()
         {
-            if (GL.IsTexture(Original_InternalID))
-            {
-                GL.DeleteTexture(Original_InternalID);
-            }
+            Destroy();
             Engine.LoadedTextures.Remove(this);
         }
 
@@ -333,12 +357,28 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public double LastBindTime = 0;
 
+        public void CheckValid()
+        {
+            if (Internal_Texture == -1)
+            {
+                Texture temp = Engine.GetTexture(Name);
+                Original_InternalID = temp.Original_InternalID;
+                Internal_Texture = Original_InternalID;
+                if (RemappedTo != null)
+                {
+                    RemappedTo.CheckValid();
+                    Internal_Texture = RemappedTo.Original_InternalID;
+                }
+            }
+        }
+
         /// <summary>
         /// Binds this texture to OpenGL.
         /// </summary>
         public void Bind()
         {
             LastBindTime = Engine.cTime;
+            CheckValid();
             GL.BindTexture(TextureTarget.Texture2D, Internal_Texture);
         }
     }

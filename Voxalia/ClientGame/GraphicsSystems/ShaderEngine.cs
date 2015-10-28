@@ -11,7 +11,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
     {
         /// <summary>
         /// A full list of currently loaded shaders.
-        /// TODO List->Dictionary?
+        /// TODO: List->Dictionary?
         /// </summary>
         public List<Shader> LoadedShaders;
 
@@ -30,15 +30,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         public void InitShaderSystem()
         {
-            // Dispose existing shaders
-            if (LoadedShaders != null)
-            {
-                for (int i = 0; i < LoadedShaders.Count; i++)
-                {
-                    LoadedShaders[i].Remove();
-                    i--;
-                }
-            }
             // Reset shader list
             LoadedShaders = new List<Shader>();
             // Pregenerate a few needed shader
@@ -249,10 +240,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         public void Remove()
         {
-            if (GL.IsProgram(Original_Program))
-            {
-                GL.DeleteProgram(Original_Program);
-            }
+            Destroy();
             Engine.LoadedShaders.Remove(this);
         }
         

@@ -8,12 +8,16 @@ namespace Voxalia.ClientGame.GraphicsSystems
     {
         public TextureEngine TEngine;
 
-        public int TextureID;
+        public int TextureID = -1;
 
         public int TWidth;
 
         public void Generate(ClientCVar cvars, TextureEngine eng)
         {
+            if (TextureID > -1)
+            {
+                GL.DeleteTexture(TextureID);
+            }
             TEngine = eng;
             TextureID = GL.GenTexture();
             TWidth = cvars.r_blocktexturewidth.ValueI;

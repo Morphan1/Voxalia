@@ -14,7 +14,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             TheClient = tclient;
             Name = "reload";
             Description = "Reloads all or part of the game";
-            Arguments = "<chunks/screen/shaders/all>"; // TODO: List input?
+            Arguments = "<chunks/screen/shaders/textures/all>"; // TODO: List input?
         }
 
         public override void Execute(CommandEntry entry)
@@ -45,6 +45,13 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             {
                 success = true;
                 TheClient.Shaders.Clear();
+            }
+            if (arg == "textures" || is_all)
+            {
+                success = true;
+                TheClient.Textures.Empty();
+                TheClient.Textures.InitTextureSystem();
+                TheClient.TBlock.Generate(TheClient.CVars, TheClient.Textures);
             }
             if (!success)
             {
