@@ -116,10 +116,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Window.Mouse.WheelChanged += new EventHandler<MouseWheelEventArgs>(KeyHandler.Mouse_Wheel);
             Window.Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonDown);
             Window.Mouse.ButtonUp += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonUp);
+            Window.Closed += Window_Closed;
             onVsyncChanged(CVars.r_vsync, null);
             Window.Run(1, CVars.r_maxfps.ValueD);
         }
-        
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            // TODO: Cleanup!
+        }
+
         /// <summary>
         /// The system that manages textures (images) on the client.
         /// </summary>
@@ -231,7 +237,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Rendering = new Renderer(Textures, Shaders);
             Rendering.Init();
             SysConsole.Output(OutputType.INIT, "Loading general graphics settings...");
-            CVars.r_vsync.OnChanged += new EventHandler(onVsyncChanged);
+            CVars.r_vsync.OnChanged += onVsyncChanged;
             onVsyncChanged(CVars.r_vsync, null);
             SysConsole.Output(OutputType.INIT, "Loading UI Console...");
             UIConsole.InitConsole();
@@ -250,6 +256,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Network = new NetworkBase(this);
             SysConsole.Output(OutputType.INIT, "Playing background music...");
             BackgroundMusic();
+            CVars.a_musicvolume.OnChanged += onMusicVolumeChanged;
+            CVars.a_musicpitch.OnChanged += onMusicPitchChanged;
+            CVars.a_music.OnChanged += onMusicChanged;
             SysConsole.Output(OutputType.INIT, "Setting up screens...");
             TheMainMenuScreen = new MainMenuScreen() { TheClient = this };
             TheGameScreen = new GameScreen() { TheClient = this };
@@ -449,12 +458,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// The current sound object for the playing background music.
         /// </summary>
         public ActiveSound CurrentMusic = null;
-
-        /// <summary>
-        /// The requested music name.
-        /// </summary>
-        public string CMusic = "music/happy/bcfindinghope";
-
+        
         /// <summary>
         /// Plays the backgrond music. Will restart music if already playing.
         /// </summary>
@@ -464,7 +468,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 CurrentMusic.Destroy();
             }
-            SoundEffect mus = Sounds.GetSound(CMusic);
+            SoundEffect mus = Sounds.GetSound(CVars.a_music.Value);
             CurrentMusic = Sounds.Play(mus, true, Location.NaN, CVars.a_musicpitch.ValueF, CVars.a_musicvolume.ValueF);
             if (CurrentMusic != null)
             {
@@ -472,6 +476,42 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
         }
 
+        public void onMusicChanged(object obj, EventArgs e)
+        {
+            BackgroundMusic();
+        }
+
+        public void onMusicPitchChanged(object obj, EventArgs e)
+        {
+            if (CurrentMusic != null)
+            {
+                CurrentMusic.Pitch = CVars.a_musicpitch.ValueF * CVars.a_globalpitch.ValueF;
+                CurrentMusic.UpdatePitch();
+            }
+        }
+
+        public void onMusicVolumeChanged(object obj, EventArgs e)
+        {
+            if (CurrentMusic != null)
+            {
+                float vol = CVars.a_musicvolume.ValueF;
+                if (vol <= 0 || vol > 1)
+                {
+                    CurrentMusic.Destroy();
+                    CurrentMusic = null;
+                }
+                else
+                {
+                    CurrentMusic.Gain = vol;
+                    CurrentMusic.UpdateGain();
+                }
+            }
+            else
+            {
+                BackgroundMusic();
+            }
+        }
+        
         public void UpdateWindow()
         {
             if (CVars.r_width.ValueI < 1280)

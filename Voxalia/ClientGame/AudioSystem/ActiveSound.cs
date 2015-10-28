@@ -7,6 +7,8 @@ namespace Voxalia.ClientGame.AudioSystem
 {
     public class ActiveSound
     {
+        public SoundEngine Engine;
+
         public SoundEffect Effect;
 
         public Location Position;
@@ -39,11 +41,11 @@ namespace Voxalia.ClientGame.AudioSystem
                 AL.Source(Src, ALSourceb.Looping, Loop);
                 if (Pitch != 1f)
                 {
-                    AL.Source(Src, ALSourcef.Pitch, Pitch);
+                    UpdatePitch();
                 }
                 if (Gain != 1f)
                 {
-                    AL.Source(Src, ALSourcef.Gain, Gain);
+                    UpdateGain();
                 }
                 if (!Position.IsNaN())
                 {
@@ -56,6 +58,26 @@ namespace Voxalia.ClientGame.AudioSystem
                     AL.Source(Src, ALSourceb.SourceRelative, true);
                 }
                 Exists = true;
+            }
+        }
+
+        public void UpdatePitch()
+        {
+            AL.Source(Src, ALSourcef.Pitch, Pitch);
+        }
+
+        public void UpdateGain()
+        {
+            bool sel = Engine.Selected;
+            if (sel)
+            {
+                AL.Source(Src, ALSourcef.Gain, Gain);
+                Backgrounded = false;
+            }
+            else
+            {
+                AL.Source(Src, ALSourcef.Gain, 0.0001f);
+                Backgrounded = true;
             }
         }
 

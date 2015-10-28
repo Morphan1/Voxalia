@@ -35,7 +35,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth;
 
         // Audio CVars
-        public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch;
+        public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect;
 
         // UI CVars
         public CVar u_mouse_sensitivity, u_reticle, u_reticlescale, u_showhud;
@@ -87,10 +87,12 @@ namespace Voxalia.ClientGame.CommandSystem
             r_blocktexturelinear = Register("r_blocktexturelinear", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether block textures are to use a linear blur or nearest-pixel mode.");
             r_blocktexturewidth = Register("r_blocktexturewidth", "128", CVarFlag.Numeric | CVarFlag.Delayed, "What texture width (pixels) block textures should use.");
             // Audio CVars
-            a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric | CVarFlag.Delayed, "What volume the music should be.");
-            a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric | CVarFlag.Delayed, "What pitch the music should be.");
+            a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric, "What volume the music should be.");
+            a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");
             a_globalvolume = Register("a_globalvolume", "1", CVarFlag.Numeric, "What volume all sounds should be.");
             a_globalpitch = Register("a_globalpitch", "1", CVarFlag.Numeric, "What pitch all sounds should be.");
+            a_music = Register("a_music", "music/epic/bcvoxalia", CVarFlag.Textual | CVarFlag.ServerControl, "What music should be played.");
+            a_quietondeselect = Register("a_quietondeselect", "true", CVarFlag.Boolean, "Whether to quiet music when the window is deselected.");
             // UI CVars
             u_mouse_sensitivity = Register("u_mouse_sensitivity", "1", CVarFlag.Numeric, "How sensitive the mouse is.");
             u_reticle = Register("u_reticle", "1", CVarFlag.Textual, "What reticle to use.");

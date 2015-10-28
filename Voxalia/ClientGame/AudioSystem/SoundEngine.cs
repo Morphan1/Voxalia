@@ -29,8 +29,12 @@ namespace Voxalia.ClientGame.AudioSystem
             Noise = LoadSound(new DataStream(Convert.FromBase64String(NoiseDefault.NoiseB64)), "noise");
         }
 
+        public bool Selected;
+
         public void Update(Location position, Location forward, Location up, Location velocity, bool selected)
         {
+            bool sel = CVars.a_quietondeselect.ValueB ? selected : true;
+            Selected = sel;
             for (int i = 0; i < PlayingNow.Count; i++)
             {
                 if (!PlayingNow[i].Exists || AL.GetSourceState(PlayingNow[i].Src) == ALSourceState.Stopped)
@@ -39,12 +43,12 @@ namespace Voxalia.ClientGame.AudioSystem
                     PlayingNow.RemoveAt(i);
                     i--;
                 }
-                else if (!selected && PlayingNow[i].IsBackground && !PlayingNow[i].Backgrounded)
+                else if (!sel && PlayingNow[i].IsBackground && !PlayingNow[i].Backgrounded)
                 {
                     AL.Source(PlayingNow[i].Src, ALSourcef.Gain, 0.0001f);
                     PlayingNow[i].Backgrounded = true;
                 }
-                else if (selected && PlayingNow[i].Backgrounded)
+                else if (sel && PlayingNow[i].Backgrounded)
                 {
                     AL.Source(PlayingNow[i].Src, ALSourcef.Gain, PlayingNow[i].Gain);
                     PlayingNow[i].Backgrounded = false;
@@ -57,14 +61,15 @@ namespace Voxalia.ClientGame.AudioSystem
             AL.Listener(ALListener3f.Position, ref pos);
             AL.Listener(ALListenerfv.Orientation, ref forw, ref upvec);
             AL.Listener(ALListener3f.Velocity, ref vel);
-            AL.Listener(ALListenerf.Gain, CVars.a_globalvolume.ValueF);
+            float globvol = CVars.a_globalvolume.ValueF;
+            AL.Listener(ALListenerf.Gain, globvol <= 0 ? 0.001f: (globvol > 1 ? 1: globvol));
         }
 
         public Dictionary<string, SoundEffect> Effects;
 
         public List<ActiveSound> PlayingNow;
 
-        public ActiveSound Play(SoundEffect sfx, bool loop, Location pos, float pitch = 1, float volume = 1, float seconds = 0)
+        public ActiveSound Play(SoundEffect sfx, bool loop, Location pos, float pitch = 1, float volume = 1, float seek_seconds = 0)
         {
             if (pitch <= 0 || pitch > 2)
             {
@@ -79,15 +84,16 @@ namespace Voxalia.ClientGame.AudioSystem
                 throw new ArgumentException("Must be between 0 and 1", "volume");
             }
             ActiveSound actsfx = new ActiveSound(sfx);
+            actsfx.Engine = this;
             actsfx.Position = pos;
             actsfx.Pitch = pitch * CVars.a_globalpitch.ValueF;
             actsfx.Gain = volume;
             actsfx.Loop = loop;
             actsfx.Create();
             actsfx.Play();
-            if (seconds != 0)
+            if (seek_seconds != 0)
             {
-                actsfx.Seek(seconds);
+                actsfx.Seek(seek_seconds);
             }
             PlayingNow.Add(actsfx);
             return actsfx;
