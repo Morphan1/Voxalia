@@ -93,7 +93,7 @@
         </member>
         <member name="F:Frenetic.CommandSystem.CommandEntry.CommandLine">
             <summary>
-            The command itself.
+            The original command input.
             </summary>
         </member>
         <member name="F:Frenetic.CommandSystem.CommandEntry.Block">
@@ -310,9 +310,10 @@
             What function to invoke when output is generated.
             </summary>
         </member>
-        <member name="M:Frenetic.CommandSystem.CommandQueue.#ctor(Frenetic.CommandSystem.CommandScript,System.Collections.Generic.List{Frenetic.CommandSystem.CommandEntry},Frenetic.CommandSystem.Commands)">
+        <member name="M:Frenetic.CommandSystem.CommandQueue.#ctor(Frenetic.CommandSystem.CommandScript,System.Collections.Generic.IList{Frenetic.CommandSystem.CommandEntry},Frenetic.CommandSystem.Commands)">
             <summary>
             Constructs a new CommandQueue - generally kept to the Frenetic internals.
+            TODO: IList _commands -> ListQueue?
             </summary>
         </member>
         <member name="F:Frenetic.CommandSystem.CommandQueue.Complete">
@@ -1147,6 +1148,101 @@
             <param name="length">How far to pad it to</param>
             <param name="left">Whether to pad left (true), or right (false)</param>
             <returns>The padded string</returns>
+        </member>
+        <member name="T:Frenetic.ListQueue`1">
+            <summary>
+            Holds an array, managing it both like a list and like a queue depending on need.
+            </summary>
+        </member>
+        <member name="F:Frenetic.ListQueue`1.Objects">
+            <summary>
+            The internal array.
+            NOTE: INTERNAL USE ONLY.
+            </summary>
+        </member>
+        <member name="F:Frenetic.ListQueue`1.Head">
+            <summary>
+            The head of the array.
+            IE, the index of the first real object.
+            NOTE: INTERNAL USE ONLY.
+            </summary>
+        </member>
+        <member name="F:Frenetic.ListQueue`1.Length">
+            <summary>
+            The true length of the array, not counting things before the head or after the end.
+            </summary>
+        </member>
+        <member name="F:Frenetic.ListQueue`1.Max">
+            <summary>
+            How far the <see cref="F:Frenetic.ListQueue`1.Head"/> can get before the buffer is forcibly shortened.
+            Defaults to 500.
+            </summary>
+        </member>
+        <member name="P:Frenetic.ListQueue`1.Item(System.Int32)">
+            <summary>
+            Access a member of the <see cref="T:Frenetic.ListQueue`1"/>
+            </summary>
+            <param name="index">The position in the public side of the list to read from</param>
+            <returns>The read object</returns>
+        </member>
+        <member name="M:Frenetic.ListQueue`1.#ctor(System.Collections.Generic.IList{`0})">
+            <summary>
+            Initializes the <see cref="T:Frenetic.ListQueue`1"/> with specified initial entries.
+            </summary>
+            <param name="entries"></param>
+        </member>
+        <member name="M:Frenetic.ListQueue`1.#ctor(System.Int32)">
+            <summary>
+            Initializes the <see cref="T:Frenetic.ListQueue`1"/> with a specified capacity.
+            </summary>
+            <param name="capacity">The number of items to be expect to hold, is non-definite</param>
+        </member>
+        <member name="M:Frenetic.ListQueue`1.Peek">
+            <summary>
+            Returns the item at head of the queue, without removing it, if it has one.
+            </summary>
+            <returns>The item found</returns>
+        </member>
+        <member name="M:Frenetic.ListQueue`1.Pop">
+            <summary>
+            Takes the first object off the queue and removes it, if it has one.
+            On rare occasions, expensive (if head reaches the max).
+            </summary>
+            <returns>The head object</returns>
+        </member>
+        <member name="M:Frenetic.ListQueue`1.Push(`0)">
+            <summary>
+            Adds an object to the end of the queue.
+            On rare occasions, expensive (if internal buffer must expand).
+            </summary>
+            M<param name="obj">The object to push onto the queue</param>
+        </member>
+        <member name="M:Frenetic.ListQueue`1.MoveHeadBack">
+            <summary>
+            Return the <see cref="F:Frenetic.ListQueue`1.Head"/> to a 0 index.
+            Expensive.
+            </summary>
+        </member>
+        <member name="M:Frenetic.ListQueue`1.Expand(System.Int32)">
+            <summary>
+            Expands the <see cref="T:Frenetic.ListQueue`1"/>'s internal buffer.
+            Expensive.
+            </summary>
+            <param name="amount">The amount to expand it by</param>
+        </member>
+        <member name="M:Frenetic.ListQueue`1.Clear">
+            <summary>
+            Effectively empties the ListQueue by scrapping the original internal buffer, and setting Length and Head to 0.
+            Mildly expensive.
+            </summary>
+        </member>
+        <member name="M:Frenetic.ListQueue`1.Insert(System.Int32,`0[])">
+            <summary>
+            Inserts entries to the buffer.
+            Expensive.
+            </summary>
+            <param name="index">The place to start inserting at</param>
+            <param name="entries">The entries to insert</param>
         </member>
         <member name="T:Frenetic.MessageType">
             <summary>
