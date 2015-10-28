@@ -485,6 +485,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             if (CurrentMusic != null)
             {
+                // TODO: validate number?
                 CurrentMusic.Pitch = CVars.a_musicpitch.ValueF * CVars.a_globalpitch.ValueF;
                 CurrentMusic.UpdatePitch();
             }

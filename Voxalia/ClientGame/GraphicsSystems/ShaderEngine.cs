@@ -11,6 +11,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
     {
         /// <summary>
         /// A full list of currently loaded shaders.
+        /// TODO List->Dictionary?
         /// </summary>
         public List<Shader> LoadedShaders;
 
@@ -50,6 +51,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public void Update(double time)
         {
             cTime = time;
+        }
+
+        public void Clear()
+        {
+            for (int i = 0; i < LoadedShaders.Count; i++)
+            {
+                LoadedShaders[i].Original_Program = -1;
+                LoadedShaders[i].Internal_Program = -1;
+                LoadedShaders[i].Destroy();
+            }
+            LoadedShaders.Clear();
         }
 
         public double cTime = 0;
@@ -128,7 +140,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>A valid Shader object</returns>
         public Shader CreateShader(string VS, string FS, string name)
         {
-            uint Program = CompileToProgram(VS, FS);
+            int Program = CompileToProgram(VS, FS);
             Shader generic = new Shader();
             generic.Name = name;
             generic.LoadedProperly = true;
@@ -144,7 +156,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="VS">The input VertexShader code</param>
         /// <param name="FS">The input FragmentShader code</param>
         /// <returns>The internal OpenGL program ID</returns>
-        public uint CompileToProgram(string VS, string FS)
+        public int CompileToProgram(string VS, string FS)
         {
             int VertexObject = GL.CreateShader(ShaderType.VertexShader);
             GL.ShaderSource(VertexObject, VS);
@@ -185,7 +197,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             GL.DeleteShader(FragmentObject);
             GL.DeleteShader(VertexObject);
-            return (uint)Program;
+            return Program;
         }
     }
 
@@ -209,17 +221,28 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// The internal OpenGL ID for the shader program.
         /// </summary>
-        public uint Internal_Program;
+        public int Internal_Program;
 
         /// <summary>
         /// The original OpenGL ID that formed this shader program.
         /// </summary>
-        public uint Original_Program;
+        public int Original_Program;
 
         /// <summary>
         /// Whether the shader loaded properly.
         /// </summary>
         public bool LoadedProperly = false;
+
+        /// <summary>
+        /// Destroys the OpenGL program that this shader wraps.
+        /// </summary>
+        public void Destroy()
+        {
+            if (Original_Program > -1 && GL.IsProgram(Original_Program))
+            {
+                GL.DeleteProgram(Original_Program);
+            }
+        }
 
         /// <summary>
         /// Removes the shader from the system.
@@ -232,8 +255,23 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             Engine.LoadedShaders.Remove(this);
         }
-
+        
         public double LastBindTime = 0;
+
+        public void CheckValid()
+        {
+            if (Internal_Program == -1)
+            {
+                Shader temp = Engine.GetShader(Name);
+                Original_Program = temp.Original_Program;
+                Internal_Program = Original_Program;
+                if (RemappedTo != null)
+                {
+                    RemappedTo.CheckValid();
+                    Internal_Program = RemappedTo.Original_Program;
+                }
+            }
+        }
 
         /// <summary>
         /// Binds this shader to OpenGL.
@@ -241,6 +279,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public void Bind()
         {
             LastBindTime = Engine.cTime;
+            CheckValid();
             GL.UseProgram(Internal_Program);
         }
     }

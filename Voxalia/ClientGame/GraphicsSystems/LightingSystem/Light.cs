@@ -33,7 +33,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             fbo_texture = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, fbo_texture);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, texsize, texsize, 0,
-                OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
+                PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -45,7 +45,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             fbo_depthtex = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, fbo_depthtex);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32, texsize, texsize, 0,
-                OpenTK.Graphics.OpenGL4.PixelFormat.DepthComponent, PixelType.UnsignedByte, IntPtr.Zero);
+                PixelFormat.DepthComponent, PixelType.UnsignedByte, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -53,6 +53,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureCompareMode, (int)TextureCompareMode.CompareRefToTexture);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureCompareFunc, (int)DepthFunction.Lequal);
             // Attach it to the FBO
+            // TODO: 2D->Layer, bind to a massive shadow tex array for quicker rendering!
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, fbo_depthtex, 0);
             // Wrap up
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);

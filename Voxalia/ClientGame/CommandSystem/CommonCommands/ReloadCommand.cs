@@ -14,7 +14,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             TheClient = tclient;
             Name = "reload";
             Description = "Reloads all or part of the game";
-            Arguments = "<chunks/screen/all>";
+            Arguments = "<chunks/screen/shaders/all>"; // TODO: List input?
         }
 
         public override void Execute(CommandEntry entry)
@@ -26,7 +26,8 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             }
             string arg = entry.GetArgument(0).ToLower();
             bool success = false;
-            if (arg == "chunks" || arg == "all")
+            bool is_all = arg == "all";
+            if (arg == "chunks" || is_all)
             {
                 // TODO: Goto load screen?
                 success = true;
@@ -35,10 +36,15 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                     chunk.OwningRegion.UpdateChunk(chunk);
                 }
             }
-            if (arg == "screen" || arg == "all")
+            if (arg == "screen" || is_all)
             {
                 success = true;
                 TheClient.UpdateWindow();
+            }
+            if (arg == "shaders" || is_all)
+            {
+                success = true;
+                TheClient.Shaders.Clear();
             }
             if (!success)
             {

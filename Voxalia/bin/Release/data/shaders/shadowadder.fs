@@ -106,7 +106,7 @@ void main()
 				{
 					offz = -0.000001;
 				}
-                offz -= 0.001;
+				offz -= 0.001;
 				depth += textureProj(tex, fs + vec4(x * jump, y * jump, offz, 0.0));
 				depth_count++;
 			}
