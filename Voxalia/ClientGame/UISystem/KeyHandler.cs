@@ -169,8 +169,8 @@ namespace Voxalia.ClientGame.UISystem
         /// <summary>
         /// Called every time a key is pressed, adds to the Keyboard String.
         /// </summary>
-        /// <param name="sender">Irrelevant</param>
-        /// <param name="e">Holds the pressed key</param>
+        /// <param name="sender">Irrelevant.</param>
+        /// <param name="e">Holds the pressed key.</param>
         public static void PrimaryGameWindow_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (Char.IsControl(e.KeyChar))
@@ -255,8 +255,8 @@ namespace Voxalia.ClientGame.UISystem
         /// <summary>
         /// Called every time a key is pressed down, handles control codes for the Keyboard String.
         /// </summary>
-        /// <param name="sender">Irrelevant</param>
-        /// <param name="e">Holds the pressed key</param>
+        /// <param name="sender">Irrelevant.</param>
+        /// <param name="e">Holds the pressed key.</param>
         public static void PrimaryGameWindow_KeyDown(object sender, KeyboardKeyEventArgs e)
         {
             lock (Locker)
@@ -350,8 +350,8 @@ namespace Voxalia.ClientGame.UISystem
         /// <summary>
         /// Called every time a key is released, handles control codes for the Keyboard String.
         /// </summary>
-        /// <param name="sender">Irrelevant</param>
-        /// <param name="e">Holds the pressed key</param>
+        /// <param name="sender">Irrelevant.</param>
+        /// <param name="e">Holds the pressed key.</param>
         public static void PrimaryGameWindow_KeyUp(object sender, KeyboardKeyEventArgs e)
         {
             lock (Locker)
@@ -428,8 +428,8 @@ namespace Voxalia.ClientGame.UISystem
         /// <summary>
         /// Binds a key to a command.
         /// </summary>
-        /// <param name="key">The key to bind</param>
-        /// <param name="bind">The command to bind to it (null to unbind)</param>
+        /// <param name="key">The key to bind.</param>
+        /// <param name="bind">The command to bind to it (null to unbind).</param>
         public static void BindKey(Key key, string bind)
         {
             Binds.Remove(key);
@@ -445,7 +445,7 @@ namespace Voxalia.ClientGame.UISystem
         /// <summary>
         /// Checks whether the system is listening to keyboard input.
         /// </summary>
-        /// <returns>Whether the keyboard is useable</returns>
+        /// <returns>Whether the keyboard is useable.</returns>
         public static bool IsValid()
         {
             return Client.Central.Window.Focused && !UIConsole.Open;
@@ -455,8 +455,8 @@ namespace Voxalia.ClientGame.UISystem
         /// <summary>
         /// Checks whether a key is pressed down.
         /// </summary>
-        /// <param name="key">The key to check</param>
-        /// <returns>Whether it is down</returns>
+        /// <param name="key">The key to check.</param>
+        /// <returns>Whether it is down.</returns>
         public static bool IsDown(Key key)
         {
             return IsValid() && CurrentKeyboard.IsKeyDown(key);
@@ -466,8 +466,8 @@ namespace Voxalia.ClientGame.UISystem
         /// <summary>
         /// Checks whether a key was just pressed this tick.
         /// </summary>
-        /// <param name="key">The key to check</param>
-        /// <returns>Whether it was just pressed</returns>
+        /// <param name="key">The key to check.</param>
+        /// <returns>Whether it was just pressed.</returns>
         public static bool IsPressed(Key key)
         {
             //return IsValid() && CurrentKeyboard.IsKeyDown(key) && !PreviousKeyboard.IsKeyDown(key);
@@ -477,8 +477,8 @@ namespace Voxalia.ClientGame.UISystem
         /// <summary>
         /// Returns the script this key is bound to.
         /// </summary>
-        /// <param name="key">The key to check for</param>
-        /// <returns>A script, or null</returns>
+        /// <param name="key">The key to check for.</param>
+        /// <returns>A script, or null.</returns>
         public static CommandScript GetBind(Key key)
         {
             CommandScript script;

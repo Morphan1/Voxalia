@@ -280,8 +280,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Render a line between two points.
         /// </summary>
-        /// <param name="start">The initial point</param>
-        /// <param name="end">The ending point</param>
+        /// <param name="start">The initial point.</param>
+        /// <param name="end">The ending point.</param>
         public void RenderLine(Location start, Location end)
         {
             // TODO: Efficiency!
@@ -299,8 +299,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Render a cylinder between two points.
         /// </summary>
-        /// <param name="start">The initial point</param>
-        /// <param name="end">The ending point</param>
+        /// <param name="start">The initial point.</param>
+        /// <param name="end">The ending point.</param>
         public void RenderCylinder(Location start, Location end, float width)
         {
             float len = (float)(end - start).Length();
@@ -346,10 +346,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Renders a 2D rectangle.
         /// </summary>
-        /// <param name="xmin">The lower bounds of the the rectangle: X coordinate</param>
-        /// <param name="ymin">The lower bounds of the the rectangle: Y coordinate</param>
-        /// <param name="xmax">The upper bounds of the the rectangle: X coordinate</param>
-        /// <param name="ymax">The upper bounds of the the rectangle: Y coordinate</param>
+        /// <param name="xmin">The lower bounds of the the rectangle: X coordinate.</param>
+        /// <param name="ymin">The lower bounds of the the rectangle: Y coordinate.</param>
+        /// <param name="xmax">The upper bounds of the the rectangle: X coordinate.</param>
+        /// <param name="ymax">The upper bounds of the the rectangle: Y coordinate.</param>
         public void RenderRectangle(float xmin, float ymin, float xmax, float ymax, Matrix4? rot = null)
         {
             Matrix4 mat = Matrix4.CreateScale(xmax - xmin, ymax - ymin, 1) * (rot != null && rot.HasValue ? rot.Value : Matrix4.Identity) * Matrix4.CreateTranslation(xmin, ymin, 0);

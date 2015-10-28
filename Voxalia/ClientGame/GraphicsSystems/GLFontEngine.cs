@@ -136,11 +136,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Gets the font matching the specified settings.
         /// </summary>
-        /// <param name="name">The name of the font</param>
-        /// <param name="bold">Whether it's bold</param>
-        /// <param name="italic">Whether it's italic</param>
-        /// <param name="size">The font size</param>
-        /// <returns>A valid font object</returns>
+        /// <param name="name">The name of the font.</param>
+        /// <param name="bold">Whether it's bold.</param>
+        /// <param name="italic">Whether it's italic.</param>
+        /// <param name="size">The font size.</param>
+        /// <returns>A valid font object.</returns>
         public GLFont GetFont(string name, bool bold, bool italic, int size)
         {
             string namelow = name.ToLower();
@@ -163,11 +163,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Loads a font matching the specified settings.
         /// </summary>
-        /// <param name="name">The name of the font</param>
-        /// <param name="bold">Whether it's bold</param>
-        /// <param name="italic">Whether it's italic</param>
-        /// <param name="size">The font size</param>
-        /// <returns>A valid font object, or null if there was no match</returns>
+        /// <param name="name">The name of the font.</param>
+        /// <param name="bold">Whether it's bold.</param>
+        /// <param name="italic">Whether it's italic.</param>
+        /// <param name="size">The font size.</param>
+        /// <returns>A valid font object, or null if there was no match.</returns>
         public GLFont LoadFont(string name, bool bold, bool italic, int size)
         {
             Font font = new Font(name, size, (bold ? FontStyle.Bold : 0) | (italic ? FontStyle.Italic : 0));
@@ -292,8 +292,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Gets the location of a symbol.
         /// </summary>
-        /// <param name="symbol">The symbol to find</param>
-        /// <returns>A rectangle containing the precise location of a symbol</returns>
+        /// <param name="symbol">The symbol to find.</param>
+        /// <returns>A rectangle containing the precise location of a symbol.</returns>
         public RectangleF RectForSymbol(char symbol)
         {
             for (int i = 0; i < Characters.Length; i++)
@@ -311,10 +311,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Draws a single symbol at a specified location.
         /// </summary>
-        /// <param name="symbol">The symbol to draw.</param>
-        /// <param name="X">The X location to draw it at</param>
-        /// <param name="Y">The Y location to draw it at</param>
-        /// <returns>The length of the character in pixels</returns>
+        /// <param name="symbol">The symbol to draw..</param>
+        /// <param name="X">The X location to draw it at.</param>
+        /// <param name="Y">The Y location to draw it at.</param>
+        /// <returns>The length of the character in pixels.</returns>
         public float DrawSingleCharacter(char symbol, float X, float Y, bool flip, TextVBO vbo, Vector4 color)
         {
             RectangleF rec = RectForSymbol(symbol);
@@ -338,10 +338,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Draws a string at a specified location.
         /// </summary>
-        /// <param name="str">The string to draw.</param>
-        /// <param name="X">The X location to draw it at</param>
-        /// <param name="Y">The Y location to draw it at</param>
-        /// <returns>The length of the string in pixels</returns>
+        /// <param name="str">The string to draw..</param>
+        /// <param name="X">The X location to draw it at.</param>
+        /// <param name="Y">The Y location to draw it at.</param>
+        /// <returns>The length of the string in pixels.</returns>
         public float DrawString(string str, float X, float Y, Vector4 color, TextVBO vbo, bool flip = false)
         {
             float nX = 0;
@@ -360,8 +360,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Measures the drawn length of a string.
         /// </summary>
-        /// <param name="str">The string to measure</param>
-        /// <returns>The length of the string</returns>
+        /// <param name="str">The string to measure.</param>
+        /// <returns>The length of the string.</returns>
         public float MeasureString(string str)
         {
             float X = 0;

@@ -278,8 +278,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// <summary>
         /// Called or call when the value of the VSync CVar changes, or VSync needs to be recalculated.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="e"></param>
+        /// <param name="obj">.</param>
+        /// <param name="e">.</param>
         public void onVsyncChanged(object obj, EventArgs e)
         {
             Window.VSync = CVars.r_vsync.ValueB ? VSyncMode.Adaptive : VSyncMode.Off;

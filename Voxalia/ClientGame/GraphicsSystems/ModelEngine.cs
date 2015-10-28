@@ -68,10 +68,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
         }
 
         /// <summary>
-        /// Gets the texture object for a specific texture name.
+        /// Gets the model object for a specific model name.
         /// </summary>
-        /// <param name="texturename">The name of the texture</param>
-        /// <returns>A valid texture object</returns>
+        /// <param name="modelname">The name of the model.</param>
+        /// <returns>A valid model object.</returns>
         public Model GetModel(string modelname)
         {
             modelname = FileHandler.CleanFileName(modelname);
@@ -116,9 +116,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// loads a model from a file byte array.
         /// </summary>
-        /// <param name="name">The name of the model</param>
-        /// <param name="data">The .obj file string</param>
-        /// <returns>A valid model</returns>
+        /// <param name="name">The name of the model.</param>
+        /// <param name="data">The .obj file string.</param>
+        /// <returns>A valid model.</returns>
         public Model FromBytes(string name, byte[] data)
         {
             Model3D scene = Handler.LoadModel(data);

@@ -42,6 +42,8 @@
     <NoWarn>
     </NoWarn>
     <Optimize>false</Optimize>
+    <DocumentationFile>bin\Release\VoxaliaShared.XML</DocumentationFile>
+    <WarningLevel>3</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BEPUphysics">

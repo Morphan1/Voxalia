@@ -97,7 +97,7 @@ namespace Voxalia.ClientGame.WorldSystem
         /// <summary>
         /// Spawns an entity in the world.
         /// </summary>
-        /// <param name="e">The entity to spawn</param>
+        /// <param name="e">The entity to spawn.</param>
         public void SpawnEntity(Entity e)
         {
             Entities.Add(e);

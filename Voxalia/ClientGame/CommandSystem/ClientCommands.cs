@@ -83,7 +83,7 @@ namespace Voxalia.ClientGame.CommandSystem
         /// <summary>
         /// Executes an arbitrary list of command inputs (separated by newlines, semicolons, ...)
         /// </summary>
-        /// <param name="commands">The command string to parse</param>
+        /// <param name="commands">The command string to parse.</param>
         public void ExecuteCommands(string commands)
         {
             CommandSystem.ExecuteCommands(commands, null);

@@ -739,9 +739,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// <summary>
         /// Renders an item on the 2D screen.
         /// </summary>
-        /// <param name="item">The item to render</param>
-        /// <param name="pos">Where to render it</param>
-        /// <param name="size">How big to render it, in pixels</param>
+        /// <param name="item">The item to render.</param>
+        /// <param name="pos">Where to render it.</param>
+        /// <param name="size">How big to render it, in pixels.</param>
         public void RenderItem(ItemStack item, Location pos, int size)
         {
             ItemFrame.Bind();

@@ -115,7 +115,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// Writes a line of colored text to the system console.
         /// </summary>
-        /// <param name="text">The text to write</param>
+        /// <param name="text">The text to write.</param>
         public static void WriteLine(string text)
         {
             Write(text + "\n");
@@ -124,7 +124,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// Writes some colored text to the system console.
         /// </summary>
-        /// <param name="text">The text to write</param>
+        /// <param name="text">The text to write.</param>
         private static void Write(string text)
         {
             lock (ConsoleLock)
@@ -227,8 +227,8 @@ namespace Voxalia.Shared
         /// <summary>
         /// Properly formats system console output.
         /// </summary>
-        /// <param name="ot">What type of output to use</param>
-        /// <param name="text">The text to output</param>
+        /// <param name="ot">What type of output to use.</param>
+        /// <param name="text">The text to output.</param>
         public static void Output(OutputType ot, string text)
         {
             if (OutputColors[(int)ot] == "^7")

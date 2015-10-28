@@ -44,9 +44,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Gets a font by a specified name.
         /// </summary>
-        /// <param name="fontname">The name of the font</param>
-        /// <param name="fontsize">The size of the font</param>
-        /// <returns>The specified font</returns>
+        /// <param name="fontname">The name of the font.</param>
+        /// <param name="fontsize">The size of the font.</param>
+        /// <returns>The specified font.</returns>
         public FontSet GetFont(string fontname, int fontsize)
         {
             string namelow = fontname.ToLower();
@@ -160,9 +160,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Correctly forms a Color object for the color number and transparency amount, for use by RenderColoredText
         /// </summary>
-        /// <param name="color">The color number</param>
-        /// <param name="trans">Transparency value, 0-255</param>
-        /// <returns>A correctly formed color object</returns>
+        /// <param name="color">The color number.</param>
+        /// <param name="trans">Transparency value, 0-255.</param>
+        /// <returns>A correctly formed color object.</returns>
         public static Color ColorFor(int color, int trans)
         {
             return Color.FromArgb(trans, colors[color].R, colors[color].G, colors[color].B);
@@ -171,11 +171,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Fully renders colorful/fancy text (unless the text is not marked as fancy, or fancy rendering is disabled)
         /// </summary>
-        /// <param name="Text">The text to render</param>
-        /// <param name="Position">Where to render the text at</param>
-        /// <param name="MaxY">The maximum Y location to render text at.</param>
-        /// <param name="transmod">Transparency modifier (EG, 0.5 = half opacity) (0.0 - 1.0)</param>
-        /// <param name="extrashadow">Whether to always have a mini drop-shadow</param>
+        /// <param name="Text">The text to render.</param>
+        /// <param name="Position">Where to render the text at.</param>
+        /// <param name="MaxY">The maximum Y location to render text at..</param>
+        /// <param name="transmod">Transparency modifier (EG, 0.5 = half opacity) (0.0 - 1.0).</param>
+        /// <param name="extrashadow">Whether to always have a mini drop-shadow.</param>
         public void DrawColoredText(string Text, Location Position, int MaxY = int.MaxValue, float transmod = 1, bool extrashadow = false)
         {
             string[] lines = Text.Replace('\r', ' ').Replace(' ', (char)0x00A0).Replace("^q", "\"").Split('\n');
@@ -428,19 +428,18 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Semi-internal rendering of text strings.
         /// </summary>
-        /// <param name="X">The X location to render at</param>
-        /// <param name="Y">The Y location to render at</param>
-        /// <param name="text">The text to render</param>
-        /// <param name="font">The font to use</param>
-        /// <param name="color">The color ID number to use</param>
-        /// <param name="sf">The format</param>
-        /// <param name="trans">Transparency</param>
-        /// <param name="flip">Whether to flip the text</param>
-        /// <param name="pseudo">Whether to use pseudo-random color</param>
-        /// <param name="random">Whether to use real-random color</param>
-        /// <param name="jello">Whether to use a jello effect</param>
-        /// <param name="obfu">Whether to randomize letters</param>
-        /// <returns>The length of the rendered text in pixels</returns>
+        /// <param name="X">The X location to render at.</param>
+        /// <param name="Y">The Y location to render at.</param>
+        /// <param name="text">The text to render.</param>
+        /// <param name="font">The font to use.</param>
+        /// <param name="color">The color ID number to use.</param>
+        /// <param name="trans">Transparency.</param>
+        /// <param name="flip">Whether to flip the text.</param>
+        /// <param name="pseudo">Whether to use pseudo-random color.</param>
+        /// <param name="random">Whether to use real-random color.</param>
+        /// <param name="jello">Whether to use a jello effect.</param>
+        /// <param name="obfu">Whether to randomize letters.</param>
+        /// <returns>The length of the rendered text in pixels.</returns>
         public float RenderBaseText(float X, float Y, string text, GLFont font, int color,
             int trans = 255, bool flip = false, bool pseudo = false, bool random = false, bool jello = false, bool obfu = false)
         {
@@ -502,9 +501,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// Measures fancy notated text strings.
         /// Note: Do not include newlines!
         /// </summary>
-        /// <param name="line">The text to measure</param>
-        /// <param name="set">The FontSet to get fonts from</param>
-        /// <returns>the X-width of the text</returns>
+        /// <param name="line">The text to measure.</param>
+        /// <returns>the X-width of the text.</returns>
         public float MeasureFancyText(string line)
         {
             bool bold = false;
@@ -563,11 +561,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Draws a rectangle to screen.
         /// </summary>
-        /// <param name="X">The starting X</param>
-        /// <param name="Y">The starting Y</param>
-        /// <param name="width">The width</param>
-        /// <param name="height">The height</param>
-        /// <param name="c">The color to use</param>
+        /// <param name="X">The starting X.</param>
+        /// <param name="Y">The starting Y.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="c">The color to use.</param>
         public void DrawRectangle(float X, float Y, float width, float height, GLFont font, Color c)
         {
             VBO.AddQuad(new Vector2(X, Y), new Vector2(X + width, Y + height),
@@ -578,8 +576,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Used to identify if an input character is a valid color symbol (generally the character that follows a '^'), for use by RenderColoredText
         /// </summary>
-        /// <param name="c"><paramref name="c"/>The character to check</param>
-        /// <returns>whether the character is a valid color symbol</returns>
+        /// <param name="c"><paramref name="c"/>The character to check.</param>
+        /// <returns>whether the character is a valid color symbol.</returns>
         public static bool IsColorSymbol(char c)
         {
             return ((c >= '0' && c <= '9') /* 0123456789 */ ||

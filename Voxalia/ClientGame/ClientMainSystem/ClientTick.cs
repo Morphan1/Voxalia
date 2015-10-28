@@ -26,8 +26,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// Returns an item in the quick bar.
         /// Can return air.
         /// </summary>
-        /// <param name="slot">The slot, any number is permitted</param>
-        /// <returns>A valid item</returns>
+        /// <param name="slot">The slot, any number is permitted.</param>
+        /// <returns>A valid item.</returns>
         public ItemStack GetItemForSlot(int slot)
         {
             while (slot < 0)

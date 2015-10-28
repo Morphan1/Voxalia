@@ -52,7 +52,7 @@ namespace System.IO.Compression
             public bool EncodeUTF8;
 
             /// <summary>Overriden method</summary>
-            /// <returns>Filename in Zip</returns>
+            /// <returns>Filename in Zip.</returns>
             public override string ToString()
             {
                 return this.FilenameInZip;
@@ -109,9 +109,9 @@ namespace System.IO.Compression
         /// <summary>
         /// Method to create a new storage file
         /// </summary>
-        /// <param name="_filename">Full path of Zip file to create</param>
-        /// <param name="_comment">General comment for Zip file</param>
-        /// <returns>A valid ZipStorer object</returns>
+        /// <param name="_filename">Full path of Zip file to create.</param>
+        /// <param name="_comment">General comment for Zip file.</param>
+        /// <returns>A valid ZipStorer object.</returns>
         public static ZipStorer Create(string _filename, string _comment)
         {
             Stream stream = new FileStream(_filename, FileMode.Create, FileAccess.ReadWrite);
@@ -125,9 +125,9 @@ namespace System.IO.Compression
         /// <summary>
         /// Method to create a new zip storage in a stream
         /// </summary>
-        /// <param name="_stream"></param>
-        /// <param name="_comment"></param>
-        /// <returns>A valid ZipStorer object</returns>
+        /// <param name="_stream">.</param>
+        /// <param name="_comment">.</param>
+        /// <returns>A valid ZipStorer object.</returns>
         public static ZipStorer Create(Stream _stream, string _comment)
         {
             ZipStorer zip = new ZipStorer();
@@ -140,9 +140,9 @@ namespace System.IO.Compression
         /// <summary>
         /// Method to open an existing storage file
         /// </summary>
-        /// <param name="_filename">Full path of Zip file to open</param>
-        /// <param name="_access">File access mode as used in FileStream constructor</param>
-        /// <returns>A valid ZipStorer object</returns>
+        /// <param name="_filename">Full path of Zip file to open.</param>
+        /// <param name="_access">File access mode as used in FileStream constructor.</param>
+        /// <returns>A valid ZipStorer object.</returns>
         public static ZipStorer Open(string _filename, FileAccess _access)
         {
             Stream stream = (Stream)new FileStream(_filename, FileMode.Open, _access == FileAccess.Read ? FileAccess.Read : FileAccess.ReadWrite);
@@ -155,9 +155,9 @@ namespace System.IO.Compression
         /// <summary>
         /// Method to open an existing storage from stream
         /// </summary>
-        /// <param name="_stream">Already opened stream with zip contents</param>
-        /// <param name="_access">File access mode for stream operations</param>
-        /// <returns>A valid ZipStorer object</returns>
+        /// <param name="_stream">Already opened stream with zip contents.</param>
+        /// <param name="_access">File access mode for stream operations.</param>
+        /// <returns>A valid ZipStorer object.</returns>
         public static ZipStorer Open(Stream _stream, FileAccess _access)
         {
             if (!_stream.CanSeek && _access != FileAccess.Read)
@@ -176,10 +176,10 @@ namespace System.IO.Compression
         /// <summary>
         /// Add full contents of a file into the Zip storage
         /// </summary>
-        /// <param name="_method">Compression method</param>
-        /// <param name="_pathname">Full path of file to add to Zip storage</param>
-        /// <param name="_filenameInZip">Filename and path as desired in Zip directory</param>
-        /// <param name="_comment">Comment for stored file</param>        
+        /// <param name="_method">Compression method.</param>
+        /// <param name="_pathname">Full path of file to add to Zip storage.</param>
+        /// <param name="_filenameInZip">Filename and path as desired in Zip directory.</param>
+        /// <param name="_comment">Comment for stored file.</param>        
         public void AddFile(Compression _method, string _pathname, string _filenameInZip, string _comment)
         {
             if (Access == FileAccess.Read)
@@ -192,11 +192,11 @@ namespace System.IO.Compression
         /// <summary>
         /// Add full contents of a stream into the Zip storage
         /// </summary>
-        /// <param name="_method">Compression method</param>
-        /// <param name="_filenameInZip">Filename and path as desired in Zip directory</param>
-        /// <param name="_source">Stream object containing the data to store in Zip</param>
-        /// <param name="_modTime">Modification time of the data to store</param>
-        /// <param name="_comment">Comment for stored file</param>
+        /// <param name="_method">Compression method.</param>
+        /// <param name="_filenameInZip">Filename and path as desired in Zip directory.</param>
+        /// <param name="_source">Stream object containing the data to store in Zip.</param>
+        /// <param name="_modTime">Modification time of the data to store.</param>
+        /// <param name="_comment">Comment for stored file.</param>
         public void AddStream(Compression _method, string _filenameInZip, Stream _source, DateTime _modTime, string _comment)
         {
             if (Access == FileAccess.Read)
@@ -272,7 +272,7 @@ namespace System.IO.Compression
         /// <summary>
         /// Read all the file records in the central directory 
         /// </summary>
-        /// <returns>List of all entries in directory</returns>
+        /// <returns>List of all entries in directory.</returns>
         public List<ZipFileEntry> ReadCentralDir()
         {
             if (this.CentralDirImage == null)
@@ -322,9 +322,9 @@ namespace System.IO.Compression
         /// <summary>
         /// Copy the contents of a stored file into a physical file
         /// </summary>
-        /// <param name="_zfe">Entry information of file to extract</param>
-        /// <param name="_filename">Name of file to store uncompressed data</param>
-        /// <returns>True if success, false if not.</returns>
+        /// <param name="_zfe">Entry information of file to extract.</param>
+        /// <param name="_filename">Name of file to store uncompressed data.</param>
+        /// <returns>True if success, false if not..</returns>
         /// <remarks>Unique compression methods are Store and Deflate</remarks>
         public bool ExtractFile(ZipFileEntry _zfe, string _filename)
         {
@@ -350,9 +350,9 @@ namespace System.IO.Compression
         /// <summary>
         /// Copy the contents of a stored file into an opened stream
         /// </summary>
-        /// <param name="_zfe">Entry information of file to extract</param>
-        /// <param name="_stream">Stream to store the uncompressed data</param>
-        /// <returns>True if success, false if not.</returns>
+        /// <param name="_zfe">Entry information of file to extract.</param>
+        /// <param name="_stream">Stream to store the uncompressed data.</param>
+        /// <returns>True if success, false if not..</returns>
         /// <remarks>Unique compression methods are Store and Deflate</remarks>
         public bool ExtractFile(ZipFileEntry _zfe, Stream _stream)
         {
@@ -394,9 +394,9 @@ namespace System.IO.Compression
         /// <summary>
         /// Removes one of many files in storage. It creates a new Zip file.
         /// </summary>
-        /// <param name="_zip">Reference to the current Zip object</param>
-        /// <param name="_zfes">List of Entries to remove from storage</param>
-        /// <returns>True if success, false if not</returns>
+        /// <param name="_zip">Reference to the current Zip object.</param>
+        /// <param name="_zfes">List of Entries to remove from storage.</param>
+        /// <returns>True if success, false if not.</returns>
         /// <remarks>This method only works for storage of type FileStream</remarks>
         public static bool RemoveEntries(ref ZipStorer _zip, List<ZipFileEntry> _zfes)
         {

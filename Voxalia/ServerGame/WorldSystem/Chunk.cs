@@ -66,7 +66,7 @@ namespace Voxalia.ServerGame.WorldSystem
         /// Asyncable (Edit session).
         /// TODO: Local edit session lock.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>.</returns>
         public StaticMesh CalculateChunkShape()
         {
             List<Vector3> Vertices = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6); // TODO: Make this an array?

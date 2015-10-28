@@ -96,8 +96,8 @@ namespace Voxalia.Shared.Files
         /// <summary>
         /// Cleans a file name for direct system calls.
         /// </summary>
-        /// <param name="input">The original file name</param>
-        /// <returns>The cleaned file name</returns>
+        /// <param name="input">The original file name.</param>
+        /// <returns>The cleaned file name.</returns>
         public static string CleanFileName(string input)
         {
             StringBuilder output = new StringBuilder(input.Length);
@@ -168,8 +168,8 @@ namespace Voxalia.Shared.Files
         /// <summary>
         /// Returns whether a file exists.
         /// </summary>
-        /// <param name="filename">The name of the file to look for</param>
-        /// <returns>Whether the file exists</returns>
+        /// <param name="filename">The name of the file to look for.</param>
+        /// <returns>Whether the file exists.</returns>
         public bool Exists(string filename)
         {
             return FileIndex(filename) != -1;
@@ -178,8 +178,8 @@ namespace Voxalia.Shared.Files
         /// <summary>
         /// Returns all the byte data in a file.
         /// </summary>
-        /// <param name="filename">The name of the file to read</param>
-        /// <returns>The file's data, as a byte array</returns>
+        /// <param name="filename">The name of the file to read.</param>
+        /// <returns>The file's data, as a byte array.</returns>
         public byte[] ReadBytes(string filename)
         {
             int ind = FileIndex(filename);
@@ -212,8 +212,8 @@ namespace Voxalia.Shared.Files
         /// <summary>
         /// Returns a stream of the byte data in a file.
         /// </summary>
-        /// <param name="filename">The name of the file to read</param>
-        /// <returns>The file's data, as a stream</returns>
+        /// <param name="filename">The name of the file to read.</param>
+        /// <returns>The file's data, as a stream.</returns>
         public DataStream ReadToStream(string filename)
         {
             return new DataStream(ReadBytes(filename));
@@ -222,8 +222,8 @@ namespace Voxalia.Shared.Files
         /// <summary>
         /// Returns all the text data in a file.
         /// </summary>
-        /// <param name="filename">The name of the file to read</param>
-        /// <returns>The file's data, as a string</returns>
+        /// <param name="filename">The name of the file to read.</param>
+        /// <returns>The file's data, as a string.</returns>
         public string ReadText(string filename)
         {
             return encoding.GetString(ReadBytes(filename)).Replace("\r", "");
@@ -267,8 +267,8 @@ namespace Voxalia.Shared.Files
         /// <summary>
         /// Writes bytes to a file.
         /// </summary>
-        /// <param name="filename">The name of the file to write to</param>
-        /// <param name="bytes">The byte data to write</param>
+        /// <param name="filename">The name of the file to write to.</param>
+        /// <param name="bytes">The byte data to write.</param>
         public void WriteBytes(string filename, byte[] bytes)
         {
             string fname = CleanFileName(filename);
@@ -305,8 +305,8 @@ namespace Voxalia.Shared.Files
         /// <summary>
         /// Writes text to a file.
         /// </summary>
-        /// <param name="filename">The name of the file to write to</param>
-        /// <param name="text">The text data to write</param>
+        /// <param name="filename">The name of the file to write to.</param>
+        /// <param name="text">The text data to write.</param>
         public void WriteText(string filename, string text)
         {
             WriteBytes(filename, encoding.GetBytes(text.Replace('\r', ' ')));
@@ -315,8 +315,8 @@ namespace Voxalia.Shared.Files
         /// <summary>
         /// Adds text to a file.
         /// </summary>
-        /// <param name="filename">The name of the file to add to</param>
-        /// <param name="text">The text data to add</param>
+        /// <param name="filename">The name of the file to add to.</param>
+        /// <param name="text">The text data to add.</param>
         public void AppendText(string filename, string text)
         {
             string textoutput = ReadText(filename);
@@ -326,8 +326,8 @@ namespace Voxalia.Shared.Files
         /// <summary>
         /// Compresses a byte array using the GZip algorithm.
         /// </summary>
-        /// <param name="input">Uncompressed data</param>
-        /// <returns>Compressed data</returns>
+        /// <param name="input">Uncompressed data.</param>
+        /// <returns>Compressed data.</returns>
         public static byte[] GZip(byte[] input)
         {
             MemoryStream memstream = new MemoryStream();
@@ -342,8 +342,8 @@ namespace Voxalia.Shared.Files
         /// <summary>
         /// Decompress a byte array using the GZip algorithm.
         /// </summary>
-        /// <param name="input">Compressed data</param>
-        /// <returns>Uncompressed data</returns>
+        /// <param name="input">Compressed data.</param>
+        /// <returns>Uncompressed data.</returns>
         public static byte[] UnGZip(byte[] input)
         {
             using (MemoryStream output = new MemoryStream())

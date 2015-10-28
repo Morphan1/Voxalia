@@ -87,8 +87,8 @@ namespace Voxalia.Shared
         /// <summary>
         /// Converts a string to a float. Returns 0 if the string is not a valid float.
         /// </summary>
-        /// <param name="input">The string to convert</param>
-        /// <returns>The converted float</returns>
+        /// <param name="input">The string to convert.</param>
+        /// <returns>The converted float.</returns>
         public static float StringToFloat(string input)
         {
             float output;
@@ -110,8 +110,8 @@ namespace Voxalia.Shared
         /// <summary>
         /// Converts a string to a double. Returns 0 if the string is not a valid double.
         /// </summary>
-        /// <param name="input">The string to convert</param>
-        /// <returns>The converted double</returns>
+        /// <param name="input">The string to convert.</param>
+        /// <returns>The converted double.</returns>
         public static double StringToDouble(string input)
         {
             double output;
@@ -128,8 +128,8 @@ namespace Voxalia.Shared
         /// <summary>
         /// Converts a string to a ushort Returns 0 if the string is not a valid ushort.
         /// </summary>
-        /// <param name="input">The string to convert</param>
-        /// <returns>The converted ushort</returns>
+        /// <param name="input">The string to convert.</param>
+        /// <returns>The converted ushort.</returns>
         public static ushort StringToUShort(string input)
         {
             ushort output;
@@ -146,8 +146,8 @@ namespace Voxalia.Shared
         /// <summary>
         /// Converts a string to a int Returns 0 if the string is not a valid int.
         /// </summary>
-        /// <param name="input">The string to convert</param>
-        /// <returns>The converted int</returns>
+        /// <param name="input">The string to convert.</param>
+        /// <returns>The converted int.</returns>
         public static int StringToInt(string input)
         {
             int output;
@@ -164,7 +164,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns a string representation of the specified time.
         /// </summary>
-        /// <returns>The time as a string</returns>
+        /// <returns>The time as a string.</returns>
         public static string DateTimeToString(DateTime dt)
         {
             string utcoffset = "";
@@ -187,11 +187,11 @@ namespace Voxalia.Shared
         /// <summary>
         /// Pads a string to a specified length with a specified input, on a specified side.
         /// </summary>
-        /// <param name="input">The original string</param>
-        /// <param name="padding">The symbol to pad with</param>
-        /// <param name="length">How far to pad it to</param>
-        /// <param name="left">Whether to pad left (true), or right (false)</param>
-        /// <returns>The padded string</returns>
+        /// <param name="input">The original string.</param>
+        /// <param name="padding">The symbol to pad with.</param>
+        /// <param name="length">How far to pad it to.</param>
+        /// <param name="left">Whether to pad left (true), or right (false).</param>
+        /// <returns>The padded string.</returns>
         public static string Pad(string input, char padding, int length, bool left = true)
         {
             int targetlength = length - input.Length;
@@ -213,9 +213,9 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns a peice of text copied a specified number of times.
         /// </summary>
-        /// <param name="text">What text to copy</param>
-        /// <param name="times">How many times to copy it</param>
-        /// <returns></returns>
+        /// <param name="text">What text to copy.</param>
+        /// <param name="times">How many times to copy it.</param>
+        /// <returns>.</returns>
         public static string CopyText(string text, int times)
         {
             StringBuilder toret = new StringBuilder(text.Length * times);
@@ -229,9 +229,9 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns the number of times a character occurs in a string.
         /// </summary>
-        /// <param name="input">The string containing the character</param>
-        /// <param name="countme">The character which the string contains</param>
-        /// <returns>How many times the character occurs</returns>
+        /// <param name="input">The string containing the character.</param>
+        /// <param name="countme">The character which the string contains.</param>
+        /// <returns>How many times the character occurs.</returns>
         public static int CountCharacter(string input, char countme)
         {
             int count = 0;
@@ -248,9 +248,9 @@ namespace Voxalia.Shared
         /// <summary>
         /// Combines a list of strings into a single string, separated by spaces.
         /// </summary>
-        /// <param name="input">The list of strings to combine</param>
-        /// <param name="start">The index to start from</param>
-        /// <returns>The combined string</returns>
+        /// <param name="input">The list of strings to combine.</param>
+        /// <param name="start">The index to start from.</param>
+        /// <returns>The combined string.</returns>
         public static string Concat(List<string> input, int start = 0)
         {
             StringBuilder output = new StringBuilder();
@@ -264,8 +264,8 @@ namespace Voxalia.Shared
         /// <summary>
         /// If raw string data is input by a user, call this function to clean it for tag-safety.
         /// </summary>
-        /// <param name="input">The raw string</param>
-        /// <returns>A cleaned string</returns>
+        /// <param name="input">The raw string.</param>
+        /// <returns>A cleaned string.</returns>
         public static string CleanStringInput(string input)
         {
             // No nulls!
@@ -275,8 +275,8 @@ namespace Voxalia.Shared
         /// <summary>
         /// Used to identify if an input character is a valid color symbol (generally the character that follows a '^'), for use by RenderColoredText
         /// </summary>
-        /// <param name="c"><paramref name="c"/>The character to check</param>
-        /// <returns>whether the character is a valid color symbol</returns>
+        /// <param name="c"><paramref name="c"/>The character to check.</param>
+        /// <returns>whether the character is a valid color symbol.</returns>
         public static bool IsColorSymbol(char c)
         {
             return ((c >= '0' && c <= '9') /* 0123456789 */ ||
@@ -300,9 +300,9 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns a one-length vector of the Yaw/Pitch angle input.
         /// </summary>
-        /// <param name="yaw">The yaw angle, in radians</param>
-        /// <param name="pitch">The pitch angle, in radians</param>
-        /// <returns></returns>
+        /// <param name="yaw">The yaw angle, in radians.</param>
+        /// <param name="pitch">The pitch angle, in radians.</param>
+        /// <returns>.</returns>
         public static Location ForwardVector(double yaw, double pitch)
         {
             double cp = Math.Cos(pitch);
@@ -314,9 +314,9 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns a one-length vector of the Yaw/Pitch angle input in degrees
         /// </summary>
-        /// <param name="yaw">The yaw angle, in radians</param>
-        /// <param name="pitch">The pitch angle, in radians</param>
-        /// <returns></returns>
+        /// <param name="yaw">The yaw angle, in radians.</param>
+        /// <param name="pitch">The pitch angle, in radians.</param>
+        /// <returns>.</returns>
         public static Location ForwardVector_Deg(double yaw, double pitch)
         {
             double pitchdeg = pitch * PI180;
@@ -330,9 +330,9 @@ namespace Voxalia.Shared
         /// <summary>
         /// Rotates a vector by a certain yaw.
         /// </summary>
-        /// <param name="vec">The original vector</param>
-        /// <param name="yaw">The yaw to rotate by</param>
-        /// <returns>The rotated vector.</returns>
+        /// <param name="vec">The original vector.</param>
+        /// <param name="yaw">The yaw to rotate by.</param>
+        /// <returns>The rotated vector..</returns>
         public static Location RotateVector(Location vec, double yaw)
         {
             double cos = (float)Math.Cos(yaw);
@@ -343,10 +343,10 @@ namespace Voxalia.Shared
         /// <summary>
         /// Rotates a vector by a certain yaw and pitch.
         /// </summary>
-        /// <param name="vec">The original vector</param>
-        /// <param name="yaw">The yaw to rotate by</param>
-        /// <param name="pitch">The pitch to rotate by</param>
-        /// <returns>The rotated vector</returns>
+        /// <param name="vec">The original vector.</param>
+        /// <param name="yaw">The yaw to rotate by.</param>
+        /// <param name="pitch">The pitch to rotate by.</param>
+        /// <returns>The rotated vector.</returns>
         public static Location RotateVector(Location vec, double yaw, double pitch)
         {
             double cosyaw = (float)Math.Cos(yaw);
@@ -419,8 +419,8 @@ namespace Voxalia.Shared
         /// <summary>
         /// Converts a forward vector to yaw/pitch angles.
         /// </summary>
-        /// <param name="input">The forward vector</param>
-        /// <returns>The yaw/pitch angle vector</returns>
+        /// <param name="input">The forward vector.</param>
+        /// <returns>The yaw/pitch angle vector.</returns>
         public static Location VectorToAngles(Location input)
         {
             if (input.X == 0 && input.Y == 0)
@@ -477,8 +477,8 @@ namespace Voxalia.Shared
         /// <summary>
         /// Validates a username as correctly formatted.
         /// </summary>
-        /// <param name="str">The username to validate</param>
-        /// <returns>Whether the username is valid</returns>
+        /// <param name="str">The username to validate.</param>
+        /// <returns>Whether the username is valid.</returns>
         public static bool ValidateUsername(string str)
         {
             if (str == null)
@@ -511,7 +511,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// Calculates a Halton Sequence result.
         /// </summary>
-        /// <param name="basen">Should be prime</param>
+        /// <param name="basen">Should be prime.</param>
         static float HaltonSequence(int index, int basen)
         {
             if (basen <= 1)

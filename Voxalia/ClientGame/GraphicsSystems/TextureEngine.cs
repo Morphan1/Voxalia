@@ -88,8 +88,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Gets the texture object for a specific texture name.
         /// </summary>
-        /// <param name="texturename">The name of the texture</param>
-        /// <returns>A valid texture object</returns>
+        /// <param name="texturename">The name of the texture.</param>
+        /// <returns>A valid texture object.</returns>
         public Texture GetTexture(string texturename)
         {
             texturename = FileHandler.CleanFileName(texturename);
@@ -123,8 +123,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Loads a texture from file.
         /// </summary>
-        /// <param name="filename">The name of the file to use</param>
-        /// <returns>The loaded texture, or null if it does not exist</returns>
+        /// <param name="filename">The name of the file to use.</param>
+        /// <returns>The loaded texture, or null if it does not exist.</returns>
         private Texture LoadTexture(string filename)
         {
             try
@@ -169,10 +169,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Loads a texture from file.
         /// </summary>
-        /// <param name="filename">The name of the file to use</param>
-        /// <param name="depth">Where in the array to put it</param>
-        /// <param name="twidth">What width the texture must be at</param>
-        /// <returns>The loaded texture, or null if it does not exist</returns>
+        /// <param name="filename">The name of the file to use.</param>
+        /// <param name="depth">Where in the array to put it.</param>
+        /// <param name="twidth">What width the texture must be at.</param>
+        /// <returns>The loaded texture, or null if it does not exist.</returns>
         public void LoadTextureIntoArray(string filename, int depth, int twidth)
         {
             try
@@ -202,9 +202,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Creates a Texture object for a specific color.
         /// </summary>
-        /// <param name="c">The color to use</param>
-        /// <param name="name">The name of the texture</param>
-        /// <returns>The generated texture</returns>
+        /// <param name="c">The color to use.</param>
+        /// <param name="name">The name of the texture.</param>
+        /// <returns>The generated texture.</returns>
         public Texture GenerateForColor(Color c, string name)
         {
             Texture texture = new Texture();
@@ -229,7 +229,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Locks a bitmap file's data to a GL texture.
         /// </summary>
-        /// <param name="bmp">The bitmap to use</param>
+        /// <param name="bmp">The bitmap to use.</param>
         public void LockBitmapToTexture(Bitmap bmp)
         {
             // Send the bits across
@@ -250,7 +250,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Locks a bitmap file's data to a GL texture array.
         /// </summary>
-        /// <param name="bmp">The bitmap to use</param>
+        /// <param name="bmp">The bitmap to use.</param>
         public void LockBitmapToTexture(Bitmap bmp, int depth)
         {
             // Send the bits across
@@ -340,7 +340,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Saves the texture to a bitmap.
         /// </summary>
-        /// <param name="flip">Whether to flip the Y</param>
+        /// <param name="flip">Whether to flip the Y.</param>
         public Bitmap SaveToBMP(bool flip = false)
         {
             GL.BindTexture(TextureTarget.Texture2D, Original_InternalID);

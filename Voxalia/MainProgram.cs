@@ -26,7 +26,7 @@ namespace Voxalia
         /// Central program entry point.
         /// Decides whether to lauch the server or the client.
         /// </summary>
-        /// <param name="args">The command line arguments</param>
+        /// <param name="args">The command line arguments.</param>
         static void Main(string[] args)
         {
             Program.GameName = "Voxalia";

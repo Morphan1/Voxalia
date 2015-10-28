@@ -10,7 +10,7 @@ namespace Voxalia.Shared.Files
         /// <summary>
         /// Constructs a data stream with bytes pre-loaded.
         /// </summary>
-        /// <param name="bytes">The bytes to pre-load</param>
+        /// <param name="bytes">The bytes to pre-load.</param>
         public DataStream(byte[] bytes)
             : base(bytes)
         {

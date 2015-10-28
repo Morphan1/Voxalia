@@ -16,7 +16,7 @@ namespace Voxalia.ClientGame.CommandSystem.TagObjects.EntityTagObjects
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
-        /// <param name="data">The input tag data</param>
+        /// <param name="data">The input tag data.</param>
         public override string Handle(TagData data)
         {
             if (data.Input.Count == 0)

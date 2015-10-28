@@ -190,7 +190,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns the full linear length of the vector location, squared for efficiency.
         /// </summary>
-        /// <returns>The squared length</returns>
+        /// <returns>The squared length.</returns>
         public double LengthSquared()
         {
             return X * X + Y * Y + Z * Z;
@@ -199,7 +199,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns the full linear length of the vector location, which goes through a square-root operation (inefficient).
         /// </summary>
-        /// <returns>The square-rooted length</returns>
+        /// <returns>The square-rooted length.</returns>
         public double Length()
         {
             return (float)Math.Sqrt(X * X + Y * Y + Z * Z);
@@ -208,7 +208,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns whether the location is NaN.
         /// </summary>
-        /// <returns>whether the location is NaN</returns>
+        /// <returns>whether the location is NaN.</returns>
         public bool IsNaN()
         {
             return double.IsNaN(X) || double.IsNaN(Y) || double.IsNaN(Z);
@@ -217,8 +217,8 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns the dot product of this and another location.
         /// </summary>
-        /// <param name="two">The second location</param>
-        /// <returns>The dot product</returns>
+        /// <param name="two">The second location.</param>
+        /// <returns>The dot product.</returns>
         public double Dot(Location two)
         {
             return X * two.X + Y * two.Y + Z * two.Z;
@@ -228,7 +228,7 @@ namespace Voxalia.Shared
         /// Returns the location as a string in the form: (X, Y, Z)
         /// Inverts .FromString()
         /// </summary>
-        /// <returns>The location string</returns>
+        /// <returns>The location string.</returns>
         public override string ToString()
         {
             return "(" + X + ", " + Y + ", " + Z + ")";
@@ -238,7 +238,7 @@ namespace Voxalia.Shared
         /// Returns the location as a string in the form: X, Y, Z
         /// Inverts .FromString()
         /// </summary>
-        /// <returns>The location string</returns>
+        /// <returns>The location string.</returns>
         public string ToSimpleString()
         {
             return X + ", " + Y + ", " + Z;
@@ -247,7 +247,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns a normal form of this location.
         /// </summary>
-        /// <returns>A valid normal location</returns>
+        /// <returns>A valid normal location.</returns>
         public Location Normalize()
         {
             double len = Length();
@@ -261,8 +261,8 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns the cross product of this location with another.
         /// </summary>
-        /// <param name="two">The second location vector</param>
-        /// <returns>The cross product of the two</returns>
+        /// <param name="two">The second location vector.</param>
+        /// <returns>The cross product of the two.</returns>
         public Location CrossProduct(Location two)
         {
             return new Location(Y * two.Z - two.Y * Z, two.X * Z - X * two.Z, X * two.Y - Y * two.X);
@@ -271,8 +271,8 @@ namespace Voxalia.Shared
         /// <summary>
         /// Reflect a location vector against a normal.
         /// </summary>
-        /// <param name="normal">The normal vector</param>
-        /// <returns>The reflected vector</returns>
+        /// <param name="normal">The normal vector.</param>
+        /// <returns>The reflected vector.</returns>
         public Location Reflect(Location normal)
         {
             return this - (2 * this.Dot(normal) * normal);
@@ -295,7 +295,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// Returns a copy of this location.
         /// </summary>
-        /// <returns>A copy of the location</returns>
+        /// <returns>A copy of the location.</returns>
         public Location Duplicate()
         {
             return new Location(X, Y, Z);
@@ -387,8 +387,8 @@ namespace Voxalia.Shared
         /// Converts a string representation of a location to a Location object.
         /// Inverts .ToString(), .ToSimpleString()
         /// </summary>
-        /// <param name="input">The location string</param>
-        /// <returns>the location object</returns>
+        /// <param name="input">The location string.</param>
+        /// <returns>the location object.</returns>
         public static Location FromString(string input)
         {
             string[] data = input.Replace('(', ' ').Replace(')', ' ').Replace(" ", "").Split(',');
@@ -404,9 +404,9 @@ namespace Voxalia.Shared
         /// Expects 12 bytes.
         /// Inverts .ToBytes()
         /// </summary>
-        /// <param name="bytes">The bytes to read</param>
-        /// <param name="index">The index to start at</param>
-        /// <returns>the location object</returns>
+        /// <param name="bytes">The bytes to read.</param>
+        /// <param name="index">The index to start at.</param>
+        /// <returns>the location object.</returns>
         public static Location FromBytes(byte[] bytes, int index)
         {
             if (bytes.Length - index < 12)
@@ -422,7 +422,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// Converts the Location to a BEPUPhysics Vector3.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>.</returns>
         public BEPUutilities.Vector3 ToBVector()
         {
             return new BEPUutilities.Vector3((float)X, (float)Y, (float)Z);
@@ -431,7 +431,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// Gets the location of the block this location is within.
         /// </summary>
-        /// <returns>The block location</returns>
+        /// <returns>The block location.</returns>
         public Location GetBlockLocation()
         {
             return new Location(Math.Floor(X), Math.Floor(Y), Math.Floor(Z));

@@ -42,6 +42,8 @@
     <NoWarn>
     </NoWarn>
     <Optimize>false</Optimize>
+    <WarningLevel>3</WarningLevel>
+    <DocumentationFile>bin\Release\VoxaliaServerGame.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BEPUphysics">

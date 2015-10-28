@@ -112,7 +112,7 @@ namespace Voxalia.ClientGame.UISystem
         /// <summary>
         /// Writes a line of text to the console.
         /// </summary>
-        /// <param name="text">The text to be written</param>
+        /// <param name="text">The text to be written.</param>
         public static void WriteLine(string text)
         {
             Write(TextStyle.Default + text + "\n");
@@ -122,7 +122,7 @@ namespace Voxalia.ClientGame.UISystem
         /// <summary>
         /// Writes text to the console.
         /// </summary>
-        /// <param name="text">The text to be written</param>
+        /// <param name="text">The text to be written.</param>
         public static void Write(string text)
         {
             if (!ready)

@@ -61,9 +61,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Finds where a line hits the plane, if anywhere.
         /// </summary>
-        /// <param name="start">The start of the line</param>
-        /// <param name="end">The end of the line</param>
-        /// <returns>A location of the hit, or NaN if none</returns>
+        /// <param name="start">The start of the line.</param>
+        /// <param name="end">The end of the line.</param>
+        /// <returns>A location of the hit, or NaN if none.</returns>
         public Location IntersectLine(Location start, Location end)
         {
             Location ba = end - start;
@@ -85,8 +85,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Returns the distance between a point and the plane.
         /// </summary>
-        /// <param name="point">The point</param>
-        /// <returns>The distance</returns>
+        /// <param name="point">The point.</param>
+        /// <returns>The distance.</returns>
         public double Distance(Location point)
         {
             return Normal.Dot(point) + D;
@@ -98,9 +98,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// If it returns -1, the box is below the plane.
         /// If it returns 0, the box intersections with the plane.
         /// </summary>
-        /// <param name="Mins">The mins of the box</param>
-        /// <param name="Maxs">The maxes of the box</param>
-        /// <returns>-1, 0, or 1</returns>
+        /// <param name="Mins">The mins of the box.</param>
+        /// <param name="Maxs">The maxes of the box.</param>
+        /// <returns>-1, 0, or 1.</returns>
         public int SignToPlane(Location Mins, Location Maxs)
         {
             Location[] locs = new Location[8];
@@ -126,7 +126,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Converts the plane to a 36-byte array for transmission.
         /// </summary>
-        /// <returns>A byte array</returns>
+        /// <returns>A byte array.</returns>
         public byte[] ToBytes()
         {
             byte[] toret = new byte[36];
@@ -144,8 +144,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Converts a string to a plane.
         /// </summary>
-        /// <param name="input">The plane string</param>
-        /// <returns>A plane</returns>
+        /// <param name="input">The plane string.</param>
+        /// <returns>A plane.</returns>
         public static Plane FromString(string input)
         {
             string[] data = input.Replace("[", "").Replace("]", "").Replace(" ", "").Split('/');
@@ -159,8 +159,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Converts a byte array to a plane.
         /// </summary>
-        /// <param name="input">The byte array</param>
-        /// <returns>A plane</returns>
+        /// <param name="input">The byte array.</param>
+        /// <returns>A plane.</returns>
         public static Plane FromBytes(byte[] input)
         {
             return new Plane(Location.FromBytes(input, 0), Location.FromBytes(input, 12), Location.FromBytes(input, 24));

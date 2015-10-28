@@ -219,7 +219,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// Sets the friction level of this entity.
         /// </summary>
-        /// <param name="fric">The friction level</param>
+        /// <param name="fric">The friction level.</param>
         public virtual void SetFriction(float fric)
         {
             Friction = fric;
@@ -246,7 +246,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// Sets the bounciness (restitution coefficient)  of this entity.
         /// </summary>
-        /// <param name="bounce">The bounciness (restitution coefficient) </param>
+        /// <param name="bounce">The bounciness (restitution coefficient) .</param>
         public virtual void SetBounciness
             (float bounce)
         {
@@ -268,7 +268,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// Sets the mass of this entity.
         /// </summary>
-        /// <param name="mass">The new mass value</param>
+        /// <param name="mass">The new mass value.</param>
         public virtual void SetMass(float mass)
         {
             Mass = mass;
@@ -294,7 +294,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// Sets the position of this entity within the world.
         /// </summary>
-        /// <param name="pos">The position to move the entity to</param>
+        /// <param name="pos">The position to move the entity to.</param>
         public override void SetPosition(Location pos)
         {
             if (Body != null)
@@ -326,7 +326,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// Sets the velocity of this entity.
         /// </summary>
-        /// <param name="vel">The new velocity</param>
+        /// <param name="vel">The new velocity.</param>
         public virtual void SetVelocity(Location vel)
         {
             LVel = vel;
@@ -355,7 +355,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// Sets the angular velocity of this entity.
         /// </summary>
-        /// <param name="vel">The new velocity</param>
+        /// <param name="vel">The new velocity.</param>
         public virtual void SetAngularVelocity(Location vel)
         {
             AVel = vel;
@@ -380,7 +380,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// Sets the direction of the entity.
         /// </summary>
-        /// <param name="rot">The new angles</param>
+        /// <param name="rot">The new angles.</param>
         public override void SetOrientation(Quaternion rot)
         {
             if (Body != null)

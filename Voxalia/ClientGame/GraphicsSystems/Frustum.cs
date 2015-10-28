@@ -34,9 +34,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Returns whether an AABB is contained by the Frustum.
         /// </summary>
-        /// <param name="min">The lower coord of the AABB</param>
-        /// <param name="max">The higher coord of the AABB</param>
-        /// <returns>Whether it is contained</returns>
+        /// <param name="min">The lower coord of the AABB.</param>
+        /// <param name="max">The higher coord of the AABB.</param>
+        /// <returns>Whether it is contained.</returns>
         public bool ContainsBox(Location min, Location max)
         { // TODO: Improve accuracy
             if (min == max)
@@ -86,9 +86,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Returns whether the frustum contains a sphere.
         /// </summary>
-        /// <param name="point">The center of the sphere</param>
-        /// <param name="radius">The radius of the sphere</param>
-        /// <returns>Whether it intersects</returns>
+        /// <param name="point">The center of the sphere.</param>
+        /// <param name="radius">The radius of the sphere.</param>
+        /// <returns>Whether it intersects.</returns>
         public bool ContainsSphere(Location point, float radius)
         {
             // TODO: Fix
@@ -135,8 +135,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Returns whether the Frustum contains a point.
         /// </summary>
-        /// <param name="point">The point</param>
-        /// <returns>Whether it's contained</returns>
+        /// <param name="point">The point.</param>
+        /// <returns>Whether it's contained.</returns>
         public bool Contains(Location point)
         {
             double rel = TryPoint(point, Far);

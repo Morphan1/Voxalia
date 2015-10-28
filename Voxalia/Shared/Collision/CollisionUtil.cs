@@ -97,10 +97,10 @@ namespace Voxalia.Shared.Collision
         /// <summary>
         /// Returns information on what a cuboid-shaped line trace would collide with, if anything.
         /// </summary>
-        /// <param name="start">The start of the line</param>
-        /// <param name="end">The end of the line</param>
-        /// <param name="filter">The collision filter, input a BEPU BroadPhaseEntry and output whether collision should be allowed</param>
-        /// <returns>The collision details</returns>
+        /// <param name="start">The start of the line.</param>
+        /// <param name="end">The end of the line.</param>
+        /// <param name="filter">The collision filter, input a BEPU BroadPhaseEntry and output whether collision should be allowed.</param>
+        /// <returns>The collision details.</returns>
         public CollisionResult CuboidLineTrace(ConvexShape shape, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
         {
             Vector3 e = new Vector3((float)(end.X - start.X), (float)(end.Y - start.Y), (float)(end.Z - start.Z));
@@ -142,10 +142,10 @@ namespace Voxalia.Shared.Collision
         /// <summary>
         /// Returns information on what a line trace would collide with, if anything.
         /// </summary>
-        /// <param name="start">The start of the line</param>
-        /// <param name="end">The end of the line</param>
-        /// <param name="filter">The collision filter, input a BEPU BroadPhaseEntry and output whether collision should be allowed</param>
-        /// <returns>The collision details</returns>
+        /// <param name="start">The start of the line.</param>
+        /// <param name="end">The end of the line.</param>
+        /// <param name="filter">The collision filter, input a BEPU BroadPhaseEntry and output whether collision should be allowed.</param>
+        /// <returns>The collision details.</returns>
         public CollisionResult RayTrace(Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
         {
             double len = (end - start).Length();
@@ -187,11 +187,11 @@ namespace Voxalia.Shared.Collision
         /// <summary>
         /// Returns whether a box contains (intersects with) another box.
         /// </summary>
-        /// <param name="elow">The low point for box 1</param>
-        /// <param name="ehigh">The high point for box 1</param>
-        /// <param name="Low">The low point for box 2</param>
-        /// <param name="High">The high point for box 2</param>
-        /// <returns>whether there is intersection</returns>
+        /// <param name="elow">The low point for box 1.</param>
+        /// <param name="ehigh">The high point for box 1.</param>
+        /// <param name="Low">The low point for box 2.</param>
+        /// <param name="High">The high point for box 2.</param>
+        /// <returns>whether there is intersection.</returns>
         public static bool BoxContainsBox(Location elow, Location ehigh, Location Low, Location High)
         {
             return Low.X <= ehigh.X && Low.Y <= ehigh.Y && Low.Z <= ehigh.Z &&
@@ -201,10 +201,10 @@ namespace Voxalia.Shared.Collision
         /// <summary>
         /// Returns whether a box contains a point.
         /// </summary>
-        /// <param name="elow">The low point for the box</param>
-        /// <param name="ehigh">The high point for the box</param>
-        /// <param name="point">The point to check</param>
-        /// <returns>whether there is intersection</returns>
+        /// <param name="elow">The low point for the box.</param>
+        /// <param name="ehigh">The high point for the box.</param>
+        /// <param name="point">The point to check.</param>
+        /// <returns>whether there is intersection.</returns>
         public static bool BoxContainsPoint(Location elow, Location ehigh, Location point)
         {
             return point.X <= ehigh.X && point.Y <= ehigh.Y && point.Z <= ehigh.Z &&
@@ -214,15 +214,15 @@ namespace Voxalia.Shared.Collision
         /// <summary>
         /// Runs a collision check between two AABB objects.
         /// </summary>
-        /// <param name="Position">The block's position</param>
-        /// <param name="Mins">The block's mins</param>
-        /// <param name="Maxs">The block's maxs</param>
-        /// <param name="Mins2">The moving object's mins</param>
-        /// <param name="Maxs2">The moving object's maxs</param>
-        /// <param name="start">The starting location of the moving object</param>
-        /// <param name="end">The ending location of the moving object</param>
-        /// <param name="normal">The normal of the hit, or NaN if none</param>
-        /// <returns>The location of the hit, or NaN if none</returns>
+        /// <param name="Position">The block's position.</param>
+        /// <param name="Mins">The block's mins.</param>
+        /// <param name="Maxs">The block's maxs.</param>
+        /// <param name="Mins2">The moving object's mins.</param>
+        /// <param name="Maxs2">The moving object's maxs.</param>
+        /// <param name="start">The starting location of the moving object.</param>
+        /// <param name="end">The ending location of the moving object.</param>
+        /// <param name="normal">The normal of the hit, or NaN if none.</param>
+        /// <returns>The location of the hit, or NaN if none.</returns>
         public static Location AABBClosestBox(Location Position, Location Mins, Location Maxs, Location Mins2, Location Maxs2, Location start, Location end, out Location normal)
         {
             Location velocity = end - start;
@@ -346,13 +346,13 @@ namespace Voxalia.Shared.Collision
         /// <summary>
         /// Runs a collision check between an AABB and a ray.
         /// </summary>
-        /// <param name="Position">The block's position</param>
-        /// <param name="Mins">The block's mins</param>
-        /// <param name="Maxs">The block's maxs</param>
-        /// <param name="start">The starting location of the ray</param>
-        /// <param name="end">The ending location of the ray</param>
-        /// <param name="normal">The normal of the hit, or NaN if none</param>
-        /// <returns>The location of the hit, or NaN if none</returns>
+        /// <param name="Position">The block's position.</param>
+        /// <param name="Mins">The block's mins.</param>
+        /// <param name="Maxs">The block's maxs.</param>
+        /// <param name="start">The starting location of the ray.</param>
+        /// <param name="end">The ending location of the ray.</param>
+        /// <param name="normal">The normal of the hit, or NaN if none.</param>
+        /// <returns>The location of the hit, or NaN if none.</returns>
         public static Location RayTraceBox(Location Position, Location Mins, Location Maxs, Location start, Location end, out Location normal)
         {
             Location velocity = end - start;
@@ -472,9 +472,9 @@ namespace Voxalia.Shared.Collision
         /// <summary>
         /// Gets the lowest point of two points.
         /// </summary>
-        /// <param name="one">The first point</param>
-        /// <param name="two">The second point</param>
-        /// <returns>The lowest point</returns>
+        /// <param name="one">The first point.</param>
+        /// <param name="two">The second point.</param>
+        /// <returns>The lowest point.</returns>
         public static Location GetLow(Location one, Location two)
         {
             return new Location(one.X < two.X ? one.X : two.X,
@@ -485,9 +485,9 @@ namespace Voxalia.Shared.Collision
         /// <summary>
         /// Gets the highest point of two points.
         /// </summary>
-        /// <param name="one">The first point</param>
-        /// <param name="two">The second point</param>
-        /// <returns>The highest point</returns>
+        /// <param name="one">The first point.</param>
+        /// <param name="two">The second point.</param>
+        /// <returns>The highest point.</returns>
         public static Location GetHigh(Location one, Location two)
         {
             return new Location(one.X > two.X ? one.X : two.X,

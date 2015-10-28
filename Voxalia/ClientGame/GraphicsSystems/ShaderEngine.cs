@@ -60,8 +60,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Gets the shader object for a specific shader name.
         /// </summary>
-        /// <param name="shadername">The name of the shader</param>
-        /// <returns>A valid shader object</returns>
+        /// <param name="shadername">The name of the shader.</param>
+        /// <returns>A valid shader object.</returns>
         public Shader GetShader(string shadername)
         {
             shadername = FileHandler.CleanFileName(shadername);
@@ -89,8 +89,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Loads a shader from file.
         /// </summary>
-        /// <param name="filename">The name of the file to use</param>
-        /// <returns>The loaded shader, or null if it does not exist</returns>
+        /// <param name="filename">The name of the file to use.</param>
+        /// <returns>The loaded shader, or null if it does not exist.</returns>
         public Shader LoadShader(string filename)
         {
             try
@@ -125,10 +125,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Creates a full Shader object for a VS/FS input.
         /// </summary>
-        /// <param name="VS">The input VertexShader code</param>
-        /// <param name="FS">The input FragmentShader code</param>
-        /// <param name="name">The name of the shader</param>
-        /// <returns>A valid Shader object</returns>
+        /// <param name="VS">The input VertexShader code.</param>
+        /// <param name="FS">The input FragmentShader code.</param>
+        /// <param name="name">The name of the shader.</param>
+        /// <returns>A valid Shader object.</returns>
         public Shader CreateShader(string VS, string FS, string name)
         {
             int Program = CompileToProgram(VS, FS);
@@ -144,9 +144,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Compiles a VertexShader and FragmentShader to a usable shader program.
         /// </summary>
-        /// <param name="VS">The input VertexShader code</param>
-        /// <param name="FS">The input FragmentShader code</param>
-        /// <returns>The internal OpenGL program ID</returns>
+        /// <param name="VS">The input VertexShader code.</param>
+        /// <param name="FS">The input FragmentShader code.</param>
+        /// <returns>The internal OpenGL program ID.</returns>
         public int CompileToProgram(string VS, string FS)
         {
             int VertexObject = GL.CreateShader(ShaderType.VertexShader);

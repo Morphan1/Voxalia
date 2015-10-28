@@ -28,7 +28,7 @@ namespace Voxalia.ClientGame.CommandSystem.TagBases
         /// <summary>
         /// Handles a 'player' tag.
         /// </summary>
-        /// <param name="data">The data to be handled</param>
+        /// <param name="data">The data to be handled.</param>
         public override string Handle(TagData data)
         {
             return new PlayerTag(TheClient).Handle(data.Shrink());
