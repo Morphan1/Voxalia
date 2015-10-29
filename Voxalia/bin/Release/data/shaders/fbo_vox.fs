@@ -20,7 +20,7 @@ layout (location = 3) out vec4 renderhint;
 void main()
 {
 	vec4 col = texture(s, f_texcoord) * f_color;
-	if (col.w * v_color.w < 0.9)
+	if (col.w * v_color.w < 0.95)
 	{
 		discard;
 	}

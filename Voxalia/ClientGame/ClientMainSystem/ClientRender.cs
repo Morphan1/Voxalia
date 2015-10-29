@@ -20,6 +20,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public List<LightObject> Lights = new List<LightObject>();
 
+        public void StandardBlend()
+        {
+
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+        }
+
+        public void TranspBlend()
+        {
+
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+        }
+
         void InitRendering()
         {
             GL.Viewport(0, 0, Window.Width, Window.Height);
@@ -27,7 +39,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             vph = Window.Height;
             GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            StandardBlend();
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.Enable(EnableCap.CullFace);
             GL.CullFace(CullFaceMode.Front);
@@ -389,20 +401,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, RS4P.fbo);
                 GL.BlitFramebuffer(0, 0, Window.Width, Window.Height, 0, 0, Window.Width, Window.Height, ClearBufferMask.DepthBufferBit, BlitFramebufferFilter.Nearest);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
-                ReverseEntitiesOrder();
-                Particles.Sort();
-                s_transponlyvox.Bind();
                 Matrix4 def = Matrix4.Identity;
-                GL.UniformMatrix4(1, false, ref combined);
-                GL.UniformMatrix4(2, false, ref def);
-                s_transponly.Bind();
-                VBO.BonesIdentity();
-                GL.UniformMatrix4(1, false, ref combined);
-                GL.UniformMatrix4(2, false, ref def);
-                FBOid = 3;
-                Render3D(false);
-                FBOid = 0;
-                RenderSkyflare(combined);
                 s_colormultr.Bind();
                 VBO.BonesIdentity();
                 GL.UniformMatrix4(1, false, ref combined);
@@ -413,6 +412,23 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Render3DWires();
                 }
                 RenderSkyflare(combined);
+                ReverseEntitiesOrder();
+                Particles.Sort();
+                s_transponlyvox.Bind();
+                GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref def);
+                s_transponly.Bind();
+                VBO.BonesIdentity();
+                GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref def);
+                FBOid = 3;
+                TranspBlend();
+                GL.DepthMask(false);
+                Render3D(false);
+                FBOid = 0;
+                RenderSkyflare(combined);
+                StandardBlend();
+                GL.DepthMask(true);
             }
             else
             {
@@ -503,6 +519,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void RenderSkyflare(Matrix4 combined)
         {
+            /*
             if (CVars.r_lensflare.ValueB)
             {
                 if (PlanetSunDist > 21f)
@@ -540,6 +557,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     }
                 }
             }
+            */
         }
 
         public void Establish2D()
