@@ -81,12 +81,12 @@ namespace Voxalia.ClientGame.WorldSystem
                                 BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(x * PosMultiplier, -1, z * PosMultiplier), 1, 0, 1);
                                 BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(30, y * PosMultiplier, z * PosMultiplier), 0, 1, 1);
                                 BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(-1, y * PosMultiplier, z * PosMultiplier), 0, 1, 1);
-                                bool zps = ((Material)zp.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[zp.BlockData].OccupiesTOP();
-                                bool zms = ((Material)zm.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[zm.BlockData].OccupiesBOTTOM();
-                                bool xps = ((Material)xp.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXP();
-                                bool xms = ((Material)xm.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXM();
-                                bool yps = ((Material)yp.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYP();
-                                bool yms = ((Material)ym.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYM();
+                                bool zps = ((Material)zp.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
+                                bool zms = ((Material)zm.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
+                                bool xps = ((Material)xp.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
+                                bool xms = ((Material)xm.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
+                                bool yps = ((Material)yp.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
+                                bool yms = ((Material)ym.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
                                 BEPUutilities.Vector3 pos = new BEPUutilities.Vector3(x, y, z);
                                 List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)
@@ -125,6 +125,32 @@ namespace Voxalia.ClientGame.WorldSystem
                                     for (int i = 0; i < vecsi.Count; i++)
                                     {
                                         Cols.Add(new Vector4(1f));
+                                    }
+                                }
+                                if (!((Material)c.BlockMaterial).IsOpaque())
+                                {
+                                    for (int i = vecsi.Count - 1; i >= 0; i--)
+                                    {
+                                        Vertices.Add(new Vector3(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z));
+                                    }
+                                    for (int i = normsi.Count - 1; i >= 0; i--)
+                                    {
+                                        Norms.Add(new Vector3(normsi[i].X, normsi[i].Y, normsi[i].Z));
+                                    }
+                                    for (int i = tci.Count - 1; i >= 0; i--)
+                                    {
+                                        TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
+                                    }
+                                    if (vecsi.Count != normsi.Count || normsi.Count != tci.Count)
+                                    {
+                                        SysConsole.Output(OutputType.INFO, "v:" + vecsi.Count + ",n:" + normsi.Count + ",tci:" + tci.Count);
+                                    }
+                                    // NOTE: Lights!
+                                    {
+                                        for (int i = vecsi.Count - 1; i >= 0; i--)
+                                        {
+                                            Cols.Add(new Vector4(1f));
+                                        }
                                     }
                                 }
                             }
