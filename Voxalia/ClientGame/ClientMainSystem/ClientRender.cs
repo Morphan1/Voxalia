@@ -422,12 +422,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.UniformMatrix4(1, false, ref combined);
                 GL.UniformMatrix4(2, false, ref def);
                 FBOid = 3;
-                TranspBlend();
+                //TranspBlend();
                 GL.DepthMask(false);
                 Render3D(false);
                 FBOid = 0;
                 RenderSkyflare(combined);
-                StandardBlend();
+                //StandardBlend();
                 GL.DepthMask(true);
             }
             else
