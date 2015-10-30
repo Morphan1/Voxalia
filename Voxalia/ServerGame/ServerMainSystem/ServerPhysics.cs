@@ -1,46 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
 using Voxalia.ServerGame.WorldSystem;
+using Frenetic;
 
 namespace Voxalia.ServerGame.ServerMainSystem
 {
     // TODO: Rename or scrap file?
     public partial class Server
     {
+        // TODO: Dictionary?
         public List<Region> LoadedRegions = new List<Region>();
 
         /// <summary>
         /// Fired when a region is going to be loaded; can be cancelled.
-        /// For purely listening to a region load after the fact, use <see cref="OnRegionLoaded"/>.
+        /// For purely listening to a region load after the fact, use <see cref="OnRegionLoadPostEvent"/>.
         /// </summary>
-        public EventHandler<RegionLoadingEventArgs> OnRegionLoading;
+        public FreneticEventHandler<RegionLoadPreEventArgs> OnRegionLoadPreEvent;
 
         /// <summary>
         /// Fired when a region has been loaded; is purely informative.
-        /// For cancelling a region load, use <see cref="OnRegionLoading"/>.
+        /// For cancelling a region load, use <see cref="OnRegionLoadPreEvent"/>.
         /// </summary>
-        public EventHandler<RegionLoadedEventArgs> OnRegionLoaded;
+        public FreneticEventHandler<RegionLoadPostEventArgs> OnRegionLoadPostEvent;
 
-        public void LoadRegion(string name)
+        public Region LoadRegion(string name)
         {
-            if (OnRegionLoading != null)
+            string nl = name.ToLower();
+            for (int i = 0; i < LoadedRegions.Count; i++)
             {
-                RegionLoadingEventArgs e = new RegionLoadingEventArgs() { RegionName = name };
-                OnRegionLoading(this, e);
+                if (LoadedRegions[i].Name == nl)
+                {
+                    return LoadedRegions[i];
+                }
+            }
+            if (OnRegionLoadPreEvent != null)
+            {
+                RegionLoadPreEventArgs e = new RegionLoadPreEventArgs() { RegionName = name };
+                OnRegionLoadPreEvent.Fire(e);
                 if (e.Cancelled)
                 {
-                    return;
+                    return null;
                 }
             }
             Region region = new Region();
-            region.Name = name.ToLower();
+            region.Name = nl;
             region.TheServer = this;
             region.BuildWorld();
             LoadedRegions.Add(region);
-            if (OnRegionLoaded != null)
+            if (OnRegionLoadPostEvent != null)
             {
-                OnRegionLoaded(this, new RegionLoadedEventArgs() { TheRegion = region });
+                OnRegionLoadPostEvent.Fire(new RegionLoadPostEventArgs() { TheRegion = region });
             }
+            return region;
         }
 
         /// <summary>
@@ -55,14 +66,14 @@ namespace Voxalia.ServerGame.ServerMainSystem
         }
     }
 
-    public class RegionLoadingEventArgs : EventArgs
+    public class RegionLoadPreEventArgs : EventArgs
     {
         public bool Cancelled = false;
 
         public string RegionName = null;
     }
 
-    public class RegionLoadedEventArgs : EventArgs
+    public class RegionLoadPostEventArgs : EventArgs
     {
         public Region TheRegion = null;
     }

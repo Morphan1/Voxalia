@@ -17,7 +17,7 @@ namespace VoxaliaServerSamplePlugin
             Manager = manager;
             // Set up
             manager.TheServer.Commands.CommandSystem.RegisterCommand(new GreetingCommand(this));
-            manager.TheServer.OnRegionLoaded += ReactToRegionLoaded;
+            manager.TheServer.OnRegionLoadPostEvent += ReactToRegionLoaded;
             return true;
         }
 
@@ -26,11 +26,11 @@ namespace VoxaliaServerSamplePlugin
             SysConsole.OutputCustom(OutputType, "Goodbye!");
             // Clean up
             Manager.TheServer.Commands.CommandSystem.UnregisterCommand("greeting");
-            Manager.TheServer.OnRegionLoaded -= ReactToRegionLoaded;
+            Manager.TheServer.OnRegionLoadPostEvent -= ReactToRegionLoaded;
 
         }
 
-        public void ReactToRegionLoaded(object sender, RegionLoadedEventArgs e)
+        public void ReactToRegionLoaded(RegionLoadPostEventArgs e)
         {
             SysConsole.OutputCustom(OutputType, "I see the region " + e.TheRegion.Name + " has been loaded!");
         }
