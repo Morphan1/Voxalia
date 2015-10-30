@@ -41,7 +41,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             SetTexture((int)Material.SNOW, "blocks/solid/snow");
             SetTexture((int)Material.SMOKE, "blocks/liquid/smoke");
             SetTexture((int)Material.LOG, "blocks/solid/wood");
-            for (int i = (int)Material.LOG + 1; i < MaterialHelpers.MAX_TEXTURES - 7; i++)
+            SetTexture((int)Material.TALLGRASS, "blocks/transparent/tallgrass");
+            for (int i = (int)Material.NUM_DEFAULT; i < MaterialHelpers.MAX_TEXTURES - 7; i++)
             {
                 SetTexture(i, "clear");
             }

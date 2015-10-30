@@ -39,6 +39,19 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     for (int z = Math.Max(top - 1, 0); z < Math.Min(top, 30); z++)
                     {
                         chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 0, 0));
+                    };
+                    if (top >= 0 && top < 30)
+                    {
+                        Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1500 * 1500));
+                        int n = spotr.Next(50);
+                        if (n == 1)
+                        {
+                            chunk.SetBlockAt(x, y, top, new BlockInternal((ushort)Material.TALLGRASS, 52, 0));
+                        }
+                        else if (n == 2)
+                        {
+                            chunk.SetBlockAt(x, y, top, new BlockInternal((ushort)Material.TALLGRASS, 127, 0));
+                        }
                     }
                     // Smooth terrain cap
                     for (int z = Math.Max(top, 0); z < Math.Min(top + 1, 30); z++)
@@ -98,7 +111,8 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     // TODO: Separate generator?
                     if (top >= -7 && top < 30)
                     {
-                        if (new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000)).Next(75) == 1) // TODO: Efficiency!
+                        Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000));
+                        if (spotr.Next(75) == 1) // TODO: Efficiency!
                         {
                             int cap = Math.Min(top + 5, 30);
                             for (int z = Math.Max(top, 0); z < cap; z++)
