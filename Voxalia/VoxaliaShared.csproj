@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Shared\BlockShapes\BSD39a76.cs" />
+    <Compile Include="Shared\BlockShapes\BSD52a127.cs" />
     <Compile Include="Shared\Model3D.cs" />
     <Compile Include="Shared\Collision\AABB.cs" />
     <Compile Include="Shared\AnimationEngine.cs" />
