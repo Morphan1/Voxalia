@@ -2,6 +2,7 @@
 
 layout (binding = 0) uniform sampler2D s;
 
+layout (location = 0) uniform vec4 bw_color = vec4(0.0, 0.0, 0.0, 1.0);
 layout (location = 3) uniform vec4 v_color = vec4(1.0);
 layout (location = 4) uniform float specular_power = 200.0 / 1000.0f;
 layout (location = 5) uniform float minimum_light = 0.0;
@@ -15,6 +16,7 @@ layout (location = 0) out vec4 color;
 layout (location = 1) out vec4 position;
 layout (location = 2) out vec4 normal;
 layout (location = 3) out vec4 renderhint;
+layout (location = 4) out vec4 bw;
 
 void main()
 {
@@ -28,4 +30,5 @@ void main()
 	normal = vec4(f_normal, 1.0);
 	renderhint = vec4(specular_strength, specular_power, minimum_light, 1.0);
 	// TODO: 1 Additional renderhint - we have the slot, why not
+    bw = bw_color;
 }

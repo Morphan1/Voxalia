@@ -45,6 +45,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.CullFace(CullFaceMode.Front);
             s_shadow = Shaders.GetShader("shadow");
             s_main = Shaders.GetShader("test");
+            s_finalgodray = Shaders.GetShader("finalgodray");
             s_fbo = Shaders.GetShader("fbo");
             s_fbov = Shaders.GetShader("fbo_vox");
             s_shadowadder = Shaders.GetShader("shadowadder");
@@ -126,6 +127,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Shader s_shadow;
         public Shader s_main;
+        public Shader s_finalgodray;
         public Shader s_fbo;
         public Shader s_fbov;
         public Shader s_shadowadder;
@@ -370,11 +372,23 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 GL.DrawBuffer(DrawBufferMode.Back);
-                s_main.Bind();
+                if (CVars.r_godrays.ValueB)
+                {
+                    s_finalgodray.Bind();
+                }
+                else
+                {
+                    s_main.Bind();
+                }
                 GL.Uniform3(5, ClientUtilities.Convert(ambient));
                 GL.Uniform3(8, ClientUtilities.Convert(CameraFinalTarget));
                 GL.Uniform1(9, CVars.r_dof_strength.ValueF);
-                GL.Uniform1(10, CVars.r_zfar.ValueF - CVars.r_znear.ValueF);
+                Vector3 lPos = GetSunLocation();
+                Vector4 t = Vector4.Transform(new Vector4(lPos, 1f), combined);
+                Vector2 lightPos = (t.Xy / t.W) / 2f + new Vector2(0.5f);
+                GL.Uniform2(10, ref lightPos);
+                GL.ActiveTexture(TextureUnit.Texture6);
+                GL.BindTexture(TextureTarget.Texture2D, RS4P.bwtexture);
                 GL.ActiveTexture(TextureUnit.Texture4);
                 GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -478,10 +492,20 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Render2D();
         }
 
+        float dist = 340; // TODO: View rad
+
+        public Vector3 GetSunLocation()
+        {
+            return ClientUtilities.Convert(CameraPos + TheSun.Direction * -(dist * 0.96f));
+        }
+
         public void RenderSkybox()
         {
+            if (FBOid == 1)
+            {
+                GL.Uniform4(0, new Vector4(0f, 0f, 0f, 0f));
+            }
             Rendering.SetMinimumLight(1);
-            float dist = 340; // TODO: View rad
             GL.Disable(EnableCap.CullFace);
             Matrix4 scale = Matrix4.CreateScale(dist, dist, dist) * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos));
             GL.UniformMatrix4(2, false, ref scale);
@@ -497,12 +521,20 @@ namespace Voxalia.ClientGame.ClientMainSystem
             skybox[4].Render(false);
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/yp").Bind();
             skybox[5].Render(false);
+            if (FBOid == 1)
+            {
+                GL.Uniform4(0, Color4.White);
+            }
             Textures.GetTexture("skies/sun").Bind(); // TODO: Store var? Make dynamic?
             Matrix4 rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
                 * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + SunAngle.Yaw) * Utilities.PI180))
                 * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + TheSun.Direction * -(dist * 0.96f))); // TODO: adjust based on view rad
             Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
+            if (FBOid == 1)
+            {
+                GL.Uniform4(0, Color4.Black);
+            }
             Textures.GetTexture("skies/planet").Bind(); // TODO: Store var? Make dynamic?
             Rendering.SetColor(new Color4(PlanetLight, PlanetLight, PlanetLight, 1));
             rot = Matrix4.CreateTranslation(-150f, -150f, 0f)
@@ -570,6 +602,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void Render3D(bool shadows_only)
         {
+            if (FBOid == 1)
+            {
+                GL.Uniform4(0, Color4.Black);
+            }
             GL.Enable(EnableCap.CullFace);
             if (shadows_only)
             {
@@ -605,6 +641,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (FBOid == 1)
             {
                 s_fbov.Bind();
+                if (FBOid == 1)
+                {
+                    GL.Uniform4(0, Color4.Black);
+                }
             }
             else if (FBOid == 2)
             {
@@ -618,6 +658,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (FBOid == 1)
             {
                 s_fbo.Bind();
+                if (FBOid == 1)
+                {
+                    GL.Uniform4(0, Color4.Black);
+                }
             }
             else if (FBOid == 2)
             {

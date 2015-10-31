@@ -8,13 +8,18 @@ namespace Voxalia.ClientGame.GraphicsSystems
     {
         public int Width;
         public int Height;
+
         public uint fbo;
+
         public uint DiffuseTexture;
         public uint PositionTexture;
         public uint NormalsTexture;
         public uint DepthTexture;
         public uint RenderhintTexture;
+        public uint bwtexture;
+
         public Renderer Rendering;
+
         public RenderSurface4Part(int _width, int _height, Renderer rendering)
         {
             Rendering = rendering;
@@ -62,6 +67,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (uint)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (uint)TextureWrapMode.ClampToEdge);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment3, TextureTarget.Texture2D, RenderhintTexture, 0);
+            GL.GenTextures(1, out bwtexture);
+            GL.BindTexture(TextureTarget.Texture2D, bwtexture);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (uint)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (uint)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (uint)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (uint)TextureWrapMode.ClampToEdge);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment4, TextureTarget.Texture2D, bwtexture, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
@@ -73,16 +86,21 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.DeleteTexture(NormalsTexture);
             GL.DeleteTexture(DepthTexture);
             GL.DeleteTexture(RenderhintTexture);
+            GL.DeleteTexture(bwtexture);
         }
 
         public void Bind()
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
             GL.Viewport(0, 0, Width, Height);
-            GL.DrawBuffers(4, new DrawBuffersEnum[] { DrawBuffersEnum.ColorAttachment0,
-                DrawBuffersEnum.ColorAttachment1, DrawBuffersEnum.ColorAttachment2, DrawBuffersEnum.ColorAttachment3 });
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.DrawBuffers(5, new DrawBuffersEnum[] { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1,
+                DrawBuffersEnum.ColorAttachment2, DrawBuffersEnum.ColorAttachment3, DrawBuffersEnum.ColorAttachment4 });
+            GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0f, 0f, 0f, 0f });
+            GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1f });
+            GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 0f, 0f, 0f, 0f });
+            GL.ClearBuffer(ClearBuffer.Color, 2, new float[] { 0f, 0f, 0f, 0f });
+            GL.ClearBuffer(ClearBuffer.Color, 3, new float[] { 0f, 0f, 0f, 0f });
+            GL.ClearBuffer(ClearBuffer.Color, 4, new float[] { 0f, 0f, 0f, 0f });
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.Enable(EnableCap.Texture2D);
         }
@@ -112,6 +130,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             else if (type == 4)
             {
                 texture = RenderhintTexture;
+            }
+            else if (type == 5)
+            {
+                texture = bwtexture;
             }
             GL.BindTexture(TextureTarget.Texture2D, texture);
             Rendering.RenderRectangle(x, y, x + width, y + height);

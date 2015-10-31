@@ -32,7 +32,8 @@ namespace Voxalia.ClientGame.CommandSystem
             r_lightmaxdistance, r_fallbacklighting,
             r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun, r_shadowpace, r_shadows,
             r_highlight_targetblock, r_highlight_placeblock,
-            r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth;
+            r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth,
+            r_godrays;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect;
@@ -86,6 +87,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_lensflare = Register("r_lensflare", "true", CVarFlag.Boolean, "Whether to render a lens flare from the sun.");
             r_blocktexturelinear = Register("r_blocktexturelinear", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether block textures are to use a linear blur or nearest-pixel mode.");
             r_blocktexturewidth = Register("r_blocktexturewidth", "128", CVarFlag.Numeric | CVarFlag.Delayed, "What texture width (pixels) block textures should use.");
+            r_godrays = Register("r_godrays", "true", CVarFlag.Boolean, "Whether to render GodRays (rays of light from the sun.");
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric, "What volume the music should be.");
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");

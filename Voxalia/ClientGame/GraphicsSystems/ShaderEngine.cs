@@ -184,7 +184,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             string str = GL.GetProgramInfoLog(Program);
             if (str.Length != 0)
             {
-                SysConsole.Output(OutputType.INFO, "Linked shader with message: '" + str + "'");
+                SysConsole.Output(OutputType.INFO, "Linked shader with message: '" + str + "'" + " -- FOR -- " + VS + " -- -- " + FS);
             }
             GL.DeleteShader(FragmentObject);
             GL.DeleteShader(VertexObject);
