@@ -33,7 +33,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun, r_shadowpace, r_shadows,
             r_highlight_targetblock, r_highlight_placeblock,
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth,
-            r_godrays;
+            r_godrays, r_godray_samples, r_godray_wexposure, r_godray_decay, r_godray_density;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect;
@@ -87,7 +87,11 @@ namespace Voxalia.ClientGame.CommandSystem
             r_lensflare = Register("r_lensflare", "true", CVarFlag.Boolean, "Whether to render a lens flare from the sun.");
             r_blocktexturelinear = Register("r_blocktexturelinear", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether block textures are to use a linear blur or nearest-pixel mode.");
             r_blocktexturewidth = Register("r_blocktexturewidth", "128", CVarFlag.Numeric | CVarFlag.Delayed, "What texture width (pixels) block textures should use.");
-            r_godrays = Register("r_godrays", "true", CVarFlag.Boolean, "Whether to render GodRays (rays of light from the sun.");
+            r_godrays = Register("r_godrays", "true", CVarFlag.Boolean, "Whether to render GodRays (rays of light from the sun."); // TODO: Validate?
+            r_godray_samples = Register("r_godray_samples", "75", CVarFlag.Numeric, "How many samples to use when generating GodRays."); // TODO: Validate?
+            r_godray_wexposure = Register("r_godray_wexposure", (0.003f * 5.65f).ToString(), CVarFlag.Numeric, "What weighted exposure value to use when generating GodRays."); // TODO: Validate?
+            r_godray_decay = Register("r_godray_decay", "1", CVarFlag.Numeric, "What decay value to use when generating GodRays."); // TODO: Validate?
+            r_godray_density = Register("r_godray_density", "0.84", CVarFlag.Numeric, "What density value to use when generating GodRays."); // TODO: Validate?
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric, "What volume the music should be.");
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");

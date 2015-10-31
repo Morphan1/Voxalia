@@ -387,6 +387,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Vector4 t = Vector4.Transform(new Vector4(lPos, 1f), combined);
                 Vector2 lightPos = (t.Xy / t.W) / 2f + new Vector2(0.5f);
                 GL.Uniform2(10, ref lightPos);
+                GL.Uniform1(11, CVars.r_godray_samples.ValueI);
+                GL.Uniform1(12, CVars.r_godray_wexposure.ValueF);
+                GL.Uniform1(13, CVars.r_godray_decay.ValueF);
+                GL.Uniform1(14, CVars.r_godray_density.ValueF);
                 GL.ActiveTexture(TextureUnit.Texture6);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.bwtexture);
                 GL.ActiveTexture(TextureUnit.Texture4);
