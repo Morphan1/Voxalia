@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.Shared;
 using OpenTK.Graphics;
@@ -18,9 +19,9 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public List<ParticleEffect> ActiveEffects;
 
-        public void AddEffect(ParticleEffectType type, Location one, Location two, Location end, float data, float ttl, Location color, Location color2, bool fades, Texture texture, float salpha = 1)
+        public void AddEffect(ParticleEffectType type, Func<ParticleEffect, Location> start, Func<ParticleEffect, Location> end, Func<ParticleEffect, float> fdata, float ttl, Location color, Location color2, bool fades, Texture texture, float salpha = 1)
         {
-            ActiveEffects.Add(new ParticleEffect(TheClient) { Type = type, One = one, Two = two, EndPos = end, Data = data, TTL = ttl, O_TTL = ttl, Color = color, Color2 = color2, Alpha = salpha, Fades = fades, texture = texture });
+            ActiveEffects.Add(new ParticleEffect(TheClient) { Type = type, Start = start, End = end, FData = fdata, TTL = ttl, O_TTL = ttl, Color = color, Color2 = color2, Alpha = salpha, Fades = fades, texture = texture });
         }
 
         public void Render()

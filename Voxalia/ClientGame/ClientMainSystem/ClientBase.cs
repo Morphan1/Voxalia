@@ -244,7 +244,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Preparing rendering engine...");
             InitRendering();
             SysConsole.Output(OutputType.INIT, "Loading particle effect engine...");
-            Particles = new ParticleHelper(Textures) { Engine = new ParticleEngine(this) };
+            Particles = new ParticleHelper(this) { Engine = new ParticleEngine(this) };
             SysConsole.Output(OutputType.INIT, "Preparing mouse and keyboard handlers...");
             KeyHandler.Init();
             SysConsole.Output(OutputType.INIT, "Building the sound system...");

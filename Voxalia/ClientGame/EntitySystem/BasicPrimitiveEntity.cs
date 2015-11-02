@@ -52,17 +52,17 @@ namespace Voxalia.ClientGame.EntitySystem
                     BEPUutilities.Quaternion.TransformZ(offs, ref Angles, out offz);
                     BEPUutilities.Vector3 offx;
                     BEPUutilities.Quaternion.TransformX(offs, ref Angles, out offx);
-                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, ppos + new Location(offz),
-                        Position + new Location(offz), ppos + new Location(offz), 0.01f, 1f, Location.One,
+                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, (o) => ppos + new Location(offz),
+                        (o) => Position + new Location(offz), (o) => 1f, 1f, Location.One,
                         Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
-                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, ppos - new Location(offz),
-                        Position - new Location(offz), ppos - new Location(offz), 0.01f, 1f, Location.One,
+                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, (o) => ppos - new Location(offz),
+                        (o) => Position - new Location(offz), (o) => 1f, 1f, Location.One,
                         Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
-                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, ppos + new Location(offx),
-                        Position + new Location(offx), ppos + new Location(offx), 0.01f, 1f, Location.One,
+                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, (o) => ppos + new Location(offx),
+                        (o) => Position + new Location(offx), (o) => 1f, 1f, Location.One,
                         Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
-                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, ppos - new Location(offx),
-                        Position - new Location(offx), ppos - new Location(offx), 0.01f, 1f, Location.One,
+                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, (o) => ppos - new Location(offx),
+                        (o) => Position - new Location(offx), (o) => 1f, 1f, Location.One,
                         Location.One, true, TheClient.Textures.GetTexture("common/smoke"), 0.5f);
                     ppos = Position;
                 }
@@ -72,7 +72,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 TheClient.Rendering.SetMinimumLight(1f);
                 TheClient.Rendering.SetColor(Color4.White);
                 TheClient.Rendering.RenderCylinder(GetPosition(), GetPosition() - Velocity / 20f, 0.01f);
-                TheClient.Particles.Engine.AddEffect(ParticleEffectType.CYLINDER, ppos, Position, ppos, 0.01f, 2f,
+                TheClient.Particles.Engine.AddEffect(ParticleEffectType.CYLINDER, (o) => ppos, (o) => Position, (o) => 0.01f, 2f,
                     Location.One, Location.One, true, TheClient.Textures.GetTexture("common/smoke"));
                 ppos = Position;
             }

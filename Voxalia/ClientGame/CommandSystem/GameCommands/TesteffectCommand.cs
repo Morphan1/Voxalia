@@ -34,16 +34,19 @@ namespace Voxalia.ClientGame.CommandSystem.GameCommands
             switch (entry.GetArgument(0).ToLower())
             {
                 case "cylinder":
-                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.CYLINDER, start, end, start, 0.01f, 5f, Location.One, Location.One, true, TheClient.Textures.GetTexture("common/smoke"));
+                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.CYLINDER, (o) => start, (o) => end, (o) => 0.01f, 5f, Location.One, Location.One, true, TheClient.Textures.GetTexture("common/smoke"));
                     break;
                 case "line":
-                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, start, end, start, 0.01f, 5f, Location.One, Location.One, true, TheClient.Textures.GetTexture("common/smoke"));
+                    TheClient.Particles.Engine.AddEffect(ParticleEffectType.LINE, (o) => start, (o) => end, (o) => 1f, 5f, Location.One, Location.One, true, TheClient.Textures.GetTexture("common/smoke"));
                     break;
                 case "explosion_small":
                     TheClient.Particles.Explode(end, 2, 40);
                     break;
                 case "explosion_large":
                     TheClient.Particles.Explode(end, 5);
+                    break;
+                case "path_mark":
+                    TheClient.Particles.PathMark(end);
                     break;
                 default:
                     entry.Bad("Unknown effect name.");
