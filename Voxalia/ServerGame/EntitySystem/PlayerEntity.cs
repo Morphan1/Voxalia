@@ -98,6 +98,9 @@ namespace Voxalia.ServerGame.EntitySystem
         public double ItemStartClickTime = -1;
 
         public bool WaitingForClickRelease = false;
+
+        // TODO: Dictionary<breadcrumb id: int, List<Location>> ?
+        public List<Location> Breadcrumbs = new List<Location>();
         
         public PlayerEntity(WorldSystem.Region tregion, Connection conn)
             : base(tregion, true, 100f)
@@ -113,6 +116,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("flashlight", TheServer, 1, "items/common/flashlight_ico", "Flashlight", "Lights things up!", Color.White.ToArgb(), "items/common/flashlight.dae", false));
             Items.GiveItem(new ItemStack("flashantilight", TheServer, 1, "items/common/flashlight_ico", "Flashantilight", "Lights things down!", Color.White.ToArgb(), "items/common/flashlight.dae", false));
             Items.GiveItem(new ItemStack("sun_angler", TheServer, 1, "items/tools/sun_angler", "Sun Angler", "Moves the sun itself!", Color.White.ToArgb(), "items/tools/sun_angler.dae", false));
+            Items.GiveItem(new ItemStack("breadcrumb", TheServer, 1, "items/common/breadcrumbs", "Bread Crumbs", "Finds the way back, even over the river and through the woods!", Color.White.ToArgb(), "items/common/breadcrumbs.dae", false));
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/dirt", "Dirt", "Dirty!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.DIRT });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/stone", "Stone", "Gets things stoned!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.STONE });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/grass_side", "Grass", "Grassy!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.GRASS });
@@ -417,8 +421,19 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 pChunkLoc = cpos;
             }
+            if (Breadcrumbs.Count > 0)
+            {
+                double dist = (GetPosition() - Breadcrumbs[Breadcrumbs.Count - 1]).LengthSquared();
+                if (dist > BreadcrumbRadius * BreadcrumbRadius)
+                {
+                    Breadcrumbs.Add(GetPosition().GetBlockLocation() + new Location(0.5f, 0.5f, 0.5f));
+                    // TODO: Effect?
+                }
+            }
             //base.Tick();
         }
+        
+        public int BreadcrumbRadius = 6;
 
         Location pChunkLoc = new Location(0.5);
         

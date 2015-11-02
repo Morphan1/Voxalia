@@ -178,6 +178,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\NetStringPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\OperationStatusPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\ParticleEffectPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\PathPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PhysicsEntityUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PlayerUpdatePacketIn.cs" />

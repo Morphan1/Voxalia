@@ -108,6 +108,7 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\BlockItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\ExplodobowItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\FistItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\BreadcrumbItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\ShotgunGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\FlashLightItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\GenericItem.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\NetStringPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\OperationStatusPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\ParticleEffectPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\PathPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PhysicsEntityUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PlayerUpdatePacketOut.cs" />

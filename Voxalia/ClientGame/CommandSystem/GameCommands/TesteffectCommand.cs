@@ -46,7 +46,7 @@ namespace Voxalia.ClientGame.CommandSystem.GameCommands
                     TheClient.Particles.Explode(end, 5);
                     break;
                 case "path_mark":
-                    TheClient.Particles.PathMark(end);
+                    TheClient.Particles.PathMark(end, () => TheClient.Player.GetPosition());
                     break;
                 default:
                     entry.Bad("Unknown effect name.");

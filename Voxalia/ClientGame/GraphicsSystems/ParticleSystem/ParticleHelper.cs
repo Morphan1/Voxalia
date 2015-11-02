@@ -52,18 +52,18 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             }
         }
 
-        public void PathMark(Location pos)
+        public void PathMark(Location pos, Func<Location> target)
         {
             Location height = new Location(0, 0, 5);
             Location height2 = new Location(0, 0, 4);
             Location height3 = new Location(0, 0, 3);
             Engine.AddEffect(ParticleEffectType.CYLINDER, (o) => pos, (o) => pos + height * ((o.TTL / o.O_TTL) / 2 + 0.5f),
-                (o) => 0.5f, 4f, new Location(0, 1, 1), new Location(0, 1, 1), true, White_Blur, 1);
+                (o) => 0.5f, 4f, new Location(0, 1, 1), new Location(0, 1, 1), true, White_Blur, 0.70f);
             Engine.AddEffect(ParticleEffectType.CYLINDER, (o) => pos, (o) => pos + height * ((o.TTL / o.O_TTL) / 2 + 0.5f),
-                (o) => 0.6f, 4f, new Location(0, 1, 1), new Location(0, 1, 1), true, White_Blur, 0.75f);
+                (o) => 0.6f, 4f, new Location(0, 1, 1), new Location(0, 1, 1), true, White_Blur, 0.55f);
             Engine.AddEffect(ParticleEffectType.CYLINDER, (o) => pos, (o) => pos + height * ((o.TTL / o.O_TTL) / 2 + 0.5f),
-                (o) => 0.7f, 4f, new Location(0, 1, 1), new Location(0, 1, 1), true, White_Blur, 0.5f);
-            Engine.AddEffect(ParticleEffectType.LINE, (o) => pos, (o) => TheClient.Player.GetPosition(), (o) => 1, 4f, new Location(0, 0.5f, 0.5f), new Location(0, 0.5f, 0.5f), true, White, 1);
+                (o) => 0.7f, 4f, new Location(0, 1, 1), new Location(0, 1, 1), true, White_Blur, 0.40f);
+            Engine.AddEffect(ParticleEffectType.LINE, (o) => pos, (o) => target(), (o) => 1, 4f, new Location(0, 0.5f, 0.5f), new Location(0, 0.5f, 0.5f), true, White, 1);
         }
     }
 }
