@@ -21,7 +21,7 @@ layout (location = 4) out vec4 bw;
 void main()
 {
 	vec4 col = texture(s, vec2(f_texcoord[0], f_texcoord[1]));
-	if (col.w * v_color.w < 0.95)
+	if (col.w * v_color.w < 0.99)
 	{
 		discard;
 	}

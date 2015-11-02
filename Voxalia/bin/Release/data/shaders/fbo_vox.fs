@@ -22,7 +22,7 @@ layout (location = 4) out vec4 bw;
 void main()
 {
 	vec4 col = texture(s, f_texcoord) * f_color;
-	if (col.w * v_color.w < 0.95)
+	if (col.w * v_color.w < 0.99)
 	{
 		discard;
 	}
