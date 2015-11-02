@@ -54,7 +54,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             player.LastGunShot = player.TheRegion.GlobalTickTime;
-            for (int i = 1; i < player.Breadcrumbs.Count - 1; i++)
+            for (int i = 1; i < player.Breadcrumbs.Count; i++)
             {
                 if ((player.GetPosition() - player.Breadcrumbs[i]).LengthSquared() < 4)
                 {

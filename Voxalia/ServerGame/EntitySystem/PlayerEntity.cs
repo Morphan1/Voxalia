@@ -426,7 +426,9 @@ namespace Voxalia.ServerGame.EntitySystem
                 double dist = (GetPosition() - Breadcrumbs[Breadcrumbs.Count - 1]).LengthSquared();
                 if (dist > BreadcrumbRadius * BreadcrumbRadius)
                 {
-                    Breadcrumbs.Add(GetPosition().GetBlockLocation() + new Location(0.5f, 0.5f, 0.5f));
+                    Location one = Breadcrumbs[Breadcrumbs.Count - 1];
+                    Location two = GetPosition().GetBlockLocation() + new Location(0.5f, 0.5f, 0.5f);
+                    Breadcrumbs.Add((two - one).Normalize() * BreadcrumbRadius + one);
                     // TODO: Effect?
                 }
             }
