@@ -142,6 +142,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Location ambient;
 
+        public Location godrayCol = Location.One;
+
         void SetViewport()
         {
             vpw = Window.Width;
@@ -391,6 +393,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.Uniform1(12, CVars.r_godray_wexposure.ValueF);
                 GL.Uniform1(13, CVars.r_godray_decay.ValueF);
                 GL.Uniform1(14, CVars.r_godray_density.ValueF);
+                GL.Uniform3(15, ClientUtilities.Convert(godrayCol));
                 GL.ActiveTexture(TextureUnit.Texture6);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.bwtexture);
                 GL.ActiveTexture(TextureUnit.Texture4);

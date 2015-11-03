@@ -19,6 +19,7 @@ layout (location = 11) uniform int numSamples = 75;
 layout (location = 12) uniform float wexposure = 0.0034 * 5.65;
 layout (location = 13) uniform float decay = 1;
 layout (location = 14) uniform float density = 0.84;
+layout (location = 15) uniform vec3 grcolor = vec3(1.0);
 
 out vec4 color;
 
@@ -55,5 +56,5 @@ void main()
 	vec4 light_color = regularize(vec4(ambient + renderhint.z, 0.0) * colortex_color + shadow_light_color);
 	light_color.w = 1.0;
     vec4 godRay = getGodRay();
-	color = (light_color.w * light_color) + godRay;
+	color = (light_color.w * light_color) + godRay * vec4(grcolor, 1.0);
 }

@@ -239,6 +239,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Loading general graphics settings...");
             CVars.r_vsync.OnChanged += onVsyncChanged;
             onVsyncChanged(CVars.r_vsync, null);
+            CVars.r_godray_color.OnChanged += onGodrayColorChanged;
+            onGodrayColorChanged(CVars.r_godray_color, null);
             SysConsole.Output(OutputType.INIT, "Loading UI Console...");
             UIConsole.InitConsole();
             SysConsole.Output(OutputType.INIT, "Preparing rendering engine...");
@@ -273,6 +275,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheInventoryScreen.Init();
             TheEquipmentScreen.Init();
             ShowMainMenu();
+        }
+
+        public void onGodrayColorChanged(object obj, EventArgs e)
+        {
+            godrayCol = Location.FromString(CVars.r_godray_color.Value);
         }
 
         /// <summary>
