@@ -90,6 +90,8 @@ namespace Voxalia.Shared
 
         public abstract bool OccupiesBOTTOM();
 
+        public bool BackTextureAllowed = true;
+
         public virtual List<Vector4> GetLights(Vector3 blockPos, BlockInternal cblock, BlockInternal XP, BlockInternal XM, BlockInternal YP, BlockInternal YM, BlockInternal TOP, BlockInternal BOTTOM,
             bool bxp, bool bxm, bool byp, bool bym, bool btop, bool bbottom)
         {

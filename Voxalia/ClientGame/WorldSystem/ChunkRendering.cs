@@ -127,7 +127,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                         Cols.Add(new Vector4(1f));
                                     }
                                 }
-                                if (!((Material)c.BlockMaterial).IsOpaque())
+                                if (!((Material)c.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
                                 {
                                     for (int i = vecsi.Count - 1; i >= 0; i--)
                                     {
