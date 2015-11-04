@@ -532,6 +532,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 GL.Uniform4(0, Color4.White);
             }
+            Rendering.SetColor(new Vector4(ClientUtilities.Convert(godrayCol), 1));
             Textures.GetTexture("skies/sun").Bind(); // TODO: Store var? Make dynamic?
             Matrix4 rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
                 * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
@@ -554,6 +555,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Matrix4 ident = Matrix4.Identity;
             GL.UniformMatrix4(2, false, ref ident);
             Rendering.SetMinimumLight(0);
+            Rendering.SetColor(Color4.White);
         }
 
         public void RenderSkyflare(Matrix4 combined)
