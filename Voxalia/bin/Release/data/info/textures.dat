@@ -1,0 +1,21 @@
+# Voxalia texture list - MAT=texture OR MAT=t1,t2,...%rate - optionally add &spec - MAT can be name OR # OR m# (total minus the #)
+AIR=clear
+STONE=blocks/solid/stone
+GRASS=blocks/solid/grass_side
+DIRT=blocks/solid/dirt
+WATER=blocks/liquid/water,blocks/liquid/water_2,blocks/liquid/water_3,blocks/liquid/water_2%0.25&1
+5=blocks/solid/db_top,blocks/solid/db_exc%1.0&1
+LEAVES1=blocks/transparent/leaves_basic1
+CONCRETE=blocks/solid/concrete
+SLIPGOO=blocks/solid/slipgoo
+SNOW=blocks/solid/snow
+SMOKE=blocks/liquid/smoke
+LOG=blocks/solid/wood
+TALLGRASS=blocks/transparent/tallgrass
+m7=blocks/solid/wood_top
+m6=blocks/solid/db_ym,blocks/solid/db_exc%1.0
+m5=blocks/solid/db_yp,blocks/solid/db_exc%1.0
+m4=blocks/solid/db_xp,blocks/solid/db_exc%1.0
+m3=blocks/solid/db_xm,blocks/solid/db_exc%1.0
+m2=blocks/solid/db_bottom,blocks/solid/db_exc%1.0
+m1=blocks/solid/grass

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Voxalia.Shared
 {
@@ -104,6 +105,18 @@ namespace Voxalia.Shared
         public static float GetFrictionMod(this Material mat)
         {
             return ALL_MATS[(int)mat].FrictionMod;
+        }
+
+        public static Type MaterialType = typeof(Material);
+
+        public static Material FromNameOrNumber(string input)
+        {
+            int t;
+            if (int.TryParse(input, out t))
+            {
+                return (Material)t;
+            }
+            return (Material)Enum.Parse(MaterialType, input, true);
         }
     }
 

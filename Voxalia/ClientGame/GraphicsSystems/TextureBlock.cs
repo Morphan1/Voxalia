@@ -47,38 +47,42 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)(cvars.r_blocktexturelinear.ValueB ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            // Default Textures
-            SetTexture((int)Material.AIR, "clear");
-            SetTexture((int)Material.STONE, "blocks/solid/stone");
-            SetTexture((int)Material.GRASS, "blocks/solid/grass_side");
-            SetTexture((int)Material.DIRT, "blocks/solid/dirt");
-            SetTexture((int)Material.WATER, "blocks/liquid/water");
-            SetAnimated((int)Material.WATER, 0.25, new string[] { "blocks/liquid/water", "blocks/liquid/water_2", "blocks/liquid/water_3", "blocks/liquid/water_2" });
-            SetTexture((int)Material.DEBUG, "blocks/solid/db_top");
-            SetAnimated((int)Material.DEBUG, 1.0, new string[] { "blocks/solid/db_top", "blocks/solid/db_exc" });
-            SetTexture((int)Material.LEAVES1, "blocks/transparent/leaves_basic1");
-            SetTexture((int)Material.CONCRETE, "blocks/solid/concrete");
-            SetTexture((int)Material.SLIPGOO, "blocks/liquid/slipgoo");
-            SetTexture((int)Material.SNOW, "blocks/solid/snow");
-            SetTexture((int)Material.SMOKE, "blocks/liquid/smoke");
-            SetTexture((int)Material.LOG, "blocks/solid/wood");
-            SetTexture((int)Material.TALLGRASS, "blocks/transparent/tallgrass");
-            for (int i = (int)Material.NUM_DEFAULT; i < MaterialHelpers.MAX_TEXTURES - 7; i++)
+            string[] datums = Program.Files.ReadText("info/textures.dat").Split('\n');
+            List<MaterialTextureInfo> texs = new List<MaterialTextureInfo>();
+            for (int i = 0; i < datums.Length; i++)
             {
-                SetTexture(i, "clear");
+                if (datums[i].StartsWith("#") || datums[i].Length <= 1)
+                {
+                    continue;
+                }
+                MaterialTextureInfo tex = new MaterialTextureInfo();
+                string[] dets = datums[i].Split('=');
+                if (dets[0].StartsWith("m"))
+                {
+                    tex.Mat = (Material)(MaterialHelpers.MAX_TEXTURES - Utilities.StringToInt(dets[0].Substring(1)));
+                }
+                else
+                {
+                    tex.Mat = MaterialHelpers.FromNameOrNumber(dets[0]);
+                }
+                string[] specornot = dets[1].Split('&');
+                if (specornot.Length > 1)
+                {
+                    tex.Specular = Utilities.StringToFloat(specornot[1]);
+                }
+                string[] rateornot = specornot[0].Split('%');
+                if (rateornot.Length > 1)
+                {
+                    tex.Rate = Utilities.StringToFloat(rateornot[1]);
+                }
+                tex.Textures = rateornot[0].Split(',');
+                SetTexture((int)tex.Mat, tex.Textures[0]);
+                if (tex.Textures.Length > 1)
+                {
+                    SetAnimated((int)tex.Mat, tex.Rate, tex.Textures);
+                }
+                texs.Add(tex);
             }
-            SetTexture(MaterialHelpers.MAX_TEXTURES - 7, "blocks/solid/wood_top");
-            SetTexture(MaterialHelpers.MAX_TEXTURES - 6, "blocks/solid/db_ym");
-            SetAnimated(MaterialHelpers.MAX_TEXTURES - 6, 1.0, new string[] { "blocks/solid/db_ym", "blocks/solid/db_exc" });
-            SetTexture(MaterialHelpers.MAX_TEXTURES - 5, "blocks/solid/db_yp");
-            SetAnimated(MaterialHelpers.MAX_TEXTURES - 5, 1.0, new string[] { "blocks/solid/db_yp", "blocks/solid/db_exc" });
-            SetTexture(MaterialHelpers.MAX_TEXTURES - 4, "blocks/solid/db_xp");
-            SetAnimated(MaterialHelpers.MAX_TEXTURES - 4, 1.0, new string[] { "blocks/solid/db_xp", "blocks/solid/db_exc" });
-            SetTexture(MaterialHelpers.MAX_TEXTURES - 3, "blocks/solid/db_xm");
-            SetAnimated(MaterialHelpers.MAX_TEXTURES - 3, 1.0, new string[] { "blocks/solid/db_xm", "blocks/solid/db_exc" });
-            SetTexture(MaterialHelpers.MAX_TEXTURES - 2, "blocks/solid/db_bottom");
-            SetAnimated(MaterialHelpers.MAX_TEXTURES - 2, 1.0, new string[] { "blocks/solid/db_bottom", "blocks/solid/db_exc" });
-            SetTexture(MaterialHelpers.MAX_TEXTURES - 1, "blocks/solid/grass");
             GL.BindTexture(TextureTarget.Texture2DArray, 0);
             HelpTextureID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2DArray, HelpTextureID);
@@ -87,8 +91,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            SetSettings((int)Material.WATER, 1, 0.1f);
-            SetSettings((int)Material.DEBUG, 1, 0.1f);
+            for (int i = 0; i < texs.Count; i++)
+            {
+                SetSettings((int)texs[i].Mat, texs[i].Specular, 0);
+            }
             GL.BindTexture(TextureTarget.Texture2DArray, 0);
         }
 
@@ -138,6 +144,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
+    }
+
+    public class MaterialTextureInfo
+    {
+        public Material Mat;
+
+        public string[] Textures;
+
+        public double Rate = 1;
+
+        public float Specular = 0;
     }
 
     public class AnimatedTexture

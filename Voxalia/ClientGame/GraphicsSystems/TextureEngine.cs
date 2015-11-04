@@ -193,6 +193,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             try
             {
+                // TODO: store!
                 filename = FileHandler.CleanFileName(filename);
                 if (!Program.Files.Exists("textures/" + filename + ".png"))
                 {
