@@ -106,7 +106,7 @@ namespace Voxalia.Shared
         {
             return ALL_MATS[(int)mat].FrictionMod;
         }
-
+        
         public static Type MaterialType = typeof(Material);
 
         public static Material FromNameOrNumber(string input)
@@ -157,7 +157,7 @@ namespace Voxalia.Shared
         public bool RendersAtAll = true;
 
         public float FrictionMod = 1f;
-
+        
         public int[] TID = new int[(int)MaterialSide.COUNT];
     }
 }
