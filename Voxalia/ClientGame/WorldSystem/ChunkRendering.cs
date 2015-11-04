@@ -81,12 +81,13 @@ namespace Voxalia.ClientGame.WorldSystem
                                 BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(x * PosMultiplier, -1, z * PosMultiplier), 1, 0, 1);
                                 BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(30, y * PosMultiplier, z * PosMultiplier), 0, 1, 1);
                                 BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(-1, y * PosMultiplier, z * PosMultiplier), 0, 1, 1);
-                                bool zps = (((Material)zp.BlockMaterial).IsOpaque() || zp.BlockMaterial == c.BlockMaterial) && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
-                                bool zms = (((Material)zm.BlockMaterial).IsOpaque() || zm.BlockMaterial == c.BlockMaterial) && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
-                                bool xps = (((Material)xp.BlockMaterial).IsOpaque() || xp.BlockMaterial == c.BlockMaterial) && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
-                                bool xms = (((Material)xm.BlockMaterial).IsOpaque() || xm.BlockMaterial == c.BlockMaterial) && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
-                                bool yps = (((Material)yp.BlockMaterial).IsOpaque() || yp.BlockMaterial == c.BlockMaterial) && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
-                                bool yms = (((Material)ym.BlockMaterial).IsOpaque() || ym.BlockMaterial == c.BlockMaterial) && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
+                                bool rAS = ((Material)c.BlockMaterial).GetCanRenderAgainstSelf();
+                                bool zps = (((Material)zp.BlockMaterial).IsOpaque() || (rAS && zp.BlockMaterial == c.BlockMaterial)) && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
+                                bool zms = (((Material)zm.BlockMaterial).IsOpaque() || (rAS && zm.BlockMaterial == c.BlockMaterial)) && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
+                                bool xps = (((Material)xp.BlockMaterial).IsOpaque() || (rAS && xp.BlockMaterial == c.BlockMaterial)) && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
+                                bool xms = (((Material)xm.BlockMaterial).IsOpaque() || (rAS && xm.BlockMaterial == c.BlockMaterial)) && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
+                                bool yps = (((Material)yp.BlockMaterial).IsOpaque() || (rAS && yp.BlockMaterial == c.BlockMaterial)) && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
+                                bool yms = (((Material)ym.BlockMaterial).IsOpaque() || (rAS && ym.BlockMaterial == c.BlockMaterial)) && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
                                 BEPUutilities.Vector3 pos = new BEPUutilities.Vector3(x, y, z);
                                 List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)

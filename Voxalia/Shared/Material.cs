@@ -37,7 +37,7 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.DIRT),
                 new MaterialInfo((int)Material.WATER) { Solid = false, Opaque = false, FogColor = new Location(0, 0.5, 1) },
                 new MaterialInfo((int)Material.DEBUG),
-                new MaterialInfo((int)Material.LEAVES1) { Opaque = false, SpeedMod = 0.7f, FogAlpha = 0 },
+                new MaterialInfo((int)Material.LEAVES1) { Opaque = false, SpeedMod = 0.7f, FogAlpha = 0, CanRenderAgainstSelf = true },
                 new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f },
                 new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f, FogColor = new Location(0, 1, 0) },
                 new MaterialInfo((int)Material.SNOW) { SpeedMod = 0.8f },
@@ -117,6 +117,11 @@ namespace Voxalia.Shared
             return ALL_MATS[(int)mat].FogAlpha;
         }
 
+        public static bool GetCanRenderAgainstSelf(this Material mat)
+        {
+            return ALL_MATS[(int)mat].CanRenderAgainstSelf;
+        }
+
         public static Type MaterialType = typeof(Material);
 
         public static Material FromNameOrNumber(string input)
@@ -165,6 +170,8 @@ namespace Voxalia.Shared
         public bool Opaque = true;
 
         public bool RendersAtAll = true;
+
+        public bool CanRenderAgainstSelf = false;
 
         public float FrictionMod = 1f;
 
