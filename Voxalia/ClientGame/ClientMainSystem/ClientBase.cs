@@ -208,7 +208,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Textures.InitTextureSystem();
             ItemFrame = Textures.GetTexture("ui/hud/item_frame");
             TBlock = new TextureBlock();
-            TBlock.Generate(CVars, Textures);
+            TBlock.Generate(this, CVars, Textures);
             SysConsole.Output(OutputType.INIT, "Loading shaders...");
             Shaders = new ShaderEngine();
             GLVendor = GL.GetString(StringName.Vendor);

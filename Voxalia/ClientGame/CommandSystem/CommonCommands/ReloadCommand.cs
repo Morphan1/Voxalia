@@ -51,7 +51,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                 success = true;
                 TheClient.Textures.Empty();
                 TheClient.Textures.InitTextureSystem();
-                TheClient.TBlock.Generate(TheClient.CVars, TheClient.Textures);
+                TheClient.TBlock.Generate(TheClient, TheClient.CVars, TheClient.Textures);
             }
             if (!success)
             {

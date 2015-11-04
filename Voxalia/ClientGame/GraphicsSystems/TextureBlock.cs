@@ -1,23 +1,40 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using System.Collections.Generic;
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared;
 using Voxalia.ClientGame.CommandSystem;
+using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
     public class TextureBlock
     {
+        public Client TheClient;
+
         public TextureEngine TEngine;
+
+        public List<AnimatedTexture> Anims;
 
         public int TextureID = -1;
 
         public int TWidth;
 
-        public void Generate(ClientCVar cvars, TextureEngine eng)
+        public void Generate(Client tclient, ClientCVar cvars, TextureEngine eng)
         {
+            TheClient = tclient;
+            if (Anims != null)
+            {
+                for (int i = 0; i < Anims.Count; i++)
+                {
+                    Anims[i].Destroy();
+                }
+            }
             if (TextureID > -1)
             {
                 GL.DeleteTexture(TextureID);
             }
+            Anims = new List<AnimatedTexture>();
             TEngine = eng;
             TextureID = GL.GenTexture();
             TWidth = cvars.r_blocktexturewidth.ValueI;
@@ -34,6 +51,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             SetTexture((int)Material.GRASS, "blocks/solid/grass_side");
             SetTexture((int)Material.DIRT, "blocks/solid/dirt");
             SetTexture((int)Material.WATER, "blocks/liquid/water");
+            SetAnimated((int)Material.WATER, 0.25, new string[] { "blocks/liquid/water", "blocks/liquid/water_2", "blocks/liquid/water_3", "blocks/liquid/water_2" });
             SetTexture((int)Material.DEBUG, "blocks/solid/db_top");
             SetTexture((int)Material.LEAVES1, "blocks/transparent/leaves_basic1");
             SetTexture((int)Material.CONCRETE, "blocks/solid/concrete");
@@ -59,6 +77,92 @@ namespace Voxalia.ClientGame.GraphicsSystems
         private void SetTexture(int ID, string texture)
         {
             TEngine.LoadTextureIntoArray(texture, ID, TWidth);
+        }
+
+        public void SetAnimated(int ID, double rate, string[] textures)
+        {
+            AnimatedTexture anim = new AnimatedTexture();
+            anim.Block = this;
+            anim.Level = ID;
+            anim.Time = 0;
+            anim.Rate = rate;
+            anim.Textures = new int[textures.Length];
+            anim.FBOs = new int[textures.Length];
+            for (int i = 0; i < textures.Length; i++)
+            {
+                anim.Textures[i] = TEngine.GetTextureID(textures[i], TWidth);
+                anim.FBOs[i] = GL.GenFramebuffer();
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, anim.FBOs[i]);
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, anim.Textures[i], 0);
+            }
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            anim.Current = 0;
+            anim.FBO = GL.GenFramebuffer();
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, anim.FBO);
+            //GL.FramebufferTexture3D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2DArray, TextureID, 0, ID);
+            GL.FramebufferTextureLayer(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureID, 0, ID);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            Anims.Add(anim);
+        }
+
+        public void Tick(double ttime)
+        {
+            for (int i = 0; i < Anims.Count; i++)
+            {
+                Anims[i].Tick(ttime);
+            }
+            GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+        }
+    }
+
+    public class AnimatedTexture
+    {
+        public TextureBlock Block;
+
+        public int Level;
+
+        public double Rate;
+
+        public double Time;
+
+        public int FBO;
+
+        public int[] FBOs;
+        
+        public void Tick(double ttime)
+        {
+            Time += ttime;
+            if (Time > Rate)
+            {
+                AnimateNext();
+                Time -= Rate;
+            }
+        }
+
+        public int[] Textures;
+
+        public int Current = 0;
+
+        public void AnimateNext()
+        {
+            Current++;
+            if (Current >= Textures.Length)
+            {
+                Current = 0;
+            }
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, FBO);
+            GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, FBOs[Current]);
+            GL.BlitFramebuffer(0, 0, Block.TWidth, Block.TWidth, 0, 0, Block.TWidth, Block.TWidth, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Nearest);
+        }
+
+        public void Destroy()
+        {
+            GL.DeleteFramebuffer(FBO);
+            for (int i = 0; i < Textures.Length; i++)
+            {
+                GL.DeleteTexture(Textures[i]);
+            }
         }
     }
 }

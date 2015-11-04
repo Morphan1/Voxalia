@@ -125,7 +125,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         /// <param name="filename">The name of the file to use.</param>
         /// <returns>The loaded texture, or null if it does not exist.</returns>
-        private Texture LoadTexture(string filename)
+        public Texture LoadTexture(string filename, int twidth = 0)
         {
             try
             {
@@ -145,15 +145,20 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         "' is invalid: unreasonable width or height.");
                     return null;
                 }
+                Bitmap bmp2 = twidth <= 0 ? bmp : new Bitmap(bmp, new Size(twidth, twidth));
                 Texture texture = new Texture();
                 texture.Engine = this;
                 texture.Name = filename;
                 GL.GenTextures(1, out texture.Original_InternalID);
                 texture.Internal_Texture = texture.Original_InternalID;
                 texture.Bind();
-                LockBitmapToTexture(bmp);
-                texture.Width = bmp.Width;
-                texture.Height = bmp.Height;
+                LockBitmapToTexture(bmp2);
+                texture.Width = bmp2.Width;
+                texture.Height = bmp2.Height;
+                if (bmp2 != bmp)
+                {
+                    bmp2.Dispose();
+                }
                 bmp.Dispose();
                 texture.LoadedProperly = true;
                 return texture;
@@ -164,6 +169,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     TextStyle.Color_Standout + "textures/" + filename + ".png" + TextStyle.Color_Error + "': " + ex.ToString());
                 return null;
             }
+        }
+
+        public int GetTextureID(string name, int twidth = 0)
+        {
+            return (LoadTexture(name, twidth) ?? LoadTexture("white", twidth)).Original_InternalID;
         }
 
         /// <summary>
