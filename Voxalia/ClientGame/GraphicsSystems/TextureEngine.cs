@@ -90,7 +90,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         /// <param name="texturename">The name of the texture.</param>
         /// <returns>A valid texture object.</returns>
-        public Texture GetTexture(string texturename)
+        public Texture GetTexture(string texturename, int twidth = 0)
         {
             texturename = FileHandler.CleanFileName(texturename);
             for (int i = 0; i < LoadedTextures.Count; i++)
@@ -100,14 +100,20 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     return LoadedTextures[i];
                 }
             }
-            Texture Loaded = LoadTexture(texturename);
-            if (Loaded == null)
+            Texture Loaded = LoadTexture(texturename, twidth);
+            if (Loaded == null && twidth == 0)
             {
                 Loaded = new Texture();
                 Loaded.Engine = this;
                 Loaded.Name = texturename;
                 Loaded.Internal_Texture = White.Original_InternalID;
                 Loaded.Original_InternalID = White.Original_InternalID;
+                Loaded.LoadedProperly = false;
+            }
+            if (Loaded == null)
+            {
+                Loaded = LoadTexture("white", twidth);
+                Loaded.Name = texturename;
                 Loaded.LoadedProperly = false;
             }
             LoadedTextures.Add(Loaded);

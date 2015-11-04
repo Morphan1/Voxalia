@@ -55,6 +55,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             SetTexture((int)Material.WATER, "blocks/liquid/water");
             SetAnimated((int)Material.WATER, 0.25, new string[] { "blocks/liquid/water", "blocks/liquid/water_2", "blocks/liquid/water_3", "blocks/liquid/water_2" });
             SetTexture((int)Material.DEBUG, "blocks/solid/db_top");
+            SetAnimated((int)Material.DEBUG, 1.0, new string[] { "blocks/solid/db_top", "blocks/solid/db_exc" });
             SetTexture((int)Material.LEAVES1, "blocks/transparent/leaves_basic1");
             SetTexture((int)Material.CONCRETE, "blocks/solid/concrete");
             SetTexture((int)Material.SLIPGOO, "blocks/liquid/slipgoo");
@@ -68,10 +69,15 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             SetTexture(MaterialHelpers.MAX_TEXTURES - 7, "blocks/solid/wood_top");
             SetTexture(MaterialHelpers.MAX_TEXTURES - 6, "blocks/solid/db_ym");
+            SetAnimated(MaterialHelpers.MAX_TEXTURES - 6, 1.0, new string[] { "blocks/solid/db_ym", "blocks/solid/db_exc" });
             SetTexture(MaterialHelpers.MAX_TEXTURES - 5, "blocks/solid/db_yp");
+            SetAnimated(MaterialHelpers.MAX_TEXTURES - 5, 1.0, new string[] { "blocks/solid/db_yp", "blocks/solid/db_exc" });
             SetTexture(MaterialHelpers.MAX_TEXTURES - 4, "blocks/solid/db_xp");
+            SetAnimated(MaterialHelpers.MAX_TEXTURES - 4, 1.0, new string[] { "blocks/solid/db_xp", "blocks/solid/db_exc" });
             SetTexture(MaterialHelpers.MAX_TEXTURES - 3, "blocks/solid/db_xm");
+            SetAnimated(MaterialHelpers.MAX_TEXTURES - 3, 1.0, new string[] { "blocks/solid/db_xm", "blocks/solid/db_exc" });
             SetTexture(MaterialHelpers.MAX_TEXTURES - 2, "blocks/solid/db_bottom");
+            SetAnimated(MaterialHelpers.MAX_TEXTURES - 2, 1.0, new string[] { "blocks/solid/db_bottom", "blocks/solid/db_exc" });
             SetTexture(MaterialHelpers.MAX_TEXTURES - 1, "blocks/solid/grass");
             GL.BindTexture(TextureTarget.Texture2DArray, 0);
             HelpTextureID = GL.GenTexture();
@@ -108,7 +114,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             anim.FBOs = new int[textures.Length];
             for (int i = 0; i < textures.Length; i++)
             {
-                anim.Textures[i] = TEngine.GetTextureID(textures[i], TWidth);
+                anim.Textures[i] = TEngine.GetTexture(textures[i], TWidth).Original_InternalID;
                 anim.FBOs[i] = GL.GenFramebuffer();
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, anim.FBOs[i]);
                 GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, anim.Textures[i], 0);
