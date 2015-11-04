@@ -18,6 +18,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public int TextureID = -1;
 
+        public int HelpTextureID = -1;
+
         public int TWidth;
 
         public void Generate(Client tclient, ClientCVar cvars, TextureEngine eng)
@@ -33,6 +35,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             if (TextureID > -1)
             {
                 GL.DeleteTexture(TextureID);
+                GL.DeleteTexture(HelpTextureID);
             }
             Anims = new List<AnimatedTexture>();
             TEngine = eng;
@@ -44,7 +47,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)(cvars.r_blocktexturelinear.ValueB ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
             // Default Textures
             SetTexture((int)Material.AIR, "clear");
             SetTexture((int)Material.STONE, "blocks/solid/stone");
@@ -72,6 +74,22 @@ namespace Voxalia.ClientGame.GraphicsSystems
             SetTexture(MaterialHelpers.MAX_TEXTURES - 2, "blocks/solid/db_bottom");
             SetTexture(MaterialHelpers.MAX_TEXTURES - 1, "blocks/solid/grass");
             GL.BindTexture(TextureTarget.Texture2DArray, 0);
+            HelpTextureID = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2DArray, HelpTextureID);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.R8, 2, 2, MaterialHelpers.MAX_TEXTURES);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            SetSettings((int)Material.WATER, 1, 0.1f);
+            SetSettings((int)Material.DEBUG, 1, 0.1f);
+            GL.BindTexture(TextureTarget.Texture2DArray, 0);
+        }
+
+        private void SetSettings(int id, float specular, float waviness)
+        {
+            float[] set = new float[] { specular, waviness, 0, 0 };
+            GL.TexSubImage3D(TextureTarget.Texture2DArray, 0, 0, 0, id, 2, 2, 1, PixelFormat.Red, PixelType.Float, set);
         }
 
         private void SetTexture(int ID, string texture)

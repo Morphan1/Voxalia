@@ -63,16 +63,25 @@ namespace Voxalia.ClientGame.EntitySystem
             { 
                 TheClient.s_fbov.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
+                GL.ActiveTexture(TextureUnit.Texture0);
             }
             else if (TheClient.FBOid == 2)
             {
                 TheClient.s_colormultvox.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
+                GL.ActiveTexture(TextureUnit.Texture0);
             }
             else if (TheClient.FBOid == 3)
             {
                 TheClient.s_transponlyvox.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
+                GL.ActiveTexture(TextureUnit.Texture0);
             }
             Matrix4 mat = Matrix4.CreateTranslation(-ClientUtilities.Convert(Offset)) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
@@ -83,16 +92,25 @@ namespace Voxalia.ClientGame.EntitySystem
             // TODO: Remove this block
             if (TheClient.FBOid == 1)
             {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 TheClient.s_fbo.Bind();
             }
             else if (TheClient.FBOid == 2)
             {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 TheClient.s_colormultr.Bind();
             }
             else if (TheClient.FBOid == 3)
             {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 TheClient.s_transponly.Bind();
             }

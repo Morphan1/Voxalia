@@ -308,6 +308,9 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
+                GL.ActiveTexture(TextureUnit.Texture0);
             }
             foreach (Chunk chunk in LoadedChunks.Values)
             {
