@@ -31,17 +31,17 @@ namespace Voxalia.Shared
         static MaterialHelpers()
         {
             MaterialInfo[] mats = new MaterialInfo[] {
-                new MaterialInfo((int)Material.AIR) { Solid = false, Opaque = false, RendersAtAll = false },
+                new MaterialInfo((int)Material.AIR) { Solid = false, Opaque = false, RendersAtAll = false, FogAlpha = 0 },
                 new MaterialInfo((int)Material.STONE) { SpeedMod = 1.1f },
                 new MaterialInfo((int)Material.GRASS),
                 new MaterialInfo((int)Material.DIRT),
-                new MaterialInfo((int)Material.WATER) { Solid = false, Opaque = false },
+                new MaterialInfo((int)Material.WATER) { Solid = false, Opaque = false, FogColor = new Location(0, 0.5, 1) },
                 new MaterialInfo((int)Material.DEBUG),
-                new MaterialInfo((int)Material.LEAVES1) { Opaque = false, SpeedMod = 0.7f },
+                new MaterialInfo((int)Material.LEAVES1) { Opaque = false, SpeedMod = 0.7f, FogAlpha = 0 },
                 new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f },
-                new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f },
+                new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f, FogColor = new Location(0, 1, 0) },
                 new MaterialInfo((int)Material.SNOW) { SpeedMod = 0.8f },
-                new MaterialInfo((int)Material.SMOKE) { Solid = false, Opaque = false },
+                new MaterialInfo((int)Material.SMOKE) { Solid = false, Opaque = false, FogColor = new Location(0.8) },
                 new MaterialInfo((int)Material.LOG) { SpeedMod = 1.1f },
                 new MaterialInfo((int)Material.TALLGRASS) { Solid = false, Opaque = false }
             };
@@ -106,7 +106,17 @@ namespace Voxalia.Shared
         {
             return ALL_MATS[(int)mat].FrictionMod;
         }
-        
+
+        public static Location GetFogColor(this Material mat)
+        {
+            return ALL_MATS[(int)mat].FogColor;
+        }
+
+        public static float GetFogAlpha(this Material mat)
+        {
+            return ALL_MATS[(int)mat].FogAlpha;
+        }
+
         public static Type MaterialType = typeof(Material);
 
         public static Material FromNameOrNumber(string input)
@@ -157,6 +167,10 @@ namespace Voxalia.Shared
         public bool RendersAtAll = true;
 
         public float FrictionMod = 1f;
+
+        public Location FogColor = new Location(0.1);
+
+        public float FogAlpha = 1;
         
         public int[] TID = new int[(int)MaterialSide.COUNT];
     }

@@ -394,6 +394,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.Uniform1(13, CVars.r_godray_decay.ValueF);
                 GL.Uniform1(14, CVars.r_godray_density.ValueF);
                 GL.Uniform3(15, ClientUtilities.Convert(godrayCol));
+                GL.Uniform1(16, CVars.r_znear.ValueF);
+                GL.Uniform1(17, CVars.r_zfar.ValueF);
+                Material headmat = TheRegion.GetBlockMaterial(CameraPos);
+                GL.Uniform4(18, new Vector4(ClientUtilities.Convert(headmat.GetFogColor()), headmat.GetFogAlpha()));
                 GL.ActiveTexture(TextureUnit.Texture6);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.bwtexture);
                 GL.ActiveTexture(TextureUnit.Texture4);
