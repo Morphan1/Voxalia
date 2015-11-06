@@ -156,17 +156,20 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (worldObject != null)
             {
-                OwningRegion.PhysicsWorld.Remove(worldObject);
+                OwningRegion.RemoveChunkQuiet(worldObject);
+                worldObject = null;
             }
             if (_VBO != null)
             {
                 _VBO.Destroy();
+                _VBO = null;
             }
         }
 
         public bool LOADING = false;
         public bool PROCESSED = false;
         public bool PRED = false;
+        public bool DENIED = false;
 
         void AddInternal(Action callback)
         {
@@ -176,6 +179,10 @@ namespace Voxalia.ClientGame.WorldSystem
                 if (worldObject != null)
                 {
                     OwningRegion.RemoveChunkQuiet(worldObject);
+                }
+                if (DENIED)
+                {
+                    return;
                 }
                 worldObject = tregionObject;
                 if (worldObject != null)

@@ -169,6 +169,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddJointPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AnimationPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\BlockEditPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\ChunkForgetPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\ChunkInfoPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\CVarSetPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\DespawnEntityPacketIn.cs" />

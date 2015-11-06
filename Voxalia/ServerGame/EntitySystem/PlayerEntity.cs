@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Voxalia.Shared;
 using Voxalia.ServerGame.NetworkSystem;
@@ -419,6 +420,18 @@ namespace Voxalia.ServerGame.EntitySystem
                         ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
                     }, 21);
                 }
+                List<Location> removes = new List<Location>();
+                foreach (ChunkAwarenessInfo ch in ChunksAwareOf.Values)
+                {
+                    if (!ShouldSeeChunk(ch.ChunkPos))
+                    {
+                        removes.Add(ch.ChunkPos);
+                    }
+                }
+                foreach (Location loc in removes)
+                {
+                    ForgetChunk(loc);
+                }
                 pChunkLoc = cpos;
             }
             if (Breadcrumbs.Count > 0)
@@ -433,6 +446,18 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
             }
             //base.Tick();
+        }
+
+        public bool ShouldSeeChunk(Location cpos)
+        {
+            Location wpos = TheRegion.ChunkLocFor(GetPosition());
+            if (Math.Abs(cpos.X - wpos.X) > ViewRadiusInChunks
+                || Math.Abs(cpos.Y - wpos.Y) > ViewRadiusInChunks
+                || Math.Abs(cpos.Z - wpos.Z) > ViewRadiusInChunks)
+            {
+                return false;
+            }
+            return true;
         }
         
         public int BreadcrumbRadius = 6;
@@ -483,11 +508,25 @@ namespace Voxalia.ServerGame.EntitySystem
                     ChunksAwareOf.Remove(worldPos);
                     ChunksAwareOf.Add(worldPos, new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult, SendToClient = item });
                 }
-                // TODO: Add a note of whether the client has acknowledged the chunk's reception... (Also, chunk reception ack packet) so block edit notes can be delayed.
             }
         }
 
         public Dictionary<Location, ChunkAwarenessInfo> ChunksAwareOf = new Dictionary<Location, ChunkAwarenessInfo>();
+
+        public bool CanSeeChunk(Location cpos)
+        {
+            return ChunksAwareOf.ContainsKey(cpos);
+        }
+
+        public bool ForgetChunk(Location cpos)
+        {
+            if (ChunksAwareOf.Remove(cpos))
+            {
+                ChunkNetwork.SendPacket(new ChunkForgetPacketOut(cpos));
+                return true;
+            }
+            return false;
+        }
 
         public double LastClick = 0;
 

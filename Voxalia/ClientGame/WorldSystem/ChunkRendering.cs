@@ -169,6 +169,10 @@ namespace Voxalia.ClientGame.WorldSystem
                         }
                         _VBO = null;
                     }
+                    if (DENIED)
+                    {
+                        return;
+                    }
                     if (callback != null)
                     {
                         callback.Invoke();
@@ -209,6 +213,10 @@ namespace Voxalia.ClientGame.WorldSystem
                     {
                         VBO tV = _VBO;
                         tV.Destroy();
+                    }
+                    if (DENIED)
+                    {
+                        return;
                     }
                     _VBO = tVBO;
                     tVBO.GenerateVBO();

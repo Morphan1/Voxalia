@@ -111,6 +111,27 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Dictionary<string, Entity> JointTargets = new Dictionary<string, Entity>();
 
+        public void ChunkSendToAll(AbstractPacketOut packet, Location cpos)
+        {
+            if (cpos.IsNaN())
+            {
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    Players[i].Network.SendPacket(packet);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    if (Players[i].CanSeeChunk(cpos))
+                    {
+                        Players[i].Network.SendPacket(packet);
+                    }
+                }
+            }
+        }
+
         public void SendToAll(AbstractPacketOut packet)
         {
             for (int i = 0; i < Players.Count; i++)
@@ -657,7 +678,7 @@ namespace Voxalia.ServerGame.WorldSystem
             if (broadcast)
             {
                 // TODO: Send per-person based on chunk awareness details
-                SendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { mat }, new byte[] { dat }));
+                ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { mat }, new byte[] { dat }), ch.WorldPosition);
             }
         }
 
@@ -730,7 +751,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 TrySurroundings(ch, pos, x, y, z);
                 if (transmit)
                 {
-                    SendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { Material.AIR }, new byte[] { 0 }));
+                    ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { Material.AIR }, new byte[] { 0 }), ch.WorldPosition);
                 }
                 BlockItemEntity bie = new BlockItemEntity(this, mat, bi.BlockData, pos);
                 SpawnEntity(bie);

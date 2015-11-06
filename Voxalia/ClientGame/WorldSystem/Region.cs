@@ -351,5 +351,15 @@ namespace Voxalia.ClientGame.WorldSystem
         }
 
         public double GlobalTickTimeLocal = 0;
+
+        public void ForgetChunk(Location cpos)
+        {
+            Chunk ch;
+            if (LoadedChunks.TryGetValue(cpos, out ch))
+            {
+                ch.Destroy();
+                LoadedChunks.Remove(cpos);
+            }
+        }
     }
 }
