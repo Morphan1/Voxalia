@@ -2,7 +2,7 @@
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
-layout (location = 2) in vec3 texcoord;
+layout (location = 2) in vec2 texcoord;
 layout (location = 3) in vec4 color;
 layout (location = 4) in vec4 Weights;
 layout (location = 5) in vec4 BoneID;
@@ -19,7 +19,7 @@ layout (location = 7) uniform mat4 simplebone_matrix = mat4(1.0);
 layout (location = 8) uniform mat4 boneTrans[MAX_BONES];
 
 layout (location = 0) out vec4 f_color;
-layout (location = 1) out vec3 f_texcoord;
+layout (location = 1) out vec2 f_texcoord;
 
 void main()
 {

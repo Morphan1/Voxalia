@@ -175,7 +175,7 @@ namespace Voxalia.Shared
 
         public float FrictionMod = 1f;
 
-        public Location FogColor = new Location(0.1);
+        public Location FogColor = new Location(0.7);
 
         public float FogAlpha = 1;
         

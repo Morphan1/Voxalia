@@ -569,12 +569,29 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override Location GetPosition()
         {
+            RigidTransform transf = RigidTransform.Identity;
+            if (Body != null)
+            {
+                BoundingBox box;
+                Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
+                return base.GetPosition() - new Location(0, 0, (box.Max.Z - box.Min.Z) / 2);
+            }
             return base.GetPosition() - new Location(0, 0, HalfSize.Z);
         }
 
         public override void SetPosition(Location pos)
         {
-            base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
+            if (Body != null)
+            {
+                RigidTransform transf = RigidTransform.Identity;
+                BoundingBox box;
+                Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
+                base.SetPosition(pos + new Location(0, 0, (box.Max.Z - box.Min.Z) / 2));
+            }
+            else
+            {
+                base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
+            }
         }
 
         public void Teleport(Location pos)

@@ -12,11 +12,13 @@ layout (location = 7) in vec4 BoneID2;
 layout (location = 0) out vec4 f_position;
 layout (location = 1) out vec3 f_normal;
 layout (location = 2) out vec2 f_texcoord;
+layout (location = 3) out vec4 f_color;
 
 const int MAX_BONES = 200;
 
 layout (location = 1) uniform mat4 proj_matrix = mat4(1.0);
 layout (location = 2) uniform mat4 mv_matrix = mat4(1.0);
+layout (location = 3) uniform vec4 v_color = vec4(1.0);
 // ...
 layout (location = 7) uniform mat4 simplebone_matrix = mat4(1.0);
 layout (location = 8) uniform mat4 boneTrans[MAX_BONES];
@@ -52,12 +54,18 @@ void main(void)
 	//norm1 = simplebone_matrix * norm1;
 	f_texcoord = texcoords;
 	f_position = mv_matrix * vec4(pos1.xyz, 1.0);
+	//vec4 norm1 = boneTransform * vec4(normal, 1.0);
+	f_color = color;
+    if (f_color == vec4(0.0, 0.0, 0.0, 1.0))
+    {
+        f_color = vec4(1.0);
+    }
+    f_color = f_color * v_color;
+	gl_Position = proj_matrix * mv_matrix * vec4(pos1.xyz, 1.0);
 	mat4 mv_mat_simple = mv_matrix;
 	mv_mat_simple[3][0] = 0.0;
 	mv_mat_simple[3][1] = 0.0;
 	mv_mat_simple[3][2] = 0.0;
-	//vec4 norm1 = boneTransform * vec4(normal, 1.0);
 	vec4 nnormal = (BT * mv_mat_simple) * vec4(norm1.xyz, 1.0); // TODO: Should BT be here?
 	f_normal = nnormal.xyz / nnormal.w; // TODO: Normalize?
-	gl_Position = proj_matrix * mv_matrix * vec4(pos1.xyz, 1.0);
 }

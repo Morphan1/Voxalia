@@ -220,7 +220,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else
             {
-                CameraPos = PlayerEyePosition - Player.ForwardVector() * 2;
+                CollisionResult cr = TheRegion.Collision.RayTrace(PlayerEyePosition, PlayerEyePosition - Player.ForwardVector() * 2, Player.IgnoreThis);
+                if (cr.Hit)
+                {
+                    CameraPos = cr.Position + cr.Normal * 0.05;
+                }
+                else
+                {
+                    CameraPos = cr.Position;
+                }
             }
             sortEntities();
             if (CVars.r_lighting.ValueB)
@@ -276,6 +284,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture0);
                 RS4P.Bind();
                 RenderLights = true;
+                Rendering.SetColor(Color4.White);
+                VBO.BonesIdentity();
                 // TODO: Render settings
                 Render3D(false);
                 RenderLights = false;
@@ -654,10 +664,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (FBOid == 1)
             {
                 s_fbov.Bind();
-                if (FBOid == 1)
-                {
-                    GL.Uniform4(0, Color4.Black);
-                }
+                GL.Uniform4(0, Color4.Black);
             }
             else if (FBOid == 2)
             {
@@ -671,10 +678,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (FBOid == 1)
             {
                 s_fbo.Bind();
-                if (FBOid == 1)
-                {
-                    GL.Uniform4(0, Color4.Black);
-                }
+                GL.Uniform4(0, Color4.Black);
             }
             else if (FBOid == 2)
             {

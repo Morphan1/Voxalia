@@ -399,6 +399,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public static void BonesIdentity()
         {
+            Matrix4 ident = Matrix4.Identity;
             int bones = 200;
             float[] floats = new float[bones * 4 * 4];
             for (int i = 0; i < bones; i++)
@@ -407,11 +408,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     for (int y = 0; y < 4; y++)
                     {
-                        floats[i * 16 + x * 4 + y] = Matrix4.Identity[x, y];
+                        floats[i * 16 + x * 4 + y] = ident[x, y];
                     }
                 }
             }
-            Matrix4 ident = Matrix4.Identity;
             GL.UniformMatrix4(7, false, ref ident);
             GL.UniformMatrix4(8, bones, false, floats);
         }
