@@ -6,15 +6,36 @@ namespace Voxalia.ServerGame.WorldSystem
     [Flags]
     public enum BlockFlags: byte
     {
+        /// <summary>
+        /// The block has nothing special about it.
+        /// </summary>
         NONE = 0,
+        /// <summary>
+        /// The block has been edited by a user.
+        /// </summary>
         EDITED = 1,
+        /// <summary>
+        /// The block is powered.
+        /// </summary>
         POWERED = 2,
+        /// <summary>
+        /// The block has some form of filling.
+        /// </summary>
         FILLED = 4,
+        /// <summary>
+        /// The block has some form of filling.
+        /// </summary>
         FILLED2 = 8,
+        /// <summary>
+        /// The block has some form of filling.
+        /// </summary>
         FILLED3 = 16,
         THIRTYTWO = 32,
         SIXTYFOUR = 64,
-        ONETWENTYEIGHT = 128
+        /// <summary>
+        /// The block cannot be edited by users.
+        /// </summary>
+        PROTECTED = 128
     }
 
     public static class BlockInternalExtensions

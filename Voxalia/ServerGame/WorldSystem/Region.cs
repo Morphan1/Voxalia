@@ -662,12 +662,16 @@ namespace Voxalia.ServerGame.WorldSystem
             return (Material)ch.GetBlockAt(x, y, z).BlockMaterial;
         }
 
-        public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, byte locdat = 1, bool broadcast = true, bool regen = true)
+        public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, byte locdat = (byte)BlockFlags.EDITED, bool broadcast = true, bool regen = true, bool override_protection = false)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos));
             int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+            if (!override_protection && ((BlockFlags)ch.GetBlockAt(x, y, z).BlockLocalData).HasFlag(BlockFlags.PROTECTED))
+            {
+                return;
+            }
             ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat, locdat));
             ch.LastEdited = GlobalTickTime;
             if (regen)
@@ -734,7 +738,9 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        public void BreakNaturally(Location pos, bool regen = true, bool transmit = true)
+        public Location[] FellLocs = new Location[] { new Location(0, 0, 1), new Location(1, 0, 0), new Location(0, 1, 0), new Location(-1, 0, 0), new Location(0, -1, 0) };
+
+        public void BreakNaturally(Location pos, bool regentrans = true, int max_subbreaks = 3, HashSet<Location> chnoregen = null)
         {
             pos = pos.GetBlockLocation();
             Chunk ch = LoadChunk(ChunkLocFor(pos));
@@ -742,15 +748,40 @@ namespace Voxalia.ServerGame.WorldSystem
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
             BlockInternal bi = ch.GetBlockAt(x, y, z);
-            if (bi.BlockMaterial != (ushort)Material.AIR)
+            if (((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.PROTECTED))
             {
-                Material mat = (Material)bi.BlockMaterial;
-                ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0, 1));
-                ch.AddToWorld();
-                ch.LastEdited = GlobalTickTime;
-                TrySurroundings(ch, pos, x, y, z);
-                if (transmit)
+                return;
+            }
+            Material mat = (Material)bi.BlockMaterial;
+            bi.BlockLocalData |= (byte)BlockFlags.PROTECTED;
+            if (mat != (ushort)Material.AIR)
+            {
+                // TODO: Find way to make this work D:<
+                //bool canregen = chnoregen == null || !chnoregen.Contains(ch.WorldPosition);
+                if (max_subbreaks > 0
+                    && !((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.EDITED)
+                    && (mat == Material.LOG || mat == Material.LEAVES1))
                 {
+                    foreach (Location loc in FellLocs)
+                    {
+                        Material m2 = GetBlockMaterial(pos + loc);
+                        if (m2 == Material.LOG || m2 == Material.LEAVES1)
+                        {
+                            if (chnoregen == null)
+                            {
+                                chnoregen = new HashSet<Location>();
+                            }
+                            chnoregen.Add(ch.WorldPosition);
+                            BreakNaturally(pos + loc, regentrans, max_subbreaks - 1, chnoregen);
+                        }
+                    }
+                }
+                ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0, (byte)BlockFlags.EDITED));
+                ch.LastEdited = GlobalTickTime;
+                if (regentrans)
+                {
+                    ch.AddToWorld();
+                    TrySurroundings(ch, pos, x, y, z);
                     ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { Material.AIR }, new byte[] { 0 }), ch.WorldPosition);
                 }
                 BlockItemEntity bie = new BlockItemEntity(this, mat, bi.BlockData, pos);
@@ -959,7 +990,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 List<Location> hits = GetBlocksInRadius(pos, rad / 3);
                 foreach (Location loc in hits)
                 {
-                    BreakNaturally(loc, true, true); // TODO: Regen + transmit in Explode() not Break().
+                    BreakNaturally(loc, true); // TODO: Regen + transmit in Explode() not Break().
                 }
             }
             if (effect)
