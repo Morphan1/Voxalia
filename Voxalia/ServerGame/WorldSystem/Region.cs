@@ -566,8 +566,8 @@ namespace Voxalia.ServerGame.WorldSystem
                 return;
             }
             PhysicsWorld.Remove(mesh);
-        }*/
-
+        }
+        */
         public void AddChunk(StaticMesh mesh)
         {
             if (mesh == null)

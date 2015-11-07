@@ -7,7 +7,7 @@ namespace Voxalia.Shared.BlockShapes
     {
         public override BEPUphysics.CollisionShapes.EntityShape GetShape(out Location offset)
         {
-            offset = new Location(-0.5);
+            offset = new Location(0.5);
             return new BEPUphysics.CollisionShapes.ConvexShapes.BoxShape(1, 1, 1);
         }
 

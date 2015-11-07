@@ -126,7 +126,8 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public void AddToWorld(Action callback = null)
         {
-            /*if (worldObject != null)
+            /*
+            if (worldObject != null)
             {
                 OwningRegion.RemoveChunkQuiet(worldObject);
             }
@@ -136,8 +137,8 @@ namespace Voxalia.ServerGame.WorldSystem
             if (callback != null)
             {
                 callback.Invoke();
-            }*/
-            
+            }
+            */
             if (adding != null)
             {
                 ASyncScheduleItem item = OwningRegion.TheServer.Schedule.AddASyncTask(() => AddInternal(callback));

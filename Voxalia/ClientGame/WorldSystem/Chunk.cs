@@ -137,14 +137,14 @@ namespace Voxalia.ClientGame.WorldSystem
         }
 
         public StaticMesh worldObject = null;
-
         //public FullChunkObject worldObject = null;
 
         public ASyncScheduleItem adding = null;
 
         public void AddToWorld(Action callback = null)
         {
-            /*if (worldObject != null)
+            /*
+            if (worldObject != null)
             {
                 OwningRegion.RemoveChunkQuiet(worldObject);
             }
@@ -154,8 +154,8 @@ namespace Voxalia.ClientGame.WorldSystem
             if (callback != null)
             {
                 callback.Invoke();
-            }*/
-            
+            }
+            */
             if (adding != null)
             {
                 ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(() => AddInternal(callback));

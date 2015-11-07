@@ -166,7 +166,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             // TODO: Better variable control! (Server should command every detail!)
             CBody = new CharacterController(WorldTransform.Translation, (float)HalfSize.Z * 2f, (float)HalfSize.Z * 1.1f,
-                (float)HalfSize.X, CBRadius, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed,
+                (float)HalfSize.X, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
                 CBTractionForce * Mass, CBSlideSpeed, CBSlideForce * Mass, CBAirSpeed, CBAirForce * Mass, CBJumpSpeed, CBSlideJumpSpeed, CBGlueForce * Mass);
             CBody.StanceManager.DesiredStance = Stance.Standing;
             CBody.ViewDirection = new Vector3(1f, 0f, 0f);
@@ -183,11 +183,15 @@ namespace Voxalia.ClientGame.EntitySystem
             TheRegion.PhysicsWorld.Add(CBody);
         }
 
+        public float CBProneSpeed = 1f;
+
+        public float CBMargin = 0.01f;
+
         public float CBStepHeight = 0.6f;
 
         public float CBDownStepHeight = 0.6f;
 
-        public float CBRadius = 0.01f;
+        public float CBRadius = 0.55f;
 
         public float CBMaxTractionSlope = 1.0f;
 

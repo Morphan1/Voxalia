@@ -22,7 +22,7 @@ namespace Voxalia.Shared.Collision
         {
             return z * CHUNK_SIZE * CHUNK_SIZE + y * CHUNK_SIZE + x;
         }
-
+        
         public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, out RayHit hit)
         {
             BoundingBox bb;
