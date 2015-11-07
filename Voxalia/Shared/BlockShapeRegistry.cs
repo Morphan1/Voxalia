@@ -115,7 +115,7 @@ namespace Voxalia.Shared
                 ints[i] = i;
             }
             Vector3 offs;
-            BEPUphysics.CollisionShapes.MobileMeshShape Shape = new BEPUphysics.CollisionShapes.MobileMeshShape(vecs.ToArray(), ints, new AffineTransform(new Vector3(0.95f, 0.95f, 0.95f), // TODO: Fiddle!
+            BEPUphysics.CollisionShapes.MobileMeshShape Shape = new BEPUphysics.CollisionShapes.MobileMeshShape(vecs.ToArray(), ints, new AffineTransform(new Vector3(1f, 1f, 1f), // TODO: Fiddle!
                 Quaternion.Identity, Vector3.Zero), BEPUphysics.CollisionShapes.MobileMeshSolidity.Solid, out offs);
             offset = new Location(offs);
             return Shape;

@@ -3,15 +3,47 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries.Events;
 using BEPUphysics.OtherSpaceStages;
+using BEPUphysics.NarrowPhaseSystems;
+using BEPUphysics.CollisionShapes;
+using BEPUphysics.BroadPhaseSystems;
+using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using BEPUphysics.NarrowPhaseSystems.Pairs;
+using BEPUphysics.CollisionRuleManagement;
+using BEPUutilities.DataStructures;
+using System;
+using BEPUphysics.CollisionTests.Manifolds;
+using BEPUphysics.Constraints.Collision;
+using BEPUphysics.Entities;
+using BEPUphysics.CollisionTests.CollisionAlgorithms.GJK;
+using BEPUphysics.PositionUpdating;
+using BEPUphysics.Settings;
 
 namespace Voxalia.Shared.Collision
 {
     public class FullChunkObject : StaticCollidable
     {
+        public static void RegisterMe()
+        {
+            /*
+            NarrowPhasePairFactory<ConvexFCOPairHandler> fact = new NarrowPhasePairFactory<ConvexFCOPairHandler>();
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<BoxShape>), typeof(FullChunkObject)), fact);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<SphereShape>), typeof(FullChunkObject)), fact);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<CapsuleShape>), typeof(FullChunkObject)), fact);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<TriangleShape>), typeof(FullChunkObject)), fact);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<CylinderShape>), typeof(FullChunkObject)), fact);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<ConeShape>), typeof(FullChunkObject)), fact);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<TransformableShape>), typeof(FullChunkObject)), fact);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<MinkowskiSumShape>), typeof(FullChunkObject)), fact);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<WrappedShape>), typeof(FullChunkObject)), fact);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<ConvexHullShape>), typeof(FullChunkObject)), fact);
+            */
+        }
+
         public FullChunkObject(Vector3 pos, BlockInternal[] blocks)
         {
             ChunkShape = new FullChunkShape(blocks);
             Position = pos;
+            boundingBox = new BoundingBox(Position, Position + new Vector3(30, 30, 30));
         }
 
         public FullChunkShape ChunkShape;
@@ -35,22 +67,30 @@ namespace Voxalia.Shared.Collision
             boundingBox = new BoundingBox(Position, Position + new Vector3(30, 30, 30));
         }
 
-        public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, out RayHit hit)
+        public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, Func<BroadPhaseEntry, bool> filter, out RayHit hit)
         {
-            // TODO: Actual code, less cheating!
-            Vector3 move = sweep - startingTransform.Position;
-            float movelen = move.Length();
-            Ray testray = new Ray(startingTransform.Position, move / movelen);
-            return RayCast(testray, movelen, out hit);
+            RigidTransform rt = new RigidTransform(startingTransform.Position - Position, startingTransform.Orientation);
+            RayHit rHit;
+            bool h = ChunkShape.ConvexCast(castShape, ref rt, ref sweep, out rHit);
+            rHit.Location = rHit.Location + Position;
+          //  rHit.T = (rHit.Location - startingTransform.Position).Length() / sweep.Length(); // TODO: Determine if needed at all. Length()'s are bad!
+            // TODO: ALTERNATELY, find a quicker calculation for T.
+            hit = rHit;
+            return h;
         }
 
-        public override bool RayCast(Ray ray, float maximumLength, out RayHit rayHit)
+        public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, out RayHit hit)
+        {
+            return ConvexCast(castShape, ref startingTransform, ref sweep, null, out hit);
+        }
+
+        public override bool RayCast(Ray ray, float maximumLength, Func<BroadPhaseEntry, bool> filter, out RayHit rayHit)
         {
             Ray r2 = new Ray(ray.Position - Position, ray.Direction);
             if (ChunkShape.RayCast(ref r2, maximumLength, out rayHit))
             {
-                rayHit.Location = rayHit.Location + ray.Position;
-                rayHit.T = (rayHit.Location - r2.Position).Length() / maximumLength; // TODO: Determine if needed at all. Length()'s are bad!
+                rayHit.Location = rayHit.Location + Position;
+              //  rayHit.T = (rayHit.Location - ray.Position).Length() / maximumLength; // TODO: Determine if needed at all. Length()'s are bad!
                 // TODO: ALTERNATELY, find a quicker calculation for T.
                 return true;
             }
@@ -58,6 +98,11 @@ namespace Voxalia.Shared.Collision
             {
                 return false;
             }
+        }
+
+        public override bool RayCast(Ray ray, float maximumLength, out RayHit rayHit)
+        {
+            return RayCast(ray, maximumLength, null, out rayHit);
         }
     }
 }

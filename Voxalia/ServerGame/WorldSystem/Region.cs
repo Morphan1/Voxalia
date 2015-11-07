@@ -549,21 +549,41 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             CFGEdited = true;
         }
+        /*
+        public void AddChunk(FullChunkObject mesh)
+        {
+            if (mesh == null)
+            {
+                return;
+            }
+            PhysicsWorld.Add(mesh);
+        }
+
+        public void RemoveChunkQuiet(FullChunkObject mesh)
+        {
+            if (mesh == null)
+            {
+                return;
+            }
+            PhysicsWorld.Remove(mesh);
+        }*/
 
         public void AddChunk(StaticMesh mesh)
         {
-            PhysicsWorld.Remove(chunkGroup);
-            if (mesh != null)
+            if (mesh == null)
             {
-                ChunkShapes.Add(mesh);
+                return;
             }
-            chunkGroup = new StaticGroup(ChunkShapes);
-            PhysicsWorld.Add(chunkGroup);
+            PhysicsWorld.Add(mesh);
         }
 
         public void RemoveChunkQuiet(StaticMesh mesh)
         {
-            ChunkShapes.Remove(mesh);
+            if (mesh == null)
+            {
+                return;
+            }
+            PhysicsWorld.Remove(mesh);
         }
 
         public List<Collidable> ChunkShapes = new List<Collidable>();
@@ -753,7 +773,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 return;
             }
             Material mat = (Material)bi.BlockMaterial;
-            bi.BlockLocalData |= (byte)BlockFlags.PROTECTED;
+            ch.BlocksInternal[ch.BlockIndex(x, y, z)].BlockLocalData |= (byte)BlockFlags.PROTECTED;
             if (mat != (ushort)Material.AIR)
             {
                 // TODO: Find way to make this work D:<

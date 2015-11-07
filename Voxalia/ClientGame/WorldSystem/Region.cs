@@ -52,27 +52,50 @@ namespace Voxalia.ClientGame.WorldSystem
             PhysicsWorld.ForceUpdater.Gravity = new BEPUutilities.Vector3(0, 0, -9.8f * 3f / 2f);
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
-            chunkGroup = new StaticGroup(ChunkShapes);
-            PhysicsWorld.Add(chunkGroup);
+        }
+        /*
+        public void AddChunk(FullChunkObject mesh)
+        {
+            if (mesh == null)
+            {
+                return;
+            }
+            PhysicsWorld.Add(mesh);
+            return;
         }
 
+        public void RemoveChunkQuiet(FullChunkObject mesh)
+        {
+            if (mesh == null)
+            {
+                return;
+            }
+            PhysicsWorld.Remove(mesh);
+            return;
+        }
+        */
         public void AddChunk(StaticMesh mesh)
         {
-            PhysicsWorld.Remove(chunkGroup);
-            ChunkShapes.Add(mesh);
-            chunkGroup = new StaticGroup(ChunkShapes);
-            PhysicsWorld.Add(chunkGroup);
+            if (mesh == null)
+            {
+                return;
+            }
+            PhysicsWorld.Add(mesh);
+            return;
         }
 
         public void RemoveChunkQuiet(StaticMesh mesh)
         {
-            ChunkShapes.Remove(mesh);
+            if (mesh == null)
+            {
+                return;
+            }
+            PhysicsWorld.Remove(mesh);
+            return;
         }
 
         public List<Collidable> ChunkShapes = new List<Collidable>();
-
-        public StaticGroup chunkGroup;
-
+        
         /// <summary>
         /// Ticks the physics world.
         /// </summary>

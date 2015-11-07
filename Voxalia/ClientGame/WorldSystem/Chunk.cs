@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Voxalia.Shared;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -137,10 +138,24 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public StaticMesh worldObject = null;
 
+        //public FullChunkObject worldObject = null;
+
         public ASyncScheduleItem adding = null;
 
         public void AddToWorld(Action callback = null)
         {
+            /*if (worldObject != null)
+            {
+                OwningRegion.RemoveChunkQuiet(worldObject);
+            }
+            worldObject = new FullChunkObject(WorldPosition.ToBVector() * 30, BlocksInternal);
+            worldObject.CollisionRules.Group = CollisionUtil.Solid;
+            OwningRegion.AddChunk(worldObject);
+            if (callback != null)
+            {
+                callback.Invoke();
+            }*/
+            
             if (adding != null)
             {
                 ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(() => AddInternal(callback));
@@ -150,6 +165,7 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 adding = OwningRegion.TheClient.Schedule.StartASyncTask(() => AddInternal(callback));
             }
+            
         }
 
         public void Destroy()
@@ -170,7 +186,7 @@ namespace Voxalia.ClientGame.WorldSystem
         public bool PROCESSED = false;
         public bool PRED = false;
         public bool DENIED = false;
-
+        
         void AddInternal(Action callback)
         {
             StaticMesh tregionObject = CalculateChunkShape();
