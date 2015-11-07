@@ -52,13 +52,20 @@ namespace Voxalia.Shared.Collision
             }
         }
 
+        public static bool IsNaNOrInfOrZero(ref Vector3 vec)
+        {
+            return float.IsInfinity(vec.X) || float.IsNaN(vec.X) || vec.X == 0
+                || float.IsInfinity(vec.Y) || float.IsNaN(vec.Y) || vec.Y == 0
+                || float.IsInfinity(vec.Z) || float.IsNaN(vec.Z) || vec.Z == 0;
+        }
+
         public override void Update(float dt)
         {
             RigidTransform rt = convex.WorldTransform;
-            Vector3 sw = new Vector3(0, 0, 0.01f);
+            Vector3 sw = new Vector3(0, 0, -1f);
             RayHit rh;
-            bool hit = mesh.ChunkShape.ConvexCast(convex.Shape, ref rt, ref sw, out rh);
-            if (!hit)
+            bool hit = mesh.ChunkShape.ConvexCast(convex.Shape, ref rt, ref sw, 0.001f, out rh);
+            if (!hit || IsNaNOrInfOrZero(ref rh.Normal))
             {
                 for (int i = contacts.Count - 1; i >= 0; i--)
                 {
@@ -66,18 +73,18 @@ namespace Voxalia.Shared.Collision
                 }
                 return;
             }
-            for (int i = contacts.Count - 1; i >= 0; i--)
+            /*for (int i = contacts.Count - 1; i >= 0; i--)
             {
                 contacts[i].Normal = rh.Normal;
                 contacts[i].Position = rh.Location;
-                contacts[i].PenetrationDepth = -1;
-            }
+                contacts[i].PenetrationDepth = -0.1f;
+            }*/
             if (Contacts.Count == 0)
             {
                 ContactData cd = new ContactData();
                 cd.Normal = rh.Normal;
                 cd.Position = rh.Location;
-                cd.PenetrationDepth = -1;
+                cd.PenetrationDepth = -0.1f;
                 cd.Id = contacts.Count;
                 Add(ref cd);
             }

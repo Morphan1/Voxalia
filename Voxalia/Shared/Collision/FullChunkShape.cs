@@ -23,17 +23,16 @@ namespace Voxalia.Shared.Collision
             return z * CHUNK_SIZE * CHUNK_SIZE + y * CHUNK_SIZE + x;
         }
         
-        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, out RayHit hit)
+        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, float slen, out RayHit hit)
         {
             BoundingBox bb;
             RigidTransform rot = new RigidTransform(Vector3.Zero, startingTransform.Orientation);
             castShape.GetBoundingBox(ref rot, out bb);
-            float adv = 0.25f;
-            float slen = sweep.Length();
-            Vector3 sweepnorm = sweep / slen;
+            float adv = 0.1f;
             float max = slen + adv;
             bool gotOne = false;
             RayHit BestRH = default(RayHit);
+            Vector3 sweep = sweepnorm * slen;
             for (float f = 0; f < max; f += adv)
             {
                 Vector3 c = startingTransform.Position + sweepnorm * f;
@@ -69,17 +68,20 @@ namespace Voxalia.Shared.Collision
                                 }
                                 Vector3 adj = new Vector3(x + (float)offs.X, y + (float)offs.Y, z + (float)offs.Z);
                                 EntityCollidable coll = es.GetCollidableInstance();
-                                coll.LocalPosition = adj;
+                                //coll.LocalPosition = adj;
                                 RigidTransform rt = new RigidTransform(Vector3.Zero, Quaternion.Identity);
+                                coll.LocalPosition = Vector3.Zero;
+                                coll.WorldTransform = rt;
                                 coll.UpdateBoundingBoxForTransform(ref rt);
                                 RayHit rhit;
                                 RigidTransform adjusted = new RigidTransform(startingTransform.Position - adj, startingTransform.Orientation);
-                                bool b = es.GetCollidableInstance().ConvexCast(castShape, ref adjusted, ref sweep, out rhit);
+                                bool b = coll.ConvexCast(castShape, ref adjusted, ref sweep, out rhit);
                                 if (b && (!gotOne || rhit.T < BestRH.T) && rhit.T <= 1 && rhit.T >= 0)
                                 {
                                     gotOne = true;
                                     BestRH = rhit;
                                     BestRH.Location += adj;
+                                    BestRH.Normal = -BestRH.Normal;
                                 }
                             }
                         }
@@ -103,8 +105,8 @@ namespace Voxalia.Shared.Collision
         {
             // TODO: Original special ray code!
             RigidTransform rt = new RigidTransform(ray.Position, Quaternion.Identity);
-            Vector3 sweep = ray.Direction * maximumLength;
-            return ConvexCast(new BoxShape(0.1f, 0.1f, 0.1f), ref rt, ref sweep, out hit);
+            Vector3 sweep = ray.Direction;
+            return ConvexCast(new BoxShape(0.1f, 0.1f, 0.1f), ref rt, ref sweep, maximumLength, out hit);
         }
     }
 }

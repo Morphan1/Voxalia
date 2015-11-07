@@ -19,37 +19,36 @@ namespace Voxalia.Shared.Collision
     public class ConvexFCOPairHandler : StandardPairHandler
     {
         FullChunkObject mesh;
+
         ConvexCollidable convex;
 
         private NonConvexContactManifoldConstraint contactConstraint;
-
-
+        
         public override Collidable CollidableA
         {
             get { return convex; }
         }
+
         public override Collidable CollidableB
         {
             get { return mesh; }
         }
+
         public override Entity EntityA
         {
             get { return convex.Entity; }
         }
+
         public override Entity EntityB
         {
             get { return null; }
         }
-        /// <summary>
-        /// Gets the contact constraint used by the pair handler.
-        /// </summary>
+
         public override ContactManifoldConstraint ContactConstraint
         {
             get { return contactConstraint; }
         }
-        /// <summary>
-        /// Gets the contact manifold used by the pair handler.
-        /// </summary>
+
         public override ContactManifold ContactManifold
         {
             get { return MeshManifold; }
@@ -65,12 +64,7 @@ namespace Voxalia.Shared.Collision
         }
 
         bool noRecurse = false;
-
-        ///<summary>
-        /// Initializes the pair handler.
-        ///</summary>
-        ///<param name="entryA">First entry in the pair.</param>
-        ///<param name="entryB">Second entry in the pair.</param>
+        
         public override void Initialize(BroadPhaseEntry entryA, BroadPhaseEntry entryB)
         {
             if (noRecurse)
@@ -85,7 +79,9 @@ namespace Voxalia.Shared.Collision
                 mesh = entryB as FullChunkObject;
                 convex = entryA as ConvexCollidable;
                 if (mesh == null || convex == null)
+                {
                     throw new ArgumentException("Inappropriate types used to initialize pair.");
+                }
             }
             //Contact normal goes from A to B.
             BroadPhaseOverlap = new BEPUphysics.BroadPhaseSystems.BroadPhaseOverlap(convex, mesh);
@@ -93,8 +89,7 @@ namespace Voxalia.Shared.Collision
             base.Initialize(entryA, entryB);
             noRecurse = false;
         }
-
-
+        
         ///<summary>
         /// Cleans up the pair handler.
         ///</summary>
@@ -105,32 +100,34 @@ namespace Voxalia.Shared.Collision
             mesh = null;
             convex = null;
         }
-
-
-
-        ///<summary>
-        /// Updates the time of impact for the pair.
-        ///</summary>
-        ///<param name="requester">Collidable requesting the update.</param>
-        ///<param name="dt">Timestep duration.</param>
+        
         public override void UpdateTimeOfImpact(Collidable requester, float dt)
         {
             if (convex.Entity != null && convex.Entity.ActivityInformation.IsActive && convex.Entity.PositionUpdateMode == PositionUpdateMode.Continuous)
             {
-                // TODO
+                timeOfImpact = 1;
+                RigidTransform rt = convex.WorldTransform;
+                Vector3 sweep = convex.Entity.LinearVelocity;
+                RayHit rh;
+                if (mesh.ConvexCast(convex.Shape, ref rt, ref sweep, out rh))
+                {
+                    timeOfImpact = rh.T;
+                }
+                // Special exception!
+                if (TimeOfImpact <= 0)
+                {
+                    timeOfImpact = 1;
+                }
             }
-
         }
-
-
-
+        
         protected override void GetContactInformation(int index, out ContactInformation info)
         {
             ContactInformation ci = new ContactInformation();
             ci.Contact = contactManifold.ctcts[index];
             ci.Pair = this;
-            ci.NormalImpulse = convex.Entity.Mass * 10f;
-            ci.FrictionImpulse = convex.Entity.Mass;
+            ci.NormalImpulse = 0; // convex.Entity.Mass * 10f;
+            ci.FrictionImpulse = 0; // convex.Entity.Mass;
             info = ci;
         }
     }

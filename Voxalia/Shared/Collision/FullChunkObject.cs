@@ -69,10 +69,10 @@ namespace Voxalia.Shared.Collision
         {
             RigidTransform rt = new RigidTransform(startingTransform.Position - Position, startingTransform.Orientation);
             RayHit rHit;
-            bool h = ChunkShape.ConvexCast(castShape, ref rt, ref sweep, out rHit);
+            float slen = sweep.Length();
+            Vector3 sweepnorm = sweep / slen;
+            bool h = ChunkShape.ConvexCast(castShape, ref rt, ref sweepnorm, slen, out rHit);
             rHit.Location = rHit.Location + Position;
-          //  rHit.T = (rHit.Location - startingTransform.Position).Length() / sweep.Length(); // TODO: Determine if needed at all. Length()'s are bad!
-            // TODO: ALTERNATELY, find a quicker calculation for T.
             hit = rHit;
             return h;
         }
@@ -85,17 +85,11 @@ namespace Voxalia.Shared.Collision
         public override bool RayCast(Ray ray, float maximumLength, Func<BroadPhaseEntry, bool> filter, out RayHit rayHit)
         {
             Ray r2 = new Ray(ray.Position - Position, ray.Direction);
-            if (ChunkShape.RayCast(ref r2, maximumLength, out rayHit))
-            {
-                rayHit.Location = rayHit.Location + Position;
-              //  rayHit.T = (rayHit.Location - ray.Position).Length() / maximumLength; // TODO: Determine if needed at all. Length()'s are bad!
-                // TODO: ALTERNATELY, find a quicker calculation for T.
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            RayHit rHit;
+            bool h = ChunkShape.RayCast(ref r2, maximumLength, out rHit);
+            rHit.Location = rHit.Location + Position;
+            rayHit = rHit;
+            return h;
         }
 
         public override bool RayCast(Ray ray, float maximumLength, out RayHit rayHit)
