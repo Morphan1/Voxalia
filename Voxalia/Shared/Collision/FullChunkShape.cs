@@ -81,7 +81,7 @@ namespace Voxalia.Shared.Collision
                                     gotOne = true;
                                     BestRH = rhit;
                                     BestRH.Location += adj;
-                                    BestRH.Normal = -BestRH.Normal;
+                                    BestRH.Normal = -BestRH.Normal; // TODO: WHY?!
                                 }
                             }
                         }

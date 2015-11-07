@@ -113,9 +113,11 @@ namespace Voxalia.ServerGame.WorldSystem
             StaticMesh sm = new StaticMesh(vecs, inds);
             return sm;
         }
-
-        //StaticMesh worldObject = null;
+#if NEW_CHUNKS
         FullChunkObject worldObject = null;
+#else
+        StaticMesh worldObject = null;
+#endif
 
         public ASyncScheduleItem adding = null;
         
@@ -126,7 +128,7 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public void AddToWorld(Action callback = null)
         {
-            
+#if NEW_CHUNKS
             if (worldObject != null)
             {
                 OwningRegion.RemoveChunkQuiet(worldObject);
@@ -138,7 +140,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 callback.Invoke();
             }
-            /*
+#else
             if (adding != null)
             {
                 ASyncScheduleItem item = OwningRegion.TheServer.Schedule.AddASyncTask(() => AddInternal(callback));
@@ -169,7 +171,8 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     callback.Invoke();
                 }
-            });*/
+            });
+#endif
         }
 
         /// <summary>

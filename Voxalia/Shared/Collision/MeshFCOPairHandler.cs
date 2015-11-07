@@ -16,11 +16,11 @@ using BEPUphysics;
 
 namespace Voxalia.Shared.Collision
 {
-    public class ConvexFCOPairHandler : StandardPairHandler
+    public class MeshFCOPairHandler : StandardPairHandler
     {
         FullChunkObject mesh;
 
-        ConvexCollidable convex;
+        MobileMeshCollidable convex;
 
         private NonConvexContactManifoldConstraint contactConstraint;
         
@@ -58,7 +58,7 @@ namespace Voxalia.Shared.Collision
 
         protected FCOContactManifold MeshManifold { get { return contactManifold; } }
 
-        public ConvexFCOPairHandler()
+        public MeshFCOPairHandler()
         {
             contactConstraint = new NonConvexContactManifoldConstraint(this);
         }
@@ -73,11 +73,11 @@ namespace Voxalia.Shared.Collision
             }
             noRecurse = true;
             mesh = entryA as FullChunkObject;
-            convex = entryB as ConvexCollidable;
+            convex = entryB as MobileMeshCollidable;
             if (mesh == null || convex == null)
             {
                 mesh = entryB as FullChunkObject;
-                convex = entryA as ConvexCollidable;
+                convex = entryA as MobileMeshCollidable;
                 if (mesh == null || convex == null)
                 {
                     throw new ArgumentException("Inappropriate types used to initialize pair.");
@@ -106,13 +106,15 @@ namespace Voxalia.Shared.Collision
             if (convex.Entity != null && convex.Entity.ActivityInformation.IsActive && convex.Entity.PositionUpdateMode == PositionUpdateMode.Continuous)
             {
                 timeOfImpact = 1;
-                RigidTransform rt = new RigidTransform(convex.Entity.Position, convex.Entity.Orientation);
+                // TODO!
+                timeOfImpact = 0;
+                /*RigidTransform rt = new RigidTransform(convex.Entity.Position, convex.Entity.Orientation);
                 Vector3 sweep = convex.Entity.LinearVelocity;
                 RayHit rh;
                 if (mesh.ConvexCast(convex.Shape, ref rt, ref sweep, out rh))
                 {
                     timeOfImpact = rh.T;
-                }
+                }*/
                 // Special exception!
                 if (TimeOfImpact <= 0)
                 {

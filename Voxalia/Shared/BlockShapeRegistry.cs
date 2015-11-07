@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Voxalia.Shared.BlockShapes;
+using BEPUphysics.CollisionShapes.ConvexShapes;
+using BEPUphysics.CollisionShapes;
 using BEPUutilities;
 
 namespace Voxalia.Shared
@@ -106,19 +108,13 @@ namespace Voxalia.Shared
             return lits;
         }
 
-        public virtual BEPUphysics.CollisionShapes.EntityShape GetShape(out Location offset)
+        public virtual EntityShape GetShape(out Location offset)
         {
             List<Vector3> vecs = GetVertices(new Vector3(0, 0, 0), false, false, false, false, false, false);
-            int[] ints = new int[vecs.Count];
-            for (int i = 0; i < vecs.Count; i++)
-            {
-                ints[i] = i;
-            }
             Vector3 offs;
-            BEPUphysics.CollisionShapes.MobileMeshShape Shape = new BEPUphysics.CollisionShapes.MobileMeshShape(vecs.ToArray(), ints, new AffineTransform(new Vector3(1f, 1f, 1f), // TODO: Fiddle!
-                Quaternion.Identity, Vector3.Zero), BEPUphysics.CollisionShapes.MobileMeshSolidity.Solid, out offs);
+            ConvexHullShape shape = new ConvexHullShape(vecs, out offs);
             offset = new Location(offs);
-            return Shape;
+            return shape;
         }
     }
 }

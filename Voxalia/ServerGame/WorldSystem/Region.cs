@@ -512,7 +512,7 @@ namespace Voxalia.ServerGame.WorldSystem
             CollisionDetectionSettings.AllowedPenetration = 0.001f;
             PhysicsWorld = new Space(pl);
             // Set the world's general default gravity
-            PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, 0);// -9.8f * 3f / 2f);
+            PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f * 3f / 2f);
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
             chunkGroup = new StaticGroup(ChunkShapes);
@@ -549,7 +549,7 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             CFGEdited = true;
         }
-        
+#if NEW_CHUNKS
         public void AddChunk(FullChunkObject mesh)
         {
             if (mesh == null)
@@ -567,7 +567,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             PhysicsWorld.Remove(mesh);
         }
-        /*
+#else
         public void AddChunk(StaticMesh mesh)
         {
             if (mesh == null)
@@ -584,8 +584,8 @@ namespace Voxalia.ServerGame.WorldSystem
                 return;
             }
             PhysicsWorld.Remove(mesh);
-        }*/
-
+        }
+#endif
         public List<Collidable> ChunkShapes = new List<Collidable>();
 
         public StaticGroup chunkGroup;

@@ -25,6 +25,7 @@ namespace Voxalia.Shared.Collision
         public static void RegisterMe()
         {
             NarrowPhasePairFactory<ConvexFCOPairHandler> fact = new NarrowPhasePairFactory<ConvexFCOPairHandler>();
+            NarrowPhasePairFactory<MeshFCOPairHandler> fact2 = new NarrowPhasePairFactory<MeshFCOPairHandler>();
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<BoxShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<SphereShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<CapsuleShape>), typeof(FullChunkObject)), fact);
@@ -35,6 +36,8 @@ namespace Voxalia.Shared.Collision
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<MinkowskiSumShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<WrappedShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<ConvexHullShape>), typeof(FullChunkObject)), fact);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(TriangleCollidable), typeof(FullChunkObject)), fact);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(MobileMeshCollidable), typeof(FullChunkObject)), fact2);
         }
 
         public FullChunkObject(Vector3 pos, BlockInternal[] blocks)
@@ -63,6 +66,16 @@ namespace Voxalia.Shared.Collision
         public override void UpdateBoundingBox()
         {
             boundingBox = new BoundingBox(Position, Position + new Vector3(30, 30, 30));
+        }
+
+        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, float slen, out RayHit hit)
+        {
+            RigidTransform rt = new RigidTransform(startingTransform.Position - Position, startingTransform.Orientation);
+            RayHit rHit;
+            bool h = ChunkShape.ConvexCast(castShape, ref rt, ref sweepnorm, slen, out rHit);
+            rHit.Location = rHit.Location + Position;
+            hit = rHit;
+            return h;
         }
 
         public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, Func<BroadPhaseEntry, bool> filter, out RayHit hit)

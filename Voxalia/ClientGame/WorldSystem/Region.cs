@@ -49,11 +49,11 @@ namespace Voxalia.ClientGame.WorldSystem
             CollisionDetectionSettings.AllowedPenetration = 0.001f;
             PhysicsWorld = new Space(pl);
             // Set the world's general default gravity
-            PhysicsWorld.ForceUpdater.Gravity = new BEPUutilities.Vector3(0, 0, 0);// -9.8f * 3f / 2f);
+            PhysicsWorld.ForceUpdater.Gravity = new BEPUutilities.Vector3(0, 0, -9.8f * 3f / 2f);
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
         }
-        
+#if NEW_CHUNKS
         public void AddChunk(FullChunkObject mesh)
         {
             if (mesh == null)
@@ -73,7 +73,7 @@ namespace Voxalia.ClientGame.WorldSystem
             PhysicsWorld.Remove(mesh);
             return;
         }
-        /*
+#else
         public void AddChunk(StaticMesh mesh)
         {
             if (mesh == null)
@@ -92,8 +92,8 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             PhysicsWorld.Remove(mesh);
             return;
-        }*/
-
+        }
+#endif
         public List<Collidable> ChunkShapes = new List<Collidable>();
         
         /// <summary>

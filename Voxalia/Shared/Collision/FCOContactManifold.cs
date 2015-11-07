@@ -61,10 +61,16 @@ namespace Voxalia.Shared.Collision
 
         public override void Update(float dt)
         {
-            RigidTransform rt = convex.WorldTransform;
-            Vector3 sw = new Vector3(0, 0, -1f);
+            RigidTransform rt = convex.Entity == null ? convex.WorldTransform: new RigidTransform(convex.Entity.Position, convex.Entity.Orientation);
+            Vector3 sw = new Vector3(0, 0, 1f);
+            if (convex.Entity != null)
+            {
+                sw = convex.Entity.LinearVelocity;
+                float len = sw.Length();
+                sw /= len;
+            }
             RayHit rh;
-            bool hit = mesh.ChunkShape.ConvexCast(convex.Shape, ref rt, ref sw, 0.001f, out rh);
+            bool hit = mesh.ConvexCast(convex.Shape, ref rt, ref sw, 0.001f, out rh);
             if (!hit || IsNaNOrInfOrZero(ref rh.Normal))
             {
                 for (int i = contacts.Count - 1; i >= 0; i--)
@@ -73,18 +79,20 @@ namespace Voxalia.Shared.Collision
                 }
                 return;
             }
-            /*for (int i = contacts.Count - 1; i >= 0; i--)
+            float pendef = -1f; // TODO: WHY IS THIS NEGATIVE?!
+            Vector3 norm = -rh.Normal; // TODO: WHY MUST WE NEGATE HERE?
+            for (int i = contacts.Count - 1; i >= 0; i--)
             {
-                contacts[i].Normal = rh.Normal;
+                contacts[i].Normal = norm;
                 contacts[i].Position = rh.Location;
-                contacts[i].PenetrationDepth = -0.1f;
-            }*/
+                contacts[i].PenetrationDepth = pendef;
+            }
             if (Contacts.Count == 0)
             {
                 ContactData cd = new ContactData();
-                cd.Normal = rh.Normal;
+                cd.Normal = norm;
                 cd.Position = rh.Location;
-                cd.PenetrationDepth = -0.1f;
+                cd.PenetrationDepth = pendef;
                 cd.Id = contacts.Count;
                 Add(ref cd);
             }
