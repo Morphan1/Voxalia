@@ -67,7 +67,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                 PE.Kick("Internal exception.");
             }
         }
-
+        
         public void Tick(double delta)
         {
             try
@@ -151,7 +151,14 @@ namespace Voxalia.ServerGame.NetworkSystem
                     if (recd[0] == 'G' && recd[1] == 'E' && recd[2] == 'T' && recd[3] == ' ' && recd[4] == '/')
                     {
                         // HTTP GET
-                        throw new NotImplementedException("HTTP GET not yet implemented");
+                        if (recd[recdsofar - 1] == '\n' && (recd[recdsofar - 2] == '\n' || recd[recdsofar - 3] == '\n'))
+                        {
+                            WebPage wp = new WebPage(TheServer, this);
+                            wp.Init(FileHandler.encoding.GetString(recd, 0, recdsofar));
+                            PrimarySocket.Send(wp.GetFullData());
+                            PrimarySocket.Close();
+                            Alive = false;
+                        }
                     }
                     else if (recd[0] == 'P' && recd[1] == 'O' && recd[2] == 'S' && recd[3] == 'T' && recd[4] == ' ')
                     {
@@ -161,10 +168,23 @@ namespace Voxalia.ServerGame.NetworkSystem
                     else if (recd[0] == 'H' && recd[1] == 'E' && recd[2] == 'A' && recd[3] == 'D' && recd[4] == ' ')
                     {
                         // HTTP HEAD
-                        throw new NotImplementedException("HTTP HEAD not yet implemented");
+                        if (recd[recdsofar - 1] == '\n' && (recd[recdsofar - 2] == '\n' || recd[recdsofar - 3] == '\n'))
+                        {
+                            WebPage wp = new WebPage(TheServer, this);
+                            wp.Init(FileHandler.encoding.GetString(recd, 0, recdsofar));
+                            PrimarySocket.Send(FileHandler.encoding.GetBytes(wp.GetHeaders()));
+                            PrimarySocket.Close();
+                            Alive = false;
+                        }
+                    }
+                    else if (recd[0] == 'V' && recd[1] == 'O' && recd[2] == 'X' && recd[3] == 'p' && recd[4] == '_')
+                    {
+                        // VOXALIA ping
+                        throw new NotImplementedException("VOXALIA ping not yet implemented");
                     }
                     else if (recd[0] == 'V' && recd[1] == 'O' && recd[2] == 'X' && recd[3] == '_' && recd[4] == '_')
                     {
+                        // VOXALIA connect
                         if (recd[recdsofar - 1] == '\n')
                         {
                             string data = FileHandler.encoding.GetString(recd, 6, recdsofar - 6);
@@ -196,6 +216,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                     }
                     else if (recd[0] == 'V' && recd[1] == 'O' && recd[2] == 'X' && recd[3] == 'c' && recd[4] == '_')
                     {
+                        // VOXALIA chunk connect
                         if (recd[recdsofar - 1] == '\n')
                         {
                             string data = FileHandler.encoding.GetString(recd, 6, recdsofar - 6);

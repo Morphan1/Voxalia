@@ -175,6 +175,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourPositionPacketOut.cs" />
     <Compile Include="ServerGame\ItemSystem\ItemStack.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourStatusPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\WebPage.cs" />
     <Compile Include="ServerGame\OtherSystems\ModelEngine.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\BlockshapePlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\DevelPlayerCommand.cs" />
