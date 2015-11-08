@@ -97,7 +97,7 @@ namespace Voxalia.Shared
         public virtual List<Vector4> GetLights(Vector3 blockPos, BlockInternal cblock, BlockInternal XP, BlockInternal XM, BlockInternal YP, BlockInternal YM, BlockInternal TOP, BlockInternal BOTTOM,
             bool bxp, bool bxm, bool byp, bool bym, bool btop, bool bbottom)
         {
-            // TODO: Remove default implementation
+            // TODO: Remove default implementation?
             List<Vector4> lits = new List<Vector4>(6 * 3 * 2);
             int c = GetVertices(blockPos, bxp, bxm, byp, bym, btop, bbottom).Count;
             for (int i = 0; i < c; i++)

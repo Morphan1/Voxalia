@@ -54,14 +54,30 @@ namespace Voxalia.Shared.Collision
 
         public static bool IsNaNOrInfOrZero(ref Vector3 vec)
         {
-            return float.IsInfinity(vec.X) || float.IsNaN(vec.X) || vec.X == 0
-                || float.IsInfinity(vec.Y) || float.IsNaN(vec.Y) || vec.Y == 0
-                || float.IsInfinity(vec.Z) || float.IsNaN(vec.Z) || vec.Z == 0;
+            return float.IsInfinity(vec.X) || float.IsNaN(vec.X)
+                || float.IsInfinity(vec.Y) || float.IsNaN(vec.Y)
+                || float.IsInfinity(vec.Z) || float.IsNaN(vec.Z) || (vec.X == 0 && vec.Y == 0 && vec.Z == 0);
         }
 
+        public static bool IsNaNOrInf(ref Vector3 vec)
+        {
+            return float.IsInfinity(vec.X) || float.IsNaN(vec.X)
+                || float.IsInfinity(vec.Y) || float.IsNaN(vec.Y)
+                || float.IsInfinity(vec.Z) || float.IsNaN(vec.Z);
+        }
+        
         public override void Update(float dt)
         {
+
             RigidTransform rt = convex.Entity == null ? convex.WorldTransform: new RigidTransform(convex.Entity.Position, convex.Entity.Orientation);
+            if (IsNaNOrInf(ref rt.Position))
+            {
+                for (int i = contacts.Count - 1; i >= 0; i--)
+                {
+                    Remove(i);
+                }
+                return;
+            }
             Vector3 sw = new Vector3(0, 0, 1f);
             if (convex.Entity != null)
             {
@@ -79,23 +95,33 @@ namespace Voxalia.Shared.Collision
                 }
                 return;
             }
-            float pendef = -1f; // TODO: WHY IS THIS NEGATIVE?!
-            Vector3 norm = -rh.Normal; // TODO: WHY MUST WE NEGATE HERE?
+            float pendef = 1f;
+            Vector3 norm;
+            RigidTransform rtx = new RigidTransform(Vector3.Zero, rt.Orientation);
+            RigidTransform.Transform(ref rh.Normal, ref rtx, out norm);
+            norm = -norm; // TODO: Why must we negate here?!
             for (int i = contacts.Count - 1; i >= 0; i--)
             {
                 contacts[i].Normal = norm;
-                contacts[i].Position = rh.Location;
+                contacts[i].Position = rt.Position;
                 contacts[i].PenetrationDepth = pendef;
             }
             if (Contacts.Count == 0)
             {
                 ContactData cd = new ContactData();
                 cd.Normal = norm;
-                cd.Position = rh.Location;
+                cd.Position = rt.Position;
                 cd.PenetrationDepth = pendef;
                 cd.Id = contacts.Count;
                 Add(ref cd);
             }
+        }
+        
+        public override void CleanUp()
+        {
+            convex = null;
+            mesh = null;
+            base.CleanUp();
         }
     }
 }

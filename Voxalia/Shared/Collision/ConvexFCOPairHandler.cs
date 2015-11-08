@@ -108,15 +108,15 @@ namespace Voxalia.Shared.Collision
                 timeOfImpact = 1;
                 RigidTransform rt = new RigidTransform(convex.Entity.Position, convex.Entity.Orientation);
                 Vector3 sweep = convex.Entity.LinearVelocity;
+                sweep *= dt;
                 RayHit rh;
                 if (mesh.ConvexCast(convex.Shape, ref rt, ref sweep, out rh))
                 {
                     timeOfImpact = rh.T;
                 }
-                // Special exception!
-                if (TimeOfImpact <= 0)
+                if (TimeOfImpact < 0)
                 {
-                    timeOfImpact = 1;
+                    timeOfImpact = 0;
                 }
             }
         }
@@ -126,8 +126,8 @@ namespace Voxalia.Shared.Collision
             ContactInformation ci = new ContactInformation();
             ci.Contact = contactManifold.ctcts[index];
             ci.Pair = this;
-            ci.NormalImpulse = -100; // convex.Entity.Mass * 10f;
-            ci.FrictionImpulse = -1; // convex.Entity.Mass;
+            ci.NormalImpulse = 100; // convex.Entity.Mass * 10f;
+            ci.FrictionImpulse = 1; // convex.Entity.Mass;
             info = ci;
         }
     }

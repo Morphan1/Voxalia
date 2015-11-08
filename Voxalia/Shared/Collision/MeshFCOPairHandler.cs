@@ -54,7 +54,7 @@ namespace Voxalia.Shared.Collision
             get { return MeshManifold; }
         }
 
-        FCOContactManifold contactManifold = new FCOContactManifold();
+        FCOContactManifold contactManifold = new FCOContactManifold(); // TODO: Special contact manifold!
 
         protected FCOContactManifold MeshManifold { get { return contactManifold; } }
 
@@ -107,7 +107,6 @@ namespace Voxalia.Shared.Collision
             {
                 timeOfImpact = 1;
                 // TODO!
-                timeOfImpact = 0;
                 /*RigidTransform rt = new RigidTransform(convex.Entity.Position, convex.Entity.Orientation);
                 Vector3 sweep = convex.Entity.LinearVelocity;
                 RayHit rh;
@@ -115,11 +114,12 @@ namespace Voxalia.Shared.Collision
                 {
                     timeOfImpact = rh.T;
                 }*/
-                // Special exception!
-                if (TimeOfImpact <= 0)
+                if (TimeOfImpact < 0)
                 {
-                    timeOfImpact = 1;
+                    timeOfImpact = 0;
                 }
+                // TODO!
+                timeOfImpact = 0;
             }
         }
         
