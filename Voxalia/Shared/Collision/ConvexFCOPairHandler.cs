@@ -13,6 +13,7 @@ using BEPUphysics.NarrowPhaseSystems.Pairs;
 using BEPUphysics.Entities;
 using BEPUutilities;
 using BEPUphysics;
+using BEPUutilities.DataStructures;
 
 namespace Voxalia.Shared.Collision
 {
@@ -126,8 +127,28 @@ namespace Voxalia.Shared.Collision
             ContactInformation ci = new ContactInformation();
             ci.Contact = contactManifold.ctcts[index];
             ci.Pair = this;
-            ci.NormalImpulse = 100; // convex.Entity.Mass * 10f;
-            ci.FrictionImpulse = 1; // convex.Entity.Mass;
+            ReadOnlyList<ContactPenetrationConstraint> list = contactConstraint.ContactPenetrationConstraints;
+            float totalimp = 0;
+            for (int i = 0; i < list.Count; i++)
+            {
+                totalimp += list[i].NormalImpulse;
+            }
+            ci.NormalImpulse = list[index].NormalImpulse;
+            ci.FrictionImpulse = (ci.NormalImpulse / totalimp) * list[index].RelativeVelocity;
+            if (convex.Entity != null)
+            {
+                Vector3 velocity;
+                Vector3 cep = convex.Entity.Position;
+                Vector3 ceav = convex.Entity.AngularVelocity;
+                Vector3 celv = convex.Entity.LinearVelocity;
+                Vector3.Subtract(ref ci.Contact.Position, ref cep, out velocity);
+                Vector3.Cross(ref ceav, ref velocity, out velocity);
+                Vector3.Add(ref velocity, ref celv, out ci.RelativeVelocity);
+            }
+            else
+            {
+                ci.RelativeVelocity = new Vector3(0, 0, 0);
+            }
             info = ci;
         }
     }

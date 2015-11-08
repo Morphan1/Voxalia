@@ -103,14 +103,14 @@ namespace Voxalia.Shared.Collision
             for (int i = contacts.Count - 1; i >= 0; i--)
             {
                 contacts[i].Normal = norm;
-                contacts[i].Position = rt.Position;
+                contacts[i].Position = rh.Location;
                 contacts[i].PenetrationDepth = pendef;
             }
             if (Contacts.Count == 0)
             {
                 ContactData cd = new ContactData();
                 cd.Normal = norm;
-                cd.Position = rt.Position;
+                cd.Position = rh.Location;
                 cd.PenetrationDepth = pendef;
                 cd.Id = contacts.Count;
                 Add(ref cd);
