@@ -6,6 +6,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using BEPUphysics;
+using BEPUutilities;
 using BEPUphysics.Settings;
 using Voxalia.ClientGame.JointSystem;
 using Voxalia.ClientGame.EntitySystem;
@@ -94,8 +95,55 @@ namespace Voxalia.ClientGame.WorldSystem
             return;
         }
 #endif
-        public List<Collidable> ChunkShapes = new List<Collidable>();
-        
+
+        public bool SpecialCaseRayTrace(Location start, Location dir, float len, MaterialSolidity considerSolid, Func<BroadPhaseEntry, bool> filter, out RayCastResult rayHit)
+        {
+            Ray ray = new Ray(start.ToBVector(), dir.ToBVector());
+            RayCastResult best = new RayCastResult(new RayHit() { T = len }, null);
+            bool hA = false;
+            if (considerSolid.HasFlag(MaterialSolidity.FULLSOLID))
+            {
+                RayCastResult rcr;
+                if (PhysicsWorld.RayCast(ray, len, filter, out rcr))
+                {
+                    best = rcr;
+                    hA = true;
+                }
+            }
+            AABB box = new AABB();
+            box.Min = start;
+            box.Max = start;
+            box.Include(start + dir * len);
+            foreach (KeyValuePair<Location, Chunk> chunk in LoadedChunks)
+            {
+                if (chunk.Value == null || chunk.Value.FCO == null)
+                {
+                    continue;
+                }
+                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition * 30, Max = chunk.Value.WorldPosition * 30 + new Location(30, 30, 30) }))
+                {
+                    continue;
+                }
+                RayHit temp;
+                if (chunk.Value.FCO.RayCast(ray, len, null, MaterialSolidity.ANY, out temp))
+                {
+                    hA = true;
+                    temp.T *= len;
+                    if (temp.T < best.HitData.T)
+                    {
+                        best.HitData = temp;
+#if NEW_CHUNKS
+                        best.HitObject = chunk.Value.FCO;
+#else
+                        best.HitObject = chunk.Value.worldObject;
+#endif
+                    }
+                }
+            }
+            rayHit = best;
+            return hA;
+        }
+
         /// <summary>
         /// Ticks the physics world.
         /// </summary>

@@ -1,6 +1,10 @@
 ﻿using Voxalia.Shared;
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.Shared.Collision;
+using BEPUphysics;
+using BEPUutilities;
+using BEPUphysics.BroadPhaseEntries;
+using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
@@ -29,23 +33,34 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             PlayerEntity player = (PlayerEntity)ent;
             Location eye = player.GetEyePosition();
-            CollisionResult cr = player.TheRegion.Collision.RayTrace(eye, eye + player.ForwardVector() * 5, player.IgnoreThis);
-            if (cr.Hit)
+            Location forw = player.ForwardVector();
+            RayCastResult rcr;
+            bool h = player.TheRegion.SpecialCaseRayTrace(eye, forw, 5, MaterialSolidity.ANY, player.IgnoreThis, out rcr);
+            if (h)
             {
-                if (cr.HitEnt != null)
+                if (rcr.HitObject != null && rcr.HitObject is EntityCollidable && ((EntityCollidable)rcr.HitObject).Entity != null)
                 {
+                    SysConsole.Output(OutputType.INFO, "Swung fist but entity there :(");
                     // TODO: Damage
                 }
                 else if (player.TheRegion.GlobalTickTime - player.LastBlockBreak >= 0.2)
                 {
-                    Location block = cr.Position - cr.Normal * 0.01;
+                    Location block = new Location(rcr.HitData.Location) - new Location(rcr.HitData.Normal).Normalize() * 0.01;
                     Material mat = player.TheRegion.GetBlockMaterial(block);
-                    if (mat != Material.AIR) // TODO: IsBreakable
+                    if (mat != Material.AIR) // TODO: IsBreakable?
                     {
                         player.TheRegion.BreakNaturally(block);
                         player.LastBlockBreak = player.TheRegion.GlobalTickTime;
                     }
+                    else
+                    {
+                        SysConsole.Output(OutputType.INFO, "Swung fist but smacked air :( at " + block + " with normal " + rcr.HitData.Normal);
+                    }
                 }
+            }
+            else
+            {
+                SysConsole.Output(OutputType.INFO, "Swung fist but nothing there :(");
             }
         }
 

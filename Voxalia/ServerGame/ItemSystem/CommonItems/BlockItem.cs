@@ -2,6 +2,10 @@
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
+using BEPUphysics;
+using BEPUutilities;
+using BEPUphysics.BroadPhaseEntries;
+using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
@@ -26,16 +30,18 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             PlayerEntity player = (PlayerEntity)entity;
             Location eye = player.GetEyePosition();
-            CollisionResult cr = player.TheRegion.Collision.RayTrace(eye, eye + player.ForwardVector() * 5, player.IgnoreThis);
-            if (cr.Hit)
+            Location forw = player.ForwardVector();
+            RayCastResult rcr;
+            bool h = player.TheRegion.SpecialCaseRayTrace(eye, forw, 5, MaterialSolidity.ANY, player.IgnoreThis, out rcr);
+            if (h)
             {
-                if (cr.HitEnt != null)
+                if (rcr.HitObject != null && rcr.HitObject is EntityCollidable && ((EntityCollidable)rcr.HitObject).Entity != null)
                 {
                     // TODO: ???
                 }
                 else if (player.TheRegion.GlobalTickTime - player.LastBlockPlace >= 0.2)
                 {
-                    Location block = player.TheRegion.GetBlockLocation(cr.Position + cr.Normal * 0.91f);
+                    Location block = new Location(rcr.HitData.Location) + new Location(rcr.HitData.Normal).Normalize() * 0.9f;
                     Material mat = player.TheRegion.GetBlockMaterial(block);
                     if (mat == Material.AIR) // TODO: IsPlaceableIn
                     {

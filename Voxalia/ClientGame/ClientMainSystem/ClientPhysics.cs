@@ -30,6 +30,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 ThePlanet.Destroy();
                 Lights.Remove(ThePlanet);
             }
+            // TODO: DESTROY OLD REGION!
             // TODO: Radius -> max view rad * 2
             // TODO: Size -> max view rad * 2 + 30 * 2
             TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, 30 * 10, SunLightDef, new Location(0, 0, -1), 30 * 12);

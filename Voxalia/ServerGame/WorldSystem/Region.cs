@@ -515,8 +515,6 @@ namespace Voxalia.ServerGame.WorldSystem
             PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f * 3f / 2f);
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
-            chunkGroup = new StaticGroup(ChunkShapes);
-            PhysicsWorld.Add(chunkGroup);
             string fname = "saves/" + Name + "/region.yml";
             if (Program.Files.Exists(fname))
             {
@@ -586,9 +584,54 @@ namespace Voxalia.ServerGame.WorldSystem
             PhysicsWorld.Remove(mesh);
         }
 #endif
-        public List<Collidable> ChunkShapes = new List<Collidable>();
 
-        public StaticGroup chunkGroup;
+        public bool SpecialCaseRayTrace(Location start, Location dir, float len, MaterialSolidity considerSolid, Func<BroadPhaseEntry, bool> filter, out RayCastResult rayHit)
+        {
+            Ray ray = new Ray(start.ToBVector(), dir.ToBVector());
+            RayCastResult best = new RayCastResult(new RayHit() { T = len }, null);
+            bool hA = false;
+            if (considerSolid.HasFlag(MaterialSolidity.FULLSOLID))
+            {
+                RayCastResult rcr;
+                if (PhysicsWorld.RayCast(ray, len, filter, out rcr))
+                {
+                    best = rcr;
+                    hA = true;
+                }
+            }
+            AABB box = new AABB();
+            box.Min = start;
+            box.Max = start;
+            box.Include(start + dir * len);
+            foreach (KeyValuePair<Location, Chunk> chunk in LoadedChunks)
+            {
+                if (chunk.Value == null || chunk.Value.FCO == null)
+                {
+                    continue;
+                }
+                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition * 30, Max = chunk.Value.WorldPosition * 30 + new Location(30, 30, 30) }))
+                {
+                    continue;
+                }
+                RayHit temp;
+                if (chunk.Value.FCO.RayCast(ray, len, null, MaterialSolidity.ANY, out temp))
+                {
+                    hA = true;
+                    temp.T *= len;
+                    if (temp.T < best.HitData.T)
+                    {
+                        best.HitData = temp;
+#if NEW_CHUNKS
+                        best.HitObject = chunk.Value.FCO;
+#else
+                        best.HitObject = chunk.Value.worldObject;
+#endif
+                    }
+                }
+            }
+            rayHit = best;
+            return hA;
+        }
 
         private bool AllChunksLoadedFully()
         {

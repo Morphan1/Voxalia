@@ -86,7 +86,7 @@ namespace Voxalia.Shared.Collision
                 sw /= len;
             }
             RayHit rh;
-            bool hit = mesh.ConvexCast(convex.Shape, ref rt, ref sw, 0.001f, out rh);
+            bool hit = mesh.ConvexCast(convex.Shape, ref rt, ref sw, 0.001f, MaterialSolidity.FULLSOLID, out rh);
             if (!hit || IsNaNOrInfOrZero(ref rh.Normal))
             {
                 for (int i = contacts.Count - 1; i >= 0; i--)

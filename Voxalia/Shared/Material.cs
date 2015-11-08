@@ -31,19 +31,19 @@ namespace Voxalia.Shared
         static MaterialHelpers()
         {
             MaterialInfo[] mats = new MaterialInfo[] {
-                new MaterialInfo((int)Material.AIR) { Solid = false, Opaque = false, RendersAtAll = false, FogAlpha = 0 },
+                new MaterialInfo((int)Material.AIR) { Solidity = MaterialSolidity.NONSOLID, Opaque = false, RendersAtAll = false, FogAlpha = 0 },
                 new MaterialInfo((int)Material.STONE) { SpeedMod = 1.1f },
                 new MaterialInfo((int)Material.GRASS),
                 new MaterialInfo((int)Material.DIRT),
-                new MaterialInfo((int)Material.WATER) { Solid = false, Opaque = false, FogColor = new Location(0, 0.5, 1) },
+                new MaterialInfo((int)Material.WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1) },
                 new MaterialInfo((int)Material.DEBUG),
                 new MaterialInfo((int)Material.LEAVES1) { Opaque = false, SpeedMod = 0.7f, FogAlpha = 0, CanRenderAgainstSelf = true },
                 new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f },
                 new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f, FogColor = new Location(0, 1, 0) },
                 new MaterialInfo((int)Material.SNOW) { SpeedMod = 0.8f },
-                new MaterialInfo((int)Material.SMOKE) { Solid = false, Opaque = false, FogColor = new Location(0.8) },
+                new MaterialInfo((int)Material.SMOKE) { Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.8) },
                 new MaterialInfo((int)Material.LOG) { SpeedMod = 1.1f },
-                new MaterialInfo((int)Material.TALLGRASS) { Solid = false, Opaque = false }
+                new MaterialInfo((int)Material.TALLGRASS) { Solidity = MaterialSolidity.SPECIAL, Opaque = false }
             };
             mats[(int)Material.GRASS].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
             mats[(int)Material.GRASS].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
@@ -57,9 +57,9 @@ namespace Voxalia.Shared
             ALL_MATS.AddRange(mats);
         }
         
-        public static bool IsSolid(this Material mat)
+        public static MaterialSolidity GetSolidity(this Material mat)
         {
-            return ALL_MATS[(int)mat].Solid;
+            return ALL_MATS[(int)mat].Solidity;
         }
 
         public static bool IsOpaque(this Material mat)
@@ -146,6 +146,17 @@ namespace Voxalia.Shared
         COUNT = 6
     }
 
+    [Flags]
+    public enum MaterialSolidity : byte
+    {
+        NONSOLID = 1,
+        FULLSOLID = 2,
+        LIQUID = 4,
+        GAS = 8,
+        SPECIAL = 16,
+        ANY = FULLSOLID | LIQUID | GAS | SPECIAL
+    }
+
     public class MaterialInfo
     {
         public MaterialInfo(int _ID)
@@ -164,9 +175,7 @@ namespace Voxalia.Shared
         public int ID = 0;
 
         public float SpeedMod = 1f;
-
-        public bool Solid = true;
-
+        
         public bool Opaque = true;
 
         public bool RendersAtAll = true;
@@ -178,6 +187,8 @@ namespace Voxalia.Shared
         public Location FogColor = new Location(0.7);
 
         public float FogAlpha = 1;
+
+        public MaterialSolidity Solidity = MaterialSolidity.FULLSOLID;
         
         public int[] TID = new int[(int)MaterialSide.COUNT];
     }

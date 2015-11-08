@@ -11,6 +11,9 @@ using Frenetic;
 using Frenetic.TagHandlers.Common;
 using System.Linq;
 using Voxalia.Shared.Collision;
+using BEPUphysics;
+using BEPUutilities;
+using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -141,11 +144,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
                 }
                 PlayerEyePosition = Player.GetEyePosition();
-                CameraFinalTarget = PlayerEyePosition + Player.ForwardVector() * 100f;
-                CollisionResult cr = TheRegion.Collision.RayTrace(PlayerEyePosition, CameraFinalTarget, IgnorePlayer);
-                CameraFinalTarget = cr.Position;
-                CameraImpactNormal = cr.Hit ? cr.Normal.Normalize() : Location.Zero;
-                CameraDistance = (PlayerEyePosition - CameraFinalTarget).Length();
+                RayCastResult rcr;
+                Location forw = Player.ForwardVector();
+                bool h = TheRegion.SpecialCaseRayTrace(PlayerEyePosition, forw, 100, MaterialSolidity.ANY, IgnorePlayer, out rcr);
+                CameraFinalTarget = h ? new Location(rcr.HitData.Location) - new Location(rcr.HitData.Normal).Normalize() * 0.01: PlayerEyePosition + forw * 100;
+                CameraImpactNormal = h ? new Location(rcr.HitData.Normal).Normalize() : Location.Zero;
+                CameraDistance = h ? rcr.HitData.T: 100;
             }
         }
 
@@ -155,8 +159,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         bool IgnorePlayer(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)
         {
-            if (entry is BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable
-                && ((BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable)entry).Entity.Tag == Player)
+            if (entry is EntityCollidable && ((EntityCollidable)entry).Entity.Tag == Player)
             {
                 return false;
             }

@@ -23,7 +23,7 @@ namespace Voxalia.Shared.Collision
             return z * CHUNK_SIZE * CHUNK_SIZE + y * CHUNK_SIZE + x;
         }
         
-        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, float slen, out RayHit hit)
+        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, float slen, MaterialSolidity solidness, out RayHit hit)
         {
             BoundingBox bb;
             RigidTransform rot = new RigidTransform(Vector3.Zero, startingTransform.Orientation);
@@ -58,7 +58,7 @@ namespace Voxalia.Shared.Collision
                                 continue;
                             }
                             BlockInternal bi = Blocks[BlockIndex(x, y, z)];
-                            if (((Material)bi.BlockMaterial).IsSolid())
+                            if (solidness.HasFlag(((Material)bi.BlockMaterial).GetSolidity()))
                             {
                                 Location offs;
                                 EntityShape es = BlockShapeRegistry.BSD[bi.BlockData].GetShape(out offs);
@@ -76,7 +76,7 @@ namespace Voxalia.Shared.Collision
                                 RayHit rhit;
                                 RigidTransform adjusted = new RigidTransform(startingTransform.Position - adj, startingTransform.Orientation);
                                 bool b = coll.ConvexCast(castShape, ref adjusted, ref sweep, out rhit);
-                                if (b && (!gotOne || rhit.T < BestRH.T) && rhit.T <= 1 && rhit.T >= 0)
+                                if (b && (!gotOne || rhit.T < BestRH.T) && rhit.T >= 0)
                                 {
                                     gotOne = true;
                                     BestRH = rhit;
@@ -93,20 +93,22 @@ namespace Voxalia.Shared.Collision
                     return true;
                 }
             }
-            hit = new RayHit() { Location = startingTransform.Position + sweep, Normal = new Vector3(0, 0, 0), T = 1 };
+            hit = new RayHit() { Location = startingTransform.Position + sweep, Normal = new Vector3(0, 0, 0), T = slen };
             return false;
         }
+
+        BoxShape RayCastShape = new BoxShape(0.1f, 0.1f, 0.1f);
 
         /// <summary>
         /// Performs a raycast.
         /// NOTE: hit.T is always 0.
         /// </summary>
-        public bool RayCast(ref Ray ray, float maximumLength, out RayHit hit)
+        public bool RayCast(ref Ray ray, float maximumLength, MaterialSolidity solidness, out RayHit hit)
         {
             // TODO: Original special ray code!
             RigidTransform rt = new RigidTransform(ray.Position, Quaternion.Identity);
             Vector3 sweep = ray.Direction;
-            return ConvexCast(new BoxShape(0.1f, 0.1f, 0.1f), ref rt, ref sweep, maximumLength, out hit);
+            return ConvexCast(RayCastShape, ref rt, ref sweep, maximumLength, solidness, out hit);
         }
     }
 }

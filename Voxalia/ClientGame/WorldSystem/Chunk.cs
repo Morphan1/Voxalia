@@ -97,7 +97,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     for (int z = 0; z < CSize; z++)
                     {
                         BlockInternal c = GetBlockAt(x, y, z);
-                        if (((Material)c.BlockMaterial).IsSolid())
+                        if (((Material)c.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
                         {
                             // TODO: Handle ALL blocks against the surface when low-LOD?
                             BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(x, y, 30));
@@ -106,12 +106,12 @@ namespace Voxalia.ClientGame.WorldSystem
                             BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(x, -1, z));
                             BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(30, y, z));
                             BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(-1, y, z));
-                            bool zps = ((Material)zp.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
-                            bool zms = ((Material)zm.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
-                            bool xps = ((Material)xp.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
-                            bool xms = ((Material)xm.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
-                            bool yps = ((Material)yp.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
-                            bool yms = ((Material)ym.BlockMaterial).IsSolid() && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
+                            bool zps = ((Material)zp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
+                            bool zms = ((Material)zm.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
+                            bool xps = ((Material)xp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
+                            bool xms = ((Material)xm.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
+                            bool yps = ((Material)yp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
+                            bool yms = ((Material)ym.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
                             Vector3 pos = new Vector3(x, y, z);
                             List<Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                             foreach (Vector3 vec in vecsi)
@@ -135,11 +135,10 @@ namespace Voxalia.ClientGame.WorldSystem
             StaticMesh sm = new StaticMesh(vecs, inds);
             return sm;
         }
-#if NEW_CHUNKS
-        public FullChunkObject worldObject = null;
-#else
+
+        public FullChunkObject FCO = null;
+
         public StaticMesh worldObject = null;
-#endif
 
         public ASyncScheduleItem adding = null;
 
@@ -148,11 +147,13 @@ namespace Voxalia.ClientGame.WorldSystem
 #if NEW_CHUNKS
             if (worldObject != null)
             {
-                OwningRegion.RemoveChunkQuiet(worldObject);
+                OwningRegion.RemoveChunkQuiet(FCO);
             }
-            worldObject = new FullChunkObject(WorldPosition.ToBVector() * 30, BlocksInternal);
-            worldObject.CollisionRules.Group = CollisionUtil.Solid;
-            OwningRegion.AddChunk(worldObject);
+#endif
+            FCO = new FullChunkObject(WorldPosition.ToBVector() * 30, BlocksInternal);
+            FCO.CollisionRules.Group = CollisionUtil.Solid;
+#if NEW_CHUNKS
+            OwningRegion.AddChunk(FCO);
             if (callback != null)
             {
                 callback.Invoke();

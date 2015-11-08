@@ -227,7 +227,6 @@ namespace Voxalia.ClientGame.NetworkSystem
                         break;
                     case 24:
                         packet = new ChunkInfoPacketIn();
-                        asyncable = true;
                         break;
                     case 25:
                         packet = new BlockEditPacketIn();
