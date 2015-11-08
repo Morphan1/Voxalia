@@ -181,6 +181,9 @@ namespace Voxalia.ServerGame.NetworkSystem
                     {
                         // VOXALIA ping
                         throw new NotImplementedException("VOXALIA ping not yet implemented");
+                        /*if (recd[recdsofar - 1] == '\n')
+                        {
+                        }*/
                     }
                     else if (recd[0] == 'V' && recd[1] == 'O' && recd[2] == 'X' && recd[3] == '_' && recd[4] == '_')
                     {

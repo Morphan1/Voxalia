@@ -288,6 +288,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             else if (e is PlayerEntity)
             {
+                TheServer.Players.Remove((PlayerEntity)e);
                 Players.Remove((PlayerEntity)e);
                 ((PlayerEntity)e).Kick("Despawned!");
             }

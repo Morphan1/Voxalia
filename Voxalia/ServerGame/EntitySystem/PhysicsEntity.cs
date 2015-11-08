@@ -95,6 +95,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     return;
                 }
+                // TODO: Better calculations - depth inside the water ++ floatiness factor!
                 Vector3 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * GetMass() * (float)TheRegion.Delta;
                 Body.ApplyLinearImpulse(ref impulse);
                 Body.ActivityInformation.Activate();

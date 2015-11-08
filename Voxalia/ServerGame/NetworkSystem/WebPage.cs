@@ -62,7 +62,9 @@ namespace Voxalia.ServerGame.NetworkSystem
             // Placeholder
             string respcont = "<!doctype HTML>\n<html>";
             respcont += "<head><title>Voxalia Server</title></head>\n";
-            respcont += "<body><h1>Hello, this is a test page!</h1></body>";
+            respcont += "<body><h1>Hello, this is a test page!</h1>\n<br>";
+            respcont += "Online players: " + TheServer.Players.Count + "\n<br>";
+            respcont += "</body>\n";
             respcont += "</html>\n";
             http_response_content = FileHandler.encoding.GetBytes(respcont);
             if (GZip)
