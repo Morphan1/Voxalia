@@ -14,6 +14,7 @@ using Voxalia.ServerGame.WorldSystem.SimpleGenerator;
 using System.Threading;
 using System.Threading.Tasks;
 using BEPUphysics.BroadPhaseEntries;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.WorldSystem
@@ -615,6 +616,56 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
                 RayHit temp;
                 if (chunk.Value.FCO.RayCast(ray, len, null, MaterialSolidity.ANY, out temp))
+                {
+                    hA = true;
+                    temp.T *= len;
+                    if (temp.T < best.HitData.T)
+                    {
+                        best.HitData = temp;
+#if NEW_CHUNKS
+                        best.HitObject = chunk.Value.FCO;
+#else
+                        best.HitObject = chunk.Value.worldObject;
+#endif
+                    }
+                }
+            }
+            rayHit = best;
+            return hA;
+        }
+
+        public bool SpecialCaseConvexTrace(ConvexShape shape, Location start, Location dir, float len, MaterialSolidity considerSolid, Func<BroadPhaseEntry, bool> filter, out RayCastResult rayHit)
+        {
+            RigidTransform rt = new RigidTransform(start.ToBVector(), BEPUutilities.Quaternion.Identity);
+            BEPUutilities.Vector3 sweep = (dir * len).ToBVector();
+            RayCastResult best = new RayCastResult(new RayHit() { T = len }, null);
+            bool hA = false;
+            if (considerSolid.HasFlag(MaterialSolidity.FULLSOLID))
+            {
+                RayCastResult rcr;
+                if (PhysicsWorld.ConvexCast(shape, ref rt, ref sweep, filter, out rcr))
+                {
+                    best = rcr;
+                    hA = true;
+                }
+            }
+            sweep = dir.ToBVector();
+            AABB box = new AABB();
+            box.Min = start;
+            box.Max = start;
+            box.Include(start + dir * len);
+            foreach (KeyValuePair<Location, Chunk> chunk in LoadedChunks)
+            {
+                if (chunk.Value == null || chunk.Value.FCO == null)
+                {
+                    continue;
+                }
+                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition * 30, Max = chunk.Value.WorldPosition * 30 + new Location(30, 30, 30) }))
+                {
+                    continue;
+                }
+                RayHit temp;
+                if (chunk.Value.FCO.ConvexCast(shape, ref rt, ref sweep, len, MaterialSolidity.ANY, out temp))
                 {
                     hA = true;
                     temp.T *= len;

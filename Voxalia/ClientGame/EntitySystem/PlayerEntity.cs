@@ -176,7 +176,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
                 Flashlight.Reposition(GetEyePosition() + Utilities.ForwardVector_Deg(Direction.Yaw, 0) * 0.3f);
             }
-            //base.Tick();
+            base.Tick();
             //base.SetOrientation(Quaternion.Identity);
             aHTime += TheClient.Delta;
             aTTime += TheClient.Delta;

@@ -1,7 +1,7 @@
 ﻿using Voxalia.Shared;
 using Voxalia.Shared.Collision;
 
-namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
+namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
 {
     class BlockshapePlayerCommand: AbstractPlayerCommand
     {

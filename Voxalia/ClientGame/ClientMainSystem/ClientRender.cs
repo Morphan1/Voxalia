@@ -695,7 +695,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             // TODO: 5 -> Variable length (Server controlled?)
             if (TheRegion.GetBlockMaterial(cpos) != Material.AIR && CameraDistance < 5)
             {
-                if (CVars.r_highlight_targetblock.ValueB)
+                if (CVars.u_highlight_targetblock.ValueB)
                 {
                     Location cft = cpos.GetBlockLocation();
                     GL.LineWidth(3);
@@ -704,7 +704,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Rendering.RenderLineBox(cft - mov * 0.01f, cft + Location.One - mov * 0.01f);
                     GL.LineWidth(1);
                 }
-                if (CVars.r_highlight_placeblock.ValueB)
+                if (CVars.u_highlight_placeblock.ValueB)
                 {
                     Rendering.SetColor(Color4.Cyan);
                     Location cft2 = cpos2.GetBlockLocation();

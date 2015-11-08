@@ -3,6 +3,7 @@ using System.Text;
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.Shared;
 using Voxalia.ServerGame.PlayerCommandSystem.CommonCommands;
+using Voxalia.ServerGame.PlayerCommandSystem.RegionCommands;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem
 {
@@ -12,14 +13,17 @@ namespace Voxalia.ServerGame.PlayerCommandSystem
 
         public PlayerCommandEngine()
         {
-            Register(new BlockshapePlayerCommand());
+            // Common
             Register(new DevelPlayerCommand());
             Register(new DropPlayerCommand());
-            Register(new WeaponreloadPlayerCommand());
             Register(new SayPlayerCommand());
-            Register(new ThrowPlayerCommand());
             Register(new StancePlayerCommand());
+            Register(new ThrowPlayerCommand());
             Register(new UsePlayerCommand());
+            Register(new WeaponreloadPlayerCommand());
+            // Region
+            Register(new BlockfloodPlayerCommand());
+            Register(new BlockshapePlayerCommand());
         }
 
         public void Register(AbstractPlayerCommand cmd)

@@ -31,7 +31,6 @@ namespace Voxalia.ClientGame.CommandSystem
             r_maxfps,
             r_lightmaxdistance, r_fallbacklighting,
             r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun, r_shadowpace, r_shadows,
-            r_highlight_targetblock, r_highlight_placeblock,
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth,
             r_godrays, r_godray_samples, r_godray_wexposure, r_godray_decay, r_godray_density, r_godray_color;
 
@@ -39,7 +38,8 @@ namespace Voxalia.ClientGame.CommandSystem
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect;
 
         // UI CVars
-        public CVar u_mouse_sensitivity, u_reticle, u_reticlescale, u_showhud;
+        public CVar u_mouse_sensitivity, u_reticle, u_reticlescale, u_showhud,
+            u_highlight_targetblock, u_highlight_placeblock;
 
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
@@ -82,8 +82,6 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality_sun = Register("r_shadowquality_sun", "2048", CVarFlag.Numeric | CVarFlag.Delayed, "What texture size to use for the sun."); // TODO: Callback to auto-set
             r_shadowpace = Register("r_shadowpace", "2", CVarFlag.Numeric, "How rapidly to rerender shadows, in frames.");
             r_shadows = Register("r_shadows", "true", CVarFlag.Boolean, "Whether to render shadows at all.");
-            r_highlight_targetblock = Register("r_highlight_targetblock", "true", CVarFlag.Boolean, "Whether to highlight the targeted block."); // TODO: u_?
-            r_highlight_placeblock = Register("r_highlight_placeblock", "true", CVarFlag.Boolean, "Whether to highlight the targeted placement block."); // TODO: u_?
             r_good_graphics = Register("r_good_graphics", "true", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use 'good' graphics."); // TODO: Callback to auto-set
             r_skybox = Register("r_skybox", "default", CVarFlag.ServerControl | CVarFlag.Textual, "What skybox to use.");
             r_lensflare = Register("r_lensflare", "true", CVarFlag.Boolean, "Whether to render a lens flare from the sun.");
@@ -107,6 +105,8 @@ namespace Voxalia.ClientGame.CommandSystem
             u_reticle = Register("u_reticle", "1", CVarFlag.Textual, "What reticle to use.");
             u_reticlescale = Register("u_reticlescale", "32", CVarFlag.Numeric, "How big the reticle should be.");
             u_showhud = Register("u_showhud", "true", CVarFlag.Boolean, "Whether to render the HUD.");
+            u_highlight_targetblock = Register("u_highlight_targetblock", "true", CVarFlag.Boolean, "Whether to highlight the targeted block.");
+            u_highlight_placeblock = Register("u_highlight_placeblock", "true", CVarFlag.Boolean, "Whether to highlight the targeted placement block.");
         }
 
         CVar Register(string name, string value, CVarFlag flags, string desc = null)

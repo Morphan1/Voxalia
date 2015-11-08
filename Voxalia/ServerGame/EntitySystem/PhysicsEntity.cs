@@ -8,6 +8,7 @@ using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
+using BEPUphysics;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -86,33 +87,11 @@ namespace Voxalia.ServerGame.EntitySystem
         void DoWaterFloat()
         {
             RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
-            Vector3 sweep = new Vector3(0, 0, -0.001f);
-            CollisionResult cr = TheRegion.Collision.CuboidLineTrace(ConvexEntityShape, GetPosition(), GetPosition() + new Location(0, 0, -0.0001f), IgnoreEverythingButWater);
-            if (cr.Hit && cr.HitEnt != null)
+            Location sweep = new Location(0, 0, -1);
+            RayCastResult rcr;
+            if (TheRegion.SpecialCaseConvexTrace(ConvexEntityShape, new Location(Body.Position), sweep, 0.001f, MaterialSolidity.LIQUID, IgnoreEverythingButWater, out rcr))
             {
-                SysConsole.Output(OutputType.WARNING, "Hit poorly implemented water!");
-                // TODO: grab factors from the entity
-                PhysicsEntity pe = (PhysicsEntity)cr.HitEnt.Tag;
                 if (GetVelocity().Z > 2f)
-                {
-                    return;
-                }
-                double Top;
-                if (pe is CubeEntity)
-                {
-                    Top = pe.GetPosition().Z + ((CubeEntity)pe).HalfSize.Z;
-                }
-                else
-                {
-                    Top = pe.GetPosition().Z; // Placeholder - TODO: Maybe throw a warning of invalid water source?
-                }
-                // TODO: Reverse of gravity direction, rather than just Z-up
-                double distanceInside = Top - Body.Position.Z;
-                if (distanceInside <= 0)
-                {
-                    return;
-                }
-                if (distanceInside < 0.5f && GetVelocity().Z > 1f)
                 {
                     return;
                 }

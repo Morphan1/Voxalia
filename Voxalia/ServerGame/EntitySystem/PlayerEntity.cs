@@ -449,7 +449,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     // TODO: Effect?
                 }
             }
-            //base.Tick();
+            base.Tick();
         }
 
         public bool ShouldSeeChunk(Location cpos)
