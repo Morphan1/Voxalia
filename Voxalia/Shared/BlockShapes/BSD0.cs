@@ -10,7 +10,7 @@ namespace Voxalia.Shared.BlockShapes
         public override EntityShape GetShape(out Location offset)
         {
             offset = new Location(0.5);
-            return new BoxShape(1, 1, 1);
+            return new BoxShape(1, 1, 1) { CollisionMargin = 0 };
         }
 
         public override List<Vector3> GetVertices(Vector3 pos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)

@@ -40,7 +40,6 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             {
                 if (rcr.HitObject != null && rcr.HitObject is EntityCollidable && ((EntityCollidable)rcr.HitObject).Entity != null)
                 {
-                    SysConsole.Output(OutputType.INFO, "Swung fist but entity there :(");
                     // TODO: Damage
                 }
                 else if (player.TheRegion.GlobalTickTime - player.LastBlockBreak >= 0.2)
@@ -52,15 +51,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                         player.TheRegion.BreakNaturally(block);
                         player.LastBlockBreak = player.TheRegion.GlobalTickTime;
                     }
-                    else
-                    {
-                        SysConsole.Output(OutputType.INFO, "Swung fist but smacked air :( at " + block + " with normal " + rcr.HitData.Normal);
-                    }
                 }
-            }
-            else
-            {
-                SysConsole.Output(OutputType.INFO, "Swung fist but nothing there :(");
             }
         }
 

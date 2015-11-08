@@ -36,7 +36,7 @@ namespace Voxalia.ServerGame.NetworkSystem
             string[] oreq = http_request_original.Split(' ');
             if (oreq.Length != 3)
             {
-                throw new ArgumentException("Incorrect web request!");
+                throw new ArgumentException("Invalid web request!");
             }
             http_request_mode = oreq[0];
             http_request_page = oreq[1];

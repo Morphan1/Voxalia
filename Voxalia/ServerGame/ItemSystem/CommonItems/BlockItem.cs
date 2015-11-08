@@ -42,8 +42,9 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 else if (player.TheRegion.GlobalTickTime - player.LastBlockPlace >= 0.2)
                 {
                     Location block = new Location(rcr.HitData.Location) + new Location(rcr.HitData.Normal).Normalize() * 0.9f;
+                    block = block.GetBlockLocation();
                     Material mat = player.TheRegion.GetBlockMaterial(block);
-                    if (mat == Material.AIR) // TODO: IsPlaceableIn
+                    if (mat == Material.AIR) // TODO: IsPlaceableIn?
                     {
                         CollisionResult hit = player.TheRegion.Collision.CuboidLineTrace(new Location(0.45, 0.45, 0.45), block + new Location(0.5),
                             block + new Location(0.5, 0.5, 0.501), player.TheRegion.Collision.ShouldCollide);

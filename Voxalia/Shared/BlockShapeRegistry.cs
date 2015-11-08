@@ -112,7 +112,7 @@ namespace Voxalia.Shared
         {
             List<Vector3> vecs = GetVertices(new Vector3(0, 0, 0), false, false, false, false, false, false);
             Vector3 offs;
-            ConvexHullShape shape = new ConvexHullShape(vecs, out offs);
+            ConvexHullShape shape = new ConvexHullShape(vecs, out offs) { CollisionMargin = 0 };
             offset = new Location(offs);
             return shape;
         }
