@@ -30,7 +30,7 @@ namespace Voxalia
         static void Main(string[] args)
         {
             Program.GameName = "Voxalia";
-            Program.GameVersion = "0.0.4";
+            Program.GameVersion = "0.0.5";
             ConsoleHandle = Process.GetCurrentProcess().MainWindowHandle;
             SysConsole.Init();
             StringBuilder arger = new StringBuilder();
