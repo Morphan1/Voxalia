@@ -88,17 +88,7 @@ namespace Voxalia.Shared
             }
             return mat.ToString();
         }
-
-        public static string GetDescription(this Material mat)
-        {
-            string bdesc = ALL_MATS[(int)mat].Description;
-            if (bdesc != null)
-            {
-                return bdesc;
-            }
-            return "A standard block of " + mat.ToString().ToLower();
-        }
-
+        
         public static float GetSpeedMod(this Material mat)
         {
             return ALL_MATS[(int)mat].SpeedMod;
@@ -171,9 +161,7 @@ namespace Voxalia.Shared
         }
 
         public string Name = null;
-
-        public string Description = null;
-
+        
         public int ID = 0;
 
         public float SpeedMod = 1f;
