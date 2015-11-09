@@ -1,4 +1,5 @@
-﻿using Voxalia.Shared;
+﻿using System;
+using Voxalia.Shared;
 using BEPUphysics.Character;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
@@ -17,9 +18,9 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             TheClient.Player.ServerLocation = pos;
             if (dir.LengthSquared() < TheClient.CVars.n_movement_maxdistance.ValueF * TheClient.CVars.n_movement_maxdistance.ValueF)
             {
-                TheClient.Player.SetPosition(TheClient.Player.GetPosition() + dir / (TheClient.CVars.n_movement_adjustment.ValueF * TheClient.Delta));
+                TheClient.Player.SetPosition(TheClient.Player.GetPosition() + dir / Math.Max(TheClient.CVars.n_movement_adjustment.ValueF * TheClient.Delta, 1));
                 Location veldir = vel - TheClient.Player.GetVelocity();
-                TheClient.Player.SetVelocity(TheClient.Player.GetVelocity() + veldir / (TheClient.CVars.n_movement_adjustment.ValueF * TheClient.Delta));
+                TheClient.Player.SetVelocity(TheClient.Player.GetVelocity() + veldir / Math.Max(TheClient.CVars.n_movement_adjustment.ValueF * TheClient.Delta, 1));
             }
             else
             {
