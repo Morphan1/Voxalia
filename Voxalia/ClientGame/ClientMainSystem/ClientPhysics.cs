@@ -82,20 +82,20 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     ThePlanet.InternalLights[0].color = ClientUtilities.Convert(PlanetLightDef * Math.Min((PlanetSunDist / 180f), 1f));
                 }
                 PlanetLight = PlanetSunDist / 180f;
-                if (SunAngle.Pitch < 20 && SunAngle.Pitch > -20)
+                if (SunAngle.Pitch < 10 && SunAngle.Pitch > -30)
                 {
-                    float rel = 20 + (float)SunAngle.Pitch;
+                    float rel = 30 + (float)SunAngle.Pitch;
                     if (rel == 0)
                     {
                         rel = 0.00001f;
                     }
-                    rel = 1f / (rel / 7f);
+                    rel = 1f - (rel / 40f);
                     rel = Math.Max(Math.Min(rel, 1f), 0f);
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(TheSun.InternalLights[0].color.X, TheSun.InternalLights[0].color.Y * rel, TheSun.InternalLights[0].color.Z * rel);
                     DesaturationAmount = (1f - rel) * 0.75f;
-                    ambient = BaseAmbient * (1f - rel) * 0.5f;
+                    ambient = BaseAmbient * ((1f - rel) * 0.5f + 0.5f);
                 }
-                else if (SunAngle.Pitch >= 20) // TODO: Why is this flipped?
+                else if (SunAngle.Pitch >= 10) // TODO: Why is this flipped?
                 {
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
                     DesaturationAmount = 0.75f;
