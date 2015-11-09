@@ -3,6 +3,7 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.OtherSystems;
+using BEPUutilities;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -35,7 +36,6 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
-            base.Tick();
             if (!hasWheels) // TODO: Efficiency. We shouldn't have to check this every tick!
             {
                 Model mod = TheServer.Models.GetModel(model);
@@ -57,23 +57,22 @@ namespace Voxalia.ServerGame.EntitySystem
                     string name = nodes[i].Name.ToLower();
                     if (name.Contains("wheel"))
                     {
-                        // TODO
-                        /*
-                        Assimp.Vector3D apos;
-                        Assimp.Vector3D ascale;
-                        Assimp.Quaternion arot;
-                        nodes[i].MatrixA.Decompose(out ascale, out arot, out apos);
-                        Location pos = GetPosition() + new Location(apos.X, apos.Y, apos.Z - 1);// TODO: make the -1 not needed!)
-                        ModelEntity wheel = new ModelEntity("vehicles/" + vehName + "_wheel.dae", TheRegion);
+                        Matrix mat = nodes[i].MatrixA;
+                        Model3DNode tnode = nodes[i].Parent;
+                        while (tnode != null)
+                        {
+                            mat = tnode.MatrixA * mat;
+                            tnode = tnode.Parent;
+                        }
+                        Location pos = GetPosition() + new Location(mat.M14, mat.M34, mat.M24); // TODO: Why are the matrices transposed?! // TODO: Why are Y and Z flipped?!
+                        ModelEntity wheel = new ModelEntity("vehicles/" + vehName + "_wheel", TheRegion);
                         wheel.SetPosition(pos);
-                        wheel.SetOrientation(BEPUutilities.Quaternion.Identity); // TODO: orient
-                        //wheel.SetOrientation(new BEPUutilities.Quaternion(arot.X, arot.Y, arot.Z, arot.W));
+                        wheel.SetOrientation(Quaternion.Identity); // TOOD: orient
                         wheel.Gravity = Gravity;
                         wheel.CGroup = CGroup;
                         wheel.SetMass(5);
                         wheel.mode = ModelCollisionMode.SPHERE;
                         TheRegion.SpawnEntity(wheel);
-                        // TODO: better joints
                         JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
                         //BEPUutilities.Vector3 side = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(1, 0, 0), wheel.GetOrientation());
                         BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
@@ -87,11 +86,11 @@ namespace Voxalia.ServerGame.EntitySystem
                         BEPUutilities.Vector3 angvel = new BEPUutilities.Vector3(10, 0, 0);
                         wheel.Body.ApplyAngularImpulse(ref angvel);
                         wheel.Body.ActivityInformation.Activate();
-                        */
                     }
                 }
                 hasWheels = true;
             }
+            base.Tick();
         }
 
         public bool Use(Entity user)

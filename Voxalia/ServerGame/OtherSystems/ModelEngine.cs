@@ -29,7 +29,7 @@ namespace Voxalia.ServerGame.OtherSystems
 
         Model LoadModel(string name)
         {
-            string n = "models/" + name;
+            string n = "models/" + name + ".vmd";
             try
             {
                 if (Program.Files.Exists(n))
