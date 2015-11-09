@@ -52,7 +52,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_lightadder = Shaders.GetShader("lightadder");
             s_transponly = Shaders.GetShader("transponly");
             s_colormultvox = Shaders.GetShader("colormultvox");
-            s_colormultr = Shaders.GetShader("color_multr");
             s_transponlyvox = Shaders.GetShader("transponlyvox");
             generateLightHelpers();
             ambient = new Location(0.1f);
@@ -134,7 +133,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_lightadder;
         public Shader s_transponly;
         public Shader s_colormultvox;
-        public Shader s_colormultr;
         public Shader s_transponlyvox;
         RenderSurface4Part RS4P;
 
@@ -231,7 +229,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
             }
             sortEntities();
-            if (CVars.r_lighting.ValueB)
+            // if (CVars.r_lighting.ValueB)
             {
                 SetViewport();
                 CameraTarget = CameraPos + Player.ForwardVector();
@@ -276,11 +274,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 SetViewport();
                 s_fbov.Bind();
                 GL.UniformMatrix4(1, false, ref combined);
+                Matrix4 matident = Matrix4.Identity;
+                GL.UniformMatrix4(2, false, ref matident);
                 s_fbo.Bind();
                 FBOid = 1;
                 RenderingShadows = false;
                 CFrust = camFrust;
                 GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref matident);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 RS4P.Bind();
                 RenderLights = true;
@@ -300,6 +301,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 if (CVars.r_shadows.ValueB)
                 {
                     s_shadowadder.Bind();
+                    GL.Uniform1(13, CVars.r_shadowblur.ValueF);
                 }
                 else
                 {
@@ -320,7 +322,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 mat = Matrix4.Identity;
                 GL.UniformMatrix4(2, false, ref mat);
                 GL.Uniform3(10, ClientUtilities.Convert(CameraPos));
-                GL.Uniform1(13, CVars.r_shadowblur.ValueF);
                 bool first = true;
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 1 });
@@ -328,6 +329,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 1 });
                 GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
                 GL.Disable(EnableCap.CullFace);
+                GL.Disable(EnableCap.DepthTest);
                 for (int i = 0; i < Lights.Count; i++)
                 {
                     if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
@@ -373,7 +375,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 {
                                     GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
                                 }
-                                GL.Uniform1(12, 1f / Lights[i].InternalLights[x].texsize);
+                                if (CVars.r_shadows.ValueB)
+                                {
+                                    GL.Uniform1(12, 1f / Lights[i].InternalLights[x].texsize);
+                                }
                                 Rendering.RenderRectangle(-1, -1, 1, 1);
                                 first = !first;
                                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -433,20 +438,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
+                GL.Enable(EnableCap.DepthTest);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, RS4P.fbo);
                 GL.BlitFramebuffer(0, 0, Window.Width, Window.Height, 0, 0, Window.Width, Window.Height, ClearBufferMask.DepthBufferBit, BlitFramebufferFilter.Nearest);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
                 Matrix4 def = Matrix4.Identity;
-                s_colormultr.Bind();
-                VBO.BonesIdentity();
-                GL.UniformMatrix4(1, false, ref combined);
-                GL.UniformMatrix4(2, false, ref def);
                 GL.Enable(EnableCap.CullFace);
-                if (CVars.r_renderwireframe.ValueB)
-                {
-                    Render3DWires();
-                }
-                RenderSkyflare(combined);
                 ReverseEntitiesOrder();
                 Particles.Sort();
                 s_transponlyvox.Bind();
@@ -465,50 +462,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 //StandardBlend();
                 GL.DepthMask(true);
             }
-            else
-            {
-                SetViewport();
-                Location CameraTarget = CameraPos + Player.ForwardVector();
-                Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
-                Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(CameraPos), ClientUtilities.Convert(CameraTarget), ClientUtilities.Convert(CameraUp));
-                Matrix4 combined = view * proj;
-                GL.ActiveTexture(TextureUnit.Texture0);
-                ReverseEntitiesOrder();
-                s_colormultvox.Bind();
-                RenderLights = false;
-                RenderTextures = true;
-                RenderingShadows = false;
-                GL.UniformMatrix4(1, false, ref combined);
-                Matrix4 def = Matrix4.Identity;
-                GL.UniformMatrix4(2, false, ref def);
-                VBO.BonesIdentity();
-                s_colormultr.Bind();
-                GL.UniformMatrix4(1, false, ref combined);
-                GL.UniformMatrix4(2, false, ref def);
-                VBO.BonesIdentity();
-                CFrust = new Frustum(combined);
-                FBOid = 2;
-                Particles.Sort();
-                Render3D(false);
-                FBOid = 0;
-                if (CVars.r_renderwireframe.ValueB)
-                {
-                    Render3DWires();
-                }
-                RenderSkyflare(combined);
-                ReverseEntitiesOrder();
-                s_transponlyvox.Bind();
-                GL.UniformMatrix4(1, false, ref combined);
-                GL.UniformMatrix4(2, false, ref def);
-                s_transponly.Bind();
-                VBO.BonesIdentity();
-                GL.UniformMatrix4(1, false, ref combined);
-                GL.UniformMatrix4(2, false, ref def);
-                FBOid = 3;
-                Render3D(false);
-                FBOid = 0;
-                RenderSkyflare(combined);
-            }
             Establish2D();
             Render2D();
         }
@@ -524,7 +477,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             if (FBOid == 1)
             {
-                GL.Uniform4(0, new Vector4(0f, 0f, 0f, 0f));
+                GL.Uniform4(7, new Vector4(0f, 0f, 0f, 0f));
             }
             Rendering.SetMinimumLight(1);
             GL.Disable(EnableCap.CullFace);
@@ -544,7 +497,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             skybox[5].Render(false);
             if (FBOid == 1)
             {
-                GL.Uniform4(0, Color4.White);
+                GL.Uniform4(7, Color4.White);
             }
             Rendering.SetColor(new Vector4(ClientUtilities.Convert(godrayCol), 1));
             Textures.GetTexture("skies/sun").Bind(); // TODO: Store var? Make dynamic?
@@ -555,7 +508,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
             if (FBOid == 1)
             {
-                GL.Uniform4(0, Color4.Black);
+                GL.Uniform4(7, Color4.Black);
             }
             Textures.GetTexture("skies/planet").Bind(); // TODO: Store var? Make dynamic?
             Rendering.SetColor(new Color4(PlanetLight, PlanetLight, PlanetLight, 1));
@@ -627,7 +580,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             if (FBOid == 1)
             {
-                GL.Uniform4(0, Color4.Black);
+                GL.Uniform4(7, Color4.Black);
             }
             GL.Enable(EnableCap.CullFace);
             if (shadows_only)
@@ -664,11 +617,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (FBOid == 1)
             {
                 s_fbov.Bind();
-                GL.Uniform4(0, Color4.Black);
-            }
-            else if (FBOid == 2)
-            {
-                s_colormultvox.Bind();
+                GL.Uniform4(7, Color4.Black);
             }
             else if (FBOid == 3)
             {
@@ -678,11 +627,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (FBOid == 1)
             {
                 s_fbo.Bind();
-                GL.Uniform4(0, Color4.Black);
-            }
-            else if (FBOid == 2)
-            {
-                s_colormultr.Bind();
+                GL.Uniform4(7, Color4.Black);
             }
             else if (FBOid == 3)
             {

@@ -345,7 +345,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                 }
             }
-            GL.UniformMatrix4(8, bones, false, set);
+            GL.UniformMatrix4(9, bones, false, set);
         }
         
         Matrix4 globalInverse = Matrix4.Identity;

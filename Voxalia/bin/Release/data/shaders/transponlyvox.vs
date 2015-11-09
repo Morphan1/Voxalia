@@ -21,5 +21,5 @@ void main()
     }
     f_color = f_color * v_color;
 	f_texcoord = texcoord;
-	gl_Position = projection * model_matrix * vec4(position.xyz, 1.0);
+	gl_Position = projection * model_matrix * vec4(position, 1.0);
 }

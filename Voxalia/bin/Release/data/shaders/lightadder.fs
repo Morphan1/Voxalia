@@ -1,5 +1,4 @@
 #version 430 core
-#INCLUDE_STATEMENTS_HERE
 
 layout (binding = 0) uniform sampler2D pre_lighttex;
 layout (binding = 1) uniform sampler2D positiontex;
@@ -9,7 +8,6 @@ layout (binding = 5) uniform sampler2D renderhinttex;
 layout (binding = 6) uniform sampler2D diffusetex;
 
 layout (location = 0) in vec2 f_texcoord;
-layout (location = 1) in vec4 f_position;
 
 layout (location = 3) uniform mat4 shadow_matrix;
 layout (location = 4) uniform vec3 light_pos = vec3(5.0, 5.0, 5.0);
@@ -20,8 +18,6 @@ layout (location = 8) uniform vec3 light_color = vec3(1.0, 1.0, 1.0);
 layout (location = 9) uniform float light_radius = 30.0;
 layout (location = 10) uniform vec3 eye_pos = vec3(0.0, 0.0, 0.0);
 layout (location = 11) uniform float light_type = 0.0;
-layout (location = 12) uniform float tex_size = 0.001;
-layout (location = 13) uniform float depth_jump = 0.5;
 
 out vec4 color;
 
@@ -32,7 +28,7 @@ void main()
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
 	vec4 diffuset = texture(diffusetex, f_texcoord);
 	vec4 f_spos = shadow_matrix * vec4(position, 1.0);
-	if (position == vec3(0.0) && normal == vec3(0.0))
+	if (position == vec3(0.0) && normal == vec3(0.0)) // TODO: is this still needed?
 	{
 		f_spos = vec4(999999999.0, 999999999.0, -999999999.0, 1.0);
 		position = vec3(999999999.0, 999999999.0, -999999999.0);

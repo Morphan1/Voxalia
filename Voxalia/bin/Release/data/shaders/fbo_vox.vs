@@ -20,12 +20,13 @@ void main(void)
 {
     f_color = vec4(color.xyz, 1.0);
 	f_texcoord = texcoords;
-	f_position = mv_matrix * vec4(position.xyz, 1.0);
+	f_position = mv_matrix * vec4(position, 1.0);
     f_position /= f_position.w;
 	mat4 mv_mat_simple = mv_matrix;
 	mv_mat_simple[3][0] = 0.0;
 	mv_mat_simple[3][1] = 0.0;
 	mv_mat_simple[3][2] = 0.0;
-	f_normal = normal;
+	vec4 nnormal = mv_mat_simple * vec4(normal, 1.0);
+    f_normal = normal;
 	gl_Position = proj_matrix * mv_matrix * vec4(position, 1.0);
 }

@@ -20,8 +20,8 @@ layout (location = 1) uniform mat4 proj_matrix = mat4(1.0);
 layout (location = 2) uniform mat4 mv_matrix = mat4(1.0);
 layout (location = 3) uniform vec4 v_color = vec4(1.0);
 // ...
-layout (location = 7) uniform mat4 simplebone_matrix = mat4(1.0);
-layout (location = 8) uniform mat4 boneTrans[MAX_BONES];
+layout (location = 8) uniform mat4 simplebone_matrix = mat4(1.0);
+layout (location = 9) uniform mat4 boneTrans[MAX_BONES];
 
 void main(void)
 {

@@ -3,11 +3,11 @@
 layout (binding = 0) uniform sampler2DArray s;
 layout (binding = 1) uniform sampler2DArray htex;
 
-layout (location = 0) uniform vec4 bw_color = vec4(0.0, 0.0, 0.0, 1.0);
 layout (location = 3) uniform vec4 v_color = vec4(1.0);
 layout (location = 4) uniform float specular_power = 200.0 / 1000.0f;
 layout (location = 5) uniform float minimum_light = 0.0;
 layout (location = 6) uniform float specular_strength = 1.0;
+layout (location = 7) uniform vec4 bw_color = vec4(0.0, 0.0, 0.0, 1.0);
 
 layout (location = 0) in vec4 f_position;
 layout (location = 1) in vec3 f_normal;

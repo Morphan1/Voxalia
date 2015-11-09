@@ -119,14 +119,6 @@ namespace Voxalia.ClientGame.EntitySystem
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
             }
-            else if (TheClient.FBOid == 2)
-            {
-                TheClient.s_colormultvox.Bind();
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
-                GL.ActiveTexture(TextureUnit.Texture1);
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
-                GL.ActiveTexture(TextureUnit.Texture0);
-            }
             else if (TheClient.FBOid == 3)
             {
                 TheClient.s_transponlyvox.Bind();
@@ -149,14 +141,6 @@ namespace Voxalia.ClientGame.EntitySystem
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 TheClient.s_fbo.Bind();
-            }
-            else if (TheClient.FBOid == 2)
-            {
-                GL.ActiveTexture(TextureUnit.Texture1);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                TheClient.s_colormultr.Bind();
             }
             else if (TheClient.FBOid == 3)
             {

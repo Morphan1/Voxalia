@@ -17,5 +17,9 @@ void main()
 	{
 		discard;
 	}
+    if (tcolor.w * f_color.w < 0.01)
+    {
+        discard;
+    }
 	color = tcolor * f_color;
 }

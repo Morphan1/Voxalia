@@ -15,8 +15,8 @@ layout (location = 1) uniform mat4 projection = mat4(1.0);
 layout (location = 2) uniform mat4 model_matrix = mat4(1.0);
 layout (location = 3) uniform vec4 v_color = vec4(1.0);
 // ...
-layout (location = 7) uniform mat4 simplebone_matrix = mat4(1.0);
-layout (location = 8) uniform mat4 boneTrans[MAX_BONES];
+layout (location = 8) uniform mat4 simplebone_matrix = mat4(1.0);
+layout (location = 9) uniform mat4 boneTrans[MAX_BONES];
 
 layout (location = 0) out vec4 f_color;
 layout (location = 1) out vec2 f_texcoord;

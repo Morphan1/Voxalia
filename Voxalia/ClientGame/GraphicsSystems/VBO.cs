@@ -412,8 +412,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                 }
             }
-            GL.UniformMatrix4(7, false, ref ident);
-            GL.UniformMatrix4(8, bones, false, floats);
+            GL.UniformMatrix4(8, false, ref ident);
+            GL.UniformMatrix4(9, bones, false, floats);
         }
 
         public void Render(bool texture)
