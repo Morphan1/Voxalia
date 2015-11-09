@@ -10,10 +10,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
         public override bool ParseBytesAndExecute(byte[] data)
         {
             int len = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + 4 + 1;
-            if (data.Length != len
-                && data.Length != len + 4 * 6 + 4 * 6
-                && data.Length != len + 2 + 1
-                && data.Length != len + 4 + 1)
+            if (data.Length < len)
             {
                 return false;
             }
@@ -66,6 +63,21 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 byte dat = data[start + 2];
                 BlockItemEntity bie = new BlockItemEntity(TheClient.TheRegion, mat, dat);
                 ce = bie;
+            }
+            else if (type == 4)
+            {
+                int start = len - (4 + 1);
+                int xwidth = (int)halfsize.X;
+                int ywidth = (int)halfsize.Y;
+                int zwidth = (int)halfsize.Z;
+                BlockInternal[] bi = new BlockInternal[xwidth * ywidth * zwidth];
+                for (int i = 0; i < bi.Length; i++)
+                {
+                    bi[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(data, start + i * 2, 2));
+                    bi[i].BlockData = data[start + bi.Length * 2 + i];
+                }
+                BlockGroupEntity bge = new BlockGroupEntity(TheClient.TheRegion, bi, xwidth, ywidth, zwidth);
+                ce = bge;
             }
             else
             {

@@ -92,6 +92,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                 List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
+                                    // TODO: is PosMultiplier used correctly here?
                                     Vertices.Add(new Vector3(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z));
                                 }
                                 List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[c.BlockData].GetNormals(pos, xps, xms, yps, yms, zps, zms);
@@ -106,7 +107,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                 }
                                 if (vecsi.Count != normsi.Count || normsi.Count != tci.Count)
                                 {
-                                    SysConsole.Output(OutputType.INFO, "v:" + vecsi.Count + ",n:" + normsi.Count + ",tci:" + tci.Count);
+                                    SysConsole.Output(OutputType.WARNING, "PROBLEM RENDERING CHUNK: v:" + vecsi.Count + ",n:" + normsi.Count + ",tci:" + tci.Count);
                                 }
                                 // TODO: FIXME!
                                 /*if (light)
@@ -141,10 +142,6 @@ namespace Voxalia.ClientGame.WorldSystem
                                     for (int i = tci.Count - 1; i >= 0; i--)
                                     {
                                         TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
-                                    }
-                                    if (vecsi.Count != normsi.Count || normsi.Count != tci.Count)
-                                    {
-                                        SysConsole.Output(OutputType.INFO, "v:" + vecsi.Count + ",n:" + normsi.Count + ",tci:" + tci.Count);
                                     }
                                     // NOTE: Lights!
                                     {

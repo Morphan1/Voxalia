@@ -121,6 +121,7 @@
     <Compile Include="ClientGame\CommandSystem\UICommands\ForwardCommand.cs" />
     <Compile Include="ClientGame\EntitySystem\BasicPrimitiveEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\BlockItemEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\BlockGroupEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\Entity.cs" />
     <Compile Include="ClientGame\EntitySystem\EntityAnimated.cs" />

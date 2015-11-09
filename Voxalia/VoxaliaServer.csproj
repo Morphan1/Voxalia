@@ -79,6 +79,7 @@
     <Compile Include="ServerGame\EntitySystem\ArrowEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\BlockItemEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\BulletEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\BlockGroupEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\CuboidalEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
@@ -185,6 +186,7 @@
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\DropPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\StancePlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\UsePlayerCommand.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\RegionCommands\BlockshipPlayerCommand.cs" />
     <Compile Include="ServerGame\PluginSystem\Plugin.cs" />
     <Compile Include="ServerGame\PluginSystem\PluginLoader.cs" />
     <Compile Include="ServerGame\PluginSystem\PluginManager.cs" />

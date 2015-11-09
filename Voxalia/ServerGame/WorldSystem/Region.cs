@@ -616,7 +616,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     continue;
                 }
                 RayHit temp;
-                if (chunk.Value.FCO.RayCast(ray, len, null, MaterialSolidity.ANY, out temp))
+                if (chunk.Value.FCO.RayCast(ray, len, null, considerSolid, out temp))
                 {
                     hA = true;
                     temp.T *= len;
@@ -666,7 +666,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     continue;
                 }
                 RayHit temp;
-                if (chunk.Value.FCO.ConvexCast(shape, ref rt, ref sweep, len, MaterialSolidity.ANY, out temp))
+                if (chunk.Value.FCO.ConvexCast(shape, ref rt, ref sweep, len, considerSolid, out temp))
                 {
                     hA = true;
                     temp.T *= len;
@@ -775,6 +775,15 @@ namespace Voxalia.ServerGame.WorldSystem
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
             int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
             return (Material)ch.GetBlockAt(x, y, z).BlockMaterial;
+        }
+
+        public BlockInternal GetBlockInternal(Location pos)
+        {
+            Chunk ch = LoadChunk(ChunkLocFor(pos));
+            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
+            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
+            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+            return ch.GetBlockAt(x, y, z);
         }
 
         public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, byte locdat = (byte)BlockFlags.EDITED, bool broadcast = true, bool regen = true, bool override_protection = false)

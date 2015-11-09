@@ -9,7 +9,14 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         public SpawnPhysicsEntityPacketOut(PhysicsEntity e)
         {
             ID = 2;
-            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + (e is CubeEntity ? 4 * 6 + 4 * 6: (e is BlockItemEntity ? 3: (e is ModelEntity ? 4 + 1: 0))) + 4 + 1];
+            BlockGroupEntity bge = null;
+            Location hs = Location.Zero;
+            if (e is BlockGroupEntity)
+            {
+                bge = (BlockGroupEntity)e;
+                hs = new Location(bge.XWidth, bge.YWidth, bge.ZWidth);
+            }
+            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + (e is BlockGroupEntity ? bge.Blocks.Length * 3 :(e is CubeEntity ? 4 * 6 + 4 * 6: (e is BlockItemEntity ? 3: (e is ModelEntity ? 4 + 1: 0)))) + 4 + 1];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
@@ -31,12 +38,16 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 ((ModelEntity)e).scale.ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
+            else if (e is BlockGroupEntity)
+            {
+                hs.ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
+            }
             else
             {
                 // TODO: Warning message?
                 new Location(1, 1, 1).ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
-            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is CubeEntity ? 0 : (e is PlayerEntity ? 1 : (e is BlockItemEntity ? 3: 2)));
+            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is BlockGroupEntity ? 4: (e is CubeEntity ? 0 : (e is PlayerEntity ? 1 : (e is BlockItemEntity ? 3: 2))));
             int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
             if (e is CubeEntity)
             {
@@ -67,6 +78,14 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 NetStringManager strings = me.TheServer.Networking.Strings;
                 Utilities.IntToBytes(strings.IndexForString(me.model)).CopyTo(Data, start);
                 Data[start + 4] = (byte)me.mode;
+            }
+            else if (e is BlockGroupEntity)
+            {
+                for (int i = 0; i < bge.Blocks.Length; i++)
+                {
+                    Utilities.UshortToBytes(bge.Blocks[i].BlockMaterial).CopyTo(Data, start + i * 2);
+                    Data[start + bge.Blocks.Length * 2 + i] = bge.Blocks[i].BlockData;
+                }
             }
             Utilities.FloatToBytes(e.GetBounciness()).CopyTo(Data, Data.Length - (4 + 1));
             Data[Data.Length - 1] = (byte)(e.Visible ? 1 : 0);

@@ -126,7 +126,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     continue;
                 }
                 RayHit temp;
-                if (chunk.Value.FCO.RayCast(ray, len, null, MaterialSolidity.ANY, out temp))
+                if (chunk.Value.FCO.RayCast(ray, len, null, considerSolid, out temp))
                 {
                     hA = true;
                     temp.T *= len;
@@ -176,7 +176,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     continue;
                 }
                 RayHit temp;
-                if (chunk.Value.FCO.ConvexCast(shape, ref rt, ref sweep, len, MaterialSolidity.ANY, out temp))
+                if (chunk.Value.FCO.ConvexCast(shape, ref rt, ref sweep, len, considerSolid, out temp))
                 {
                     hA = true;
                     temp.T *= len;
