@@ -123,6 +123,8 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/grass_side", "Grass", "Grassy!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.GRASS });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/db_top", "DebugBlock", "Not buggy!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.DEBUG });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/concrete", "Concrete", "Solid!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.CONCRETE });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/metals/steel_solid", "Solid Steel", "*very* solid!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.STEEL_SOLID });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/metals/steel_plate", "Plated Steel", "Plated for extra strength!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.STEEL_PLATE });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/wood", "Wood Log", "Makes a rather woody sound, doe'n'it?!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.LOG });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/liquid/water", "Water", "Wet!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.WATER });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/liquid/smoke", "Smoke", "Gaseous!", Color.White.ToArgb(), "items/block.dae", false) { Datum = (int)Material.SMOKE });
