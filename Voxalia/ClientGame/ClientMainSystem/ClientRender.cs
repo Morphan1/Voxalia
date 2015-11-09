@@ -249,7 +249,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     }
                 }
                 sortEntities();
-                // if (CVars.r_lighting.ValueB)
                 SetViewport();
                 CameraTarget = CameraPos + Player.ForwardVector();
                 Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
@@ -482,17 +481,20 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Render3D(false);
                 FBOid = 0;
                 //StandardBlend();
-                GL.Disable(EnableCap.CullFace);
-                GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1f });
-                GL.Disable(EnableCap.DepthTest);
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2D, fbo_godray_texture2);
-                s_godray.Bind();
-                GL.UniformMatrix4(1, false, ref mat);
-                GL.UniformMatrix4(2, false, ref matident);
-                TranspBlend();
-                Rendering.RenderRectangle(-1, -1, 1, 1);
-                StandardBlend();
+                if (CVars.r_godrays.ValueB)
+                {
+                    GL.Disable(EnableCap.CullFace);
+                    GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1f });
+                    GL.Disable(EnableCap.DepthTest);
+                    GL.ActiveTexture(TextureUnit.Texture0);
+                    GL.BindTexture(TextureTarget.Texture2D, fbo_godray_texture2);
+                    s_godray.Bind();
+                    GL.UniformMatrix4(1, false, ref mat);
+                    GL.UniformMatrix4(2, false, ref matident);
+                    TranspBlend();
+                    Rendering.RenderRectangle(-1, -1, 1, 1);
+                    StandardBlend();
+                }
                 GL.UseProgram(0);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.DepthMask(true);
