@@ -19,7 +19,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Location SunLightDef = Location.One;
 
-        public Location PlanetLightDef = new Location(1, 0.5, 0) * 0.5f;
+        public Location PlanetLightDef = new Location(0.75, 0.3, 0) * 0.5f;
 
         public void BuildWorld()
         {
@@ -90,6 +90,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     rel = 1f / (rel / 5f);
                     rel = Math.Max(Math.Min(rel, 1f), 0f);
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(TheSun.InternalLights[0].color.X, TheSun.InternalLights[0].color.Y * rel, TheSun.InternalLights[0].color.Z * rel);
+                }
+                else if (SunAngle.Pitch >= 20) // TODO: Why is this flipped?
+                {
+                    TheSun.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
                 }
                 rTicks = 0;
                 shouldRedrawShadows = true;

@@ -80,7 +80,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality_max = Register("r_shadowquality_max", "2048", CVarFlag.Numeric, "What maximum light texture size to accept from the server.");
             r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric, "What factor to use for shadow blurring. Smaller = blurrier.");
             r_shadowquality_sun = Register("r_shadowquality_sun", "2048", CVarFlag.Numeric | CVarFlag.Delayed, "What texture size to use for the sun."); // TODO: Callback to auto-set
-            r_shadowpace = Register("r_shadowpace", "2", CVarFlag.Numeric, "How rapidly to rerender shadows, in frames.");
+            r_shadowpace = Register("r_shadowpace", "1", CVarFlag.Numeric, "How rapidly to rerender shadows, in frames.");
             r_shadows = Register("r_shadows", "true", CVarFlag.Boolean, "Whether to render shadows at all.");
             r_good_graphics = Register("r_good_graphics", "true", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use 'good' graphics."); // TODO: Callback to auto-set
             r_skybox = Register("r_skybox", "default", CVarFlag.ServerControl | CVarFlag.Textual, "What skybox to use.");
