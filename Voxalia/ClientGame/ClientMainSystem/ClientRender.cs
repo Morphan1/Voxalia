@@ -349,59 +349,62 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
                 GL.Disable(EnableCap.CullFace);
                 GL.Disable(EnableCap.DepthTest);
-                for (int i = 0; i < Lights.Count; i++)
+                if (CVars.r_lighting.ValueB)
                 {
-                    if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                    for (int i = 0; i < Lights.Count; i++)
                     {
-                        double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
-                        double d2 = CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance;
-                        double maxrangemult = 0;
-                        if (d1 < d2 * 4 || Lights[i] is SkyLight)
+                        if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                         {
-                            maxrangemult = 1;
-                        }
-                        else if (d1 < d2 * 6)
-                        {
-                            maxrangemult = 1 - ((d1 - (d2 * 4)) / ((d2 * 6) - (d2 * 4)));
-                        }
-                        if (maxrangemult > 0)
-                        {
-                            GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
-                            for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                            double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
+                            double d2 = CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance;
+                            double maxrangemult = 0;
+                            if (d1 < d2 * 4 || Lights[i] is SkyLight)
                             {
-                                if (Lights[i].InternalLights[x].color.LengthSquared <= 0.01)
+                                maxrangemult = 1;
+                            }
+                            else if (d1 < d2 * 6)
+                            {
+                                maxrangemult = 1 - ((d1 - (d2 * 4)) / ((d2 * 6) - (d2 * 4)));
+                            }
+                            if (maxrangemult > 0)
+                            {
+                                GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
+                                for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                                 {
-                                    continue;
+                                    if (Lights[i].InternalLights[x].color.LengthSquared <= 0.01)
+                                    {
+                                        continue;
+                                    }
+                                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
+                                    GL.ActiveTexture(TextureUnit.Texture0);
+                                    GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
+                                    if (CVars.r_shadows.ValueB)
+                                    {
+                                        GL.ActiveTexture(TextureUnit.Texture4);
+                                        GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
+                                    }
+                                    Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
+                                    GL.UniformMatrix4(3, false, ref smat);
+                                    GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
+                                    Vector3 col = Lights[i].InternalLights[x].color * (float)maxrangemult;
+                                    GL.Uniform3(8, ref col);
+                                    if (Lights[i].InternalLights[x] is LightOrtho)
+                                    {
+                                        GL.Uniform1(9, 0f);
+                                    }
+                                    else
+                                    {
+                                        GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
+                                    }
+                                    if (CVars.r_shadows.ValueB)
+                                    {
+                                        GL.Uniform1(12, 1f / Lights[i].InternalLights[x].texsize);
+                                    }
+                                    Rendering.RenderRectangle(-1, -1, 1, 1);
+                                    first = !first;
+                                    GL.ActiveTexture(TextureUnit.Texture0);
+                                    GL.BindTexture(TextureTarget.Texture2D, 0);
                                 }
-                                GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
-                                GL.ActiveTexture(TextureUnit.Texture0);
-                                GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
-                                if (CVars.r_shadows.ValueB)
-                                {
-                                    GL.ActiveTexture(TextureUnit.Texture4);
-                                    GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
-                                }
-                                Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
-                                GL.UniformMatrix4(3, false, ref smat);
-                                GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
-                                Vector3 col = Lights[i].InternalLights[x].color * (float)maxrangemult;
-                                GL.Uniform3(8, ref col);
-                                if (Lights[i].InternalLights[x] is LightOrtho)
-                                {
-                                    GL.Uniform1(9, 0f);
-                                }
-                                else
-                                {
-                                    GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
-                                }
-                                if (CVars.r_shadows.ValueB)
-                                {
-                                    GL.Uniform1(12, 1f / Lights[i].InternalLights[x].texsize);
-                                }
-                                Rendering.RenderRectangle(-1, -1, 1, 1);
-                                first = !first;
-                                GL.ActiveTexture(TextureUnit.Texture0);
-                                GL.BindTexture(TextureTarget.Texture2D, 0);
                             }
                         }
                     }
@@ -413,7 +416,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 1f, 1f, 1f, 0f });
                 GL.BlendFuncSeparate(1, BlendingFactorSrc.SrcColor, BlendingFactorDest.Zero, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.Zero);
                 GL.Uniform1(19, DesaturationAmount);
-                GL.Uniform3(5, ClientUtilities.Convert(ambient));
+                GL.Uniform3(5, ClientUtilities.Convert(CVars.r_lighting.ValueB ? ambient: new Location(1, 1, 1)));
                 GL.Uniform3(8, ClientUtilities.Convert(CameraFinalTarget));
                 GL.Uniform1(9, CVars.r_dof_strength.ValueF);
                 Vector3 lPos = GetSunLocation();
