@@ -38,18 +38,18 @@ vec4 regularize(vec4 input_r) // TODO: Is this working the best it can?
 
 vec4 getGodRay()
 {
-    vec4 c = vec4(0.0);
-    vec2 tcd = vec2(f_texcoord - lightPos);
-    tcd *= 1.0 / float(numSamples) * density;
-    float illuminationDecay = 1.0;
-    vec2 tc = f_texcoord;
-    for (int i = 0; i < numSamples; i++)
-    {
-        tc -= tcd;
-        c += texture2D(bwtex, tc) * illuminationDecay;
-        illuminationDecay *= decay;
-    }
-    return c * wexposure;
+	vec4 c = vec4(0.0);
+	vec2 tcd = vec2(f_texcoord - lightPos);
+	tcd *= 1.0 / float(numSamples) * density;
+	float illuminationDecay = 1.0;
+	vec2 tc = f_texcoord;
+	for (int i = 0; i < numSamples; i++)
+	{
+		tc -= tcd;
+		c += texture2D(bwtex, tc) * illuminationDecay;
+		illuminationDecay *= decay;
+	}
+	return c * wexposure;
 }
 
 vec3 desaturate(vec3 c)
@@ -62,10 +62,13 @@ void main()
 	vec4 shadow_light_color = texture(shtex, f_texcoord);
 	vec4 colortex_color = texture(colortex, f_texcoord);
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
-    float dist = texture(depthtex, f_texcoord).r;// * ((zfar - znear) + znear) / fog_dist;
+	float dist = texture(depthtex, f_texcoord).r;// * ((zfar - znear) + znear) / fog_dist;
 	vec4 light_color = regularize(vec4(ambient + renderhint.z, 0.0) * colortex_color + shadow_light_color);
 	light_color.w = 1.0;
-    vec4 godRay = getGodRay();
+	vec4 godRay = getGodRay();
 	color = (light_color.w * light_color) + godRay * vec4(grcolor, 1.0);
-    color = vec4(desaturate(mix(color.xyz, fogCol.xyz, 1.0 - exp(-dist * fogCol.w))), 1.0);
+	if (texture(bwtex, f_texcoord).w > 0.01)
+	{
+		color = vec4(desaturate(mix(color.xyz, fogCol.xyz, 1.0 - exp(-dist * fogCol.w))), 1.0);
+	}
 }
