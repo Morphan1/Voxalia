@@ -54,7 +54,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_colormultvox = Shaders.GetShader("colormultvox");
             s_transponlyvox = Shaders.GetShader("transponlyvox");
             generateLightHelpers();
-            ambient = new Location(0.1f);
             skybox = new VBO[6];
             for (int i = 0; i < 6; i++)
             {

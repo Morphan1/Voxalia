@@ -19,7 +19,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Location SunLightDef = Location.One;
 
-        public Location PlanetLightDef = new Location(0.75, 0.3, 0) * 0.5f;
+        public Location PlanetLightDef = new Location(0.75, 0.3, 0) * 0.25f;
 
         public void BuildWorld()
         {
@@ -53,6 +53,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public float PlanetSunDist = 0;
 
+        public Location BaseAmbient = new Location(0.1, 0.1, 0.1);
+
         public void TickWorld(double delta)
         {
             rTicks++;
@@ -77,7 +79,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 else
                 {
                     TheSun.InternalLights[0].color = ClientUtilities.Convert(SunLightDef);
-                    ThePlanet.InternalLights[0].color = ClientUtilities.Convert(PlanetLightDef * (PlanetSunDist / 180f));
+                    ThePlanet.InternalLights[0].color = ClientUtilities.Convert(PlanetLightDef * Math.Min((PlanetSunDist / 180f), 1f));
                 }
                 PlanetLight = PlanetSunDist / 180f;
                 if (SunAngle.Pitch < 20 && SunAngle.Pitch > -20)
@@ -91,15 +93,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     rel = Math.Max(Math.Min(rel, 1f), 0f);
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(TheSun.InternalLights[0].color.X, TheSun.InternalLights[0].color.Y * rel, TheSun.InternalLights[0].color.Z * rel);
                     DesaturationAmount = (1f - rel) * 0.75f;
+                    ambient = BaseAmbient * (1f - rel) * 0.5f;
                 }
                 else if (SunAngle.Pitch >= 20) // TODO: Why is this flipped?
                 {
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
                     DesaturationAmount = 0.75f;
+                    ambient = BaseAmbient * 0.5f;
                 }
                 else
                 {
                     DesaturationAmount = 0f;
+                    ambient = BaseAmbient;
                 }
                 rTicks = 0;
                 shouldRedrawShadows = true;
