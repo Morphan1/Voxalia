@@ -6,9 +6,16 @@ layout (binding = 1) uniform sampler2DArray htex;
 layout (location = 0) in vec4 f_color;
 layout (location = 1) in vec3 f_texcoord;
 
+layout (location = 4) uniform float desaturationAmount = 1.0;
+
 out vec4 color;
 
 // TOD: maybe apply ambient/diffuse/specular lighting?
+
+vec3 desaturate(vec3 c)
+{
+	return mix(c, vec3(0.95, 0.77, 0.55) * dot(c, vec3(1.0)), desaturationAmount);
+}
 
 void main()
 {
@@ -22,4 +29,5 @@ void main()
         discard;
     }
 	color = tcolor * f_color;
+    color = vec4(desaturate(color.xyz), color.w);
 }

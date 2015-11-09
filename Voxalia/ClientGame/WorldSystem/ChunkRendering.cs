@@ -137,7 +137,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     }
                                     for (int i = normsi.Count - 1; i >= 0; i--)
                                     {
-                                        Norms.Add(new Vector3(normsi[i].X, normsi[i].Y, normsi[i].Z));
+                                        Norms.Add(new Vector3(-normsi[i].X, -normsi[i].Y, -normsi[i].Z));
                                     }
                                     for (int i = tci.Count - 1; i >= 0; i--)
                                     {

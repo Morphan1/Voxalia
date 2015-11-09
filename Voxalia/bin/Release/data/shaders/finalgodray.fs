@@ -23,6 +23,7 @@ layout (location = 15) uniform vec3 grcolor = vec3(1.0);
 layout (location = 16) uniform float znear = 0.1;
 layout (location = 17) uniform float zfar = 1000.0;
 layout (location = 18) uniform vec4 fogCol = vec4(0.0);
+layout (location = 19) uniform float desaturationAmount = 1.0;
 
 out vec4 color;
 
@@ -51,6 +52,11 @@ vec4 getGodRay()
     return c * wexposure;
 }
 
+vec3 desaturate(vec3 c)
+{
+	return mix(c, vec3(0.95, 0.77, 0.55) * dot(c, vec3(1.0)), desaturationAmount);
+}
+
 void main()
 {
 	vec4 shadow_light_color = texture(shtex, f_texcoord);
@@ -61,5 +67,5 @@ void main()
 	light_color.w = 1.0;
     vec4 godRay = getGodRay();
 	color = (light_color.w * light_color) + godRay * vec4(grcolor, 1.0);
-    color = vec4(mix(color.xyz, fogCol.xyz, 1.0 - exp(-dist * fogCol.w)), 1.0);
+    color = vec4(desaturate(mix(color.xyz, fogCol.xyz, 1.0 - exp(-dist * fogCol.w))), 1.0);
 }

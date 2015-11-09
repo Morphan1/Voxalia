@@ -140,6 +140,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Location ambient;
 
+        public float DesaturationAmount = 0f;
+
         public Location godrayCol = Location.One;
 
         void SetViewport()
@@ -392,10 +394,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 if (CVars.r_godrays.ValueB)
                 {
                     s_finalgodray.Bind();
+                    GL.Uniform1(19, DesaturationAmount);
                 }
                 else
                 {
-                    s_main.Bind();
+                    s_main.Bind(); // TODO: Remove?!
                 }
                 GL.Uniform3(5, ClientUtilities.Convert(ambient));
                 GL.Uniform3(8, ClientUtilities.Convert(CameraFinalTarget));
@@ -449,10 +452,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 s_transponlyvox.Bind();
                 GL.UniformMatrix4(1, false, ref combined);
                 GL.UniformMatrix4(2, false, ref def);
+                GL.Uniform1(4, DesaturationAmount);
                 s_transponly.Bind();
                 VBO.BonesIdentity();
                 GL.UniformMatrix4(1, false, ref combined);
                 GL.UniformMatrix4(2, false, ref def);
+                GL.Uniform1(4, DesaturationAmount);
                 FBOid = 3;
                 //TranspBlend();
                 GL.DepthMask(false);

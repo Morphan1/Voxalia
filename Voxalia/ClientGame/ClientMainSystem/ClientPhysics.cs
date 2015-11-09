@@ -87,13 +87,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     {
                         rel = 0.00001f;
                     }
-                    rel = 1f / (rel / 5f);
+                    rel = 1f / (rel / 7f);
                     rel = Math.Max(Math.Min(rel, 1f), 0f);
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(TheSun.InternalLights[0].color.X, TheSun.InternalLights[0].color.Y * rel, TheSun.InternalLights[0].color.Z * rel);
+                    DesaturationAmount = (1f - rel) * 0.75f;
                 }
                 else if (SunAngle.Pitch >= 20) // TODO: Why is this flipped?
                 {
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
+                    DesaturationAmount = 0.75f;
+                }
+                else
+                {
+                    DesaturationAmount = 0f;
                 }
                 rTicks = 0;
                 shouldRedrawShadows = true;
