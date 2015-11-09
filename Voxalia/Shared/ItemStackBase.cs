@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Text;
+using System.Drawing;
 using System.Collections.Generic;
 using Voxalia.Shared.Files;
 
@@ -118,6 +119,20 @@ namespace Voxalia.Shared
                 float cvalue = dr.ReadFloat();
                 SharedAttributes.Add(cattrib, cvalue);
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("shared={");
+            foreach (KeyValuePair<string, float> val in SharedAttributes)
+            {
+                sb.Append(val.Key + "=" + val.Value + ";");
+            }
+            sb.Append("}");
+            return Name + "[secondary=" + (SecondaryName == null ? "{NULL}" : SecondaryName) + ";display=" + DisplayName + ";count=" + Count
+                + ";description=" + Description + ";texture=" + GetTextureName() + ";model=" + GetModelName()
+                + ";drawcolor=" + DrawColor + ";datum=" + Datum + ";" + sb.ToString() + "]";
         }
     }
 }

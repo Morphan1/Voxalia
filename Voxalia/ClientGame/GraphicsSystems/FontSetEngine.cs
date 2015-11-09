@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using System.Drawing;
@@ -173,7 +174,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         /// <param name="Text">The text to render.</param>
         /// <param name="Position">Where to render the text at.</param>
-        /// <param name="MaxY">The maximum Y location to render text at..</param>
+        /// <param name="MaxY">The maximum Y location to render text at.</param>
         /// <param name="transmod">Transparency modifier (EG, 0.5 = half opacity) (0.0 - 1.0).</param>
         /// <param name="extrashadow">Whether to always have a mini drop-shadow.</param>
         public void DrawColoredText(string Text, Location Position, int MaxY = int.MaxValue, float transmod = 1, bool extrashadow = false)
@@ -556,6 +557,45 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 }
             }
             return MeasWidth;
+        }
+
+        public string SplitAppropriately(string text, int maxX)
+        {
+            StringBuilder sb = new StringBuilder(text.Length + 50);
+            int start = 0;
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] == '\n')
+                {
+                    start = i;
+                }
+                else if (MeasureFancyText(text.Substring(start, i - start)) > maxX)
+                {
+                    int x = i;
+                    bool safe = false;
+                    while (x >= start + 10)
+                    {
+                        if (text[x] == ' ')
+                        {
+                            safe = x != i;
+                            break;
+                        }
+                        x--;
+                    }
+                    if (safe)
+                    {
+                        sb[x] = '\n';
+                        start = x;
+                    }
+                    else
+                    {
+                        sb.Insert(i, '\n');
+                        start = i;
+                    }
+                }
+                sb.Append(text[i]);
+            }
+            return sb.ToString();
         }
 
         /// <summary>

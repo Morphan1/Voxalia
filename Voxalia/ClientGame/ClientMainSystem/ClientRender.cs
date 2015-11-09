@@ -707,12 +707,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.Disable(EnableCap.CullFace);
             if (CVars.u_showhud.ValueB)
             {
-                FontSets.Standard.DrawColoredText("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
-                    + "\n" + Player.GetPosition()
-                    + "\n" + Player.GetVelocity() + " == " + Player.GetVelocity().Length()
-                    + "\nLight source(s): " + LightsC
-                    + "\nEntities: " + TheRegion.Entities.Count
-                    + "\nFLAGS: " + Player.ServerFlags, new Location(0, 0, 0));
+                FontSets.Standard.DrawColoredText(FontSets.Standard.SplitAppropriately("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
+                    + "\nHeld Item: " + GetItemForSlot(QuickBarPos).ToString(),
+                    Window.Width - 10), new Location(0, 0, 0));
                 int center = Window.Width / 2;
                 if (RenderExtraItems > 0)
                 {
