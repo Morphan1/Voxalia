@@ -151,6 +151,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\CVarSetPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\DespawnEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\DestroyJointPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\FlagEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\FlashLightPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\JointStatusPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\MessagePacketOut.cs" />

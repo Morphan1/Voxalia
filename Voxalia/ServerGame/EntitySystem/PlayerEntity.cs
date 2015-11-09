@@ -277,6 +277,33 @@ namespace Voxalia.ServerGame.EntitySystem
         public float ItemSpeedMod = 1;
         public bool ItemDoSpeedMod = false;
 
+        public bool IsFlying = false;
+        public float PreFlyMass = 0;
+
+        public void Fly()
+        {
+            if (IsFlying)
+            {
+                return;
+            }
+            IsFlying = true;
+            PreFlyMass = GetMass();
+            SetMass(0);
+            TheRegion.SendToAll(new FlagEntityPacketOut(this, EntityFlag.FLYING, 1));
+        }
+
+        public void Unfly()
+        {
+            if (!IsFlying)
+            {
+                return;
+            }
+            IsFlying = false;
+            SetMass(PreFlyMass);
+            TheRegion.SendToAll(new FlagEntityPacketOut(this, EntityFlag.FLYING, 0));
+            TheRegion.SendToAll(new FlagEntityPacketOut(this, EntityFlag.MASS, PreFlyMass));
+        }
+
         public override void Tick()
         {
             if (!IsSpawned)
@@ -304,8 +331,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Direction.Pitch = -89.9f;
             }
             CBody.ViewDirection = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch).ToBVector();
-            bool fly = false;
-            if (Upward && !fly && !pup && CBody.SupportFinder.HasSupport)
+            if (Upward && !IsFlying && !pup && CBody.SupportFinder.HasSupport)
             {
                 CBody.Jump();
                 pup = true;
@@ -350,6 +376,17 @@ namespace Voxalia.ServerGame.EntitySystem
                 movement.Normalize();
             }
             CBody.HorizontalMotionConstraint.MovementDirection = movement;
+            if (IsFlying)
+            {
+                Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, 0), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
+                if (Upward)
+                {
+                    forw.Z += 1;
+                }
+                SetPosition(GetPosition() + forw * TheRegion.Delta * 5);
+                CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
+                Body.LinearVelocity = new Vector3(0, 0, 0);
+            }
             CursorMarker.SetPosition(GetEyePosition() + ForwardVector() * 0.9f);
             CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(Direction.Pitch * Utilities.PI180)) * // TODO: ensure pitch works properly
                 Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(Direction.Yaw * Utilities.PI180)));

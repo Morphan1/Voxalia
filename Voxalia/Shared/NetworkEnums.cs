@@ -27,4 +27,10 @@ namespace Voxalia.Shared
         CONVEX = 0,
         PERFECT = 1
     }
+
+    public enum EntityFlag : byte
+    {
+        FLYING = 0,
+        MASS = 1
+    }
 }

@@ -27,6 +27,19 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 ve.SetPosition(entry.Player.GetEyePosition() + entry.Player.ForwardVector() * 5);
                 entry.Player.TheRegion.SpawnEntity(ve);
             }
+            else if (arg0 == "fly")
+            {
+                if (entry.Player.IsFlying)
+                {
+                    entry.Player.Unfly();
+                    entry.Player.Network.SendMessage("Unflying!");
+                }
+                else
+                {
+                    entry.Player.Fly();
+                    entry.Player.Network.SendMessage("Flying!");
+                }
+            }
             else if (arg0 == "chunkDebug")
             {
                 float h = entry.Player.TheRegion.Generator.GetHeight(entry.Player.TheRegion.Seed, entry.Player.TheRegion.Seed2,

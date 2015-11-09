@@ -17,6 +17,30 @@ namespace Voxalia.ClientGame.EntitySystem
         public SingleAnimation tAnim;
         public SingleAnimation lAnim;
 
+        public bool IsFlying = false;
+        public float PreFlyMass = 0;
+
+        public void Fly()
+        {
+            if (IsFlying)
+            {
+                return;
+            }
+            IsFlying = true;
+            PreFlyMass = GetMass();
+            SetMass(0);
+        }
+
+        public void Unfly()
+        {
+            if (!IsFlying)
+            {
+                return;
+            }
+            IsFlying = false;
+            SetMass(PreFlyMass);
+        }
+
         public void SetAnimation(string anim, byte mode)
         {
             if (mode == 0)
@@ -93,8 +117,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Direction.Pitch = -89.9f;
             }
             CBody.ViewDirection = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch).ToBVector();
-            bool fly = false;
-            if (Upward && !fly && !pup && CBody.SupportFinder.HasSupport && GetVelocity().Z < 1f)
+            if (Upward && !IsFlying && !pup && CBody.SupportFinder.HasSupport && GetVelocity().Z < 1f)
             {
                 CBody.Jump();
                 pup = true;
@@ -125,6 +148,17 @@ namespace Voxalia.ClientGame.EntitySystem
                 movement.Normalize();
             }
             CBody.HorizontalMotionConstraint.MovementDirection = movement;
+            if (IsFlying)
+            {
+                Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, 0), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
+                if (Upward)
+                {
+                    forw.Z += 1;
+                }
+                SetPosition(GetPosition() + forw * TheRegion.Delta * 5);
+                CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
+                Body.LinearVelocity = new Vector3(0, 0, 0);
+            }
             aHTime += TheClient.Delta;
             aTTime += TheClient.Delta;
             aLTime += TheClient.Delta;
