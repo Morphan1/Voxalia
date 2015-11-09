@@ -7,10 +7,10 @@ namespace Voxalia.Shared.BlockShapes
 {
     public class BSD0: BlockShapeDetails
     {
-        public override EntityShape GetShape(out Location offset)
+        public BSD0()
         {
-            offset = new Location(0.5);
-            return new BoxShape(1, 1, 1) { CollisionMargin = 0 };
+            BlockShapeCache = new BoxShape(1f, 1f, 1f);
+            OffsetCache = new Location(0.5);
         }
 
         public override List<Vector3> GetVertices(Vector3 pos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)

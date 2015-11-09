@@ -108,12 +108,23 @@ namespace Voxalia.Shared
             return lits;
         }
 
+        public EntityShape BlockShapeCache;
+
+        public Location OffsetCache;
+
         public virtual EntityShape GetShape(out Location offset)
         {
+            if (BlockShapeCache != null)
+            {
+                offset = OffsetCache;
+                return BlockShapeCache;
+            }
             List<Vector3> vecs = GetVertices(new Vector3(0, 0, 0), false, false, false, false, false, false);
             Vector3 offs;
             ConvexHullShape shape = new ConvexHullShape(vecs, out offs) { CollisionMargin = 0 };
             offset = new Location(offs);
+            OffsetCache = offset;
+            BlockShapeCache = shape;
             return shape;
         }
     }

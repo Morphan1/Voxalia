@@ -864,7 +864,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Location[] FellLocs = new Location[] { new Location(0, 0, 1), new Location(1, 0, 0), new Location(0, 1, 0), new Location(-1, 0, 0), new Location(0, -1, 0) };
 
-        public void BreakNaturally(Location pos, bool regentrans = true, int max_subbreaks = 3/*, HashSet<Location> chnoregen = null*/)
+        public void BreakNaturally(Location pos, bool regentrans = true, int max_subbreaks = 5/*, HashSet<Location> chnoregen = null*/)
         {
             pos = pos.GetBlockLocation();
             Chunk ch = LoadChunk(ChunkLocFor(pos));
