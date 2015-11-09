@@ -18,7 +18,8 @@ namespace Voxalia.Shared
         SMOKE = 10,
         LOG = 11,
         TALLGRASS = 12,
-        NUM_DEFAULT = 13,
+        SAND = 13,
+        NUM_DEFAULT = 14,
         MAX = ushort.MaxValue
     }
 
@@ -43,7 +44,8 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.SNOW) { SpeedMod = 0.8f },
                 new MaterialInfo((int)Material.SMOKE) { Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.8) },
                 new MaterialInfo((int)Material.LOG) { SpeedMod = 1.1f },
-                new MaterialInfo((int)Material.TALLGRASS) { Solidity = MaterialSolidity.SPECIAL, Opaque = false }
+                new MaterialInfo((int)Material.TALLGRASS) { Solidity = MaterialSolidity.SPECIAL, Opaque = false },
+                new MaterialInfo((int)Material.SAND)
             };
             mats[(int)Material.GRASS].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
             mats[(int)Material.GRASS].TID[(int)MaterialSide.BOTTOM] = 3; // dirt

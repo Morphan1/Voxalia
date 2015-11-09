@@ -11,6 +11,7 @@ SLIPGOO=blocks/liquid/slipgoo
 SNOW=blocks/solid/snow
 SMOKE=blocks/liquid/smoke
 LOG=blocks/solid/wood
+SAND=blocks/solid/sand
 TALLGRASS=blocks/transparent/tallgrass
 m7=blocks/solid/wood_top
 m6=blocks/solid/db_ym,blocks/solid/db_exc%1.0
