@@ -22,13 +22,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void StandardBlend()
         {
-
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
         }
 
         public void TranspBlend()
         {
-
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
         }
 
@@ -44,7 +42,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.Enable(EnableCap.CullFace);
             GL.CullFace(CullFaceMode.Front);
             s_shadow = Shaders.GetShader("shadow");
-            s_main = Shaders.GetShader("test");
             s_finalgodray = Shaders.GetShader("finalgodray");
             s_fbo = Shaders.GetShader("fbo");
             s_fbov = Shaders.GetShader("fbo_vox");
@@ -53,6 +50,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_transponly = Shaders.GetShader("transponly");
             s_colormultvox = Shaders.GetShader("colormultvox");
             s_transponlyvox = Shaders.GetShader("transponlyvox");
+            s_godray = Shaders.GetShader("godray");
             generateLightHelpers();
             skybox = new VBO[6];
             for (int i = 0; i < 6; i++)
@@ -93,6 +91,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
         int fbo2_texture;
         int fbo2_main;
 
+        int fbo_godray_main;
+        int fbo_godray_texture;
+        int fbo_godray_texture2;
+
         public void generateLightHelpers()
         {
             RS4P = new RenderSurface4Part(Window.Width, Window.Height, Rendering);
@@ -100,8 +102,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             fbo_texture = GL.GenTexture();
             fbo_main = GL.GenFramebuffer();
             GL.BindTexture(TextureTarget.Texture2D, fbo_texture);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba32f, Window.Width, Window.Height, 0,
-                PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba32f, Window.Width, Window.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -112,8 +113,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             fbo2_texture = GL.GenTexture();
             fbo2_main = GL.GenFramebuffer();
             GL.BindTexture(TextureTarget.Texture2D, fbo2_texture);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba32f, Window.Width, Window.Height, 0,
-                PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba32f, Window.Width, Window.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -121,10 +121,28 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, fbo2_texture, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            fbo_godray_texture = GL.GenTexture();
+            fbo_godray_texture2 = GL.GenTexture();
+            fbo_godray_main = GL.GenFramebuffer();
+            GL.BindTexture(TextureTarget.Texture2D, fbo_godray_texture);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Window.Width, Window.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            GL.BindTexture(TextureTarget.Texture2D, fbo_godray_texture2);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Window.Width, Window.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_godray_main);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, fbo_godray_texture, 0);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment1, TextureTarget.Texture2D, fbo_godray_texture2, 0);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
         public Shader s_shadow;
-        public Shader s_main;
         public Shader s_finalgodray;
         public Shader s_fbo;
         public Shader s_fbov;
@@ -133,6 +151,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_transponly;
         public Shader s_colormultvox;
         public Shader s_transponlyvox;
+        public Shader s_godray;
         RenderSurface4Part RS4P;
 
         public Location CameraUp = Location.UnitZ;
@@ -210,7 +229,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public void renderGame()
         {
             RenderTextures = true;
-            GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0f, 1f, 1f, 1f });
+            GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1f, 0f, 1f, 1f });
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
             GL.Enable(EnableCap.DepthTest);
             if (CVars.g_firstperson.ValueB)
@@ -320,8 +339,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.DiffuseTexture);
                 Matrix4 mat = Matrix4.CreateOrthographicOffCenter(-1, 1, -1, 1, -1, 1);
                 GL.UniformMatrix4(1, false, ref mat);
-                mat = Matrix4.Identity;
-                GL.UniformMatrix4(2, false, ref mat);
+                GL.UniformMatrix4(2, false, ref matident);
                 GL.Uniform3(10, ClientUtilities.Convert(CameraPos));
                 bool first = true;
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
@@ -388,17 +406,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         }
                     }
                 }
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-                GL.DrawBuffer(DrawBufferMode.Back);
-                if (CVars.r_godrays.ValueB)
-                {
-                    s_finalgodray.Bind();
-                    GL.Uniform1(19, DesaturationAmount);
-                }
-                else
-                {
-                    s_main.Bind(); // TODO: Remove?!
-                }
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_godray_main);
+                s_finalgodray.Bind();
+                GL.DrawBuffers(2, new DrawBuffersEnum[] { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1 });
+                GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1f, 1f, 1f, 0f });
+                GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 1f, 1f, 1f, 0f });
+                GL.Uniform1(19, DesaturationAmount);
                 GL.Uniform3(5, ClientUtilities.Convert(ambient));
                 GL.Uniform3(8, ClientUtilities.Convert(CameraFinalTarget));
                 GL.Uniform1(9, CVars.r_dof_strength.ValueF);
@@ -421,10 +434,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.DiffuseTexture);
-                mat = Matrix4.CreateOrthographicOffCenter(-1, 1, -1, 1, -1, 1);
                 GL.UniformMatrix4(1, false, ref mat);
-                mat = Matrix4.Identity;
-                GL.UniformMatrix4(2, false, ref mat);
+                GL.UniformMatrix4(2, false, ref matident);
                 Rendering.RenderRectangle(-1, -1, 1, 1);
                 GL.ActiveTexture(TextureUnit.Texture6);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
@@ -441,8 +452,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.Enable(EnableCap.DepthTest);
+                GL.DrawBuffer(DrawBufferMode.Back);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, RS4P.fbo);
                 GL.BlitFramebuffer(0, 0, Window.Width, Window.Height, 0, 0, Window.Width, Window.Height, ClearBufferMask.DepthBufferBit, BlitFramebufferFilter.Nearest);
+                GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, fbo_godray_main);
+                GL.BlitFramebuffer(0, 0, Window.Width, Window.Height, 0, 0, Window.Width, Window.Height, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Nearest);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
                 Matrix4 def = Matrix4.Identity;
                 GL.Enable(EnableCap.CullFace);
@@ -462,15 +477,30 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.DepthMask(false);
                 Render3D(false);
                 FBOid = 0;
-                RenderSkyflare(combined);
                 //StandardBlend();
+                GL.Disable(EnableCap.CullFace);
+                GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1f });
+                GL.Disable(EnableCap.DepthTest);
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2D, fbo_godray_texture2);
+                s_godray.Bind();
+                GL.UniformMatrix4(1, false, ref mat);
+                GL.UniformMatrix4(2, false, ref matident);
+                TranspBlend();
+                Rendering.RenderRectangle(-1, -1, 1, 1);
+                StandardBlend();
+                GL.UseProgram(0);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.DepthMask(true);
+                GL.Enable(EnableCap.DepthTest);
+                GL.Enable(EnableCap.CullFace);
             }
             Establish2D();
             Render2D();
         }
 
-        float dist = 340; // TODO: View rad
+        float dist2 = 380; // TODO: View rad
+        float dist = 340;
 
         public Vector3 GetSunLocation()
         {
@@ -485,8 +515,26 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             Rendering.SetMinimumLight(1);
             GL.Disable(EnableCap.CullFace);
-            Matrix4 scale = Matrix4.CreateScale(dist, dist, dist) * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos));
+            Rendering.SetColor(Color4.White);
+            Matrix4 scale = Matrix4.CreateScale(dist2, dist2, dist2) * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos));
             GL.UniformMatrix4(2, false, ref scale);
+            // TODO: Save textures!
+            Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/bottom").Bind();
+            skybox[0].Render(false);
+            Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/top").Bind();
+            skybox[1].Render(false);
+            Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/xm").Bind();
+            skybox[2].Render(false);
+            Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/xp").Bind();
+            skybox[3].Render(false);
+            Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/ym").Bind();
+            skybox[4].Render(false);
+            Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/yp").Bind();
+            skybox[5].Render(false);
+            Rendering.SetColor(new Vector4(1, 1, 1, (float)Math.Max(Math.Min((SunAngle.Pitch - 50) / (-90), 1), 0)));
+            scale = Matrix4.CreateScale(dist, dist, dist) * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos));
+            GL.UniformMatrix4(2, false, ref scale);
+            // TODO: Save textures!
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/bottom").Bind();
             skybox[0].Render(false);
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/top").Bind();
@@ -528,50 +576,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Rendering.SetMinimumLight(0);
             Rendering.SetColor(Color4.White);
         }
-
-        public void RenderSkyflare(Matrix4 combined)
-        {
-            /*
-            if (CVars.r_lensflare.ValueB)
-            {
-                if (PlanetSunDist > 21f)
-                {
-                    Location rel = CameraPos + TheSun.Direction * -200f;
-                    Vector4 vec = new Vector4((float)rel.X, (float)rel.Y, (float)rel.Z, 1f);
-                    vec = Vector4.Transform(vec, combined);
-                    float dist = 200; // TODO: View rad * 0.75 or something
-                    Location sunpos = new Location(vec.X / vec.W, vec.Y / vec.W, vec.Z / vec.W);
-                    if (sunpos.X >= -1 && sunpos.X <= 1 && sunpos.Y >= -1 && sunpos.Y <= 1 && sunpos.Z <= 1 && sunpos.Z >= -1)
-                    {
-                        CollisionResult trace = TheRegion.Collision.RayTrace(CameraPos, CameraPos + TheSun.Direction * -dist, Player.IgnoreThis);
-                        if (!trace.Hit)
-                        {
-                            Rendering.SetColor(Color4.Yellow);
-                            Matrix4 ident = Matrix4.Identity;
-                            GL.UniformMatrix4(1, false, ref ident);
-                            GL.UniformMatrix4(2, false, ref ident);
-                            Location start = new Location(sunpos.X, sunpos.Y, 0);
-                            Location targ = new Location(0, 0, 0);
-                            GL.Disable(EnableCap.CullFace);
-                            int c = 6;
-                            Location move = (targ - start) / (c / 2);
-                            for (int i = 0; i < c; i++)
-                            {
-                                Textures.GetTexture("effects/lensflare/0" + (i + 1)).Bind(); // TODO: Store better
-                                Location fs = start + move * (i + 1);
-                                float s = 0.2f - ((float)i) * 0.025f;
-                                Rendering.RenderRectangle((float)fs.X - s, (float)fs.Y - s, (float)fs.X + s, (float)fs.Y + s, Matrix4.CreateTranslation(0, 0, 0.1f * c - 0.1f * i));
-                            }
-                            GL.BindTexture(TextureTarget.Texture2D, 0);
-                            Rendering.SetColor(Color4.White);
-                            GL.Enable(EnableCap.CullFace);
-                        }
-                    }
-                }
-            }
-            */
-        }
-
+        
         public void Establish2D()
         {
             GL.Disable(EnableCap.DepthTest);
