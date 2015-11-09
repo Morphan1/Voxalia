@@ -48,7 +48,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_shadowadder = Shaders.GetShader("shadowadder");
             s_lightadder = Shaders.GetShader("lightadder");
             s_transponly = Shaders.GetShader("transponly");
-            s_colormultvox = Shaders.GetShader("colormultvox");
             s_transponlyvox = Shaders.GetShader("transponlyvox");
             s_godray = Shaders.GetShader("godray");
             generateLightHelpers();
@@ -149,7 +148,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_shadowadder;
         public Shader s_lightadder;
         public Shader s_transponly;
-        public Shader s_colormultvox;
         public Shader s_transponlyvox;
         public Shader s_godray;
         RenderSurface4Part RS4P;
