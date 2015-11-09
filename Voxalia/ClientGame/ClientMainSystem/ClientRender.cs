@@ -212,7 +212,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 catch (Exception ex)
                 {
-                    SysConsole.Output(OutputType.ERROR, "Rendering: " + ex.ToString());
+                    SysConsole.Output(OutputType.ERROR, "Rendering (general): " + ex.ToString());
                 }
                 try
                 {
@@ -220,7 +220,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 catch (Exception ex)
                 {
-                    SysConsole.Output(OutputType.ERROR, "Renderticking: " + ex.ToString());
+                    SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
                 }
                 Window.SwapBuffers();
             }
@@ -228,29 +228,30 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void renderGame()
         {
-            RenderTextures = true;
-            GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1f, 0f, 1f, 1f });
-            GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
-            GL.Enable(EnableCap.DepthTest);
-            if (CVars.g_firstperson.ValueB)
+            try
             {
-                CameraPos = PlayerEyePosition;
-            }
-            else
-            {
-                CollisionResult cr = TheRegion.Collision.RayTrace(PlayerEyePosition, PlayerEyePosition - Player.ForwardVector() * 2, Player.IgnoreThis);
-                if (cr.Hit)
+                RenderTextures = true;
+                GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1f, 0f, 1f, 1f });
+                GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
+                GL.Enable(EnableCap.DepthTest);
+                if (CVars.g_firstperson.ValueB)
                 {
-                    CameraPos = cr.Position + cr.Normal * 0.05;
+                    CameraPos = PlayerEyePosition;
                 }
                 else
                 {
-                    CameraPos = cr.Position;
+                    CollisionResult cr = TheRegion.Collision.RayTrace(PlayerEyePosition, PlayerEyePosition - Player.ForwardVector() * 2, Player.IgnoreThis);
+                    if (cr.Hit)
+                    {
+                        CameraPos = cr.Position + cr.Normal * 0.05;
+                    }
+                    else
+                    {
+                        CameraPos = cr.Position;
+                    }
                 }
-            }
-            sortEntities();
-            // if (CVars.r_lighting.ValueB)
-            {
+                sortEntities();
+                // if (CVars.r_lighting.ValueB)
                 SetViewport();
                 CameraTarget = CameraPos + Player.ForwardVector();
                 Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
@@ -416,7 +417,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 1f, 1f, 1f, 0f });
                 GL.BlendFuncSeparate(1, BlendingFactorSrc.SrcColor, BlendingFactorDest.Zero, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.Zero);
                 GL.Uniform1(19, DesaturationAmount);
-                GL.Uniform3(5, ClientUtilities.Convert(CVars.r_lighting.ValueB ? ambient: new Location(1, 1, 1)));
+                GL.Uniform3(5, ClientUtilities.Convert(CVars.r_lighting.ValueB ? ambient : new Location(1, 1, 1)));
                 GL.Uniform3(8, ClientUtilities.Convert(CameraFinalTarget));
                 GL.Uniform1(9, CVars.r_dof_strength.ValueF);
                 Vector3 lPos = GetSunLocation();
@@ -500,8 +501,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.Enable(EnableCap.DepthTest);
                 GL.Enable(EnableCap.CullFace);
             }
-            Establish2D();
-            Render2D();
+            catch (Exception ex)
+            {
+                SysConsole.Output("Rendering (3D)", ex);
+            }
+            try
+            {
+                Establish2D();
+                Render2D();
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output("Rendering (2D)", ex);
+            }
         }
 
         float dist2 = 380; // TODO: View rad
