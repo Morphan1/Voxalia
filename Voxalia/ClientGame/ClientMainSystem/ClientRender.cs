@@ -409,8 +409,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_godray_main);
                 s_finalgodray.Bind();
                 GL.DrawBuffers(2, new DrawBuffersEnum[] { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1 });
-                GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1f, 1f, 1f, 0f });
+                GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0f, 0f, 0f, 0f });
                 GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 1f, 1f, 1f, 0f });
+                GL.BlendFuncSeparate(1, BlendingFactorSrc.SrcColor, BlendingFactorDest.Zero, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.Zero);
                 GL.Uniform1(19, DesaturationAmount);
                 GL.Uniform3(5, ClientUtilities.Convert(ambient));
                 GL.Uniform3(8, ClientUtilities.Convert(CameraFinalTarget));
@@ -452,6 +453,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.Enable(EnableCap.DepthTest);
+                GL.BlendFunc(1, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
                 GL.DrawBuffer(DrawBufferMode.Back);
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, RS4P.fbo);
