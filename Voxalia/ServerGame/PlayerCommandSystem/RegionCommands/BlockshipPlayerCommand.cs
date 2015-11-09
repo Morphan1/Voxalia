@@ -20,6 +20,16 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
 
         public override void Execute(PlayerCommandEntry entry)
         {
+            if (entry.InputArguments.Count < 1)
+            {
+                entry.Player.Network.SendMessage("/blockship <context/perfect>");
+                return;
+            }
+            BGETraceMode tm = BGETraceMode.CONVEX;
+            if (entry.InputArguments[0].ToLower() == "perfect")
+            {
+                tm = BGETraceMode.PERFECT;
+            }
             float maxRad = 20; // TODO: Config!
             Location start = entry.Player.GetPosition().GetBlockLocation() + new Location(0, 0, -1);
             List<KeyValuePair<Location, BlockInternal>> blocks = new List<KeyValuePair<Location, BlockInternal>>();
@@ -42,7 +52,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                 entry.Player.TheRegion.SetBlockMaterial(block.Key, Material.AIR, 0, 1, true, true, true);
                 blocksin[(int)(block.Key.Z - zsub) * ywidth * xwidth + (int)(block.Key.Y - ysub) * xwidth + (int)(block.Key.X - xsub)] = block.Value;
             }
-            BlockGroupEntity bge = new BlockGroupEntity(extent.Min, entry.Player.TheRegion, blocksin, xwidth, ywidth, zwidth);
+            BlockGroupEntity bge = new BlockGroupEntity(extent.Min, tm, entry.Player.TheRegion, blocksin, xwidth, ywidth, zwidth);
             entry.Player.TheRegion.SpawnEntity(bge);
         }
 

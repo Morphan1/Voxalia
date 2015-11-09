@@ -25,17 +25,27 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public BlockInternal[] Blocks = null;
 
+        public BGETraceMode TraceMode = BGETraceMode.CONVEX;
+
         public Location shapeOffs;
 
-        public BlockGroupEntity(Region tregion, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth) : base(tregion, true, true)
+        public BlockGroupEntity(Region tregion, BGETraceMode mode, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth) : base(tregion, true, true)
         {
             SetMass(blocks.Length);
             XWidth = xwidth;
             YWidth = ywidth;
             ZWidth = zwidth;
             Blocks = blocks;
-            ConvexEntityShape = CalculateHullShape(out shapeOffs);
-            Shape = ConvexEntityShape;
+            TraceMode = mode;
+            ConvexEntityShape = (ConvexShape)CalculateHullShape(BGETraceMode.CONVEX, out shapeOffs);
+            if (TraceMode == BGETraceMode.PERFECT)
+            {
+                Shape = CalculateHullShape(BGETraceMode.PERFECT, out shapeOffs);
+            }
+            else
+            {
+                Shape = ConvexEntityShape;
+            }
             SetPosition(GetPosition() + shapeOffs);
         }
 
@@ -66,7 +76,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public double deltat = 0;
         
         // TODO: Make async!
-        public ConvexHullShape CalculateHullShape(out Location offs)
+        public EntityShape CalculateHullShape(BGETraceMode mode, out Location offs)
         {
             List<Vector3> Vertices = new List<Vector3>(XWidth * YWidth * ZWidth);
             for (int x = 0; x < XWidth; x++)
@@ -99,9 +109,23 @@ namespace Voxalia.ClientGame.EntitySystem
                 }
             }
             Vector3 center;
-            ConvexHullShape chs = new ConvexHullShape(Vertices, out center);
-            offs = new Location(center);
-            return chs;
+            if (mode == BGETraceMode.PERFECT)
+            {
+                int[] indices = new int[Vertices.Count];
+                for (int i = 0; i < Vertices.Count; i++)
+                {
+                    indices[i] = i;
+                }
+                MobileMeshShape mesh = new MobileMeshShape(Vertices.ToArray(), indices, AffineTransform.Identity, MobileMeshSolidity.DoubleSided, out center);
+                offs = new Location(center);
+                return mesh;
+            }
+            else
+            {
+                ConvexHullShape chs = new ConvexHullShape(Vertices, out center);
+                offs = new Location(center);
+                return chs;
+            }
         }
 
         public override void Render()

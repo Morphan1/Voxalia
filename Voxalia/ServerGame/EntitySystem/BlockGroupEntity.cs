@@ -21,9 +21,11 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public int ZWidth = 0;
 
+        public BGETraceMode TraceMode = BGETraceMode.CONVEX;
+
         public BlockInternal[] Blocks = null;
         
-        public BlockGroupEntity(Location baseloc, Region tregion, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth) : base(tregion, true)
+        public BlockGroupEntity(Location baseloc, BGETraceMode mode, Region tregion, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth) : base(tregion, true)
         {
             SetMass(blocks.Length);
             SetPosition(baseloc);
@@ -32,8 +34,16 @@ namespace Voxalia.ServerGame.EntitySystem
             ZWidth = zwidth;
             Blocks = blocks;
             Location shapeOffs;
-            ConvexEntityShape = CalculateHullShape(out shapeOffs);
-            Shape = ConvexEntityShape;
+            TraceMode = mode;
+            ConvexEntityShape = (ConvexShape)CalculateHullShape(BGETraceMode.CONVEX, out shapeOffs);
+            if (TraceMode == BGETraceMode.PERFECT)
+            {
+                Shape = CalculateHullShape(BGETraceMode.PERFECT, out shapeOffs);
+            }
+            else
+            {
+                Shape = ConvexEntityShape;
+            }
             SetPosition(GetPosition() + shapeOffs);
         }
 
@@ -70,7 +80,7 @@ namespace Voxalia.ServerGame.EntitySystem
         }
 
         // TODO: Async?
-        public ConvexHullShape CalculateHullShape(out Location offs)
+        public EntityShape CalculateHullShape(BGETraceMode mode, out Location offs)
         {
             List<Vector3> Vertices = new List<Vector3>(XWidth * YWidth * ZWidth);
             for (int x = 0; x < XWidth; x++)
@@ -103,9 +113,23 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
             }
             Vector3 center;
-            ConvexHullShape chs = new ConvexHullShape(Vertices, out center);
-            offs = new Location(center);
-            return chs;
+            if (mode == BGETraceMode.PERFECT)
+            {
+                int[] indices = new int[Vertices.Count];
+                for (int i = 0; i < Vertices.Count; i++)
+                {
+                    indices[i] = i;
+                }
+                MobileMeshShape mesh = new MobileMeshShape(Vertices.ToArray(), indices, AffineTransform.Identity, MobileMeshSolidity.DoubleSided, out center);
+                offs = new Location(center);
+                return mesh;
+            }
+            else
+            {
+                ConvexHullShape chs = new ConvexHullShape(Vertices, out center);
+                offs = new Location(center);
+                return chs;
+            }
         }
     }
 }

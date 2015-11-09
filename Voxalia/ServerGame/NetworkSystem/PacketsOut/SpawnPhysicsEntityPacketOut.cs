@@ -16,7 +16,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 bge = (BlockGroupEntity)e;
                 hs = new Location(bge.XWidth, bge.YWidth, bge.ZWidth);
             }
-            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + (e is BlockGroupEntity ? bge.Blocks.Length * 3 :(e is CubeEntity ? 4 * 6 + 4 * 6: (e is BlockItemEntity ? 3: (e is ModelEntity ? 4 + 1: 0)))) + 4 + 1];
+            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + (e is BlockGroupEntity ? bge.Blocks.Length * 3 + 1 :(e is CubeEntity ? 4 * 6 + 4 * 6: (e is BlockItemEntity ? 3: (e is ModelEntity ? 4 + 1: 0)))) + 4 + 1];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
@@ -86,6 +86,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                     Utilities.UshortToBytes(bge.Blocks[i].BlockMaterial).CopyTo(Data, start + i * 2);
                     Data[start + bge.Blocks.Length * 2 + i] = bge.Blocks[i].BlockData;
                 }
+                Data[start + bge.Blocks.Length * 3] = (byte)bge.TraceMode;
             }
             Utilities.FloatToBytes(e.GetBounciness()).CopyTo(Data, Data.Length - (4 + 1));
             Data[Data.Length - 1] = (byte)(e.Visible ? 1 : 0);

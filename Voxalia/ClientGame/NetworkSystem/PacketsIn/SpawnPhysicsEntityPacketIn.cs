@@ -76,7 +76,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     bi[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(data, start + i * 2, 2));
                     bi[i].BlockData = data[start + bi.Length * 2 + i];
                 }
-                BlockGroupEntity bge = new BlockGroupEntity(TheClient.TheRegion, bi, xwidth, ywidth, zwidth);
+                BGETraceMode tm = (BGETraceMode)data[start + bi.Length * 3];
+                BlockGroupEntity bge = new BlockGroupEntity(TheClient.TheRegion, tm, bi, xwidth, ywidth, zwidth);
                 ce = bge;
             }
             else

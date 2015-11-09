@@ -21,4 +21,10 @@ namespace Voxalia.Shared
         NONE = 0,
         CHUNK_LOAD = 1
     }
+
+    public enum BGETraceMode : byte
+    {
+        CONVEX = 0,
+        PERFECT = 1
+    }
 }
