@@ -105,6 +105,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 KeyHandler.Modified = false;
                 first = false;
                 StringBuilder keybindsave = new StringBuilder(KeyHandler.keystonames.Count * 100);
+                keybindsave.Append("wait 0.5;\n");
                 foreach (KeyValuePair<string, Key> keydat in KeyHandler.namestokeys)
                 {
                     CommandScript cs = KeyHandler.GetBind(keydat.Value);
