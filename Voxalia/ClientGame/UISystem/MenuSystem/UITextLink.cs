@@ -65,7 +65,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
         }
 
-        public override void Render(double delta)
+        public override void Render(double delta, int xoff, int yoff)
         {
             string tt = Text;
             if (Clicked)
@@ -76,7 +76,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             {
                 tt = TextHover;
             }
-            TextFont.DrawColoredText(tt, new Location(GetX(), GetY(), 0));
+            TextFont.DrawColoredText(tt, new Location(GetX() + xoff, GetY() + yoff, 0));
         }
 
         public float GetWidth()

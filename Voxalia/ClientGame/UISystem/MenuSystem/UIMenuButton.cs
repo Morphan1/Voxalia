@@ -77,7 +77,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             Tex_Click = Menus.TheClient.Textures.GetTexture(tName + "_click");
         }
 
-        public override void Render(double delta)
+        public override void Render(double delta, int xoff, int yoff)
         {
             if (Clicked)
             {
@@ -91,10 +91,10 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             {
                 Tex_None.Bind();
             }
-            Menus.TheClient.Rendering.RenderRectangle((int)X, (int)Y, (int)(X + Width), (int)(Y + Height));
+            Menus.TheClient.Rendering.RenderRectangle((int)X + xoff, (int)Y + yoff, (int)(X + xoff + Width), (int)(Y + yoff + Height));
             float len = TextFont.MeasureFancyText(Text);
             float hei = TextFont.font_default.Height;
-            TextFont.DrawColoredText(Text, new Location(X + Width / 2 - len / 2, Y + Height / 2 - hei / 2, 0));
+            TextFont.DrawColoredText(Text, new Location(X + xoff + Width / 2 - len / 2, Y + yoff + Height / 2 - hei / 2, 0));
         }
 
         public override bool Contains(int x, int y)

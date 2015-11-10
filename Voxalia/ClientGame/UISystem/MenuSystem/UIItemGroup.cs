@@ -54,7 +54,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
         }
 
-        public override void Render(double delta)
+        public override void Render(double delta, int xoff, int yoff)
         {
         }
     }

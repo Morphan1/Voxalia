@@ -14,7 +14,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
     public partial class Client
     {
         public UIMenu InventoryMenu;
-        public UIItemGroup UI_Inv_Items; // TODO: Scrollbox?
+        public UIScrollGroup UI_Inv_Items;
 
         public UIMenu EquipmentMenu;
 
@@ -50,7 +50,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             InventoryMenu.Add(inv_equipment);
             InventoryMenu.Add(inv_builderitems);
             InventoryMenu.Add(InventoryExitButton());
-            UI_Inv_Items = new UIItemGroup();
+            Func<int> height = () => (int)(inv_inventory.GetY() + inv_inventory.GetHeight() + 20);
+            UI_Inv_Items = new UIScrollGroup(() => 20, height, ItemsListSize, () => Window.Height - height() - 20);
             InventoryMenu.Add(UI_Inv_Items);
             GenerateItemDescriptors();
             UpdateInventoryMenu();

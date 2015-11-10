@@ -14,10 +14,14 @@
 
         public abstract void Init();
 
-        public abstract void Render(double delta);
+        public abstract void Render(double delta, int xoff, int yoff);
 
         public abstract bool Contains(int x, int y);
 
         public bool HoverInternal = false;
+
+        public virtual void Tick(double delta)
+        {
+        }
     }
 }

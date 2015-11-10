@@ -52,6 +52,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                     MenuItems[i].HoverInternal = false;
                     MenuItems[i].MouseLeave();
                 }
+                MenuItems[i].Tick(TheClient.Delta);
             }
             pDown = mDown;
         }
@@ -60,7 +61,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
             for (int i = 0; i < MenuItems.Count; i++)
             {
-                MenuItems[i].Render(delta);
+                MenuItems[i].Render(delta, 0, 0);
             }
         }
     }

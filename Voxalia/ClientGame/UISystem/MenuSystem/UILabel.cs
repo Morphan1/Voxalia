@@ -45,9 +45,9 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
         }
 
-        public override void Render(double delta)
+        public override void Render(double delta, int xoff, int yoff)
         {
-            TextFont.DrawColoredText(MaxX != null ? TextFont.SplitAppropriately(Text,MaxX()): Text, new Location(GetX(), GetY(), 0));
+            TextFont.DrawColoredText(MaxX != null ? TextFont.SplitAppropriately(Text,MaxX()): Text, new Location(GetX() + xoff, GetY() + yoff, 0));
         }
 
         public float GetWidth()
