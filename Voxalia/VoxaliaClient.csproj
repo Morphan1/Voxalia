@@ -112,6 +112,8 @@
     <Compile Include="ClientGame\CommandSystem\TagObjects\EntityTagObjects\PlayerTag.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\AttackCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\BindblockCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\UnbindCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BindCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\WalkCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\SecondaryCommand.cs" />

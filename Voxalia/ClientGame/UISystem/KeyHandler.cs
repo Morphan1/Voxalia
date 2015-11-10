@@ -443,6 +443,23 @@ namespace Voxalia.ClientGame.UISystem
         }
 
         /// <summary>
+        /// Binds a key to a command.
+        /// </summary>
+        /// <param name="key">The key to bind.</param>
+        /// <param name="bind">The command to bind to it (null to unbind).</param>
+        public static void BindKey(Key key, List<CommandEntry> bind)
+        {
+            Binds.Remove(key);
+            if (bind != null)
+            {
+                CommandScript script = new CommandScript("_bind_for_" + key.ToString(), bind);
+                script.Debug = DebugMode.MINIMAL;
+                Binds.Add(key, script);
+            }
+            Modified = true;
+        }
+
+        /// <summary>
         /// Checks whether the system is listening to keyboard input.
         /// </summary>
         /// <returns>Whether the keyboard is useable.</returns>

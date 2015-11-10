@@ -23,7 +23,7 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count <= 0)
+            if (entry.Arguments.Count < 1)
             {
                 ShowUsage(entry);
                 return;

@@ -43,11 +43,13 @@ namespace Voxalia.ClientGame.CommandSystem
             // UI Commands
             CommandSystem.RegisterCommand(new AttackCommand(TheClient));
             CommandSystem.RegisterCommand(new BackwardCommand(TheClient));
+            CommandSystem.RegisterCommand(new BindblockCommand(TheClient));
             CommandSystem.RegisterCommand(new BindCommand(TheClient));
             CommandSystem.RegisterCommand(new ForwardCommand(TheClient));
             CommandSystem.RegisterCommand(new LeftwardCommand(TheClient));
             CommandSystem.RegisterCommand(new RightwardCommand(TheClient));
             CommandSystem.RegisterCommand(new SecondaryCommand(TheClient));
+            CommandSystem.RegisterCommand(new UnbindCommand(TheClient));
             CommandSystem.RegisterCommand(new UpwardCommand(TheClient));
             CommandSystem.RegisterCommand(new WalkCommand(TheClient));
 
