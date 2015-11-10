@@ -266,14 +266,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheGameScreen = new GameScreen() { TheClient = this };
             TheChunkWaitingScreen = new ChunkWaitingScreen() { TheClient = this };
             TheSingleplayerMenuScreen = new SingleplayerMenuScreen() { TheClient = this };
-            TheInventoryScreen = new InventoryScreen() { TheClient = this };
-            TheEquipmentScreen = new EquipmentScreen() { TheClient = this };
             TheMainMenuScreen.Init();
             TheGameScreen.Init();
             TheChunkWaitingScreen.Init();
             TheSingleplayerMenuScreen.Init();
-            TheInventoryScreen.Init();
-            TheEquipmentScreen.Init();
             ShowMainMenu();
         }
 
@@ -317,25 +313,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 CScreen.SwitchTo();
             }
         }
-
-        /// <summary>
-        /// Shows the 'equipment' in-game menu screen.
-        /// </summary>
-        public void ShowEquipment()
-        {
-            CScreen = TheEquipmentScreen;
-            CScreen.SwitchTo();
-        }
-
-        /// <summary>
-        /// Shows the 'inventory' in-game menu screen.
-        /// </summary>
-        public void ShowInventory()
-        {
-            CScreen = TheInventoryScreen;
-            CScreen.SwitchTo();
-        }
-
+        
         /// <summary>
         /// Shows the 'singleplayer' main menu screen to the client.
         /// </summary>
@@ -450,17 +428,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// The "waiting on chunks" main menu screen.
         /// </summary>
         public ChunkWaitingScreen TheChunkWaitingScreen;
-
-        /// <summary>
-        /// The in-game "inventory" menu screen.
-        /// </summary>
-        InventoryScreen TheInventoryScreen;
-
-        /// <summary>
-        /// The in-game "equipment" menu screen.
-        /// </summary>
-        EquipmentScreen TheEquipmentScreen;
-
+        
         /// <summary>
         /// The current sound object for the playing background music.
         /// </summary>
