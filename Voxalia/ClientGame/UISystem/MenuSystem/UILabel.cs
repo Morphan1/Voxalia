@@ -14,12 +14,15 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public FontSet TextFont;
 
-        public UILabel(string btext, Func<float> xer, Func<float> yer, FontSet font)
+        public Func<int> MaxX = null;
+
+        public UILabel(string btext, Func<float> xer, Func<float> yer, FontSet font, Func<int> maxx = null)
         {
             Text = btext;
             TextFont = font;
             XGet = xer;
             YGet = yer;
+            MaxX = maxx;
         }
 
         public override void MouseEnter()
@@ -44,17 +47,19 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public override void Render(double delta)
         {
-            TextFont.DrawColoredText(Text, new Location(GetX(), GetY(), 0));
+            TextFont.DrawColoredText(MaxX != null ? TextFont.SplitAppropriately(Text,MaxX()): Text, new Location(GetX(), GetY(), 0));
         }
 
         public float GetWidth()
         {
-            return TextFont.MeasureFancyText(Text);
+            Location size = TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text);
+            return (float)size.X;
         }
 
         public float GetHeight()
         {
-            return TextFont.font_default.Height;
+            Location size = TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text);
+            return (float)size.Y;
         }
 
         public float GetX()
@@ -71,8 +76,9 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
             float tx = GetX();
             float ty = GetY();
-            return x > tx && x < tx + TextFont.MeasureFancyText(Text)
-                && y > ty && y < ty + TextFont.font_default.Height;
+            Location size = TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text);
+            return x > tx && x < tx + size.X
+                && y > ty && y < ty + size.Y;
         }
     }
 }

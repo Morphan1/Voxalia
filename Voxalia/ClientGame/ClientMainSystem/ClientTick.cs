@@ -215,6 +215,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public void Resetregion()
         {
             Items.Clear();
+            UpdateInventoryMenu();
             QuickBarPos = 0;
             BuildWorld();
         }

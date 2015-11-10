@@ -7,12 +7,14 @@ using Voxalia.ClientGame.UISystem.MenuSystem;
 using Voxalia.ClientGame.GraphicsSystems;
 using OpenTK;
 using OpenTK.Graphics;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
     public partial class Client
     {
         public UIMenu InventoryMenu;
+        public UIItemGroup UI_Inv_Items; // TODO: Scrollbox?
 
         public UIMenu EquipmentMenu;
 
@@ -48,6 +50,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             InventoryMenu.Add(inv_equipment);
             InventoryMenu.Add(inv_builderitems);
             InventoryMenu.Add(InventoryExitButton());
+            UI_Inv_Items = new UIItemGroup();
+            InventoryMenu.Add(UI_Inv_Items);
+            GenerateItemDescriptors();
+            UpdateInventoryMenu();
             EquipmentMenu = new UIMenu(this);
             UITextLink equ_inventory = new UITextLink("Inventory", "^0^e^7Inventory", "^7^e^0Inventory", () =>
             {
@@ -80,6 +86,56 @@ namespace Voxalia.ClientGame.ClientMainSystem
             BuilderItemsMenu.Add(bui_equipment);
             BuilderItemsMenu.Add(bui_builderitems);
             BuilderItemsMenu.Add(InventoryExitButton());
+        }
+
+        int ItemsListSize = 150;
+
+        UILabel UI_Inv_Displayname;
+        UILabel UI_Inv_Description;
+        UILabel UI_Inv_Detail;
+
+        void GenerateItemDescriptors()
+        {
+            UI_Inv_Displayname = new UILabel("<Display name>", () => 20 + ItemsListSize, () => Window.Height / 2, FontSets.SlightlyBigger, () => Window.Width - (20 + ItemsListSize));
+            UI_Inv_Description = new UILabel("<Description>", () => 20 + ItemsListSize, () => UI_Inv_Displayname.GetY() + UI_Inv_Displayname.GetHeight(), FontSets.Standard, () => Window.Width - (20 + ItemsListSize));
+            UI_Inv_Detail = new UILabel("<Detail>", () => 20 + ItemsListSize, () => UI_Inv_Description.GetY() + UI_Inv_Description.GetHeight(), FontSets.Standard, () => Window.Width - (20 + ItemsListSize));
+            InventoryMenu.Add(UI_Inv_Displayname);
+            InventoryMenu.Add(UI_Inv_Description);
+            InventoryMenu.Add(UI_Inv_Detail);
+        }
+
+        public void InventorySelectItem(int slot)
+        {
+            ItemStack item = GetItemForSlot(slot);
+            UI_Inv_Displayname.Text = item.DisplayName;
+            UI_Inv_Description.Text = item.Name + (item.SecondaryName != null && item.SecondaryName.Length > 0 ? " [" + item.SecondaryName + "]" : "") + "\n>" + item.Description;
+            UI_Inv_Detail.Text = "Count: " + item.Count + ", ColorCode: " + item.DrawColor + ", Texture: " + item.Tex.Name + ", Model: " + item.Mod.Name + ", Shared attributes: "+  item.SharedStr();
+        }
+
+        public void UpdateInventoryMenu()
+        {
+            UI_Inv_Items.Clear();
+            string pref1 = "^0^e^7";
+            string pref2 = "^7^e^0";
+            UITextLink prev = new UITextLink("Air", pref1 + "Air", pref2 + "Air", () =>
+            {
+                InventorySelectItem(0);
+            }
+            , () => 20, () => 20 + FontSets.SlightlyBigger.font_default.Height + 20, FontSets.Standard);
+            UI_Inv_Items.Add(prev);
+            for (int i = 0; i < Items.Count; i++)
+            {
+                string name = Items[i].DisplayName;
+                UITextLink p = prev;
+                int x = i;
+                UITextLink neo = new UITextLink(name, pref1 + name, pref2 + name, () =>
+                {
+                    InventorySelectItem(x + 1);
+                }
+                , () => p.GetX(), () => p.GetY() + p.GetHeight(), FontSets.Standard);
+                UI_Inv_Items.Add(neo);
+                prev = neo;
+            }
         }
 
         public void TickInvMenu()

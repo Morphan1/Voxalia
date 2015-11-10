@@ -121,18 +121,24 @@ namespace Voxalia.Shared
             }
         }
 
-        public override string ToString()
+        public string SharedStr()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("shared={");
+            sb.Append("{");
             foreach (KeyValuePair<string, float> val in SharedAttributes)
             {
                 sb.Append(val.Key + "=" + val.Value + ";");
             }
             sb.Append("}");
+            return sb.ToString();
+
+        }
+
+        public override string ToString()
+        {
             return Name + "[secondary=" + (SecondaryName == null ? "{NULL}" : SecondaryName) + ";display=" + DisplayName + ";count=" + Count
                 + ";description=" + Description + ";texture=" + GetTextureName() + ";model=" + GetModelName()
-                + ";drawcolor=" + DrawColor + ";datum=" + Datum + ";" + sb.ToString() + "]";
+                + ";drawcolor=" + DrawColor + ";datum=" + Datum + ";shared=" + SharedStr() + "]";
         }
     }
 }

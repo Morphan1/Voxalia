@@ -208,6 +208,7 @@
     <Compile Include="ClientGame\OtherSystems\ClientUtilities.cs" />
     <Compile Include="ClientGame\OtherSystems\ItemStack.cs" />
     <Compile Include="ClientGame\UISystem\KeyHandler.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIItemGroup.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIMenu.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UILabel.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UITextLink.cs" />

@@ -22,6 +22,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 ItemStack item = new ItemStack(TheClient, dat);
                 TheClient.Items.Insert(spot, item);
+                TheClient.UpdateInventoryMenu();
                 return true;
             }
             catch (Exception)
