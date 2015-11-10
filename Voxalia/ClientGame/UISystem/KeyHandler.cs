@@ -15,7 +15,7 @@ namespace Voxalia.ClientGame.UISystem
     {
         public static Dictionary<Key, CommandScript> Binds;
 
-        static Dictionary<string, Key> namestokeys;
+        public static Dictionary<string, Key> namestokeys;
         public static Dictionary<Key, string> keystonames;
 
         public static bool Modified = false;
@@ -452,7 +452,7 @@ namespace Voxalia.ClientGame.UISystem
             Binds.Remove(key);
             if (bind != null)
             {
-                CommandScript script = new CommandScript("_bind_for_" + key.ToString(), bind);
+                CommandScript script = new CommandScript("_bind_for_" + keystonames[key], bind);
                 script.Debug = DebugMode.MINIMAL;
                 Binds.Add(key, script);
             }

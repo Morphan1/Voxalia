@@ -39,7 +39,7 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
                 }
                 else
                 {
-                    entry.Info(TagParser.Escape(key + ": '" + cs.FullString() + "'"));
+                    entry.Info(TagParser.Escape(KeyHandler.keystonames[k] + ": '" + cs.FullString() + "'"));
                 }
             }
             else if (entry.Arguments.Count >= 2)

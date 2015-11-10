@@ -227,6 +227,13 @@
             Use at own risk.
             </summary>
         </member>
+        <member name="M:Frenetic.CommandSystem.CommandEntry.FullString(System.String)">
+            <summary>
+            Gets the full command string that represents this command.
+            </summary>
+            <param name="tabulation">How much space to include in front of the commands.</param>
+            <returns>The full command string.</returns>
+        </member>
         <member name="F:Frenetic.CommandSystem.CommandEntry.Name">
             <summary>
             The command name input by the user.
@@ -319,11 +326,21 @@
             </summary>
             <param name="system">The relevant command system.</param>
         </member>
-        <member name="M:Frenetic.CommandSystem.CommandEvents.ScriptRanPreScriptEvent.Run(System.String)">
+        <member name="M:Frenetic.CommandSystem.CommandEvents.ScriptRanPreScriptEvent.Init">
+            <summary>
+            Init the script event, registers it with the Run command.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommandEvents.ScriptRanPreScriptEvent.Destroy">
+            <summary>
+            Destroys the script event, unregisters it with the run command.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommandEvents.ScriptRanPreScriptEvent.Run(Frenetic.CommandSystem.QueueCmds.ScriptRanPreEventArgs)">
             <summary>
             Runs the script event with the given input.
             </summary>
-            <param name="scrName">The name of the script to run.</param>
+            <param name="oevt">The details of the script to be ran.</param>
             <returns>The event details after firing.</returns>
         </member>
         <member name="F:Frenetic.CommandSystem.CommandEvents.ScriptRanPreScriptEvent.ScriptName">
@@ -355,11 +372,21 @@
             </summary>
             <param name="system">The relevant command system.</param>
         </member>
-        <member name="M:Frenetic.CommandSystem.CommandEvents.ScriptRanPostScriptEvent.Run(System.String)">
+        <member name="M:Frenetic.CommandSystem.CommandEvents.ScriptRanPostScriptEvent.Init">
+            <summary>
+            Init the script event, registers it with the Run command.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommandEvents.ScriptRanPostScriptEvent.Destroy">
+            <summary>
+            Destroys the script event, unregisters it with the run command.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommandEvents.ScriptRanPostScriptEvent.Run(Frenetic.CommandSystem.QueueCmds.ScriptRanPostEventArgs)">
             <summary>
             Runs the script event with the given input.
             </summary>
-            <param name="scrName">The name of the script to run.</param>
+            <param name="oevt">The details to the script that was ran.</param>
             <returns>The event details after firing.</returns>
         </member>
         <member name="F:Frenetic.CommandSystem.CommandEvents.ScriptRanPostScriptEvent.ScriptName">
@@ -391,11 +418,21 @@
             </summary>
             <param name="system">The relevant command system.</param>
         </member>
-        <member name="M:Frenetic.CommandSystem.CommandEvents.ScriptRanScriptEvent.Run(System.String)">
+        <member name="M:Frenetic.CommandSystem.CommandEvents.ScriptRanScriptEvent.Init">
+            <summary>
+            Init the script event, registers it with the Run command.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommandEvents.ScriptRanScriptEvent.Destroy">
+            <summary>
+            Destroys the script event, unregisters it with the run command.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommandEvents.ScriptRanScriptEvent.Run(Frenetic.CommandSystem.QueueCmds.ScriptRanEventArgs)">
             <summary>
             Runs the script event with the given input.
             </summary>
-            <param name="scrName">The name of the script to run.</param>
+            <param name="oevt">The details of the script to be ran.</param>
             <returns>The event details after firing.</returns>
         </member>
         <member name="F:Frenetic.CommandSystem.CommandEvents.ScriptRanScriptEvent.ScriptName">
@@ -812,10 +849,11 @@
             Returns the name of the script.
             </summary>
         </member>
-        <member name="M:Frenetic.CommandSystem.CommandScript.FullString">
+        <member name="M:Frenetic.CommandSystem.CommandScript.FullString(System.String)">
             <summary>
             Gets the full command string that represents this script.
             </summary>
+            <param name="tabulation">How much space to include in front of the commands.</param>
             <returns>The full command string.</returns>
         </member>
         <member name="T:Frenetic.CommandSystem.CommonCmds.CleanmemCommand">
@@ -1051,9 +1089,38 @@
             <param name="_event">The event to get the handlers for.</param>
             <returns>The list of handlers.</returns>
         </member>
+        <member name="M:Frenetic.CommandSystem.ScriptEvent.Init">
+            <summary>
+            Set up the script event. For use by the event system itself.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.ScriptEvent.Destroy">
+            <summary>
+            Shut down the script event. For use by the event system itself.
+            </summary>
+        </member>
         <member name="F:Frenetic.CommandSystem.ScriptEvent.Handlers">
             <summary>
             All scripts that handle this event.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.ScriptEvent.RegisterEventHandler(System.Int32,Frenetic.CommandSystem.CommandScript)">
+            <summary>
+            Register a new event handler to this script event.
+            </summary>
+            <param name="prio">The priority to use.</param>
+            <param name="script">The script to register to the handler</param>
+        </member>
+        <member name="M:Frenetic.CommandSystem.ScriptEvent.RemoveEventHandler(System.String)">
+            <summary>
+            Removes an event handler by name.
+            </summary>
+            <param name="name">The name of the handler to remove.</param>
+            <returns>Whether there was a removal.</returns>
+        </member>
+        <member name="M:Frenetic.CommandSystem.ScriptEvent.Clear">
+            <summary>
+            Clears away all event handlers.
             </summary>
         </member>
         <member name="F:Frenetic.CommandSystem.ScriptEvent.System">
