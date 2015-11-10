@@ -158,12 +158,12 @@ namespace Voxalia.ClientGame.EntitySystem
                     speedmod *= item.SharedAttributes["cspeedm"];
                 }
             }
-            speedmod *= TheRegion.GetBlockMaterial(GetPosition() - new Location(0, 0, 0.05f)).GetSpeedMod();
+            Material mat = TheRegion.GetBlockMaterial(GetPosition() + new Location(0, 0, -0.05f));
+            speedmod *= mat.GetSpeedMod();
             CBody.StandingSpeed = CBStandSpeed * speedmod;
             CBody.CrouchingSpeed = CBCrouchSpeed * speedmod;
-            // TODO: FIX FRICTION
             float frictionmod = 1f;
-            frictionmod *= TheRegion.GetBlockMaterial(GetPosition() - new Location(0, 0, 0.05f)).GetFrictionMod();
+            frictionmod *= mat.GetFrictionMod();
             CBody.SlidingForce = CBSlideForce * frictionmod * Mass;
             CBody.AirForce = CBAirForce * frictionmod * Mass;
             CBody.TractionForce = CBTractionForce * frictionmod * Mass;
@@ -192,11 +192,7 @@ namespace Voxalia.ClientGame.EntitySystem
             if (IsFlying)
             {
                 Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, 0), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                if (Upward)
-                {
-                    forw.Z += 1;
-                }
-                SetPosition(GetPosition() + forw * TheRegion.Delta * 5);
+                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Upward ? 2 : 1));
                 CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 Body.LinearVelocity = new Vector3(0, 0, 0);
             }
@@ -248,7 +244,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             // TODO: Better variable control! (Server should command every detail!)
             CBody = new CharacterController(ServerLocation.ToBVector(), (float)HalfSize.Z * 2f, (float)HalfSize.Z * 1.1f,
-                (float)HalfSize.X, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
+                (float)HalfSize.Z * 1f, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
                 CBTractionForce * Mass, CBSlideSpeed, CBSlideForce * Mass, CBAirSpeed, CBAirForce * Mass, CBJumpSpeed, CBSlideJumpSpeed, CBGlueForce * Mass);
             CBody.StanceManager.DesiredStance = Stance.Standing;
             CBody.ViewDirection = new Vector3(1f, 0f, 0f);
@@ -339,12 +335,12 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override Location GetPosition()
         {
-            RigidTransform transf = RigidTransform.Identity;
             if (Body != null)
             {
+                RigidTransform transf = new RigidTransform(Vector3.Zero, Body.Orientation);
                 BoundingBox box;
                 Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
-                return base.GetPosition() - new Location(0, 0, (box.Max.Z - box.Min.Z) / 2);
+                return base.GetPosition() + new Location(0, 0, box.Min.Z);
             }
             return base.GetPosition() - new Location(0, 0, HalfSize.Z);
         }
@@ -353,10 +349,10 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             if (Body != null)
             {
-                RigidTransform transf = RigidTransform.Identity;
+                RigidTransform transf = new RigidTransform(Vector3.Zero, Body.Orientation);
                 BoundingBox box;
                 Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
-                base.SetPosition(pos + new Location(0, 0, (box.Max.Z - box.Min.Z) / 2));
+                base.SetPosition(pos + new Location(0, 0, -box.Min.Z));
             }
             else
             {
