@@ -167,6 +167,7 @@ namespace Voxalia.ClientGame.EntitySystem
             CBody.SlidingForce = CBSlideForce * frictionmod * Mass;
             CBody.AirForce = CBAirForce * frictionmod * Mass;
             CBody.TractionForce = CBTractionForce * frictionmod * Mass;
+            CBody.VerticalMotionConstraint.MaximumGlueForce = CBGlueForce * Mass;
             Vector2 movement = new Vector2(0, 0);
             if (Leftward)
             {
