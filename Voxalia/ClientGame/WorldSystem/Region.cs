@@ -50,6 +50,7 @@ namespace Voxalia.ClientGame.WorldSystem
             // Minimize penetration
             CollisionDetectionSettings.AllowedPenetration = 0.001f;
             PhysicsWorld = new Space(pl);
+            PhysicsWorld.TimeStepSettings.MaximumTimeStepsPerFrame = 10;
             // Set the world's general default gravity
             PhysicsWorld.ForceUpdater.Gravity = new BEPUutilities.Vector3(0, 0, -9.8f * 3f / 2f);
             // Load a CollisionUtil instance
@@ -206,8 +207,7 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 return;
             }
-            PhysicsWorld.TimeStepSettings.TimeStepDuration = (float)delta;
-            PhysicsWorld.Update(); // TODO: More specific settings?
+            PhysicsWorld.Update((float)delta); // TODO: More specific settings?
             for (int i = 0; i < Tickers.Count; i++)
             {
                 Tickers[i].Tick();
