@@ -85,6 +85,7 @@
     <Compile Include="ClientGame\AudioSystem\SoundEngine.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ChunkWaitingScreen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientBase.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\ClientInventory.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientPhysics.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientRender.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientTick.cs" />

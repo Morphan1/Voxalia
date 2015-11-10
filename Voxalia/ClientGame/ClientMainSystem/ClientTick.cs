@@ -176,6 +176,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     UIConsole.Tick();
                     Commands.Tick();
                     TickWorld(Delta);
+                    TickInvMenu();
                     Sounds.Update(CameraPos, CameraTarget - CameraPos, CameraUp, Player.GetVelocity(), Window.Focused);
                     CScreen.Tick();
                     Schedule.RunAllSyncTasks(0);

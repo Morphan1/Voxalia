@@ -731,7 +731,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public void Render2D()
         {
             GL.Disable(EnableCap.CullFace);
-            if (CVars.u_showhud.ValueB)
+            if (CVars.u_showhud.ValueB && CInvMenu == null)
             {
                 FontSets.Standard.DrawColoredText(FontSets.Standard.SplitAppropriately("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
                     + "\nHeld Item: " + GetItemForSlot(QuickBarPos).ToString(),
@@ -781,6 +781,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Textures.GetTexture("ui/hud/reticles/" + CVars.u_reticle.Value + "_br").Bind();
                 Rendering.RenderRectangle(cX + move, cY + move, cX + CVars.u_reticlescale.ValueI + move, cY + CVars.u_reticlescale.ValueI + move);
             }
+            RenderInvMenu();
         }
 
         /// <summary>

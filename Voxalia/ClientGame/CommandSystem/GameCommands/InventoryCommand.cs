@@ -21,7 +21,7 @@ namespace Voxalia.ClientGame.CommandSystem.GameCommands
 
         public override void Execute(CommandEntry entry)
         {
-            entry.Good("Inventory!");
+            TheClient.ShowInventory();
         }
     }
 }

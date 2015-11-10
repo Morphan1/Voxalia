@@ -261,6 +261,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CVars.a_musicvolume.OnChanged += onMusicVolumeChanged;
             CVars.a_musicpitch.OnChanged += onMusicPitchChanged;
             CVars.a_music.OnChanged += onMusicChanged;
+            SysConsole.Output(OutputType.INIT, "Preparing inventory...");
+            InitInventory();
             SysConsole.Output(OutputType.INIT, "Setting up screens...");
             TheMainMenuScreen = new MainMenuScreen() { TheClient = this };
             TheGameScreen = new GameScreen() { TheClient = this };
