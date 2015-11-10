@@ -202,7 +202,12 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             Delta = delta;
             GlobalTickTimeLocal += Delta;
-            PhysicsWorld.Update((float)delta); // TODO: More specific settings?
+            if (Delta <= 0)
+            {
+                return;
+            }
+            PhysicsWorld.TimeStepSettings.TimeStepDuration = (float)delta;
+            PhysicsWorld.Update(); // TODO: More specific settings?
             for (int i = 0; i < Tickers.Count; i++)
             {
                 Tickers[i].Tick();

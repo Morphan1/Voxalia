@@ -737,19 +737,24 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             Delta = delta;
             GlobalTickTime += Delta;
+            if (Delta <= 0)
+            {
+                return;
+            }
             opsat += Delta;
             while (opsat > 1.0)
             {
                 opsat -= 1.0;
                 OncePerSecondActions();
             }
-            PhysicsWorld.Update((float)delta); // TODO: More specific settings?
+            PhysicsWorld.TimeStepSettings.TimeStepDuration = (float)delta;
+            PhysicsWorld.Update(); // TODO: More specific settings?
             // TODO: Async tick
             for (int i = 0; i < Tickers.Count; i++)
             {
                 Tickers[i].Tick();
             }
-            for (int i = 0; i < Joints.Count; i++)
+            for (int i = 0; i < Joints.Count; i++) // TODO: Optimize!
             {
                 if (Joints[i].Enabled && Joints[i] is BaseFJoint)
                 {

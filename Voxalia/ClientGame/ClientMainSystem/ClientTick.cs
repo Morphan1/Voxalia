@@ -26,6 +26,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Object TickLock = new Object();
 
+        public double LastPosPacket = 0;
+
         /// <summary>
         /// Returns an item in the quick bar.
         /// Can return air.

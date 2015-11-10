@@ -293,6 +293,7 @@ namespace Voxalia.ServerGame.EntitySystem
             PreFlyMass = GetMass();
             SetMass(0);
             TheRegion.SendToAll(new FlagEntityPacketOut(this, EntityFlag.FLYING, 1));
+            TheRegion.SendToAll(new FlagEntityPacketOut(this, EntityFlag.MASS, 0));
         }
 
         public void Unfly()
