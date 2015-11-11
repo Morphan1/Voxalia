@@ -36,7 +36,7 @@ vec4 regularize(vec4 input_r) // TODO: Is this working the best it can?
 	{
 		return input_r;
 	}
-	return vec4(input_r.xyz / ((input_r.x >= input_r.y && input_r.x >= input_r.z) ? input_r.x: ((input_r.y >= input_r.z) ? input_r.y: input_r.z)), input_r.w);
+	return vec4(input_r.xyz / max(max(input_r.x, input_r.y), input_r.z), input_r.w);
 }
 
 vec4 getGodRay()

@@ -1,5 +1,7 @@
 #version 430 core
 
+#INCLUDE_STATEMENTS_HERE
+
 layout (binding = 0) uniform sampler2D tex;
 
 layout (location = 0) in vec4 f_color;
@@ -28,5 +30,7 @@ void main()
         discard;
     }
 	color = tcolor * f_color;
+#ifdef MCM_GOOD_GRAPHICS
     color = vec4(desaturate(color.xyz), color.w);
+#endif
 }
