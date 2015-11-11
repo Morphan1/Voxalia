@@ -540,7 +540,7 @@ namespace Voxalia.ServerGame.WorldSystem
             LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30));
             while (!AllChunksLoadedFully())
             {
-                TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-world scheduler
+                TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-world scheduler // Also don't freeze the entire server just because we're waiting on chunks >.>
                 Thread.Sleep(16);
             }
             SysConsole.Output(OutputType.INIT, "Finished building chunks!");

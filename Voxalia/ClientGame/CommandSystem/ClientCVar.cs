@@ -22,7 +22,7 @@ namespace Voxalia.ClientGame.CommandSystem
         public CVar g_timescale, g_firstperson;
 
         // Network CVars
-        public CVar n_first, n_debugmovement, n_movement_maxdistance, n_movement_adjustment;
+        public CVar n_first, n_debugmovement, n_movement_maxdistance, n_movement_adjustment, n_movemode;
 
         // Renderer CVars
         public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_vsync, r_lighting, r_renderwireframe,
@@ -61,6 +61,7 @@ namespace Voxalia.ClientGame.CommandSystem
             n_debugmovement = Register("n_debugmovement", "false", CVarFlag.Boolean, "Whether to debug movement networking.");
             n_movement_maxdistance = Register("n_movement_maxdistance", "20", CVarFlag.Numeric, "How far apart the client can move from the serverside player before snapping to the correct location.");
             n_movement_adjustment = Register("n_movement_adjustment", "0.1", CVarFlag.Numeric, "How rapidly to adjust the player's position to better match the server. Smaller numbers yield quicker results.");
+            n_movemode = Register("n_movemode", "1", CVarFlag.Numeric, "Which movement mode to use. 1 = run-and-adjust, 2 = back-trace.");
             // Renderer CVars
             r_fullscreen = Register("r_fullscreen", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use fullscreen mode.");
             r_width = Register("r_width", "1280", CVarFlag.Numeric | CVarFlag.Delayed, "What width the window should be.");

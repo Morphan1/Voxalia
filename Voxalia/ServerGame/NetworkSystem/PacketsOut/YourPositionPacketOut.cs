@@ -5,13 +5,14 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     public class YourPositionPacketOut: AbstractPacketOut
     {
-        public YourPositionPacketOut(Location pos, Location vel, Location avel, Stance stance)
+        public YourPositionPacketOut(long tID, Location pos, Location vel, Location avel, Stance stance)
         {
             ID = 1;
-            Data = new byte[12 + 12 + 1];
-            pos.ToBytes().CopyTo(Data, 0);
-            vel.ToBytes().CopyTo(Data, 12);
-            Data[12 + 12] = (byte)(stance == Stance.Standing ? 0 : 1);
+            Data = new byte[8 + 12 + 12 + 1];
+            Utilities.LongToBytes(tID).CopyTo(Data, 0);
+            pos.ToBytes().CopyTo(Data, 8);
+            vel.ToBytes().CopyTo(Data, 8 + 12);
+            Data[8 + 12 + 12] = (byte)(stance == Stance.Standing ? 0 : 1);
         }
     }
 }

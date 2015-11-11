@@ -1,4 +1,5 @@
-﻿using Voxalia.Shared;
+﻿using System;
+using Voxalia.Shared;
 using Voxalia.ClientGame.UISystem;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 using BEPUutilities;
@@ -11,6 +12,7 @@ using Voxalia.ClientGame.OtherSystems;
 using Voxalia.Shared.Collision;
 using BEPUphysics.Character;
 using OpenTK.Graphics.OpenGL4;
+using Frenetic;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -114,6 +116,57 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             return TheRegion.Collision.ShouldCollide(entry);
         }
+
+        public ListQueue<UserInputSet> Input = new ListQueue<UserInputSet>();
+
+        double lPT;
+
+        public void PacketFromServer(long ID, Location pos, Location vel)
+        {
+            if (TheClient.CVars.n_movemode.ValueI == 2)
+            {
+            }
+            else
+            {
+                double delta = lPT - TheRegion.GlobalTickTimeLocal;
+                ServerLocation = pos;
+                lPT = TheRegion.GlobalTickTimeLocal;
+                Location dir = pos - TheClient.Player.GetPosition();
+                if (dir.LengthSquared() < TheClient.CVars.n_movement_maxdistance.ValueF * TheClient.CVars.n_movement_maxdistance.ValueF)
+                {
+                    SetPosition(GetPosition() + dir / Math.Max(TheClient.CVars.n_movement_adjustment.ValueF / delta, 1));
+                    Location veldir = vel - GetVelocity();
+                    SetVelocity(GetVelocity() + veldir / Math.Max(TheClient.CVars.n_movement_adjustment.ValueF / delta, 1));
+                }
+                else
+                {
+                    TheClient.Player.SetPosition(pos);
+                    TheClient.Player.SetVelocity(vel);
+                }
+            }
+        }
+
+        long cPacketID = 0;
+
+        public void UpdateLocalMovement()
+        {
+            KeysPacketData kpd = (Forward ? KeysPacketData.FORWARD : 0) | (Backward ? KeysPacketData.BACKWARD : 0)
+                 | (Leftward ? KeysPacketData.LEFTWARD : 0) | (Rightward ? KeysPacketData.RIGHTWARD : 0)
+                 | (Upward ? KeysPacketData.UPWARD : 0) | (Walk ? KeysPacketData.WALK : 0)
+                  | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK : 0);
+            TheClient.Network.SendPacket(new KeysPacketOut(cPacketID, kpd, Direction));
+            UserInputSet uis = new UserInputSet()
+            {
+                ID = cPacketID++,
+                Forward = Forward,
+                Backward = Backward,
+                Leftward = Leftward,
+                Rightward = Rightward,
+                Direction = Direction,
+                GlobalTimeLocal = TheRegion.GlobalTickTimeLocal
+            };
+            Input.Push(uis);
+        }
         
         public override void Tick()
         {
@@ -197,11 +250,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 Body.LinearVelocity = new Vector3(0, 0, 0);
             }
-            KeysPacketData kpd = (Forward ? KeysPacketData.FORWARD : 0) | (Backward ? KeysPacketData.BACKWARD : 0)
-                 | (Leftward ? KeysPacketData.LEFTWARD : 0) | (Rightward ? KeysPacketData.RIGHTWARD : 0)
-                 | (Upward ? KeysPacketData.UPWARD : 0) | (Walk ? KeysPacketData.WALK: 0)
-                  | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK: 0);
-            TheClient.Network.SendPacket(new KeysPacketOut(kpd, Direction));
+            UpdateLocalMovement();
             if (Flashlight != null)
             {
                 Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
@@ -394,5 +443,22 @@ namespace Voxalia.ClientGame.EntitySystem
                 model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
             }
         }
+    }
+
+    public class UserInputSet
+    {
+        public long ID;
+
+        public double GlobalTimeLocal;
+
+        public Location Direction;
+
+        public bool Forward;
+
+        public bool Backward;
+
+        public bool Leftward;
+
+        public bool Rightward;
     }
 }

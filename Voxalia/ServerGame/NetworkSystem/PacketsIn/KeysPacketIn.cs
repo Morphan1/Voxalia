@@ -7,11 +7,12 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 2 + 4 + 4)
+            if (data.Length != 8 + 2 + 4 + 4)
             {
                 return false;
             }
-            KeysPacketData val = (KeysPacketData)Utilities.BytesToUshort(Utilities.BytesPartial(data, 0, 2));
+            long tid = Utilities.BytesToLong(Utilities.BytesPartial(data, 0, 8));
+            KeysPacketData val = (KeysPacketData)Utilities.BytesToUshort(Utilities.BytesPartial(data, 8, 2));
             Player.Forward = val.HasFlag(KeysPacketData.FORWARD);
             Player.Backward = val.HasFlag(KeysPacketData.BACKWARD);
             Player.Leftward = val.HasFlag(KeysPacketData.LEFTWARD);
@@ -20,14 +21,14 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             Player.Walk = val.HasFlag(KeysPacketData.WALK);
             Player.Click = val.HasFlag(KeysPacketData.CLICK);
             Player.AltClick = val.HasFlag(KeysPacketData.ALTCLICK);
-            Player.Network.SendPacket(new YourPositionPacketOut(Player.GetPosition(), Player.GetVelocity(), new Location(0, 0, 0), Player.CBody.StanceManager.CurrentStance));
-            Player.Direction.Yaw = Utilities.BytesToFloat(Utilities.BytesPartial(data, 2, 4));
-            Player.Direction.Pitch = Utilities.BytesToFloat(Utilities.BytesPartial(data, 2 + 4, 4));
+            Player.Network.SendPacket(new YourPositionPacketOut(tid, Player.GetPosition(), Player.GetVelocity(), new Location(0, 0, 0), Player.CBody.StanceManager.CurrentStance));
+            Player.Direction.Yaw = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2, 4));
+            Player.Direction.Pitch = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4, 4));
             return true;
         }
     }
 
-    public enum KeysPacketData : ushort
+    public enum KeysPacketData : ushort // TODO: Network enum?
     {
         FORWARD = 1,
         BACKWARD = 2,
