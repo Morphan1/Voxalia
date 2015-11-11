@@ -1575,7 +1575,7 @@
             <summary>
             Initializes the <see cref="T:Frenetic.ListQueue`1"/> with a specified capacity.
             </summary>
-            <param name="capacity">The number of items to be expect to hold, is non-definite.</param>
+            <param name="capacity">The number of items to expect to hold, is non-definite.</param>
         </member>
         <member name="M:Frenetic.ListQueue`1.Peek">
             <summary>

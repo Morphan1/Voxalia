@@ -202,11 +202,11 @@ namespace Voxalia.ClientGame.WorldSystem
         public void TickWorld(double delta)
         {
             Delta = delta;
-            GlobalTickTimeLocal += Delta;
             if (Delta <= 0)
             {
                 return;
             }
+            GlobalTickTimeLocal += Delta;
             PhysicsWorld.Update((float)delta); // TODO: More specific settings?
             for (int i = 0; i < Tickers.Count; i++)
             {

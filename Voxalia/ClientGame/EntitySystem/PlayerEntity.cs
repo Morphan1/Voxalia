@@ -1,10 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using Voxalia.Shared;
 using Voxalia.ClientGame.UISystem;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
+using BEPUphysics.BroadPhaseSystems;
+using BEPUphysics.OtherSpaceStages;
+using BEPUphysics.UpdateableSystems;
+using BEPUphysics.NarrowPhaseSystems.Pairs;
+using BEPUphysics.PositionUpdating;
+using BEPUphysics.NarrowPhaseSystems;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 using Voxalia.ClientGame.WorldSystem;
@@ -117,20 +124,83 @@ namespace Voxalia.ClientGame.EntitySystem
             return TheRegion.Collision.ShouldCollide(entry);
         }
 
+        UserInputSet lUIS = null;
+
         public ListQueue<UserInputSet> Input = new ListQueue<UserInputSet>();
 
         double lPT;
-
+        
         public void PacketFromServer(long ID, Location pos, Location vel)
         {
+            double now = TheRegion.GlobalTickTimeLocal;
+            ServerLocation = pos;
             if (TheClient.CVars.n_movemode.ValueI == 2)
             {
+                AddUIS();
+                SetPosition(pos);
+                SetVelocity(vel);
+                double delta = 0;
+                float tstep = TheRegion.PhysicsWorld.TimeStepSettings.TimeStepDuration;
+                int xf = 0;
+                while (xf < Input.Length)
+                {
+                    UserInputSet uis = Input[xf];
+                    if (uis.ID < ID)
+                    {
+                        Input.Pop();
+                        continue;
+                    }
+                    else
+                    {
+                        xf++;
+                    }
+                    if (xf < 2)
+                    {
+                        continue;
+                    }
+                    UserInputSet prev = Input[xf - 2];
+                    SetBodyMovement(prev);
+                    delta += uis.GlobalTimeLocal - prev.GlobalTimeLocal;
+                    lPT = uis.GlobalTimeLocal;
+                    //Vector3 ppos = CBody.Body.Position;
+                    while (delta > tstep)
+                    {
+                        TryToJump();
+                        SetMoveSpeed();
+                        ((IBeforeSolverUpdateable)CBody).Update(tstep);
+                        CBody.HorizontalMotionConstraint.Update(tstep);
+                        CBody.VerticalMotionConstraint.Update(tstep);
+                        ((IForceUpdateable)CBody.Body).UpdateForForces(tstep);
+                        CBody.Body.CollisionInformation.UpdateBoundingBox(tstep);
+                        ((IBroadPhaseEntryOwner)CBody.Body).Entry.UpdateBoundingBox();
+                        List<BroadPhaseEntry> bpes = new List<BroadPhaseEntry>();
+                        TheRegion.PhysicsWorld.BroadPhase.QueryAccelerator.GetEntries(CBody.Body.CollisionInformation.BoundingBox, bpes);
+                        foreach (BroadPhaseEntry bpe in bpes)
+                        {
+                            if (CBody.Body.CollisionInformation != bpe && TheRegion.PhysicsWorld.NarrowPhase.GetPair(CBody.Body.CollisionInformation, bpe) == null)
+                            {
+                                NarrowPhasePair npp = NarrowPhaseHelper.GetPairHandler(CBody.Body.CollisionInformation, bpe);
+                                TheRegion.PhysicsWorld.NarrowPhase.OnCreatePair(npp);
+                            }
+                        }
+                        foreach (CollidablePairHandler entry in CBody.Body.CollisionInformation.Pairs)
+                        {
+                            entry.UpdateCollision(tstep);
+                            entry.UpdateTimeOfImpact(CBody.Body.CollisionInformation, tstep);
+                        }
+                        ((ICCDPositionUpdateable)CBody.Body).PreUpdatePosition(tstep);
+                        ((ICCDPositionUpdateable)CBody.Body).UpdateTimesOfImpact(tstep);
+                        ((ICCDPositionUpdateable)CBody.Body).UpdatePositionContinuously(tstep);
+                        delta -= tstep;
+                    }
+                    //SysConsole.Output(OutputType.INFO, "MOVE: " + (CBody.Body.Position - ppos));
+                }
+                SetBodyMovement(lUIS); // Just in case!
+                AddUIS();
             }
             else
             {
-                double delta = lPT - TheRegion.GlobalTickTimeLocal;
-                ServerLocation = pos;
-                lPT = TheRegion.GlobalTickTimeLocal;
+                double delta = lPT - now;
                 Location dir = pos - TheClient.Player.GetPosition();
                 if (dir.LengthSquared() < TheClient.CVars.n_movement_maxdistance.ValueF * TheClient.CVars.n_movement_maxdistance.ValueF)
                 {
@@ -143,31 +213,111 @@ namespace Voxalia.ClientGame.EntitySystem
                     TheClient.Player.SetPosition(pos);
                     TheClient.Player.SetVelocity(vel);
                 }
+                lPT = now;
             }
         }
 
         long cPacketID = 0;
 
-        public void UpdateLocalMovement()
+        public void AddUIS()
         {
-            KeysPacketData kpd = (Forward ? KeysPacketData.FORWARD : 0) | (Backward ? KeysPacketData.BACKWARD : 0)
-                 | (Leftward ? KeysPacketData.LEFTWARD : 0) | (Rightward ? KeysPacketData.RIGHTWARD : 0)
-                 | (Upward ? KeysPacketData.UPWARD : 0) | (Walk ? KeysPacketData.WALK : 0)
-                  | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK : 0);
-            TheClient.Network.SendPacket(new KeysPacketOut(cPacketID, kpd, Direction));
             UserInputSet uis = new UserInputSet()
             {
                 ID = cPacketID++,
+                Upward = Upward,
+                Walk = Walk,
                 Forward = Forward,
                 Backward = Backward,
                 Leftward = Leftward,
                 Rightward = Rightward,
                 Direction = Direction,
+                pup = pup,
                 GlobalTimeLocal = TheRegion.GlobalTickTimeLocal
             };
             Input.Push(uis);
+            lUIS = uis;
         }
-        
+
+        public void UpdateLocalMovement()
+        {
+            AddUIS();
+            KeysPacketData kpd = (Forward ? KeysPacketData.FORWARD : 0) | (Backward ? KeysPacketData.BACKWARD : 0)
+                 | (Leftward ? KeysPacketData.LEFTWARD : 0) | (Rightward ? KeysPacketData.RIGHTWARD : 0)
+                 | (Upward ? KeysPacketData.UPWARD : 0) | (Walk ? KeysPacketData.WALK : 0)
+                  | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK : 0);
+            TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction));
+        }
+
+        public void SetBodyMovement(UserInputSet uis)
+        {
+            Vector2 movement = new Vector2(0, 0);
+            if (uis.Leftward)
+            {
+                movement.X = -1;
+            }
+            if (uis.Rightward)
+            {
+                movement.X = 1;
+            }
+            if (uis.Backward)
+            {
+                movement.Y = -1;
+            }
+            if (uis.Forward)
+            {
+                movement.Y = 1;
+            }
+            if (movement.LengthSquared() > 0)
+            {
+                movement.Normalize();
+            }
+            CBody.ViewDirection = Utilities.ForwardVector_Deg(uis.Direction.Yaw, uis.Direction.Pitch).ToBVector();
+            CBody.HorizontalMotionConstraint.MovementDirection = movement;
+            if (IsFlying)
+            {
+                Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, 0), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
+                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Upward ? 2 : 1));
+                CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
+                Body.LinearVelocity = new Vector3(0, 0, 0);
+            }
+        }
+
+        public void TryToJump()
+        {
+            if (Upward && !IsFlying && !pup && CBody.SupportFinder.HasSupport)
+            {
+                CBody.Jump();
+                pup = true;
+            }
+            else if (!Upward)
+            {
+                pup = false;
+            }
+        }
+
+        public void SetMoveSpeed()
+        {
+            float speedmod = 1f;
+            if (Click)
+            {
+                ItemStack item = TheClient.GetItemForSlot(TheClient.QuickBarPos);
+                if (item.SharedAttributes.ContainsKey("charge") && item.SharedAttributes["charge"] == 1f)
+                {
+                    speedmod *= item.SharedAttributes["cspeedm"];
+                }
+            }
+            Material mat = TheRegion.GetBlockMaterial(GetPosition() + new Location(0, 0, -0.05f));
+            speedmod *= mat.GetSpeedMod();
+            CBody.StandingSpeed = CBStandSpeed * speedmod;
+            CBody.CrouchingSpeed = CBCrouchSpeed * speedmod;
+            float frictionmod = 1f;
+            frictionmod *= mat.GetFrictionMod();
+            CBody.SlidingForce = CBSlideForce * frictionmod * Mass;
+            CBody.AirForce = CBAirForce * frictionmod * Mass;
+            CBody.TractionForce = CBTractionForce * frictionmod * Mass;
+            CBody.VerticalMotionConstraint.MaximumGlueForce = CBGlueForce * Mass;
+        }
+
         public override void Tick()
         {
             if (CBody == null || Body == null)
@@ -192,65 +342,10 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 Direction.Pitch = -89.9f;
             }
-            CBody.ViewDirection = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch).ToBVector();
-            if (Upward && !IsFlying && !pup && CBody.SupportFinder.HasSupport)
-            {
-                CBody.Jump();
-                pup = true;
-            }
-            else if (!Upward)
-            {
-                pup = false;
-            }
-            float speedmod = 1f;
-            if (Click)
-            {
-                ItemStack item = TheClient.GetItemForSlot(TheClient.QuickBarPos);
-                if (item.SharedAttributes.ContainsKey("charge") && item.SharedAttributes["charge"] == 1f)
-                {
-                    speedmod *= item.SharedAttributes["cspeedm"];
-                }
-            }
-            Material mat = TheRegion.GetBlockMaterial(GetPosition() + new Location(0, 0, -0.05f));
-            speedmod *= mat.GetSpeedMod();
-            CBody.StandingSpeed = CBStandSpeed * speedmod;
-            CBody.CrouchingSpeed = CBCrouchSpeed * speedmod;
-            float frictionmod = 1f;
-            frictionmod *= mat.GetFrictionMod();
-            CBody.SlidingForce = CBSlideForce * frictionmod * Mass;
-            CBody.AirForce = CBAirForce * frictionmod * Mass;
-            CBody.TractionForce = CBTractionForce * frictionmod * Mass;
-            CBody.VerticalMotionConstraint.MaximumGlueForce = CBGlueForce * Mass;
-            Vector2 movement = new Vector2(0, 0);
-            if (Leftward)
-            {
-                movement.X = -1;
-            }
-            if (Rightward)
-            {
-                movement.X = 1;
-            }
-            if (Backward)
-            {
-                movement.Y = -1;
-            }
-            if (Forward)
-            {
-                movement.Y = 1;
-            }
-            if (movement.LengthSquared() > 0)
-            {
-                movement.Normalize();
-            }
-            CBody.HorizontalMotionConstraint.MovementDirection = movement;
-            if (IsFlying)
-            {
-                Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, 0), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Upward ? 2 : 1));
-                CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
-                Body.LinearVelocity = new Vector3(0, 0, 0);
-            }
+            TryToJump();
+            SetMoveSpeed();
             UpdateLocalMovement();
+            SetBodyMovement(lUIS);
             if (Flashlight != null)
             {
                 Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
@@ -452,6 +547,12 @@ namespace Voxalia.ClientGame.EntitySystem
         public double GlobalTimeLocal;
 
         public Location Direction;
+
+        public bool Upward;
+
+        public bool pup;
+
+        public bool Walk;
 
         public bool Forward;
 
