@@ -1,5 +1,7 @@
 #version 430 core
 
+#INCLUDE_STATEMENTS_HERE
+
 layout (binding = 0) uniform sampler2D colortex;
 layout (binding = 1) uniform sampler2D positiontex;
 layout (binding = 2) uniform sampler2D normaltex;
@@ -66,7 +68,11 @@ void main()
 	float dist = texture(depthtex, f_texcoord).r;// * ((zfar - znear) + znear) / fog_dist;
 	vec4 light_color = regularize(vec4(ambient + renderhint.z, 0.0) * colortex_color + shadow_light_color);
 	godray = getGodRay() * vec4(grcolor, 1.0);
+#ifdef MCM_GOOD_GRAPHICS
 	color = vec4(mix(light_color.xyz, fogCol.xyz, 1.0 - exp(-dist * fogCol.w)), 1.0);
+#else
+	color = vec4(light_color.xyz, 1.0);
+#endif
 	if (texture(bwtex, f_texcoord).w > 0.01)
 	{
 		color = vec4(desaturate(color.xyz), 1.0);
