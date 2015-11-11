@@ -526,11 +526,13 @@ namespace Voxalia.ServerGame.WorldSystem
             else
             {
                 Config = new YAMLConfiguration("");
-                Config.Set("general.seed", 100); // TODO: Random-generate?
             }
             Config.Changed += new EventHandler(configChanged);
+            Config.Set("general.IMPORTANT_NOTE", "Edit this configuration at your own risk!");
+            Config.Set("general.name", Name);
+            Config.Default("general.seed", Utilities.UtilRandom.Next(short.MaxValue * 2));
             CFGEdited = true;
-            Seed = (short)Config.ReadInt("general.seed", 100); // TODO: Generate or load
+            Seed = (short)Config.ReadInt("general.seed", 100);
             Random seedGen = new Random(Seed);
             Seed2 = (short)(seedGen.Next(short.MaxValue * 2) - short.MaxValue);
             LoadRegion(new Location(-MaxViewRadiusInChunks / 4 * 30), new Location(MaxViewRadiusInChunks / 4 * 30));

@@ -13,26 +13,26 @@ namespace Voxalia.Shared
         {
             if (string.IsNullOrEmpty(input))
             {
-                Data = new Dictionary<string, dynamic>();
+                Data = new Dictionary<object, object>();
             }
             else
             {
                 Deserializer des = new Deserializer();
-                Data = des.Deserialize<Dictionary<string, dynamic>>(new StringReader(input));
+                Data = des.Deserialize<Dictionary<object, object>>(new StringReader(input));
             }
         }
 
-        public YAMLConfiguration(Dictionary<string, dynamic> datas)
+        public YAMLConfiguration(Dictionary<object, object> datas)
         {
             Data = datas;
         }
 
-        public Dictionary<string, dynamic> Data;
+        public Dictionary<object, object> Data;
 
         public bool IsList(string path)
         {
             List<object> res = ReadList(path);
-            return res != null && res.Count > 0;
+            return res != null;
         }
 
         public List<string> ReadStringList(string path)
@@ -58,7 +58,7 @@ namespace Voxalia.Shared
             while (i < data.Length - 1)
             {
                 dynamic nobj = obj.ContainsKey(data[i]) ? obj[data[i]] : null;
-                if (nobj == null || !(nobj is Dictionary<string, dynamic> || nobj is Dictionary<string, object> || nobj is Dictionary<object, object>))
+                if (nobj == null || !(nobj is Dictionary<object, object>))
                 {
                     return null;
                 }
@@ -69,9 +69,9 @@ namespace Voxalia.Shared
             {
                 return null;
             }
-            if (obj[data[i]] is List<dynamic>)
+            if (obj[data[i]] is List<object>)
             {
-                List<dynamic> objs = (List<dynamic>)obj[data[i]];
+                List<object> objs = (List<object>)obj[data[i]];
                 return objs;
             }
             return null;
@@ -79,44 +79,135 @@ namespace Voxalia.Shared
 
         public float ReadFloat(string path, float def)
         {
-            float f;
-            if (float.TryParse(Read(path, def.ToString()), out f))
-            {
-                return f;
-            }
-            return def;
+            return (float)ReadDouble(path, def);
         }
 
-        public int ReadInt(string path, int def)
-        {
-            int i;
-            if (int.TryParse(Read(path, def.ToString()), out i))
-            {
-                return i;
-            }
-            return def;
-        }
-
-        public string Read(string path, string def)
+        public double ReadDouble(string path, double def)
         {
             string[] data = path.Split('.');
             int i = 0;
-            dynamic obj = Data;
+            object obj = Data;
             while (i < data.Length - 1)
             {
-                dynamic nobj = obj.ContainsKey(data[i]) ? obj[data[i]] : null;
-                if (nobj == null || !(nobj is Dictionary<string, dynamic> || nobj is Dictionary<string, object> || nobj is Dictionary<object, object>))
+                // TODO: TryGetValue?
+                object nobj = ((Dictionary<object, object>)obj).ContainsKey(data[i]) ? ((Dictionary<object, object>)obj)[data[i]] : null;
+                if (nobj == null || !(nobj is Dictionary<object, object>))
                 {
                     return def;
                 }
                 obj = nobj;
                 i++;
             }
-            if (!obj.ContainsKey(data[i]))
+            if (!((Dictionary<object, object>)obj).ContainsKey(data[i]))
             {
                 return def;
             }
-            return obj[data[i]].ToString();
+            Object iobj = ((Dictionary<object, object>)obj)[data[i]];
+            if (iobj is Double)
+            {
+                return (Double)iobj;
+            }
+            if (iobj is Single)
+            {
+                return (Single)iobj;
+            }
+            if (iobj is Int64)
+            {
+                return (double)((Int64)iobj);
+            }
+            if (iobj is Int32)
+            {
+                return (double)((Int32)iobj);
+            }
+            double xtemp;
+            if (double.TryParse(iobj.ToString(), out xtemp))
+            {
+                return xtemp;
+            }
+            return def;
+        }
+
+        public int ReadInt(string path, int def)
+        {
+            return (int)ReadLong(path, def);
+        }
+
+        public long ReadLong(string path, long def)
+        {
+            string[] data = path.Split('.');
+            int i = 0;
+            object obj = Data;
+            while (i < data.Length - 1)
+            {
+                // TODO: TryGetValue?
+                object nobj = ((Dictionary<object, object>)obj).ContainsKey(data[i]) ? ((Dictionary<object, object>)obj)[data[i]] : null;
+                if (nobj == null || !(nobj is Dictionary<object, object>))
+                {
+                    return def;
+                }
+                obj = nobj;
+                i++;
+            }
+            if (!((Dictionary<object, object>)obj).ContainsKey(data[i]))
+            {
+                return def;
+            }
+            Object iobj = ((Dictionary<object, object>)obj)[data[i]];
+            if (iobj is Int64)
+            {
+                return (Int64)iobj;
+            }
+            if (iobj is Int32)
+            {
+                return (Int32)iobj;
+            }
+            if (iobj is Double)
+            {
+                return (long)((Double)iobj);
+            }
+            if (iobj is Single)
+            {
+                return (long)((Single)iobj);
+            }
+            long xtemp;
+            if (long.TryParse(iobj.ToString(), out xtemp))
+            {
+                return xtemp;
+            }
+            return def;
+        }
+
+        public string ReadString(string path, string def)
+        {
+            object obj = Read(path, def);
+            if (obj == null)
+            {
+                return def;
+            }
+            return obj.ToString();
+        }
+
+        public object Read(string path, object def)
+        {
+            string[] data = path.Split('.');
+            int i = 0;
+            object obj = Data;
+            while (i < data.Length - 1)
+            {
+                // TODO: TryGetValue?
+                object nobj = ((Dictionary<object, object>)obj).ContainsKey(data[i]) ? ((Dictionary<object, object>)obj)[data[i]] : null;
+                if (nobj == null || !(nobj is Dictionary<object, object>))
+                {
+                    return def;
+                }
+                obj = nobj;
+                i++;
+            }
+            if (!((Dictionary<object, object>)obj).ContainsKey(data[i]))
+            {
+                return def;
+            }
+            return ((Dictionary<object, object>)obj)[data[i]];
         }
 
         public bool HasKey(string path, string key)
@@ -128,29 +219,34 @@ namespace Voxalia.Shared
         {
             if (string.IsNullOrEmpty(path))
             {
-                return new List<string>(Data.Keys);
+                List<string> atemp = new List<string>();
+                foreach (object xtobj in Data.Keys)
+                {
+                    atemp.Add(xtobj + "");
+                }
+                return atemp;
             }
             string[] data = path.Split('.');
             int i = 0;
-            dynamic obj = Data;
+            object obj = Data;
             while (i < data.Length - 1)
             {
-                dynamic nobj = obj.ContainsKey(data[i]) ? obj[data[i]] : null;
-                if (nobj == null || !(nobj is Dictionary<string, dynamic> || nobj is Dictionary<string, object> || nobj is Dictionary<object, object>))
+                dynamic nobj = ((Dictionary<object, object>)obj).ContainsKey(data[i]) ? ((Dictionary<object, object>)obj)[data[i]] : null;
+                if (nobj == null || !(nobj is Dictionary<object, object>))
                 {
                     return new List<string>();
                 }
                 obj = nobj;
                 i++;
             }
-            if (!obj.ContainsKey(data[i]))
+            if (!((Dictionary<object, object>)obj).ContainsKey(data[i]))
             {
                 return new List<string>();
             }
-            dynamic tobj = obj[data[i]];
+            object tobj = ((Dictionary<object, object>)obj)[data[i]];
             if (tobj is Dictionary<object, object>)
             {
-                Dictionary<object, object>.KeyCollection objs = tobj.Keys;
+                Dictionary<object, object>.KeyCollection objs = ((Dictionary<object, object>)tobj).Keys;
                 List<string> toret = new List<string>();
                 foreach (object o in objs)
                 {
@@ -162,7 +258,12 @@ namespace Voxalia.Shared
             {
                 return new List<string>();
             }
-            return new List<string>(tobj.Keys);
+            List<string> temp = new List<string>();
+            foreach (object xtobj in ((Dictionary<object, object>)tobj).Keys)
+            {
+                temp.Add(xtobj + "");
+            }
+            return temp;
         }
 
         public YAMLConfiguration GetConfigurationSection(string path)
@@ -173,62 +274,79 @@ namespace Voxalia.Shared
             }
             string[] data = path.Split('.');
             int i = 0;
-            dynamic obj = Data;
+            object obj = Data;
             while (i < data.Length - 1)
             {
-                dynamic nobj = obj.ContainsKey(data[i]) ? obj[data[i]] : null;
-                if (nobj == null || !(nobj is Dictionary<string, dynamic> || nobj is Dictionary<string, object> || nobj is Dictionary<object, object>))
+                // TODO: TryGetValue?
+                object nobj = ((Dictionary<object, object>)obj).ContainsKey(data[i]) ? ((Dictionary<object, object>)obj)[data[i]] : null;
+                if (nobj == null || !(nobj is Dictionary<object, object>))
                 {
                     return null;
                 }
                 obj = nobj;
                 i++;
             }
-            if (!obj.ContainsKey(data[i]))
+            if (!((Dictionary<object, object>)obj).ContainsKey(data[i]))
             {
                 return null;
             }
-            dynamic tobj = obj[data[i]];
-            if (tobj is Dictionary<object, object>)
+            object tobj = ((Dictionary<object, object>)obj)[data[i]];
+            if (!(tobj is Dictionary<object, object>))
             {
-                Dictionary<object, object> dict = (Dictionary<object, object>)tobj;
-                Dictionary<string, object> ndict = new Dictionary<string, object>();
-                foreach (object fobj in dict.Keys)
+                return null;
+            }
+            return new YAMLConfiguration((Dictionary<object, object>)tobj);
+        }
+
+        public void Default(string path, object val)
+        {
+            string[] data = path.Split('.');
+            int i = 0;
+            object obj = Data;
+            while (i < data.Length - 1)
+            {
+                dynamic nobj = ((Dictionary<object, object>)obj).ContainsKey(data[i]) ? ((Dictionary<object, object>)obj)[data[i]] : null;
+                if (nobj == null || !(nobj is Dictionary<object, object>))
                 {
-                    ndict.Add(fobj + "", dict[fobj]);
+                    nobj = new Dictionary<dynamic, dynamic>();
+                    ((Dictionary<object, object>)obj)[data[i]] = nobj;
                 }
-                return new YAMLConfiguration(ndict);
+                obj = nobj;
+                i++;
             }
-            if (!(tobj is Dictionary<string, dynamic> || tobj is Dictionary<string, object>))
+            if (!((Dictionary<object, object>)obj).ContainsKey(data[i]))
             {
-                return null;
+                ((Dictionary<object, object>)obj)[data[i]] = val;
+                if (Changed != null)
+                {
+                    Changed.Invoke(this, new EventArgs());
+                }
             }
-            return new YAMLConfiguration(tobj);
         }
 
         public void Set(string path, object val)
         {
             string[] data = path.Split('.');
             int i = 0;
-            dynamic obj = Data;
+            object obj = Data;
             while (i < data.Length - 1)
             {
-                dynamic nobj = obj.ContainsKey(data[i]) ? obj[data[i]] : null;
-                if (nobj == null || !(nobj is Dictionary<string, dynamic> || nobj is Dictionary<string, object> || nobj is Dictionary<object, object>))
+                dynamic nobj = ((Dictionary<object, object>)obj).ContainsKey(data[i]) ? ((Dictionary<object, object>)obj)[data[i]] : null;
+                if (nobj == null || !(nobj is Dictionary<object, object>))
                 {
                     nobj = new Dictionary<dynamic, dynamic>();
-                    obj[data[i]] = nobj;
+                    ((Dictionary<object, object>)obj)[data[i]] = nobj;
                 }
                 obj = nobj;
                 i++;
             }
             if (val == null)
             {
-                obj.Remove(data[i]);
+                ((Dictionary<object, object>)obj).Remove(data[i]);
             }
             else
             {
-                obj[data[i]] = val;
+                ((Dictionary<object, object>)obj)[data[i]] = val;
             }
             if (Changed != null)
             {
