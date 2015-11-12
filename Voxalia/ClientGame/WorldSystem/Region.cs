@@ -192,6 +192,11 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 Tickers[i].Tick();
             }
+            SolveJoints();
+        }
+
+        public void SolveJoints()
+        {
             for (int i = 0; i < Joints.Count; i++)
             {
                 if (Joints[i].Enabled && Joints[i] is BaseFJoint)

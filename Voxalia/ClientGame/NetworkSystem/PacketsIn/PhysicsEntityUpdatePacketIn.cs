@@ -28,14 +28,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                         e.SetVelocity(vel);
                         e.SetOrientation(ang);
                         e.SetAngularVelocity(angvel);
-                        if (e.Body.ActivityInformation.IsActive && !active)
+                        if (e.Body != null && e.Body.ActivityInformation != null && e.Body.ActivityInformation.IsActive && !active) // TODO: Why are the first two checks needed?
                         {
                             if (e.Body.ActivityInformation.SimulationIsland != null) // TODO: Why is this needed?
                             {
                                 e.Body.ActivityInformation.SimulationIsland.IsActive = false;
                             }
                         }
-                        else if (!e.Body.ActivityInformation.IsActive && active)
+                        else if (e.Body != null && e.Body.ActivityInformation != null && !e.Body.ActivityInformation.IsActive && active) // TODO: Why are the first two checks needed?
                         {
                             e.Body.ActivityInformation.Activate();
                         }

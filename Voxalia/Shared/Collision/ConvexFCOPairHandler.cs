@@ -14,6 +14,7 @@ using BEPUphysics.Entities;
 using BEPUutilities;
 using BEPUphysics;
 using BEPUutilities.DataStructures;
+using BEPUphysics.Materials;
 
 namespace Voxalia.Shared.Collision
 {
@@ -88,6 +89,11 @@ namespace Voxalia.Shared.Collision
             BroadPhaseOverlap = new BEPUphysics.BroadPhaseSystems.BroadPhaseOverlap(convex, mesh);
             UpdateMaterialProperties(convex.Entity != null ? convex.Entity.Material : null, mesh.Material);
             base.Initialize(entryA, entryB);
+            InteractionProperties ip = contactConstraint.MaterialInteraction;
+            ip.StaticFriction = 0f;
+            ip.KineticFriction = 0f;
+            ip.Bounciness = 0.5f;
+            contactConstraint.MaterialInteraction = ip;
             noRecurse = false;
         }
         
