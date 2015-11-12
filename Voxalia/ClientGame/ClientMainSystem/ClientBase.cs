@@ -251,7 +251,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             KeyHandler.Init();
             SysConsole.Output(OutputType.INIT, "Building the sound system...");
             Sounds = new SoundEngine();
-            Sounds.Init(CVars);
+            Sounds.Init(this, CVars);
             SysConsole.Output(OutputType.INIT, "Building game world...");
             BuildWorld();
             SysConsole.Output(OutputType.INIT, "Preparing networking...");
@@ -447,11 +447,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 CurrentMusic.Destroy();
             }
             SoundEffect mus = Sounds.GetSound(CVars.a_music.Value);
-            CurrentMusic = Sounds.Play(mus, true, Location.NaN, CVars.a_musicpitch.ValueF, CVars.a_musicvolume.ValueF);
-            if (CurrentMusic != null)
+            Sounds.Play(mus, true, Location.NaN, CVars.a_musicpitch.ValueF, CVars.a_musicvolume.ValueF, 0, (asfx) =>
             {
-                CurrentMusic.IsBackground = true;
-            }
+                CurrentMusic = asfx;
+                if (CurrentMusic != null)
+                {
+                    CurrentMusic.IsBackground = true;
+                }
+            });
         }
 
         public void onMusicChanged(object obj, EventArgs e)

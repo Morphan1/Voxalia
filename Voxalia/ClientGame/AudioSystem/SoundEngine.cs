@@ -8,6 +8,7 @@ using OggDecoder;
 using Voxalia.ClientGame.CommandSystem;
 using Voxalia.Shared.Files;
 using Voxalia.ClientGame.OtherSystems;
+using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.AudioSystem
 {
@@ -17,10 +18,13 @@ namespace Voxalia.ClientGame.AudioSystem
 
         public AudioContext Context;
 
+        public Client TheClient;
+
         public ClientCVar CVars;
         
-        public void Init(ClientCVar cvar)
+        public void Init(Client tclient, ClientCVar cvar)
         {
+            TheClient = tclient;
             CVars = cvar;
             Context = new AudioContext();
             Context.MakeCurrent();
@@ -69,7 +73,10 @@ namespace Voxalia.ClientGame.AudioSystem
 
         public List<ActiveSound> PlayingNow;
 
-        public ActiveSound Play(SoundEffect sfx, bool loop, Location pos, float pitch = 1, float volume = 1, float seek_seconds = 0)
+        /// <summary>
+        /// NOTE: *NOT* guaranteed to play a sound effect immediately, regardless of input! Some sound effects will be delayed!
+        /// </summary>
+        public void Play(SoundEffect sfx, bool loop, Location pos, float pitch = 1, float volume = 1, float seek_seconds = 0, Action<ActiveSound> callback = null)
         {
             if (pitch <= 0 || pitch > 2)
             {
@@ -77,26 +84,44 @@ namespace Voxalia.ClientGame.AudioSystem
             }
             if (volume == 0)
             {
-                return null;
+                return;
             }
             if (volume <= 0 || volume > 1)
             {
                 throw new ArgumentException("Must be between 0 and 1", "volume");
             }
-            ActiveSound actsfx = new ActiveSound(sfx);
-            actsfx.Engine = this;
-            actsfx.Position = pos;
-            actsfx.Pitch = pitch * CVars.a_globalpitch.ValueF;
-            actsfx.Gain = volume;
-            actsfx.Loop = loop;
-            actsfx.Create();
-            actsfx.Play();
-            if (seek_seconds != 0)
+            Action playSound = () =>
             {
-                actsfx.Seek(seek_seconds);
+                ActiveSound actsfx = new ActiveSound(sfx);
+                actsfx.Engine = this;
+                actsfx.Position = pos;
+                actsfx.Pitch = pitch * CVars.a_globalpitch.ValueF;
+                actsfx.Gain = volume;
+                actsfx.Loop = loop;
+                actsfx.Create();
+                actsfx.Play();
+                if (seek_seconds != 0)
+                {
+                    actsfx.Seek(seek_seconds);
+                }
+                PlayingNow.Add(actsfx);
+                if (callback != null)
+                {
+                    callback(actsfx);
+                }
+            };
+            lock (sfx)
+            {
+                if (sfx.Internal == -1)
+                {
+                    sfx.Loaded += (o, e) =>
+                    {
+                        playSound();
+                    };
+                    return;
+                }
             }
-            PlayingNow.Add(actsfx);
-            return actsfx;
+            playSound();
         }
 
         public SoundEffect GetSound(string name)
@@ -138,7 +163,28 @@ namespace Voxalia.ClientGame.AudioSystem
                 {
                     return null;
                 }
-                return LoadVorbisSound(Program.Files.ReadToStream(newname), name);
+                SoundEffect tsfx = new SoundEffect();
+                tsfx.Name = name;
+                tsfx.Internal = -1;
+                TheClient.Schedule.StartASyncTask(() =>
+                {
+                    SoundEffect ts = LoadVorbisSound(Program.Files.ReadToStream(newname), name);
+                    lock (tsfx)
+                    {
+                        tsfx.Internal = ts.Internal;
+                    }
+                    if (tsfx.Loaded != null)
+                    {
+                        TheClient.Schedule.ScheduleSyncTask(() =>
+                        {
+                            if (tsfx.Loaded != null)
+                            {
+                                tsfx.Loaded.Invoke(tsfx, null);
+                            }
+                        });
+                    }
+                });
+                return tsfx;
             }
             catch (Exception ex)
             {
