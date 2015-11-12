@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Threading;
+using System.Collections.Generic;
+using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
     public class LoadAllChunksSystem
     {
-        public Region TheWorld;
+        public Region TheRegion;
 
         public LoadAllChunksSystem(Region tregion)
         {
-            TheWorld = tregion;
+            TheRegion = tregion;
         }
 
         public int Count = 0;
@@ -26,9 +28,19 @@ namespace Voxalia.ClientGame.WorldSystem
             Count = 0;
             c = 0;
             rC = 0;
-            TheWorld.TheClient.Schedule.StartASyncTask(() =>
+            TheRegion.TheClient.Schedule.StartASyncTask(() =>
             {
-                foreach (Chunk chunk in TheWorld.LoadedChunks.Values)
+                // The following code is the _correct_ way to do this, more or less...
+                // (This was originally just a foreach, now it's broken into components to demonstrate.)
+                // However... it freezes. Inside the MoveNext(). Good job, Microsoft!
+                // Dictionary<Location, Chunk>.ValueCollection.Enumerator x = TheRegion.LoadedChunks.Values.GetEnumerator();
+                // while (x.MoveNext())
+                // {
+                // ...
+                // Now, observe the greatest work-around of all time!
+                Chunk[] chunks = new Chunk[TheRegion.LoadedChunks.Values.Count];
+                TheRegion.LoadedChunks.Values.CopyTo(chunks, 0);
+                foreach (Chunk chunk in chunks)
                 {
                     if (!chunk.PROCESSED)
                     {

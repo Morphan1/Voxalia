@@ -42,16 +42,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Menus.RenderAll(TheClient.gDelta);
             if (LACS == null)
             {
-                TheClient.FontSets.SlightlyBigger.DrawColoredText("^!^e^0Chunks Loaded: " + TheClient.TheRegion.LoadedChunks.Count
-                    + "\nChunks that still need parsing: " + ChunksStillWaiting, new Location(20, 20, 0));
+                lock (TheClient.TheRegion.LoadedChunks)
+                {
+                    TheClient.FontSets.SlightlyBigger.DrawColoredText("^!^e^0Chunks Loaded: " + TheClient.TheRegion.LoadedChunks.Count
+                        + "\nChunks that still need parsing: " + ChunksStillWaiting, new Location(20, 20, 0));
+                }
             }
             else
             {
                 lock (LACS.Locker)
                 {
                     TheClient.FontSets.SlightlyBigger.DrawColoredText("^!^e^0Chunks Loaded: " + LACS.Count
-                        + "\nChunks Solidified: " + LACS.c + ": " + ((LACS.c / (float)LACS.Count) * 100) + "%"
-                        + "\nChunks Rendered: " + LACS.rC + ": " + ((LACS.rC / (float)LACS.Count) * 100) + "%", new Location(20, 20, 0));
+                        + "\nChunks Solidified: " + LACS.c + ": " + ((LACS.c / (float)LACS.Count) * 100f) + "%"
+                        + "\nChunks Rendered: " + LACS.rC + ": " + ((LACS.rC / (float)LACS.Count) * 100f) + "%", new Location(20, 20, 0));
                 }
             }
         }

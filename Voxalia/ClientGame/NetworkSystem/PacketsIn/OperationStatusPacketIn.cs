@@ -43,7 +43,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                                 Thread.Sleep(16);
                                 c = TheClient.TheChunkWaitingScreen.ChunksStillWaiting;
                             }
-                            TheClient.ShowGame();
+                            TheClient.Schedule.ScheduleSyncTask(() =>
+                            {
+                                TheClient.ShowGame();
+                            });
                         });
                     }
                     else if (data[1] == 0)

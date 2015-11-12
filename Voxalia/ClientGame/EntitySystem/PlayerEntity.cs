@@ -44,6 +44,7 @@ namespace Voxalia.ClientGame.EntitySystem
             IsFlying = true;
             PreFlyMass = GetMass();
             SetMass(0);
+            NMTWOCBody.Body.Mass = 0;
         }
 
         public void Unfly()
@@ -54,6 +55,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             IsFlying = false;
             SetMass(PreFlyMass);
+            NMTWOCBody.Body.Mass = PreFlyMass;
         }
 
         public void SetAnimation(string anim, byte mode)
@@ -184,7 +186,7 @@ namespace Voxalia.ClientGame.EntitySystem
                     }
                 }
                 AddUIS();
-                NMTWOSetPosition(pos);
+                NMTWOSetPosition(pos); // TODO: Find relevant UIS position, adjust to midway between that and 'pos'?
                 NMTWOSetVelocity(vel);
                 int xf = 0;
                 double jumpback = gtt - lGTT;

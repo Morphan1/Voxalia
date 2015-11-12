@@ -358,7 +358,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 return;
             }
-            pMode = 1;
+            pMode = 1; // TODO: lock something before doing this?
             Schedule.StartASyncTask(() =>
             {
                 while (true)
@@ -393,6 +393,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         if (!chunk.PROCESSED)
                         {
                             c++;
+                            // TODO: chunk.CalculateLighting() ?
                             Schedule.ScheduleSyncTask(() => { chunk.AddToWorld(); }, Utilities.UtilRandom.NextDouble() * 10);
                             Schedule.ScheduleSyncTask(() => { chunk.CreateVBO(); }, Utilities.UtilRandom.NextDouble() * 10);
                             chunk.PROCESSED = true;
