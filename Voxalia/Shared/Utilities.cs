@@ -26,12 +26,22 @@ namespace Voxalia.Shared
             return BitConverter.ToSingle(bytes, 0);
         }
 
+        public static double BytesToDouble(byte[] bytes)
+        {
+            return BitConverter.ToDouble(bytes, 0);
+        }
+
         public static byte[] UshortToBytes(ushort ush)
         {
             return BitConverter.GetBytes(ush);
         }
 
         public static byte[] FloatToBytes(float flt)
+        {
+            return BitConverter.GetBytes(flt);
+        }
+
+        public static byte[] DoubleToBytes(double flt)
         {
             return BitConverter.GetBytes(flt);
         }

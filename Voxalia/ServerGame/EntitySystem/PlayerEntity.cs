@@ -24,6 +24,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Connection ChunkNetwork;
 
+        public double LastKPI = 0;
+
         public string Name;
 
         public string Host;

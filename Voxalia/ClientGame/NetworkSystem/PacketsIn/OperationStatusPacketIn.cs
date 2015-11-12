@@ -1,4 +1,5 @@
-﻿using Voxalia.Shared;
+﻿
+using Voxalia.Shared;
 using Voxalia.ClientGame.WorldSystem;
 using System.Threading;
 
@@ -59,7 +60,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     }
                     break;
                 default:
-                    SysConsole.Output(OutputType.INFO, "Unknown status operation: " + ((StatusOperation)data[0]));
                     return false;
             }
             return true;

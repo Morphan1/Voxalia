@@ -135,8 +135,23 @@ namespace Voxalia.ClientGame.EntitySystem
         public Space NMTWOWorld = new Space(null);
 
         Dictionary<Location, InstancedMesh> NMTWOMeshes = new Dictionary<Location, InstancedMesh>();
-        
-        public void PacketFromServer(long ID, Location pos, Location vel)
+
+        double lGTT = 0;
+
+        double _gtt;
+        long _id = -1;
+        Location _pos;
+        Location _vel;
+
+        public void PacketFromServer(double gtt, long ID, Location pos, Location vel)
+        {
+            _gtt = gtt;
+            _id = ID;
+            _pos = pos;
+            _vel = vel;
+        }
+
+        public void UpdateForPacketFromServer(double gtt, long ID, Location pos, Location vel)
         {
             double now = TheRegion.GlobalTickTimeLocal;
             ServerLocation = pos;
@@ -171,35 +186,47 @@ namespace Voxalia.ClientGame.EntitySystem
                 AddUIS();
                 NMTWOSetPosition(pos);
                 NMTWOSetVelocity(vel);
-                double delta = 0;
-                float tstep = TheRegion.PhysicsWorld.TimeStepSettings.TimeStepDuration;
                 int xf = 0;
+                double jumpback = gtt - lGTT;
+                if (jumpback < 0)
+                {
+                    return;
+                }
+                double target = TheRegion.GlobalTickTimeLocal - jumpback;
+                UserInputSet past = null;
                 while (xf < Input.Length)
                 {
                     UserInputSet uis = Input[xf];
-                    if (uis.ID < ID)
+                    if (uis.GlobalTimeLocal < target)
                     {
+                        past = uis;
                         Input.Pop();
                         continue;
                     }
-                    else if (uis.ID == ID)
-                    {
-                        SysConsole.Output(OutputType.INFO, (uis.Position - pos).ToString());
-                    }
                     xf++;
+                    double delta;
                     if (xf < 2)
                     {
-                        continue;
+                        if (past == null)
+                        {
+                            continue;
+                        }
+                        delta = uis.GlobalTimeLocal - target;
+                        SetBodyMovement(NMTWOCBody, past);
                     }
-                    UserInputSet prev = Input[xf - 2];
-                    SetBodyMovement(NMTWOCBody, prev);
-                    delta = uis.GlobalTimeLocal - prev.GlobalTimeLocal;
+                    else
+                    {
+                        UserInputSet prev = Input[xf - 2];
+                        delta = uis.GlobalTimeLocal - prev.GlobalTimeLocal;
+                        SetBodyMovement(NMTWOCBody, prev);
+                    }
                     lPT = uis.GlobalTimeLocal;
                     NMTWOWorld.Update((float)delta);
                 }
                 AddUIS();
                 SetPosition(NMTWOGetPosition());
                 SetVelocity(new Location(NMTWOCBody.Body.LinearVelocity));
+                lGTT = gtt;
             }
             else
             {
@@ -235,6 +262,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Rightward = Rightward,
                 Direction = Direction,
                 Position = GetPosition(),
+                GlobalTimeRemote = lGTT,
                 pup = pup,
                 GlobalTimeLocal = TheRegion.GlobalTickTimeLocal
             };
@@ -280,7 +308,7 @@ namespace Voxalia.ClientGame.EntitySystem
             if (IsFlying)
             {
                 Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, 0), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Upward ? 2 : 1)); // TODO: Handle better!
+                cc.Body.Position += (forw * TheRegion.Delta * CBStandSpeed * 2 * (Upward ? 2 : 1)).ToBVector(); // TODO: Make upward go up?
                 CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 cc.Body.LinearVelocity = new Vector3(0, 0, 0);
             }
@@ -380,6 +408,15 @@ namespace Voxalia.ClientGame.EntitySystem
                 {
                     aLTime = 0;
                 }
+            }
+        }
+
+        public void PostTick()
+        {
+            if (CBody != null && _id >= 0)
+            {
+                UpdateForPacketFromServer(_gtt, _id, _pos, _vel);
+                _id = -1;
             }
         }
 
@@ -582,6 +619,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public long ID;
 
         public double GlobalTimeLocal;
+
+        public double GlobalTimeRemote;
 
         public Location Direction;
 

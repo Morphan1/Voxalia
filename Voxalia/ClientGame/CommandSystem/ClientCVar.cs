@@ -60,8 +60,8 @@ namespace Voxalia.ClientGame.CommandSystem
             n_first = Register("n_first", "ipv4", CVarFlag.Textual, "Whether to prefer IPv4 or IPv6.");
             n_debugmovement = Register("n_debugmovement", "false", CVarFlag.Boolean, "Whether to debug movement networking.");
             n_movement_maxdistance = Register("n_movement_maxdistance", "20", CVarFlag.Numeric, "How far apart the client can move from the serverside player before snapping to the correct location.");
-            n_movement_adjustment = Register("n_movement_adjustment", "0.1", CVarFlag.Numeric, "How rapidly to adjust the player's position to better match the server. Smaller numbers yield quicker results.");
-            n_movemode = Register("n_movemode", "1", CVarFlag.Numeric, "Which movement mode to use. 1 = run-and-adjust, 2 = back-trace.");
+            n_movement_adjustment = Register("n_movement_adjustment", "0.1", CVarFlag.Numeric, "How rapidly to adjust the player's position to better match the server. Smaller numbers yield quicker results (Movemode=1 only).");
+            n_movemode = Register("n_movemode", "2", CVarFlag.Numeric, "Which movement mode to use. 1 = run-and-adjust, 2 = back-trace.");
             // Renderer CVars
             r_fullscreen = Register("r_fullscreen", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use fullscreen mode.");
             r_width = Register("r_width", "1280", CVarFlag.Numeric | CVarFlag.Delayed, "What width the window should be.");

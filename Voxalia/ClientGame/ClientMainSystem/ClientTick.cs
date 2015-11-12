@@ -178,6 +178,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Sounds.Update(CameraPos, CameraTarget - CameraPos, CameraUp, Player.GetVelocity(), Window.Focused);
                     CScreen.Tick();
                     Schedule.RunAllSyncTasks(0);
+                    Player.PostTick();
                 }
                 catch (Exception ex)
                 {
