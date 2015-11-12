@@ -21,6 +21,7 @@ using Voxalia.Shared.Collision;
 using BEPUphysics.Character;
 using OpenTK.Graphics.OpenGL4;
 using Frenetic;
+using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -108,6 +109,7 @@ namespace Voxalia.ClientGame.EntitySystem
             model.LoadSkin(TheClient.Textures);
             CGroup = CollisionUtil.Player;
             NMTWOWorld.ForceUpdater.Gravity = TheRegion.PhysicsWorld.ForceUpdater.Gravity;
+            SetPosition(new Location(0, 0, 1000));
         }
 
         public bool IgnoreThis(BroadPhaseEntry entry)
@@ -186,8 +188,6 @@ namespace Voxalia.ClientGame.EntitySystem
                     }
                 }
                 AddUIS();
-                NMTWOSetPosition(pos); // TODO: Find relevant UIS position, adjust to midway between that and 'pos'?
-                NMTWOSetVelocity(vel);
                 int xf = 0;
                 double jumpback = gtt - lGTT;
                 if (jumpback < 0)
@@ -204,6 +204,12 @@ namespace Voxalia.ClientGame.EntitySystem
                         past = uis;
                         Input.Pop();
                         continue;
+                    }
+                    else if (xf == 0)
+                    {
+                        double mult = Math.Max(Math.Min(jumpback / TheClient.CVars.n_movement_adjustment.ValueD, 1.0), 0.01);
+                        NMTWOSetPosition(uis.Position + (pos - uis.Position) * mult);
+                        NMTWOSetVelocity(uis.Velocity + (vel - uis.Velocity) * mult);
                     }
                     xf++;
                     double delta;
@@ -265,6 +271,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Rightward = Rightward,
                 Direction = Direction,
                 Position = GetPosition(),
+                Velocity = GetVelocity(),
                 GlobalTimeRemote = lGTT,
                 pup = pup,
                 GlobalTimeLocal = TheRegion.GlobalTickTimeLocal
@@ -360,6 +367,10 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Tick()
         {
+            if (!(TheClient.CScreen is GameScreen))
+            {
+                return;
+            }
             if (CBody == null || Body == null)
             {
                 return;
@@ -648,5 +659,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Rightward;
 
         public Location Position;
+
+        public Location Velocity;
     }
 }
