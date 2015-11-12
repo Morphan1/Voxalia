@@ -4,6 +4,7 @@ using Voxalia.Shared;
 using Voxalia.ClientGame.UISystem;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 using BEPUutilities;
+using BEPUphysics;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseSystems;
@@ -129,6 +130,10 @@ namespace Voxalia.ClientGame.EntitySystem
         public ListQueue<UserInputSet> Input = new ListQueue<UserInputSet>();
 
         double lPT;
+
+        public Space NMTWOWorld = new Space(null);
+
+        Dictionary<Location, InstancedMesh> NMTWOMeshes = new Dictionary<Location, InstancedMesh>();
         
         public void PacketFromServer(long ID, Location pos, Location vel)
         {
@@ -136,9 +141,35 @@ namespace Voxalia.ClientGame.EntitySystem
             ServerLocation = pos;
             if (TheClient.CVars.n_movemode.ValueI == 2)
             {
+                // TODO: Remove outsider chunks!
+                for (int x = -1; x <= 1; x++)
+                {
+                    for (int y = -1; y <= 1; y++)
+                    {
+                        for (int z = -1; z <= 1; z++)
+                        {
+                            Location ch = TheRegion.ChunkLocFor(pos) + new Location(x, y, z);
+                            Chunk chunk = TheRegion.GetChunk(ch);
+                            InstancedMesh temp;
+                            if ((!NMTWOMeshes.TryGetValue(ch, out temp)) || (temp.Shape != chunk.MeshShape))
+                            {
+                                if (temp != null)
+                                {
+                                    NMTWOWorld.Remove(temp);
+                                }
+                                if (chunk.MeshShape != null)
+                                {
+                                    InstancedMesh im = new InstancedMesh(chunk.MeshShape);
+                                    NMTWOWorld.Add(im);
+                                    NMTWOMeshes[ch] = im;
+                                }
+                            }
+                        }
+                    }
+                }
                 AddUIS();
-                SetPosition(pos);
-                SetVelocity(vel);
+                NMTWOSetPosition(pos);
+                NMTWOSetVelocity(vel);
                 double delta = 0;
                 float tstep = TheRegion.PhysicsWorld.TimeStepSettings.TimeStepDuration;
                 int xf = 0;
@@ -160,43 +191,14 @@ namespace Voxalia.ClientGame.EntitySystem
                     }
                     UserInputSet prev = Input[xf - 2];
                     SetBodyMovement(prev);
-                    delta += uis.GlobalTimeLocal - prev.GlobalTimeLocal;
+                    delta = uis.GlobalTimeLocal - prev.GlobalTimeLocal;
                     lPT = uis.GlobalTimeLocal;
-                    //Vector3 ppos = CBody.Body.Position;
-                    while (delta > tstep)
-                    {
-                        TryToJump();
-                        SetMoveSpeed();
-                        ((IBeforeSolverUpdateable)CBody).Update(tstep);
-                        CBody.HorizontalMotionConstraint.Update(tstep);
-                        CBody.VerticalMotionConstraint.Update(tstep);
-                        ((IForceUpdateable)CBody.Body).UpdateForForces(tstep);
-                        CBody.Body.CollisionInformation.UpdateBoundingBox(tstep);
-                        ((IBroadPhaseEntryOwner)CBody.Body).Entry.UpdateBoundingBox();
-                        List<BroadPhaseEntry> bpes = new List<BroadPhaseEntry>();
-                        TheRegion.PhysicsWorld.BroadPhase.QueryAccelerator.GetEntries(CBody.Body.CollisionInformation.BoundingBox, bpes);
-                        foreach (BroadPhaseEntry bpe in bpes)
-                        {
-                            if (CBody.Body.CollisionInformation != bpe && TheRegion.PhysicsWorld.NarrowPhase.GetPair(CBody.Body.CollisionInformation, bpe) == null)
-                            {
-                                NarrowPhasePair npp = NarrowPhaseHelper.GetPairHandler(CBody.Body.CollisionInformation, bpe);
-                                TheRegion.PhysicsWorld.NarrowPhase.OnCreatePair(npp);
-                            }
-                        }
-                        foreach (CollidablePairHandler entry in CBody.Body.CollisionInformation.Pairs)
-                        {
-                            entry.UpdateCollision(tstep);
-                            entry.UpdateTimeOfImpact(CBody.Body.CollisionInformation, tstep);
-                        }
-                        ((ICCDPositionUpdateable)CBody.Body).PreUpdatePosition(tstep);
-                        ((ICCDPositionUpdateable)CBody.Body).UpdateTimesOfImpact(tstep);
-                        ((ICCDPositionUpdateable)CBody.Body).UpdatePositionContinuously(tstep);
-                        delta -= tstep;
-                    }
-                    //SysConsole.Output(OutputType.INFO, "MOVE: " + (CBody.Body.Position - ppos));
+                    NMTWOWorld.Update((float)delta);
                 }
                 SetBodyMovement(lUIS); // Just in case!
                 AddUIS();
+                SetPosition(NMTWOGetPosition());
+                SetVelocity(new Location(NMTWOCBody.Body.LinearVelocity));
             }
             else
             {
@@ -380,6 +382,27 @@ namespace Voxalia.ClientGame.EntitySystem
         }
 
         public CharacterController CBody;
+
+        CharacterController GenCharCon()
+        {
+            // TODO: Better variable control! (Server should command every detail!)
+            CharacterController cb = new CharacterController(ServerLocation.ToBVector(), (float)HalfSize.Z * 2f, (float)HalfSize.Z * 1.1f,
+                (float)HalfSize.Z * 1f, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
+                CBTractionForce * Mass, CBSlideSpeed, CBSlideForce * Mass, CBAirSpeed, CBAirForce * Mass, CBJumpSpeed, CBSlideJumpSpeed, CBGlueForce * Mass);
+            cb.StanceManager.DesiredStance = Stance.Standing;
+            cb.ViewDirection = new Vector3(1f, 0f, 0f);
+            cb.Down = new Vector3(0f, 0f, -1f);
+            cb.Tag = this;
+            BEPUphysics.Entities.Prefabs.Cylinder tb = cb.Body;
+            tb.Tag = this;
+            tb.AngularDamping = 1.0f;
+            tb.CollisionInformation.CollisionRules.Group = CollisionUtil.Player;
+            cb.StepManager.MaximumStepHeight = CBStepHeight;
+            cb.StepManager.MinimumDownStepHeight = CBDownStepHeight;
+            return cb;
+        }
+
+        public CharacterController NMTWOCBody = null;
         
         public override void SpawnBody()
         {
@@ -387,23 +410,13 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 DestroyBody();
             }
-            // TODO: Better variable control! (Server should command every detail!)
-            CBody = new CharacterController(ServerLocation.ToBVector(), (float)HalfSize.Z * 2f, (float)HalfSize.Z * 1.1f,
-                (float)HalfSize.Z * 1f, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
-                CBTractionForce * Mass, CBSlideSpeed, CBSlideForce * Mass, CBAirSpeed, CBAirForce * Mass, CBJumpSpeed, CBSlideJumpSpeed, CBGlueForce * Mass);
-            CBody.StanceManager.DesiredStance = Stance.Standing;
-            CBody.ViewDirection = new Vector3(1f, 0f, 0f);
-            CBody.Down = new Vector3(0f, 0f, -1f);
-            CBody.Tag = this;
+            CBody = GenCharCon();
             Body = CBody.Body;
-            Body.Tag = this;
-            Body.AngularDamping = 1.0f;
             Shape = CBody.Body.CollisionInformation.Shape;
             ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
-            Body.CollisionInformation.CollisionRules.Group = CollisionUtil.Player;
-            CBody.StepManager.MaximumStepHeight = CBStepHeight;
-            CBody.StepManager.MinimumDownStepHeight = CBDownStepHeight;
             TheRegion.PhysicsWorld.Add(CBody);
+            NMTWOCBody = GenCharCon();
+            NMTWOWorld.Add(NMTWOCBody);
         }
 
         public float CBProneSpeed = 1f;
@@ -449,6 +462,7 @@ namespace Voxalia.ClientGame.EntitySystem
             TheRegion.PhysicsWorld.Remove(CBody);
             CBody = null;
             Body = null;
+            NMTWOWorld.Remove(NMTWOCBody);
         }
 
         public SpotLight Flashlight = null;
@@ -503,6 +517,27 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
             }
+        }
+
+        Location NMTWOGetPosition()
+        {
+            RigidTransform transf = new RigidTransform(Vector3.Zero, Body.Orientation);
+            BoundingBox box;
+            NMTWOCBody.Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
+            return new Location(NMTWOCBody.Body.Position) + new Location(0, 0, box.Min.Z);
+        }
+
+        void NMTWOSetPosition(Location pos)
+        {
+            RigidTransform transf = new RigidTransform(Vector3.Zero, Body.Orientation);
+            BoundingBox box;
+            NMTWOCBody.Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
+            NMTWOCBody.Body.Position = (pos + new Location(0, 0, -box.Min.Z)).ToBVector();
+        }
+
+        void NMTWOSetVelocity(Location vel)
+        {
+            NMTWOCBody.Body.LinearVelocity = vel.ToBVector();
         }
 
         public override void SetVelocity(Location vel)

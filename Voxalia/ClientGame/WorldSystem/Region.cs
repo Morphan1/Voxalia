@@ -59,42 +59,22 @@ namespace Voxalia.ClientGame.WorldSystem
 #if NEW_CHUNKS
         public void AddChunk(FullChunkObject mesh)
         {
-            if (mesh == null)
-            {
-                return;
-            }
             PhysicsWorld.Add(mesh);
-            return;
         }
 
         public void RemoveChunkQuiet(FullChunkObject mesh)
         {
-            if (mesh == null)
-            {
-                return;
-            }
             PhysicsWorld.Remove(mesh);
-            return;
         }
 #else
-        public void AddChunk(StaticMesh mesh)
+        public void AddChunk(InstancedMesh mesh)
         {
-            if (mesh == null)
-            {
-                return;
-            }
             PhysicsWorld.Add(mesh);
-            return;
         }
 
-        public void RemoveChunkQuiet(StaticMesh mesh)
+        public void RemoveChunkQuiet(InstancedMesh mesh)
         {
-            if (mesh == null)
-            {
-                return;
-            }
             PhysicsWorld.Remove(mesh);
-            return;
         }
 #endif
 
@@ -412,6 +392,10 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void UpdateChunk(Chunk ch)
         {
+            if (TheClient.IsWaitingOnChunks())
+            {
+                return;
+            }
             TheClient.Schedule.StartASyncTask(() =>
             {
                 ch.CalculateLighting();

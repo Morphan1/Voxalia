@@ -20,7 +20,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Menus = new UIMenu(TheClient);
             Menus.Add(new UIMenuButton("ui/menus/buttons/basic", "Cancel", () =>
             {
-                UIConsole.WriteLine("Cancel!");
+                UIConsole.WriteLine("Cancel!"); // TODO
             }, 10, 300, 350, 70, TheClient.FontSets.SlightlyBigger));
         }
 

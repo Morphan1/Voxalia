@@ -257,10 +257,14 @@ namespace Voxalia.ClientGame.NetworkSystem
                 }
                 packet.TheClient = TheClient;
                 packet.ChunkN = sock == ChunkSocket;
+                int pid = packetID;
                 if (asyncable)
                 {
                     // TODO: StartASyncTask?
-                    packet.ParseBytesAndExecute(data);
+                    if (!packet.ParseBytesAndExecute(data))
+                    {
+                        SysConsole.Output(OutputType.ERROR, "Bad async packet (ID=" + pid + ") data!");
+                    }
                 }
                 else
                 {
@@ -270,12 +274,12 @@ namespace Voxalia.ClientGame.NetworkSystem
                         {
                             if (!packet.ParseBytesAndExecute(data))
                             {
-                                SysConsole.Output(OutputType.ERROR, "Bad packet (ID=" + packetID + ") data!");
+                                SysConsole.Output(OutputType.ERROR, "Bad sync packet (ID=" + pid + ") data!");
                             }
                         }
                         catch (Exception ex)
                         {
-                            SysConsole.Output(OutputType.ERROR, "Bad packet (ID=" + packetID + ") data: " + ex.ToString());
+                            SysConsole.Output(OutputType.ERROR, "Bad sync packet (ID=" + pid + ") data: " + ex.ToString());
                         }
                     });
                 }

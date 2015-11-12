@@ -33,6 +33,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     if (!chunk.PROCESSED)
                     {
                         Count++;
+                        chunk.CalculateLighting();
                         chunk.AddToWorld(() =>
                         {
                             lock (Locker)

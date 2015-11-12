@@ -295,7 +295,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// </summary>
         public void ShowGame()
         {
-            if (IsWaitingOnChunks())
+            if (IsWaitingOnChunks() && TheChunkWaitingScreen.LACS == null)
             {
                 TheChunkWaitingScreen.LACS = new LoadAllChunksSystem(TheRegion);
                 TheChunkWaitingScreen.LACS.LoadAll(() =>
@@ -354,7 +354,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// </summary>
         public void ProcessChunks()
         {
-            if (pMode != 0)
+            if (pMode != 0 || IsWaitingOnChunks())
             {
                 return;
             }

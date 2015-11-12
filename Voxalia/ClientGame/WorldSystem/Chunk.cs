@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Voxalia.Shared;
 using BEPUutilities;
+using BEPUphysics.CollisionShapes;
 using BEPUphysics.BroadPhaseEntries;
 using Voxalia.Shared.Collision;
 
@@ -53,8 +54,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 Chunk ch = OwningRegion.GetChunk(WorldPosition + loc);
                 if (ch != null)
                 {
-                    ch.AddToWorld();
-                    ch.CreateVBO();
+                    OwningRegion.UpdateChunk(ch);
                 }
             }
         }
@@ -86,7 +86,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
         }
 
-        public StaticMesh CalculateChunkShape()
+        public InstancedMeshShape CalculateChunkShape()
         {
             List<Vector3> Vertices = new List<Vector3>(CSize * CSize * CSize * 6); // TODO: Make this an array?
             Vector3 ppos = WorldPosition.ToBVector() * 30;
@@ -132,13 +132,15 @@ namespace Voxalia.ClientGame.WorldSystem
                 inds[i] = i;
             }
             Vector3[] vecs = Vertices.ToArray();
-            StaticMesh sm = new StaticMesh(vecs, inds);
-            return sm;
+            InstancedMeshShape shape = new InstancedMeshShape(vecs, inds);
+            return shape;
         }
 
         public FullChunkObject FCO = null;
 
-        public StaticMesh worldObject = null;
+        public InstancedMeshShape MeshShape = null;
+
+        public InstancedMesh worldObject = null;
 
         public ASyncScheduleItem adding = null;
 
@@ -193,7 +195,8 @@ namespace Voxalia.ClientGame.WorldSystem
         void AddInternal(Action callback)
         {
 #if !NEW_CHUNKS
-            StaticMesh tregionObject = CalculateChunkShape();
+            InstancedMeshShape mx = CalculateChunkShape();
+            InstancedMesh tregionObject = mx == null ? null: new InstancedMesh(mx);
             OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
             {
                 if (worldObject != null)
@@ -204,6 +207,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     return;
                 }
+                MeshShape = mx;
                 worldObject = tregionObject;
                 if (worldObject != null)
                 {

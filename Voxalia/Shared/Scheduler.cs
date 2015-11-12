@@ -37,7 +37,7 @@ namespace Voxalia.Shared
         {
             lock (Locker)
             {
-                for (int i = 0; i < Tasks.Count; i++)
+                for (int i = 0; i < Tasks.Count; i++) // NOTE: *MUST* calculate in this order!
                 {
                     Tasks[i].Time -= time;
                     if (Tasks[i].Time > 0)
