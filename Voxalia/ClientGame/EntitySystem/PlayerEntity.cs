@@ -105,6 +105,7 @@ namespace Voxalia.ClientGame.EntitySystem
             model = TheClient.Models.GetModel("players/human_male_004");
             model.LoadSkin(TheClient.Textures);
             CGroup = CollisionUtil.Player;
+            NMTWOWorld.ForceUpdater.Gravity = TheRegion.PhysicsWorld.ForceUpdater.Gravity;
         }
 
         public bool IgnoreThis(BroadPhaseEntry entry)
@@ -181,21 +182,21 @@ namespace Voxalia.ClientGame.EntitySystem
                         Input.Pop();
                         continue;
                     }
-                    else
+                    else if (uis.ID == ID)
                     {
-                        xf++;
+                        SysConsole.Output(OutputType.INFO, (uis.Position - pos).ToString());
                     }
+                    xf++;
                     if (xf < 2)
                     {
                         continue;
                     }
                     UserInputSet prev = Input[xf - 2];
-                    SetBodyMovement(prev);
+                    SetBodyMovement(NMTWOCBody, prev);
                     delta = uis.GlobalTimeLocal - prev.GlobalTimeLocal;
                     lPT = uis.GlobalTimeLocal;
                     NMTWOWorld.Update((float)delta);
                 }
-                SetBodyMovement(lUIS); // Just in case!
                 AddUIS();
                 SetPosition(NMTWOGetPosition());
                 SetVelocity(new Location(NMTWOCBody.Body.LinearVelocity));
@@ -233,6 +234,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Leftward = Leftward,
                 Rightward = Rightward,
                 Direction = Direction,
+                Position = GetPosition(),
                 pup = pup,
                 GlobalTimeLocal = TheRegion.GlobalTickTimeLocal
             };
@@ -250,7 +252,7 @@ namespace Voxalia.ClientGame.EntitySystem
             TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction));
         }
 
-        public void SetBodyMovement(UserInputSet uis)
+        public void SetBodyMovement(CharacterController cc, UserInputSet uis)
         {
             Vector2 movement = new Vector2(0, 0);
             if (uis.Leftward)
@@ -273,14 +275,14 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 movement.Normalize();
             }
-            CBody.ViewDirection = Utilities.ForwardVector_Deg(uis.Direction.Yaw, uis.Direction.Pitch).ToBVector();
-            CBody.HorizontalMotionConstraint.MovementDirection = movement;
+            cc.ViewDirection = Utilities.ForwardVector_Deg(uis.Direction.Yaw, uis.Direction.Pitch).ToBVector();
+            cc.HorizontalMotionConstraint.MovementDirection = movement;
             if (IsFlying)
             {
                 Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, 0), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Upward ? 2 : 1));
+                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Upward ? 2 : 1)); // TODO: Handle better!
                 CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
-                Body.LinearVelocity = new Vector3(0, 0, 0);
+                cc.Body.LinearVelocity = new Vector3(0, 0, 0);
             }
         }
 
@@ -347,7 +349,7 @@ namespace Voxalia.ClientGame.EntitySystem
             TryToJump();
             SetMoveSpeed();
             UpdateLocalMovement();
-            SetBodyMovement(lUIS);
+            SetBodyMovement(CBody, lUIS);
             if (Flashlight != null)
             {
                 Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);
@@ -521,7 +523,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         Location NMTWOGetPosition()
         {
-            RigidTransform transf = new RigidTransform(Vector3.Zero, Body.Orientation);
+            RigidTransform transf = new RigidTransform(Vector3.Zero, NMTWOCBody.Body.Orientation);
             BoundingBox box;
             NMTWOCBody.Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
             return new Location(NMTWOCBody.Body.Position) + new Location(0, 0, box.Min.Z);
@@ -529,7 +531,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         void NMTWOSetPosition(Location pos)
         {
-            RigidTransform transf = new RigidTransform(Vector3.Zero, Body.Orientation);
+            RigidTransform transf = new RigidTransform(Vector3.Zero, NMTWOCBody.Body.Orientation);
             BoundingBox box;
             NMTWOCBody.Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
             NMTWOCBody.Body.Position = (pos + new Location(0, 0, -box.Min.Z)).ToBVector();
@@ -596,5 +598,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Leftward;
 
         public bool Rightward;
+
+        public Location Position;
     }
 }
