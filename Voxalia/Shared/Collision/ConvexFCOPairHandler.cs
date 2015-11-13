@@ -53,13 +53,11 @@ namespace Voxalia.Shared.Collision
 
         public override ContactManifold ContactManifold
         {
-            get { return MeshManifold; }
+            get { return ContactManifold; }
         }
 
         FCOContactManifold contactManifold = new FCOContactManifold();
-
-        protected FCOContactManifold MeshManifold { get { return contactManifold; } }
-
+        
         public ConvexFCOPairHandler()
         {
             contactConstraint = new NonConvexContactManifoldConstraint(this);
@@ -85,7 +83,6 @@ namespace Voxalia.Shared.Collision
                     throw new ArgumentException("Inappropriate types used to initialize pair.");
                 }
             }
-            //Contact normal goes from A to B.
             BroadPhaseOverlap = new BEPUphysics.BroadPhaseSystems.BroadPhaseOverlap(convex, mesh);
             UpdateMaterialProperties(convex.Entity != null ? convex.Entity.Material : null, mesh.Material);
             base.Initialize(entryA, entryB);
@@ -97,9 +94,6 @@ namespace Voxalia.Shared.Collision
             noRecurse = false;
         }
         
-        ///<summary>
-        /// Cleans up the pair handler.
-        ///</summary>
         public override void CleanUp()
         {
             base.CleanUp();

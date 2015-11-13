@@ -95,7 +95,7 @@ namespace Voxalia.Shared.Collision
                 }
                 return;
             }
-            float pendef = 1f;
+            float pendef = 0.01f;
             Vector3 norm;
             RigidTransform rtx = new RigidTransform(Vector3.Zero, rt.Orientation);
             RigidTransform.Transform(ref rh.Normal, ref rtx, out norm);

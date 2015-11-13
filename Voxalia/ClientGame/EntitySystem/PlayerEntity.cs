@@ -176,6 +176,7 @@ namespace Voxalia.ClientGame.EntitySystem
                                 if (temp != null)
                                 {
                                     NMTWOWorld.Remove(temp);
+                                    NMTWOMeshes.Remove(ch);
                                 }
                                 if (chunk.MeshShape != null)
                                 {
