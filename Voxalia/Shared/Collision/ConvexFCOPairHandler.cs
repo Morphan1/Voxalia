@@ -53,7 +53,7 @@ namespace Voxalia.Shared.Collision
 
         public override ContactManifold ContactManifold
         {
-            get { return ContactManifold; }
+            get { return contactManifold; }
         }
 
         FCOContactManifold contactManifold = new FCOContactManifold();
