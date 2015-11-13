@@ -36,7 +36,7 @@ namespace Voxalia.Shared
             MaterialInfo[] mats = new MaterialInfo[] {
                 new MaterialInfo((int)Material.AIR) { Solidity = MaterialSolidity.NONSOLID, Opaque = false, RendersAtAll = false, FogAlpha = 0 },
                 new MaterialInfo((int)Material.STONE) { SpeedMod = 1.1f },
-                new MaterialInfo((int)Material.GRASS),
+                new MaterialInfo((int)Material.GRASS) { Sound = MaterialSound.GRASS },
                 new MaterialInfo((int)Material.DIRT),
                 new MaterialInfo((int)Material.WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1) },
                 new MaterialInfo((int)Material.DEBUG),
@@ -81,6 +81,11 @@ namespace Voxalia.Shared
         public static int TextureID(this Material mat, MaterialSide side)
         {
             return ALL_MATS[(int)mat].TID[(int)side];
+        }
+
+        public static MaterialSound Sound(this Material mat)
+        {
+            return ALL_MATS[(int)mat].Sound;
         }
 
         public static string GetName(this Material mat)
@@ -142,6 +147,12 @@ namespace Voxalia.Shared
         COUNT = 6
     }
 
+    public enum MaterialSound : byte
+    {
+        NONE = 0,
+        GRASS = 1
+    }
+
     [Flags]
     public enum MaterialSolidity : byte
     {
@@ -181,6 +192,8 @@ namespace Voxalia.Shared
         public Location FogColor = new Location(0.7);
 
         public float FogAlpha = 1;
+
+        public MaterialSound Sound = MaterialSound.NONE;
 
         public MaterialSolidity Solidity = MaterialSolidity.FULLSOLID;
         

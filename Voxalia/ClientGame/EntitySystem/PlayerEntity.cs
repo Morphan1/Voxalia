@@ -343,7 +343,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
         }
 
-        public void SetMoveSpeed()
+        public void SetMoveSpeed(CharacterController cc)
         {
             float speedmod = 1f;
             if (Click)
@@ -354,16 +354,50 @@ namespace Voxalia.ClientGame.EntitySystem
                     speedmod *= item.SharedAttributes["cspeedm"];
                 }
             }
-            Material mat = TheRegion.GetBlockMaterial(GetPosition() + new Location(0, 0, -0.05f));
+            Material mat = TheRegion.GetBlockMaterial(new Location(cc.Body.Position) + new Location(0, 0, -0.05f));
             speedmod *= mat.GetSpeedMod();
-            CBody.StandingSpeed = CBStandSpeed * speedmod;
-            CBody.CrouchingSpeed = CBCrouchSpeed * speedmod;
+            cc.StandingSpeed = CBStandSpeed * speedmod;
+            cc.CrouchingSpeed = CBCrouchSpeed * speedmod;
             float frictionmod = 1f;
             frictionmod *= mat.GetFrictionMod();
-            CBody.SlidingForce = CBSlideForce * frictionmod * Mass;
-            CBody.AirForce = CBAirForce * frictionmod * Mass;
-            CBody.TractionForce = CBTractionForce * frictionmod * Mass;
-            CBody.VerticalMotionConstraint.MaximumGlueForce = CBGlueForce * Mass;
+            cc.SlidingForce = CBSlideForce * frictionmod * Mass;
+            cc.AirForce = CBAirForce * frictionmod * Mass;
+            cc.TractionForce = CBTractionForce * frictionmod * Mass;
+            cc.VerticalMotionConstraint.MaximumGlueForce = CBGlueForce * Mass;
+        }
+
+        public double SoundTimeout = 0;
+
+        public void PlayRelevantSounds()
+        {
+            if (SoundTimeout > 0)
+            {
+                SoundTimeout -= TheRegion.Delta;
+                return;
+            }
+            if (GetVelocity().LengthSquared() < 0.2)
+            {
+                return;
+            }
+            Material mat = TheRegion.GetBlockMaterial(GetPosition() + new Location(0, 0, -0.05f));
+            MaterialSound sound = mat.Sound();
+            if (sound == MaterialSound.NONE)
+            {
+                return;
+            }
+            float pitch = (float)(Utilities.UtilRandom.NextDouble() * 0.05 + 1.0 - 0.025);
+            float volume = (float)((Utilities.UtilRandom.NextDouble() * 0.1 + 1.0 - 0.1) * 0.5);
+            // TODO: registry of some form?
+            switch (sound)
+            {
+                case MaterialSound.GRASS:
+                    // TODO: Don't manually search the sound list every time!
+                    TheClient.Sounds.Play(TheClient.Sounds.GetSound("sfx/steps/humanoid/grass1"), false, GetPosition(), pitch, volume);
+                    break;
+                default:
+                    return;
+            }
+            SoundTimeout = (Utilities.UtilRandom.NextDouble() * 0.2 + 1.0) / GetVelocity().Length();
         }
 
         public override void Tick()
@@ -395,10 +429,11 @@ namespace Voxalia.ClientGame.EntitySystem
                 Direction.Pitch = -89.9f;
             }
             TryToJump();
-            SetMoveSpeed();
+            SetMoveSpeed(CBody);
             UpdateLocalMovement();
             FlyForth(CBody, TheRegion.Delta);
             SetBodyMovement(CBody, lUIS);
+            PlayRelevantSounds();
             if (Flashlight != null)
             {
                 Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);

@@ -273,6 +273,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheChunkWaitingScreen.Init();
             TheSingleplayerMenuScreen.Init();
             ShowMainMenu();
+            SysConsole.Output(OutputType.INIT, "Ready and looping!");
         }
 
         public void onGodrayColorChanged(object obj, EventArgs e)
