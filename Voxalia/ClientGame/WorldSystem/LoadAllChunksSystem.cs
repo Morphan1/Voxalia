@@ -46,19 +46,22 @@ namespace Voxalia.ClientGame.WorldSystem
                     {
                         Count++;
                         chunk.CalculateLighting();
-                        chunk.AddToWorld(() =>
+                        TheRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                         {
-                            lock (Locker)
+                            chunk.AddToWorld(() =>
                             {
-                                c++;
-                            }
-                        });
-                        chunk.CreateVBO(() =>
-                        {
-                            lock (Locker)
+                                lock (Locker)
+                                {
+                                    c++;
+                                }
+                            });
+                            chunk.CreateVBO(() =>
                             {
-                                rC++;
-                            }
+                                lock (Locker)
+                                {
+                                    rC++;
+                                }
+                            });
                         });
                         chunk.PROCESSED = true;
                     }

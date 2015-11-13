@@ -177,7 +177,11 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (worldObject != null)
             {
+#if NEW_CHUNKS
+                OwningRegion.RemoveChunkQuiet(FCO);
+#else
                 OwningRegion.RemoveChunkQuiet(worldObject);
+#endif
                 worldObject = null;
             }
             if (_VBO != null)

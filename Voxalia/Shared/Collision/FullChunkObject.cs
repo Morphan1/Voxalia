@@ -40,6 +40,13 @@ namespace Voxalia.Shared.Collision
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(MobileMeshCollidable), typeof(FullChunkObject)), fact2);
         }
 
+        public FullChunkObject(Vector3 pos, FullChunkShape shape)
+        {
+            ChunkShape = shape;
+            Position = pos;
+            boundingBox = new BoundingBox(Position, Position + new Vector3(30, 30, 30));
+        }
+
         public FullChunkObject(Vector3 pos, BlockInternal[] blocks)
         {
             ChunkShape = new FullChunkShape(blocks);

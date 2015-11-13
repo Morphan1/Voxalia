@@ -39,13 +39,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             UITextLink inv_equipment = new UITextLink("Equipment", "^0^e^7Equipment", "^7^e^0Equipment", () =>
             {
                 CInvMenu = EquipmentMenu;
-            },
-            () => inv_inventory.GetX() + inv_inventory.GetWidth() + 20, () => inv_inventory.GetY(), FontSets.SlightlyBigger);
+            }, () => inv_inventory.GetX() + inv_inventory.GetWidth() + 20, () => inv_inventory.GetY(), FontSets.SlightlyBigger);
             UITextLink inv_builderitems = new UITextLink("Builder Items", "^0^e^&7uilder Items", "^7^e^0Builder Items", () =>
             {
                 CInvMenu = BuilderItemsMenu;
-            },
-            () => inv_equipment.GetX() + inv_equipment.GetWidth() + 20, () => inv_equipment.GetY(), FontSets.SlightlyBigger);
+            }, () => inv_equipment.GetX() + inv_equipment.GetWidth() + 20, () => inv_equipment.GetY(), FontSets.SlightlyBigger);
             InventoryMenu.Add(inv_inventory);
             InventoryMenu.Add(inv_equipment);
             InventoryMenu.Add(inv_builderitems);
@@ -59,14 +57,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             UITextLink equ_inventory = new UITextLink("Inventory", "^0^e^7Inventory", "^7^e^0Inventory", () =>
             {
                 CInvMenu = InventoryMenu;
-            },
-            () => 20, () => 20, FontSets.SlightlyBigger);
+            }, () => 20, () => 20, FontSets.SlightlyBigger);
             UILabel equ_equipment = new UILabel("^(Equipment", () => equ_inventory.GetX() + equ_inventory.GetWidth() + 20, () => equ_inventory.GetY(), FontSets.SlightlyBigger);
             UITextLink equ_builderitems = new UITextLink("Builder Items", "^0^e^7Builder Items", "^7^e^0Builder Items", () =>
             {
                 CInvMenu = BuilderItemsMenu;
-            },
-            () => equ_equipment.GetX() + equ_equipment.GetWidth() + 20, () => equ_equipment.GetY(), FontSets.SlightlyBigger);
+            }, () => equ_equipment.GetX() + equ_equipment.GetWidth() + 20, () => equ_equipment.GetY(), FontSets.SlightlyBigger);
             EquipmentMenu.Add(equ_inventory);
             EquipmentMenu.Add(equ_equipment);
             EquipmentMenu.Add(equ_builderitems);
@@ -75,13 +71,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             UITextLink bui_inventory = new UITextLink("Inventory", "^0^e^7Inventory", "^7^e^0Inventory", () =>
             {
                 CInvMenu = InventoryMenu;
-            },
-            () => 20, () => 20, FontSets.SlightlyBigger);
+            }, () => 20, () => 20, FontSets.SlightlyBigger);
             UITextLink bui_equipment = new UITextLink("Equipment", "^0^e^7Equipment", "^7^e^0Equipment", () =>
             {
                 CInvMenu = EquipmentMenu;
-            },
-            () => bui_inventory.GetX() + bui_inventory.GetWidth() + 20, () => bui_inventory.GetY(), FontSets.SlightlyBigger);
+            }, () => bui_inventory.GetX() + bui_inventory.GetWidth() + 20, () => bui_inventory.GetY(), FontSets.SlightlyBigger);
             UILabel bui_builderitems = new UILabel("^(Builder Items", () => bui_equipment.GetX() + bui_equipment.GetWidth() + 20, () => bui_equipment.GetY(), FontSets.SlightlyBigger);
             BuilderItemsMenu.Add(bui_inventory);
             BuilderItemsMenu.Add(bui_equipment);

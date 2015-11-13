@@ -382,6 +382,10 @@ namespace System.IO.Compression
             while (bytesPending > 0)
             {
                 int bytesRead = inStream.Read(buffer, 0, (int)Math.Min(bytesPending, buffer.Length));
+                if (bytesRead < 1)
+                {
+                    break;
+                }
                 _stream.Write(buffer, 0, bytesRead);
                 bytesPending -= (uint)bytesRead;
             }

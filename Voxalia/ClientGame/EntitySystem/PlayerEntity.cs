@@ -138,7 +138,11 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Space NMTWOWorld = new Space(null);
 
+#if NEW_CHUNKS
+        Dictionary<Location, FullChunkObject> NMTWOMeshes = new Dictionary<Location, FullChunkObject>();
+#else
         Dictionary<Location, InstancedMesh> NMTWOMeshes = new Dictionary<Location, InstancedMesh>();
+#endif
 
         double lGTT = 0;
 
@@ -170,6 +174,23 @@ namespace Voxalia.ClientGame.EntitySystem
                         {
                             Location ch = TheRegion.ChunkLocFor(pos) + new Location(x, y, z);
                             Chunk chunk = TheRegion.GetChunk(ch);
+#if NEW_CHUNKS
+                            FullChunkObject temp;
+                            if ((!NMTWOMeshes.TryGetValue(ch, out temp)) || (temp.Shape != chunk.FCO.Shape))
+                            {
+                                if (temp != null)
+                                {
+                                    NMTWOWorld.Remove(temp);
+                                    NMTWOMeshes.Remove(ch);
+                                }
+                                if (chunk.MeshShape != null)
+                                {
+                                    FullChunkObject im = new FullChunkObject(chunk.FCO.Position, (FullChunkShape)chunk.FCO.Shape);
+                                    NMTWOWorld.Add(im);
+                                    NMTWOMeshes[ch] = im;
+                                }
+                            }
+#else
                             InstancedMesh temp;
                             if ((!NMTWOMeshes.TryGetValue(ch, out temp)) || (temp.Shape != chunk.MeshShape))
                             {
@@ -185,6 +206,7 @@ namespace Voxalia.ClientGame.EntitySystem
                                     NMTWOMeshes[ch] = im;
                                 }
                             }
+#endif
                         }
                     }
                 }
@@ -385,7 +407,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
-            float pitch = (float)(Utilities.UtilRandom.NextDouble() * 0.05 + 1.0 - 0.025);
+            float pitch = (float)(Utilities.UtilRandom.NextDouble() * 0.1 + 1.0 - 0.05);
             float volume = (float)((Utilities.UtilRandom.NextDouble() * 0.1 + 1.0 - 0.1) * 0.5);
             // TODO: registry of some form?
             switch (sound)

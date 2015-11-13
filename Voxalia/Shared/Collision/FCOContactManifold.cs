@@ -79,14 +79,15 @@ namespace Voxalia.Shared.Collision
                 return;
             }
             Vector3 sw = new Vector3(0, 0, 1f);
-            if (convex.Entity != null)
+            float len = 1;
+            if (convex.Entity != null) // NOTE: Wot?
             {
                 sw = convex.Entity.LinearVelocity;
-                float len = sw.Length();
+                len = sw.Length();
                 sw /= len;
             }
             RayHit rh;
-            bool hit = mesh.ConvexCast(convex.Shape, ref rt, ref sw, 0.001f, MaterialSolidity.FULLSOLID, out rh);
+            bool hit = mesh.ConvexCast(convex.Shape, ref rt, ref sw, len * dt, MaterialSolidity.FULLSOLID, out rh);
             if (!hit || IsNaNOrInfOrZero(ref rh.Normal))
             {
                 for (int i = contacts.Count - 1; i >= 0; i--)
@@ -95,7 +96,25 @@ namespace Voxalia.Shared.Collision
                 }
                 return;
             }
-            float pendef = 0.01f;
+            Location tnorm = new Location(rh.Normal).Normalize();
+            #region MathIsWierd
+            Location rando = new Location(1, 0, 0);
+            if (tnorm == rando)
+            {
+                rando = new Location(0, 1, 0);
+            }
+            Location axisone = (rando - (rando.Dot(tnorm) * tnorm)).Normalize();
+            Location axistwo = tnorm.CrossProduct(axisone);
+            #endregion
+            BoundingBox bb = new BoundingBox(rh.Location - axisone.ToBVector() - axistwo.ToBVector(), rh.Location + axisone.ToBVector() + axistwo.ToBVector());
+            Ray ray = new Ray(rt.Position, sw);
+            float t;
+            Vector3 pos = rh.Location;
+            if (ray.Intersects(bb, out t))
+            {
+                ray.GetPointOnRay(t, out pos);
+            }
+            float pendef = Math.Abs(len * dt - t);
             Vector3 norm;
             RigidTransform rtx = new RigidTransform(Vector3.Zero, rt.Orientation);
             RigidTransform.Transform(ref rh.Normal, ref rtx, out norm);
@@ -103,14 +122,14 @@ namespace Voxalia.Shared.Collision
             for (int i = contacts.Count - 1; i >= 0; i--)
             {
                 contacts[i].Normal = norm;
-                contacts[i].Position = rh.Location;
+                contacts[i].Position = pos;
                 contacts[i].PenetrationDepth = pendef;
             }
             if (Contacts.Count == 0)
             {
                 ContactData cd = new ContactData();
                 cd.Normal = norm;
-                cd.Position = rh.Location;
+                cd.Position = pos;
                 cd.PenetrationDepth = pendef;
                 cd.Id = contacts.Count;
                 Add(ref cd);
