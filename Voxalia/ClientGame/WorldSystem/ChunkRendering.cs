@@ -51,7 +51,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         }
                     }
                 }
-                return new BlockInternal((ushort)1, (byte)0, (byte)0);
+                return new BlockInternal((ushort)Material.AIR, (byte)0, (byte)0); // NOTE: This also works if set to STONE or similar fullblocksolidopaque block.
             }
         }
 

@@ -12,20 +12,23 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Object Locker = new Object();
 
-        public Region world;
+        public Region region;
 
         public void LoadRegion(Location min, Location max)
         {
-            Location minc = world.ChunkLocFor(min);
-            Location maxc = world.ChunkLocFor(max);
+            Location minc = region.ChunkLocFor(min);
+            Location maxc = region.ChunkLocFor(max);
             for (double x = minc.X; x <= maxc.X; x++)
             {
                 for (double y = minc.Y; y <= maxc.Y; y++)
                 {
                     for (double z = minc.Z; z <= maxc.Z; z++)
                     {
-                        c++;
-                        world.LoadChunk_Background(new Location(x, y, z), (o) =>
+                        lock (Locker)
+                        {
+                            c++;
+                        }
+                        region.LoadChunk_Background(new Location(x, y, z), (o) =>
                         {
                             lock (Locker)
                             {

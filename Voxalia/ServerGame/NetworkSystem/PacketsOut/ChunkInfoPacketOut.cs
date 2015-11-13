@@ -1,4 +1,5 @@
-﻿using Voxalia.ServerGame.WorldSystem;
+﻿using System;
+using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
 using Voxalia.Shared.Files;
 
@@ -8,6 +9,10 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public ChunkInfoPacketOut(Chunk chunk, int lod)
         {
+            if (chunk.POPULATING)
+            {
+                throw new Exception("Trying to transmit chunk while it's still loading! For chunk at " + chunk);
+            }
             ID = 24;
             byte[] data_orig;
             if (lod == 1)

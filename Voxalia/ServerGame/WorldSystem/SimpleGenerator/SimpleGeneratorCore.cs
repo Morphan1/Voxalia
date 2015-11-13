@@ -14,6 +14,37 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             float height = SimplexNoise.Generate((float)Seed + (x / LocalHeightMapSize), (float)seed2 + (y / LocalHeightMapSize)) * 6f - 3f;
             return lheight + height;
         }
+        
+        void SpecialSetBlockAt(Chunk chunk, int X, int Y, int Z, BlockInternal bi)
+        {
+            if (X < 0 || Y < 0 || Z < 0 || X >= Chunk.CHUNK_SIZE || Y >= Chunk.CHUNK_SIZE || Z >= Chunk.CHUNK_SIZE)
+            {
+                Location chloc = chunk.OwningRegion.ChunkLocFor(new Location(X, Y, Z));
+                Chunk ch = chunk.OwningRegion.LoadChunkNoPopulate(chunk.WorldPosition + chloc);
+                int x = (int)(X - chloc.X * Chunk.CHUNK_SIZE);
+                int y = (int)(Y - chloc.Y * Chunk.CHUNK_SIZE);
+                int z = (int)(Z - chloc.Z * Chunk.CHUNK_SIZE);
+                if (x < 0 || y < 0 || z < 0 || x >= Chunk.CHUNK_SIZE || y >= Chunk.CHUNK_SIZE || z >= Chunk.CHUNK_SIZE)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Invalid: " + x + ", " + y + ", " + z + " from " + X +", " + Y + ", " + Z + ", " + chloc);
+                }
+                    BlockInternal orig = ch.GetBlockAt(x, y, z);
+                BlockFlags flags = ((BlockFlags)orig.BlockLocalData);
+                if (!flags.HasFlag(BlockFlags.EDITED) && !flags.HasFlag(BlockFlags.PROTECTED))
+                {
+                    ch.SetBlockAt(x, y, z, bi);
+                }
+            }
+            else
+            {
+                BlockInternal orig = chunk.GetBlockAt(X, Y, Z);
+                BlockFlags flags = ((BlockFlags)orig.BlockLocalData);
+                if (!flags.HasFlag(BlockFlags.EDITED) && !flags.HasFlag(BlockFlags.PROTECTED))
+                {
+                    chunk.SetBlockAt(X, Y, Z, bi);
+                }
+            }
+        }
 
         public override void Populate(short Seed, short seed2, Chunk chunk)
         {
@@ -124,7 +155,6 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             {
                                 chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.LEAVES1, 0, 0));
                             }
-                            // Imperfect, needs fixing: Generate side-leaves. Does not work well with chunk borders.
                             cap = Math.Min(top + 7, 30);
                             for (int z = Math.Max(top + 3, 0); z < cap; z++)
                             {
@@ -133,18 +163,15 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                                 {
                                     width = 1;
                                 }
-                                int xcap = Math.Min(x + 1 + width, 30);
-                                for (int sx = Math.Max(x - width, 0); sx < xcap; sx++)
+                                int xcap = x + 1 + width;
+                                for (int sx = x - width; sx < xcap; sx++)
                                 {
-                                    int ycap = Math.Min(y + 1 + width, 30);
-                                    for (int sy = Math.Max(y - width, 0); sy < ycap; sy++)
+                                    int ycap = y + 1 + width;
+                                    for (int sy = y - width; sy < ycap; sy++)
                                     {
                                         if (sy != y || sx != x)
                                         {
-                                            if (chunk.GetBlockAt(sx, sy, z).BlockMaterial == (ushort)Material.AIR)
-                                            {
-                                                chunk.SetBlockAt(sx, sy, z, new BlockInternal((ushort)Material.LEAVES1, 0, 0));
-                                            }
+                                            SpecialSetBlockAt(chunk, sx, sy, z, new BlockInternal((ushort)Material.LEAVES1, 0, 0));
                                         }
                                     }
                                 }

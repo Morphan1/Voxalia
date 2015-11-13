@@ -159,6 +159,8 @@ namespace Voxalia.ClientGame.EntitySystem
             _vel = vel;
         }
 
+        HashSet<Location> Quiet = new HashSet<Location>();
+
         public void UpdateForPacketFromServer(double gtt, long ID, Location pos, Location vel)
         {
             double now = TheRegion.GlobalTickTimeLocal;
@@ -174,6 +176,15 @@ namespace Voxalia.ClientGame.EntitySystem
                         {
                             Location ch = TheRegion.ChunkLocFor(pos) + new Location(x, y, z);
                             Chunk chunk = TheRegion.GetChunk(ch);
+                            if (chunk == null)
+                            {
+                                if (!Quiet.Contains(ch))
+                                {
+                                    Quiet.Add(ch);
+                                    SysConsole.Output(OutputType.WARNING, "Moving around in non-loaded chunks! For loc: " + ch);
+                                }
+                                continue;
+                            }
 #if NEW_CHUNKS
                             FullChunkObject temp;
                             if ((!NMTWOMeshes.TryGetValue(ch, out temp)) || (temp.Shape != chunk.FCO.Shape))
