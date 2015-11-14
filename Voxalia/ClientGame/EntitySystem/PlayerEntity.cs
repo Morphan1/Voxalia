@@ -419,21 +419,18 @@ namespace Voxalia.ClientGame.EntitySystem
                 return;
             }
             float pitch = (float)(Utilities.UtilRandom.NextDouble() * 0.1 + 1.0 - 0.05);
-            float volume = (float)Math.Min(((Utilities.UtilRandom.NextDouble() * 0.1 + 1.0 - 0.1) * 0.2 * GetVelocity().Length()), 1.0);
+            float volume = (float)Math.Min(((Utilities.UtilRandom.NextDouble() * 0.1 + 1.0 - 0.1) * 0.14 * GetVelocity().Length()), 1.0);
             // TODO: registry of some form?
             switch (sound)
             {
                 case MaterialSound.GRASS:
-                    // TODO: Don't manually search the sound list every time!
-                    TheClient.Sounds.Play(TheClient.Sounds.GetSound("sfx/steps/humanoid/grass1"), false, GetPosition(), pitch, volume);
-                    break;
                 case MaterialSound.SAND:
-                    // TODO: Don't manually search the sound list every time!
-                    TheClient.Sounds.Play(TheClient.Sounds.GetSound("sfx/steps/humanoid/sand" + (Utilities.UtilRandom.Next(4) + 1)), false, GetPosition(), pitch, volume);
-                    break;
                 case MaterialSound.LEAVES:
+                case MaterialSound.WOOD:
+                case MaterialSound.METAL:
+                case MaterialSound.DIRT:
                     // TODO: Don't manually search the sound list every time!
-                    TheClient.Sounds.Play(TheClient.Sounds.GetSound("sfx/steps/humanoid/leaves" + (Utilities.UtilRandom.Next(4) + 1)), false, GetPosition(), pitch, volume);
+                    TheClient.Sounds.Play(TheClient.Sounds.GetSound("sfx/steps/humanoid/" + sound.ToString().ToLower() + (Utilities.UtilRandom.Next(4) + 1)), false, GetPosition(), pitch, volume);
                     break;
                 default:
                     return;

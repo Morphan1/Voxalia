@@ -162,7 +162,7 @@ namespace Voxalia.Shared
                 Started = true;
                 Done = false;
             }
-            Task.Factory.StartNew(() => runInternal());
+            Task.Factory.StartNew(runInternal);
         }
 
         private void runInternal()

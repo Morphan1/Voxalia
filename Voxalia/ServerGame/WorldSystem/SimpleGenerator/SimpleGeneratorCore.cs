@@ -32,7 +32,8 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                 BlockFlags flags = ((BlockFlags)orig.BlockLocalData);
                 if (!flags.HasFlag(BlockFlags.EDITED) && !flags.HasFlag(BlockFlags.PROTECTED))
                 {
-                    ch.SetBlockAt(x, y, z, bi);
+                    // TODO: lock?
+                    ch.BlocksInternal[chunk.BlockIndex(x, y, z)] = bi;
                 }
             }
             else
@@ -41,7 +42,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                 BlockFlags flags = ((BlockFlags)orig.BlockLocalData);
                 if (!flags.HasFlag(BlockFlags.EDITED) && !flags.HasFlag(BlockFlags.PROTECTED))
                 {
-                    chunk.SetBlockAt(X, Y, Z, bi);
+                    chunk.BlocksInternal[chunk.BlockIndex(X, Y, Z)] = bi;
                 }
             }
         }
@@ -61,15 +62,15 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     // General natural ground
                     for (int z = 0; z < Math.Min(top - 5, 30); z++)
                     {
-                        chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.STONE, 0, 0));
+                        chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.STONE, 0, 0);
                     }
                     for (int z = Math.Max(top - 5, 0); z < Math.Min(top - 1, 30); z++)
                     {
-                        chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.DIRT, 0, 0));
+                        chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.DIRT, 0, 0);
                     }
                     for (int z = Math.Max(top - 1, 0); z < Math.Min(top, 30); z++)
                     {
-                        chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 0, 0));
+                        chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.GRASS, 0, 0);
                     };
                     if (top >= 0 && top < 30)
                     {
@@ -77,11 +78,11 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         int n = spotr.Next(50);
                         if (n == 1)
                         {
-                            chunk.SetBlockAt(x, y, top, new BlockInternal((ushort)Material.TALLGRASS, 52, 0));
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, top)] = new BlockInternal((ushort)Material.TALLGRASS, 52, 0);
                         }
                         else if (n == 2)
                         {
-                            chunk.SetBlockAt(x, y, top, new BlockInternal((ushort)Material.TALLGRASS, 127, 0));
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, top)] = new BlockInternal((ushort)Material.TALLGRASS, 127, 0);
                         }
                     }
                     // Smooth terrain cap
@@ -95,46 +96,46 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         {
                             if (topfxp > topf && topfxp - Math.Round(topfxp) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 80, 0));
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.GRASS, 80, 0);
                             }
                             else if (topfxm > topf && topfxm - Math.Round(topfxm) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 81, 0));
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.GRASS, 81, 0);
                             }
                             else if (topfyp > topf && topfyp - Math.Round(topfyp) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 82, 0));
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.GRASS, 82, 0);
                             }
                             else if (topfym > topf && topfym - Math.Round(topfym) <= 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 83, 0));
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.GRASS, 83, 0);
                             }
                             else
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 3, 0));
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.GRASS, 3, 0);
                             }
                             if (z > 0)
                             {
-                                chunk.SetBlockAt(x, y, z - 1, new BlockInternal((ushort)Material.DIRT, 0, 0));
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z - 1)] = new BlockInternal((ushort)Material.DIRT, 0, 0);
                             }
                         }
                         else
                         {
                             if (topfxp > topf && topfxp - Math.Round(topfxp) > 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 73, 0));
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.GRASS, 73, 0);
                             }
                             else if (topfxm > topf && topfxm - Math.Round(topfxm) > 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 72, 0));
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.GRASS, 72, 0);
                             }
                             else if (topfyp > topf && topfyp - Math.Round(topfyp) > 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 74, 0));
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.GRASS, 74, 0);
                             }
                             else if (topfym > topf && topfym - Math.Round(topfym) > 0)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.GRASS, 75, 0));
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.GRASS, 75, 0);
                             }
                         }
                     }
@@ -148,12 +149,12 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             int cap = Math.Min(top + 5, 30);
                             for (int z = Math.Max(top, 0); z < cap; z++)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.LOG, 39, 0));
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.LOG, 39, 0);
                             }
                             cap = Math.Min(top + 7, 30);
                             for (int z = Math.Max(top + 5, 0); z < cap; z++)
                             {
-                                chunk.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.LEAVES1, 0, 0));
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.LEAVES1, 0, 0);
                             }
                             cap = Math.Min(top + 7, 30);
                             for (int z = Math.Max(top + 3, 0); z < cap; z++)

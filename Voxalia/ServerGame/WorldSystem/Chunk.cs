@@ -15,8 +15,8 @@ namespace Voxalia.ServerGame.WorldSystem
 
         static Chunk()
         {
-            Lockers = new List<Object>(11);
-            for (int i = 0; i < 10; i++)
+            Lockers = new List<Object>(21);
+            for (int i = 0; i < 20; i++)
             {
                 Lockers.Add(new Object());
             }
@@ -24,7 +24,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         Object GetLocker()
         {
-            return Lockers[WorldPosition.GetHashCode() % 10];
+            return Lockers[Math.Abs(WorldPosition.GetHashCode()) % 20];
         }
 
         public const int CHUNK_SIZE = 30;
@@ -65,59 +65,65 @@ namespace Voxalia.ServerGame.WorldSystem
 
         /// <summary>
         /// Asyncable (Edit session).
-        /// TODO: Edit session lock notes.
         /// </summary>
         public void SetBlockAt(int x, int y, int z, BlockInternal mat)
         {
-            BlocksInternal[BlockIndex(x, y, z)] = mat;
+            lock (EditSessionLock)
+            {
+                BlocksInternal[BlockIndex(x, y, z)] = mat;
+            }
         }
 
         public double LastEdited = -1;
 
         /// <summary>
         /// Asyncable (Edit session).
-        /// TODO: Edit session lock notes.
         /// </summary>
         public BlockInternal GetBlockAt(int x, int y, int z)
         {
-            return BlocksInternal[BlockIndex(x, y, z)];
+            //lock (EditSessionLock) // TODO: How do we magic this to be possible?
+            {
+                return BlocksInternal[BlockIndex(x, y, z)];
+            }
         }
 
         /// <summary>
         /// Asyncable (Edit session).
-        /// TODO: Local edit session lock.
         /// </summary>
-        /// <returns>.</returns>
+        /// <returns>A chunk.</returns>
         public StaticMesh CalculateChunkShape()
         {
             try
             {
                 List<Vector3> Vertices = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6); // TODO: Make this an array?
                 Vector3 ppos = WorldPosition.ToBVector() * 30;
-                for (int x = 0; x < CHUNK_SIZE; x++)
+                //lock (EditSessionLock) // TODO: How do we magic this to be possible?
                 {
-                    for (int y = 0; y < CHUNK_SIZE; y++)
+                    for (int x = 0; x < CHUNK_SIZE; x++)
                     {
-                        for (int z = 0; z < CHUNK_SIZE; z++)
+                        for (int y = 0; y < CHUNK_SIZE; y++)
                         {
-                            BlockInternal c = GetBlockAt(x, y, z);
-                            if (((Material)c.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
+                            for (int z = 0; z < CHUNK_SIZE; z++)
                             {
-                                BlockInternal zp = z + 1 < CHUNK_SIZE ? GetBlockAt(x, y, z + 1) : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(x, y, 30));
-                                BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(x, y, -1));
-                                BlockInternal yp = y + 1 < CHUNK_SIZE ? GetBlockAt(x, y + 1, z) : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(x, 30, z));
-                                BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(x, -1, z));
-                                BlockInternal xp = x + 1 < CHUNK_SIZE ? GetBlockAt(x + 1, y, z) : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(30, y, z));
-                                BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(-1, y, z));
-                                bool zps = ((Material)zp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
-                                bool zms = ((Material)zm.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
-                                bool xps = ((Material)xp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
-                                bool xms = ((Material)xm.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
-                                bool yps = ((Material)yp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
-                                bool yms = ((Material)ym.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
-                                Vector3 pos = new Vector3(ppos.X + x, ppos.Y + y, ppos.Z + z);
-                                List<Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
-                                Vertices.AddRange(vecsi);
+                                BlockInternal c = GetBlockAt(x, y, z);
+                                if (((Material)c.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
+                                {
+                                    BlockInternal zp = z + 1 < CHUNK_SIZE ? BlocksInternal[BlockIndex(x, y, z + 1)] : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(x, y, 30));
+                                    BlockInternal zm = z > 0 ? BlocksInternal[BlockIndex(x, y, z - 1)] : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(x, y, -1));
+                                    BlockInternal yp = y + 1 < CHUNK_SIZE ? BlocksInternal[BlockIndex(x, y + 1, z)] : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(x, 30, z));
+                                    BlockInternal ym = y > 0 ? BlocksInternal[BlockIndex(x, y - 1, z)] : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(x, -1, z));
+                                    BlockInternal xp = x + 1 < CHUNK_SIZE ? BlocksInternal[BlockIndex(x + 1, y, z)] : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(30, y, z));
+                                    BlockInternal xm = x > 0 ? BlocksInternal[BlockIndex(x - 1, y, z)] : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(-1, y, z));
+                                    bool zps = ((Material)zp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
+                                    bool zms = ((Material)zm.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
+                                    bool xps = ((Material)xp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
+                                    bool xms = ((Material)xm.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
+                                    bool yps = ((Material)yp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
+                                    bool yms = ((Material)ym.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
+                                    Vector3 pos = new Vector3(ppos.X + x, ppos.Y + y, ppos.Z + z);
+                                    List<Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
+                                    Vertices.AddRange(vecsi);
+                                }
                             }
                         }
                     }
@@ -210,6 +216,8 @@ namespace Voxalia.ServerGame.WorldSystem
             });
 #endif
         }
+
+        public Object EditSessionLock = new Object();
         
         /// <summary>
         /// Asyncable.
@@ -217,16 +225,19 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public byte[] GetSaveData()
         {
-            byte[] bytes = new byte[8 + BlocksInternal.Length * 4];
-            Encoding.ASCII.GetBytes("VOX_").CopyTo(bytes, 0); // General Header
-            Utilities.IntToBytes(1).CopyTo(bytes, 4); // Saves Version
-            for (int i = 0; i < BlocksInternal.Length; i++)
+            lock (EditSessionLock)
             {
-                Utilities.UshortToBytes(BlocksInternal[i].BlockMaterial).CopyTo(bytes, 8 + i * 2);
-                bytes[8 + BlocksInternal.Length * 2 + i] = BlocksInternal[i].BlockData;
-                bytes[8 + BlocksInternal.Length * 3 + i] = BlocksInternal[i].BlockLocalData;
+                byte[] bytes = new byte[8 + BlocksInternal.Length * 4];
+                Encoding.ASCII.GetBytes("VOX_").CopyTo(bytes, 0); // General Header
+                Utilities.IntToBytes(1).CopyTo(bytes, 4); // Saves Version
+                for (int i = 0; i < BlocksInternal.Length; i++)
+                {
+                    Utilities.UshortToBytes(BlocksInternal[i].BlockMaterial).CopyTo(bytes, 8 + i * 2);
+                    bytes[8 + BlocksInternal.Length * 2 + i] = BlocksInternal[i].BlockData;
+                    bytes[8 + BlocksInternal.Length * 3 + i] = BlocksInternal[i].BlockLocalData;
+                }
+                return FileHandler.GZip(bytes);
             }
-            return FileHandler.GZip(bytes);
         }
         
         /// <summary>
@@ -283,26 +294,27 @@ namespace Voxalia.ServerGame.WorldSystem
 
         void SaveToFileI()
         {
-            lock (GetLocker())
+            try
             {
-                try
+                byte[] saves = GetSaveData();
+                lock (GetLocker())
                 {
-                    Program.Files.WriteBytes(GetFileName(), GetSaveData());
+                    Program.Files.WriteBytes(GetFileName(), saves);
                 }
-                catch (Exception ex)
-                {
-                    SysConsole.Output(OutputType.ERROR, "Saving chunk to file: " + ex.ToString());
-                }
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output(OutputType.ERROR, "Saving chunk to file: " + ex.ToString());
             }
         }
 
         /// <summary>
         /// Asyncable.
-        /// TODO: Local edit session lock.
         /// Note: Set LOADING=true before calling, and LOADING=false when done.
         /// </summary>
         public void LoadFromSaveData(byte[] data)
         {
+            // TODO: Lock safely?
             byte[] bytes = FileHandler.UnGZip(data);
             string engine = Encoding.ASCII.GetString(bytes, 0, 4);
             if (engine != "VOX_")
@@ -310,18 +322,15 @@ namespace Voxalia.ServerGame.WorldSystem
                 throw new Exception("Invalid save data ENGINE format: " + engine + "!");
             }
             int revision = Utilities.BytesToInt(Utilities.BytesPartial(bytes, 4, 4));
-            if (revision == 1)
+            if (revision != 1)
             {
-                for (int i = 0; i < BlocksInternal.Length; i++)
-                {
-                    BlocksInternal[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(bytes, 8 + i * 2, 2));
-                    BlocksInternal[i].BlockData = bytes[8 + BlocksInternal.Length * 2 + i];
-                    BlocksInternal[i].BlockLocalData = bytes[8 + BlocksInternal.Length * 3 + i];
-                }
+                throw new Exception("Invalid save data REVISION: " + revision + "!");
             }
-            else
+            for (int i = 0; i < BlocksInternal.Length; i++)
             {
-                throw new Exception("Invalid save data VERSION format: " + revision + "!");
+                BlocksInternal[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(bytes, 8 + i * 2, 2));
+                BlocksInternal[i].BlockData = bytes[8 + BlocksInternal.Length * 2 + i];
+                BlocksInternal[i].BlockLocalData = bytes[8 + BlocksInternal.Length * 3 + i];
             }
         }
     }

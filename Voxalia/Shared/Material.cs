@@ -37,7 +37,7 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.AIR) { Solidity = MaterialSolidity.NONSOLID, Opaque = false, RendersAtAll = false, FogAlpha = 0 },
                 new MaterialInfo((int)Material.STONE) { SpeedMod = 1.1f },
                 new MaterialInfo((int)Material.GRASS) { Sound = MaterialSound.GRASS },
-                new MaterialInfo((int)Material.DIRT),
+                new MaterialInfo((int)Material.DIRT) { Sound = MaterialSound.DIRT },
                 new MaterialInfo((int)Material.WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1) },
                 new MaterialInfo((int)Material.DEBUG),
                 new MaterialInfo((int)Material.LEAVES1) { Opaque = false, SpeedMod = 0.7f, FogAlpha = 0, CanRenderAgainstSelf = true, Sound = MaterialSound.LEAVES },
@@ -45,11 +45,11 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f, FogColor = new Location(0, 1, 0) },
                 new MaterialInfo((int)Material.SNOW) { SpeedMod = 0.8f },
                 new MaterialInfo((int)Material.SMOKE) { Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.8) },
-                new MaterialInfo((int)Material.LOG) { SpeedMod = 1.1f },
+                new MaterialInfo((int)Material.LOG) { SpeedMod = 1.1f, Sound = MaterialSound.WOOD },
                 new MaterialInfo((int)Material.TALLGRASS) { Solidity = MaterialSolidity.SPECIAL, Opaque = false },
                 new MaterialInfo((int)Material.SAND) { Sound = MaterialSound.SAND },
-                new MaterialInfo((int)Material.STEEL_SOLID) { SpeedMod = 1.25f },
-                new MaterialInfo((int)Material.STEEL_PLATE) { SpeedMod = 1.35f },
+                new MaterialInfo((int)Material.STEEL_SOLID) { SpeedMod = 1.25f, Sound = MaterialSound.METAL },
+                new MaterialInfo((int)Material.STEEL_PLATE) { SpeedMod = 1.35f, Sound = MaterialSound.METAL },
             };
             mats[(int)Material.GRASS].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
             mats[(int)Material.GRASS].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
@@ -152,7 +152,12 @@ namespace Voxalia.Shared
         NONE = 0,
         GRASS = 1,
         SAND = 2,
-        LEAVES = 3
+        LEAVES = 3,
+        METAL = 4,
+        STONE = 5,
+        SNOW = 6,
+        DIRT = 7,
+        WOOD = 8
     }
 
     [Flags]
