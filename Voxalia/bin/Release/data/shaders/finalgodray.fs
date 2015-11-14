@@ -74,7 +74,7 @@ vec4 ssr()
 	vec4 reflecto = texture(normaltex, f_texcoord);
 	vec3 normal = normalize(reflecto.xyz);
 	float currDepth = linearizeDepth(texture(depthtex, f_texcoord).r);
-	eyePosition = normalize(eye_position);
+	vec3 eyePosition = normalize(eye_position);
 	vec4 reflectionVector = proj_mat * reflect(vec4(-eyePosition, 0), vec4(normal, 0));
 	return raytrace(reflectionVector.xyz / reflectionVector.w, currDepth);
 }
