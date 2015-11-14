@@ -22,7 +22,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
         {
             if (entry.InputArguments.Count < 1)
             {
-                entry.Player.Network.SendMessage("/blockship <context/perfect>");
+                entry.Player.Network.SendMessage("/blockship <convex/perfect>");
                 return;
             }
             BGETraceMode tm = BGETraceMode.CONVEX;
@@ -34,7 +34,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
             Location start = entry.Player.GetPosition().GetBlockLocation() + new Location(0, 0, -1);
             List<KeyValuePair<Location, BlockInternal>> blocks = new List<KeyValuePair<Location, BlockInternal>>();
             AABB extent = new AABB() { Min = start, Max = start };
-            if (!FloodFrom(entry.Player.TheRegion, start, blocks, maxRad, extent))
+            if (!FloodFrom(entry.Player.TheRegion, start, blocks, maxRad, extent) || blocks.Count == 0)
             {
                 entry.Player.Network.SendMessage("Invalid flood-search!");
                 return;

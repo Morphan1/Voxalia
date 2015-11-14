@@ -25,7 +25,7 @@ namespace Voxalia.Shared.Collision
         public static void RegisterMe()
         {
             NarrowPhasePairFactory<ConvexFCOPairHandler> fact = new NarrowPhasePairFactory<ConvexFCOPairHandler>();
-            NarrowPhasePairFactory<MeshFCOPairHandler> fact2 = new NarrowPhasePairFactory<MeshFCOPairHandler>();
+            //NarrowPhasePairFactory<MeshFCOPairHandler> fact2 = new NarrowPhasePairFactory<MeshFCOPairHandler>();
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<BoxShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<SphereShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<CapsuleShape>), typeof(FullChunkObject)), fact);
@@ -37,28 +37,32 @@ namespace Voxalia.Shared.Collision
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<WrappedShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<ConvexHullShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(TriangleCollidable), typeof(FullChunkObject)), fact);
-            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(MobileMeshCollidable), typeof(FullChunkObject)), fact2);
+            //NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(MobileMeshCollidable), typeof(FullChunkObject)), fact2);
         }
 
         public FullChunkObject(Vector3 pos, FullChunkShape shape)
         {
             ChunkShape = shape;
+            base.Shape = ChunkShape;
             Position = pos;
             boundingBox = new BoundingBox(Position, Position + new Vector3(30, 30, 30));
+            Events = new ContactEventManager<FullChunkObject>(this);
         }
 
         public FullChunkObject(Vector3 pos, BlockInternal[] blocks)
         {
             ChunkShape = new FullChunkShape(blocks);
+            base.Shape = ChunkShape;
             Position = pos;
             boundingBox = new BoundingBox(Position, Position + new Vector3(30, 30, 30));
+            Events = new ContactEventManager<FullChunkObject>(this);
         }
 
         public FullChunkShape ChunkShape;
 
         public Vector3 Position;
 
-        public ContactEventManager<FullChunkObject> Events = new ContactEventManager<FullChunkObject>();
+        public ContactEventManager<FullChunkObject> Events;
 
         protected override IContactEventTriggerer EventTriggerer
         {

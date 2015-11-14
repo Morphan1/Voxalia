@@ -15,6 +15,9 @@ using BEPUutilities;
 using BEPUphysics;
 using BEPUutilities.DataStructures;
 using BEPUphysics.Materials;
+using BEPUphysics.BroadPhaseSystems;
+using BEPUutilities.ResourceManagement;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace Voxalia.Shared.Collision
 {
@@ -83,14 +86,9 @@ namespace Voxalia.Shared.Collision
                     throw new ArgumentException("Inappropriate types used to initialize pair.");
                 }
             }
-            BroadPhaseOverlap = new BEPUphysics.BroadPhaseSystems.BroadPhaseOverlap(convex, mesh);
+            broadPhaseOverlap = new BroadPhaseOverlap(convex, mesh, broadPhaseOverlap.CollisionRule);
             UpdateMaterialProperties(convex.Entity != null ? convex.Entity.Material : null, mesh.Material);
             base.Initialize(entryA, entryB);
-            InteractionProperties ip = contactConstraint.MaterialInteraction;
-            ip.StaticFriction = 0f;
-            ip.KineticFriction = 0f;
-            ip.Bounciness = 0.5f;
-            contactConstraint.MaterialInteraction = ip;
             noRecurse = false;
         }
         
@@ -104,52 +102,59 @@ namespace Voxalia.Shared.Collision
         
         public override void UpdateTimeOfImpact(Collidable requester, float dt)
         {
-            if (convex.Entity != null && convex.Entity.ActivityInformation.IsActive && convex.Entity.PositionUpdateMode == PositionUpdateMode.Continuous)
+            // TODO: fix, etc.
+            if (convex != null && convex.Entity != null && convex.Entity.ActivityInformation != null && convex.Entity.ActivityInformation.IsActive && convex.Entity.PositionUpdateMode == PositionUpdateMode.Continuous)
             {
+                Vector3 velocity;
+                Vector3 lvel = convex.Entity.LinearVelocity;
+                Vector3.Multiply(ref lvel, dt, out velocity);
+                float velocitySquared = velocity.LengthSquared();
+
+                var minimumRadius = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
                 timeOfImpact = 1;
-                RigidTransform rt = new RigidTransform(convex.Entity.Position, convex.Entity.Orientation);
-                Vector3 sweep = convex.Entity.LinearVelocity;
-                sweep *= dt;
-                RayHit rh;
-                if (mesh.ConvexCast(convex.Shape, ref rt, ref sweep, out rh))
+                if (minimumRadius * minimumRadius < velocitySquared)
                 {
-                    timeOfImpact = rh.T;
-                }
-                if (TimeOfImpact < 0)
-                {
-                    timeOfImpact = 0;
+                    BoxShape bs = new BoxShape(1, 1, 1);
+                    for (int i = 0; i < contactManifold.ctcts.Count; i++)
+                    {
+                        var ct = contactManifold.ctcts.Elements[i];
+                        Vector3 pos = -(ct.Position + convex.Entity.Position);
+                        RayHit rayHit;
+                        if (GJKToolbox.CCDSphereCast(new Ray(pos, velocity), minimumRadius, bs, ref Toolbox.RigidIdentity, timeOfImpact, out rayHit) &&
+                            rayHit.T > Toolbox.BigEpsilon)
+                        {
+                            timeOfImpact = rayHit.T;
+                        }
+                    }
                 }
             }
         }
         
         protected override void GetContactInformation(int index, out ContactInformation info)
         {
-            ContactInformation ci = new ContactInformation();
-            ci.Contact = contactManifold.ctcts[index];
-            ci.Pair = this;
-            ReadOnlyList<ContactPenetrationConstraint> list = contactConstraint.ContactPenetrationConstraints;
-            float totalimp = 0;
-            for (int i = 0; i < list.Count; i++)
+            info.Contact = contactManifold.Contacts[index];
+            //Find the contact's normal and friction forces.
+            info.FrictionImpulse = 0;
+            info.NormalImpulse = 0;
+            for (int i = 0; i < contactConstraint.ContactFrictionConstraints.Count; i++)
             {
-                totalimp += list[i].NormalImpulse;
+                if (contactConstraint.ContactFrictionConstraints[i].PenetrationConstraint.Contact == info.Contact)
+                {
+                    info.FrictionImpulse = contactConstraint.ContactFrictionConstraints[i].TotalImpulse;
+                    info.NormalImpulse = contactConstraint.ContactFrictionConstraints[i].PenetrationConstraint.NormalImpulse;
+                    break;
+                }
             }
-            ci.NormalImpulse = list[index].NormalImpulse;
-            ci.FrictionImpulse = (ci.NormalImpulse / totalimp) * list[index].RelativeVelocity;
+            //Compute relative velocity
             if (convex.Entity != null)
             {
-                Vector3 velocity;
-                Vector3 cep = convex.Entity.Position;
-                Vector3 ceav = convex.Entity.AngularVelocity;
-                Vector3 celv = convex.Entity.LinearVelocity;
-                Vector3.Subtract(ref ci.Contact.Position, ref cep, out velocity);
-                Vector3.Cross(ref ceav, ref velocity, out velocity);
-                Vector3.Add(ref velocity, ref celv, out ci.RelativeVelocity);
+                info.RelativeVelocity = Toolbox.GetVelocityOfPoint(info.Contact.Position, convex.Entity.Position, convex.Entity.LinearVelocity, convex.Entity.AngularVelocity);
             }
             else
             {
-                ci.RelativeVelocity = new Vector3(0, 0, 0);
+                info.RelativeVelocity = new Vector3();
             }
-            info = ci;
+            info.Pair = this;
         }
     }
 }

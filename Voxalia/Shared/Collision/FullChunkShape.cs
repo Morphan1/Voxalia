@@ -4,6 +4,7 @@ using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using System;
+using BEPUutilities.DataStructures;
 
 namespace Voxalia.Shared.Collision
 {
@@ -61,7 +62,7 @@ namespace Voxalia.Shared.Collision
                             if (solidness.HasFlag(((Material)bi.BlockMaterial).GetSolidity()))
                             {
                                 Location offs;
-                                EntityShape es = BlockShapeRegistry.BSD[bi.BlockData].GetShape(out offs);
+                                EntityShape es = BlockShapeRegistry.BSD[/*bi.BlockData*/0].GetShape(out offs);
                                 if (es == null)
                                 {
                                     continue;
@@ -98,17 +99,46 @@ namespace Voxalia.Shared.Collision
         }
 
         BoxShape RayCastShape = new BoxShape(0.1f, 0.1f, 0.1f);
-
-        /// <summary>
-        /// Performs a raycast.
-        /// NOTE: hit.T is always 0.
-        /// </summary>
+        
         public bool RayCast(ref Ray ray, float maximumLength, MaterialSolidity solidness, out RayHit hit)
         {
             // TODO: Original special ray code!
             RigidTransform rt = new RigidTransform(ray.Position, Quaternion.Identity);
             Vector3 sweep = ray.Direction;
             return ConvexCast(RayCastShape, ref rt, ref sweep, maximumLength, solidness, out hit);
+        }
+        
+        // TODO: Optimize me!
+        public void GetOverlaps(Vector3 gridPosition, BoundingBox boundingBox, ref QuickList<Vector3i> overlaps)
+        {
+            BoundingBox b2 = new BoundingBox();
+            Vector3.Subtract(ref boundingBox.Min, ref gridPosition, out b2.Min);
+            Vector3.Subtract(ref boundingBox.Max, ref gridPosition, out b2.Max);
+            var min = new Vector3i
+            {
+                X = Math.Max(0, (int)b2.Min.X),
+                Y = Math.Max(0, (int)b2.Min.Y),
+                Z = Math.Max(0, (int)b2.Min.Z)
+            };
+            var max = new Vector3i
+            {
+                X = Math.Min(CHUNK_SIZE - 1, (int)b2.Max.X),
+                Y = Math.Min(CHUNK_SIZE - 1, (int)b2.Max.Y),
+                Z = Math.Min(CHUNK_SIZE - 1, (int)b2.Max.Z)
+            };
+            for (int x = min.X; x < max.X; x++)
+            {
+                for (int y = min.Y; y < max.Y; y++)
+                {
+                    for (int z = min.Z; z < max.Z; z++)
+                    {
+                        if (((Material)Blocks[BlockIndex(x, y, z)].BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
+                        {
+                            overlaps.Add(new Vector3i { X = x, Y = y, Z = z });
+                        }
+                    }
+                }
+            }
         }
     }
 }

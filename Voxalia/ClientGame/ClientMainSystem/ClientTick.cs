@@ -191,7 +191,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 bool h = TheRegion.SpecialCaseRayTrace(PlayerEyePosition, forw, 100, MaterialSolidity.ANY, IgnorePlayer, out rcr);
                 CameraFinalTarget = h ? new Location(rcr.HitData.Location) - new Location(rcr.HitData.Normal).Normalize() * 0.01: PlayerEyePosition + forw * 100;
                 CameraImpactNormal = h ? new Location(rcr.HitData.Normal).Normalize() : Location.Zero;
-                CameraDistance = h ? rcr.HitData.T: 100;
+                CameraDistance = h ? rcr.HitData.T * 100: 100;
             }
         }
 
