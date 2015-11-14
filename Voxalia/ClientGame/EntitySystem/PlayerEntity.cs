@@ -692,6 +692,10 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             if (TheClient.RenderingShadows || !TheClient.CVars.g_firstperson.ValueB)
             {
+                if (!TheClient.RenderingShadows)
+                {
+                    TheClient.Rendering.SetReflectionAmt(0.7f);
+                }
                 OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(1.5f)
                     * OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
                     * PlayerAngleMat
@@ -699,6 +703,10 @@ namespace Voxalia.ClientGame.EntitySystem
                 GL.UniformMatrix4(2, false, ref mat);
                 TheClient.Rendering.SetMinimumLight(0.0f);
                 model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
+                if (!TheClient.RenderingShadows)
+                {
+                    TheClient.Rendering.SetReflectionAmt(0f);
+                }
             }
         }
     }

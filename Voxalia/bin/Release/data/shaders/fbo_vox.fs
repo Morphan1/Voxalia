@@ -32,8 +32,7 @@ void main()
 	color = col * v_color;
 	position = f_position;
 	normal = vec4(f_normal, 1.0);
-	renderhint = vec4(specular_strength + spec, specular_power, minimum_light, 1.0);
-	// TODO: 1 Additional renderhint - we have the slot, why not
-    // TODO: Maybe take advantage of normal.w as well?
+	renderhint = vec4(specular_strength + spec, specular_power, minimum_light, 0.0);
+    // TODO: Maybe take advantage of normal.w and position.w as well?
     bw = bw_color;
 }

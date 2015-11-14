@@ -101,6 +101,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.ClearBuffer(ClearBuffer.Color, 2, new float[] { 0f, 0f, 0f, 0f });
             GL.ClearBuffer(ClearBuffer.Color, 3, new float[] { 0f, 0f, 0f, 0f });
             GL.ClearBuffer(ClearBuffer.Color, 4, new float[] { 0f, 0f, 0f, 0f });
+            GL.BlendFunc(3, BlendingFactorSrc.One, BlendingFactorDest.Zero);
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.Enable(EnableCap.Texture2D);
         }

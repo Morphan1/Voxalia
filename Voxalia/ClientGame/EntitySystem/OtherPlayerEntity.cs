@@ -316,6 +316,10 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
+            if (!TheClient.RenderingShadows)
+            {
+                TheClient.Rendering.SetReflectionAmt(0.7f);
+            }
             OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(1.5f)
                 * OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
                 * PlayerEntity.PlayerAngleMat
@@ -331,10 +335,14 @@ namespace Voxalia.ClientGame.EntitySystem
                     m4.M31, m4.M32, m4.M33, m4.M34, m4.M41, m4.M42, m4.M43, m4.M44);
                 OpenTK.Matrix4 nrot = OpenTK.Matrix4.CreateRotationY(180f * (float)Utilities.PI180);
                 bonemat *= nrot;
-                GL.UniformMatrix4(8, false, ref bonemat);
+                GL.UniformMatrix4(10, false, ref bonemat);
                 TheClient.Models.GetModel("items/weapons/gun01.dae").Draw();
                 bonemat = OpenTK.Matrix4.Identity;
-                GL.UniformMatrix4(8, false, ref bonemat);
+                GL.UniformMatrix4(10, false, ref bonemat);
+                if (!TheClient.RenderingShadows)
+                {
+                    TheClient.Rendering.SetReflectionAmt(0f);
+                }
             }
         }
     }

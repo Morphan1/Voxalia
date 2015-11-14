@@ -27,8 +27,57 @@ layout (location = 17) uniform float zfar = 1000.0;
 layout (location = 18) uniform vec4 fogCol = vec4(0.0);
 layout (location = 19) uniform float desaturationAmount = 1.0;
 
+layout (location = 20) uniform vec3 eye_position = vec3(0.0);
+layout (location = 21) uniform float MIN_DEPTH = 1.0;
+layout (location = 22) uniform mat4 proj_mat = mat4(1.0);
+layout (location = 23) uniform float MAX_DEPTH = 1000.0;
+
 layout (location = 0) out vec4 color;
 layout (location = 1) out vec4 godray;
+
+float linearizeDepth(float rinput)
+{
+	return (2 * MIN_DEPTH) / (MAX_DEPTH + MIN_DEPTH - rinput * (MAX_DEPTH - MIN_DEPTH));
+}
+
+vec4 raytrace(in vec3 reflectionVector, in float startDepth)
+{
+	vec4 acolor = vec4(0.0f);
+	float stepSize = 0.001;//rayStepSize;
+	float size = length(reflectionVector.xy);
+	reflectionVector = normalize(reflectionVector/size);
+	reflectionVector = reflectionVector * stepSize;
+	vec2 sampledPosition = f_texcoord;
+	float currentDepth = startDepth;
+	while(sampledPosition.x <= 1.0 && sampledPosition.x >= 0.0
+		  && sampledPosition.y <= 1.0 && sampledPosition.y >= 0.0)
+	{
+		sampledPosition = sampledPosition + reflectionVector.xy;
+		currentDepth = currentDepth + reflectionVector.z * startDepth;
+		float sampledDepth = linearizeDepth(texture(depthtex, sampledPosition).r);
+		if(currentDepth > sampledDepth)
+		{
+			float delta = (currentDepth - sampledDepth);
+			if(delta < 0.003f )
+			{
+				acolor = texture(colortex, sampledPosition);
+				break;
+			}
+		}
+	}
+ 
+	return acolor;
+}
+
+vec4 ssr()
+{
+	vec4 reflecto = texture(normaltex, f_texcoord);
+	vec3 normal = normalize(reflecto.xyz);
+	float currDepth = linearizeDepth(texture(depthtex, f_texcoord).r);
+	eyePosition = normalize(eye_position);
+	vec4 reflectionVector = proj_mat * reflect(vec4(-eyePosition, 0), vec4(normal, 0));
+	return raytrace(reflectionVector.xyz / reflectionVector.w, currDepth);
+}
 
 vec4 regularize(vec4 input_r) // TODO: Is this working the best it can?
 {
@@ -70,6 +119,14 @@ void main()
 	float dist = texture(depthtex, f_texcoord).r;// * ((zfar - znear) + znear) / fog_dist;
 	godray = getGodRay() * vec4(grcolor, 1.0);
 	color = vec4(mix(light_color.xyz, fogCol.xyz, 1.0 - exp(-dist * fogCol.w)), 1.0);
+	if (renderhint.w > 0.0)
+	{
+		vec4 SSR = ssr();
+		if (SSR.w > 0.0)
+		{
+			color = color * (1.0 - renderhint.w) + SSR * renderhint.w;
+		}
+	}
 	if (texture(bwtex, f_texcoord).w > 0.01)
 	{
 		color = vec4(desaturate(color.xyz), 1.0);

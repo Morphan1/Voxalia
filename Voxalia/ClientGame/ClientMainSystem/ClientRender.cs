@@ -305,6 +305,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 RenderLights = true;
                 Rendering.SetColor(Color4.White);
                 VBO.BonesIdentity();
+                Rendering.SetReflectionAmt(0f);
                 // TODO: Render settings
                 Render3D(false);
                 RenderLights = false;
@@ -430,6 +431,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.Uniform1(17, CVars.r_zfar.ValueF);
                 Material headmat = TheRegion.GetBlockMaterial(CameraPos);
                 GL.Uniform4(18, new Vector4(ClientUtilities.Convert(headmat.GetFogColor()), headmat.GetFogAlpha()));
+                GL.Uniform3(20, ClientUtilities.Convert(CameraPos));
+                GL.Uniform1(21, CVars.r_znear.ValueF);
+                GL.Uniform1(23, CVars.r_zfar.ValueF);
+                GL.UniformMatrix4(22, false, ref combined);
                 GL.ActiveTexture(TextureUnit.Texture6);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.bwtexture);
                 GL.ActiveTexture(TextureUnit.Texture4);
