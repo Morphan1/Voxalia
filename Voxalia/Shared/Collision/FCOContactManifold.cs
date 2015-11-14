@@ -120,7 +120,7 @@ namespace Voxalia.Shared.Collision
             var overlaps = new QuickList<Vector3i>(BufferPools<Vector3i>.Thread);
             mesh.ChunkShape.GetOverlaps(mesh.Position, convex.BoundingBox, ref overlaps);
             var candidatesToAdd = new QuickList<ContactData>(BufferPools<ContactData>.Thread, BufferPool<int>.GetPoolIndex(overlaps.Count));
-            for (int i = 0; i < overlaps.Count; ++i)
+            for (int i = 0; i < overlaps.Count; i++)
             {
                 GeneralConvexPairTester manifold;
                 if (!activePairs.TryGetValue(overlaps.Elements[i], out manifold))
@@ -139,7 +139,7 @@ namespace Voxalia.Shared.Collision
                 }
             }
             overlaps.Dispose();
-            for (int i = activePairs.Count - 1; i >= 0; --i)
+            for (int i = activePairs.Count - 1; i >= 0; i--)
             {
                 ReturnPair(activePairs.Values[i]);
                 activePairs.FastRemove(activePairs.Keys[i]);

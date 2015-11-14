@@ -180,9 +180,6 @@ namespace Voxalia.ServerGame.EntitySystem
                 CursorMarker.Visible = false;
                 TheRegion.SpawnEntity(CursorMarker);
             }
-            Fly();
-            return;
-            Fly();
         }
 
         public float CBProneSpeed = 1f;
