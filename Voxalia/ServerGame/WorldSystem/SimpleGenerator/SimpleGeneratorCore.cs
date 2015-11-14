@@ -172,7 +172,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                                     {
                                         if (sy != y || sx != x)
                                         {
-                                            SpecialSetBlockAt(chunk, sx, sy, z, new BlockInternal((ushort)Material.LEAVES1, 0, 0));
+                                            SpecialSetBlockAt(chunk, sx, sy, z, new BlockInternal((ushort)Material.LEAVES1, 127, 0));
                                         }
                                     }
                                 }
