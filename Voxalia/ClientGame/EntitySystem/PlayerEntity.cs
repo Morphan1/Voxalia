@@ -262,6 +262,7 @@ namespace Voxalia.ClientGame.EntitySystem
                         delta = uis.GlobalTimeLocal - prev.GlobalTimeLocal;
                         SetBodyMovement(NMTWOCBody, prev);
                     }
+                    SetMoveSpeed(NMTWOCBody);
                     lPT = uis.GlobalTimeLocal;
                     NMTWOWorld.Update((float)delta);
                     FlyForth(NMTWOCBody, delta); // TODO: Entirely disregard NWTWOWorld if flying?
@@ -363,7 +364,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
         }
 
-        public void TryToJump()
+        public void TryToJump() // TODO: NMTWO support?
         {
             if (Upward && !IsFlying && !pup && CBody.SupportFinder.HasSupport)
             {
@@ -387,7 +388,11 @@ namespace Voxalia.ClientGame.EntitySystem
                     speedmod *= item.SharedAttributes["cspeedm"];
                 }
             }
-            Material mat = TheRegion.GetBlockMaterial(new Location(cc.Body.Position) + new Location(0, 0, -0.05f));
+            RigidTransform transf = new RigidTransform(Vector3.Zero, Body.Orientation);
+            BoundingBox box;
+            cc.Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
+            Location pos = new Location(cc.Body.Position) + new Location(0, 0, box.Min.Z);
+            Material mat = TheRegion.GetBlockMaterial(pos + new Location(0, 0, -0.05f));
             speedmod *= mat.GetSpeedMod();
             cc.StandingSpeed = CBStandSpeed * speedmod;
             cc.CrouchingSpeed = CBCrouchSpeed * speedmod;

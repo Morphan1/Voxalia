@@ -15,15 +15,12 @@ namespace Voxalia.Shared.BlockShapes
         public override List<Vector3> GetVertices(Vector3 pos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)
         {
             List<Vector3> Vertices = new List<Vector3>();
-            if (!TOP)
-            {
-                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
-                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
-                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
-            }
+            Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
+            Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
             if (!BOTTOM)
             {
                 Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
@@ -60,12 +57,9 @@ namespace Voxalia.Shared.BlockShapes
         public override List<BEPUutilities.Vector3> GetNormals(Vector3 blockPos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)
         {
             List<Vector3> Norms = new List<Vector3>();
-            if (!TOP)
+            for (int i = 0; i < 6; i++)
             {
-                for (int i = 0; i < 6; i++)
-                {
-                    Norms.Add(Normal);
-                }
+                Norms.Add(Normal);
             }
             if (!BOTTOM)
             {
@@ -101,16 +95,13 @@ namespace Voxalia.Shared.BlockShapes
         public override List<Vector3> GetTCoords(Vector3 blockPos, Material mat, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)
         {
             List<Vector3> TCoords = new List<Vector3>();
-            if (!TOP)
-            {
-                int tID_TOP = mat.TextureID(MaterialSide.TOP);
-                TCoords.Add(new Vector3(0, 1, tID_TOP));
-                TCoords.Add(new Vector3(1, 1, tID_TOP));
-                TCoords.Add(new Vector3(0, 0, tID_TOP));
-                TCoords.Add(new Vector3(1, 1, tID_TOP));
-                TCoords.Add(new Vector3(1, 0, tID_TOP));
-                TCoords.Add(new Vector3(0, 0, tID_TOP));
-            }
+            int tID_TOP = mat.TextureID(MaterialSide.TOP);
+            TCoords.Add(new Vector3(0, 1, tID_TOP));
+            TCoords.Add(new Vector3(1, 1, tID_TOP));
+            TCoords.Add(new Vector3(0, 0, tID_TOP));
+            TCoords.Add(new Vector3(1, 1, tID_TOP));
+            TCoords.Add(new Vector3(1, 0, tID_TOP));
+            TCoords.Add(new Vector3(0, 0, tID_TOP));
             if (!BOTTOM)
             {
                 int tID_BOTTOM = mat.TextureID(MaterialSide.BOTTOM);
