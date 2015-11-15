@@ -18,28 +18,13 @@ namespace Voxalia.Shared.Collision
 {
     public class FCOContactManifold : ContactManifold
     {
-        private class ReusableBoxCollidable : ConvexCollidable<BoxShape>
-        {
-            public ReusableBoxCollidable()
-                : base(new BoxShape(1, 1, 1))
-            {
-            }
-
-            protected override void UpdateBoundingBoxInternal(float dt)
-            {
-                Shape.GetBoundingBox(ref worldTransform, out boundingBox);
-            }
-        }
-
-        static LockingResourcePool<ReusableBoxCollidable> boxCollidablePool = new LockingResourcePool<ReusableBoxCollidable>();
-
         static LockingResourcePool<GeneralConvexPairTester> testerPool = new LockingResourcePool<GeneralConvexPairTester>();
 
         protected ConvexCollidable convex;
 
         protected FullChunkObject mesh;
 
-        private QuickDictionary<Vector3i, GeneralConvexPairTester> activePairs;
+        public QuickDictionary<Vector3i, GeneralConvexPairTester> ActivePairs;
         private QuickDictionary<Vector3i, GeneralConvexPairTester> activePairsBackBuffer;
         protected RawValueList<ContactSupplementData> supplementData = new RawValueList<ContactSupplementData>(4);
 
@@ -56,7 +41,7 @@ namespace Voxalia.Shared.Collision
                     throw new ArgumentException("Inappropriate types used to initialize contact manifold.");
                 }
             }
-            activePairs = new QuickDictionary<Vector3i, GeneralConvexPairTester>(BufferPools<Vector3i>.Locking, BufferPools<GeneralConvexPairTester>.Locking, BufferPools<int>.Locking, 3);
+            ActivePairs = new QuickDictionary<Vector3i, GeneralConvexPairTester>(BufferPools<Vector3i>.Locking, BufferPools<GeneralConvexPairTester>.Locking, BufferPools<int>.Locking, 3);
             activePairsBackBuffer = new QuickDictionary<Vector3i, GeneralConvexPairTester>(BufferPools<Vector3i>.Locking, BufferPools<GeneralConvexPairTester>.Locking, BufferPools<int>.Locking, 3);
         }
 
@@ -77,22 +62,20 @@ namespace Voxalia.Shared.Collision
 
         private GeneralConvexPairTester GetPair(ref Vector3i position)
         {
+            // TODO: Efficiency!
             var pair = testerPool.Take();
-            var boxCollidable = boxCollidablePool.Take();
-            boxCollidable.Shape.Width = 1;
-            boxCollidable.Shape.Height = 1;
-            boxCollidable.Shape.Length = 1;
+            Vector3 offs;
+            var boxCollidable = new ReusableGenericCollidable<ConvexShape>((ConvexShape)mesh.ChunkShape.ShapeAt(position.X, position.Y, position.Z, out offs));
             pair.Initialize(convex, boxCollidable);
             boxCollidable.WorldTransform = new RigidTransform(new Vector3(
-                mesh.Position.X + position.X,
-                mesh.Position.Y + position.Y,
-                mesh.Position.Z + position.Z));
+                mesh.Position.X + position.X + offs.X,
+                mesh.Position.Y + position.Y + offs.Y,
+                mesh.Position.Z + position.Z + offs.Z));
             return pair;
         }
         
         private void ReturnPair(GeneralConvexPairTester pair)
         {
-            boxCollidablePool.GiveBack((ReusableBoxCollidable)pair.CollidableB);
             pair.CleanUp();
             testerPool.GiveBack(pair);
         }
@@ -123,13 +106,13 @@ namespace Voxalia.Shared.Collision
             for (int i = 0; i < overlaps.Count; i++)
             {
                 GeneralConvexPairTester manifold;
-                if (!activePairs.TryGetValue(overlaps.Elements[i], out manifold))
+                if (!ActivePairs.TryGetValue(overlaps.Elements[i], out manifold))
                 {
                     manifold = GetPair(ref overlaps.Elements[i]);
                 }
                 else
                 {
-                    activePairs.FastRemove(overlaps.Elements[i]);
+                    ActivePairs.FastRemove(overlaps.Elements[i]);
                 }
                 activePairsBackBuffer.Add(overlaps.Elements[i], manifold);
                 ContactData contactCandidate;
@@ -139,13 +122,13 @@ namespace Voxalia.Shared.Collision
                 }
             }
             overlaps.Dispose();
-            for (int i = activePairs.Count - 1; i >= 0; i--)
+            for (int i = ActivePairs.Count - 1; i >= 0; i--)
             {
-                ReturnPair(activePairs.Values[i]);
-                activePairs.FastRemove(activePairs.Keys[i]);
+                ReturnPair(ActivePairs.Values[i]);
+                ActivePairs.FastRemove(ActivePairs.Keys[i]);
             }
-            var temp = activePairs;
-            activePairs = activePairsBackBuffer;
+            var temp = ActivePairs;
+            ActivePairs = activePairsBackBuffer;
             activePairsBackBuffer = temp;
             if (contacts.Count + candidatesToAdd.Count > 4)
             {
@@ -191,13 +174,13 @@ namespace Voxalia.Shared.Collision
         {
             convex = null;
             mesh = null;
-            for (int i = activePairs.Count - 1; i >= 0; --i)
+            for (int i = ActivePairs.Count - 1; i >= 0; --i)
             {
-                ReturnPair(activePairs.Values[i]);
-                activePairs.Values[i].CleanUp();
+                ReturnPair(ActivePairs.Values[i]);
+                ActivePairs.Values[i].CleanUp();
             }
-            activePairs.Clear();
-            activePairs.Dispose();
+            ActivePairs.Clear();
+            ActivePairs.Dispose();
             activePairsBackBuffer.Dispose();
             base.CleanUp();
         }

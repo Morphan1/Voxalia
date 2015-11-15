@@ -3,7 +3,7 @@
 layout (binding = 0) uniform sampler2DArray s;
 
 layout (location = 0) in vec4 f_pos;
-layout (location = 1) in vec2 f_texcoord;
+layout (location = 1) in vec3 f_texcoord;
 
 out vec4 color;
 

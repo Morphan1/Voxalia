@@ -40,6 +40,12 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                     entry.Player.Network.SendMessage("Flying!");
                 }
             }
+            else if (arg0 == "playerDebug")
+            {
+                entry.Player.Network.SendMessage("YOU: " + entry.Player.Name + ", tractionForce: " + entry.Player.CBody.TractionForce
+                     + ", mass: " + entry.Player.CBody.Body.Mass + ", radius: " + entry.Player.CBody.BodyRadius + ", hasSupport: " + entry.Player.CBody.SupportFinder.HasSupport
+                     + ", hasTraction: " + entry.Player.CBody.SupportFinder.HasTraction);
+            }
             else if (arg0 == "chunkDebug")
             {
                 float h = entry.Player.TheRegion.Generator.GetHeight(entry.Player.TheRegion.Seed, entry.Player.TheRegion.Seed2,

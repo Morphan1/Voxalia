@@ -102,25 +102,25 @@ namespace Voxalia.Shared.Collision
         
         public override void UpdateTimeOfImpact(Collidable requester, float dt)
         {
-            // TODO: fix, etc.
-            if (convex != null && convex.Entity != null && convex.Entity.ActivityInformation != null && convex.Entity.ActivityInformation.IsActive && convex.Entity.PositionUpdateMode == PositionUpdateMode.Continuous)
+            //Notice that we don't test for convex entity null explicitly.  The convex.IsActive property does that for us.
+            if (convex.IsActive && convex.Entity.PositionUpdateMode == PositionUpdateMode.Continuous)
             {
-                Vector3 velocity;
-                Vector3 lvel = convex.Entity.LinearVelocity;
-                Vector3.Multiply(ref lvel, dt, out velocity);
+                //Only perform the test if the minimum radii are small enough relative to the size of the velocity.
+                Vector3 velocity = convex.Entity.LinearVelocity * dt;
                 float velocitySquared = velocity.LengthSquared();
 
                 var minimumRadius = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
                 timeOfImpact = 1;
                 if (minimumRadius * minimumRadius < velocitySquared)
                 {
-                    BoxShape bs = new BoxShape(1, 1, 1);
-                    for (int i = 0; i < contactManifold.ctcts.Count; i++)
+                    for (int i = 0; i < contactManifold.ActivePairs.Count; i++)
                     {
-                        var ct = contactManifold.ctcts.Elements[i];
-                        Vector3 pos = -(ct.Position + convex.Entity.Position);
+                        var pair = contactManifold.ActivePairs.Values[i];
+                        //In the contact manifold, the box collidable is always put into the second slot.
+                        var boxCollidable = (ReusableGenericCollidable<ConvexShape>)pair.CollidableB;
                         RayHit rayHit;
-                        if (GJKToolbox.CCDSphereCast(new Ray(pos, velocity), minimumRadius, bs, ref Toolbox.RigidIdentity, timeOfImpact, out rayHit) &&
+                        var worldTransform = boxCollidable.WorldTransform;
+                        if (GJKToolbox.CCDSphereCast(new Ray(convex.WorldTransform.Position, velocity), minimumRadius, boxCollidable.Shape, ref worldTransform, timeOfImpact, out rayHit) &&
                             rayHit.T > Toolbox.BigEpsilon)
                         {
                             timeOfImpact = rayHit.T;

@@ -187,7 +187,7 @@ namespace Voxalia.ClientGame.EntitySystem
                             }
 #if NEW_CHUNKS
                             FullChunkObject temp;
-                            if ((!NMTWOMeshes.TryGetValue(ch, out temp)) || (temp.Shape != chunk.FCO.Shape))
+                            if ((!NMTWOMeshes.TryGetValue(ch, out temp)) || (temp.Shape != chunk.FCO.ChunkShape))
                             {
                                 if (temp != null)
                                 {
@@ -196,7 +196,7 @@ namespace Voxalia.ClientGame.EntitySystem
                                 }
                                 if (chunk.MeshShape != null)
                                 {
-                                    FullChunkObject im = new FullChunkObject(chunk.FCO.Position, (FullChunkShape)chunk.FCO.Shape);
+                                    FullChunkObject im = new FullChunkObject(chunk.FCO.Position, chunk.FCO.ChunkShape);
                                     NMTWOWorld.Add(im);
                                     NMTWOMeshes[ch] = im;
                                 }

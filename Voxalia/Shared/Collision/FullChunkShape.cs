@@ -23,6 +23,14 @@ namespace Voxalia.Shared.Collision
         {
             return z * CHUNK_SIZE * CHUNK_SIZE + y * CHUNK_SIZE + x;
         }
+
+        public ConvexShape ShapeAt(int x, int y, int z, out Vector3 offs)
+        {
+            Location loffs;
+            ConvexShape shape = (ConvexShape)BlockShapeRegistry.BSD[Blocks[BlockIndex(x, y, z)].BlockData].GetShape(out loffs);
+            offs = loffs.ToBVector();
+            return shape;
+        }
         
         public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, float slen, MaterialSolidity solidness, out RayHit hit)
         {
@@ -62,7 +70,7 @@ namespace Voxalia.Shared.Collision
                             if (solidness.HasFlag(((Material)bi.BlockMaterial).GetSolidity()))
                             {
                                 Location offs;
-                                EntityShape es = BlockShapeRegistry.BSD[/*bi.BlockData*/0].GetShape(out offs);
+                                EntityShape es = BlockShapeRegistry.BSD[bi.BlockData].GetShape(out offs);
                                 if (es == null)
                                 {
                                     continue;
