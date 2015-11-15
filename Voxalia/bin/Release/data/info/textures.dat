@@ -1,4 +1,4 @@
-# Voxalia texture list - MAT=texture OR MAT=t1,t2,...%rate - optionally add &spec - MAT can be name OR # OR m# (total minus the #)
+# Voxalia texture list - MAT=texture OR MAT=t1,t2,...%rate - optionally add &specularity - optionally add *reflectivity - MAT can be name OR # OR m# (total minus the #)
 AIR=clear
 STONE=blocks/solid/stone
 GRASS=blocks/solid/grass_side

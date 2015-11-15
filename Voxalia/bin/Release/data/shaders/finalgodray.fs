@@ -40,17 +40,13 @@ float linearizeDepth(float rinput)
 	return (2 * MIN_DEPTH) / (MAX_DEPTH + MIN_DEPTH - rinput * (MAX_DEPTH - MIN_DEPTH));
 }
 
-vec4 raytrace(in vec3 reflectionVector, in float startDepth)
+vec4 raytrace(vec3 reflectionVector, float startDepth)
 {
-	vec4 acolor = vec4(0.0f);
-	float stepSize = 0.001;//rayStepSize;
-	float size = length(reflectionVector.xy);
-	reflectionVector = normalize(reflectionVector/size);
-	reflectionVector = reflectionVector * stepSize;
+	float stepSize = 0.01; //rayStepSize;
+	reflectionVector = normalize(reflectionVector) * stepSize;
 	vec2 sampledPosition = f_texcoord;
 	float currentDepth = startDepth;
-	while(sampledPosition.x <= 1.0 && sampledPosition.x >= 0.0
-		  && sampledPosition.y <= 1.0 && sampledPosition.y >= 0.0)
+	while(sampledPosition.x <= 1.0 && sampledPosition.x >= 0.0 && sampledPosition.y <= 1.0 && sampledPosition.y >= 0.0)
 	{
 		sampledPosition = sampledPosition + reflectionVector.xy;
 		currentDepth = currentDepth + reflectionVector.z * startDepth;
@@ -58,24 +54,23 @@ vec4 raytrace(in vec3 reflectionVector, in float startDepth)
 		if(currentDepth > sampledDepth)
 		{
 			float delta = (currentDepth - sampledDepth);
-			if(delta < 0.003f )
+			if(delta < 0.03)
 			{
-				acolor = texture(colortex, sampledPosition);
-				break;
+				return texture(colortex, sampledPosition);
 			}
 		}
 	}
- 
-	return acolor;
+	return vec4(0.0);
 }
 
 vec4 ssr()
 {
-	vec4 reflecto = texture(normaltex, f_texcoord);
-	vec3 normal = normalize(reflecto.xyz);
+	vec4 norm = texture(normaltex, f_texcoord);
+	vec3 normal = normalize(norm.xyz);
 	float currDepth = linearizeDepth(texture(depthtex, f_texcoord).r);
-	vec3 eyePosition = normalize(eye_position);
-	vec4 reflectionVector = proj_mat * reflect(vec4(-eyePosition, 0), vec4(normal, 0));
+	vec3 pos = texture(positiontex, f_texcoord).xyz;
+	vec3 eyePosition = normalize(eye_position - pos);
+	vec4 reflectionVector = proj_mat * reflect(vec4(eyePosition, 0.0), vec4(normal, 0.0));
 	return raytrace(reflectionVector.xyz / reflectionVector.w, currDepth);
 }
 

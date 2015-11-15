@@ -65,7 +65,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     tex.Mat = MaterialHelpers.FromNameOrNumber(dets[0]);
                 }
-                string[] specornot = dets[1].Split('&');
+                string[] reflecornot = dets[1].Split('*');
+                if (reflecornot.Length > 1)
+                {
+                    tex.Reflectivity = Utilities.StringToFloat(reflecornot[1]);
+                }
+                string[] specornot = reflecornot[0].Split('&');
                 if (specornot.Length > 1)
                 {
                     tex.Specular = Utilities.StringToFloat(specornot[1]);
@@ -93,14 +98,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
             for (int i = 0; i < texs.Count; i++)
             {
-                SetSettings((int)texs[i].Mat, texs[i].Specular, 0);
+                SetSettings((int)texs[i].Mat, texs[i].Specular, 0, texs[i].Reflectivity);
             }
             GL.BindTexture(TextureTarget.Texture2DArray, 0);
         }
 
-        private void SetSettings(int id, float specular, float waviness)
+        private void SetSettings(int id, float specular, float waviness, float reflectivity)
         {
-            float[] set = new float[] { specular, waviness, 0, 0 };
+            float[] set = new float[] { specular, waviness, reflectivity, 0 };
             GL.TexSubImage3D(TextureTarget.Texture2DArray, 0, 0, 0, id, 2, 2, 1, PixelFormat.Red, PixelType.Float, set);
         }
 
@@ -155,6 +160,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public double Rate = 1;
 
         public float Specular = 0;
+
+        public float Reflectivity = 0;
     }
 
     public class AnimatedTexture
