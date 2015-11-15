@@ -151,6 +151,11 @@ namespace Voxalia.ClientGame.EntitySystem
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
             }
+            else if (TheClient.FBOid == 4)
+            {
+                TheClient.s_shadowvox.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+            }
             OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateTranslation(-ClientUtilities.Convert(shapeOffs)) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
             float spec = TheClient.Rendering.Specular;
@@ -173,6 +178,11 @@ namespace Voxalia.ClientGame.EntitySystem
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 TheClient.s_transponly.Bind();
+            }
+            else if (TheClient.FBOid == 4)
+            {
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                TheClient.s_shadow.Bind();
             }
         }
 

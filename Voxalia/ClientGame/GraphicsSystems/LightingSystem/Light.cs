@@ -74,9 +74,14 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
             Client.Central.vpw = texsize; // TODO: pass client reference!
             Client.Central.vph = texsize; // TODO: pass client reference!
+            SetProj();
+            GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
+        }
+
+        public void SetProj()
+        {
             Matrix4 mat = GetMatrix();
             GL.UniformMatrix4(1, false, ref mat);
-            GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
         }
 
         public void Complete()

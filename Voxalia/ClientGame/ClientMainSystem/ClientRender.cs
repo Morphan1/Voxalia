@@ -42,6 +42,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.Enable(EnableCap.CullFace);
             GL.CullFace(CullFaceMode.Front);
             s_shadow = Shaders.GetShader("shadow");
+            s_shadowvox = Shaders.GetShader("shadowvox");
             s_finalgodray = Shaders.GetShader("finalgodray");
             s_fbo = Shaders.GetShader("fbo");
             s_fbov = Shaders.GetShader("fbo_vox");
@@ -150,6 +151,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_transponly;
         public Shader s_transponlyvox;
         public Shader s_godray;
+        public Shader s_shadowvox;
         RenderSurface4Part RS4P;
 
         public Location CameraUp = Location.UnitZ;
@@ -280,9 +282,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     {
                                         CFrust = new Frustum(Lights[i].InternalLights[x].GetMatrix());
                                     }
+                                    s_shadowvox.Bind();
+                                    Matrix4 tident = Matrix4.Identity;
+                                    GL.UniformMatrix4(2, false, ref tident);
+                                    Lights[i].InternalLights[x].SetProj();
+                                    FBOid = 4;
+                                    s_shadow.Bind();
+                                    GL.UniformMatrix4(2, false, ref tident);
                                     Lights[i].InternalLights[x].Attach();
                                     // TODO: Render settings
                                     Render3D(true);
+                                    FBOid = 0;
                                     Lights[i].InternalLights[x].Complete();
                                 }
                             }
@@ -654,6 +664,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 s_transponlyvox.Bind();
             }
+            else if (FBOid == 4)
+            {
+                s_shadowvox.Bind();
+            }
             TheRegion.Render();
             if (FBOid == 1)
             {
@@ -663,6 +677,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             else if (FBOid == 3)
             {
                 s_transponly.Bind();
+            }
+            else if (FBOid == 4)
+            {
+                s_shadow.Bind();
             }
             Textures.White.Bind();
             Location mov = (CameraFinalTarget - CameraPos) / CameraDistance;
