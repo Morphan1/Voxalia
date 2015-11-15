@@ -429,6 +429,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 case MaterialSound.WOOD:
                 case MaterialSound.METAL:
                 case MaterialSound.DIRT:
+                case MaterialSound.STONE:
+                case MaterialSound.SNOW:
                     // TODO: Don't manually search the sound list every time!
                     TheClient.Sounds.Play(TheClient.Sounds.GetSound("sfx/steps/humanoid/" + sound.ToString().ToLower() + (Utilities.UtilRandom.Next(4) + 1)), false, GetPosition(), pitch, volume);
                     break;
