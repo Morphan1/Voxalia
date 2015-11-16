@@ -225,6 +225,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
                 ((PlayerEntity)e).Network.SendPacket(new YourEIDPacketOut(e.EID));
                 ((PlayerEntity)e).Network.SendPacket(new CVarSetPacketOut(TheServer.CVars.g_timescale, TheServer));
+                // TODO: Anims!
                 /*((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 0);
                 ((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 1);
                 ((PlayerEntity)e).SetAnimation("human/" + ((PlayerEntity)e).StanceName() + "/idle01", 2);*/
@@ -298,6 +299,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
+        // TODO: Rework, update
         public void LoadMapFromString(string data)
         {
             for (int i = 0; i < Entities.Count; i++)
@@ -339,6 +341,7 @@ namespace Voxalia.ServerGame.WorldSystem
             // TODO: Respawn all players
         }
 
+        // TODO: Rework, update
         public void LoadObj(string name, string dat)
         {
             string[] dats = dat.Split(';');
@@ -524,13 +527,10 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 pl.AddThread();
             }
-            // Minimize penetration
             CollisionDetectionSettings.AllowedPenetration = 0.01f;
             PhysicsWorld = new Space(pl);
             PhysicsWorld.TimeStepSettings.MaximumTimeStepsPerFrame =  10;
-            // Set the world's general default gravity
             PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f * 3f / 2f);
-            // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
             string fname = "saves/" + Name + "/region.yml";
             if (Program.Files.Exists(fname))
@@ -717,13 +717,6 @@ namespace Voxalia.ServerGame.WorldSystem
 
         void OncePerSecondActions()
         {
-            /*Parallel.ForEach(LoadedChunks.Values, (o) =>
-            {
-                if (o.LastEdited >= 0)
-                {
-                    o.SaveToFile();
-                }
-            });*/
             foreach (Chunk o in LoadedChunks.Values)
             {
                 if (o.LastEdited >= 0)
@@ -903,7 +896,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Location[] FellLocs = new Location[] { new Location(0, 0, 1), new Location(1, 0, 0), new Location(0, 1, 0), new Location(-1, 0, 0), new Location(0, -1, 0) };
 
-        public void BreakNaturally(Location pos, bool regentrans = true, int max_subbreaks = 5/*, HashSet<Location> chnoregen = null*/)
+        public void BreakNaturally(Location pos, bool regentrans = true, int max_subbreaks = 5)
         {
             pos = pos.GetBlockLocation();
             Chunk ch = LoadChunk(ChunkLocFor(pos));
@@ -921,8 +914,6 @@ namespace Voxalia.ServerGame.WorldSystem
                 ch.BlocksInternal[ch.BlockIndex(x, y, z)].BlockLocalData |= (byte)BlockFlags.PROTECTED;
                 if (mat != (ushort)Material.AIR)
                 {
-                    // TODO: Find way to make this work D:<
-                    //bool canregen = chnoregen == null || !chnoregen.Contains(ch.WorldPosition);
                     if (max_subbreaks > 0
                         && !((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.EDITED)
                         && (mat == Material.LOG || mat == Material.LEAVES1))
@@ -932,15 +923,11 @@ namespace Voxalia.ServerGame.WorldSystem
                             Material m2 = GetBlockMaterial(pos + loc);
                             if (m2 == Material.LOG || m2 == Material.LEAVES1)
                             {
-                                /*if (chnoregen == null)
-                                {
-                                    chnoregen = new HashSet<Location>();
-                                }
-                                chnoregen.Add(ch.WorldPosition);*/
-                                BreakNaturally(pos + loc, regentrans, max_subbreaks - 1/*, chnoregen*/);
+                                BreakNaturally(pos + loc, regentrans, max_subbreaks - 1);
                             }
                         }
                     }
+                    // TODO: Activate any nearby physents!
                     ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0, (byte)BlockFlags.EDITED));
                     ch.LastEdited = GlobalTickTime;
                     if (regentrans)
@@ -1159,9 +1146,9 @@ namespace Voxalia.ServerGame.WorldSystem
         public void UnloadFully()
         {
             CheckThreadValidity();
-            // TODO: Transfer all players to the default world.
-            IntHolder counter = new IntHolder();
-            IntHolder total = new IntHolder();
+            // TODO: Transfer all players to another world.
+            IntHolder counter = new IntHolder(); // TODO: is IntHolder needed here?
+            IntHolder total = new IntHolder(); // TODO: is IntHolder needed here?
             foreach (Chunk chunk in LoadedChunks.Values)
             {
                 total.Value++;
@@ -1247,7 +1234,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             if (applyforce)
             {
-                foreach (Entity e in GetEntitiesInRadius(pos, rad * 5))
+                foreach (Entity e in GetEntitiesInRadius(pos, rad * 5)) // TODO: Physent-specific search method?
                 {
                     // TODO: Generic entity 'ApplyForce' method
                     if (e is PhysicsEntity)
