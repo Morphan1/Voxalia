@@ -109,6 +109,7 @@ namespace Voxalia.ClientGame.EntitySystem
             model.LoadSkin(TheClient.Textures);
             CGroup = CollisionUtil.Player;
             NMTWOWorld.ForceUpdater.Gravity = TheRegion.PhysicsWorld.ForceUpdater.Gravity;
+            NMTWOWorld.TimeStepSettings.MaximumTimeStepsPerFrame = 10;
             SetPosition(new Location(0, 0, 1000));
         }
 
@@ -186,14 +187,8 @@ namespace Voxalia.ClientGame.EntitySystem
                                 continue;
                             }
 #if NEW_CHUNKS
-                            FullChunkObject temp;
-                            if ((!NMTWOMeshes.TryGetValue(ch, out temp)) || (temp.Shape != chunk.FCO.ChunkShape))
+                            if (!NMTWOMeshes.ContainsKey(ch))
                             {
-                                if (temp != null)
-                                {
-                                    NMTWOWorld.Remove(temp);
-                                    NMTWOMeshes.Remove(ch);
-                                }
                                 if (chunk.MeshShape != null)
                                 {
                                     FullChunkObject im = new FullChunkObject(chunk.FCO.Position, chunk.FCO.ChunkShape);

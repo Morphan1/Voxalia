@@ -525,9 +525,9 @@ namespace Voxalia.ServerGame.WorldSystem
                 pl.AddThread();
             }
             // Minimize penetration
-            CollisionDetectionSettings.AllowedPenetration = 0.001f;
+            CollisionDetectionSettings.AllowedPenetration = 0.01f;
             PhysicsWorld = new Space(pl);
-            PhysicsWorld.TimeStepSettings.MaximumTimeStepsPerFrame = 10;
+            PhysicsWorld.TimeStepSettings.MaximumTimeStepsPerFrame =  10;
             // Set the world's general default gravity
             PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f * 3f / 2f);
             // Load a CollisionUtil instance
@@ -557,7 +557,6 @@ namespace Voxalia.ServerGame.WorldSystem
             int c = 0;
             while (!AllChunksLoadedFully(out c) || !bval)
             {
-                SysConsole.Output(OutputType.INIT, "Need " + c + " more chunks...");
                 TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-world scheduler // Also don't freeze the entire server just because we're waiting on chunks >.>
                 Thread.Sleep(16);
             }
@@ -645,7 +644,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 if (chunk.Value.FCO.RayCast(ray, len, null, considerSolid, out temp))
                 {
                     hA = true;
-                    temp.T *= len;
+                    //temp.T *= len;
                     if (temp.T < best.HitData.T)
                     {
                         best.HitData = temp;
@@ -696,7 +695,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 if (chunk.Value.FCO.ConvexCast(shape, ref rt, ref sweep, len, considerSolid, out temp))
                 {
                     hA = true;
-                    temp.T *= len;
+                   // temp.T *= len;
                     if (temp.T < best.HitData.T)
                     {
                         best.HitData = temp;
@@ -1065,7 +1064,8 @@ namespace Voxalia.ServerGame.WorldSystem
         public void AddChunkToWorld(Chunk chunk)
         {
             CheckThreadValidity();
-            chunk.AddToWorld(() => { chunk.LOADING = false; });
+            chunk.AddToWorld();
+            chunk.LOADING = false;
             foreach (Location loc in slocs)
             {
                 Chunk ch = GetChunk(chunk.WorldPosition + loc);
@@ -1078,6 +1078,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         /// <summary>
         /// Designed for startup time.
+        /// TODO: Non-background and/or actually asyncify...
         /// </summary>
         public void LoadChunk_Background(Location cpos, Action<bool> callback = null)
         {
@@ -1100,7 +1101,8 @@ namespace Voxalia.ServerGame.WorldSystem
                         ch.ISCUSTOM = false;
                         ChunksToDestroy.Remove(ch);
                         PopulateChunk(ch, false);
-                        ch.AddToWorld(() => { ch.LOADING = false; });
+                        ch.AddToWorld();
+                        ch.LOADING = false;
                         if (callback != null)
                         {
                             callback.Invoke(false);
@@ -1116,7 +1118,8 @@ namespace Voxalia.ServerGame.WorldSystem
                 // TheServer.Schedule.StartASyncTask(() =>
                 // {
                 PopulateChunk(ch, true); // TODO: Make asyncable!
-                ch.AddToWorld(() => { ch.LOADING = false; });
+                ch.AddToWorld();
+                ch.LOADING = false;
                 if (callback != null)
                 {
                     callback.Invoke(false);

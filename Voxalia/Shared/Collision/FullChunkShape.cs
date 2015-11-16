@@ -90,6 +90,7 @@ namespace Voxalia.Shared.Collision
                                     gotOne = true;
                                     BestRH = rhit;
                                     BestRH.Location += adj;
+                                    BestRH.T *= slen; // TODO: ???
                                     BestRH.Normal = -BestRH.Normal; // TODO: WHY?!
                                 }
                             }
@@ -134,11 +135,11 @@ namespace Voxalia.Shared.Collision
                 Y = Math.Min(CHUNK_SIZE - 1, (int)b2.Max.Y),
                 Z = Math.Min(CHUNK_SIZE - 1, (int)b2.Max.Z)
             };
-            for (int x = min.X; x < max.X; x++)
+            for (int x = min.X; x <= max.X; x++)
             {
-                for (int y = min.Y; y < max.Y; y++)
+                for (int y = min.Y; y <= max.Y; y++)
                 {
-                    for (int z = min.Z; z < max.Z; z++)
+                    for (int z = min.Z; z <= max.Z; z++)
                     {
                         if (((Material)Blocks[BlockIndex(x, y, z)].BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
                         {

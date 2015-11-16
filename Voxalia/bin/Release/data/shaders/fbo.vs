@@ -54,6 +54,7 @@ void main(void)
 	//norm1 = simplebone_matrix * norm1;
 	f_texcoord = texcoords;
 	f_position = mv_matrix * vec4(pos1.xyz, 1.0);
+	f_position /= f_position.w;
 	//vec4 norm1 = boneTransform * vec4(normal, 1.0);
 	f_color = color;
     if (f_color == vec4(0.0, 0.0, 0.0, 1.0))

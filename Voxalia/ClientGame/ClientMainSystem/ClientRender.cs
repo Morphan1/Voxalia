@@ -757,7 +757,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (CVars.u_showhud.ValueB && CInvMenu == null)
             {
                 FontSets.Standard.DrawColoredText(FontSets.Standard.SplitAppropriately("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
-                    + "\nHeld Item: " + GetItemForSlot(QuickBarPos).ToString(),
+                    + "\nHeld Item: " + GetItemForSlot(QuickBarPos).ToString()
+                    + "\nPhysics Time: " + TheRegion.PhysTime,
                     Window.Width - 10), new Location(0, 0, 0));
                 int center = Window.Width / 2;
                 if (RenderExtraItems > 0)

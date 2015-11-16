@@ -14,6 +14,7 @@ using BEPUutilities.Threading;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.Shared.Collision;
+using System.Diagnostics;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -48,7 +49,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 pl.AddThread();
             }
             // Minimize penetration
-            CollisionDetectionSettings.AllowedPenetration = 0.001f;
+            CollisionDetectionSettings.AllowedPenetration = 0.01f;
             PhysicsWorld = new Space(pl);
             PhysicsWorld.TimeStepSettings.MaximumTimeStepsPerFrame = 10;
             // Set the world's general default gravity
@@ -110,7 +111,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 if (chunk.Value.FCO.RayCast(ray, len, null, considerSolid, out temp))
                 {
                     hA = true;
-                    temp.T *= len;
+                    //temp.T *= len;
                     if (temp.T < best.HitData.T)
                     {
                         best.HitData = temp;
@@ -160,7 +161,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 if (chunk.Value.FCO.ConvexCast(shape, ref rt, ref sweep, len, considerSolid, out temp))
                 {
                     hA = true;
-                    temp.T *= len;
+                    //temp.T *= len;
                     if (temp.T < best.HitData.T)
                     {
                         best.HitData = temp;
@@ -176,6 +177,8 @@ namespace Voxalia.ClientGame.WorldSystem
             return hA;
         }
 
+        public double PhysTime;
+
         /// <summary>
         /// Ticks the physics world.
         /// </summary>
@@ -187,7 +190,11 @@ namespace Voxalia.ClientGame.WorldSystem
                 return;
             }
             GlobalTickTimeLocal += Delta;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             PhysicsWorld.Update((float)delta); // TODO: More specific settings?
+            sw.Stop();
+            PhysTime = (double)sw.ElapsedMilliseconds / 1000f;
             for (int i = 0; i < Tickers.Count; i++)
             {
                 Tickers[i].Tick();

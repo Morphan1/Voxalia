@@ -144,44 +144,22 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public ASyncScheduleItem adding = null;
 
-        public void AddToWorld(Action callback = null)
+        public void AddToWorld()
         {
-#if NEW_CHUNKS
-            if (worldObject != null)
+            if (FCO != null)
             {
-                OwningRegion.RemoveChunkQuiet(FCO);
+                return;
             }
-#endif
             FCO = new FullChunkObject(WorldPosition.ToBVector() * 30, BlocksInternal);
             FCO.CollisionRules.Group = CollisionUtil.Solid;
-#if NEW_CHUNKS
             OwningRegion.AddChunk(FCO);
-            if (callback != null)
-            {
-                callback.Invoke();
-            }
-#else
-            if (adding != null)
-            {
-                ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(() => AddInternal(callback));
-                adding = adding.ReplaceOrFollowWith(item);
-            }
-            else
-            {
-                adding = OwningRegion.TheClient.Schedule.StartASyncTask(() => AddInternal(callback));
-            }
-#endif
         }
 
         public void Destroy()
         {
             if (worldObject != null)
             {
-#if NEW_CHUNKS
                 OwningRegion.RemoveChunkQuiet(FCO);
-#else
-                OwningRegion.RemoveChunkQuiet(worldObject);
-#endif
                 worldObject = null;
             }
             if (_VBO != null)
@@ -195,34 +173,5 @@ namespace Voxalia.ClientGame.WorldSystem
         public bool PROCESSED = false;
         public bool PRED = false;
         public bool DENIED = false;
-        
-        void AddInternal(Action callback)
-        {
-#if !NEW_CHUNKS
-            InstancedMeshShape mx = CalculateChunkShape();
-            InstancedMesh tregionObject = mx == null ? null: new InstancedMesh(mx);
-            OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
-            {
-                if (worldObject != null)
-                {
-                    OwningRegion.RemoveChunkQuiet(worldObject);
-                }
-                if (DENIED)
-                {
-                    return;
-                }
-                MeshShape = mx;
-                worldObject = tregionObject;
-                if (worldObject != null)
-                {
-                    OwningRegion.AddChunk(worldObject);
-                }
-                if (callback != null)
-                {
-                    callback.Invoke();
-                }
-            });
-#endif
-        }
     }
 }

@@ -31,7 +31,7 @@ void main()
     float wavi = texture(htex, vec3(1, 0, f_texcoord.z)).r; // TODO: Implement!?
     float refl = texture(htex, vec3(0, 1, f_texcoord.z)).r;
 	color = col * v_color;
-	position = f_position;
+	position = vec4(f_position.xyz, 1.0);
 	normal = vec4(f_normal, 1.0);
 	renderhint = vec4(specular_strength + spec, specular_power, minimum_light, refl);
     // TODO: Maybe take advantage of normal.w and position.w as well?

@@ -15,9 +15,7 @@ namespace Voxalia.ClientGame.WorldSystem
         }
 
         public int Count = 0;
-
-        public int c = 0;
-
+        
         public int rC = 0;
 
         public Object Locker = new Object();
@@ -26,7 +24,6 @@ namespace Voxalia.ClientGame.WorldSystem
         public void LoadAll(Action callback)
         {
             Count = 0;
-            c = 0;
             rC = 0;
             TheRegion.TheClient.Schedule.StartASyncTask(() =>
             {
@@ -48,13 +45,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         chunk.CalculateLighting();
                         TheRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                         {
-                            chunk.AddToWorld(() =>
-                            {
-                                lock (Locker)
-                                {
-                                    c++;
-                                }
-                            });
+                            chunk.AddToWorld();
                             chunk.CreateVBO(() =>
                             {
                                 lock (Locker)
@@ -70,7 +61,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     lock (Locker)
                     {
-                        if (c >= Count && rC >= Count)
+                        if (rC >= Count)
                         {
                             break;
                         }

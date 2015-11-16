@@ -154,7 +154,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             cap = Math.Min(top + 7, 30);
                             for (int z = Math.Max(top + 5, 0); z < cap; z++)
                             {
-                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.LEAVES1, 0, 0);
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.LEAVES1, 127, 0);
                             }
                             cap = Math.Min(top + 7, 30);
                             for (int z = Math.Max(top + 3, 0); z < cap; z++)

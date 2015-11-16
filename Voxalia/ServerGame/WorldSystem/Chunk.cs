@@ -159,62 +159,19 @@ namespace Voxalia.ServerGame.WorldSystem
         /// Probably.
         /// TODO: Async? (Probably just a single local Add lock is sufficient).
         /// </summary>
-        public void AddToWorld(Action callback = null)
+        public void AddToWorld()
         {
             if (ISCUSTOM)
             {
-                if (callback != null)
-                {
-                    callback.Invoke();
-                }
                 return;
             }
-#if NEW_CHUNKS
-            if (worldObject != null)
+            if (FCO != null)
             {
-                OwningRegion.RemoveChunkQuiet(FCO);
+                return;
             }
-#endif
             FCO = new FullChunkObject(WorldPosition.ToBVector() * 30, BlocksInternal);
             FCO.CollisionRules.Group = CollisionUtil.Solid;
-#if NEW_CHUNKS
             OwningRegion.AddChunk(FCO);
-            if (callback != null)
-            {
-                callback.Invoke();
-            }
-#else
-            if (adding != null)
-            {
-                ASyncScheduleItem item = OwningRegion.TheServer.Schedule.AddASyncTask(() => AddInternal(callback));
-                adding = adding.ReplaceOrFollowWith(item);
-            }
-            else
-            {
-                adding = OwningRegion.TheServer.Schedule.StartASyncTask(() => AddInternal(callback));
-            }
-        }
-        
-        void AddInternal(Action callback)
-        {
-            StaticMesh tregionObject = CalculateChunkShape();
-            OwningRegion.TheServer.Schedule.ScheduleSyncTask(() =>
-            {
-                if (worldObject != null)
-                {
-                    OwningRegion.RemoveChunkQuiet(worldObject);
-                }
-                worldObject = tregionObject;
-                if (worldObject != null)
-                {
-                    OwningRegion.AddChunk(worldObject);
-                }
-                if (callback != null)
-                {
-                    callback.Invoke();
-                }
-            });
-#endif
         }
 
         public Object EditSessionLock = new Object();

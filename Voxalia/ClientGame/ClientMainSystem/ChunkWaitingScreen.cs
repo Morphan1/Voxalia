@@ -52,8 +52,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 lock (LACS.Locker)
                 {
-                    TheClient.FontSets.SlightlyBigger.DrawColoredText("^!^e^0Chunks Loaded: " + LACS.Count
-                        + "\nChunks Solidified: " + LACS.c + ": " + ((LACS.c / (float)LACS.Count) * 100f) + "%"
+                    TheClient.FontSets.SlightlyBigger.DrawColoredText("^!^e^0Chunks Loaded: " + TheClient.TheRegion.LoadedChunks.Count
+                        + "\nChunks Registered: " + LACS.Count
                         + "\nChunks Rendered: " + LACS.rC + ": " + ((LACS.rC / (float)LACS.Count) * 100f) + "%", new Location(20, 20, 0));
                 }
             }

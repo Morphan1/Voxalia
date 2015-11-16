@@ -28,7 +28,7 @@ void main()
 		discard;
 	}
 	color = col * f_color;
-	position = f_position;
+	position = vec4(f_position.xyz, 1.0);
 	normal = vec4(f_normal, 1.0);
 	renderhint = vec4(specular_strength, specular_power, minimum_light, reflection_amt);
     // TODO: Maybe take advantage of normal.w and position.w as well?

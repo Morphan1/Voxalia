@@ -192,7 +192,7 @@
     <Compile Include="ServerGame\PluginSystem\PluginLoader.cs" />
     <Compile Include="ServerGame\PluginSystem\PluginManager.cs" />
     <Compile Include="ServerGame\WorldSystem\BlockFlags.cs" />
-    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biome.cs" />
+    <Compile Include="ServerGame\WorldSystem\Biome.cs" />
     <Compile Include="ServerGame\WorldSystem\BiomeGenerator.cs" />
     <Compile Include="ServerGame\WorldSystem\BlockPopulator.cs" />
     <Compile Include="ServerGame\WorldSystem\Chunk.cs" />
