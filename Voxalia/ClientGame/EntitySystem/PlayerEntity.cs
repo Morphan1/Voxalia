@@ -236,6 +236,7 @@ namespace Voxalia.ClientGame.EntitySystem
                         SetBodyMovement(NMTWOCBody, prev);
                     }
                     SetMoveSpeed(NMTWOCBody);
+                    NMTWOTryToJump(uis);
                     lPT = uis.GlobalTimeLocal;
                     NMTWOWorld.Update((float)delta);
                     FlyForth(NMTWOCBody, delta); // TODO: Entirely disregard NWTWOWorld if flying?
@@ -347,6 +348,15 @@ namespace Voxalia.ClientGame.EntitySystem
             else if (!Upward)
             {
                 pup = false;
+            }
+        }
+
+        public void NMTWOTryToJump(UserInputSet uis)
+        {
+            if (uis.Upward && !uis.pup && !IsFlying && NMTWOCBody.SupportFinder.HasSupport)
+            {
+                NMTWOCBody.Jump();
+                uis.pup = true;
             }
         }
 

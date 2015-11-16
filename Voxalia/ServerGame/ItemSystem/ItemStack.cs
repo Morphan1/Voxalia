@@ -94,5 +94,10 @@ namespace Voxalia.ServerGame.ItemSystem
         {
             Model = name;
         }
+
+        public ItemStack Duplicate()
+        {
+            return (ItemStack)MemberwiseClone();
+        }
     }
 }

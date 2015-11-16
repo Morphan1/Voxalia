@@ -36,7 +36,11 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             Matrix4 mat = Matrix4.CreateScale(0.05f, 0.2f, 0.05f) * GetTransformationMatrix();// TODO: * Matrix4.CreateRotationX(90f * (float)Utilities.PI180);
             GL.UniformMatrix4(2, false, ref mat);
+            TheClient.Rendering.SetColor(GColor);
+            TheClient.Rendering.SetMinimumLight(1);
             model.Draw();
+            TheClient.Rendering.SetMinimumLight(0);
+            TheClient.Rendering.SetColor(Color4.White);
         }
 
         public override void Tick()

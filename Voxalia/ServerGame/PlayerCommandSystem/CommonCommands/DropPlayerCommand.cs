@@ -33,7 +33,9 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 entry.Player.Network.SendMessage("^1Can't drop this."); // TODO: Language, entry.output, etc.
                 return;
             }
-            PhysicsEntity ie = entry.Player.TheRegion.ItemToEntity(stack);
+            ItemStack item = stack.Duplicate();
+            item.Count = 1;
+            PhysicsEntity ie = entry.Player.TheRegion.ItemToEntity(item);
             // TODO: Animate player
             Location fvel = entry.Player.ForwardVector();
             ie.SetPosition(entry.Player.GetEyePosition() + fvel);
@@ -43,7 +45,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             if (stack.Count > 1)
             {
                 stack.Count -= 1;
-                entry.Player.Network.SendPacket(new SetItemPacketOut(entry.Player.Items.cItem, stack));
+                entry.Player.Network.SendPacket(new SetItemPacketOut(entry.Player.Items.cItem - 1, stack));
             }
             else
             {
