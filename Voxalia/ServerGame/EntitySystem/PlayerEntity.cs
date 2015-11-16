@@ -402,20 +402,19 @@ namespace Voxalia.ServerGame.EntitySystem
                     TheServer.Players[i].Network.SendPacket(pupo);
                 }
             }
-            // TODO: Animation!
-            /*
             if (GetVelocity().LengthSquared() > 1)
             {
                 // TODO: Replicate animation automation on client?
-                SetAnimation("human/" + StanceName() + "/walk_lowquality", 1);
-                SetAnimation("human/" + StanceName() + "/walk_lowquality", 2);
+                SetAnimation("human/stand/run", 1);
+                SetAnimation("human/stand/run", 2);
+                SetAnimation("human/stand/run", 3);
             }
             else
             {
-                SetAnimation("human/" + StanceName() + "/idle01", 1);
-                SetAnimation("human/" + StanceName() + "/idle01", 2);
+                SetAnimation("human/stand/idle01", 1);
+                SetAnimation("human/stand/idle01", 2);
+                SetAnimation("human/stand/idle01", 3);
             }
-            */
             ItemStack cit = Items.GetItemForSlot(Items.cItem);
             if (Click)
             {
