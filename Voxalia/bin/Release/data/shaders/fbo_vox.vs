@@ -26,7 +26,6 @@ void main(void)
 	mv_mat_simple[3][0] = 0.0;
 	mv_mat_simple[3][1] = 0.0;
 	mv_mat_simple[3][2] = 0.0;
-	vec4 nnormal = mv_mat_simple * vec4(normal, 1.0);
-    f_normal = normal;
+	f_normal = (mv_mat_simple * vec4(normal, 1.0)).xyz;
 	gl_Position = proj_matrix * mv_matrix * vec4(position, 1.0);
 }

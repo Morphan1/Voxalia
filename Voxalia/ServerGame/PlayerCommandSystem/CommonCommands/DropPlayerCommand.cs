@@ -32,7 +32,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 entry.Player.Network.SendMessage("^1Can't drop this."); // TODO: Language, entry.output, etc.
                 return;
             }
-            ItemEntity ie = new ItemEntity(stack, entry.Player.TheRegion);
+            PhysicsEntity ie = entry.Player.TheRegion.ItemToEntity(stack);
             // TODO: Animate player
             Location fvel = entry.Player.ForwardVector();
             ie.SetPosition(entry.Player.GetEyePosition() + fvel);

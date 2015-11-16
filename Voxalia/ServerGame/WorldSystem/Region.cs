@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.Shared.Collision;
+using Voxalia.ServerGame.ItemSystem;
+using Voxalia.ServerGame.ItemSystem.CommonItems;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -1249,6 +1251,23 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 // TODO: DO DAMAGE!
             }
+        }
+
+        public PhysicsEntity ItemToEntity(ItemStack item)
+        {
+            if (item.Info is BlockItem)
+            {
+                int mat = item.Datum & (255 + 255 * 256);
+                int dat = item.Datum & (255 * 256 * 256);
+                return new BlockItemEntity(this, (Material)mat, (byte)dat, Location.Zero);
+            }
+            /*
+            if (item.Info is GlowstickItem)
+            {
+                return null;
+            }
+            */
+            return new ItemEntity(item, this);
         }
     }
 }
