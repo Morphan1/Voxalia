@@ -102,7 +102,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     norecurs = true;
                     Model m = GetModel("cube");
                     norecurs = false;
-                    Loaded = new Model(modelname) { Engine = this, Root = m.Root, RootNode = m.RootNode, Meshes = m.Meshes };
+                    Loaded = new Model(modelname) { Engine = this, Root = m.Root, RootNode = m.RootNode, Meshes = m.Meshes, Original = m.Original };
                 }
             }
             LoadedModels.Add(Loaded);
