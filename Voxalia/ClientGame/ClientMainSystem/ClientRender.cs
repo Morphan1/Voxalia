@@ -444,6 +444,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.Uniform3(20, ClientUtilities.Convert(CameraPos));
                 GL.Uniform1(21, CVars.r_znear.ValueF);
                 GL.Uniform1(23, CVars.r_zfar.ValueF);
+                GL.Uniform1(24, (float)Window.Width);
+                GL.Uniform1(25, (float)Window.Height);
                 GL.UniformMatrix4(22, false, ref combined);
                 GL.ActiveTexture(TextureUnit.Texture6);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.bwtexture);
