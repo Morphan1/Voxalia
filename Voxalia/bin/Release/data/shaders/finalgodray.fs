@@ -137,7 +137,7 @@ vec3 fxaaColor()
 	float lumaMax = max(luma, max(max(lumaxpyp, lumaxpym), max(lumaxmym, lumaxmyp)));
 	vec2 dir = vec2(-((lumaxpyp + lumaxpym) - (lumaxmym + lumaxmyp)), (lumaxpyp + lumaxmym) - (lumaxpym + lumaxmyp));
 	float dirReduce = max((lumaxpyp + lumaxpym + lumaxmym + lumaxmyp) * (0.25 * FXAA_REDUCE_MUL), FXAA_REDUCE_MIN);
-	float rcpDirMin = 1.0/(min(abs(dir.x), abs(dir.y)) + dirReduce);
+	float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
 	dir = min(vec2( FXAA_SPAN_MAX,  FXAA_SPAN_MAX), max(vec2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX), dir * rcpDirMin));
 	dir.x /= WIDTH;
 	dir.y /= HEIGHT;

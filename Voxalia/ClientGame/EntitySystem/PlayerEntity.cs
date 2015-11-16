@@ -138,12 +138,8 @@ namespace Voxalia.ClientGame.EntitySystem
         double lPT;
 
         public Space NMTWOWorld = new Space(null);
-
-#if NEW_CHUNKS
+        
         Dictionary<Location, FullChunkObject> NMTWOMeshes = new Dictionary<Location, FullChunkObject>();
-#else
-        Dictionary<Location, InstancedMesh> NMTWOMeshes = new Dictionary<Location, InstancedMesh>();
-#endif
 
         double lGTT = 0;
 
@@ -186,33 +182,15 @@ namespace Voxalia.ClientGame.EntitySystem
                                 }
                                 continue;
                             }
-#if NEW_CHUNKS
                             if (!NMTWOMeshes.ContainsKey(ch))
                             {
-                                if (chunk.MeshShape != null)
+                                if (chunk.FCO != null)
                                 {
                                     FullChunkObject im = new FullChunkObject(chunk.FCO.Position, chunk.FCO.ChunkShape);
                                     NMTWOWorld.Add(im);
                                     NMTWOMeshes[ch] = im;
                                 }
                             }
-#else
-                            InstancedMesh temp;
-                            if ((!NMTWOMeshes.TryGetValue(ch, out temp)) || (temp.Shape != chunk.MeshShape))
-                            {
-                                if (temp != null)
-                                {
-                                    NMTWOWorld.Remove(temp);
-                                    NMTWOMeshes.Remove(ch);
-                                }
-                                if (chunk.MeshShape != null)
-                                {
-                                    InstancedMesh im = new InstancedMesh(chunk.MeshShape);
-                                    NMTWOWorld.Add(im);
-                                    NMTWOMeshes[ch] = im;
-                                }
-                            }
-#endif
                         }
                     }
                 }

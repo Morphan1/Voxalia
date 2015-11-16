@@ -137,8 +137,6 @@ namespace Voxalia.ClientGame.WorldSystem
         }
 
         public FullChunkObject FCO = null;
-
-        public InstancedMeshShape MeshShape = null;
         
         public ASyncScheduleItem adding = null;
 
