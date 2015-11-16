@@ -1,6 +1,7 @@
 ﻿using Voxalia.Shared;
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.ItemSystem;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
@@ -40,7 +41,15 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             ie.SetOrientation(entry.Player.GetOrientation());
             ie.SetVelocity(fvel * 10);
             entry.Player.TheRegion.SpawnEntity(ie);
-            entry.Player.Items.RemoveItem(entry.Player.Items.cItem);
+            if (stack.Count > 1)
+            {
+                stack.Count -= 1;
+                entry.Player.Network.SendPacket(new SetItemPacketOut(entry.Player.Items.cItem, stack));
+            }
+            else
+            {
+                entry.Player.Items.RemoveItem(entry.Player.Items.cItem);
+            }
         }
     }
 }

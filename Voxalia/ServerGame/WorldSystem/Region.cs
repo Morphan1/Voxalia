@@ -1261,12 +1261,10 @@ namespace Voxalia.ServerGame.WorldSystem
                 int dat = item.Datum & (255 * 256 * 256);
                 return new BlockItemEntity(this, (Material)mat, (byte)dat, Location.Zero);
             }
-            /*
             if (item.Info is GlowstickItem)
             {
-                return null;
+                return new GlowstickEntity(item.DrawColor, this);
             }
-            */
             return new ItemEntity(item, this);
         }
     }

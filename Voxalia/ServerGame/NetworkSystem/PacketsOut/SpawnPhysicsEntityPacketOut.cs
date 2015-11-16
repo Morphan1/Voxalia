@@ -16,7 +16,9 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 bge = (BlockGroupEntity)e;
                 hs = new Location(bge.XWidth, bge.YWidth, bge.ZWidth);
             }
-            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + (e is BlockGroupEntity ? bge.Blocks.Length * 3 + 1 :(e is CubeEntity ? 4 * 6 + 4 * 6: (e is BlockItemEntity ? 3: (e is ModelEntity ? 4 + 1: 0)))) + 4 + 1];
+            // TODO: LOL PLS CLEAN
+            Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + 
+                (e is GlowstickEntity ? 4: (e is BlockGroupEntity ? bge.Blocks.Length * 3 + 1 :(e is CubeEntity ? 4 * 6 + 4 * 6: (e is BlockItemEntity ? 3: (e is ModelEntity ? 4 + 1: 0))))) + 4 + 1];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
@@ -47,7 +49,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 // TODO: Warning message?
                 new Location(1, 1, 1).ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
-            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is BlockGroupEntity ? 4: (e is CubeEntity ? 0 : (e is PlayerEntity ? 1 : (e is BlockItemEntity ? 3: 2))));
+            // TODO: LOL PLS CLEAN
+            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is GlowstickEntity ? 5: (e is BlockGroupEntity ? 4: (e is CubeEntity ? 0 : (e is PlayerEntity ? 1 : (e is BlockItemEntity ? 3: 2)))));
             int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
             if (e is CubeEntity)
             {
@@ -87,6 +90,10 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                     Data[start + bge.Blocks.Length * 2 + i] = bge.Blocks[i].BlockData;
                 }
                 Data[start + bge.Blocks.Length * 3] = (byte)bge.TraceMode;
+            }
+            else if (e is GlowstickEntity)
+            {
+                Utilities.IntToBytes(((GlowstickEntity)e).Color).CopyTo(Data, start);
             }
             Utilities.FloatToBytes(e.GetBounciness()).CopyTo(Data, Data.Length - (4 + 1));
             Data[Data.Length - 1] = (byte)(e.Visible ? 1 : 0);

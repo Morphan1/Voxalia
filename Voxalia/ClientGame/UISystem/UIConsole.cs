@@ -220,7 +220,7 @@ namespace Voxalia.ClientGame.UISystem
             // Update open/close state
             if (KeyHandler._TogglerPressed)
             {
-                KeyHandler._TogglerPressed = false;
+                KeyHandler.GetKBState();
                 Open = !Open;
                 if (Open)
                 {

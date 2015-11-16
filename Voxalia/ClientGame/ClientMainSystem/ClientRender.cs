@@ -798,6 +798,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     move = 20;
                 }
+                Rendering.SetColor(Color4.White);
                 Textures.GetTexture("ui/hud/reticles/" + CVars.u_reticle.Value + "_tl").Bind();
                 Rendering.RenderRectangle(cX - CVars.u_reticlescale.ValueI - move, cY - CVars.u_reticlescale.ValueI - move, cX - move, cY - move);
                 Textures.GetTexture("ui/hud/reticles/" + CVars.u_reticle.Value + "_tr").Bind();

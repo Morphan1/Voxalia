@@ -24,11 +24,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             float fric = Utilities.BytesToFloat(Utilities.BytesPartial(data, 4 + 12 + 12 + 16 + 12 + 8, 4));
             Location halfsize = Location.FromBytes(data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             PhysicsEntity ce;
+            int start = len - (4 + 1);
             if (type == 0)
             {
                 CubeEntity ce1 = new CubeEntity(TheClient.TheRegion, halfsize);
                 ce = ce1;
-                int start = len - (4 + 1);
                 NetStringManager strings = TheClient.Network.Strings;
                 ce1.Textures[0] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4)));
                 ce1.Textures[1] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4, 4)));
@@ -49,7 +49,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 2)
             {
-                int start = len - (4 + 1);
                 NetStringManager strings = TheClient.Network.Strings;
                 ModelEntity me = new ModelEntity(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4))), TheClient.TheRegion);
                 byte moder = data[start + 4];
@@ -58,7 +57,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 3)
             {
-                int start = len - (4 + 1);
                 Material mat = (Material)Utilities.BytesToUshort(Utilities.BytesPartial(data, start, 2));
                 byte dat = data[start + 2];
                 BlockItemEntity bie = new BlockItemEntity(TheClient.TheRegion, mat, dat);
@@ -66,7 +64,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 4)
             {
-                int start = len - (4 + 1);
                 int xwidth = (int)halfsize.X;
                 int ywidth = (int)halfsize.Y;
                 int zwidth = (int)halfsize.Z;
@@ -79,6 +76,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 BGETraceMode tm = (BGETraceMode)data[start + bi.Length * 3];
                 BlockGroupEntity bge = new BlockGroupEntity(TheClient.TheRegion, tm, bi, xwidth, ywidth, zwidth);
                 ce = bge;
+            }
+            else if (type == 5)
+            {
+                int col = Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4));
+                ce = new GlowstickEntity(TheClient.TheRegion, col);
             }
             else
             {
