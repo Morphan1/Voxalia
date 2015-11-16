@@ -139,9 +139,7 @@ namespace Voxalia.ClientGame.WorldSystem
         public FullChunkObject FCO = null;
 
         public InstancedMeshShape MeshShape = null;
-
-        public InstancedMesh worldObject = null;
-
+        
         public ASyncScheduleItem adding = null;
 
         public void AddToWorld()
@@ -157,10 +155,9 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void Destroy()
         {
-            if (worldObject != null)
+            if (FCO != null)
             {
                 OwningRegion.RemoveChunkQuiet(FCO);
-                worldObject = null;
             }
             if (_VBO != null)
             {

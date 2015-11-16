@@ -57,7 +57,6 @@ namespace Voxalia.ClientGame.WorldSystem
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
         }
-#if NEW_CHUNKS
         public void AddChunk(FullChunkObject mesh)
         {
             PhysicsWorld.Add(mesh);
@@ -67,17 +66,6 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             PhysicsWorld.Remove(mesh);
         }
-#else
-        public void AddChunk(InstancedMesh mesh)
-        {
-            PhysicsWorld.Add(mesh);
-        }
-
-        public void RemoveChunkQuiet(InstancedMesh mesh)
-        {
-            PhysicsWorld.Remove(mesh);
-        }
-#endif
 
         public bool SpecialCaseRayTrace(Location start, Location dir, float len, MaterialSolidity considerSolid, Func<BroadPhaseEntry, bool> filter, out RayCastResult rayHit)
         {
@@ -115,11 +103,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     if (temp.T < best.HitData.T)
                     {
                         best.HitData = temp;
-#if NEW_CHUNKS
                         best.HitObject = chunk.Value.FCO;
-#else
-                        best.HitObject = chunk.Value.worldObject;
-#endif
                     }
                 }
             }
@@ -165,11 +149,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     if (temp.T < best.HitData.T)
                     {
                         best.HitData = temp;
-#if NEW_CHUNKS
                         best.HitObject = chunk.Value.FCO;
-#else
-                        best.HitObject = chunk.Value.worldObject;
-#endif
                     }
                 }
             }
@@ -288,6 +268,7 @@ namespace Voxalia.ClientGame.WorldSystem
             Chunk chunk;
             if (LoadedChunks.TryGetValue(pos, out chunk))
             {
+                // TODO: ?!?!?!?
                 if (chunk.PosMultiplier != posMult)
                 {
                     Chunk ch = chunk;
@@ -295,7 +276,6 @@ namespace Voxalia.ClientGame.WorldSystem
                     chunk = new Chunk(posMult);
                     chunk.OwningRegion = this;
                     chunk.adding = ch.adding;
-                    chunk.worldObject = ch.worldObject;
                     chunk.rendering = ch.rendering;
                     chunk._VBO = ch._VBO;
                     chunk.WorldPosition = pos;

@@ -569,7 +569,7 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             CFGEdited = true;
         }
-#if NEW_CHUNKS
+
         public void AddChunk(FullChunkObject mesh)
         {
             CheckThreadValidity();
@@ -589,27 +589,6 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             PhysicsWorld.Remove(mesh);
         }
-#else
-        public void AddChunk(StaticMesh mesh)
-        {
-            CheckThreadValidity();
-            if (mesh == null)
-            {
-                return;
-            }
-            PhysicsWorld.Add(mesh);
-        }
-
-        public void RemoveChunkQuiet(StaticMesh mesh)
-        {
-            CheckThreadValidity();
-            if (mesh == null)
-            {
-                return;
-            }
-            PhysicsWorld.Remove(mesh);
-        }
-#endif
 
         public bool SpecialCaseRayTrace(Location start, Location dir, float len, MaterialSolidity considerSolid, Func<BroadPhaseEntry, bool> filter, out RayCastResult rayHit)
         {
@@ -644,15 +623,10 @@ namespace Voxalia.ServerGame.WorldSystem
                 if (chunk.Value.FCO.RayCast(ray, len, null, considerSolid, out temp))
                 {
                     hA = true;
-                    //temp.T *= len;
                     if (temp.T < best.HitData.T)
                     {
                         best.HitData = temp;
-#if NEW_CHUNKS
                         best.HitObject = chunk.Value.FCO;
-#else
-                        best.HitObject = chunk.Value.worldObject;
-#endif
                     }
                 }
             }
@@ -695,15 +669,10 @@ namespace Voxalia.ServerGame.WorldSystem
                 if (chunk.Value.FCO.ConvexCast(shape, ref rt, ref sweep, len, considerSolid, out temp))
                 {
                     hA = true;
-                   // temp.T *= len;
                     if (temp.T < best.HitData.T)
                     {
                         best.HitData = temp;
-#if NEW_CHUNKS
                         best.HitObject = chunk.Value.FCO;
-#else
-                        best.HitObject = chunk.Value.worldObject;
-#endif
                     }
                 }
             }

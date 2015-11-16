@@ -149,9 +149,7 @@ namespace Voxalia.ServerGame.WorldSystem
         }
 
         public FullChunkObject FCO = null;
-
-        public StaticMesh worldObject = null;
-
+        
         public ASyncScheduleItem adding = null;
         
         /// <summary>
@@ -203,14 +201,9 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public void UnloadSafely(Action callback = null)
         {
-            if (worldObject != null)
+            if (FCO != null)
             {
-#if NEW_CHUNKS
                 OwningRegion.RemoveChunkQuiet(FCO);
-#else
-                OwningRegion.RemoveChunkQuiet(worldObject);
-#endif
-                worldObject = null;
             }
             if (LastEdited >= 0)
             {
