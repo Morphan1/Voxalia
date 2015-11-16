@@ -23,5 +23,10 @@
         public virtual void Tick(double delta)
         {
         }
+
+        public virtual void MouseLeftDownOutside()
+        {
+
+        }
     }
 }

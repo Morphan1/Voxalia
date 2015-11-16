@@ -15,6 +15,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
     {
         public UIMenu InventoryMenu;
         public UIScrollGroup UI_Inv_Items;
+        public UITextBox UI_Inv_Filter;
 
         public UIMenu EquipmentMenu;
 
@@ -48,9 +49,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             InventoryMenu.Add(inv_equipment);
             InventoryMenu.Add(inv_builderitems);
             InventoryMenu.Add(InventoryExitButton());
-            Func<int> height = () => (int)(inv_inventory.GetY() + inv_inventory.GetHeight() + 20);
+            Func<int> height = () => (int)(inv_inventory.GetY() + inv_inventory.GetHeight() + 20 + FontSets.Standard.font_default.Height + 20);
             UI_Inv_Items = new UIScrollGroup(() => 20, height, ItemsListSize, () => Window.Height - height() - 20);
+            UI_Inv_Filter = new UITextBox("", "Item Filter", () => 20, () => (int)(inv_inventory.GetY() + inv_inventory.GetHeight() + 20), 200, FontSets.Standard);
+            UI_Inv_Filter.TextModified += (o, e) => UpdateInventoryMenu();
             InventoryMenu.Add(UI_Inv_Items);
+            InventoryMenu.Add(UI_Inv_Filter);
             GenerateItemDescriptors();
             UpdateInventoryMenu();
             EquipmentMenu = new UIMenu(this);
@@ -104,7 +108,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             ItemStack item = GetItemForSlot(slot);
             UI_Inv_Displayname.Text = item.DisplayName;
             UI_Inv_Description.Text = item.Name + (item.SecondaryName != null && item.SecondaryName.Length > 0 ? " [" + item.SecondaryName + "]" : "") + "\n>" + item.Description;
-            UI_Inv_Detail.Text = "Count: " + item.Count + ", ColorCode: " + item.DrawColor + ", Texture: " + item.Tex.Name + ", Model: " + item.Mod.Name + ", Shared attributes: "+  item.SharedStr();
+            UI_Inv_Detail.Text = "Count: " + item.Count + ", ColorCode: " + item.DrawColor + ", Texture: " + (item.Tex != null ? item.Tex.Name: "{NULL}")
+                + ", Model: " + (item.Mod != null ? item.Mod.Name : "{NULL}") + ", Shared attributes: "+  item.SharedStr();
         }
 
         public void UpdateInventoryMenu()
@@ -116,20 +121,24 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 InventorySelectItem(0);
             }
-            , () => 20, () => 20 + FontSets.SlightlyBigger.font_default.Height + 20, FontSets.Standard);
+            , () => 0, () => 0, FontSets.Standard);
             UI_Inv_Items.Add(prev);
+            string filter = UI_Inv_Filter.Text;
             for (int i = 0; i < Items.Count; i++)
             {
-                string name = Items[i].DisplayName;
-                UITextLink p = prev;
-                int x = i;
-                UITextLink neo = new UITextLink(name, pref1 + name, pref2 + name, () =>
+                if (filter.Length == 0 || Items[i].ToString().ToLower().Contains(filter.ToLower()))
                 {
-                    InventorySelectItem(x + 1);
+                    string name = Items[i].DisplayName;
+                    UITextLink p = prev;
+                    int x = i;
+                    UITextLink neo = new UITextLink(name, pref1 + name, pref2 + name, () =>
+                    {
+                        InventorySelectItem(x + 1);
+                    }
+                    , () => p.GetX(), () => p.GetY() + p.GetHeight(), FontSets.Standard);
+                    UI_Inv_Items.Add(neo);
+                    prev = neo;
                 }
-                , () => p.GetX(), () => p.GetY() + p.GetHeight(), FontSets.Standard);
-                UI_Inv_Items.Add(neo);
-                prev = neo;
             }
         }
 
@@ -139,6 +148,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 CInvMenu.TickAll();
             }
+        }
+
+        public bool InvShown()
+        {
+            return CInvMenu != null;
         }
 
         bool invmousewascaptured = false;

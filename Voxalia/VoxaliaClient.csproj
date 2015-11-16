@@ -212,6 +212,7 @@
     <Compile Include="ClientGame\UISystem\MenuSystem\UIMenu.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UILabel.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIScrollGroup.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UITextBox.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UITextLink.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIMenuButton.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIMenuItem.cs" />

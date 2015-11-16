@@ -150,7 +150,7 @@ namespace Voxalia.ClientGame.UISystem
 
         static bool _CopyPressed = false;
 
-        static bool _TogglerPressed = false;
+        public static bool _TogglerPressed = false;
 
         static int _Pages = 0;
 
@@ -173,6 +173,10 @@ namespace Voxalia.ClientGame.UISystem
         /// <param name="e">Holds the pressed key.</param>
         public static void PrimaryGameWindow_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if (!Client.Central.Window.Focused)
+            {
+                return;
+            }
             if (Char.IsControl(e.KeyChar))
             {
                 return;
@@ -190,6 +194,10 @@ namespace Voxalia.ClientGame.UISystem
 
         public static void Mouse_ButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (!Client.Central.Window.Focused)
+            {
+                return;
+            }
             lock (Locker)
             {
                 if (_BindsValid)
@@ -213,6 +221,10 @@ namespace Voxalia.ClientGame.UISystem
 
         public static void Mouse_Wheel(object sender, MouseWheelEventArgs e)
         {
+            if (!Client.Central.Window.Focused)
+            {
+                return;
+            }
             if (e.DeltaPrecise != 0)
             {
                 lock (Locker)
@@ -231,6 +243,10 @@ namespace Voxalia.ClientGame.UISystem
 
         public static void Mouse_ButtonUp(object sender, MouseButtonEventArgs e)
         {
+            if (!Client.Central.Window.Focused)
+            {
+                return;
+            }
             lock (Locker)
             {
                 if (_BindsValid)
@@ -259,6 +275,10 @@ namespace Voxalia.ClientGame.UISystem
         /// <param name="e">Holds the pressed key.</param>
         public static void PrimaryGameWindow_KeyDown(object sender, KeyboardKeyEventArgs e)
         {
+            if (!Client.Central.Window.Focused)
+            {
+                return;
+            }
             lock (Locker)
             {
                 switch (e.Key)
@@ -354,6 +374,10 @@ namespace Voxalia.ClientGame.UISystem
         /// <param name="e">Holds the pressed key.</param>
         public static void PrimaryGameWindow_KeyUp(object sender, KeyboardKeyEventArgs e)
         {
+            if (!Client.Central.Window.Focused)
+            {
+                return;
+            }
             lock (Locker)
             {
                 switch (e.Key)
@@ -371,9 +395,7 @@ namespace Voxalia.ClientGame.UISystem
                 }
             }
         }
-
-        //public static KeyboardState CurrentKeyboard;
-        //public static KeyboardState PreviousKeyboard;
+        
         public static List<Key> KeyPressList;
 
         /// <summary>
@@ -381,8 +403,6 @@ namespace Voxalia.ClientGame.UISystem
         /// </summary>
         public static void Tick()
         {
-            //PreviousKeyboard = CurrentKeyboard;
-            //CurrentKeyboard = Keyboard.GetState();
             lock (Locker)
             {
                 KeyPressList.Clear();
@@ -465,7 +485,7 @@ namespace Voxalia.ClientGame.UISystem
         /// <returns>Whether the keyboard is useable.</returns>
         public static bool IsValid()
         {
-            return Client.Central.Window.Focused && !UIConsole.Open;
+            return Client.Central.Window.Focused && !UIConsole.Open && !Client.Central.InvShown();
         }
 
         /*

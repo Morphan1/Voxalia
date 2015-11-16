@@ -51,7 +51,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Description = "An empty slot.",
                     Count = 0,
                     Datum = 0,
-                    DisplayName = "Air"
+                    DisplayName = "Air",
+                    Name = "air",
+                    TheClient = this
                 };
             }
             else

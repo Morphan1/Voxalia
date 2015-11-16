@@ -67,7 +67,14 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public override void MouseLeave()
         {
-            watchMouse = false;
+            for (int i = 0; i < MenuItems.Count; i++)
+            {
+                if (MenuItems[i].HoverInternal)
+                {
+                    MenuItems[i].MouseLeave();
+                }
+            }
+           watchMouse = false;
         }
 
         public override void Tick(double delta)
@@ -80,8 +87,8 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                     Scroll = 0;
                 }
                 // TODO: Maximum value?
-                int mx = MouseHandler.MouseX();
-                int my = MouseHandler.MouseY() + Scroll;
+                int mx = MouseHandler.MouseX() - X();
+                int my = MouseHandler.MouseY() + Scroll - Y();
                 for (int i = 0; i < MenuItems.Count; i++)
                 {
                     if (MenuItems[i].Contains(mx, my))
@@ -102,8 +109,16 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                     }
                     else if (MenuItems[i].HoverInternal)
                     {
+                        if (mLDown && !mLDP)
+                        {
+                            MenuItems[i].MouseLeftDownOutside();
+                        }
                         MenuItems[i].HoverInternal = false;
                         MenuItems[i].MouseLeave();
+                    }
+                    else if (mLDown && !mLDP)
+                    {
+                        MenuItems[i].MouseLeftDownOutside();
                     }
                 }
                 mLDP = mLDown;
@@ -127,7 +142,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
             mLDown = false;
         }
-
+        
         public override void Render(double delta, int xoff, int yoff)
         {
             int x = X() + xoff;
@@ -141,7 +156,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             // TODO: Adust everything by scroll amount!
             for (int i = 0; i < MenuItems.Count; i++)
             {
-                MenuItems[i].Render(delta, xoff, yoff - Scroll);
+                MenuItems[i].Render(delta, x, y - Scroll);
             }
             GL.Scissor(0, 0, Menus.TheClient.Window.Width, Menus.TheClient.Window.Height); // TODO: Bump around a stack, for embedded scroll groups?
             GL.Disable(EnableCap.ScissorTest);

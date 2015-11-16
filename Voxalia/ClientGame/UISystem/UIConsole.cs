@@ -217,10 +217,10 @@ namespace Voxalia.ClientGame.UISystem
         /// </summary>
         public static void Tick()
         {
-            KeyHandlerState KeyState = KeyHandler.GetKBState();
             // Update open/close state
-            if (KeyState.TogglerPressed)
+            if (KeyHandler._TogglerPressed)
             {
+                KeyHandler._TogglerPressed = false;
                 Open = !Open;
                 if (Open)
                 {
@@ -241,6 +241,7 @@ namespace Voxalia.ClientGame.UISystem
             }
             if (Open)
             {
+                KeyHandlerState KeyState = KeyHandler.GetKBState();
                 extralines = 0;
                 LineBack = 0;
                 // flicker the cursor

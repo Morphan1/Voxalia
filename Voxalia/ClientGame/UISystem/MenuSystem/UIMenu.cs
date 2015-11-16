@@ -28,7 +28,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
             int mX = MouseHandler.MouseX();
             int mY = MouseHandler.MouseY();
-            bool mDown = Mouse.GetState().IsButtonDown(MouseButton.Left);
+            bool mDown = MouseHandler.CurrentMouse.IsButtonDown(MouseButton.Left);
             for (int i = 0; i < MenuItems.Count; i++)
             {
                 if (MenuItems[i].Contains(mX, mY))
@@ -51,6 +51,14 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                 {
                     MenuItems[i].HoverInternal = false;
                     MenuItems[i].MouseLeave();
+                    if (mDown && !pDown)
+                    {
+                        MenuItems[i].MouseLeftDownOutside();
+                    }
+                }
+                else if (mDown && !pDown)
+                {
+                    MenuItems[i].MouseLeftDownOutside();
                 }
                 MenuItems[i].Tick(TheClient.Delta);
             }
