@@ -49,7 +49,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             // Load other stuff
             LoadTextFile();
             Fonts = new List<GLFont>();
-            // Choose a default font: Segoe UI, Arial, Calibri, or generic.
+            // Choose a default font.
             FontFamily[] families = FontFamily.Families;
             FontFamily family = FontFamily.GenericMonospace;
             int family_priority = 0;
@@ -261,7 +261,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 for (int i = 0; i < Engine.textfile.Length; i++)
                 {
                     string chr = Engine.textfile[i] == '\t' ? "    " : Engine.textfile[i].ToString();
-                    float nwidth = gfx.MeasureString(chr, font, new PointF(0, 0), sf).Width;
+                    float nwidth = (float)Math.Ceiling(gfx.MeasureString(chr, font, new PointF(0, 0), sf).Width);
                     if (X + nwidth >= Engine.bwidth)
                     {
                         Y += Height + 4;
@@ -269,7 +269,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                     gfx.DrawString(chr, font, brush, new PointF(X, Y), sf);
                     CharacterLocations.Add(new RectangleF(X, Y, nwidth, Height));
-                    X += (float)Math.Ceiling(nwidth) + 4;
+                    X += nwidth + 4f;
                 }
             }
             BitmapData data = bmp.LockBits(new Rectangle(0, 0, Engine.bwidth, Engine.bheight), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);

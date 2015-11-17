@@ -586,23 +586,23 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.Uniform4(7, Color4.White);
             }
             Rendering.SetColor(new Vector4(ClientUtilities.Convert(godrayCol), 1));
-            Textures.GetTexture("skies/sun").Bind(); // TODO: Store var? Make dynamic?
+            Textures.GetTexture("skies/sun").Bind(); // TODO: Store var!
             Matrix4 rot = Matrix4.CreateTranslation(-50f, -50f, 0f)
                 * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + SunAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + TheSun.Direction * -(dist * 0.96f))); // TODO: adjust based on view rad
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + TheSun.Direction * -(dist * 0.96f)));
             Rendering.RenderRectangle(0, 0, 100, 100, rot); // TODO: Adjust scale based on view rad
             if (FBOid == 1)
             {
                 GL.Uniform4(7, Color4.Black);
             }
-            Textures.GetTexture("skies/planet").Bind(); // TODO: Store var? Make dynamic?
+            Textures.GetTexture("skies/planet").Bind(); // TODO: Store var!
             Rendering.SetColor(new Color4(PlanetLight, PlanetLight, PlanetLight, 1));
             rot = Matrix4.CreateTranslation(-150f, -150f, 0f)
                 * Matrix4.CreateRotationY((float)((-PlanetAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + PlanetAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + ThePlanet.Direction * -(dist * 0.8f))); // TODO: adjust based on view rad
-            Rendering.RenderRectangle(0, 0, 300, 300, rot); // TODO: Adjust scale based on view rad
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + ThePlanet.Direction * -(dist * 0.8f)));
+            Rendering.RenderRectangle(0, 0, 300, 300, rot);
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.Enable(EnableCap.CullFace);
             Matrix4 ident = Matrix4.Identity;
