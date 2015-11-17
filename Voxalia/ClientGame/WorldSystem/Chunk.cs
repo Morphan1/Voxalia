@@ -67,10 +67,10 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     for (int y = 0; y < CSize; y++)
                     {
-                        byte light = 255;
+                        float light = 1f;
                         for (int z = CSize - 1; z >= 0; z--)
                         {
-                            BlocksInternal[BlockIndex(x, y, z)].BlockLocalData = light;
+                            BlocksInternal[BlockIndex(x, y, z)].BlockLocalData = (byte)(light * 255);
                             Material mat = (Material)GetBlockAt(x, y, z).BlockMaterial;
                             if (mat.IsOpaque())
                             {
@@ -78,7 +78,7 @@ namespace Voxalia.ClientGame.WorldSystem
                             }
                             if (mat.RendersAtAll())
                             {
-                                light /= 2;
+                                light /= 1.8f;
                             }
                         }
                     }

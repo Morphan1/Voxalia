@@ -4,6 +4,7 @@ using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.Shared;
 using OpenTK;
 using Voxalia.ClientGame.OtherSystems;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -109,26 +110,35 @@ namespace Voxalia.ClientGame.WorldSystem
                                 {
                                     SysConsole.Output(OutputType.WARNING, "PROBLEM RENDERING CHUNK: v:" + vecsi.Count + ",n:" + normsi.Count + ",tci:" + tci.Count);
                                 }
-                                // TODO: FIXME!
-                                /*if (light)
+                                for (int i = 0; i < vecsi.Count; i++)
                                 {
-                                    List<BEPUutilities.Vector4> lits = BlockShapeRegistry.BSD[c.BlockData].GetLights(pos, c, xp, xm, yp, ym, zp, zm, xps, xms, yps, yms, zps, yms);
-                                    if (lits.Count != vecsi.Count)
+                                    Vector3i offs = new Vector3i();
+                                    if (vecsi[i].X - x < 0.1 && x > 0)
                                     {
-                                        SysConsole.Output(OutputType.ERROR, "Wat: " + (Material)c.BlockMaterial + ", " + (int)c.BlockData + " at " + pos + "... l:" + lits.Count + "!= v:" + vecsi.Count);
+                                        offs.X = -1;
                                     }
-                                    for (int i = 0; i < lits.Count; i++)
+                                    else if (vecsi[i].X - x > 0.9 && x + 1 < CSize)
                                     {
-                                        Cols.Add(new Vector4(lits[i].X, lits[i].Y, lits[i].Z, lits[i].W));
+                                        offs.X = 1;
                                     }
-                                }
-                                else*/
-                                float cCol = Math.Max(c.BlockLocalData / 255f, (float)OwningRegion.TheClient.ambient.X);
-                                {
-                                    for (int i = 0; i < vecsi.Count; i++)
+                                    if (vecsi[i].Y - y < 0.1 && y > 0)
                                     {
-                                        Cols.Add(new Vector4(cCol, cCol, cCol, 1f));
+                                        offs.Y = -1;
                                     }
+                                    else if (vecsi[i].Y - y > 0.9 && y + 1 < CSize)
+                                    {
+                                        offs.Y = 1;
+                                    }
+                                    if (vecsi[i].Z - z < 0.1 && z > 0)
+                                    {
+                                        offs.Z = -1;
+                                    }
+                                    else if (vecsi[i].Z - z > 0.9 && z + 1 < CSize)
+                                    {
+                                        offs.Z = 1;
+                                    }
+                                    float cCol = Math.Max((GetBlockAt(x + offs.X, y + offs.Y, z + offs.Z)).BlockLocalData / 255f, (float)OwningRegion.TheClient.ambient.X);
+                                    Cols.Add(new Vector4(cCol, cCol, cCol, 1f));
                                 }
                                 if (!((Material)c.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
                                 {
@@ -144,12 +154,9 @@ namespace Voxalia.ClientGame.WorldSystem
                                     {
                                         TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
                                     }
-                                    // NOTE: Lights!
+                                    for (int i = vecsi.Count - 1; i >= 0; i--)
                                     {
-                                        for (int i = vecsi.Count - 1; i >= 0; i--)
-                                        {
-                                            Cols.Add(new Vector4(cCol, cCol, cCol, 1f));
-                                        }
+                                        Cols.Add(Cols[Cols.Count - ((vecsi.Count - 1) - i) * 2]);
                                     }
                                 }
                             }
