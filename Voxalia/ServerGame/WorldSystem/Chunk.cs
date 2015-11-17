@@ -29,7 +29,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public const int CHUNK_SIZE = 30;
 
-        public ChunkFlags Flags = ChunkFlags.POPULATING;
+        public ChunkFlags Flags = ChunkFlags.NONE;
         
         public Region OwningRegion = null;
 
@@ -114,14 +114,15 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             lock (EditSessionLock)
             {
-                byte[] bytes = new byte[8 + BlocksInternal.Length * 4];
+                byte[] bytes = new byte[12 + BlocksInternal.Length * 4];
                 Encoding.ASCII.GetBytes("VOX_").CopyTo(bytes, 0); // General Header
-                Utilities.IntToBytes(1).CopyTo(bytes, 4); // Saves Version
+                Utilities.IntToBytes(2).CopyTo(bytes, 4); // Saves Version
+                Utilities.IntToBytes((int)Flags).CopyTo(bytes, 8);
                 for (int i = 0; i < BlocksInternal.Length; i++)
                 {
-                    Utilities.UshortToBytes(BlocksInternal[i].BlockMaterial).CopyTo(bytes, 8 + i * 2);
-                    bytes[8 + BlocksInternal.Length * 2 + i] = BlocksInternal[i].BlockData;
-                    bytes[8 + BlocksInternal.Length * 3 + i] = BlocksInternal[i].BlockLocalData;
+                    Utilities.UshortToBytes(BlocksInternal[i].BlockMaterial).CopyTo(bytes, 12 + i * 2);
+                    bytes[12 + BlocksInternal.Length * 2 + i] = BlocksInternal[i].BlockData;
+                    bytes[12 + BlocksInternal.Length * 3 + i] = BlocksInternal[i].BlockLocalData;
                 }
                 return FileHandler.GZip(bytes);
             }
@@ -191,8 +192,7 @@ namespace Voxalia.ServerGame.WorldSystem
         }
 
         /// <summary>
-        /// Asyncable.
-        /// Note: Set LOADING=true before calling, and LOADING=false when done.
+        /// Asyncable (Just don't add the chunk to the world while this is running!)
         /// </summary>
         public void LoadFromSaveData(byte[] data)
         {
@@ -204,15 +204,17 @@ namespace Voxalia.ServerGame.WorldSystem
                 throw new Exception("Invalid save data ENGINE format: " + engine + "!");
             }
             int revision = Utilities.BytesToInt(Utilities.BytesPartial(bytes, 4, 4));
-            if (revision != 1)
+            if (revision != 2)
             {
                 throw new Exception("Invalid save data REVISION: " + revision + "!");
             }
+            int flags = Utilities.BytesToInt(Utilities.BytesPartial(bytes, 8, 4));
+            Flags = (ChunkFlags)flags & ~(ChunkFlags.POPULATING);
             for (int i = 0; i < BlocksInternal.Length; i++)
             {
-                BlocksInternal[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(bytes, 8 + i * 2, 2));
-                BlocksInternal[i].BlockData = bytes[8 + BlocksInternal.Length * 2 + i];
-                BlocksInternal[i].BlockLocalData = bytes[8 + BlocksInternal.Length * 3 + i];
+                BlocksInternal[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(bytes, 12 + i * 2, 2));
+                BlocksInternal[i].BlockData = bytes[12 + BlocksInternal.Length * 2 + i];
+                BlocksInternal[i].BlockLocalData = bytes[12 + BlocksInternal.Length * 3 + i];
             }
         }
     }
