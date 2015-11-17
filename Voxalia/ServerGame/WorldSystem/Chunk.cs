@@ -29,12 +29,8 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public const int CHUNK_SIZE = 30;
 
-        public bool LOADING = true;
-
-        public bool POPULATING = true;
-
-        public bool ISCUSTOM = false;
-
+        public ChunkFlags Flags = ChunkFlags.POPULATING;
+        
         public Region OwningRegion = null;
 
         public Location WorldPosition;
@@ -86,80 +82,16 @@ namespace Voxalia.ServerGame.WorldSystem
                 return BlocksInternal[BlockIndex(x, y, z)];
             }
         }
-
-        /// <summary>
-        /// Asyncable (Edit session).
-        /// </summary>
-        /// <returns>A chunk.</returns>
-        public StaticMesh CalculateChunkShape()
-        {
-            try
-            {
-                List<Vector3> Vertices = new List<Vector3>(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 6); // TODO: Make this an array?
-                Vector3 ppos = WorldPosition.ToBVector() * 30;
-                //lock (EditSessionLock) // TODO: How do we magic this to be possible?
-                {
-                    for (int x = 0; x < CHUNK_SIZE; x++)
-                    {
-                        for (int y = 0; y < CHUNK_SIZE; y++)
-                        {
-                            for (int z = 0; z < CHUNK_SIZE; z++)
-                            {
-                                BlockInternal c = GetBlockAt(x, y, z);
-                                if (((Material)c.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
-                                {
-                                    BlockInternal zp = z + 1 < CHUNK_SIZE ? BlocksInternal[BlockIndex(x, y, z + 1)] : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(x, y, 30));
-                                    BlockInternal zm = z > 0 ? BlocksInternal[BlockIndex(x, y, z - 1)] : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(x, y, -1));
-                                    BlockInternal yp = y + 1 < CHUNK_SIZE ? BlocksInternal[BlockIndex(x, y + 1, z)] : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(x, 30, z));
-                                    BlockInternal ym = y > 0 ? BlocksInternal[BlockIndex(x, y - 1, z)] : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(x, -1, z));
-                                    BlockInternal xp = x + 1 < CHUNK_SIZE ? BlocksInternal[BlockIndex(x + 1, y, z)] : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(30, y, z));
-                                    BlockInternal xm = x > 0 ? BlocksInternal[BlockIndex(x - 1, y, z)] : OwningRegion.GetBlockInternal_NoLoad(new Location(ppos) + new Location(-1, y, z));
-                                    bool zps = ((Material)zp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
-                                    bool zms = ((Material)zm.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
-                                    bool xps = ((Material)xp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
-                                    bool xms = ((Material)xm.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
-                                    bool yps = ((Material)yp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
-                                    bool yms = ((Material)ym.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
-                                    Vector3 pos = new Vector3(ppos.X + x, ppos.Y + y, ppos.Z + z);
-                                    List<Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
-                                    Vertices.AddRange(vecsi);
-                                }
-                            }
-                        }
-                    }
-                }
-                if (Vertices.Count == 0)
-                {
-                    return null;
-                }
-                int[] inds = new int[Vertices.Count];
-                for (int i = 0; i < Vertices.Count; i++)
-                {
-                    inds[i] = i;
-                }
-                Vector3[] vecs = Vertices.ToArray();
-                StaticMesh sm = new StaticMesh(vecs, inds);
-                return sm;
-            }
-            catch (Exception ex)
-            {
-                SysConsole.Output("Building chunk: " + WorldPosition, ex);
-                return null;
-            }
-        }
-
-        public FullChunkObject FCO = null;
         
-        public ASyncScheduleItem adding = null;
+        public FullChunkObject FCO = null;
         
         /// <summary>
         /// Sync only.
         /// Probably.
-        /// TODO: Async? (Probably just a single local Add lock is sufficient).
         /// </summary>
         public void AddToWorld()
         {
-            if (ISCUSTOM)
+            if (Flags.HasFlag(ChunkFlags.ISCUSTOM))
             {
                 return;
             }

@@ -530,7 +530,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             CollisionDetectionSettings.AllowedPenetration = 0.01f;
             PhysicsWorld = new Space(pl);
-            PhysicsWorld.TimeStepSettings.MaximumTimeStepsPerFrame =  10;
+            PhysicsWorld.TimeStepSettings.MaximumTimeStepsPerFrame = 10;
             PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f * 3f / 2f);
             Collision = new CollisionUtil(PhysicsWorld);
             string fname = "saves/" + Name + "/region.yml";
@@ -550,17 +550,8 @@ namespace Voxalia.ServerGame.WorldSystem
             Seed = (short)Config.ReadInt("general.seed", 100);
             Random seedGen = new Random(Seed);
             Seed2 = (short)(seedGen.Next(short.MaxValue * 2) - short.MaxValue);
-            bool bval = false;
-            LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30), true, () =>
-            {
-                bval = true;
-            });
-            int c = 0;
-            while (!AllChunksLoadedFully(out c) || !bval)
-            {
-                TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-world scheduler // Also don't freeze the entire server just because we're waiting on chunks >.>
-                Thread.Sleep(16);
-            }
+            LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30), true);
+            TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-world scheduler // Also don't freeze the entire server just because we're waiting on chunks >.>
             SysConsole.Output(OutputType.INIT, "Finished building chunks! Now have " + LoadedChunks.Count + " chunks!");
         }
 
@@ -681,35 +672,26 @@ namespace Voxalia.ServerGame.WorldSystem
             return hA;
         }
 
-        private bool AllChunksLoadedFully(out int c)
+        public void LoadRegion(Location min, Location max, bool announce = true)
         {
-            c = 0;
-            CheckThreadValidity();
-            foreach (Chunk chunk in LoadedChunks.Values)
+            Location minc = ChunkLocFor(min);
+            Location maxc = ChunkLocFor(max);
+            int c = 0;
+            for (double x = minc.X; x <= maxc.X; x++)
             {
-                if (chunk.LOADING && !chunk.ISCUSTOM)
+                for (double y = minc.Y; y <= maxc.Y; y++)
                 {
-                    c++;
+                    for (double z = minc.Z; z <= maxc.Z; z++)
+                    {
+                        LoadChunk(new Location(x, y, z));
+                        c++;
+                    }
                 }
             }
-            return c == 0;
-        }
-
-        public void LoadRegion(Location min, Location max, bool announce = true, Action callback = null)
-        {
-            RegionLoader rl = new RegionLoader() { region = this };
-            TheServer.Schedule.StartASyncTask(() =>
+            if (announce)
             {
-                rl.LoadRegion(min, max);
-                if (announce)
-                {
-                    SysConsole.Output(OutputType.INIT, "Initially loaded " + rl.Count + " chunks...");
-                }
-                if (callback != null)
-                {
-                    callback.Invoke();
-                }
-            });
+                SysConsole.Output(OutputType.INIT, "Initially loaded " + c + " chunks...");
+            }
         }
 
         public short Seed;
@@ -829,11 +811,6 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
                 ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat, locdat));
                 ch.LastEdited = GlobalTickTime;
-                if (regen)
-                {
-                    ch.AddToWorld();
-                    TrySurroundings(ch, pos, x, y, z);
-                }
                 if (broadcast)
                 {
                     // TODO: Send per-person based on chunk awareness details
@@ -841,60 +818,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
             }
         }
-
-        public void TrySurroundings(Chunk ch, Location pos, int x, int y, int z) // TODO: Clean!
-        {
-            CheckThreadValidity();
-            if (x == 0)
-            {
-                ch = GetChunk(ChunkLocFor(pos + new Location(-1, 0, 0)));
-                if (ch != null && !ch.LOADING)
-                {
-                    ch.AddToWorld();
-                }
-            }
-            if (y == 0)
-            {
-                ch = GetChunk(ChunkLocFor(pos + new Location(0, -1, 0)));
-                if (ch != null && !ch.LOADING)
-                {
-                    ch.AddToWorld();
-                }
-            }
-            if (z == 0)
-            {
-                ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, -1)));
-                if (ch != null && !ch.LOADING)
-                {
-                    ch.AddToWorld();
-                }
-            }
-            if (x == Chunk.CHUNK_SIZE - 1)
-            {
-                ch = GetChunk(ChunkLocFor(pos + new Location(1, 0, 0)));
-                if (ch != null && !ch.LOADING)
-                {
-                    ch.AddToWorld();
-                }
-            }
-            if (y == Chunk.CHUNK_SIZE - 1)
-            {
-                ch = GetChunk(ChunkLocFor(pos + new Location(0, 1, 0)));
-                if (ch != null && !ch.LOADING)
-                {
-                    ch.AddToWorld();
-                }
-            }
-            if (z == Chunk.CHUNK_SIZE - 1)
-            {
-                ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, 1)));
-                if (ch != null && !ch.LOADING)
-                {
-                    ch.AddToWorld();
-                }
-            }
-        }
-
+        
         public Location[] FellLocs = new Location[] { new Location(0, 0, 1), new Location(1, 0, 0), new Location(0, 1, 0), new Location(-1, 0, 0), new Location(0, -1, 0) };
 
         public void BreakNaturally(Location pos, bool regentrans = true, int max_subbreaks = 5)
@@ -933,8 +857,6 @@ namespace Voxalia.ServerGame.WorldSystem
                     ch.LastEdited = GlobalTickTime;
                     if (regentrans)
                     {
-                        ch.AddToWorld();
-                        TrySurroundings(ch, pos, x, y, z);
                         ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { Material.AIR }, new byte[] { 0 }), ch.WorldPosition);
                     }
                     BlockItemEntity bie = new BlockItemEntity(this, mat, bi.BlockData, pos);
@@ -970,18 +892,15 @@ namespace Voxalia.ServerGame.WorldSystem
                 return chunk;
             }
             chunk = new Chunk();
-            chunk.LOADING = true;
-            chunk.POPULATING = true;
-            chunk.ISCUSTOM = true;
+            chunk.Flags = ChunkFlags.ISCUSTOM | ChunkFlags.POPULATING;
             chunk.OwningRegion = this;
             chunk.WorldPosition = cpos;
             LoadedChunks.Add(cpos, chunk);
             if (Program.Files.Exists(chunk.GetFileName()))
             {
-                PopulateChunk(chunk, true);
-                chunk.POPULATING = false;
-                chunk.ISCUSTOM = false;
-                AddChunkToWorld(chunk);
+                PopulateChunk(chunk, true, true);
+                chunk.Flags &= ~ChunkFlags.ISCUSTOM;
+                chunk.AddToWorld();
             }
             ChunksToDestroy.Add(chunk);
             chunk.LastEdited = GlobalTickTime;
@@ -994,45 +913,29 @@ namespace Voxalia.ServerGame.WorldSystem
             Chunk chunk;
             if (LoadedChunks.TryGetValue(cpos, out chunk))
             {
-                if (chunk.ISCUSTOM)
+                if (chunk.Flags.HasFlag(ChunkFlags.ISCUSTOM))
                 {
-                    chunk.ISCUSTOM = false;
+                    chunk.Flags &= ~ChunkFlags.ISCUSTOM;
                     ChunksToDestroy.Remove(chunk);
                     PopulateChunk(chunk, false);
-                    AddChunkToWorld(chunk);
+                    chunk.AddToWorld();
                 }
-                if (chunk.POPULATING)
+                if (chunk.Flags.HasFlag(ChunkFlags.POPULATING))
                 {
                     throw new Exception("Non-custom chunk was still loading when grabbed?!");
                 }
                 return chunk;
             }
             chunk = new Chunk();
-            chunk.LOADING = true;
-            chunk.POPULATING = true;
+            chunk.Flags = ChunkFlags.POPULATING;
             chunk.OwningRegion = this;
             chunk.WorldPosition = cpos;
             LoadedChunks.Add(cpos, chunk);
             PopulateChunk(chunk, true);
-            AddChunkToWorld(chunk);
+            chunk.AddToWorld();
             return chunk;
         }
-
-        public void AddChunkToWorld(Chunk chunk)
-        {
-            CheckThreadValidity();
-            chunk.AddToWorld();
-            chunk.LOADING = false;
-            foreach (Location loc in slocs)
-            {
-                Chunk ch = GetChunk(chunk.WorldPosition + loc);
-                if (ch != null && !ch.LOADING)
-                {
-                    ch.AddToWorld();
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Designed for startup time.
         /// TODO: Non-background and/or actually asyncify...
@@ -1045,7 +948,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 Chunk ch;
                 if (LoadedChunks.TryGetValue(cpos, out ch))
                 {
-                    if (!ch.ISCUSTOM)
+                    if (!ch.Flags.HasFlag(ChunkFlags.ISCUSTOM))
                     {
                         if (callback != null)
                         {
@@ -1055,11 +958,9 @@ namespace Voxalia.ServerGame.WorldSystem
                     }
                     else
                     {
-                        ch.ISCUSTOM = false;
                         ChunksToDestroy.Remove(ch);
                         PopulateChunk(ch, false);
                         ch.AddToWorld();
-                        ch.LOADING = false;
                         if (callback != null)
                         {
                             callback.Invoke(false);
@@ -1068,7 +969,6 @@ namespace Voxalia.ServerGame.WorldSystem
                     }
                 }
                 ch = new Chunk();
-                ch.LOADING = true;
                 ch.OwningRegion = this;
                 ch.WorldPosition = cpos;
                 LoadedChunks.Add(cpos, ch);
@@ -1076,7 +976,6 @@ namespace Voxalia.ServerGame.WorldSystem
                 // {
                 PopulateChunk(ch, true); // TODO: Make asyncable!
                 ch.AddToWorld();
-                ch.LOADING = false;
                 if (callback != null)
                 {
                     callback.Invoke(false);
@@ -1090,7 +989,7 @@ namespace Voxalia.ServerGame.WorldSystem
             Chunk chunk;
             if (LoadedChunks.TryGetValue(cpos, out chunk))
             {
-                if (chunk.ISCUSTOM)
+                if (chunk.Flags.HasFlag(ChunkFlags.ISCUSTOM))
                 {
                     return null;
                 }
@@ -1115,7 +1014,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public BlockPopulator Generator = new SimpleGeneratorCore();
         public BiomeGenerator BiomeGen = new SimpleBiomeGenerator();
 
-        public void PopulateChunk(Chunk chunk, bool allowFile)
+        public void PopulateChunk(Chunk chunk, bool allowFile, bool fileOnly = false)
         {
             CheckThreadValidity();
             try
@@ -1123,12 +1022,11 @@ namespace Voxalia.ServerGame.WorldSystem
                 if (allowFile && Program.Files.Exists(chunk.GetFileName()))
                 {
                     chunk.LoadFromSaveData(Program.Files.ReadBytes(chunk.GetFileName()));
-                    if (!chunk.ISCUSTOM)
+                    if (!chunk.Flags.HasFlag(ChunkFlags.ISCUSTOM))
                     {
-                        chunk.POPULATING = false;
+                        chunk.Flags &= ~ChunkFlags.POPULATING;
                         return;
                     }
-                    chunk.ISCUSTOM = false;
                 }
             }
             catch (Exception ex)
@@ -1136,9 +1034,13 @@ namespace Voxalia.ServerGame.WorldSystem
                 SysConsole.Output(OutputType.ERROR, "Loading a chunk: " + ex.ToString());
                 return;
             }
+            if (fileOnly)
+            {
+                return;
+            }
             Generator.Populate(Seed, Seed2, chunk);
             chunk.LastEdited = GlobalTickTime;
-            chunk.POPULATING = false;
+            chunk.Flags &= ~(ChunkFlags.POPULATING | ChunkFlags.ISCUSTOM);
         }
 
         /// <summary>

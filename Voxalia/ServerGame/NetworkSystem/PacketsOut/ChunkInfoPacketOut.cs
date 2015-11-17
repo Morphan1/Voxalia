@@ -9,7 +9,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public ChunkInfoPacketOut(Chunk chunk, int lod)
         {
-            if (chunk.POPULATING)
+            if (chunk.Flags.HasFlag(ChunkFlags.POPULATING))
             {
                 throw new Exception("Trying to transmit chunk while it's still loading! For chunk at " + chunk);
             }
