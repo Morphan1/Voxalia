@@ -56,6 +56,10 @@ namespace Voxalia.ClientGame.WorldSystem
             }
         }
 
+        public static Vector3i[] dirs = new Vector3i[] { new Vector3i(1, 0, 0), new Vector3i(0, 1, 0), new Vector3i(0, 0, 1), new Vector3i(1, 1, 0), new Vector3i(0, 1, 1), new Vector3i(1, 0, 1),
+        new Vector3i(-1, 1, 0), new Vector3i(0, -1, 1), new Vector3i(-1, 0, 1), new Vector3i(1, 1, 1), new Vector3i(-1, 1, 1), new Vector3i(1, -1, 1), new Vector3i(1, 1, -1), new Vector3i(-1, -1, 1),
+        new Vector3i(-1, 1, -1), new Vector3i(1, -1, -1) };
+
         void VBOHInternal(Action callback)
         {
             try
@@ -112,32 +116,33 @@ namespace Voxalia.ClientGame.WorldSystem
                                 }
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
-                                    Vector3i offs = new Vector3i();
-                                    if (vecsi[i].X - x < 0.1 && x > 0)
+                                    float tp = c.BlockLocalData / 255f;
+                                    float tc = 1;
+                                    Vector3i me = new Vector3i(vecsi[i].X - x < 0.1 ? -1 : (vecsi[i].X - x > 0.9 ? 1 : 0),
+                                        vecsi[i].Y - y < 0.1 ? -1 : (vecsi[i].Y - y > 0.9 ? 1 : 0),
+                                        vecsi[i].Z - z < 0.1 ? -1 : (vecsi[i].Z - z > 0.9 ? 1 : 0));
+                                    for (int f = 0; f < dirs.Length; f++)
                                     {
-                                        offs.X = -1;
+                                        Vector3i rel = dirs[f];
+                                        if ((me.X == rel.X || rel.X == 0) && (me.Y == rel.Y || rel.Y == 0) && (me.Z == rel.Z || rel.Z == 0))
+                                        {
+                                            tp += SpecialGetBlockAt(x + rel.X, y + rel.Y, z + rel.Z).BlockLocalData / 255f;
+                                            tc += 1;
+                                        }
                                     }
-                                    else if (vecsi[i].X - x > 0.9 && x + 1 < CSize)
+                                    for (int f = 0; f < dirs.Length; f++)
                                     {
-                                        offs.X = 1;
+                                        Vector3i rel = dirs[f];
+                                        rel.X = -rel.X;
+                                        rel.Y = -rel.Y;
+                                        rel.Z = -rel.Z;
+                                        if ((me.X == rel.X || rel.X == 0) && (me.Y == rel.Y || rel.Y == 0) && (me.Z == rel.Z || rel.Z == 0))
+                                        {
+                                            tp += SpecialGetBlockAt(x + rel.X, y + rel.Y, z + rel.Z).BlockLocalData / 255f;
+                                            tc += 1;
+                                        }
                                     }
-                                    if (vecsi[i].Y - y < 0.1 && y > 0)
-                                    {
-                                        offs.Y = -1;
-                                    }
-                                    else if (vecsi[i].Y - y > 0.9 && y + 1 < CSize)
-                                    {
-                                        offs.Y = 1;
-                                    }
-                                    if (vecsi[i].Z - z < 0.1 && z > 0)
-                                    {
-                                        offs.Z = -1;
-                                    }
-                                    else if (vecsi[i].Z - z > 0.9 && z + 1 < CSize)
-                                    {
-                                        offs.Z = 1;
-                                    }
-                                    float cCol = Math.Max((GetBlockAt(x + offs.X, y + offs.Y, z + offs.Z)).BlockLocalData / 255f, (float)OwningRegion.TheClient.ambient.X);
+                                    float cCol = Math.Max(tp / tc, (float)OwningRegion.TheClient.ambient.X);
                                     Cols.Add(new Vector4(cCol, cCol, cCol, 1f));
                                 }
                                 if (!((Material)c.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
@@ -236,6 +241,15 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 SysConsole.Output(OutputType.ERROR, "Generating ChunkVBO...: " + ex.ToString());
             }
+        }
+
+        public BlockInternal SpecialGetBlockAt(int x, int y, int z)
+        {
+            if (x >= 0 && y >= 0 && z >= 0 && x < CSize && y < CSize && z < CSize)
+            {
+                return GetBlockAt(x, y, z);
+            }
+            return OwningRegion.GetBlockInternal(WorldPosition * 30.0 + new Location(x, y, z));
         }
 
         public void Render()
