@@ -123,10 +123,11 @@ namespace Voxalia.ClientGame.WorldSystem
                                     }
                                 }
                                 else*/
+                                float cCol = Math.Max(c.BlockLocalData / 255f, (float)OwningRegion.TheClient.ambient.X);
                                 {
                                     for (int i = 0; i < vecsi.Count; i++)
                                     {
-                                        Cols.Add(new Vector4(1f));
+                                        Cols.Add(new Vector4(cCol, cCol, cCol, 1f));
                                     }
                                 }
                                 if (!((Material)c.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
@@ -147,7 +148,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     {
                                         for (int i = vecsi.Count - 1; i >= 0; i--)
                                         {
-                                            Cols.Add(new Vector4(1f));
+                                            Cols.Add(new Vector4(cCol, cCol, cCol, 1f));
                                         }
                                     }
                                 }

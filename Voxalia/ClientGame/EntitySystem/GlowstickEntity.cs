@@ -34,7 +34,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
-            Matrix4 mat = Matrix4.CreateScale(0.05f, 0.2f, 0.05f) * GetTransformationMatrix();// TODO: * Matrix4.CreateRotationX(90f * (float)Utilities.PI180);
+            Matrix4 mat = Matrix4.CreateScale(0.05f, 0.2f, 0.05f) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetColor(GColor);
             TheClient.Rendering.SetMinimumLight(1);

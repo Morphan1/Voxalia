@@ -70,7 +70,8 @@ namespace Voxalia.ClientGame.WorldSystem
                         byte light = 255;
                         for (int z = CSize - 1; z >= 0; z--)
                         {
-                            /*Material mat = (Material)GetBlockAt(x, y, z).BlockMaterial;
+                            BlocksInternal[BlockIndex(x, y, z)].BlockLocalData = light;
+                            Material mat = (Material)GetBlockAt(x, y, z).BlockMaterial;
                             if (mat.IsOpaque())
                             {
                                 light = 0;
@@ -78,64 +79,13 @@ namespace Voxalia.ClientGame.WorldSystem
                             if (mat.RendersAtAll())
                             {
                                 light /= 2;
-                            }*/
-                            BlocksInternal[BlockIndex(x, y, z)].BlockLocalData = light;
-                        }
-                    }
-                }
-            }
-        }
-
-        public InstancedMeshShape CalculateChunkShape()
-        {
-            List<Vector3> Vertices = new List<Vector3>(CSize * CSize * CSize * 6); // TODO: Make this an array?
-            Vector3 ppos = WorldPosition.ToBVector() * 30;
-            for (int x = 0; x < CSize; x++)
-            {
-                for (int y = 0; y < CSize; y++)
-                {
-                    for (int z = 0; z < CSize; z++)
-                    {
-                        BlockInternal c = GetBlockAt(x, y, z);
-                        if (((Material)c.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
-                        {
-                            // TODO: Handle ALL blocks against the surface when low-LOD?
-                            BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(x, y, 30));
-                            BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(x, y, -1));
-                            BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(x, 30, z));
-                            BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(x, -1, z));
-                            BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(30, y, z));
-                            BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : OwningRegion.GetBlockInternal(new Location(ppos) + new Location(-1, y, z));
-                            bool zps = ((Material)zp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
-                            bool zms = ((Material)zm.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
-                            bool xps = ((Material)xp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
-                            bool xms = ((Material)xm.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
-                            bool yps = ((Material)yp.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
-                            bool yms = ((Material)ym.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
-                            Vector3 pos = new Vector3(x, y, z);
-                            List<Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
-                            foreach (Vector3 vec in vecsi)
-                            {
-                                Vertices.Add(vec * PosMultiplier + ppos);
                             }
                         }
                     }
                 }
             }
-            if (Vertices.Count == 0)
-            {
-                return null;
-            }
-            int[] inds = new int[Vertices.Count];
-            for (int i = 0; i < Vertices.Count; i++)
-            {
-                inds[i] = i;
-            }
-            Vector3[] vecs = Vertices.ToArray();
-            InstancedMeshShape shape = new InstancedMeshShape(vecs, inds);
-            return shape;
         }
-
+        
         public FullChunkObject FCO = null;
         
         public ASyncScheduleItem adding = null;
