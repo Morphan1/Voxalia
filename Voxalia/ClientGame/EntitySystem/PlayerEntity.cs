@@ -147,18 +147,20 @@ namespace Voxalia.ClientGame.EntitySystem
         long _id = -1;
         Location _pos;
         Location _vel;
+        bool __pup;
 
-        public void PacketFromServer(double gtt, long ID, Location pos, Location vel)
+        public void PacketFromServer(double gtt, long ID, Location pos, Location vel, bool _pup)
         {
             _gtt = gtt;
             _id = ID;
             _pos = pos;
             _vel = vel;
+            __pup = _pup;
         }
 
         HashSet<Location> Quiet = new HashSet<Location>();
-
-        public void UpdateForPacketFromServer(double gtt, long ID, Location pos, Location vel)
+        
+        public void UpdateForPacketFromServer(double gtt, long ID, Location pos, Location vel, bool _pup)
         {
             double now = TheRegion.GlobalTickTimeLocal;
             ServerLocation = pos;
@@ -236,7 +238,10 @@ namespace Voxalia.ClientGame.EntitySystem
                         SetBodyMovement(NMTWOCBody, prev);
                     }
                     SetMoveSpeed(NMTWOCBody);
-                    NMTWOTryToJump(uis);
+                    if (!_pup)
+                    {
+                        NMTWOTryToJump(uis);
+                    }
                     lPT = uis.GlobalTimeLocal;
                     NMTWOWorld.Update((float)delta);
                     FlyForth(NMTWOCBody, delta); // TODO: Entirely disregard NWTWOWorld if flying?
@@ -244,6 +249,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 AddUIS();
                 SetPosition(NMTWOGetPosition());
                 SetVelocity(new Location(NMTWOCBody.Body.LinearVelocity));
+                pup = _pup;
                 lGTT = gtt;
             }
             else
@@ -499,7 +505,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             if (CBody != null && _id >= 0)
             {
-                UpdateForPacketFromServer(_gtt, _id, _pos, _vel);
+                UpdateForPacketFromServer(_gtt, _id, _pos, _vel, __pup);
                 _id = -1;
             }
         }

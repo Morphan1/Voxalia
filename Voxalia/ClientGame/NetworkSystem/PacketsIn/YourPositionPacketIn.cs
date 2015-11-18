@@ -16,8 +16,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Location pos = Location.FromBytes(data, 8);
             Location vel = Location.FromBytes(data, 8 + 12);
             double gtt = Utilities.BytesToDouble(Utilities.BytesPartial(data, 8 + 12 + 12 + 1, 8));
-            TheClient.Player.PacketFromServer(gtt, ID, pos, vel);
-            TheClient.Player.CBody.StanceManager.DesiredStance = data[8 + 12 + 12] == 0 ? Stance.Standing : Stance.Crouching; // TODO: Handle better!
+            TheClient.Player.PacketFromServer(gtt, ID, pos, vel, (data[8 + 12 + 12] & 2) == 2);
+            TheClient.Player.CBody.StanceManager.DesiredStance = (data[8 + 12 + 12] & 1) == 0 ? Stance.Standing : Stance.Crouching;
             return true;
         }
     }

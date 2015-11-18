@@ -90,7 +90,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public CubeEntity CursorMarker = null;
 
-        bool pup = false;
+        public bool pup = false;
 
         public JointBallSocket GrabJoint = null;
 

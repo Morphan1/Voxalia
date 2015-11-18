@@ -161,7 +161,7 @@ void main()
 				}
 				offz -= 0.001;
 				vec4 fstx = fs + vec4(x * jump, y * jump, offz, 0.0);
-				vec3 tester = vec3(fs.x, fs.y, float(shtex));
+				vec3 tester = vec3(fstx.x, fstx.y, float(shtex));
 				depth = float(texture(tex, tester).r > fstx.z);
 				depth_count++;
 			}
@@ -169,7 +169,7 @@ void main()
 		depth = depth / depth_count;
 #else
 		vec4 fstx = fs - vec4(0.0, 0.0, 0.0001, 0.0);
-		vec3 tester = vec3(fs.x, fs.y, float(shtex));
+		vec3 tester = vec3(fstx.x, fstx.y, float(shtex));
 		depth = float(texture(tex, tester).r > fstx.z);
 #endif
 	}
