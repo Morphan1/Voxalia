@@ -5,18 +5,18 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
 {
     public class SimpleBiomeGenerator: BiomeGenerator
     {
-        public float TemperatureMapSize = 1200;
+        public float TemperatureMapSize = 2400;
 
-        public float DownfallMapSize = 2400;
+        public float DownfallMapSize = 4800;
 
-        public override float GetTemperature(short seed, short seed2, float x, float y)
+        public override float GetTemperature(int seed2, int seed3, float x, float y)
         {
-            return SimplexNoise.Generate((float)seed + (x / TemperatureMapSize), (float)seed + (y / TemperatureMapSize)) * 100f;
+            return SimplexNoise.Generate((float)seed2 + (x / TemperatureMapSize), (float)seed3 + (y / TemperatureMapSize)) * 100f;
         }
 
-        public override float GetDownfallRate(short seed, short seed2, float x, float y)
+        public override float GetDownfallRate(int seed3, int seed4, float x, float y)
         {
-            return SimplexNoise.Generate((float)seed2 + (x / DownfallMapSize), (float)seed2 + (y / DownfallMapSize));
+            return SimplexNoise.Generate((float)seed3 + (x / DownfallMapSize), (float)seed4 + (y / DownfallMapSize));
         }
 
         public SimpleRainForestBiome RainForest = new SimpleRainForestBiome();
@@ -45,12 +45,12 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
 
         SimpleHellBiome Hell = new SimpleHellBiome();
 
-        public override Biome BiomeFor(short seed, short seed2, float x, float y, float z, float height)
+        public override Biome BiomeFor(int seed2, int seed3, int seed4, float x, float y, float z, float height)
         {
-            if (z > -50)
+            if (z > -120)
             {
-                float temp = GetTemperature(seed, seed2, x, y);
-                float down = GetDownfallRate(seed, seed2, x, y);
+                float temp = GetTemperature(seed2, seed3, x, y);
+                float down = GetDownfallRate(seed3, seed4, x, y);
                 if (height > 0f && height < 20f)
                 {
                     if (down >= 0.8f && temp >= 80f)

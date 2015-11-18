@@ -212,6 +212,7 @@
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleRainForestBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleSnowBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleSwampBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleBiomeGenerator.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleGeneratorCore.cs" />
     <Compile Include="ServerGame\WorldSystem\Region.cs" />

@@ -32,9 +32,14 @@ namespace Voxalia.Shared
     // This class all mcmonkey
     public class SimplexNoise
     {
-        public static float Generate(float x, float y)
+        public static float Generate(float x, float y) // TODO: Take doubles?
         {
-            return (SimplexNoiseInteral.Generate(x, y) + 1f) * 0.5f;
+            return (SimplexNoiseInternal.Generate(x, y) + 1f) * 0.5f;
+        }
+
+        public static float Generate(float x, float y, float z) // TODO: Take doubles?
+        {
+            return (SimplexNoiseInternal.Generate(x, y, z) + 1f) * 0.5f;
         }
     }
 
@@ -42,7 +47,7 @@ namespace Voxalia.Shared
     /// Implementation of the Perlin simplex noise, an improved Perlin noise algorithm.
     /// Based loosely on SimplexNoise1234 by Stefan Gustavson http://staffwww.itn.liu.se/~stegu/aqsis/aqsis-newnoise/
     /// </summary>
-    public class SimplexNoiseInteral
+    public class SimplexNoiseInternal
     {
         /// <summary>
         /// 1D simplex noise

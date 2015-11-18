@@ -2,8 +2,8 @@
 {
     public abstract class BlockPopulator
     {
-        public abstract float GetHeight(short seed, short seed2, float x, float y);
+        public abstract float GetHeight(int seed, int seed2, float x, float y);
 
-        public abstract void Populate(short seed, short seed2, Chunk chunk);
+        public abstract void Populate(int seed, int seed2, int seed3, int seed4, int seed5, Chunk chunk);
     }
 }

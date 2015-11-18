@@ -1,6 +1,6 @@
 ﻿namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator.Biomes
 {
-    public class SimpleLakeBiome : Biome
+    public class SimpleLakeBiome : SimpleBiome
     {
         public override string GetName()
         {

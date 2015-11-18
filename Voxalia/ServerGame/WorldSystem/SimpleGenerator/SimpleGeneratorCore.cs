@@ -5,10 +5,19 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
 {
     public class SimpleGeneratorCore: BlockPopulator
     {
-        public const float GlobalHeightMapSize = 1500;
+        public const float GlobalHeightMapSize = 400;
         public const float LocalHeightMapSize = 40;
+        public const float SolidityMapSize = 100;
+        public const float SolidityTolerance = 0.8f;
 
-        public override float GetHeight(short Seed, short seed2, float x, float y)
+        public bool CanBeSolid(int seed3, int seed4, int seed5, int x, int y, int z)
+        {
+            float val = SimplexNoise.Generate((float)seed3 + (x / SolidityMapSize), (float)seed4 + (y / SolidityMapSize), (float)seed5 + (z / SolidityMapSize));
+            //SysConsole.Output(OutputType.INFO, seed3 + "," + seed4 + "," + seed5 + " -> " + x + ", " + y + ", " + z + " -> " + val);
+            return val < SolidityTolerance;
+        }
+
+        public override float GetHeight(int Seed, int seed2, float x, float y)
         {
             float lheight = SimplexNoise.Generate((float)seed2 + (x / GlobalHeightMapSize), (float)Seed + (y / GlobalHeightMapSize)) * 50f - 10f;
             float height = SimplexNoise.Generate((float)Seed + (x / LocalHeightMapSize), (float)seed2 + (y / LocalHeightMapSize)) * 6f - 3f;
@@ -24,11 +33,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                 int x = (int)(X - chloc.X * Chunk.CHUNK_SIZE);
                 int y = (int)(Y - chloc.Y * Chunk.CHUNK_SIZE);
                 int z = (int)(Z - chloc.Z * Chunk.CHUNK_SIZE);
-                if (x < 0 || y < 0 || z < 0 || x >= Chunk.CHUNK_SIZE || y >= Chunk.CHUNK_SIZE || z >= Chunk.CHUNK_SIZE)
-                {
-                    SysConsole.Output(OutputType.WARNING, "Invalid: " + x + ", " + y + ", " + z + " from " + X +", " + Y + ", " + Z + ", " + chloc);
-                }
-                    BlockInternal orig = ch.GetBlockAt(x, y, z);
+                BlockInternal orig = ch.GetBlockAt(x, y, z);
                 BlockFlags flags = ((BlockFlags)orig.BlockLocalData);
                 if (!flags.HasFlag(BlockFlags.EDITED) && !flags.HasFlag(BlockFlags.PROTECTED))
                 {
@@ -47,26 +52,33 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             }
         }
 
-        public override void Populate(short Seed, short seed2, Chunk chunk)
+        public override void Populate(int Seed, int seed2, int seed3, int seed4, int seed5, Chunk chunk)
         {
-            for (int x = 0; x < 30; x++)
+            for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
             {
-                for (int y = 0; y < 30; y++)
+                for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
                 {
+                    Location cpos = chunk.WorldPosition * Chunk.CHUNK_SIZE;
                     // Prepare basics
-                    float cx = (float)chunk.WorldPosition.X * 30f + x;
-                    float cy = (float)chunk.WorldPosition.Y * 30f + y;
+                    int cx = (int)cpos.X + x;
+                    int cy = (int)cpos.Y + y;
                     float hheight = GetHeight(Seed, seed2, cx, cy);
-                    float topf = hheight - (float)chunk.WorldPosition.Z * 30;
+                    float topf = hheight - (float)(chunk.WorldPosition.Z * Chunk.CHUNK_SIZE);
                     int top = (int)Math.Round(topf);
                     // General natural ground
                     for (int z = 0; z < Math.Min(top - 5, 30); z++)
                     {
-                        chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.STONE, 0, 0);
+                        if (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z))
+                        {
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.STONE, 0, 0);
+                        }
                     }
                     for (int z = Math.Max(top - 5, 0); z < Math.Min(top - 1, 30); z++)
                     {
-                        chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.DIRT, 0, 0);
+                        if (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z))
+                        {
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.DIRT, 0, 0);
+                        }
                     }
                     for (int z = Math.Max(top - 1, 0); z < Math.Min(top, 30); z++)
                     {
@@ -88,10 +100,10 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     // Smooth terrain cap
                     for (int z = Math.Max(top, 0); z < Math.Min(top + 1, 30); z++)
                     {
-                        float topfxp = GetHeight(Seed, seed2, cx + 1, cy) - (float)chunk.WorldPosition.Z * 30;
-                        float topfxm = GetHeight(Seed, seed2, cx - 1, cy) - (float)chunk.WorldPosition.Z * 30;
-                        float topfyp = GetHeight(Seed, seed2, cx, cy + 1) - (float)chunk.WorldPosition.Z * 30;
-                        float topfym = GetHeight(Seed, seed2, cx, cy - 1) - (float)chunk.WorldPosition.Z * 30;
+                        float topfxp = GetHeight(Seed, seed2, cx + 1, cy) - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
+                        float topfxm = GetHeight(Seed, seed2, cx - 1, cy) - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
+                        float topfyp = GetHeight(Seed, seed2, cx, cy + 1) - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
+                        float topfym = GetHeight(Seed, seed2, cx, cy - 1) - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
                         if (topf - top > 0f)
                         {
                             if (topfxp > topf && topfxp - Math.Round(topfxp) <= 0)
@@ -178,6 +190,10 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                                 }
                             }
                         }
+                    }
+                    for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
+                    {
+
                     }
                 }
             }

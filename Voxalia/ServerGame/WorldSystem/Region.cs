@@ -545,15 +545,20 @@ namespace Voxalia.ServerGame.WorldSystem
             Config.Changed += new EventHandler(configChanged);
             Config.Set("general.IMPORTANT_NOTE", "Edit this configuration at your own risk!");
             Config.Set("general.name", Name);
-            Config.Default("general.seed", Utilities.UtilRandom.Next(short.MaxValue * 2));
+            Config.Default("general.seed", Utilities.UtilRandom.Next(SeedMax) - SeedMax / 2);
             CFGEdited = true;
-            Seed = (short)Config.ReadInt("general.seed", 100);
+            Seed = Config.ReadInt("general.seed", 100);
             Random seedGen = new Random(Seed);
-            Seed2 = (short)(seedGen.Next(short.MaxValue * 2) - short.MaxValue);
+            Seed2 = (seedGen.Next(SeedMax) - SeedMax / 2);
+            Seed3 = (seedGen.Next(SeedMax) - SeedMax / 2);
+            Seed4 = (seedGen.Next(SeedMax) - SeedMax / 2);
+            Seed5 = (seedGen.Next(SeedMax) - SeedMax / 2);
             LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30), true);
             TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-world scheduler // Also don't freeze the entire server just because we're waiting on chunks >.>
             SysConsole.Output(OutputType.INIT, "Finished building chunks! Now have " + LoadedChunks.Count + " chunks!");
         }
+
+        const int SeedMax = int.MaxValue / 10000;
 
         bool CFGEdited = false;
 
@@ -694,9 +699,17 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        public short Seed;
+        public int Seed;
 
-        public short Seed2;
+        public int Seed2;
+
+        public int Seed3;
+
+        public int Seed4;
+
+        public int Seed5;
+
+        public int Seed6;
 
         void OncePerSecondActions()
         {
@@ -1038,7 +1051,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 return;
             }
-            Generator.Populate(Seed, Seed2, chunk);
+            Generator.Populate(Seed, Seed2, Seed3, Seed4, Seed5, chunk);
             chunk.LastEdited = GlobalTickTime;
             chunk.Flags &= ~(ChunkFlags.POPULATING | ChunkFlags.ISCUSTOM);
         }
