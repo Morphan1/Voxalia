@@ -5,7 +5,7 @@ namespace Voxalia.Shared.BlockShapes
 {
     public class BSD74: BlockShapeDetails
     {
-        public Vector3 Normal = new Vector3(0, -1, 1);
+        public Vector3 Normal = new Vector3(0, -0.5f, 1);
 
         public BSD74()
         {

@@ -457,12 +457,9 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     // TODO: Better system -> async?
                     TrySet(pos, 1, 0, 1);
-                    TrySet(pos, ViewRadiusInChunks / 2, 5, 1); // TODO: Closer chunks -> send sooner?
-                    TrySet(pos, ViewRadiusInChunks, 10, 1);
-                    TheServer.Schedule.ScheduleSyncTask(() =>
-                    {
-                        ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
-                    }, 11);
+                    TrySet(pos, ViewRadiusInChunks / 2, 0, 1);
+                    TrySet(pos, ViewRadiusInChunks, 0, 1);
+                    ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
                 }
                 List<Location> removes = new List<Location>();
                 foreach (ChunkAwarenessInfo ch in ChunksAwareOf.Values)
