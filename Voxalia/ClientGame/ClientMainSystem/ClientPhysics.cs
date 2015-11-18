@@ -55,6 +55,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Location BaseAmbient = new Location(0.1, 0.1, 0.1);
 
+        public float sl_min = 0;
+        public float sl_max = 1;
+
         public void TickWorld(double delta)
         {
             rTicks++;
@@ -94,15 +97,21 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(TheSun.InternalLights[0].color.X, TheSun.InternalLights[0].color.Y * rel, TheSun.InternalLights[0].color.Z * rel);
                     DesaturationAmount = (1f - rel) * 0.75f;
                     ambient = BaseAmbient * ((1f - rel) * 0.5f + 0.5f);
+                    sl_min = 0.2f - (1f - rel) * (0.2f - 0.05f);
+                    sl_max = 0.8f - (1f - rel) * (0.8f - 0.15f);
                 }
-                else if (SunAngle.Pitch >= 10) // TODO: Why is this flipped?
+                else if (SunAngle.Pitch >= 10)
                 {
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
                     DesaturationAmount = 0.75f;
                     ambient = BaseAmbient * 0.5f;
+                    sl_min = 0.05f;
+                    sl_max = 0.15f;
                 }
                 else
                 {
+                    sl_min = 0.2f;
+                    sl_max = 0.8f;
                     DesaturationAmount = 0f;
                     ambient = BaseAmbient;
                 }

@@ -142,7 +142,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                             tc += 1;
                                         }
                                     }
-                                    float cCol = Math.Max(tp / tc, (float)OwningRegion.TheClient.ambient.X);
+                                    float cCol = tp / tc;
                                     Cols.Add(new Vector4(cCol, cCol, cCol, 1f));
                                 }
                                 if (!((Material)c.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)

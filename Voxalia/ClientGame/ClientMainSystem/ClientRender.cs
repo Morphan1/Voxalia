@@ -308,6 +308,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.UniformMatrix4(1, false, ref combined);
                 Matrix4 matident = Matrix4.Identity;
                 GL.UniformMatrix4(2, false, ref matident);
+                GL.Uniform2(8, new Vector2(sl_min, sl_max));
                 s_fbo.Bind();
                 FBOid = 1;
                 RenderingShadows = false;
