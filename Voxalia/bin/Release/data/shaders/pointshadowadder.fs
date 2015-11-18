@@ -4,8 +4,8 @@
 layout (binding = 0) uniform sampler2D pre_lighttex;
 layout (binding = 1) uniform sampler2D positiontex;
 layout (binding = 2) uniform sampler2D normaltex;
-layout (binding = 3) uniform sampler2DArray depthtex;
-layout (binding = 4) uniform sampler2D tex;
+layout (binding = 3) uniform sampler2D depthtex;
+layout (binding = 4) uniform sampler2DArray tex;
 layout (binding = 5) uniform sampler2D renderhinttex;
 layout (binding = 6) uniform sampler2D diffusetex;
 
