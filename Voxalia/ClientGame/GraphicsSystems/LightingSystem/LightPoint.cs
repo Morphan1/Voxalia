@@ -31,7 +31,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             Client.Central.vph = texsize; // TODO: pass client reference!
             SetProj();
             GL.DrawBuffer(DBM);
-            GL.ClearBuffer(ClearBuffer.Color, (int)(DBM - DrawBufferMode.ColorAttachment0), new float[] { 1.0f });
+            GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1.0f });
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
         }
         
@@ -40,6 +40,5 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.DrawBuffer(DrawBufferMode.Back);
         }
-
     }
 }

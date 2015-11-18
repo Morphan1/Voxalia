@@ -407,7 +407,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     if (CVars.r_shadows.ValueB)
                                     {
                                         GL.ActiveTexture(TextureUnit.Texture4);
-                                        GL.BindTexture(TextureTarget.Texture2DArray, ((PointLight)Lights[i]).FBODepthTex);
+                                        GL.BindTexture(TextureTarget.Texture2D, ((PointLight)Lights[i]).FBODepthTex);
                                     }
                                     GL.Uniform3(4, ref Lights[i].InternalLights[0].eye);
                                     Vector3 col = Lights[i].InternalLights[0].color * (float)maxrangemult;

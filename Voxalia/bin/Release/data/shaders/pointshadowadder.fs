@@ -4,8 +4,8 @@
 layout (binding = 0) uniform sampler2D pre_lighttex;
 layout (binding = 1) uniform sampler2D positiontex;
 layout (binding = 2) uniform sampler2D normaltex;
-layout (binding = 3) uniform sampler2D depthtex;
-layout (binding = 4) uniform sampler2DArray tex;
+layout (binding = 3) uniform sampler2DArray depthtex;
+layout (binding = 4) uniform sampler2D tex;
 layout (binding = 5) uniform sampler2D renderhinttex;
 layout (binding = 6) uniform sampler2D diffusetex;
 
@@ -161,16 +161,15 @@ void main()
 				}
 				offz -= 0.001;
 				vec4 fstx = fs + vec4(x * jump, y * jump, offz, 0.0);
-				vec3 tester = vec3(fs.x, fs.y, shtex);
+				vec3 tester = vec3(fs.x, fs.y, float(shtex));
 				depth = float(texture(tex, tester).r > fstx.z);
 				depth_count++;
 			}
 		}
 		depth = depth / depth_count;
-		depth = 1.0;
 #else
 		vec4 fstx = fs - vec4(0.0, 0.0, 0.0001, 0.0);
-		vec3 tester = vec3(fs.x, fs.y, shtex);
+		vec3 tester = vec3(fs.x, fs.y, float(shtex));
 		depth = float(texture(tex, tester).r > fstx.z);
 #endif
 	}

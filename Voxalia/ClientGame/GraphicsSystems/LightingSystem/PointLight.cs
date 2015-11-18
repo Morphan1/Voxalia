@@ -31,7 +31,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, FBO);
             FBODepthTex = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2DArray, FBODepthTex);
-            GL.TexImage2D(TextureTarget.Texture2DArray, 0, PixelInternalFormat.R32f, tsize, tsize, 0, PixelFormat.Red, PixelType.Float, System.IntPtr.Zero);
+            GL.TexImage3D(TextureTarget.Texture2DArray, 0, PixelInternalFormat.R32f, tsize, tsize, 6, 0, PixelFormat.Red, PixelType.Float, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -47,7 +47,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             GL.BindTexture(TextureTarget.Texture2DArray, 0);
             FBODTex = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, FBODTex);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent, tsize, tsize, 0, PixelFormat.DepthComponent, PixelType.Float, System.IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent, tsize, tsize, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -59,6 +59,9 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             for (int i = 0; i < 6; i++)
             {
                 LightPoint lp = new LightPoint();
+                lp.fbo_main = FBO;
+                lp.fbo_texture = FBODepthTex;
+                lp.fbo_depthtex = FBODTex;
                 InternalLights.Add(lp);
                 lp.Setup(Texsize, ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + Location.UnitX), 90f, Radius, ClientUtilities.Convert(Color));
             }
