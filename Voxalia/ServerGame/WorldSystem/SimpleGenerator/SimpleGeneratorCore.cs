@@ -72,8 +72,9 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         {
                             chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.STONE, 0, 0);
                         }
-                        else if (CanBeSolid(seed3, seed4, seed5, cx + 1, cy, (int)cpos.Z + z) || CanBeSolid(seed3, seed4, seed5, cx, cy + 1, (int)cpos.Z + z)
-                                || CanBeSolid(seed3, seed4, seed5, cx - 1, cy, (int)cpos.Z + z) || CanBeSolid(seed3, seed4, seed5, cx, cy - 1, (int)cpos.Z + z))
+                        else if ((CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z - 1) || (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z + 1))) &&
+                            (CanBeSolid(seed3, seed4, seed5, cx + 1, cy, (int)cpos.Z + z) || CanBeSolid(seed3, seed4, seed5, cx, cy + 1, (int)cpos.Z + z)
+                                || CanBeSolid(seed3, seed4, seed5, cx - 1, cy, (int)cpos.Z + z) || CanBeSolid(seed3, seed4, seed5, cx, cy - 1, (int)cpos.Z + z)))
                         {
                             chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.STONE, 3, 0);
                         }
