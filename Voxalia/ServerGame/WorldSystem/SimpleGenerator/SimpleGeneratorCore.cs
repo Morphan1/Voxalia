@@ -63,6 +63,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     int cx = (int)cpos.X + x;
                     int cy = (int)cpos.Y + y;
                     float hheight = GetHeight(Seed, seed2, cx, cy);
+                    int hheightint = (int)Math.Round(hheight);
                     float topf = hheight - (float)(chunk.WorldPosition.Z * Chunk.CHUNK_SIZE);
                     int top = (int)Math.Round(topf);
                     // General natural ground
@@ -104,12 +105,16 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         }
                     }
                     // Smooth terrain cap
+                    float heightfxp = GetHeight(Seed, seed2, cx + 1, cy);
+                    float heightfxm = GetHeight(Seed, seed2, cx - 1, cy);
+                    float heightfyp = GetHeight(Seed, seed2, cx, cy + 1);
+                    float heightfym = GetHeight(Seed, seed2, cx, cy - 1);
+                    float topfxp = heightfxp - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
+                    float topfxm = heightfxm - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
+                    float topfyp = heightfyp - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
+                    float topfym = heightfym - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
                     for (int z = Math.Max(top, 0); z < Math.Min(top + 1, 30); z++)
                     {
-                        float topfxp = GetHeight(Seed, seed2, cx + 1, cy) - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
-                        float topfxm = GetHeight(Seed, seed2, cx - 1, cy) - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
-                        float topfyp = GetHeight(Seed, seed2, cx, cy + 1) - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
-                        float topfym = GetHeight(Seed, seed2, cx, cy - 1) - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
                         if (topf - top > 0f)
                         {
                             if (topfxp > topf && topfxp - Math.Round(topfxp) <= 0)
@@ -157,9 +162,32 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             }
                         }
                     }
+                    // Water
+                    int level = 0 - (int)(chunk.WorldPosition.Z * Chunk.CHUNK_SIZE);
+                    if (hheightint <= 0)
+                    {
+                        for (int z = Math.Max(top, 0); z < Math.Min(top + 1, Chunk.CHUNK_SIZE); z++)
+                        {
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.SAND, 0, 0);
+                        }
+                        for (int z = Math.Max(top + 1, 0); z <= Math.Min(level, Chunk.CHUNK_SIZE - 1); z++)
+                        {
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.WATER, 0, 0);
+                        }
+                    }
+                    else
+                    {
+                        if (level >= 0 && level < Chunk.CHUNK_SIZE)
+                        {
+                            if (Math.Round(heightfxp) <= 0 || Math.Round(heightfxm) <= 0 || Math.Round(heightfyp) <= 0 || Math.Round(heightfym) <= 0)
+                            {
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, level)] = new BlockInternal((ushort)Material.SAND, 0, 0);
+                            }
+                        }
+                    }
                     // Special case: trees.
                     // TODO: Separate generator?
-                    if (top >= -7 && top < 30)
+                    if (hheight > 0 && top >= -7 && top < 30)
                     {
                         Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000));
                         if (spotr.Next(75) == 1) // TODO: Efficiency!

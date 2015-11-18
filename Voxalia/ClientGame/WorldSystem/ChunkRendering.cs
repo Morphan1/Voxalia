@@ -159,9 +159,10 @@ namespace Voxalia.ClientGame.WorldSystem
                                     {
                                         TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
                                     }
+                                    int txc = Cols.Count;
                                     for (int i = vecsi.Count - 1; i >= 0; i--)
                                     {
-                                        Cols.Add(Cols[Cols.Count - ((vecsi.Count - 1) - i) * 2]);
+                                        Cols.Add(Cols[txc - i]);
                                     }
                                 }
                             }
