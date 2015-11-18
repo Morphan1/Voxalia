@@ -32,8 +32,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             // Build the texture
             fbo_texture = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, fbo_texture);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, texsize, texsize, 0,
-                PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.R32f, texsize, texsize, 0, PixelFormat.Red, PixelType.Float, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -45,7 +44,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             fbo_depthtex = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, fbo_depthtex);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32, texsize, texsize, 0,
-                PixelFormat.DepthComponent, PixelType.UnsignedByte, IntPtr.Zero);
+                PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -66,7 +65,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             GL.DeleteTexture(fbo_depthtex);
         }
 
-        public void Attach()
+        public virtual void Attach()
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
             GL.Viewport(0, 0, texsize, texsize);
@@ -84,7 +83,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             GL.UniformMatrix4(1, false, ref mat);
         }
 
-        public void Complete()
+        public virtual void Complete()
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.DrawBuffer(DrawBufferMode.Back);

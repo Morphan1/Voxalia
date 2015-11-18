@@ -139,6 +139,7 @@
     <Compile Include="ClientGame\GraphicsSystems\LightingSystem\Light.cs" />
     <Compile Include="ClientGame\GraphicsSystems\LightingSystem\LightObject.cs" />
     <Compile Include="ClientGame\GraphicsSystems\LightingSystem\LightOrtho.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\LightingSystem\LightPoint.cs" />
     <Compile Include="ClientGame\GraphicsSystems\LightingSystem\PointLight.cs" />
     <Compile Include="ClientGame\GraphicsSystems\LightingSystem\SkyLight.cs" />
     <Compile Include="ClientGame\GraphicsSystems\LightingSystem\SpotLight.cs" />

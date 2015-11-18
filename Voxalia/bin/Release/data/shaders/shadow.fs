@@ -5,7 +5,7 @@ layout (binding = 0) uniform sampler2D s;
 layout (location = 0) in vec4 f_pos;
 layout (location = 1) in vec2 f_texcoord;
 
-out vec4 color;
+out float color;
 
 void main()
 {
@@ -14,5 +14,5 @@ void main()
 	{
 		discard;
 	}
-	color = vec4(f_pos.z / f_pos.w);
+	color = f_pos.z / f_pos.w;
 }
