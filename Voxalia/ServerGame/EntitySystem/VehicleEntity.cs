@@ -10,12 +10,16 @@ namespace Voxalia.ServerGame.EntitySystem
     public class VehicleEntity: ModelEntity, EntityUseable
     {
         public string vehName;
+        public Seat DriverSeat;
 
         public VehicleEntity(string vehicle, Region tregion)
             : base("vehicles/" + vehicle + "_base", tregion)
         {
             vehName = vehicle;
             SetMass(100);
+            DriverSeat = new Seat(this, Location.UnitZ * 2);
+            Seats = new List<Seat>();
+            Seats.Add(DriverSeat);
         }
 
         public bool hasWheels = false;
@@ -73,16 +77,20 @@ namespace Voxalia.ServerGame.EntitySystem
                         wheel.SetMass(5);
                         wheel.mode = ModelCollisionMode.SPHERE;
                         TheRegion.SpawnEntity(wheel);
-                        JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
-                        //BEPUutilities.Vector3 side = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(1, 0, 0), wheel.GetOrientation());
-                        BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
-                        BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 0, 1), wheel.GetOrientation());
-                        JointTwist jt = new JointTwist(this, wheel, new Location(forward), new Location(forward));
+                        //JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
+                        BEPUutilities.Vector3 side = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(1, 0, 0), wheel.GetOrientation());
+                        //BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
+                        BEPUutilities.Vector3 down = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 0, -1), wheel.GetOrientation());
+                        JointSlider js = new JointSlider(this, wheel, new Location(down));
+                        JointSpinner jsp = new JointSpinner(wheel, this, new Location(side));
+                        TheRegion.AddJoint(js);
+                        TheRegion.AddJoint(jsp);
+                        //JointTwist jt = new JointTwist(this, wheel, new Location(forward), new Location(forward));
                         // TODO: For front wheels, remove the 'forward' JT and replace it with a motor - to allow turning!
-                        JointTwist jt2 = new JointTwist(this, wheel, new Location(up), new Location(up));
-                        TheRegion.AddJoint(jbs);
-                        TheRegion.AddJoint(jt);
-                        TheRegion.AddJoint(jt2);
+                        //JointTwist jt2 = new JointTwist(this, wheel, new Location(up), new Location(up));
+                        //TheRegion.AddJoint(jbs);
+                        //TheRegion.AddJoint(jt);
+                        //TheRegion.AddJoint(jt2);
                         BEPUutilities.Vector3 angvel = new BEPUutilities.Vector3(10, 0, 0);
                         wheel.Body.ApplyAngularImpulse(ref angvel);
                         wheel.Body.ActivityInformation.Activate();
@@ -95,19 +103,12 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool Use(Entity user)
         {
-            Location pos = GetPosition() + Location.UnitZ * 3;
-            if (user is PlayerEntity)
+            if (user.CurrentSeat == DriverSeat)
             {
-                ((PlayerEntity)user).Teleport(pos);
+                DriverSeat.Kick();
+                return true;
             }
-            else
-            {
-                user.SetPosition(pos);
-            }
-            user.SetOrientation(GetOrientation());
-            JointForceWeld jfw = new JointForceWeld(this, user);
-            TheRegion.AddJoint(jfw);
-            return true;
+            return DriverSeat.Accept(user);
         }
     }
 }
