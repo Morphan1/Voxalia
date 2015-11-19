@@ -22,5 +22,10 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         {
             return Material.STONE;
         }
+
+        public virtual float HeightMod()
+        {
+            return 1;
+        }
     }
 }

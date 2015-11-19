@@ -48,20 +48,18 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             }
             else if (arg0 == "chunkDebug")
             {
-                float h = entry.Player.TheRegion.Generator.GetHeight(entry.Player.TheRegion.Seed, entry.Player.TheRegion.Seed2,
-                    (float)Math.Floor(entry.Player.GetPosition().X), (float)Math.Floor(entry.Player.GetPosition().Y));
-                Location chunkpos = entry.Player.GetPosition().GetBlockLocation();
-                float hC = entry.Player.TheRegion.Generator.GetHeight(entry.Player.TheRegion.Seed, entry.Player.TheRegion.Seed2, (float)chunkpos.X, (float)chunkpos.Y);
-                entry.Player.Network.SendMessage("Generate height: " + h + " ==  " + Math.Round(h));
+                Biome biome;
+                Location posBlock = entry.Player.GetPosition().GetBlockLocation();
+                float h = entry.Player.TheRegion.Generator.GetHeight(entry.Player.TheRegion.Seed, entry.Player.TheRegion.Seed2, entry.Player.TheRegion.Seed3,
+                    entry.Player.TheRegion.Seed4, entry.Player.TheRegion.Seed5, (float)posBlock.X, (float)posBlock.Y, (float)posBlock.Z, out biome);
                 BlockInternal bi = entry.Player.TheRegion.GetBlockInternal_NoLoad((entry.Player.GetPosition() + new Location(0, 0, -0.05f)).GetBlockLocation());
                 entry.Player.Network.SendMessage("Mat: " + ((Material)bi.BlockMaterial) + ", data: " + ((int)bi.BlockData) + ", locDat: " + ((int)bi.BlockLocalData)
                     + ", xp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXP() + ", xm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXM()
                     + ", yp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYP() + ", ym: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYM()
                     + ", zp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesTOP() + ", zm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesBOTTOM());
-                float temp = entry.Player.TheRegion.BiomeGen.GetTemperature(entry.Player.TheRegion.Seed2, entry.Player.TheRegion.Seed3, (float)chunkpos.X, (float)chunkpos.Y);
-                float down = entry.Player.TheRegion.BiomeGen.GetDownfallRate(entry.Player.TheRegion.Seed3, entry.Player.TheRegion.Seed4, (float)chunkpos.X, (float)chunkpos.Y);
-                Biome biome = entry.Player.TheRegion.BiomeGen.BiomeFor(entry.Player.TheRegion.Seed2, entry.Player.TheRegion.Seed3, entry.Player.TheRegion.Seed4, (float)chunkpos.X, (float)chunkpos.Y, (float)chunkpos.Z, hC);
-                entry.Player.Network.SendMessage("Chunk height: " + hC + ", temperature: " + temp + ", downfallrate: " + down + ", biome yield: " + biome.GetName());
+                float temp = entry.Player.TheRegion.BiomeGen.GetTemperature(entry.Player.TheRegion.Seed2, entry.Player.TheRegion.Seed3, (float)posBlock.X, (float)posBlock.Y);
+                float down = entry.Player.TheRegion.BiomeGen.GetDownfallRate(entry.Player.TheRegion.Seed3, entry.Player.TheRegion.Seed4, (float)posBlock.X, (float)posBlock.Y);
+                entry.Player.Network.SendMessage("Height: " + h + ", temperature: " + temp + ", downfallrate: " + down + ", biome yield: " + biome.GetName());
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using Voxalia.Shared;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
 {
@@ -18,11 +19,36 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             return val < SolidityTolerance;
         }
 
-        public override float GetHeight(int Seed, int seed2, float x, float y)
+        public float GetHeightQuick(int Seed, int seed2, float x, float y)
         {
             float lheight = SimplexNoise.Generate((float)seed2 + (x / GlobalHeightMapSize), (float)Seed + (y / GlobalHeightMapSize)) * 50f - 10f;
             float height = SimplexNoise.Generate((float)Seed + (x / LocalHeightMapSize), (float)seed2 + (y / LocalHeightMapSize)) * 6f - 3f;
             return lheight + height;
+        }
+        
+        // TODO: Clean, reduce to only what's necessary. Every entry in this list makes things that much more expensive.
+        public static Vector3i[] Rels = new Vector3i[] { new Vector3i(-10, 10, 0), new Vector3i(-10, -10, 0), new Vector3i(10, 10, 0), new Vector3i(10, -10, 0),
+        new Vector3i(-20, 20, 0), new Vector3i(-20, -20, 0), new Vector3i(20, 20, 0), new Vector3i(20, -20, 0),
+        new Vector3i(-5, 5, 0), new Vector3i(-5, -5, 0), new Vector3i(5, 5, 0), new Vector3i(5, -5, 0),
+        new Vector3i(-10, 0, 0), new Vector3i(0, -10, 0), new Vector3i(10, 0, 0), new Vector3i(0, 10, 0),
+        new Vector3i(-20, 0, 0), new Vector3i(0, -20, 0), new Vector3i(20, 0, 0), new Vector3i(0, 20, 0),
+        new Vector3i(-5, 0, 0), new Vector3i(0, -5, 0), new Vector3i(5, 0, 0), new Vector3i(0, 5, 0)};
+
+        float relmod = 1f;
+
+        public override float GetHeight(int Seed, int seed2, int seed3, int seed4, int seed5, float x, float y, float z, out Biome biome)
+        {
+            float valBasic = GetHeightQuick(Seed, seed2, x, y);
+            Biome b = Biomes.BiomeFor(seed2, seed3, seed4, x, y, z, valBasic);
+            float total = valBasic * ((SimpleBiome)b).HeightMod();
+            foreach (Vector3i vecer in Rels)
+            {
+                float valt = GetHeightQuick(Seed, seed2, x + vecer.X * relmod, y + vecer.Y * relmod);
+                Biome bt = Biomes.BiomeFor(seed2, seed3, seed4, x + vecer.X * relmod, y + vecer.Y * relmod, z, valt);
+                total += valt * ((SimpleBiome)bt).HeightMod();
+            }
+            biome = b;
+            return total / (Rels.Length + 1);
         }
         
         void SpecialSetBlockAt(Chunk chunk, int X, int Y, int Z, BlockInternal bi)
@@ -63,8 +89,9 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     // Prepare basics
                     int cx = (int)cpos.X + x;
                     int cy = (int)cpos.Y + y;
-                    float hheight = GetHeight(Seed, seed2, cx, cy);
-                    SimpleBiome biome = (SimpleBiome)Biomes.BiomeFor(seed2, seed3, seed4, x, y, (float)cpos.Z, hheight);
+                    Biome biomeOrig;
+                    float hheight = GetHeight(Seed, seed2, seed3, seed4, seed5, cx, cy, (float)cpos.Z, out biomeOrig);
+                    SimpleBiome biome = (SimpleBiome)biomeOrig;
                     Material surf = biome.SurfaceBlock();
                     Material seco = biome.SecondLayerBlock();
                     Material basb = biome.BaseBlock();
@@ -110,10 +137,11 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         }
                     }
                     // Smooth terrain cap
-                    float heightfxp = GetHeight(Seed, seed2, cx + 1, cy);
-                    float heightfxm = GetHeight(Seed, seed2, cx - 1, cy);
-                    float heightfyp = GetHeight(Seed, seed2, cx, cy + 1);
-                    float heightfym = GetHeight(Seed, seed2, cx, cy - 1);
+                    Biome tempb;
+                    float heightfxp = GetHeight(Seed, seed2, seed3, seed4, seed5, cx + 1, cy, (float)cpos.Z, out tempb);
+                    float heightfxm = GetHeight(Seed, seed2, seed3, seed4, seed5, cx - 1, cy, (float)cpos.Z, out tempb);
+                    float heightfyp = GetHeight(Seed, seed2, seed3, seed4, seed5, cx, cy + 1, (float)cpos.Z, out tempb);
+                    float heightfym = GetHeight(Seed, seed2, seed3, seed4, seed5, cx, cy - 1, (float)cpos.Z, out tempb);
                     float topfxp = heightfxp - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
                     float topfxm = heightfxm - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
                     float topfyp = heightfyp - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
