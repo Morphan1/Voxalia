@@ -60,6 +60,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 Sitter.SetPosition(OldPosition);
             }
+            Sitter.CurrentSeat = null;
             Sitter = null;
             OldPosition = Location.Zero;
             jfw = null;

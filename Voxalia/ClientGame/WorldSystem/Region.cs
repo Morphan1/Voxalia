@@ -443,9 +443,13 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void DestroyJoint(InternalBaseJoint joint)
         {
-            Joints.Remove(joint);
+            if (!Joints.Remove(joint))
+            {
+                SysConsole.Output(OutputType.WARNING, "Destroyed non-existent joint?!");
+            }
             joint.One.Joints.Remove(joint);
             joint.Two.Joints.Remove(joint);
+            joint.Enabled = false;
             if (joint is BaseJoint)
             {
                 BaseJoint pjoint = (BaseJoint)joint;

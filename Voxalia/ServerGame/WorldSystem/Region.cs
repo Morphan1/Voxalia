@@ -82,7 +82,7 @@ namespace Voxalia.ServerGame.WorldSystem
             Joints.Add(joint);
             joint.One.Joints.Add(joint);
             joint.Two.Joints.Add(joint);
-            joint.JID = jID;
+            joint.JID = jID++;
             joint.Enabled = true;
             if (joint is BaseJoint)
             {
