@@ -40,12 +40,13 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 1)
             {
-                if (data.Length != len)
+                if (data.Length != len + 12)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
-                JointSlider js = new JointSlider((PhysicsEntity)pe1, (PhysicsEntity)pe2);
+                Location dir = Location.FromBytes(data, len);
+                JointSlider js = new JointSlider((PhysicsEntity)pe1, (PhysicsEntity)pe2, dir);
                 js.JID = JID;
                 TheClient.TheRegion.AddJoint(js);
                 return true;

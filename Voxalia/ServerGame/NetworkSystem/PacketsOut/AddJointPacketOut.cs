@@ -17,8 +17,10 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             }
             else if (joint is JointSlider)
             {
-                Data = new byte[len];
+                Data = new byte[len + 12];
                 Data[0] = 1;
+                ((JointSlider)joint).Direction.ToBytes().CopyTo(Data, len);
+
             }
             else if (joint is JointDistance)
             {
