@@ -25,7 +25,9 @@ namespace Voxalia.Shared
         SANDSTONE = 17,
         TIN_ORE = 18,
         TIN_ORE_SPARSE = 19,
-        NUM_DEFAULT = 20,
+        COPPER_ORE = 20,
+        COPPER_ORE_SPARSE = 21,
+        NUM_DEFAULT = 22,
         MAX = ushort.MaxValue
     }
 
@@ -58,6 +60,8 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.SANDSTONE) { Sound = MaterialSound.STONE },
                 new MaterialInfo((int)Material.TIN_ORE) { Sound = MaterialSound.STONE },
                 new MaterialInfo((int)Material.TIN_ORE_SPARSE) { Sound = MaterialSound.STONE },
+                new MaterialInfo((int)Material.COPPER_ORE) { Sound = MaterialSound.STONE },
+                new MaterialInfo((int)Material.COPPER_ORE_SPARSE) { Sound = MaterialSound.STONE },
             };
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
