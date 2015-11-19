@@ -11,6 +11,27 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         public const float LocalHeightMapSize = 40;
         public const float SolidityMapSize = 100;
         public const float SolidityTolerance = 0.8f;
+        public const float OreMapSize = 70;
+        public const float OreMapTolerance = 0.90f;
+        public const float OreMapThickTolerance = 0.94f;
+        
+        public Material GetMatType(int seed2, int seed4, int seed5, int x, int y, int z)
+        {
+            float val = SimplexNoise.Generate((float)seed2 + (x / OreMapSize), (float)seed5 + (y / OreMapSize), (float)seed4 + (z / OreMapSize));
+            if (val < OreMapTolerance)
+            {
+                return Material.AIR;
+            }
+            bool thick = val > OreMapThickTolerance;
+            if (thick)
+            {
+                return Material.TIN_ORE;
+            }
+            else
+            {
+                return Material.TIN_ORE_SPARE;
+            }
+        }
 
         public bool CanBeSolid(int seed3, int seed4, int seed5, int x, int y, int z)
         {
@@ -109,7 +130,8 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     {
                         if (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z))
                         {
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)basb, 0, 0);
+                            Material typex = GetMatType(seed2, seed4, seed5, cx, cy, (int)cpos.Z + z);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(typex == Material.AIR ? basb : typex), 0, 0);
                         }
                         else if ((CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z - 1) || (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z + 1))) &&
                             (CanBeSolid(seed3, seed4, seed5, cx + 1, cy, (int)cpos.Z + z) || CanBeSolid(seed3, seed4, seed5, cx, cy + 1, (int)cpos.Z + z)

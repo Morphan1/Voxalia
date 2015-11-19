@@ -155,6 +155,8 @@ namespace Voxalia.Shared
 
         public static float Generate(float x, float y, float z)
         {
+            x = System.Math.Abs(x); y = System.Math.Abs(y); z = System.Math.Abs(z); // mcmonkey - allow negative coordinates... poorly.
+
             // Simple skewing factors for the 3D case
             const float F3 = 0.333333333f;
             const float G3 = 0.166666667f;
@@ -253,7 +255,7 @@ namespace Voxalia.Shared
 
             // Add contributions from each corner to get the final noise value.
             // The result is scaled to stay just inside [-1,1]
-            return 32.0f * (n0 + n1 + n2 + n3); // TODO: The scale factor is preliminary!
+            return 32.4f * (n0 + n1 + n2 + n3); // TODO: The scale factor is preliminary! // mcmonkey - improve scaling factor from 32.0
         }
 
         public static byte[] perm = new byte[512] { 151,160,137,91,90,15,

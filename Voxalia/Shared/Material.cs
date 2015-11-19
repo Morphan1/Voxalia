@@ -23,7 +23,9 @@ namespace Voxalia.Shared
         STEEL_PLATE = 15,
         GRASS_PLAINS = 16,
         SANDSTONE = 17,
-        NUM_DEFAULT = 18,
+        TIN_ORE = 18,
+        TIN_ORE_SPARE = 19,
+        NUM_DEFAULT = 20,
         MAX = ushort.MaxValue
     }
 
@@ -54,6 +56,8 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.STEEL_PLATE) { SpeedMod = 1.35f, Sound = MaterialSound.METAL },
                 new MaterialInfo((int)Material.GRASS_PLAINS) { Sound = MaterialSound.GRASS },
                 new MaterialInfo((int)Material.SANDSTONE) { Sound = MaterialSound.STONE },
+                new MaterialInfo((int)Material.TIN_ORE) { Sound = MaterialSound.STONE },
+                new MaterialInfo((int)Material.TIN_ORE_SPARE) { Sound = MaterialSound.STONE },
             };
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
