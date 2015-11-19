@@ -166,6 +166,7 @@
     <Compile Include="ClientGame\JointSystem\JointPushPull.cs" />
     <Compile Include="ClientGame\JointSystem\JointSlider.cs" />
     <Compile Include="ClientGame\JointSystem\JointSpinner.cs" />
+    <Compile Include="ClientGame\JointSystem\JointWeld.cs" />
     <Compile Include="ClientGame\NetworkSystem\AbstractPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\AbstractPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\NetStringManager.cs" />

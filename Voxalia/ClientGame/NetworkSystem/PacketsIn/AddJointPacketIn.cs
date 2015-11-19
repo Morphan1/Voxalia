@@ -22,7 +22,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Entity pe2 = TheClient.TheRegion.GetEntity(EID2);
             if (pe1 == null || pe2 == null)
             {
-                SysConsole.Output(OutputType.WARNING, "Invalid EIDs " + EID1 + " and/or " + EID2);
+                SysConsole.Output(OutputType.WARNING, "Invalid EID(s) " + EID1 + " and/or " + EID2);
                 return false;
             }
             if (type == 0)
@@ -117,6 +117,18 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 JointTwist jt = new JointTwist((PhysicsEntity)pe1, (PhysicsEntity)pe2, a1, a2);
                 jt.JID = JID;
                 TheClient.TheRegion.AddJoint(jt);
+                return true;
+            }
+            else if (type == 7)
+            {
+                if (data.Length != len)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
+                    return false;
+                }
+                JointWeld jw = new JointWeld((PhysicsEntity)pe1, (PhysicsEntity)pe2);
+                jw.JID = JID;
+                TheClient.TheRegion.AddJoint(jw);
                 return true;
             }
             else

@@ -1,5 +1,6 @@
 ﻿using Voxalia.ClientGame.EntitySystem;
 using BEPUphysics.Constraints.TwoEntity;
+using BEPUphysics.Constraints;
 
 namespace Voxalia.ClientGame.JointSystem
 {
@@ -29,9 +30,9 @@ namespace Voxalia.ClientGame.JointSystem
             }
         }
 
-        public abstract TwoEntityConstraint GetBaseJoint();
+        public abstract SolverUpdateable GetBaseJoint();
 
-        public TwoEntityConstraint CurrentJoint;
+        public SolverUpdateable CurrentJoint;
 
         public override void Enable()
         {

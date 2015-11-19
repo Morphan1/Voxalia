@@ -1,4 +1,5 @@
 ﻿using Voxalia.ServerGame.EntitySystem;
+using BEPUphysics.Constraints;
 using BEPUphysics.Constraints.TwoEntity;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
@@ -30,9 +31,9 @@ namespace Voxalia.ServerGame.JointSystem
             }
         }
 
-        public abstract TwoEntityConstraint GetBaseJoint();
+        public abstract SolverUpdateable GetBaseJoint();
 
-        public TwoEntityConstraint CurrentJoint = null;
+        public SolverUpdateable CurrentJoint = null;
 
         public override void Enable()
         {

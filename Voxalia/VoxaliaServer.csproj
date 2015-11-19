@@ -136,6 +136,7 @@
     <Compile Include="ServerGame\JointSystem\JointSlider.cs" />
     <Compile Include="ServerGame\JointSystem\JointSpinner.cs" />
     <Compile Include="ServerGame\JointSystem\JointTwist.cs" />
+    <Compile Include="ServerGame\JointSystem\JointWeld.cs" />
     <Compile Include="ServerGame\NetworkSystem\AbstractPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\AbstractPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\Connection.cs" />

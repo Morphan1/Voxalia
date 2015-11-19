@@ -108,7 +108,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 DriverSeat.Kick();
                 return true;
             }
-            return DriverSeat.Accept(user);
+            return DriverSeat.Accept((PhysicsEntity)user);
         }
     }
 }

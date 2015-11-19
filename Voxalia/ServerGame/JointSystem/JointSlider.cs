@@ -3,6 +3,7 @@ using Voxalia.Shared;
 using BEPUphysics.Constraints.TwoEntity;
 using BEPUphysics.Constraints.TwoEntity.Joints;
 using Voxalia.ServerGame.WorldSystem;
+using BEPUphysics.Constraints;
 
 namespace Voxalia.ServerGame.JointSystem
 {
@@ -15,7 +16,7 @@ namespace Voxalia.ServerGame.JointSystem
             Direction = dir;
         }
 
-        public override TwoEntityConstraint GetBaseJoint()
+        public override SolverUpdateable GetBaseJoint()
         {
             return new PointOnLineJoint(Ent1.Body, Ent2.Body, Ent1.GetPosition().ToBVector(), Direction.Normalize().ToBVector(), Ent1.GetPosition().ToBVector());
         }

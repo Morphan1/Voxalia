@@ -1,6 +1,7 @@
 ﻿using Voxalia.ServerGame.EntitySystem;
 using BEPUphysics.Constraints.TwoEntity;
 using BEPUphysics.Constraints.TwoEntity.Motors;
+using BEPUphysics.Constraints;
 
 namespace Voxalia.ServerGame.JointSystem
 {
@@ -15,7 +16,7 @@ namespace Voxalia.ServerGame.JointSystem
 
         public float Strength;
 
-        public override TwoEntityConstraint GetBaseJoint()
+        public override SolverUpdateable GetBaseJoint()
         {
             LinearAxisMotor lam = new LinearAxisMotor(Ent1.Body, Ent2.Body, Ent1.GetPosition().ToBVector(), Ent2.GetPosition().ToBVector(), (Ent2.GetPosition() - Ent1.GetPosition()).Normalize().ToBVector());
             lam.Settings.Mode = MotorMode.VelocityMotor;

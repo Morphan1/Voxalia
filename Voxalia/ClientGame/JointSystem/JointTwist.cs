@@ -2,6 +2,7 @@
 using Voxalia.Shared;
 using BEPUphysics.Constraints.TwoEntity;
 using BEPUphysics.Constraints.TwoEntity.Joints;
+using BEPUphysics.Constraints;
 
 namespace Voxalia.ClientGame.JointSystem
 {
@@ -15,7 +16,7 @@ namespace Voxalia.ClientGame.JointSystem
             AxisTwo = a2;
         }
 
-        public override TwoEntityConstraint GetBaseJoint()
+        public override SolverUpdateable GetBaseJoint()
         {
             return new TwistJoint(Ent1.Body, Ent2.Body, AxisOne.ToBVector(), AxisTwo.ToBVector());
         }

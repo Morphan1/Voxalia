@@ -55,6 +55,11 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 ((JointTwist)joint).AxisOne.ToBytes().CopyTo(Data, len);
                 ((JointTwist)joint).AxisTwo.ToBytes().CopyTo(Data, len + 12);
             }
+            else if (joint is JointWeld)
+            {
+                Data = new byte[len];
+                Data[0] = 7;
+            }
             Utilities.LongToBytes(joint.One.EID).CopyTo(Data, 1);
             Utilities.LongToBytes(joint.Two.EID).CopyTo(Data, 1 + 8);
             Utilities.LongToBytes(joint.JID).CopyTo(Data, 1 + 8 + 8);

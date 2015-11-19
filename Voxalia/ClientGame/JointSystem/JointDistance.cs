@@ -2,6 +2,7 @@
 using Voxalia.Shared;
 using BEPUphysics.Constraints.TwoEntity;
 using BEPUphysics.Constraints.TwoEntity.JointLimits;
+using BEPUphysics.Constraints;
 
 namespace Voxalia.ClientGame.JointSystem
 {
@@ -22,7 +23,7 @@ namespace Voxalia.ClientGame.JointSystem
         public Location Ent1Pos;
         public Location Ent2Pos;
 
-        public override TwoEntityConstraint GetBaseJoint()
+        public override SolverUpdateable GetBaseJoint()
         {
             DistanceLimit dl = new DistanceLimit(Ent1.Body, Ent2.Body, (Ent1Pos + Ent1.GetPosition()).ToBVector(), (Ent2Pos + Ent2.GetPosition()).ToBVector(), Min, Max);
             return dl;

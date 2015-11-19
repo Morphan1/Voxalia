@@ -9,20 +9,20 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class Seat
     {
-        public Entity SeatHolder;
+        public PhysicsEntity SeatHolder;
         public Location PositionOffset;
-        public Entity Sitter = null;
+        public PhysicsEntity Sitter = null;
         public Location OldPosition = Location.Zero;
 
-        private JointForceWeld jfw = null;
+        private JointWeld jw = null;
 
-        public Seat(Entity seatHolder, Location posOffset)
+        public Seat(PhysicsEntity seatHolder, Location posOffset)
         {
             SeatHolder = seatHolder;
             PositionOffset = posOffset;
         }
 
-        public bool Accept(Entity sitter)
+        public bool Accept(PhysicsEntity sitter)
         {
             if (Sitter != null)
             {
@@ -44,14 +44,18 @@ namespace Voxalia.ServerGame.EntitySystem
                 Sitter.SetPosition(SeatHolder.GetPosition() + PositionOffset);
             }
             Sitter.SetOrientation(SeatHolder.GetOrientation());
-            jfw = new JointForceWeld(SeatHolder, Sitter);
-            SeatHolder.TheRegion.AddJoint(jfw);
+            jw = new JointWeld(SeatHolder, Sitter);
+            SeatHolder.TheRegion.AddJoint(jw);
             return true;
         }
 
         public void Kick()
         {
-            SeatHolder.TheRegion.DestroyJoint(jfw);
+            if (jw == null)
+            {
+                return;
+            }
+            SeatHolder.TheRegion.DestroyJoint(jw);
             if (Sitter is PlayerEntity)
             {
                 ((PlayerEntity)Sitter).Teleport(OldPosition);
@@ -63,7 +67,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Sitter.CurrentSeat = null;
             Sitter = null;
             OldPosition = Location.Zero;
-            jfw = null;
+            jw = null;
         }
     }
 }
