@@ -44,7 +44,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         SimpleFrozenLakeBiome FrozenLake = new SimpleFrozenLakeBiome();
 
         SimpleHellBiome Hell = new SimpleHellBiome();
-
+        
         public override Biome BiomeFor(int seed2, int seed3, int seed4, float x, float y, float z, float height)
         {
             if (z > -120)

@@ -90,10 +90,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             chk.CalculateLighting();
             chk.LOADING = false;
             chk.PRED = true;
-            //if (!TheClient.IsWaitingOnChunks())
-            //{
-                //TheClient.Schedule.ScheduleSyncTask(() => { chk.AddToWorld(); chk.CreateVBO(); chk.UpdateSurroundingsFully(); });
-            //}
         }
     }
 }

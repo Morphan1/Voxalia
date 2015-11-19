@@ -122,7 +122,8 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("breadcrumb", TheServer, 1, "items/common/breadcrumbs", "Bread Crumbs", "Finds the way back, even over the river and through the woods!", Color.White.ToArgb(), "items/common/breadcrumbs", false));
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/dirt", "Dirt", "Dirty!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.DIRT });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/stone", "Stone", "Gets things stoned!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.STONE });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/grass_side", "Grass", "Grassy!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.GRASS });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/grass_forest_side", "Forest Grass", "Grassy!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.GRASS_FOREST });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/grass_plains_side", "Plains Grass", "Light and grassy!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.GRASS_PLAINS });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/special/db_top", "DebugBlock", "Not buggy!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.DEBUG });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/made/concrete", "Concrete", "Solid!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.CONCRETE });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/metals/steel_solid", "Solid Steel", "*very* solid!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.STEEL_SOLID });

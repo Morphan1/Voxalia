@@ -7,7 +7,7 @@ namespace Voxalia.Shared
     {
         AIR = 0,
         STONE = 1,
-        GRASS = 2,
+        GRASS_FOREST = 2,
         DIRT = 3,
         WATER = 4,
         DEBUG = 5,
@@ -21,7 +21,9 @@ namespace Voxalia.Shared
         SAND = 13,
         STEEL_SOLID = 14,
         STEEL_PLATE = 15,
-        NUM_DEFAULT = 16,
+        GRASS_PLAINS = 16,
+        SANDSTONE = 17,
+        NUM_DEFAULT = 18,
         MAX = ushort.MaxValue
     }
 
@@ -36,7 +38,7 @@ namespace Voxalia.Shared
             MaterialInfo[] mats = new MaterialInfo[] {
                 new MaterialInfo((int)Material.AIR) { Solidity = MaterialSolidity.NONSOLID, Opaque = false, RendersAtAll = false, FogAlpha = 0 },
                 new MaterialInfo((int)Material.STONE) { SpeedMod = 1.1f, Sound = MaterialSound.STONE },
-                new MaterialInfo((int)Material.GRASS) { Sound = MaterialSound.GRASS },
+                new MaterialInfo((int)Material.GRASS_FOREST) { Sound = MaterialSound.GRASS },
                 new MaterialInfo((int)Material.DIRT) { Sound = MaterialSound.DIRT },
                 new MaterialInfo((int)Material.WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1) },
                 new MaterialInfo((int)Material.DEBUG) { Sound = MaterialSound.METAL },
@@ -50,9 +52,11 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.SAND) { Sound = MaterialSound.SAND },
                 new MaterialInfo((int)Material.STEEL_SOLID) { SpeedMod = 1.25f, Sound = MaterialSound.METAL },
                 new MaterialInfo((int)Material.STEEL_PLATE) { SpeedMod = 1.35f, Sound = MaterialSound.METAL },
+                new MaterialInfo((int)Material.GRASS_PLAINS) { Sound = MaterialSound.GRASS },
+                new MaterialInfo((int)Material.SANDSTONE) { Sound = MaterialSound.STONE },
             };
-            mats[(int)Material.GRASS].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
-            mats[(int)Material.GRASS].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
+            mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
+            mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
             mats[(int)Material.DEBUG].TID[(int)MaterialSide.BOTTOM] = MAX_TEXTURES - 2; // db_bottom
             mats[(int)Material.DEBUG].TID[(int)MaterialSide.XM] = MAX_TEXTURES - 3; // db_xm
             mats[(int)Material.DEBUG].TID[(int)MaterialSide.XP] = MAX_TEXTURES - 4; // db_xp
@@ -60,6 +64,8 @@ namespace Voxalia.Shared
             mats[(int)Material.DEBUG].TID[(int)MaterialSide.YM] = MAX_TEXTURES - 6; // db_ym
             mats[(int)Material.LOG].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 7; // wood_top
             mats[(int)Material.LOG].TID[(int)MaterialSide.BOTTOM] = MAX_TEXTURES - 7; // wood_top
+            mats[(int)Material.GRASS_PLAINS].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 8; // grass plains (top)
+            mats[(int)Material.GRASS_PLAINS].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
             ALL_MATS.AddRange(mats);
         }
         
