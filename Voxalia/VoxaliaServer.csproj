@@ -95,6 +95,7 @@
     <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PointLightEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PrimitiveEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\Seat.cs" />
     <Compile Include="ServerGame\EntitySystem\SpawnPointEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\TargetEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\TargetPositionEntity.cs" />

@@ -30,8 +30,8 @@ void main()
     {
         discard;
     }
-	color = tcolor * f_color;
+	color = tcolor * f_color; // TODO: Clamp f_color.xyz, match fbo_vox
 #ifdef MCM_GOOD_GRAPHICS
-    color = vec4(desaturate(color.xyz), color.w);
+    color = vec4(desaturate(color.xyz), color.w); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
 #endif
 }
