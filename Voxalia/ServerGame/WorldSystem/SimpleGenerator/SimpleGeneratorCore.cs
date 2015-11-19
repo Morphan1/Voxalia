@@ -38,6 +38,12 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
 
         public override float GetHeight(int Seed, int seed2, int seed3, int seed4, int seed5, float x, float y, float z, out Biome biome)
         {
+            if (z < -50 || z > 50)
+            {
+                float valx = GetHeightQuick(Seed, seed2, x, y);
+                biome = Biomes.BiomeFor(seed2, seed3, seed4, x, y, z, valx);
+                return valx;
+            }
             float valBasic = GetHeightQuick(Seed, seed2, x, y);
             Biome b = Biomes.BiomeFor(seed2, seed3, seed4, x, y, z, valBasic);
             float total = valBasic * ((SimpleBiome)b).HeightMod();
