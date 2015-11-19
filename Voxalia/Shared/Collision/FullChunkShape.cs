@@ -85,7 +85,7 @@ namespace Voxalia.Shared.Collision
                                 RayHit rhit;
                                 RigidTransform adjusted = new RigidTransform(startingTransform.Position - adj, startingTransform.Orientation);
                                 bool b = coll.ConvexCast(castShape, ref adjusted, ref sweep, out rhit);
-                                if (b && (!gotOne || rhit.T < BestRH.T) && rhit.T >= 0)
+                                if (b && (!gotOne || rhit.T * slen < BestRH.T) && rhit.T >= 0)
                                 {
                                     gotOne = true;
                                     BestRH = rhit;

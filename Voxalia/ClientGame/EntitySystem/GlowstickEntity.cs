@@ -34,6 +34,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
+            TheClient.Textures.White.Bind();
             Matrix4 mat = Matrix4.CreateScale(0.05f, 0.2f, 0.05f) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetColor(GColor);
@@ -51,7 +52,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void SpawnBody()
         {
-            light = new PointLight(GetPosition(), 64, 6, new Location(GColor.R, GColor.G, GColor.B));
+            light = new PointLight(GetPosition(), 64, 15, new Location(GColor.R, GColor.G, GColor.B));
             TheClient.Lights.Add(light);
             base.SpawnBody();
         }
