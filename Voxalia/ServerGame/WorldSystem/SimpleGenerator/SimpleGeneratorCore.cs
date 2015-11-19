@@ -29,7 +29,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             }
             else
             {
-                return Material.TIN_ORE_SPARE;
+                return Material.TIN_ORE_SPARSE;
             }
         }
 
