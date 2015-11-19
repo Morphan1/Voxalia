@@ -16,7 +16,7 @@ namespace Voxalia.ServerGame.EntitySystem
             : base("vehicles/" + vehicle + "_base", tregion)
         {
             vehName = vehicle;
-            SetMass(100);
+            SetMass(500);
             DriverSeat = new Seat(this, Location.UnitZ * 2);
             Seats = new List<Seat>();
             Seats.Add(DriverSeat);
