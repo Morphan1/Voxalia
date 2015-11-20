@@ -63,7 +63,7 @@ namespace Voxalia.Shared
                         }
                         CIPos = RecCommandInput.Count;
                     }
-                    SysConsole.WriteLine(">" + read);
+                    SysConsole.WriteLine(">" + read, "^r^7");
                     read = "";
                     pos = 0;
                 }

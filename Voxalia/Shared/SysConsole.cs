@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Voxalia.Shared
 {
     public class SysConsole
     {
-        volatile static string Waiting = "";
+        volatile static List<KeyValuePair<string, string>> Waiting = new List<KeyValuePair<string, string>>();
 
         static Object ConsoleLock;
 
@@ -25,9 +26,12 @@ namespace Voxalia.Shared
                 lock (WriteLock)
                 {
                     ConsoleOutputThread.Abort();
-                    if (Waiting.Length > 0)
+                    if (Waiting.Count > 0)
                     {
-                        WriteInternal(Waiting);
+                        foreach (KeyValuePair<string, string> message in Waiting)
+                        {
+                            WriteInternal(message.Value, message.Key);
+                        }
                     }
                 }
             }
@@ -51,20 +55,21 @@ namespace Voxalia.Shared
             Output(OutputType.INIT, "Test colors: ^r^7Text Colors: ^0^h^1^^n1 ^!^^n! ^2^^n2 ^@^^n@ ^3^^n3 ^#^^n# ^4^^n4 ^$^^n$ ^5^^n5 ^%^^n% ^6^^n6 ^-^^n- ^7^^n7 ^&^^n& ^8^^n8 ^*^^** ^9^^n9 ^(^^n( ^&^h^0^^n0^h ^)^^n) ^a^^na ^A^^nA\n" +
                             "^r^7Text styles: ^b^^nb is bold,^r ^i^^ni is italic,^r ^u^^nu is underline,^r ^s^^ns is strike-through,^r ^O^^nO is overline,^r ^7^h^0^^nh is highlight,^r^7 ^j^^nj is jello (AKA jiggle),^r " +
                             "^7^h^2^e^0^^ne is emphasis,^r^7 ^t^^nt is transparent,^r ^T^^nT is more transparent,^r ^o^^no is opaque,^r ^R^^nR is random,^r ^p^^np is pseudo-random,^r ^^nk is obfuscated (^kobfu^r),^r " +
-                            "^^nS is ^SSuperScript^r, ^^nl is ^lSubScript (AKA Lower-Text)^r, ^h^8^d^^nd is Drop-Shadow,^r^7 ^f^^nf is flip,^r ^^nr is regular text, ^^nq is a ^qquote^q, and ^^nn is nothing (escape-symbol).");
+                            "^^nS is ^SSuperScript^r, ^^nl is ^lSubScript (AKA Lower-Text)^r, ^h^8^d^^nd is Drop-Shadow,^r^7 ^f^^nf is flip,^r ^^nr is regular text, ^^nq is a ^qquote^q, ^^nn is nothing (escape-symbol),^r " +
+                            "and ^^nB is base-colors.");
         }
 
         static void ConsoleLoop()
         {
             while (true)
             {
-                string twaiting;
+                List<KeyValuePair<string, string>> twaiting;
                 lock (ConsoleLock)
                 {
                     twaiting = Waiting;
-                    Waiting = "";
+                    Waiting = new List<KeyValuePair<string, string>>();
                 }
-                if (twaiting.Length > 0)
+                if (twaiting.Count > 0)
                 {
                     // TODO: Log file control! Option to change file name or disable entirely...
                     // Also options to put a value like logs/%yyyy%/%mm%/%dd%.log
@@ -72,7 +77,10 @@ namespace Voxalia.Shared
                     // FileHandler.AppendText("console.log", twaiting);
                     lock (WriteLock)
                     {
-                        WriteInternal(twaiting);
+                        foreach (KeyValuePair<string, string> message in twaiting)
+                        {
+                            WriteInternal(message.Value, message.Key);
+                        }
                     }
                 }
                 Thread.Sleep(100);
@@ -116,25 +124,26 @@ namespace Voxalia.Shared
         /// Writes a line of colored text to the system console.
         /// </summary>
         /// <param name="text">The text to write.</param>
-        public static void WriteLine(string text)
+        public static void WriteLine(string text, string bcolor)
         {
-            Write(text + "\n");
+            Write(text + "\n", bcolor);
         }
 
         /// <summary>
         /// Writes some colored text to the system console.
         /// </summary>
         /// <param name="text">The text to write.</param>
-        private static void Write(string text)
+        private static void Write(string text, string bcolor)
         {
             lock (ConsoleLock)
             {
-                Waiting += text;
+                Waiting.Add(new KeyValuePair<string, string>(bcolor, text));
             }
         }
 
-        static void WriteInternal(string text)
+        static void WriteInternal(string text, string bcolor)
         {
+            text = text.Replace("^B", bcolor);
             Console.SetCursorPosition(0, Console.CursorTop);
             StringBuilder outme = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
@@ -219,9 +228,9 @@ namespace Voxalia.Shared
             Output(OutputType.ERROR, ex.ToString() + "\n\n" + Environment.StackTrace);
         }
 
-        public static void OutputCustom(string type, string message)
+        public static void OutputCustom(string type, string message, string bcolor = "^r^7")
         {
-            WriteLine("^r^7" + Utilities.DateTimeToString(DateTime.Now) + " [" + type + "^r^7] " + message);
+            WriteLine("^r^7" + Utilities.DateTimeToString(DateTime.Now) + " [" + bcolor + type + "^r^7] " + bcolor + message, bcolor);
         }
 
         /// <summary>
@@ -229,27 +238,20 @@ namespace Voxalia.Shared
         /// </summary>
         /// <param name="ot">What type of output to use.</param>
         /// <param name="text">The text to output.</param>
-        public static void Output(OutputType ot, string text)
+        public static void Output(OutputType ot, string text, string bcolor = null)
         {
-            if (OutputColors[(int)ot] == "^7")
-            {
-                WriteLine("^r^7" + Utilities.DateTimeToString(DateTime.Now) + " [" + OutputNames[(int)ot] + "] " + text);
-            }
-            else
-            {
-                WriteLine("^r^7" + Utilities.DateTimeToString(DateTime.Now) + " [" + OutputColors[(int)ot] +
-                    OutputNames[(int)ot] + "^7] " + OutputColors[(int)ot] + text);
-            }
+            WriteLine("^r^7" + Utilities.DateTimeToString(DateTime.Now) + " [" + OutputColors[(int)ot] +
+                OutputNames[(int)ot] + "^r^7] " + OutputColors[(int)ot] + text, bcolor ?? OutputColors[(int)ot]);
         }
 
         static string[] OutputColors = new string[]
         {
-            "^7ERROR:OUTPUTTYPE=NONE?",
-            "^7",
-            "^2",
-            "^3",
-            "^7^h^0",
-            "^7",
+            "^r^7ERROR:OUTPUTTYPE=NONE?",
+            "^r^7",
+            "^r^2",
+            "^r^3",
+            "^r^7^h^0",
+            "^r^7",
         };
 
         static string[] OutputNames = new string[]

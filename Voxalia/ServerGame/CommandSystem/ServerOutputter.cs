@@ -16,7 +16,8 @@ namespace Voxalia.ServerGame.CommandSystem
 
         public override void WriteLine(string text)
         {
-            SysConsole.WriteLine(text);
+            // TODO: Change maybe?
+            SysConsole.WriteLine(text, "^r^7");
         }
 
         public override void Good(string tagged_text, DebugMode mode)

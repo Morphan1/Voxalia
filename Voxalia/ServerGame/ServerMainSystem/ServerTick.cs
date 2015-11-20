@@ -25,13 +25,13 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         string SaveStr = null;
 
-        public void Broadcast(string message)
+        public void Broadcast(string message, string bcolor = null)
         {
             for (int i = 0; i < Players.Count; i++)
             {
                 Players[i].Network.SendMessage(message);
             }
-            SysConsole.Output(OutputType.INFO, "[Broadcast] " + message);
+            SysConsole.Output(OutputType.INFO, "[Broadcast] " + message, bcolor);
         }
 
         public void SendToAll(AbstractPacketOut packet)

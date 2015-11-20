@@ -20,7 +20,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             DateTime Now = DateTime.Now;
             // TODO: Better format (customizable?)
             entry.Player.TheServer.Broadcast("^r^7[^d^5" + Utilities.Pad(Now.Hour.ToString(), '0', 2, true) + "^7:^5" + Utilities.Pad(Now.Minute.ToString(), '0', 2, true)
-                + "^7:^5" + Utilities.Pad(Now.Second.ToString(), '0', 2, true) + "^r^7] <^d" + entry.Player.Name + "^r^7>: ^2^d" + entry.AllArguments());
+                + "^7:^5" + Utilities.Pad(Now.Second.ToString(), '0', 2, true) + "^r^7] <^d" + entry.Player.Name + "^r^7>: ^2^d" + entry.AllArguments(), "^r^2^d");
         }
     }
 }

@@ -696,9 +696,10 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             while (done < c)
             {
-                Thread.Sleep(16);
                 TheServer.Schedule.RunAllSyncTasks(0.016);
+                Thread.Sleep(16);
             }
+            TheServer.Schedule.RunAllSyncTasks(0.016);
             if (announce)
             {
                 SysConsole.Output(OutputType.INIT, "Initially loaded " + c + " chunks...");
@@ -957,7 +958,6 @@ namespace Voxalia.ServerGame.WorldSystem
         
         /// <summary>
         /// Designed for startup time.
-        /// TODO: Non-background and/or actually asyncify...
         /// </summary>
         public void LoadChunk_Background(Location cpos, Action<bool> callback = null)
         {
