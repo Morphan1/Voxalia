@@ -263,7 +263,6 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         }
                     }
                     // Special case: trees.
-                    // TODO: Separate generator?
                     if (hheight > 0 && top >= -7 && top < 30)
                     {
                         Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000));
@@ -282,23 +281,30 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             cap = Math.Min(top + 7, 30);
                             for (int z = Math.Max(top + 3, 0); z < cap; z++)
                             {
-                                int width = 2;
-                                if (z == top + 3 || z == top + 6)
+                                int xty = x;
+                                int yty = y;
+                                int zty = z;
+                                chunk.OwningRegion.TheServer.Schedule.ScheduleSyncTask(() =>
                                 {
-                                    width = 1;
-                                }
-                                int xcap = x + 1 + width;
-                                for (int sx = x - width; sx < xcap; sx++)
-                                {
-                                    int ycap = y + 1 + width;
-                                    for (int sy = y - width; sy < ycap; sy++)
+                                    // TODO: Separate generator -> structure file based!
+                                    int width = 2;
+                                    if (zty == top + 3 || zty == top + 6)
                                     {
-                                        if (sy != y || sx != x)
+                                        width = 1;
+                                    }
+                                    int xcap = xty + 1 + width;
+                                    for (int sx = xty - width; sx < xcap; sx++)
+                                    {
+                                        int ycap = yty + 1 + width;
+                                        for (int sy = yty - width; sy < ycap; sy++)
                                         {
-                                            SpecialSetBlockAt(chunk, sx, sy, z, new BlockInternal((ushort)Material.LEAVES1, 127, 0));
+                                            if (sy != yty || sx != xty)
+                                            {
+                                                SpecialSetBlockAt(chunk, sx, sy, zty, new BlockInternal((ushort)Material.LEAVES1, 127, 0));
+                                            }
                                         }
                                     }
-                                }
+                                });
                             }
                         }
                     }

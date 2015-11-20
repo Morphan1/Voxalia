@@ -682,16 +682,22 @@ namespace Voxalia.ServerGame.WorldSystem
             Location minc = ChunkLocFor(min);
             Location maxc = ChunkLocFor(max);
             int c = 0;
+            int done = 0;
             for (double x = minc.X; x <= maxc.X; x++)
             {
                 for (double y = minc.Y; y <= maxc.Y; y++)
                 {
                     for (double z = minc.Z; z <= maxc.Z; z++)
                     {
-                        LoadChunk(new Location(x, y, z));
+                        LoadChunk_Background(new Location(x, y, z), (o) => { done++; });
                         c++;
                     }
                 }
+            }
+            while (done < c)
+            {
+                Thread.Sleep(16);
+                TheServer.Schedule.RunAllSyncTasks(0.016);
             }
             if (announce)
             {
@@ -972,12 +978,15 @@ namespace Voxalia.ServerGame.WorldSystem
                     else
                     {
                         ChunksToDestroy.Remove(ch);
-                        PopulateChunk(ch, false);
                         ch.AddToWorld();
-                        if (callback != null)
+                        TheServer.Schedule.StartASyncTask(() =>
                         {
-                            callback.Invoke(false);
-                        }
+                            PopulateChunk(ch, false);
+                            if (callback != null)
+                            {
+                                callback.Invoke(false);
+                            }
+                        });
                         return;
                     }
                 }
@@ -985,16 +994,16 @@ namespace Voxalia.ServerGame.WorldSystem
                 ch.OwningRegion = this;
                 ch.WorldPosition = cpos;
                 LoadedChunks.Add(cpos, ch);
-                // TheServer.Schedule.StartASyncTask(() =>
-                // {
-                PopulateChunk(ch, true); // TODO: Make asyncable!
                 ch.AddToWorld();
-                if (callback != null)
+                TheServer.Schedule.StartASyncTask(() =>
                 {
-                    callback.Invoke(false);
-                }
+                    PopulateChunk(ch, true);
+                    if (callback != null)
+                    {
+                        callback.Invoke(false);
+                    }
+                });
             });
-            // });
         }
         
         public Chunk GetChunk(Location cpos)
@@ -1029,7 +1038,6 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void PopulateChunk(Chunk chunk, bool allowFile, bool fileOnly = false)
         {
-            CheckThreadValidity();
             try
             {
                 if (allowFile && Program.Files.Exists(chunk.GetFileName()))
