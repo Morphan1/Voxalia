@@ -32,14 +32,14 @@ namespace VoxaliaServerSamplePlugin
 
         }
 
-        public void ReactToRegionLoaded(RegionLoadPostEventArgs e)
+        public void ReactToRegionLoaded(int prio, RegionLoadPostEventArgs e)
         {
             SysConsole.OutputCustom(OutputType, "I see the region " + e.TheRegion.Name + " has been loaded!");
         }
 
-        public void ReactToRegionLoadedTWO(RegionLoadPostEventArgs e)
+        public void ReactToRegionLoadedTWO(int prio, RegionLoadPostEventArgs e)
         {
-            SysConsole.OutputCustom(OutputType, "I see the region " + e.TheRegion.Name + " has been loaded (secondary response)!");
+            SysConsole.OutputCustom(OutputType, "I see the region " + e.TheRegion.Name + " has been loaded (secondary response, priority=" + prio + ")!");
         }
 
         public string Name { get { return "SamplePlugin"; } }
