@@ -14,14 +14,16 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// <summary>
         /// Fired when a region is going to be loaded; can be cancelled.
         /// For purely listening to a region load after the fact, use <see cref="OnRegionLoadPostEvent"/>.
+        /// TODO: Move to an event helper!
         /// </summary>
-        public FreneticEventHandler<RegionLoadPreEventArgs> OnRegionLoadPreEvent;
+        public FreneticEventHandler<RegionLoadPreEventArgs> OnRegionLoadPreEvent = new FreneticEventHandler<RegionLoadPreEventArgs>();
 
         /// <summary>
         /// Fired when a region has been loaded; is purely informative.
         /// For cancelling a region load, use <see cref="OnRegionLoadPreEvent"/>.
+        /// TODO: Move to an event helper!
         /// </summary>
-        public FreneticEventHandler<RegionLoadPostEventArgs> OnRegionLoadPostEvent;
+        public FreneticEventHandler<RegionLoadPostEventArgs> OnRegionLoadPostEvent = new FreneticEventHandler<RegionLoadPostEventArgs>();
 
         public Region LoadRegion(string name)
         {
@@ -33,24 +35,18 @@ namespace Voxalia.ServerGame.ServerMainSystem
                     return LoadedRegions[i];
                 }
             }
-            if (OnRegionLoadPreEvent != null)
+            RegionLoadPreEventArgs e = new RegionLoadPreEventArgs() { RegionName = name };
+            OnRegionLoadPreEvent.Fire(e);
+            if (e.Cancelled)
             {
-                RegionLoadPreEventArgs e = new RegionLoadPreEventArgs() { RegionName = name };
-                OnRegionLoadPreEvent.Fire(e);
-                if (e.Cancelled)
-                {
-                    return null;
-                }
+                return null;
             }
             Region region = new Region();
             region.Name = nl;
             region.TheServer = this;
             region.BuildWorld();
             LoadedRegions.Add(region);
-            if (OnRegionLoadPostEvent != null)
-            {
-                OnRegionLoadPostEvent.Fire(new RegionLoadPostEventArgs() { TheRegion = region });
-            }
+            OnRegionLoadPostEvent.Fire(new RegionLoadPostEventArgs() { TheRegion = region });
             return region;
         }
 
