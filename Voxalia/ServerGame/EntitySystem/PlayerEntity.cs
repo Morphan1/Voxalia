@@ -449,7 +449,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Location cpos = TheRegion.ChunkLocFor(pos);
             if (cpos != pChunkLoc)
             {
-                // TODO: Move to a separate method that's called once on startup + at every teleport... also, asyncify
+                // TODO: Move to a separate method that's called once on startup + at every teleport... also, asyncify!
                 if (!loadedInitially)
                 {
                     TrySet(pos, 1, 0, 1);
