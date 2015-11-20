@@ -19,11 +19,11 @@ namespace Voxalia.ServerGame.NetworkSystem
         {
             TheServer = tserver;
             PrimarySocket = psocket;
-            PrimarySocket.Blocking = false;
+            PrimarySocket.Blocking = true;// false;
             recd = new byte[MAX];
         }
 
-        int MAX = 1024 * 100; // 100 KB by default
+        int MAX = 1024 * 1024; // 1 MB by default
 
         byte[] recd;
 
@@ -257,6 +257,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                             player.TheRegion.SpawnEntity(player);
                             player.LastPingByte = 0;
                             player.LastCPingByte = 0;
+                            PrimarySocket.SendBufferSize *= 10;
                             SendPacket(new PingPacketOut(0));
                             player.Network.SendPacket(new PingPacketOut(0));
                             player.Die();
