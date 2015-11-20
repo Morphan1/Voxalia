@@ -41,27 +41,27 @@ namespace Voxalia.Shared
         {
             MaterialInfo[] mats = new MaterialInfo[] {
                 new MaterialInfo((int)Material.AIR) { Solidity = MaterialSolidity.NONSOLID, Opaque = false, RendersAtAll = false, FogAlpha = 0 },
-                new MaterialInfo((int)Material.STONE) { SpeedMod = 1.1f, Sound = MaterialSound.STONE },
+                new MaterialInfo((int)Material.STONE) { SpeedMod = 1.1f, Sound = MaterialSound.STONE, Hardness = 20 },
                 new MaterialInfo((int)Material.GRASS_FOREST) { Sound = MaterialSound.GRASS },
                 new MaterialInfo((int)Material.DIRT) { Sound = MaterialSound.DIRT },
-                new MaterialInfo((int)Material.WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1) },
-                new MaterialInfo((int)Material.DEBUG) { Sound = MaterialSound.METAL },
+                new MaterialInfo((int)Material.WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1), Hardness = 5 },
+                new MaterialInfo((int)Material.DEBUG) { Sound = MaterialSound.METAL, Hardness = 100 },
                 new MaterialInfo((int)Material.LEAVES1) { Opaque = false, SpeedMod = 0.7f, FogAlpha = 0, CanRenderAgainstSelf = true, Sound = MaterialSound.LEAVES },
-                new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f, Sound = MaterialSound.STONE },
-                new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f, FogColor = new Location(0, 1, 0) },
+                new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f, Sound = MaterialSound.STONE, Hardness = 25 },
+                new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f, FogColor = new Location(0, 1, 0), Hardness = 5 },
                 new MaterialInfo((int)Material.SNOW) { SpeedMod = 0.8f, Sound = MaterialSound.SNOW },
                 new MaterialInfo((int)Material.SMOKE) { Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.8) },
                 new MaterialInfo((int)Material.LOG) { SpeedMod = 1.1f, Sound = MaterialSound.WOOD },
-                new MaterialInfo((int)Material.TALLGRASS) { Solidity = MaterialSolidity.SPECIAL, Opaque = false },
+                new MaterialInfo((int)Material.TALLGRASS) { Solidity = MaterialSolidity.SPECIAL, Opaque = false, Hardness = 1 },
                 new MaterialInfo((int)Material.SAND) { Sound = MaterialSound.SAND },
-                new MaterialInfo((int)Material.STEEL_SOLID) { SpeedMod = 1.25f, Sound = MaterialSound.METAL },
-                new MaterialInfo((int)Material.STEEL_PLATE) { SpeedMod = 1.35f, Sound = MaterialSound.METAL },
+                new MaterialInfo((int)Material.STEEL_SOLID) { SpeedMod = 1.25f, Sound = MaterialSound.METAL, Hardness = 30 },
+                new MaterialInfo((int)Material.STEEL_PLATE) { SpeedMod = 1.35f, Sound = MaterialSound.METAL, Hardness = 40 },
                 new MaterialInfo((int)Material.GRASS_PLAINS) { Sound = MaterialSound.GRASS },
-                new MaterialInfo((int)Material.SANDSTONE) { Sound = MaterialSound.STONE },
-                new MaterialInfo((int)Material.TIN_ORE) { Sound = MaterialSound.STONE },
-                new MaterialInfo((int)Material.TIN_ORE_SPARSE) { Sound = MaterialSound.STONE },
-                new MaterialInfo((int)Material.COPPER_ORE) { Sound = MaterialSound.STONE },
-                new MaterialInfo((int)Material.COPPER_ORE_SPARSE) { Sound = MaterialSound.STONE },
+                new MaterialInfo((int)Material.SANDSTONE) { Sound = MaterialSound.STONE, Hardness = 15 },
+                new MaterialInfo((int)Material.TIN_ORE) { Sound = MaterialSound.STONE, Hardness = 15 },
+                new MaterialInfo((int)Material.TIN_ORE_SPARSE) { Sound = MaterialSound.STONE, Hardness = 15 },
+                new MaterialInfo((int)Material.COPPER_ORE) { Sound = MaterialSound.STONE, Hardness = 15 },
+                new MaterialInfo((int)Material.COPPER_ORE_SPARSE) { Sound = MaterialSound.STONE, Hardness = 15 },
             };
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
@@ -130,6 +130,11 @@ namespace Voxalia.Shared
         public static float GetFogAlpha(this Material mat)
         {
             return ALL_MATS[(int)mat].FogAlpha;
+        }
+
+        public static float GetHardness(this Material mat)
+        {
+            return ALL_MATS[(int)mat].Hardness;
         }
 
         public static bool GetCanRenderAgainstSelf(this Material mat)
@@ -213,6 +218,8 @@ namespace Voxalia.Shared
         public Location FogColor = new Location(0.7);
 
         public float FogAlpha = 1;
+
+        public float Hardness = 10;
 
         public MaterialSound Sound = MaterialSound.NONE;
 

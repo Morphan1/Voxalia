@@ -135,6 +135,10 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/snow", "Snow", "Cold!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.SNOW });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/sand", "Sand", "Literally, it's sand!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.SAND });
             Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/transparent/leaves_basic1", "Leaves", "Transparent in parts!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.LEAVES1 });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/ore/tin_ore", "Tin Ore", "Tinny!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.TIN_ORE });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/ore/tin_ore_sparse", "Sparse Tin Ore", "Slightly tinny!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.TIN_ORE_SPARSE });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/ore/copper_ore", "Copper Ore", "Coppery!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.COPPER_ORE });
+            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/ore/copper_ore_sparse", "Sparse Copper Ore", "Slightly coppery!", Color.White.ToArgb(), "items/block", false) { Datum = (int)Material.COPPER_ORE_SPARSE });
             Items.GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol_ico", "9mm Pistol", "It shoots bullets!", Color.White.ToArgb(), "items/weapons/silenced_pistol", false));
             Items.GiveItem(new ItemStack("shotgun_gun", TheServer, 1, "items/weapons/shotgun_ico", "Shotgun", "It shoots many bullets!", Color.White.ToArgb(), "items/weapons/shotgun", false));
             Items.GiveItem(new ItemStack("bow", TheServer, 1, "items/weapons/bow_ico", "Bow", "It shoots arrows!", Color.White.ToArgb(), "items/weapons/bow", false));
@@ -686,7 +690,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (TheRegion.SpawnPoints.Count == 0)
             {
                 SysConsole.Output(OutputType.WARNING, "No spawn points... generating one!");
-                TheRegion.SpawnEntity(new SpawnPointEntity(TheRegion) { Position = new Location(0, 0, 50) });
+                TheRegion.SpawnEntity(new SpawnPointEntity(TheRegion) { Position = new Location(0, 0, 70) });
             }
             SpawnPointEntity spe = null; // TODO: Scrap old spawn point code, handle more sanely!
             for (int i = 0; i < 10; i++)

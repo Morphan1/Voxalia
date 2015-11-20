@@ -1130,13 +1130,26 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void Explode(Location pos, float rad = 5f, bool effect = true, bool breakblock = true, bool applyforce = true, bool doDamage = true)
         {
+            float expDamage = 8 * rad;
             CheckThreadValidity();
             if (breakblock)
             {
-                List<Location> hits = GetBlocksInRadius(pos, rad / 3);
-                foreach (Location loc in hits)
+                int min = (int)Math.Floor(-rad);
+                int max = (int)Math.Ceiling(rad);
+                for (int x = min; x < max; x++)
                 {
-                    BreakNaturally(loc, true); // TODO: Regen + transmit in Explode() not Break().
+                    for (int y = min; y < max; y++)
+                    {
+                        for (int z = min; z < max; z++)
+                        {
+                            Location post = new Location(pos.X + x, pos.Y + y, pos.Z + z);
+                            // TODO: Defensive wall structuring - trace lines and break as appropriate.
+                            if ((post - pos).LengthSquared() <= rad * rad && GetBlockMaterial(post).GetHardness() <= expDamage / (post - pos).Length())
+                            {
+                                BreakNaturally(post, true, 0);
+                            }
+                        }
+                    }
                 }
             }
             if (effect)
