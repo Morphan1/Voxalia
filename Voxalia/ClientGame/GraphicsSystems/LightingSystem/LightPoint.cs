@@ -22,7 +22,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             maxrange = max_range;
             color = col;
         }
-
+        
         public override void Attach()
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);

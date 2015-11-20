@@ -58,19 +58,22 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             GL.BindTexture(TextureTarget.Texture2D, 0);
             for (int i = 0; i < 6; i++)
             {
-                LightPoint lp = new LightPoint();
+                /*LightPoint lp = new LightPoint();
                 lp.fbo_main = FBO;
                 lp.fbo_texture = FBODepthTex;
                 lp.fbo_depthtex = FBODTex;
                 InternalLights.Add(lp);
-                lp.Setup(Texsize, ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + Location.UnitX), 90f, Radius, ClientUtilities.Convert(Color));
+                lp.Setup(Texsize, ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + Location.UnitX), 90f, Radius, ClientUtilities.Convert(Color));*/
+                Light li = new Light();
+                li.Create(tsize, ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + Location.UnitX), 90f, Radius, ClientUtilities.Convert(Color));
+                InternalLights.Add(li);
             }
-            ((LightPoint)InternalLights[0]).DBM = DrawBufferMode.ColorAttachment0;
+            /*((LightPoint)InternalLights[0]).DBM = DrawBufferMode.ColorAttachment0;
             ((LightPoint)InternalLights[1]).DBM = DrawBufferMode.ColorAttachment1;
             ((LightPoint)InternalLights[2]).DBM = DrawBufferMode.ColorAttachment2;
             ((LightPoint)InternalLights[3]).DBM = DrawBufferMode.ColorAttachment3;
             ((LightPoint)InternalLights[4]).DBM = DrawBufferMode.ColorAttachment4;
-            ((LightPoint)InternalLights[5]).DBM = DrawBufferMode.ColorAttachment5;
+            ((LightPoint)InternalLights[5]).DBM = DrawBufferMode.ColorAttachment5;*/
             InternalLights[4].up = new Vector3(0, 1, 0);
             InternalLights[5].up = new Vector3(0, 1, 0);
             Reposition(EyePos);

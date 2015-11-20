@@ -379,7 +379,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     for (int i = 0; i < Lights.Count; i++)
                     {
-                        if (Lights[i] is PointLight)
+                        if (Lights[i] is PointLight && !CVars.r_shadows.ValueB)
                         {
                             if (camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                             {
