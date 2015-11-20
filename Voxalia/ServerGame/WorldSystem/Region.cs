@@ -1130,7 +1130,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void Explode(Location pos, float rad = 5f, bool effect = true, bool breakblock = true, bool applyforce = true, bool doDamage = true)
         {
-            float expDamage = 8 * rad;
+            float expDamage = 5 * rad;
             CheckThreadValidity();
             if (breakblock)
             {

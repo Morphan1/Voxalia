@@ -89,6 +89,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                 else if (height >= 20 && height < 40)
                 {
                     return LightForestHill;
+                    // TODO: Snow hill, etc?
                 }
                 else if (height >= 40)
                 {
