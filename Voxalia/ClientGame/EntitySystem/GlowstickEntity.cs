@@ -34,6 +34,10 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
+            if (TheClient.FBOid == 1)
+            {
+                GL.Uniform4(7, new Vector4(GColor.R, GColor.B, GColor.B, 1f));
+            }
             TheClient.Textures.White.Bind();
             Matrix4 mat = Matrix4.CreateScale(0.05f, 0.2f, 0.05f) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
@@ -42,6 +46,10 @@ namespace Voxalia.ClientGame.EntitySystem
             model.Draw();
             TheClient.Rendering.SetMinimumLight(0);
             TheClient.Rendering.SetColor(Color4.White);
+            if (TheClient.FBOid == 1)
+            {
+                GL.Uniform4(7, new Vector4(0f, 0f, 0f, 0f));
+            }
         }
 
         public override void Tick()
