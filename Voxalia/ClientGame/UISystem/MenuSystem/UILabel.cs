@@ -16,6 +16,8 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public Func<int> MaxX = null;
 
+        public string BColor = "^r^7";
+
         public UILabel(string btext, Func<float> xer, Func<float> yer, FontSet font, Func<int> maxx = null)
         {
             Text = btext;
@@ -47,18 +49,18 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public override void Render(double delta, int xoff, int yoff)
         {
-            TextFont.DrawColoredText(MaxX != null ? TextFont.SplitAppropriately(Text,MaxX()): Text, new Location(GetX() + xoff, GetY() + yoff, 0));
+            TextFont.DrawColoredText(MaxX != null ? TextFont.SplitAppropriately(Text,MaxX()): Text, new Location(GetX() + xoff, GetY() + yoff, 0), int.MaxValue, 1, false, BColor);
         }
 
         public float GetWidth()
         {
-            Location size = TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text);
+            Location size = TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text, BColor);
             return (float)size.X;
         }
 
         public float GetHeight()
         {
-            Location size = TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text);
+            Location size = TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text, BColor);
             return (float)size.Y;
         }
 
@@ -76,7 +78,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
             float tx = GetX();
             float ty = GetY();
-            Location size = TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text);
+            Location size = TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text, BColor);
             return x > tx && x < tx + size.X
                 && y > ty && y < ty + size.Y;
         }

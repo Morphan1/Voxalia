@@ -14,6 +14,8 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public string TextClick;
 
+        public string BColor = "^r^7";
+
         public bool Hovered = false;
 
         public bool Clicked = false;
@@ -76,7 +78,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             {
                 tt = TextHover;
             }
-            TextFont.DrawColoredText(tt, new Location(GetX() + xoff, GetY() + yoff, 0));
+            TextFont.DrawColoredText(tt, new Location(GetX() + xoff, GetY() + yoff, 0), int.MaxValue, 1, false, BColor);
         }
 
         public float GetWidth()
@@ -103,7 +105,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
             float tx = GetX();
             float ty = GetY();
-            return x > tx && x < tx + TextFont.MeasureFancyText(Text)
+            return x > tx && x < tx + TextFont.MeasureFancyText(Text, BColor)
                 && y > ty && y < ty + TextFont.font_default.Height;
         }
     }

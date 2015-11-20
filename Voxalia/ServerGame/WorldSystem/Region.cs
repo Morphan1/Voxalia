@@ -681,6 +681,7 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             Location minc = ChunkLocFor(min);
             Location maxc = ChunkLocFor(max);
+            Object locker = new Object();
             int c = 0;
             int done = 0;
             for (double x = minc.X; x <= maxc.X; x++)
@@ -689,14 +690,26 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     for (double z = minc.Z; z <= maxc.Z; z++)
                     {
-                        LoadChunk_Background(new Location(x, y, z), (o) => { done++; });
+                        LoadChunk_Background(new Location(x, y, z), (o) => { lock (locker) { done++; } });
                         c++;
                     }
                 }
             }
-            while (done < c)
+            bool cont = true;
+            double time = 0;
+            while (cont)
             {
                 TheServer.Schedule.RunAllSyncTasks(0.016);
+                lock (locker)
+                {
+                    cont = done < c;
+                    time += 0.016;
+                    if (time > 1)
+                    {
+                        time -= 1;
+                        SysConsole.Output(OutputType.INFO, "Loaded " + done + "/" + c + " chunks so far!");
+                    }
+                }
                 Thread.Sleep(16);
             }
             TheServer.Schedule.RunAllSyncTasks(0.016);

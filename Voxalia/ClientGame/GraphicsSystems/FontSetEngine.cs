@@ -177,8 +177,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="MaxY">The maximum Y location to render text at.</param>
         /// <param name="transmod">Transparency modifier (EG, 0.5 = half opacity) (0.0 - 1.0).</param>
         /// <param name="extrashadow">Whether to always have a mini drop-shadow.</param>
-        public void DrawColoredText(string Text, Location Position, int MaxY = int.MaxValue, float transmod = 1, bool extrashadow = false)
+        public void DrawColoredText(string Text, Location Position, int MaxY = int.MaxValue, float transmod = 1, bool extrashadow = false, string bcolor = "^r^7")
         {
+            Text = Text.Replace("^B", bcolor);
             string[] lines = Text.Replace('\r', ' ').Replace(' ', (char)0x00A0).Replace("^q", "\"").Split('\n');
             int color = DefaultColor;
             int trans = (int)(255 * transmod);
@@ -483,13 +484,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
         }
 
-        public Location MeasureFancyLinesOfText(string text)
+        public Location MeasureFancyLinesOfText(string text, string bcolor = "^r^7")
         {
             string[] data = text.Split('\n');
             float len = 0;
             for (int i = 0; i < data.Length; i++)
             {
-                float newlen = MeasureFancyText(data[i]);
+                float newlen = MeasureFancyText(data[i], bcolor);
                 if (newlen > len)
                 {
                     len = newlen;
@@ -504,7 +505,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         /// <param name="line">The text to measure.</param>
         /// <returns>the X-width of the text.</returns>
-        public float MeasureFancyText(string line)
+        public float MeasureFancyText(string line, string bcolor = "^r^7")
         {
             bool bold = false;
             bool italic = false;
@@ -512,7 +513,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             float MeasWidth = 0;
             GLFont font = font_default;
             int start = 0;
-            line = line.Replace("^q", "\"");
+            line = line.Replace("^q", "\"").Replace("^B", bcolor);
             for (int x = 0; x < line.Length; x++)
             {
                 if ((line[x] == '^' && x + 1 < line.Length && IsColorSymbol(line[x + 1])) || (x + 1 == line.Length))

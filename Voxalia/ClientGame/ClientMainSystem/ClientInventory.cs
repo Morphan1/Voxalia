@@ -95,9 +95,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         void GenerateItemDescriptors()
         {
-            UI_Inv_Displayname = new UILabel("<Display name>", () => 20 + ItemsListSize, () => Window.Height / 2, FontSets.SlightlyBigger, () => Window.Width - (20 + ItemsListSize));
-            UI_Inv_Description = new UILabel("<Description>", () => 20 + ItemsListSize, () => UI_Inv_Displayname.GetY() + UI_Inv_Displayname.GetHeight(), FontSets.Standard, () => Window.Width - (20 + ItemsListSize));
-            UI_Inv_Detail = new UILabel("<Detail>", () => 20 + ItemsListSize, () => UI_Inv_Description.GetY() + UI_Inv_Description.GetHeight(), FontSets.Standard, () => Window.Width - (20 + ItemsListSize));
+            UI_Inv_Displayname = new UILabel("^B<Display name>", () => 20 + ItemsListSize, () => Window.Height / 2, FontSets.SlightlyBigger, () => Window.Width - (20 + ItemsListSize));
+            UI_Inv_Description = new UILabel("^B<Description>", () => 20 + ItemsListSize, () => UI_Inv_Displayname.GetY() + UI_Inv_Displayname.GetHeight(), FontSets.Standard, () => Window.Width - (20 + ItemsListSize));
+            UI_Inv_Detail = new UILabel("^B<Detail>", () => 20 + ItemsListSize, () => UI_Inv_Description.GetY() + UI_Inv_Description.GetHeight(), FontSets.Standard, () => Window.Width - (20 + ItemsListSize));
+            UI_Inv_Description.BColor = "^r^7^i";
+            UI_Inv_Detail.BColor = "^r^7^l";
             InventoryMenu.Add(UI_Inv_Displayname);
             InventoryMenu.Add(UI_Inv_Description);
             InventoryMenu.Add(UI_Inv_Detail);
@@ -106,9 +108,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public void InventorySelectItem(int slot)
         {
             ItemStack item = GetItemForSlot(slot);
-            UI_Inv_Displayname.Text = item.DisplayName;
-            UI_Inv_Description.Text = item.Name + (item.SecondaryName != null && item.SecondaryName.Length > 0 ? " [" + item.SecondaryName + "]" : "") + "\n>" + item.Description;
-            UI_Inv_Detail.Text = "Count: " + item.Count + ", ColorCode: " + item.DrawColor + ", Texture: " + (item.Tex != null ? item.Tex.Name: "{NULL}")
+            UI_Inv_Displayname.Text = "^B" + item.DisplayName;
+            UI_Inv_Description.Text = "^r^7" + item.Name + (item.SecondaryName != null && item.SecondaryName.Length > 0 ? " [" + item.SecondaryName + "]" : "") + "\n>^B" + item.Description;
+            UI_Inv_Detail.Text = "^BCount: " + item.Count + ", ColorCode: " + item.DrawColor + ", Texture: " + (item.Tex != null ? item.Tex.Name: "{NULL}")
                 + ", Model: " + (item.Mod != null ? item.Mod.Name : "{NULL}") + ", Shared attributes: "+  item.SharedStr();
         }
 
