@@ -393,7 +393,11 @@ namespace Voxalia.ServerGame.EntitySystem
             if (IsFlying)
             {
                 Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, 0), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Upward ? 2: 1));
+                if (Upward)
+                {
+                    forw.Z = 1;
+                }
+                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Sprint ? 2: 1));
                 CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 Body.LinearVelocity = new Vector3(0, 0, 0);
             }

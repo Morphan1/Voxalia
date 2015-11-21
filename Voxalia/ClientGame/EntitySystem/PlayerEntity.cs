@@ -341,7 +341,11 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 Location forw = Utilities.RotateVector(new Location(-cc.HorizontalMotionConstraint.MovementDirection.Y,
                     cc.HorizontalMotionConstraint.MovementDirection.X, 0), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                cc.Body.Position += (forw * delta * CBStandSpeed * 2 * (Upward ? 2 : 1)).ToBVector(); // TODO: Make upward go up?
+                if (Upward)
+                {
+                    forw.Z = 1;
+                }
+                cc.Body.Position += (forw * delta * CBStandSpeed * 2 * (Sprint ? 2 : 1)).ToBVector();
                 CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 cc.Body.LinearVelocity = new Vector3(0, 0, 0);
             }
