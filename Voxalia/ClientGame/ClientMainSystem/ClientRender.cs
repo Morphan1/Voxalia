@@ -11,6 +11,7 @@ using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 using Voxalia.ClientGame.OtherSystems;
 using Voxalia.ClientGame.JointSystem;
 using Voxalia.Shared.Collision;
+using System.Diagnostics;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -218,20 +219,38 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     SysConsole.Output(OutputType.ERROR, "Rendering (general): " + ex.ToString());
                 }
+                Stopwatch timer = new Stopwatch();
                 try
                 {
+                    timer.Start();
                     tick(e.Time);
+                    timer.Stop();
+                    TickTime = (double)timer.ElapsedMilliseconds / 1000f;
+                    timer.Reset();
                 }
                 catch (Exception ex)
                 {
                     SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
                 }
+                timer.Start();
                 Window.SwapBuffers();
+                timer.Stop();
+                FinishTime = (double)timer.ElapsedMilliseconds / 1000f;
+                timer.Reset();
             }
         }
 
+        public double ShadowTime;
+        public double TickTime;
+        public double FBOTime;
+        public double LightsTime;
+        public double FinishTime;
+        public double TWODTime;
+        
+
         public void renderGame()
         {
+            Stopwatch timer = new Stopwatch();
             try
             {
                 RenderTextures = true;
@@ -263,6 +282,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Frustum camFrust = new Frustum(combined);
                 if (shouldRedrawShadows && CVars.r_shadows.ValueB)
                 {
+                    timer.Start();
                     shouldRedrawShadows = false;
                     s_shadow.Bind();
                     VBO.BonesIdentity();
@@ -302,7 +322,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
                             }
                         }
                     }
+                    timer.Stop();
+                    ShadowTime = (double)timer.ElapsedMilliseconds / 1000f;
+                    timer.Reset();
                 }
+                timer.Start();
                 SetViewport();
                 s_fbov.Bind();
                 GL.UniformMatrix4(1, false, ref combined);
@@ -326,6 +350,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 RenderLights = false;
                 RS4P.Unbind();
                 FBOid = 0;
+                timer.Stop();
+                FBOTime = (double)timer.ElapsedMilliseconds / 1000f;
+                timer.Reset();
+                timer.Start();
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
@@ -589,6 +617,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.DepthMask(true);
                 GL.Enable(EnableCap.DepthTest);
                 GL.Enable(EnableCap.CullFace);
+                timer.Stop();
+                LightsTime = (double)timer.ElapsedMilliseconds / 1000f;
+                timer.Reset();
             }
             catch (Exception ex)
             {
@@ -596,8 +627,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             try
             {
+                timer.Start();
                 Establish2D();
                 Render2D();
+                timer.Stop();
+                TWODTime = (double)timer.ElapsedMilliseconds / 1000f;
+                timer.Reset();
             }
             catch (Exception ex)
             {
@@ -825,6 +860,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public double RenderExtraItems = 0;
 
+        const string timeformat = "#.000";
+
         public void Render2D()
         {
             GL.Disable(EnableCap.CullFace);
@@ -832,7 +869,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 FontSets.Standard.DrawColoredText(FontSets.Standard.SplitAppropriately("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
                     + "\nHeld Item: " + GetItemForSlot(QuickBarPos).ToString()
-                    + "\nPhysics Time: " + TheRegion.PhysTime,
+                    + "\nTimes -> Phyiscs: " + TheRegion.PhysTime.ToString(timeformat) + ", Shadows: " + ShadowTime.ToString(timeformat)
+                    + ", FBO: " + FBOTime.ToString(timeformat) + ", Lights: " + LightsTime.ToString(timeformat) + ", 2D: " + TWODTime.ToString(timeformat)
+                    + ", Tick: " + TickTime.ToString(timeformat) + ", Finish: " + FinishTime.ToString(timeformat),
                     Window.Width - 10), new Location(0, 0, 0));
                 int center = Window.Width / 2;
                 if (RenderExtraItems > 0)

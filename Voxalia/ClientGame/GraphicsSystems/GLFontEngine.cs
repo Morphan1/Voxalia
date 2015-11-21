@@ -296,6 +296,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>A rectangle containing the precise location of a symbol.</returns>
         public RectangleF RectForSymbol(char symbol)
         {
+            // TODO: This is eating power. Add special cases for common symbols!
             for (int i = 0; i < Characters.Length; i++)
             {
                 if (Characters[i] == symbol)
