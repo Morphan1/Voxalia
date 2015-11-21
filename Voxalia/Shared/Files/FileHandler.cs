@@ -182,16 +182,17 @@ namespace Voxalia.Shared.Files
         /// <returns>The file's data, as a byte array.</returns>
         public byte[] ReadBytes(string filename)
         {
-            int ind = FileIndex(filename);
+            string fname = CleanFileName(filename);
+            int ind = FileIndex(fname);
             if (ind == -1)
             {
-                if (File.Exists(filename))
+                if (File.Exists(fname))
                 {
-                    return File.ReadAllBytes(filename);
+                    return File.ReadAllBytes(fname);
                 }
                 else
                 {
-                    throw new UnknownFileException(CleanFileName(filename));
+                    throw new UnknownFileException(fname);
                 }
             }
             PakkedFile file = Files[ind];
