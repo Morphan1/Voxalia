@@ -127,6 +127,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         BlockInternal bi = Blocks[BlockIndex(x, y, z)];
                         if ((Material)bi.BlockMaterial != Material.AIR)
                         {
+                            bi.BlockLocalData = (byte)(bi.BlockLocalData & ~((int)BlockFlags.EDITED));
                             Location forpos = new Location(corner.X + x, corner.Y + y, corner.Z + z);
                             Location chunkpos = tregion.ChunkLocFor(forpos);
                             Chunk ch = tregion.LoadChunkNoPopulate(chunkpos);
