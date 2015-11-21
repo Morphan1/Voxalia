@@ -33,4 +33,11 @@ namespace Voxalia.Shared
         FLYING = 0,
         MASS = 1
     }
+
+    public enum DefaultSound : byte
+    {
+        STEP = 0,
+        PLACE = 1,
+        BREAK = 2
+    }
 }

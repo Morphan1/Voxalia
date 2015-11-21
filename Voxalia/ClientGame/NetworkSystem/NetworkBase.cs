@@ -252,6 +252,9 @@ namespace Voxalia.ClientGame.NetworkSystem
                     case 32:
                         packet = new FlagEntityPacketIn();
                         break;
+                    case 33:
+                        packet = new DefaultSoundPacketIn();
+                        break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);
                 }

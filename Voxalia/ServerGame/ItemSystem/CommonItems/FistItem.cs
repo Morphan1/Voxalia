@@ -5,6 +5,7 @@ using BEPUphysics;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
@@ -49,6 +50,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     if (mat != Material.AIR) // TODO: IsBreakable?
                     {
                         player.TheRegion.BreakNaturally(block);
+                        player.Network.SendPacket(new DefaultSoundPacketOut(block, DefaultSound.BREAK, (byte)mat.Sound()));
                         player.LastBlockBreak = player.TheRegion.GlobalTickTime;
                     }
                 }

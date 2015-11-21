@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Voxalia.Shared;
 using Voxalia.ClientGame.UISystem;
+using Voxalia.ClientGame.NetworkSystem.PacketsIn;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 using BEPUutilities;
 using BEPUphysics;
@@ -419,25 +420,8 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
-            float pitch = (float)(Utilities.UtilRandom.NextDouble() * 0.1 + 1.0 - 0.05);
-            float volume = (float)Math.Min(((Utilities.UtilRandom.NextDouble() * 0.1 + 1.0 - 0.1) * 0.14 * GetVelocity().Length()), 1.0);
-            // TODO: registry of some form?
-            switch (sound)
-            {
-                case MaterialSound.GRASS:
-                case MaterialSound.SAND:
-                case MaterialSound.LEAVES:
-                case MaterialSound.WOOD:
-                case MaterialSound.METAL:
-                case MaterialSound.DIRT:
-                case MaterialSound.STONE:
-                case MaterialSound.SNOW:
-                    // TODO: Don't manually search the sound list every time!
-                    TheClient.Sounds.Play(TheClient.Sounds.GetSound("sfx/steps/humanoid/" + sound.ToString().ToLower() + (Utilities.UtilRandom.Next(4) + 1)), false, GetPosition(), pitch, volume);
-                    break;
-                default:
-                    return;
-            }
+            new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(GetPosition(), sound, 1f, 0.14f * (float)GetVelocity().Length());
+            //0.14 * GetVelocity().Length()
             SoundTimeout = (Utilities.UtilRandom.NextDouble() * 0.2 + 1.0) / GetVelocity().Length();
         }
 

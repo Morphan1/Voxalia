@@ -89,7 +89,7 @@ vec4 getGodRay()
 {
 	vec4 c = vec4(0.0);
 	vec2 tcd = vec2(f_texcoord - lightPos);
-	tcd *= 1.0 / float(numSamples) * density;
+	tcd *= density / float(numSamples);
 	float illuminationDecay = 1.0;
 	vec2 tc = f_texcoord;
 	for (int i = 0; i < numSamples; i++)

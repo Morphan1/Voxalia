@@ -50,7 +50,9 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                             block + new Location(0.5, 0.5, 0.501), player.TheRegion.Collision.ShouldCollide);
                         if (!hit.Hit)
                         {
-                            player.TheRegion.SetBlockMaterial(block, (Material)item.Datum);
+                            Material matx = (Material)item.Datum;
+                            player.TheRegion.SetBlockMaterial(block, matx);
+                            player.Network.SendPacket(new DefaultSoundPacketOut(block, DefaultSound.PLACE, (byte)matx.Sound()));
                             item.Count = item.Count - 1;
                             if (item.Count <= 0)
                             {
@@ -86,6 +88,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void ReleaseClick(Entity entity, ItemStack item)
         {
+            // TODO: Possible store fist item info reference?
             entity.TheServer.Items.Infos["fist"].ReleaseClick(entity, item);
         }
 
