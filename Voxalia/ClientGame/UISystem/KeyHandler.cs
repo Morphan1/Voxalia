@@ -37,7 +37,8 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.C, "stance stand");
             BindKey(Key.P, "toggle g_firstperson");
             BindKey(Key.Space, "+upward");
-            BindKey(Key.LShift, "+walk");
+            BindKey(Key.CapsLock, "+walk");
+            BindKey(Key.ShiftLeft, "+sprint");
             BindKey(Key.F1, "toggle u_showhud");
             BindKey(Key.F2, "toggle u_highlight_targetblock;toggle u_highlight_placeblock");
             BindKey(Key.F12, "screenshot");

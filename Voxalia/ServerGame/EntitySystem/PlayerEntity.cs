@@ -44,6 +44,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool Leftward = false;
         public bool Rightward = false;
         public bool Walk = false;
+        public bool Sprint = false;
 
         public bool Click = false;
         public bool AltClick = false;
@@ -352,7 +353,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 pup = false;
             }
-            float speedmod = 1;
+            float speedmod = Sprint ? 1.5f : (Walk ? 0.5f : 1f);
             if (ItemDoSpeedMod)
             {
                 speedmod *= ItemSpeedMod;

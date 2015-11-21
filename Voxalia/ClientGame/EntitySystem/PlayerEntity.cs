@@ -92,6 +92,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Click = false;
         public bool AltClick = false;
         public bool Walk = false;
+        public bool Sprint = false;
 
         public float tmass = 100;
 
@@ -237,7 +238,7 @@ namespace Voxalia.ClientGame.EntitySystem
                         delta = uis.GlobalTimeLocal - prev.GlobalTimeLocal;
                         SetBodyMovement(NMTWOCBody, prev);
                     }
-                    SetMoveSpeed(NMTWOCBody);
+                    SetMoveSpeed(NMTWOCBody, uis);
                     if (!_pup)
                     {
                         NMTWOTryToJump(uis);
@@ -279,6 +280,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 ID = cPacketID++,
                 Upward = Upward,
+                Sprint = Sprint,
                 Walk = Walk,
                 Forward = Forward,
                 Backward = Backward,
@@ -301,7 +303,8 @@ namespace Voxalia.ClientGame.EntitySystem
             KeysPacketData kpd = (Forward ? KeysPacketData.FORWARD : 0) | (Backward ? KeysPacketData.BACKWARD : 0)
                  | (Leftward ? KeysPacketData.LEFTWARD : 0) | (Rightward ? KeysPacketData.RIGHTWARD : 0)
                  | (Upward ? KeysPacketData.UPWARD : 0) | (Walk ? KeysPacketData.WALK : 0)
-                  | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK : 0);
+                  | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK : 0)
+                  | (Click ? KeysPacketData.SPRINT: 0);
             TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction));
         }
 
@@ -366,9 +369,9 @@ namespace Voxalia.ClientGame.EntitySystem
             }
         }
 
-        public void SetMoveSpeed(CharacterController cc)
+        public void SetMoveSpeed(CharacterController cc, UserInputSet uis)
         {
-            float speedmod = 1f;
+            float speedmod = uis.Sprint ? 1.5f : (uis.Walk ? 0.5f : 1f);
             if (Click)
             {
                 ItemStack item = TheClient.GetItemForSlot(TheClient.QuickBarPos);
@@ -463,8 +466,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 Direction.Pitch = -89.9f;
             }
             TryToJump();
-            SetMoveSpeed(CBody);
             UpdateLocalMovement();
+            SetMoveSpeed(CBody, lUIS);
             FlyForth(CBody, TheRegion.Delta);
             SetBodyMovement(CBody, lUIS);
             PlayRelevantSounds();
@@ -727,6 +730,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool pup;
 
         public bool Walk;
+
+        public bool Sprint;
 
         public bool Forward;
 
