@@ -7,6 +7,7 @@ using Frenetic.CommandSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ServerGame.ServerMainSystem;
 using System.Threading.Tasks;
+using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
 {
@@ -39,7 +40,17 @@ namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
             entry.Good("Generating new server...");
             TheClient.LocalServer = new Server();
             Server.Central = TheClient.LocalServer;
-            Task.Factory.StartNew(() => { TheClient.LocalServer.StartUp(() => { entry.Finished = true; }); });
+            Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    TheClient.LocalServer.StartUp(() => { entry.Finished = true; });
+                }
+                catch (Exception ex)
+                {
+                    SysConsole.Output("Running local server", ex);
+                }
+            });
         }
     }
 }

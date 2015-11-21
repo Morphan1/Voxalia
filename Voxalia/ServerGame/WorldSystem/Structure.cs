@@ -107,7 +107,31 @@ namespace Voxalia.ServerGame.WorldSystem
                     for (int z = 0; z < Size.Z; z++)
                     {
                         BlockInternal bi = Blocks[BlockIndex(x, y, z)];
-                        tregion.SetBlockMaterial(corner + new Location(x, y, z), (Material)bi.BlockMaterial, bi.BlockData, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED));
+                        if ((Material)bi.BlockMaterial != Material.AIR)
+                        {
+                            tregion.SetBlockMaterial(corner + new Location(x, y, z), (Material)bi.BlockMaterial, bi.BlockData, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED));
+                        }
+                    }
+                }
+            }
+        }
+
+        public void PasteCustom(Region tregion, Location corner)
+        {
+            for (int x = 0; x < Size.X; x++)
+            {
+                for (int y = 0; y < Size.Y; y++)
+                {
+                    for (int z = 0; z < Size.Z; z++)
+                    {
+                        BlockInternal bi = Blocks[BlockIndex(x, y, z)];
+                        if ((Material)bi.BlockMaterial != Material.AIR)
+                        {
+                            Location forpos = new Location(corner.X + x, corner.Y + y, corner.Z + z);
+                            Location chunkpos = tregion.ChunkLocFor(forpos);
+                            Chunk ch = tregion.LoadChunkNoPopulate(chunkpos);
+                            ch.SetBlockAt((int)(forpos.X - chunkpos.X * Chunk.CHUNK_SIZE), (int)(forpos.Y - chunkpos.Y * Chunk.CHUNK_SIZE), (int)(forpos.Z - chunkpos.Z * Chunk.CHUNK_SIZE), bi);
+                        }
                     }
                 }
             }

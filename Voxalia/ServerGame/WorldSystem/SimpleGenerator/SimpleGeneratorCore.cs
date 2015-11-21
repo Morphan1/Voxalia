@@ -15,6 +15,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         public const float OreTypeMapSize = 150;
         public const float OreMapTolerance = 0.90f;
         public const float OreMapThickTolerance = 0.94f;
+        public Structure tempTree = new Structure(Program.Files.ReadBytes("structures/tree.str"));
         
         public Material GetMatType(int seed2, int seed3, int seed4, int seed5, int x, int y, int z)
         {
@@ -268,44 +269,10 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000));
                         if (spotr.Next(75) == 1) // TODO: Efficiency!
                         {
-                            int cap = Math.Min(top + 5, 30);
-                            for (int z = Math.Max(top, 0); z < cap; z++)
+                            chunk.OwningRegion.TheServer.Schedule.ScheduleSyncTask(() =>
                             {
-                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.LOG, 39, 0);
-                            }
-                            cap = Math.Min(top + 7, 30);
-                            for (int z = Math.Max(top + 5, 0); z < cap; z++)
-                            {
-                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.LEAVES1, 127, 0);
-                            }
-                            cap = Math.Min(top + 7, 30);
-                            for (int z = Math.Max(top + 3, 0); z < cap; z++)
-                            {
-                                int xty = x;
-                                int yty = y;
-                                int zty = z;
-                                chunk.OwningRegion.TheServer.Schedule.ScheduleSyncTask(() =>
-                                {
-                                    // TODO: Separate generator -> structure file based!
-                                    int width = 2;
-                                    if (zty == top + 3 || zty == top + 6)
-                                    {
-                                        width = 1;
-                                    }
-                                    int xcap = xty + 1 + width;
-                                    for (int sx = xty - width; sx < xcap; sx++)
-                                    {
-                                        int ycap = yty + 1 + width;
-                                        for (int sy = yty - width; sy < ycap; sy++)
-                                        {
-                                            if (sy != yty || sx != xty)
-                                            {
-                                                SpecialSetBlockAt(chunk, sx, sy, zty, new BlockInternal((ushort)Material.LEAVES1, 127, 0));
-                                            }
-                                        }
-                                    }
-                                });
-                            }
+                                tempTree.PasteCustom(chunk.OwningRegion, new Location(cx - (float)tempTree.Size.X / 2f, cy - (float)tempTree.Size.Y / 2f, hheight));
+                            });
                         }
                     }
                 }
