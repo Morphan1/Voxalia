@@ -25,6 +25,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem
             Register(new BlockfloodPlayerCommand());
             Register(new BlockshapePlayerCommand());
             Register(new BlockshipPlayerCommand());
+            Register(new StructurePlayerCommand());
         }
 
         public void Register(AbstractPlayerCommand cmd)

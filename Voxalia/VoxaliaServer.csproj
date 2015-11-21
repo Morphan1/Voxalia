@@ -192,6 +192,7 @@
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\StancePlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\UsePlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\RegionCommands\BlockshipPlayerCommand.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\RegionCommands\StructurePlayerCommand.cs" />
     <Compile Include="ServerGame\PluginSystem\Plugin.cs" />
     <Compile Include="ServerGame\PluginSystem\PluginLoader.cs" />
     <Compile Include="ServerGame\PluginSystem\PluginManager.cs" />
@@ -225,6 +226,7 @@
     <Compile Include="ServerGame\ServerMainSystem\ServerPhysics.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerBase.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerTick.cs" />
+    <Compile Include="ServerGame\WorldSystem\Structure.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
