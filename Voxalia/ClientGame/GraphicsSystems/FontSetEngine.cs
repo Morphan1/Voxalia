@@ -570,7 +570,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     start = i;
                 }
-                else if (MeasureFancyText(text.Substring(start, i - start)) > maxX)
+                else if (MeasureFancyText(text.Substring(start, i - start)) > maxX) // TODO: Don't remeasure every time, only measure the added bits... requires a fair bit of work, be warned!
                 {
                     int x = i;
                     bool safe = false;

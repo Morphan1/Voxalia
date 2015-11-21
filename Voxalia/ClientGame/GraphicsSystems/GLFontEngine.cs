@@ -297,14 +297,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public RectangleF RectForSymbol(char symbol)
         {
             // TODO: This is eating power. Add special cases for common symbols!
-            for (int i = 0; i < Characters.Length; i++)
+            int loc = Characters.IndexOf(symbol);
+            if (loc < 0)
             {
-                if (Characters[i] == symbol)
-                {
-                    return CharacterLocations[i];
-                }
+                return CharacterLocations[0];
             }
-            return CharacterLocations[0];
+            return CharacterLocations[loc];
         }
 
         public int TexZ = 0;
