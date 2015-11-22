@@ -8,6 +8,7 @@ using BEPUphysics.Character;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.Shared.Collision;
 using Voxalia.ClientGame.OtherSystems;
+using Voxalia.ClientGame.NetworkSystem.PacketsIn;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -97,7 +98,30 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             return TheClient.TheRegion.Collision.ShouldCollide(entry);
         }
-        
+
+        public double SoundTimeout = 0;
+
+        public void PlayRelevantSounds()
+        {
+            if (SoundTimeout > 0)
+            {
+                SoundTimeout -= TheRegion.Delta;
+                return;
+            }
+            if (GetVelocity().LengthSquared() < 0.2)
+            {
+                return;
+            }
+            Material mat = TheRegion.GetBlockMaterial(GetPosition() + new Location(0, 0, -0.05f));
+            MaterialSound sound = mat.Sound();
+            if (sound == MaterialSound.NONE)
+            {
+                return;
+            }
+            new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(GetPosition(), sound, 1f, 0.14f * (float)GetVelocity().Length());
+            SoundTimeout = (Utilities.UtilRandom.NextDouble() * 0.2 + 1.0) / GetVelocity().Length();
+        }
+
         public override void Tick()
         {
             while (Direction.Yaw < 0)
@@ -166,6 +190,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 Body.LinearVelocity = new Vector3(0, 0, 0);
             }
+            PlayRelevantSounds();
             aHTime += TheClient.Delta;
             aTTime += TheClient.Delta;
             aLTime += TheClient.Delta;

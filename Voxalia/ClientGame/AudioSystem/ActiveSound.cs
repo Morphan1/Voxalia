@@ -49,13 +49,17 @@ namespace Voxalia.ClientGame.AudioSystem
                 }
                 if (!Position.IsNaN())
                 {
+                    Vector3 zero = Vector3.Zero;
                     Vector3 vec = ClientUtilities.Convert(Position);
+                    AL.Source(Src, ALSource3f.Direction, ref zero);
+                    AL.Source(Src, ALSource3f.Velocity, ref zero);
                     AL.Source(Src, ALSource3f.Position, ref vec);
-                    AL.Source(Src, ALSourceb.SourceRelative, false);
+                    AL.Source(Src, ALSourceb.SourceRelative, true);
+                    AL.Source(Src, ALSourcef.EfxAirAbsorptionFactor, 10f);
                 }
                 else
                 {
-                    AL.Source(Src, ALSourceb.SourceRelative, true);
+                    AL.Source(Src, ALSourceb.SourceRelative, false);
                 }
                 Exists = true;
             }

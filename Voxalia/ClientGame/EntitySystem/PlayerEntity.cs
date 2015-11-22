@@ -421,7 +421,6 @@ namespace Voxalia.ClientGame.EntitySystem
                 return;
             }
             new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(GetPosition(), sound, 1f, 0.14f * (float)GetVelocity().Length());
-            //0.14 * GetVelocity().Length()
             SoundTimeout = (Utilities.UtilRandom.NextDouble() * 0.2 + 1.0) / GetVelocity().Length();
         }
 
