@@ -16,7 +16,7 @@ namespace Voxalia.Shared
         SLIPGOO = 8,
         SNOW = 9,
         SMOKE = 10,
-        LOG = 11,
+        LOG_OAK = 11,
         TALLGRASS = 12,
         SAND = 13,
         STEEL_SOLID = 14,
@@ -51,7 +51,7 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f, FogColor = new Location(0, 1, 0), Hardness = 5 },
                 new MaterialInfo((int)Material.SNOW) { SpeedMod = 0.8f, Sound = MaterialSound.SNOW },
                 new MaterialInfo((int)Material.SMOKE) { Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.8) },
-                new MaterialInfo((int)Material.LOG) { SpeedMod = 1.1f, Sound = MaterialSound.WOOD },
+                new MaterialInfo((int)Material.LOG_OAK) { SpeedMod = 1.1f, Sound = MaterialSound.WOOD },
                 new MaterialInfo((int)Material.TALLGRASS) { Solidity = MaterialSolidity.SPECIAL, Opaque = false, Hardness = 1 },
                 new MaterialInfo((int)Material.SAND) { Sound = MaterialSound.SAND },
                 new MaterialInfo((int)Material.STEEL_SOLID) { SpeedMod = 1.25f, Sound = MaterialSound.METAL, Hardness = 30 },
@@ -70,8 +70,8 @@ namespace Voxalia.Shared
             mats[(int)Material.DEBUG].TID[(int)MaterialSide.XP] = MAX_TEXTURES - 4; // db_xp
             mats[(int)Material.DEBUG].TID[(int)MaterialSide.YP] = MAX_TEXTURES - 5; // db_yp
             mats[(int)Material.DEBUG].TID[(int)MaterialSide.YM] = MAX_TEXTURES - 6; // db_ym
-            mats[(int)Material.LOG].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 7; // wood_top
-            mats[(int)Material.LOG].TID[(int)MaterialSide.BOTTOM] = MAX_TEXTURES - 7; // wood_top
+            mats[(int)Material.LOG_OAK].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 7; // wood_top
+            mats[(int)Material.LOG_OAK].TID[(int)MaterialSide.BOTTOM] = MAX_TEXTURES - 7; // wood_top
             mats[(int)Material.GRASS_PLAINS].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 8; // grass plains (top)
             mats[(int)Material.GRASS_PLAINS].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
             ALL_MATS.AddRange(mats);

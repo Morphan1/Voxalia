@@ -874,12 +874,12 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     if (max_subbreaks > 0
                         && !((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.EDITED)
-                        && (mat == Material.LOG || mat == Material.LEAVES1))
+                        && (mat == Material.LOG_OAK || mat == Material.LEAVES1))
                     {
                         foreach (Location loc in FellLocs)
                         {
                             Material m2 = GetBlockMaterial(pos + loc);
-                            if (m2 == Material.LOG || m2 == Material.LEAVES1)
+                            if (m2 == Material.LOG_OAK || m2 == Material.LEAVES1)
                             {
                                 BreakNaturally(pos + loc, regentrans, max_subbreaks - 1);
                             }
