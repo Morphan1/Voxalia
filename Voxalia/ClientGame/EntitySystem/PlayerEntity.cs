@@ -37,6 +37,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool IsFlying = false;
         public float PreFlyMass = 0;
 
+        public Stance DesiredStance = Stance.Standing;
+
         public void Fly()
         {
             if (IsFlying)
@@ -94,6 +96,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool AltClick = false;
         public bool Walk = false;
         public bool Sprint = false;
+        public bool Downward = false;
 
         public float tmass = 100;
 
@@ -290,6 +293,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Direction = Direction,
                 Position = GetPosition(),
                 Velocity = GetVelocity(),
+                Downward = Downward,
                 GlobalTimeRemote = lGTT,
                 pup = pup,
                 GlobalTimeLocal = TheRegion.GlobalTickTimeLocal
@@ -305,7 +309,7 @@ namespace Voxalia.ClientGame.EntitySystem
                  | (Leftward ? KeysPacketData.LEFTWARD : 0) | (Rightward ? KeysPacketData.RIGHTWARD : 0)
                  | (Upward ? KeysPacketData.UPWARD : 0) | (Walk ? KeysPacketData.WALK : 0)
                   | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK : 0)
-                  | (Click ? KeysPacketData.SPRINT: 0);
+                  | (Sprint ? KeysPacketData.SPRINT: 0) | (Downward ? KeysPacketData.DOWNWARD : 0);
             TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction));
         }
 
@@ -334,6 +338,14 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             cc.ViewDirection = Utilities.ForwardVector_Deg(uis.Direction.Yaw, uis.Direction.Pitch).ToBVector();
             cc.HorizontalMotionConstraint.MovementDirection = movement;
+            if (uis.Downward)
+            {
+                cc.StanceManager.DesiredStance = Stance.Crouching;
+            }
+            else
+            {
+                cc.StanceManager.DesiredStance = DesiredStance;
+            }
         }
 
         public void FlyForth(CharacterController cc, UserInputSet uis, double delta)
@@ -346,8 +358,13 @@ namespace Voxalia.ClientGame.EntitySystem
                     move.Z = 1;
                     move = move.Normalize();
                 }
+                else if (uis.Downward)
+                {
+                    move.Z = -1;
+                    move = move.Normalize();
+                }
                 Location forw = Utilities.RotateVector(move, Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                cc.Body.Position += (forw * delta * CBStandSpeed * 2 * (uis.Sprint ? 2 : 1)).ToBVector();
+                cc.Body.Position += (forw * delta * CBStandSpeed * 2 * (uis.Sprint ? 2 : (uis.Walk ? 0.5: 1))).ToBVector();
                 cc.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 cc.Body.LinearVelocity = new Vector3(0, 0, 0);
             }
@@ -728,6 +745,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Leftward;
 
         public bool Rightward;
+
+        public bool Downward;
 
         public Location Position;
 

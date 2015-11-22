@@ -45,6 +45,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool Rightward = false;
         public bool Walk = false;
         public bool Sprint = false;
+        public bool Downward = false;
 
         public bool Click = false;
         public bool AltClick = false;
@@ -317,6 +318,8 @@ namespace Voxalia.ServerGame.EntitySystem
             TheRegion.SendToAll(new FlagEntityPacketOut(this, EntityFlag.MASS, PreFlyMass));
         }
 
+        public Stance DesiredStance = Stance.Standing;
+
         public override void Tick()
         {
             if (!IsSpawned)
@@ -385,19 +388,31 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 movement.Y = 1;
             }
-            if (Upward)
+            if (Upward && IsFlying)
             {
                 movement.Z = 1;
+            }
+            else if (Downward && IsFlying)
+            {
+                movement.Z = -1;
             }
             if (movement.LengthSquared() > 0)
             {
                 movement.Normalize();
             }
+            if (Downward)
+            {
+                CBody.StanceManager.DesiredStance = Stance.Crouching;
+            }
+            else
+            {
+                CBody.StanceManager.DesiredStance = DesiredStance;
+            }
             CBody.HorizontalMotionConstraint.MovementDirection = new Vector2(movement.X, movement.Y);
             if (IsFlying)
             {
                 Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, movement.Z), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Sprint ? 2: 1));
+                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Sprint ? 2: (Walk ? 0.5 : 1)));
                 CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 Body.LinearVelocity = new Vector3(0, 0, 0);
             }

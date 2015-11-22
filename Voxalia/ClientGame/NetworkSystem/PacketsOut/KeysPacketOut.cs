@@ -25,6 +25,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsOut
         WALK = 32,
         CLICK = 64,
         ALTCLICK = 128,
-        SPRINT = 256
+        SPRINT = 256,
+        DOWNWARD = 512
     }
 }

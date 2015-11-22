@@ -112,6 +112,7 @@
     <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\AttackCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BindblockCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\MovedownCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\UnbindCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BindCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\SprintCommand.cs" />

@@ -10,7 +10,8 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             Name = "stance";
             Silent = true;
         }
-
+        
+        // TODO: Clientside?
         public override void Execute(PlayerCommandEntry entry)
         {
             if (entry.InputArguments.Count < 1)
@@ -22,11 +23,11 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             // TOOD: Implement!
             if (stance == "stand")
             {
-                entry.Player.CBody.StanceManager.DesiredStance = Stance.Standing;
+                entry.Player.DesiredStance = Stance.Standing;
             }
             else if (stance == "crouch")
             {
-                entry.Player.CBody.StanceManager.DesiredStance = Stance.Crouching;
+                entry.Player.DesiredStance = Stance.Crouching;
             }
             else
             {
