@@ -174,11 +174,19 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         int n = spotr.Next(50);
                         if (n == 1)
                         {
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, top)] = new BlockInternal((ushort)Material.TALLGRASS, 52, 0);
+                            Material tmat = biome.TallGrassBlock();
+                            if (tmat != Material.AIR)
+                            {
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, top)] = new BlockInternal((ushort)tmat, 52, 0);
+                            }
                         }
                         else if (n == 2)
                         {
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, top)] = new BlockInternal((ushort)Material.TALLGRASS, 127, 0);
+                            Material tmat = biome.TallGrassBlock();
+                            if (tmat != Material.AIR)
+                            {
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, top)] = new BlockInternal((ushort)tmat, 127, 0);
+                            }
                         }
                     }
                     // Smooth terrain cap

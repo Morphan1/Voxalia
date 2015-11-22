@@ -23,5 +23,10 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator.Biomes
         {
             return base.BaseBlock();
         }
+
+        public override Material TallGrassBlock()
+        {
+            return Material.AIR; // TODO: Desert plants!
+        }
     }
 }

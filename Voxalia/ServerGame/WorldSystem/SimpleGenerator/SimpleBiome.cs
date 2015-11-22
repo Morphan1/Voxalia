@@ -23,6 +23,11 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             return Material.STONE;
         }
 
+        public virtual Material TallGrassBlock()
+        {
+            return Material.TALLGRASS;
+        }
+
         public virtual float HeightMod()
         {
             return 1;

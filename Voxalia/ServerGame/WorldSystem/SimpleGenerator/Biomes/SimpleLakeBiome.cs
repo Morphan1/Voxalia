@@ -18,5 +18,10 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator.Biomes
         {
             return Material.SANDSTONE;
         }
+
+        public override Material TallGrassBlock()
+        {
+            return Material.AIR;
+        }
     }
 }
