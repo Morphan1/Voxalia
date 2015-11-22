@@ -101,11 +101,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
             TexCoords = Texs.ToArray();
             Indices = Inds.ToArray();
             Colors = Cols.ToArray();
-            Vecs = new List<Vector3>(100);
-            Norms = new List<Vector3>(100);
-            Texs = new List<Vector3>(100);
-            Inds = new List<uint>(100);
-            Cols = new List<Vector4>(100);
+            Vecs.Clear();
+            Norms.Clear();
+            Texs.Clear();
+            Inds.Clear();
+            Cols.Clear();
             GL.BindVertexArray(0);
             // Vertex buffer
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
