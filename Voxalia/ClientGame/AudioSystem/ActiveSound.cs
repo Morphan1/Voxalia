@@ -54,12 +54,12 @@ namespace Voxalia.ClientGame.AudioSystem
                     AL.Source(Src, ALSource3f.Direction, ref zero);
                     AL.Source(Src, ALSource3f.Velocity, ref zero);
                     AL.Source(Src, ALSource3f.Position, ref vec);
-                    AL.Source(Src, ALSourceb.SourceRelative, true);
-                    AL.Source(Src, ALSourcef.EfxAirAbsorptionFactor, 10f);
+                    AL.Source(Src, ALSourceb.SourceRelative, false);
+                    AL.Source(Src, ALSourcef.EfxAirAbsorptionFactor, 1f);
                 }
                 else
                 {
-                    AL.Source(Src, ALSourceb.SourceRelative, false);
+                    AL.Source(Src, ALSourceb.SourceRelative, true);
                 }
                 Exists = true;
             }
