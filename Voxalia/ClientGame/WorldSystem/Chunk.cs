@@ -84,6 +84,13 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                 }
             }
+            else
+            {
+                for (int i = 0; i < BlocksInternal.Length; i++)
+                {
+                    BlocksInternal[i].BlockLocalData = 255;
+                }
+            }
         }
         
         public FullChunkObject FCO = null;

@@ -72,6 +72,8 @@
     <Compile Include="Shared\BlockShapes\BSD39a76.cs" />
     <Compile Include="Shared\BlockShapes\BSD53_54.cs" />
     <Compile Include="Shared\BlockShapes\BSD52a127.cs" />
+    <Compile Include="Shared\BlockShapes\BSD56.cs" />
+    <Compile Include="Shared\BlockShapes\BSD55.cs" />
     <Compile Include="Shared\Collision\ConvexFCOPairHandler.cs" />
     <Compile Include="Shared\Collision\FCOContactManifold.cs" />
     <Compile Include="Shared\Collision\ReusableGenericCollidable.cs" />

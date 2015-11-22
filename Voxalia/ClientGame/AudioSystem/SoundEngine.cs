@@ -26,7 +26,7 @@ namespace Voxalia.ClientGame.AudioSystem
         {
             TheClient = tclient;
             CVars = cvar;
-            Context = new AudioContext();
+            Context = new AudioContext(AudioContext.DefaultDevice, 0, 0, false, true);
             Context.MakeCurrent();
             Effects = new Dictionary<string, SoundEffect>();
             PlayingNow = new List<ActiveSound>();
