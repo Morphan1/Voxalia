@@ -69,6 +69,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Shared\BlockShapes\BSD58.cs" />
+    <Compile Include="Shared\BlockShapes\BSD57.cs" />
     <Compile Include="Shared\BlockShapes\BSD39a76.cs" />
     <Compile Include="Shared\BlockShapes\BSD53_54.cs" />
     <Compile Include="Shared\BlockShapes\BSD52a127.cs" />

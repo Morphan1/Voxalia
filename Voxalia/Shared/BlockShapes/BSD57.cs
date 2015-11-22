@@ -5,31 +5,31 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace Voxalia.Shared.BlockShapes
 {
-    public class BSD56 : BlockShapeDetails
+    public class BSD57: BlockShapeDetails
     {
         public override List<Vector3> GetVertices(Vector3 pos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)
         {
             List<Vector3> Vertices = new List<Vector3>();
             if (!TOP)
             {
-                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
             }
             if (!BOTTOM)
             {
-                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
-                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
                 Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z));
+                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
             }
-            if (!XM)
+            if (!XP)
             {
-                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
-                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
-                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
-                Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
-                Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
+                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
+                Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
             }
             if (!YM)
             {
@@ -40,12 +40,12 @@ namespace Voxalia.Shared.BlockShapes
                 Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
                 Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
             }
-            Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z + 1));
-            Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
-            Vertices.Add(new Vector3(pos.X, pos.Y + 1, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z));
-            Vertices.Add(new Vector3(pos.X + 1, pos.Y, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z + 1));
+            Vertices.Add(new Vector3(pos.X, pos.Y, pos.Z));
+            Vertices.Add(new Vector3(pos.X + 1, pos.Y + 1, pos.Z));
             return Vertices;
         }
 
@@ -66,11 +66,11 @@ namespace Voxalia.Shared.BlockShapes
                     Norms.Add(new Vector3(0, 0, -1));
                 }
             }
-            if (!XM)
+            if (!XP)
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    Norms.Add(new Vector3(-1, 0, 0));
+                    Norms.Add(new Vector3(1, 0, 0));
                 }
             }
             if (!YM)
@@ -82,7 +82,7 @@ namespace Voxalia.Shared.BlockShapes
             }
             for (int i = 0; i < 6; i++)
             {
-                Norms.Add(new Vector3(0.7071f, 0.7071f, 0));
+                Norms.Add(new Vector3(-0.7071f, 0.7071f, 0));
             }
             return Norms;
         }
@@ -93,7 +93,7 @@ namespace Voxalia.Shared.BlockShapes
             if (!TOP)
             {
                 int tID_TOP = mat.TextureID(MaterialSide.TOP);
-                TCoords.Add(new Vector3(0, 1, tID_TOP));
+                TCoords.Add(new Vector3(0, 0, tID_TOP));
                 TCoords.Add(new Vector3(1, 1, tID_TOP));
                 TCoords.Add(new Vector3(1, 0, tID_TOP));
             }
@@ -102,17 +102,17 @@ namespace Voxalia.Shared.BlockShapes
                 int tID_BOTTOM = mat.TextureID(MaterialSide.BOTTOM);
                 TCoords.Add(new Vector3(1, 0, tID_BOTTOM));
                 TCoords.Add(new Vector3(1, 1, tID_BOTTOM));
-                TCoords.Add(new Vector3(0, 1, tID_BOTTOM));
+                TCoords.Add(new Vector3(0, 0, tID_BOTTOM));
             }
-            if (!XM)
+            if (!XP)
             {
-                int tID_XM = mat.TextureID(MaterialSide.XM);
-                TCoords.Add(new Vector3(1, 1, tID_XM));
-                TCoords.Add(new Vector3(0, 1, tID_XM));
-                TCoords.Add(new Vector3(0, 0, tID_XM));
-                TCoords.Add(new Vector3(1, 1, tID_XM));
-                TCoords.Add(new Vector3(0, 0, tID_XM));
-                TCoords.Add(new Vector3(1, 0, tID_XM));
+                int tID_XP = mat.TextureID(MaterialSide.XP);
+                TCoords.Add(new Vector3(1, 0, tID_XP));
+                TCoords.Add(new Vector3(1, 1, tID_XP));
+                TCoords.Add(new Vector3(0, 1, tID_XP));
+                TCoords.Add(new Vector3(0, 0, tID_XP));
+                TCoords.Add(new Vector3(1, 0, tID_XP));
+                TCoords.Add(new Vector3(0, 1, tID_XP));
             }
             if (!YM)
             {
@@ -124,19 +124,19 @@ namespace Voxalia.Shared.BlockShapes
                 TCoords.Add(new Vector3(1, 0, tID_YM));
                 TCoords.Add(new Vector3(0, 1, tID_YM));
             }
-            int tID_YP = mat.TextureID(MaterialSide.YP);
-            TCoords.Add(new Vector3(1, 0, tID_YP));
-            TCoords.Add(new Vector3(0, 0, tID_YP));
-            TCoords.Add(new Vector3(0, 1, tID_YP));
-            TCoords.Add(new Vector3(0, 1, tID_YP));
-            TCoords.Add(new Vector3(1, 1, tID_YP));
-            TCoords.Add(new Vector3(1, 0, tID_YP));
+            int tID_XM = mat.TextureID(MaterialSide.XM);
+            TCoords.Add(new Vector3(0, 0, tID_XM));
+            TCoords.Add(new Vector3(1, 0, tID_XM));
+            TCoords.Add(new Vector3(1, 1, tID_XM));
+            TCoords.Add(new Vector3(0, 0, tID_XM));
+            TCoords.Add(new Vector3(1, 1, tID_XM));
+            TCoords.Add(new Vector3(0, 1, tID_XM));
             return TCoords;
         }
 
         public override bool OccupiesXP()
         {
-            return false;
+            return true;
         }
 
         public override bool OccupiesYP()
@@ -146,7 +146,7 @@ namespace Voxalia.Shared.BlockShapes
 
         public override bool OccupiesXM()
         {
-            return true;
+            return false;
         }
 
         public override bool OccupiesYM()
