@@ -10,6 +10,7 @@ using BEPUphysics.CollisionShapes;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.NetworkSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -38,7 +39,7 @@ namespace Voxalia.ServerGame.EntitySystem
             ConvexEntityShape = (ConvexShape)CalculateHullShape(BGETraceMode.CONVEX, out shapeOffs);
             if (TraceMode == BGETraceMode.PERFECT)
             {
-                Shape = CalculateHullShape(BGETraceMode.PERFECT, out shapeOffs);
+                Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks);
             }
             else
             {

@@ -25,7 +25,7 @@ namespace Voxalia.Shared.Collision
         public static void RegisterMe()
         {
             NarrowPhasePairFactory<ConvexFCOPairHandler> fact = new NarrowPhasePairFactory<ConvexFCOPairHandler>();
-            //NarrowPhasePairFactory<MeshFCOPairHandler> fact2 = new NarrowPhasePairFactory<MeshFCOPairHandler>();
+            //NarrowPhasePairFactory<ConcaveFCOPairHandler> fact2 = new NarrowPhasePairFactory<ConcaveFCOPairHandler>();
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<BoxShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<SphereShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<CapsuleShape>), typeof(FullChunkObject)), fact);

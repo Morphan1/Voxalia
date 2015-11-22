@@ -12,6 +12,7 @@ using Voxalia.ClientGame.GraphicsSystems;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.OtherSystems;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -40,7 +41,7 @@ namespace Voxalia.ClientGame.EntitySystem
             ConvexEntityShape = (ConvexShape)CalculateHullShape(BGETraceMode.CONVEX, out shapeOffs);
             if (TraceMode == BGETraceMode.PERFECT)
             {
-                Shape = CalculateHullShape(BGETraceMode.PERFECT, out shapeOffs);
+                Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks);
             }
             else
             {

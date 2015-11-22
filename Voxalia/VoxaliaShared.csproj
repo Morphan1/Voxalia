@@ -78,6 +78,8 @@
     <Compile Include="Shared\BlockShapes\BSD55.cs" />
     <Compile Include="Shared\Collision\ConvexFCOPairHandler.cs" />
     <Compile Include="Shared\Collision\FCOContactManifold.cs" />
+    <Compile Include="Shared\Collision\MobileChunkCollidable.cs" />
+    <Compile Include="Shared\Collision\MobileChunkShape.cs" />
     <Compile Include="Shared\Collision\ReusableGenericCollidable.cs" />
     <Compile Include="Shared\Collision\Vector3i.cs" />
     <Compile Include="Shared\Model3D.cs" />
