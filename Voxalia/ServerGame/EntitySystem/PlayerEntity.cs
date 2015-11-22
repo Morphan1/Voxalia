@@ -368,7 +368,7 @@ namespace Voxalia.ServerGame.EntitySystem
             CBody.AirForce = CBAirForce * frictionmod * Mass;
             CBody.TractionForce = CBTractionForce * frictionmod * Mass;
             CBody.VerticalMotionConstraint.MaximumGlueForce = CBGlueForce * Mass;
-            Vector2 movement = new Vector2(0, 0);
+            Vector3 movement = new Vector3(0, 0, 0);
             if (Leftward)
             {
                 movement.X = -1;
@@ -385,18 +385,18 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 movement.Y = 1;
             }
+            if (Upward)
+            {
+                movement.Z = 1;
+            }
             if (movement.LengthSquared() > 0)
             {
                 movement.Normalize();
             }
-            CBody.HorizontalMotionConstraint.MovementDirection = movement;
+            CBody.HorizontalMotionConstraint.MovementDirection = new Vector2(movement.X, movement.Y);
             if (IsFlying)
             {
-                Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, 0), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                if (Upward)
-                {
-                    forw.Z = 1;
-                }
+                Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, movement.Z), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
                 SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Sprint ? 2: 1));
                 CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 Body.LinearVelocity = new Vector3(0, 0, 0);

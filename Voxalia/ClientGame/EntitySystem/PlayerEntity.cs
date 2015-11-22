@@ -246,7 +246,7 @@ namespace Voxalia.ClientGame.EntitySystem
                     }
                     lPT = uis.GlobalTimeLocal;
                     NMTWOWorld.Update((float)delta);
-                    FlyForth(NMTWOCBody, delta); // TODO: Entirely disregard NWTWOWorld if flying?
+                    FlyForth(NMTWOCBody, uis, delta); // TODO: Entirely disregard NWTWOWorld if flying?
                 }
                 AddUIS();
                 SetPosition(NMTWOGetPosition());
@@ -336,18 +336,19 @@ namespace Voxalia.ClientGame.EntitySystem
             cc.HorizontalMotionConstraint.MovementDirection = movement;
         }
 
-        public void FlyForth(CharacterController cc, double delta)
+        public void FlyForth(CharacterController cc, UserInputSet uis, double delta)
         {
             if (IsFlying)
             {
-                Location forw = Utilities.RotateVector(new Location(-cc.HorizontalMotionConstraint.MovementDirection.Y,
-                    cc.HorizontalMotionConstraint.MovementDirection.X, 0), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                if (Upward)
+                Location move = new Location(-cc.HorizontalMotionConstraint.MovementDirection.Y, cc.HorizontalMotionConstraint.MovementDirection.X, 0);
+                if (uis.Upward)
                 {
-                    forw.Z = 1;
+                    move.Z = 1;
+                    move = move.Normalize();
                 }
-                cc.Body.Position += (forw * delta * CBStandSpeed * 2 * (Sprint ? 2 : 1)).ToBVector();
-                CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
+                Location forw = Utilities.RotateVector(move, Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
+                cc.Body.Position += (forw * delta * CBStandSpeed * 2 * (uis.Sprint ? 2 : 1)).ToBVector();
+                cc.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 cc.Body.LinearVelocity = new Vector3(0, 0, 0);
             }
         }
@@ -455,7 +456,7 @@ namespace Voxalia.ClientGame.EntitySystem
             TryToJump();
             UpdateLocalMovement();
             SetMoveSpeed(CBody, lUIS);
-            FlyForth(CBody, TheRegion.Delta);
+            FlyForth(CBody, lUIS, TheRegion.Delta);
             SetBodyMovement(CBody, lUIS);
             PlayRelevantSounds();
             if (Flashlight != null)
