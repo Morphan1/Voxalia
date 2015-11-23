@@ -895,6 +895,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         const string timeformat = "#.000";
 
+        public int ChunksRenderingCurrently = 0;
+
         public void Render2D()
         {
             GL.Disable(EnableCap.CullFace);
@@ -907,7 +909,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     + ", Tick: " + TickTime.ToString(timeformat) + ", Finish: " + FinishTime.ToString(timeformat)
                     + "\nSpike Times -> Shadows: " + ShadowSpikeTime.ToString(timeformat)
                     + ", FBO: " + FBOSpikeTime.ToString(timeformat) + ", Lights: " + LightsSpikeTime.ToString(timeformat) + ", 2D: " + TWODSpikeTime.ToString(timeformat)
-                    + ", Tick: " + TickSpikeTime.ToString(timeformat) + ", Finish: " + FinishSpikeTime.ToString(timeformat),
+                    + ", Tick: " + TickSpikeTime.ToString(timeformat) + ", Finish: " + FinishSpikeTime.ToString(timeformat)
+                    + "\nChunks loaded: " + TheRegion.LoadedChunks.Count + ", Chunks rendering currently: " + ChunksRenderingCurrently,
                     Window.Width - 10), new Location(0, 0, 0));
                 int center = Window.Width / 2;
                 if (RenderExtraItems > 0)

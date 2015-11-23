@@ -62,6 +62,10 @@ namespace Voxalia.ClientGame.WorldSystem
 
         void VBOHInternal(Action callback)
         {
+            OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
+            {
+                OwningRegion.TheClient.ChunksRenderingCurrently++;
+            });
             try
             {
                 List<Vector3> Vertices = new List<Vector3>(CSize * CSize * CSize * 6); // TODO: Make this an array?
@@ -171,15 +175,26 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 if (Vertices.Count == 0)
                 {
-                    lock (OwningRegion.TheClient.TickLock)
+                    OwningRegion.TheClient.ChunksRenderingCurrently--;
+                    OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                     {
                         if (_VBO != null)
                         {
                             VBO tV = _VBO;
-                            OwningRegion.TheClient.Schedule.ScheduleSyncTask(() => tV.Destroy());
+                            lock (OwningRegion.TheClient.vbos)
+                            {
+                                if (OwningRegion.TheClient.vbos.Length < 120)
+                                {
+                                    OwningRegion.TheClient.vbos.Push(tV);
+                                }
+                                else
+                                {
+                                    tV.Destroy();
+                                }
+                            }
                         }
-                        _VBO = null;
-                    }
+                    });
+                    _VBO = null;
                     if (DENIED)
                     {
                         return;
@@ -237,7 +252,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         VBO tV = _VBO;
                         lock (OwningRegion.TheClient.vbos)
                         {
-                            if (OwningRegion.TheClient.vbos.Length < 30)
+                            if (OwningRegion.TheClient.vbos.Length < 120)
                             {
                                 OwningRegion.TheClient.vbos.Push(tV);
                             }
@@ -247,6 +262,7 @@ namespace Voxalia.ClientGame.WorldSystem
                             }
                         }
                     }
+                    OwningRegion.TheClient.ChunksRenderingCurrently--;
                     if (DENIED)
                     {
                         return;
