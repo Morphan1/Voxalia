@@ -474,18 +474,20 @@ namespace Voxalia.ServerGame.EntitySystem
                 // TODO: Move to a separate method that's called once on startup + at every teleport... also, asyncify!
                 if (!loadedInitially)
                 {
-                    TrySet(pos, 1, 0, 1);
-                    TrySet(pos, ViewRadiusInChunks / 2, 0, 1);
-                    TrySet(pos, ViewRadiusInChunks, 0, 1);
+                    TrySet(pos, 1, 0, 1, false);
+                    TrySet(pos, ViewRadiusInChunks / 2, 0, 1, false);
+                    TrySet(pos, ViewRadiusInChunks, 0, 1, false);
+                    TrySet(pos, ViewRadiusInChunks + 1, 0, 1, true);
                     loadedInitially = true;
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 1));
                 }
                 else
                 {
                     // TODO: Better system -> async?
-                    TrySet(pos, 1, 0, 1);
-                    TrySet(pos, ViewRadiusInChunks / 2, 0, 1);
-                    TrySet(pos, ViewRadiusInChunks, 0, 1);
+                    TrySet(pos, 1, 0, 1, false);
+                    TrySet(pos, ViewRadiusInChunks / 2, 0, 1, false);
+                    TrySet(pos, ViewRadiusInChunks, 0, 1, false);
+                    TrySet(pos, ViewRadiusInChunks + 1, 0, 1, true);
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
                 }
                 List<Location> removes = new List<Location>();
@@ -534,7 +536,7 @@ namespace Voxalia.ServerGame.EntitySystem
         
         bool loadedInitially = false;
 
-        public void TrySet(Location pos, int VIEWRAD, float atime, int posMult)
+        public void TrySet(Location pos, int VIEWRAD, float atime, int posMult, bool bg)
         {
             for (int x = -VIEWRAD; x <= VIEWRAD; x++)
             {
@@ -542,7 +544,15 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     for (int z = -VIEWRAD; z <= VIEWRAD; z++)
                     {
-                        TryChunk(pos + new Location(30 * x, 30 * y, 30 * z), atime, posMult);
+                        if (bg)
+                        {
+                            Location chl = TheRegion.ChunkLocFor(pos + new Location(30 * x, 30 * y, 30 * z));
+                            TheRegion.LoadChunk_Background(chl);
+                        }
+                        else
+                        {
+                            TryChunk(pos + new Location(30 * x, 30 * y, 30 * z), atime, posMult);
+                        }
                     }
                 }
             }
