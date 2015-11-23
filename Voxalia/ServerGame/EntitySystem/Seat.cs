@@ -37,7 +37,7 @@ namespace Voxalia.ServerGame.EntitySystem
             OldPosition = Sitter.GetPosition();
             if (Sitter is PlayerEntity)
             {
-                ((PlayerEntity)Sitter).Teleport(SeatHolder.GetPosition() + PositionOffset);
+                ((PlayerEntity)Sitter).Teleport(SeatHolder.GetPosition() + PositionOffset); // TODO: Teleport method on all entities!
             }
             else
             {

@@ -30,7 +30,10 @@ namespace Voxalia.ServerGame.WorldSystem
         /// The block has some form of filling.
         /// </summary>
         FILLED3 = 16,
-        THIRTYTWO = 32,
+        /// <summary>
+        /// The block needs to be recalculated (physics, liquid movement, etc. could be relevant.)
+        /// </summary>
+        NEEDS_RECALC = 32,
         SIXTYFOUR = 64,
         /// <summary>
         /// The block cannot be edited by users.
