@@ -123,6 +123,8 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             }
         }
 
+        public byte[] OreShapes = new byte[] { 0, 64, 65, 66, 67, 68 };
+
         public override void Populate(int Seed, int seed2, int seed3, int seed4, int seed5, Chunk chunk)
         {
             for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
@@ -148,7 +150,12 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         if (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z))
                         {
                             Material typex = GetMatType(seed2, seed3, seed4, seed5, cx, cy, (int)cpos.Z + z);
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(typex == Material.AIR ? basb : typex), 0, 0);
+                            byte shape = 0;
+                            if (typex != Material.AIR)
+                            {
+                                shape = OreShapes[new Random((int)((hheight + cx + cy + cpos.Z + z) * 5)).Next(OreShapes.Length)];
+                            }
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(typex == Material.AIR ? basb : typex), shape, 0);
                         }
                         else if ((CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z - 1) || (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z + 1))) &&
                             (CanBeSolid(seed3, seed4, seed5, cx + 1, cy, (int)cpos.Z + z) || CanBeSolid(seed3, seed4, seed5, cx, cy + 1, (int)cpos.Z + z)
