@@ -129,7 +129,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 Schedule.StartASyncTask(SaveCFG);
             }
-        }
+            ShadowSpikeTime = 0;
+            TickSpikeTime = 0;
+            FBOSpikeTime = 0;
+            LightsSpikeTime = 0;
+            FinishSpikeTime = 0;
+            TWODSpikeTime = 0;
+    }
 
         Object saveLock = new Object();
 

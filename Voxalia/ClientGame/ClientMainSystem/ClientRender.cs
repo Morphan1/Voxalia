@@ -226,6 +226,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     tick(e.Time);
                     timer.Stop();
                     TickTime = (double)timer.ElapsedMilliseconds / 1000f;
+                    if (TickTime > TickSpikeTime)
+                    {
+                        TickSpikeTime = TickTime;
+                    }
                     timer.Reset();
                 }
                 catch (Exception ex)
@@ -236,6 +240,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Window.SwapBuffers();
                 timer.Stop();
                 FinishTime = (double)timer.ElapsedMilliseconds / 1000f;
+                if (FinishTime > FinishSpikeTime)
+                {
+                    FinishSpikeTime = FinishTime;
+                }
                 timer.Reset();
             }
         }
@@ -246,7 +254,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public double LightsTime;
         public double FinishTime;
         public double TWODTime;
-        
+        public double ShadowSpikeTime;
+        public double TickSpikeTime;
+        public double FBOSpikeTime;
+        public double LightsSpikeTime;
+        public double FinishSpikeTime;
+        public double TWODSpikeTime;
+
 
         public void renderGame()
         {
@@ -324,6 +338,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     }
                     timer.Stop();
                     ShadowTime = (double)timer.ElapsedMilliseconds / 1000f;
+                    if (ShadowTime > ShadowSpikeTime)
+                    {
+                        ShadowSpikeTime = ShadowTime;
+                    }
                     timer.Reset();
                 }
                 timer.Start();
@@ -352,6 +370,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 FBOid = 0;
                 timer.Stop();
                 FBOTime = (double)timer.ElapsedMilliseconds / 1000f;
+                if (FBOTime > FBOSpikeTime)
+                {
+                    FBOSpikeTime = FBOTime;
+                }
                 timer.Reset();
                 timer.Start();
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
@@ -619,6 +641,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.Enable(EnableCap.CullFace);
                 timer.Stop();
                 LightsTime = (double)timer.ElapsedMilliseconds / 1000f;
+                if (LightsTime > LightsSpikeTime)
+                {
+                    LightsSpikeTime = LightsTime;
+                }
                 timer.Reset();
             }
             catch (Exception ex)
@@ -632,6 +658,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Render2D();
                 timer.Stop();
                 TWODTime = (double)timer.ElapsedMilliseconds / 1000f;
+                if (TWODTime > TWODSpikeTime)
+                {
+                    TWODSpikeTime = TWODTime;
+                }
                 timer.Reset();
             }
             catch (Exception ex)
@@ -871,7 +901,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     + "\nHeld Item: " + GetItemForSlot(QuickBarPos).ToString()
                     + "\nTimes -> Phyiscs: " + TheRegion.PhysTime.ToString(timeformat) + ", Shadows: " + ShadowTime.ToString(timeformat)
                     + ", FBO: " + FBOTime.ToString(timeformat) + ", Lights: " + LightsTime.ToString(timeformat) + ", 2D: " + TWODTime.ToString(timeformat)
-                    + ", Tick: " + TickTime.ToString(timeformat) + ", Finish: " + FinishTime.ToString(timeformat),
+                    + ", Tick: " + TickTime.ToString(timeformat) + ", Finish: " + FinishTime.ToString(timeformat)
+                    + "\nSpike Times -> Shadows: " + ShadowSpikeTime.ToString(timeformat)
+                    + ", FBO: " + FBOSpikeTime.ToString(timeformat) + ", Lights: " + LightsSpikeTime.ToString(timeformat) + ", 2D: " + TWODSpikeTime.ToString(timeformat)
+                    + ", Tick: " + TickSpikeTime.ToString(timeformat) + ", Finish: " + FinishSpikeTime.ToString(timeformat),
                     Window.Width - 10), new Location(0, 0, 0));
                 int center = Window.Width / 2;
                 if (RenderExtraItems > 0)
