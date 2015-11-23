@@ -62,6 +62,12 @@ namespace Voxalia.Shared
             BSD[57] = new BSD57();
             BSD[58] = new BSD58();
             // ...
+            BSD[64] = new BSD64_68(MaterialSide.BOTTOM, MaterialSide.XP, MaterialSide.XM, MaterialSide.YP, MaterialSide.YM, MaterialSide.TOP);
+            BSD[65] = new BSD64_68(MaterialSide.XP, MaterialSide.XM, MaterialSide.YP, MaterialSide.YM, MaterialSide.TOP, MaterialSide.BOTTOM);
+            BSD[66] = new BSD64_68(MaterialSide.XM, MaterialSide.YP, MaterialSide.YM, MaterialSide.TOP, MaterialSide.BOTTOM, MaterialSide.XP);
+            BSD[67] = new BSD64_68(MaterialSide.YP, MaterialSide.YM, MaterialSide.TOP, MaterialSide.BOTTOM, MaterialSide.XP, MaterialSide.XM);
+            BSD[68] = new BSD64_68(MaterialSide.YM, MaterialSide.TOP, MaterialSide.BOTTOM, MaterialSide.XP, MaterialSide.XM, MaterialSide.YP);
+            // ...
             BSD[72] = new BSD72();
             BSD[73] = new BSD73();
             BSD[74] = new BSD74();
