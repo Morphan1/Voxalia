@@ -49,38 +49,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             base.Tick();
         }
-
-        public override bool ApplyVar(string var, string value)
-        {
-            switch (var)
-            {
-                case "model":
-                    model = value;
-                    return true;
-                case "scale":
-                    scale = Location.FromString(value);
-                    return true;
-                case "collisionmode":
-                    ModelCollisionMode newmode;
-                    if (Enum.TryParse(value.ToUpper(), out newmode))
-                    {
-                        mode = newmode;
-                    }
-                    return true;
-                default:
-                    return base.ApplyVar(var, value);
-            }
-        }
-
-        public override List<KeyValuePair<string, string>> GetVariables()
-        {
-            List<KeyValuePair<string, string>> vars = base.GetVariables();
-            vars.Add(new KeyValuePair<string, string>("model", model));
-            vars.Add(new KeyValuePair<string, string>("scale", scale.ToString()));
-            vars.Add(new KeyValuePair<string, string>("collisionmode", mode.ToString().ToLower()));
-            return vars;
-        }
-
+        
         public Location offset;
 
         public override void SpawnBody()
@@ -99,7 +68,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             if (mode == ModelCollisionMode.PRECISE)
             {
-                Shape = TheServer.Models.handler.MeshToBepu(smodel);
+                Shape = TheServer.Models.handler.MeshToBepu(smodel); // TODO: Scale!
             }
             else if (mode == ModelCollisionMode.AABB)
             {
@@ -113,7 +82,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Location size = abox.Max - abox.Min;
                 Location center = abox.Max - size / 2;
                 offset = -center;
-                Shape = new BoxShape((float)size.X, (float)size.Y, (float)size.Z);
+                Shape = new BoxShape((float)size.X * (float)scale.X, (float)size.Y * (float)scale.Y, (float)size.Z * (float)scale.Z);
             }
             else
             {
@@ -129,7 +98,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 double size = Math.Sqrt(distSq);
                 offset = Location.Zero;
-                Shape = new SphereShape((float)size);
+                Shape = new SphereShape((float)size * (float)scale.Length());
             }
             base.SpawnBody();
             if (mode == ModelCollisionMode.PRECISE)
@@ -144,5 +113,6 @@ namespace Voxalia.ServerGame.EntitySystem
         PRECISE = 1,
         AABB = 2,
         SPHERE = 3
+        // TODO: ConvexHull!
     }
 }

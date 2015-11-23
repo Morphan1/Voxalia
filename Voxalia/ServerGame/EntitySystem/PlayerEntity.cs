@@ -90,7 +90,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Location Direction;
 
-        public CubeEntity CursorMarker = null;
+        public ModelEntity CursorMarker = null;
 
         public bool pup = false;
 
@@ -183,7 +183,9 @@ namespace Voxalia.ServerGame.EntitySystem
             TheRegion.PhysicsWorld.Add(CBody);
             if (CursorMarker == null)
             {
-                CursorMarker = new CubeEntity(new Location(0.01, 0.01, 0.01), TheRegion, 0);
+                CursorMarker =  new ModelEntity("cube", TheRegion);
+                CursorMarker.scale = new Location(0.1f, 0.1f, 0.1f);
+                CursorMarker.mode = ModelCollisionMode.AABB;
                 CursorMarker.CGroup = CollisionUtil.NonSolid;
                 CursorMarker.Visible = false;
                 TheRegion.SpawnEntity(CursorMarker);

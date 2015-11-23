@@ -18,7 +18,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             }
             // TODO: LOL PLS CLEAN
             Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + 
-                (e is GlowstickEntity ? 4: (e is BlockGroupEntity ? bge.Blocks.Length * 3 + 1 :(e is CubeEntity ? 4 * 6 + 4 * 6: (e is BlockItemEntity ? 3: (e is ModelEntity ? 4 + 1: 0))))) + 4 + 1];
+                (e is GlowstickEntity ? 4: (e is BlockGroupEntity ? bge.Blocks.Length * 3 + 1 :(e is BlockItemEntity ? 3: (e is ModelEntity ? 4 + 1: 0)))) + 4 + 1];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
@@ -28,11 +28,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             Utilities.FloatToBytes(e.GetFriction()).CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8);
             // TODO: Unique gravity, restitution, etc. properties?
             // TODO: handle different e-types cleanly
-            if (e is CubeEntity)
-            {
-                ((CubeEntity)e).HalfSize.ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
-            }
-            else if (e is PlayerEntity)
+            if (e is PlayerEntity)
             {
                 ((PlayerEntity)e).HalfSize.ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
@@ -50,26 +46,9 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 new Location(1, 1, 1).ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
             // TODO: LOL PLS CLEAN
-            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is GlowstickEntity ? 5: (e is BlockGroupEntity ? 4: (e is CubeEntity ? 0 : (e is PlayerEntity ? 1 : (e is BlockItemEntity ? 3: 2)))));
+            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is GlowstickEntity ? 5: (e is BlockGroupEntity ? 4: (e is PlayerEntity ? 1 : (e is BlockItemEntity ? 3: 2))));
             int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
-            if (e is CubeEntity)
-            {
-                CubeEntity ce = (CubeEntity)e;
-                NetStringManager strings = ce.TheServer.Networking.Strings;
-                Utilities.IntToBytes(strings.IndexForString(ce.Textures[0])).CopyTo(Data, start);
-                Utilities.IntToBytes(strings.IndexForString(ce.Textures[1])).CopyTo(Data, start + 4);
-                Utilities.IntToBytes(strings.IndexForString(ce.Textures[2])).CopyTo(Data, start + 4 * 2);
-                Utilities.IntToBytes(strings.IndexForString(ce.Textures[3])).CopyTo(Data, start + 4 * 3);
-                Utilities.IntToBytes(strings.IndexForString(ce.Textures[4])).CopyTo(Data, start + 4 * 4);
-                Utilities.IntToBytes(strings.IndexForString(ce.Textures[5])).CopyTo(Data, start + 4 * 5);
-                Utilities.IntToBytes(strings.IndexForString(ce.TexCoords[0])).CopyTo(Data, start + 4 * 6);
-                Utilities.IntToBytes(strings.IndexForString(ce.TexCoords[1])).CopyTo(Data, start + 4 * 6 + 4);
-                Utilities.IntToBytes(strings.IndexForString(ce.TexCoords[2])).CopyTo(Data, start + 4 * 6 + 4 * 2);
-                Utilities.IntToBytes(strings.IndexForString(ce.TexCoords[3])).CopyTo(Data, start + 4 * 6 + 4 * 3);
-                Utilities.IntToBytes(strings.IndexForString(ce.TexCoords[4])).CopyTo(Data, start + 4 * 6 + 4 * 4);
-                Utilities.IntToBytes(strings.IndexForString(ce.TexCoords[5])).CopyTo(Data, start + 4 * 6 + 4 * 5);
-            }
-            else if (e is BlockItemEntity)
+            if (e is BlockItemEntity)
             {
                 BlockItemEntity bie = (BlockItemEntity)e;
                 Utilities.UshortToBytes((ushort)bie.Mat).CopyTo(Data, start);

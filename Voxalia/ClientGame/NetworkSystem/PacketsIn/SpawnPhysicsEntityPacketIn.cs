@@ -25,25 +25,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Location halfsize = Location.FromBytes(data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             PhysicsEntity ce;
             int start = len - (4 + 1);
-            if (type == 0)
-            {
-                CubeEntity ce1 = new CubeEntity(TheClient.TheRegion, halfsize);
-                ce = ce1;
-                NetStringManager strings = TheClient.Network.Strings;
-                ce1.Textures[0] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4)));
-                ce1.Textures[1] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4, 4)));
-                ce1.Textures[2] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 2, 4)));
-                ce1.Textures[3] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 3, 4)));
-                ce1.Textures[4] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 4, 4)));
-                ce1.Textures[5] = strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 5, 4)));
-                ce1.Coords[0] = TextureCoordinates.FromString(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 6, 4))));
-                ce1.Coords[1] = TextureCoordinates.FromString(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 6 + 4, 4))));
-                ce1.Coords[2] = TextureCoordinates.FromString(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 6 + 4 * 2, 4))));
-                ce1.Coords[3] = TextureCoordinates.FromString(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 6 + 4 * 3, 4))));
-                ce1.Coords[4] = TextureCoordinates.FromString(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 6 + 4 * 4, 4))));
-                ce1.Coords[5] = TextureCoordinates.FromString(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start + 4 * 6 + 4 * 5, 4))));
-            }
-            else if (type == 1)
+            if (type == 1)
             {
                 ce = new OtherPlayerEntity(TheClient.TheRegion, halfsize);
             }

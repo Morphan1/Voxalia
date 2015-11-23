@@ -52,7 +52,9 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             for (float f = 0; f < len - 1f; f += 0.5f)
             {
                 Location cpos = cr.Position + step * f;
-                CubeEntity ce = new CubeEntity(new Location(0.23, 0.05, 0.05), player.TheRegion, 1);
+                ModelEntity ce = new ModelEntity("cube", player.TheRegion);
+                ce.scale = new Location(0.23, 0.5, 0.5);
+                ce.mode = ModelCollisionMode.AABB;
                 ce.SetPosition(cpos + step * 0.5);
                 ce.SetOrientation(quat);
                 player.TheRegion.SpawnEntity(ce);

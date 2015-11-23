@@ -372,51 +372,5 @@ namespace Voxalia.ServerGame.EntitySystem
                 WorldTransform = Matrix.CreateFromQuaternion(rot) * Matrix.CreateTranslation(WorldTransform.Translation);
             }
         }
-
-        public override bool ApplyVar(string var, string data)
-        {
-            switch (var)
-            {
-                case "velocity":
-                    SetVelocity(Location.FromString(data));
-                    return true;
-                case "angle":
-                    SetOrientation(Utilities.StringToQuat(data));
-                    return true;
-                case "angular_velocity":
-                    SetAngularVelocity(Location.FromString(data));
-                    return true;
-                case "mass":
-                    SetMass(Utilities.StringToFloat(data));
-                    return true;
-                case "friction":
-                    SetFriction(Utilities.StringToFloat(data));
-                    return true;
-                case "bounciness":
-                    SetBounciness(Utilities.StringToFloat(data));
-                    return true;
-                case "solid":
-                    if (data.ToLower() != "true" && CGroup == CollisionUtil.Solid)
-                    {
-                        CGroup = CollisionUtil.NonSolid;
-                    }
-                    return true;
-                default:
-                    return base.ApplyVar(var, data);
-            }
-        }
-
-        public override List<KeyValuePair<string, string>> GetVariables()
-        {
-            List<KeyValuePair<string, string>> vars = base.GetVariables();
-            vars.Add(new KeyValuePair<string, string>("velocity", GetVelocity().ToString()));
-            vars.Add(new KeyValuePair<string, string>("angle", Utilities.QuatToString(GetOrientation())));
-            vars.Add(new KeyValuePair<string, string>("angular_velocity", GetAngularVelocity().ToString()));
-            vars.Add(new KeyValuePair<string, string>("mass", GetMass().ToString()));
-            vars.Add(new KeyValuePair<string, string>("friction", GetFriction().ToString()));
-            vars.Add(new KeyValuePair<string, string>("bounciness", GetBounciness().ToString()));
-            vars.Add(new KeyValuePair<string, string>("solid", CGroup == CollisionUtil.NonSolid ? "false" : "true"));
-            return vars;
-        }
     }
 }

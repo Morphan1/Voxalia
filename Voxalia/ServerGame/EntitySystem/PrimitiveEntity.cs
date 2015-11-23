@@ -124,37 +124,5 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             Angles = quat;
         }
-
-        public override List<KeyValuePair<string, string>> GetVariables()
-        {
-            List<KeyValuePair<string, string>> vars = base.GetVariables();
-            vars.Add(new KeyValuePair<string,string>("velocity", GetVelocity().ToString()));
-            return vars;
-        }
-
-        public override bool ApplyVar(string var, string data)
-        {
-            switch (var)
-            {
-                case "angle":
-                    Angles = Utilities.StringToQuat(data);
-                    return true; // TODO
-                case "angular_velocity":
-                    return true; // TODO
-                case "mass":
-                    return true; // Ignore
-                case "friction":
-                    return true; // Ignore
-                case "solid":
-                    return true; // Ignore
-                case "bounciness":
-                    return true; // Ignore
-                case "velocity":
-                    SetVelocity(Location.FromString(data));
-                    return true;
-                default:
-                    return base.ApplyVar(var, data);
-            }
-        }
     }
 }

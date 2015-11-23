@@ -125,7 +125,6 @@
     <Compile Include="ClientGame\EntitySystem\BasicPrimitiveEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\BlockItemEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\BlockGroupEntity.cs" />
-    <Compile Include="ClientGame\EntitySystem\CubeEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\Entity.cs" />
     <Compile Include="ClientGame\EntitySystem\EntityAnimated.cs" />
     <Compile Include="ClientGame\EntitySystem\GlowstickEntity.cs" />
@@ -133,7 +132,6 @@
     <Compile Include="ClientGame\EntitySystem\OtherPlayerEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PlayerEntity.cs" />
-    <Compile Include="ClientGame\EntitySystem\PointLightEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PrimitiveEntity.cs" />
     <Compile Include="ClientGame\GraphicsSystems\FontSetEngine.cs" />
     <Compile Include="ClientGame\GraphicsSystems\Frustum.cs" />
@@ -198,7 +196,6 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnBulletPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnItemPacketIn.cs" />
-    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnLightPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPhysicsEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPrimitiveEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SunAnglePacketIn.cs" />

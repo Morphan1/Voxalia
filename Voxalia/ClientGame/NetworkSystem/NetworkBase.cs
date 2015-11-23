@@ -166,8 +166,8 @@ namespace Voxalia.ClientGame.NetworkSystem
                         packet = new PhysicsEntityUpdatePacketIn();
                         break;
                     case 4:
-                        packet = new SpawnLightPacketIn();
-                        break;
+                        // TODO: Use slot!
+                        throw new NotImplementedException();
                     case 5:
                         packet = new MessagePacketIn();
                         break;
@@ -214,7 +214,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                         packet = new RemoveItemPacketIn();
                         break;
                     case 20:
-                        // packet = new JointStatusPacketIn();
+                        // TODO: packet = new JointStatusPacketIn();
                         throw new NotImplementedException();
                     case 21:
                         packet = new SetItemPacketIn();

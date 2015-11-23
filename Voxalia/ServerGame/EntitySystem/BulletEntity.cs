@@ -36,12 +36,6 @@ namespace Voxalia.ServerGame.EntitySystem
             TheRegion.DespawnEntity(this);
         }
 
-        public override void Recalculate()
-        {
-            Scale = new Location(Size);
-            base.Recalculate();
-        }
-
         public float Size = 1;
         public float Damage = 1;
         public float SplashSize = 0;

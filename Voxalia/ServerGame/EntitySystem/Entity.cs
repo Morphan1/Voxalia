@@ -77,36 +77,5 @@ namespace Voxalia.ServerGame.EntitySystem
         public abstract void SetOrientation(BEPUutilities.Quaternion quat);
 
         public bool Visible = true;
-
-        public virtual List<KeyValuePair<string, string>> GetVariables()
-        {
-            List<KeyValuePair<string, string>> vars = new List<KeyValuePair<string, string>>();
-            vars.Add(new KeyValuePair<string, string>("position", GetPosition().ToString()));
-            vars.Add(new KeyValuePair<string, string>("visible", Visible ? "true" : "false"));
-            vars.Add(new KeyValuePair<string, string>("jointtargetid", JointTargetID));
-            return vars;
-        }
-
-        public virtual bool ApplyVar(string var, string data)
-        {
-            switch (var)
-            {
-                case "position":
-                    SetPosition(Location.FromString(data));
-                    return true;
-                case "visible":
-                    Visible = data.ToLower() == "true";
-                    return true;
-                case "jointtargetid":
-                    JointTargetID = data;
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public virtual void Recalculate()
-        {
-        }
     }
 }
