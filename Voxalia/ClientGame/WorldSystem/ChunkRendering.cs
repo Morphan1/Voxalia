@@ -232,9 +232,9 @@ namespace Voxalia.ClientGame.WorldSystem
                     else
                     {
                         tVBO = new VBO();
+                        tVBO.BufferMode = OpenTK.Graphics.OpenGL4.BufferUsageHint.StreamDraw;
                     }
                 }
-                tVBO.BufferMode = OpenTK.Graphics.OpenGL4.BufferUsageHint.StreamDraw;
                 tVBO.Indices = inds;
                 tVBO.Vertices = Vertices;
                 tVBO.Normals = Norms;

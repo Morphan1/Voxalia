@@ -2,6 +2,7 @@
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
+using Voxalia.ServerGame.ItemSystem;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
@@ -60,6 +61,18 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 float temp = entry.Player.TheRegion.BiomeGen.GetTemperature(entry.Player.TheRegion.Seed2, entry.Player.TheRegion.Seed3, (float)posBlock.X, (float)posBlock.Y);
                 float down = entry.Player.TheRegion.BiomeGen.GetDownfallRate(entry.Player.TheRegion.Seed3, entry.Player.TheRegion.Seed4, (float)posBlock.X, (float)posBlock.Y);
                 entry.Player.Network.SendMessage("Height: " + h + ", temperature: " + temp + ", downfallrate: " + down + ", biome yield: " + biome.GetName());
+            }
+            else if (arg0 == "structureCreate" && entry.InputArguments.Count > 1)
+            {
+                string arg1 = entry.InputArguments[1];
+                entry.Player.Items.GiveItem(new ItemStack("structurecreate", arg1, entry.Player.TheServer, 1, "items/admin/strucutre_create",
+                    "Structure Creator", "Creates a " + arg1 + " structure!", System.Drawing.Color.White.ToArgb(), "items/admin/structure_create", false));
+            }
+            else if (arg0 == "structurePaste" && entry.InputArguments.Count > 1)
+            {
+                string arg1 = entry.InputArguments[1];
+                entry.Player.Items.GiveItem(new ItemStack("structurepaste", arg1, entry.Player.TheServer, 1, "items/admin/strucutre_paste",
+                    "Structor Paster", "Pastes a " + arg1 + " structure!", System.Drawing.Color.White.ToArgb(), "items/admin/structure_paste", false));
             }
             else
             {

@@ -28,6 +28,8 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new SunAnglerItem());
             Register(new BreadcrumbItem());
             Register(new GlowstickItem());
+            Register(new StructureCreateItem());
+            Register(new StructurePasteItem());
             Generic = new GenericItem();
             Register(Generic);
         }

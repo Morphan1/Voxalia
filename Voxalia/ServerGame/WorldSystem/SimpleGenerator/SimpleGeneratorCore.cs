@@ -15,7 +15,18 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         public const float OreTypeMapSize = 150;
         public const float OreMapTolerance = 0.90f;
         public const float OreMapThickTolerance = 0.94f;
-        public Structure tempTree = new Structure(Program.Files.ReadBytes("structures/tree.str"));
+        public SimpleGeneratorCore()
+        {
+            try
+            {
+                tempTree = new Structure(Program.Files.ReadBytes("structures/tree.str"));
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output("Loading tree structures", ex);
+            }
+        }
+        public Structure tempTree;
         
         public Material GetMatType(int seed2, int seed3, int seed4, int seed5, int x, int y, int z)
         {
@@ -284,10 +295,13 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000));
                         if (spotr.Next(75) == 1) // TODO: Efficiency!
                         {
-                            chunk.OwningRegion.TheServer.Schedule.ScheduleSyncTask(() =>
+                            if (tempTree != null)
                             {
-                                tempTree.PasteCustom(chunk.OwningRegion, new Location(cx - (float)tempTree.Size.X / 2f, cy - (float)tempTree.Size.Y / 2f, hheight));
-                            });
+                                chunk.OwningRegion.TheServer.Schedule.ScheduleSyncTask(() =>
+                                {
+                                    tempTree.PasteCustom(chunk.OwningRegion, new Location(cx - (float)tempTree.Size.X / 2f, cy - (float)tempTree.Size.Y / 2f, hheight));
+                                });
+                            }
                         }
                     }
                 }

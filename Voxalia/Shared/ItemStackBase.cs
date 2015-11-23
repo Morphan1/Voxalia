@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 using Voxalia.Shared.Files;
+using Frenetic.TagHandlers;
 
 namespace Voxalia.Shared
 {
@@ -119,6 +120,26 @@ namespace Voxalia.Shared
                 float cvalue = dr.ReadFloat();
                 SharedAttributes.Add(cattrib, cvalue);
             }
+        }
+
+        public string EscapedSharedStr()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{");
+            foreach (KeyValuePair<string, float> val in SharedAttributes)
+            {
+                sb.Append(TagParser.Escape(val.Key) + "=" + val.Value + ";");
+            }
+            sb.Append("}");
+            return sb.ToString();
+
+        }
+
+        public string ToEscapedString()
+        {
+            return TagParser.Escape(Name) + "[secondary=" + (SecondaryName == null ? "{NULL}" : TagParser.Escape(SecondaryName)) + ";display=" + TagParser.Escape(DisplayName) + ";count=" + Count
+                + ";description=" + TagParser.Escape(Description) + ";texture=" + TagParser.Escape(GetTextureName()) + ";model=" + TagParser.Escape(GetModelName())
+                + ";drawcolor=" + DrawColor + ";datum=" + Datum + ";shared=" + SharedStr() + "]";
         }
 
         public string SharedStr()

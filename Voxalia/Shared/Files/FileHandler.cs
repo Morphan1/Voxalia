@@ -172,7 +172,8 @@ namespace Voxalia.Shared.Files
         /// <returns>Whether the file exists.</returns>
         public bool Exists(string filename)
         {
-            return FileIndex(filename) != -1;
+            string cleaned = CleanFileName(filename);
+            return FileIndex(cleaned) != -1 || File.Exists(BaseDirectory + cleaned);
         }
 
         /// <summary>
@@ -186,9 +187,9 @@ namespace Voxalia.Shared.Files
             int ind = FileIndex(fname);
             if (ind == -1)
             {
-                if (File.Exists(fname))
+                if (File.Exists(BaseDirectory + fname))
                 {
-                    return File.ReadAllBytes(fname);
+                    return File.ReadAllBytes(BaseDirectory + fname);
                 }
                 else
                 {

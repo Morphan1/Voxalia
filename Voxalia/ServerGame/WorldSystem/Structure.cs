@@ -13,6 +13,8 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public BlockInternal[] Blocks;
 
+        public Vector3i Origin;
+
         public int BlockIndex(int x, int y, int z)
         {
             return z * Size.Y * Size.X + y * Size.X + x;
@@ -64,6 +66,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             Location ext = box.Max - box.Min;
             Size = new Vector3i((int)ext.X + 1, (int)ext.Y + 1, (int)ext.Z + 1);
+            Origin = new Vector3i((int)Math.Floor(startOfTrace.X - box.Min.X), (int)Math.Floor(startOfTrace.Y - box.Min.Y), (int)Math.Floor(startOfTrace.Z - box.Min.Z));
             Blocks = new BlockInternal[Size.X * Size.Y * Size.Z];
             foreach (Location loc in resultLocs)
             {
@@ -76,30 +79,39 @@ namespace Voxalia.ServerGame.WorldSystem
             Size.X = Utilities.BytesToInt(Utilities.BytesPartial(dat, 0, 4));
             Size.Y = Utilities.BytesToInt(Utilities.BytesPartial(dat, 4, 4));
             Size.Z = Utilities.BytesToInt(Utilities.BytesPartial(dat, 8, 4));
+            Origin.X = Utilities.BytesToInt(Utilities.BytesPartial(dat, 12, 4));
+            Origin.Y = Utilities.BytesToInt(Utilities.BytesPartial(dat, 12 + 4, 4));
+            Origin.Z = Utilities.BytesToInt(Utilities.BytesPartial(dat, 12 + 8, 4));
             Blocks = new BlockInternal[Size.X * Size.Y * Size.Z];
             for (int i = 0; i < Blocks.Length; i++)
             {
-                Blocks[i] = new BlockInternal(Utilities.BytesToUshort(Utilities.BytesPartial(dat, 12 + i * 2, 2)), dat[12 + Blocks.Length * 2 + i], dat[12 + Blocks.Length * 3 + i]);
+                Blocks[i] = new BlockInternal(Utilities.BytesToUshort(Utilities.BytesPartial(dat, 12 + 12 + i * 2, 2)), dat[12 + 12 + Blocks.Length * 2 + i], dat[12 + 12 + Blocks.Length * 3 + i]);
             }
         }
 
         public byte[] ToBytes()
         {
-            byte[] dat = new byte[12 + Blocks.Length * 4];
+            byte[] dat = new byte[12 + 12 + Blocks.Length * 4];
             Utilities.IntToBytes(Size.X).CopyTo(dat, 0);
             Utilities.IntToBytes(Size.Y).CopyTo(dat, 4);
             Utilities.IntToBytes(Size.Z).CopyTo(dat, 8);
+            Utilities.IntToBytes(Origin.X).CopyTo(dat, 12);
+            Utilities.IntToBytes(Origin.Y).CopyTo(dat, 12 + 4);
+            Utilities.IntToBytes(Origin.Z).CopyTo(dat, 12 + 8);
             for (int i = 0; i < Blocks.Length; i++)
             {
-                Utilities.UshortToBytes(Blocks[i].BlockMaterial).CopyTo(dat, 12 + i * 2);
-                dat[12 + Blocks.Length * 2 + i] = Blocks[i].BlockData;
-                dat[12 + Blocks.Length * 3 + i] = Blocks[i].BlockLocalData;
+                Utilities.UshortToBytes(Blocks[i].BlockMaterial).CopyTo(dat, 12 + 12 + i * 2);
+                dat[12 + 12 + Blocks.Length * 2 + i] = Blocks[i].BlockData;
+                dat[12 + 12 + Blocks.Length * 3 + i] = Blocks[i].BlockLocalData;
             }
             return dat;
         }
 
         public void Paste(Region tregion, Location corner)
         {
+            corner.X -= Origin.X;
+            corner.Y -= Origin.Y;
+            corner.Z -= Origin.Z;
             for (int x = 0; x < Size.X; x++)
             {
                 for (int y = 0; y < Size.Y; y++)
@@ -109,6 +121,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         BlockInternal bi = Blocks[BlockIndex(x, y, z)];
                         if ((Material)bi.BlockMaterial != Material.AIR)
                         {
+                            bi.BlockLocalData = (byte)(bi.BlockLocalData | ((int)BlockFlags.EDITED));
                             tregion.SetBlockMaterial(corner + new Location(x, y, z), (Material)bi.BlockMaterial, bi.BlockData, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED));
                         }
                     }
@@ -118,6 +131,9 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void PasteCustom(Region tregion, Location corner)
         {
+            corner.X -= Origin.X;
+            corner.Y -= Origin.Y;
+            corner.Z -= Origin.Z;
             for (int x = 0; x < Size.X; x++)
             {
                 for (int y = 0; y < Size.Y; y++)
