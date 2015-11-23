@@ -12,12 +12,15 @@ using Voxalia.ClientGame.OtherSystems;
 using Voxalia.ClientGame.JointSystem;
 using Voxalia.Shared.Collision;
 using System.Diagnostics;
+using Frenetic;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
     public partial class Client
     {
         public double gDelta = 0;
+
+        public ListQueue<VBO> vbos = new ListQueue<VBO>();
 
         public List<LightObject> Lights = new List<LightObject>();
 

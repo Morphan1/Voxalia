@@ -223,6 +223,62 @@ namespace Voxalia.ClientGame.GraphicsSystems
         Vector3[] normals = null;
         Vector3[] texts = null;
 
+        public void UpdateBuffer()
+        {
+            Vector3[] vecs = verts == null ? Vertices.ToArray() : verts;
+            uint[] inds = indices == null ? Indices.ToArray() : indices;
+            Vector3[] norms = normals == null ? Normals.ToArray() : normals;
+            Vector3[] texs = texts == null ? TexCoords.ToArray() : texts;
+            Vector4[] cols = null;
+            vC = vecs.Length;
+            if (Colors != null)
+            {
+                cols = Colors.ToArray();
+            }
+            // Vertex buffer
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _VertexVBO);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vecs.Length * Vector3.SizeInBytes),
+                    vecs, BufferMode);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            // Normal buffer
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _NormalVBO);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(norms.Length * Vector3.SizeInBytes),
+                    norms, BufferMode);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            // TexCoord buffer
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _TexCoordVBO);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(texs.Length * Vector3.SizeInBytes),
+                    texs, BufferMode);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            // Color buffer
+            if (cols != null)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _ColorVBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(cols.Length * Vector4.SizeInBytes),
+                        cols, BufferMode);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            }
+            // Index buffer
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IndexVBO);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(inds.Length * sizeof(uint)),
+                    inds, BufferMode);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+        }
+
+        public void GenerateOrUpdate()
+        {
+            if (generated)
+            {
+                UpdateBuffer();
+            }
+            else
+            {
+                GenerateVBO();
+            }
+        }
+
+        public BufferUsageHint BufferMode = BufferUsageHint.StaticDraw;
+
         public void GenerateVBO()
         {
             if (generated)
@@ -268,19 +324,19 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.GenBuffers(1, out _VertexVBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _VertexVBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vecs.Length * Vector3.SizeInBytes),
-                    vecs, BufferUsageHint.StaticDraw);
+                    vecs, BufferMode);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             // Normal buffer
             GL.GenBuffers(1, out _NormalVBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _NormalVBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(norms.Length * Vector3.SizeInBytes),
-                    norms, BufferUsageHint.StaticDraw);
+                    norms, BufferMode);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             // TexCoord buffer
             GL.GenBuffers(1, out _TexCoordVBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _TexCoordVBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(texs.Length * Vector3.SizeInBytes),
-                    texs, BufferUsageHint.StaticDraw);
+                    texs, BufferMode);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             // Color buffer
             if (cols != null)
@@ -288,7 +344,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenBuffers(1, out _ColorVBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _ColorVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(cols.Length * Vector4.SizeInBytes),
-                        cols, BufferUsageHint.StaticDraw);
+                        cols, BufferMode);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             }
             // Weight buffer
@@ -297,7 +353,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenBuffers(1, out _BoneWeightVBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeightVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(weights.Length * Vector4.SizeInBytes),
-                        weights, BufferUsageHint.StaticDraw);
+                        weights, BufferMode);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             }
             // ID buffer
@@ -306,7 +362,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenBuffers(1, out _BoneIDVBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneIDVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(ids.Length * Vector4.SizeInBytes),
-                        ids, BufferUsageHint.StaticDraw);
+                        ids, BufferMode);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             }
             // Weight2 buffer
@@ -315,7 +371,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenBuffers(1, out _BoneWeight2VBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeight2VBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(weights2.Length * Vector4.SizeInBytes),
-                        weights2, BufferUsageHint.StaticDraw);
+                        weights2, BufferMode);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             }
             // ID2 buffer
@@ -324,14 +380,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenBuffers(1, out _BoneID2VBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneID2VBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(ids2.Length * Vector4.SizeInBytes),
-                        ids2, BufferUsageHint.StaticDraw);
+                        ids2, BufferMode);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             }
             // Index buffer
             GL.GenBuffers(1, out _IndexVBO);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IndexVBO);
             GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(inds.Length * sizeof(uint)),
-                    inds, BufferUsageHint.StaticDraw);
+                    inds, BufferMode);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             // VAO
             GL.GenVertexArrays(1, out _VAO);

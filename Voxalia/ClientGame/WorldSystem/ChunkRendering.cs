@@ -205,9 +205,21 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 if (Cols.Count != Vertices.Count)
                 {
-                    SysConsole.Output(OutputType.ERROR, "Colors invalid! Chunk at " + WorldPosition + ", C: " + Cols.Count + ", V: " +Vertices.Count);
+                    SysConsole.Output(OutputType.ERROR, "Colors invalid! Chunk at " + WorldPosition + ", C: " + Cols.Count + ", V: " + Vertices.Count);
                 }
-                VBO tVBO = new VBO();
+                VBO tVBO;
+                lock (OwningRegion.TheClient.vbos)
+                {
+                    if (OwningRegion.TheClient.vbos.Length > 0)
+                    {
+                        tVBO = OwningRegion.TheClient.vbos.Pop();
+                    }
+                    else
+                    {
+                        tVBO = new VBO();
+                    }
+                }
+                tVBO.BufferMode = OpenTK.Graphics.OpenGL4.BufferUsageHint.StreamDraw;
                 tVBO.Indices = inds;
                 tVBO.Vertices = Vertices;
                 tVBO.Normals = Norms;
@@ -223,14 +235,24 @@ namespace Voxalia.ClientGame.WorldSystem
                     if (_VBO != null)
                     {
                         VBO tV = _VBO;
-                        tV.Destroy();
+                        lock (OwningRegion.TheClient.vbos)
+                        {
+                            if (OwningRegion.TheClient.vbos.Length < 30)
+                            {
+                                OwningRegion.TheClient.vbos.Push(tV);
+                            }
+                            else
+                            {
+                                tV.Destroy();
+                            }
+                        }
                     }
                     if (DENIED)
                     {
                         return;
                     }
                     _VBO = tVBO;
-                    tVBO.GenerateVBO();
+                    tVBO.GenerateOrUpdate();
                     tVBO.CleanLists();
                     if (callback != null)
                     {
