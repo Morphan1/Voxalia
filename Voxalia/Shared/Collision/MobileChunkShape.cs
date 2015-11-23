@@ -121,6 +121,7 @@ namespace Voxalia.Shared.Collision
         // TODO: Optimize me!
         public void GetOverlaps(Vector3 gridPosition, BoundingBox boundingBox, ref QuickList<Vector3i> overlaps)
         {
+            // TODO: Update!
             BoundingBox b2 = new BoundingBox();
             Vector3.Subtract(ref boundingBox.Min, ref gridPosition, out b2.Min);
             Vector3.Subtract(ref boundingBox.Max, ref gridPosition, out b2.Max);
