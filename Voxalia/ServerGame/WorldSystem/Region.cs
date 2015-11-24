@@ -1008,6 +1008,10 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 return new GlowstickEntity(item.DrawColor, this);
             }
+            if (item.Info is SmokegrenadeItem)
+            {
+                return new SmokegrenadeEntity(item.DrawColor, this);
+            }
             return new ItemEntity(item, this);
         }
     }

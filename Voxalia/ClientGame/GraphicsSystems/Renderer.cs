@@ -370,7 +370,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 * Matrix4.CreateScale(ClientUtilities.Convert(scale))
                 * Matrix4.CreateRotationY((float)((relang.Y - 90) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)(relang.Z * Utilities.PI180))
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(pos + new Location(0.5f, 0.5f, 0f)));
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(pos));
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Square._VAO);
             GL.DrawElements(PrimitiveType.Quads, 4, DrawElementsType.UnsignedInt, IntPtr.Zero);

@@ -31,7 +31,6 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             if (Body == null)
             {
-                // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
                 return;
             }
             if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))

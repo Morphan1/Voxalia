@@ -31,6 +31,7 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new StructureCreateItem());
             Register(new StructurePasteItem());
             Register(new SmokemachineItem());
+            Register(new SmokegrenadeItem());
             Generic = new GenericItem();
             Register(Generic);
         }
