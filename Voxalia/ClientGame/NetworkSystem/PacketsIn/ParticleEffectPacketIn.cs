@@ -10,12 +10,18 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 1 + 4 + 12)
+            if (data.Length != 1 + 4 + 12
+                && data.Length != 1 + 4 + 12 + 12)
             {
                 return false;
             }
             ParticleEffectNetType type = (ParticleEffectNetType)data[0];
             float fdata1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1, 4));
+            Location ldata2 = Location.NaN;
+            if (data.Length == 1 + 4 + 12 + 12)
+            {
+                ldata2 = Location.FromBytes(data, 1 + 4 + 12);
+            }
             Location pos = Location.FromBytes(data, 1 + 4);
             switch (type)
             {
@@ -23,7 +29,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     TheClient.Particles.Explode(pos, fdata1);
                     break;
                 case ParticleEffectNetType.SMOKE:
-                    TheClient.Particles.Smoke(pos, fdata1);
+                    TheClient.Particles.Smoke(pos, fdata1, ldata2);
                     break;
                 default:
                     return false;

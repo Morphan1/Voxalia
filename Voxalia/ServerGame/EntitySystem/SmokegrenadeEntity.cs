@@ -11,9 +11,13 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class SmokegrenadeEntity: GlowstickEntity
     {
+        Location colo;
+
         public SmokegrenadeEntity(int col, Region tregion):
             base(col, tregion)
         {
+            System.Drawing.Color tcol = System.Drawing.Color.FromArgb(col);
+            colo = new Location(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f);
         }
 
         public double timer = 0;
@@ -25,7 +29,7 @@ namespace Voxalia.ServerGame.EntitySystem
             timer += TheRegion.Delta;
             while (timer > pulse)
             {
-                TheRegion.SendToAll(new ParticleEffectPacketOut(ParticleEffectNetType.SMOKE, 5, GetPosition()));
+                TheRegion.SendToAll(new ParticleEffectPacketOut(ParticleEffectNetType.SMOKE, 5, GetPosition(), colo));
                 timer -= pulse;
             }
             base.Tick();
