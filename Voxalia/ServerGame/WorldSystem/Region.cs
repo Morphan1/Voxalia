@@ -352,7 +352,7 @@ namespace Voxalia.ServerGame.WorldSystem
             SysConsole.Output(OutputType.INIT, "Finished building chunks! Now have " + LoadedChunks.Count + " chunks!");
         }
 
-        const int SeedMax = int.MaxValue / 10000;
+        const int SeedMax = ushort.MaxValue;
 
         bool CFGEdited = false;
 
