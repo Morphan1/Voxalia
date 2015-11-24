@@ -11,6 +11,8 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
     {
         Texture[] Explosion;
 
+        Texture SmokeT;
+
         Texture White;
 
         Texture White_Blur;
@@ -27,6 +29,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             }
             White = TheClient.Textures.White;
             White_Blur = TheClient.Textures.GetTexture("common/white_blur");
+            SmokeT = TheClient.Textures.GetTexture("effects/smoke/smoke1");
         }
 
         public void Sort()
@@ -50,6 +53,15 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                 Location loc = new Location(ssize);
                 Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + (forward * size * speed) * o.TTL / o.O_TTL, (o) => loc, (o) => 0, ttl, c1, c2, true, tex);
             }
+        }
+
+        public void Smoke(Location pos, float spread)
+        {
+            double xoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+            double yoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+            double zoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+            Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + new Location(xoff, yoff, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.33f + zoff) * (1 - o.TTL / o.O_TTL),
+                (o) => new Location(1f), (o) => 0, 10, Location.One, Location.One, true, SmokeT);
         }
 
         public void PathMark(Location pos, Func<Location> target)

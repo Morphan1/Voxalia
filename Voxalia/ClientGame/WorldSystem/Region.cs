@@ -302,6 +302,13 @@ namespace Voxalia.ClientGame.WorldSystem
             return null;
         }
 
+        public OpenTK.Vector4 GetBlockLighting(Location pos)
+        {
+            BlockInternal bi = GetBlockInternal(pos);
+            float col = bi.BlockLocalData / 255f;
+            return new OpenTK.Vector4(col, col, col, 1f);
+        }
+
         public Material GetBlockMaterial(Location pos)
         {
             return (Material)GetBlockInternal(pos).BlockMaterial;
@@ -312,7 +319,7 @@ namespace Voxalia.ClientGame.WorldSystem
             Chunk ch = GetChunk(ChunkLocFor(pos));
             if (ch == null)
             {
-                return BlockInternal.AIR;
+                return new BlockInternal((ushort)Material.AIR, 0, 128);
             }
             int x = (int)Math.Floor(((int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30) / (float)ch.PosMultiplier);
             int y = (int)Math.Floor(((int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30) / (float)ch.PosMultiplier);

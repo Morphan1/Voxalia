@@ -104,6 +104,7 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\FistItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BreadcrumbItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\GlowstickItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\SmokemachineItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\StructureCreateItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\ShotgunGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\FlashLightItem.cs" />

@@ -14,13 +14,16 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 return false;
             }
-            byte type = data[0];
+            ParticleEffectNetType type = (ParticleEffectNetType)data[0];
             float fdata1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1, 4));
             Location pos = Location.FromBytes(data, 1 + 4);
             switch (type)
             {
-                case 0:
+                case ParticleEffectNetType.EXPLOSION:
                     TheClient.Particles.Explode(pos, fdata1);
+                    break;
+                case ParticleEffectNetType.SMOKE:
+                    TheClient.Particles.Smoke(pos, fdata1);
                     break;
                 default:
                     return false;

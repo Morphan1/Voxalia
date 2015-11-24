@@ -969,7 +969,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             if (effect)
             {
-                ParticleEffectPacketOut pepo = new ParticleEffectPacketOut(ParticleEffectType.EXPLOSION, rad + 30, pos);
+                ParticleEffectPacketOut pepo = new ParticleEffectPacketOut(ParticleEffectNetType.EXPLOSION, rad + 30, pos);
                 foreach (PlayerEntity pe in GetPlayersInRadius(pos, rad + 30)) // TODO: Better particle view dist
                 {
                     pe.Network.SendPacket(pepo);

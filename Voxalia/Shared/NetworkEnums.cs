@@ -40,4 +40,10 @@ namespace Voxalia.Shared
         PLACE = 1,
         BREAK = 2
     }
+
+    public enum ParticleEffectNetType : byte
+    {
+        EXPLOSION = 0,
+        SMOKE = 1
+    }
 }

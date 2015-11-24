@@ -30,6 +30,7 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new GlowstickItem());
             Register(new StructureCreateItem());
             Register(new StructurePasteItem());
+            Register(new SmokemachineItem());
             Generic = new GenericItem();
             Register(Generic);
         }

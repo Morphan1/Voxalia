@@ -8,7 +8,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     public class ParticleEffectPacketOut: AbstractPacketOut
     {
-        public ParticleEffectPacketOut(ParticleEffectType type, float dat1, Location pos)
+        public ParticleEffectPacketOut(ParticleEffectNetType type, float dat1, Location pos)
         {
             ID = 29;
             Data = new byte[1 + 4 + 12];
@@ -16,10 +16,5 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             Utilities.FloatToBytes(dat1).CopyTo(Data, 1);
             pos.ToBytes().CopyTo(Data, 1 + 4);
         }
-    }
-
-    public enum ParticleEffectType: byte
-    {
-        EXPLOSION = 0
     }
 }
