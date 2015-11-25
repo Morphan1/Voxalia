@@ -5,6 +5,7 @@ using BEPUutilities;
 using BEPUphysics.CollisionShapes;
 using BEPUphysics.BroadPhaseEntries;
 using Voxalia.Shared.Collision;
+using Voxalia.ClientGame.GraphicsSystems;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -116,7 +117,18 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             if (_VBO != null)
             {
-                _VBO.Destroy();
+                VBO tV = _VBO;
+                lock (OwningRegion.TheClient.vbos)
+                {
+                    if (OwningRegion.TheClient.vbos.Length < 120)
+                    {
+                        OwningRegion.TheClient.vbos.Push(tV);
+                    }
+                    else
+                    {
+                        tV.Destroy();
+                    }
+                }
                 _VBO = null;
             }
         }

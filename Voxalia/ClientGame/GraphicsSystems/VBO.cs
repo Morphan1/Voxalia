@@ -213,13 +213,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public void oldvert()
         {
             verts = Vertices.ToArray();
-            indices = Indices.ToArray();
             normals = Normals.ToArray();
             texts = TexCoords.ToArray();
         }
 
         Vector3[] verts = null;
-        uint[] indices = null;
+        public uint[] indices = null;
         Vector3[] normals = null;
         Vector3[] texts = null;
 

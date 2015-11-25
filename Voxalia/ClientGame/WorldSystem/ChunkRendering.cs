@@ -114,10 +114,6 @@ namespace Voxalia.ClientGame.WorldSystem
                                 {
                                     TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
                                 }
-                                if (vecsi.Count != normsi.Count || normsi.Count != tci.Count)
-                                {
-                                    SysConsole.Output(OutputType.WARNING, "PROBLEM RENDERING CHUNK: v:" + vecsi.Count + ",n:" + normsi.Count + ",tci:" + tci.Count);
-                                }
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
                                     float tp = c.BlockLocalData / 255f;
@@ -205,22 +201,10 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                     return;
                 }
-                List<uint> inds = new List<uint>(Vertices.Count); // TODO: VBO Array input instead of a list?
+                uint[] inds = new uint[Vertices.Count];
                 for (uint i = 0; i < Vertices.Count; i++)
                 {
-                    inds.Add(i);
-                }
-                if (Norms.Count != Vertices.Count)
-                {
-                    SysConsole.Output(OutputType.ERROR, "Normals invalid! Chunk at " + WorldPosition);
-                }
-                if (TCoords.Count != Vertices.Count)
-                {
-                    SysConsole.Output(OutputType.ERROR, "TexCoords invalid! Chunk at " + WorldPosition);
-                }
-                if (Cols.Count != Vertices.Count)
-                {
-                    SysConsole.Output(OutputType.ERROR, "Colors invalid! Chunk at " + WorldPosition + ", C: " + Cols.Count + ", V: " + Vertices.Count);
+                    inds[i] = i;
                 }
                 VBO tVBO;
                 lock (OwningRegion.TheClient.vbos)
@@ -235,7 +219,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         tVBO.BufferMode = OpenTK.Graphics.OpenGL4.BufferUsageHint.StreamDraw;
                     }
                 }
-                tVBO.Indices = inds;
+                tVBO.indices = inds;
                 tVBO.Vertices = Vertices;
                 tVBO.Normals = Norms;
                 tVBO.TexCoords = TCoords;

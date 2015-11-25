@@ -303,12 +303,17 @@ namespace Voxalia.Shared
 
         public override bool Equals(object obj)
         {
-            return (obj is Location) && this == (Location)obj;
+            if (!(obj is Location))
+            {
+                return false;
+            }
+            Location tobj = (Location)obj;
+            return tobj.X == X && tobj.Y == Y && tobj.Z == Z;
         }
 
         public bool Equals(Location v)
         {
-            return this == v;
+            return v.X == X && v.Y == Y && v.Z == Z;
         }
 
         public static bool operator ==(Location v1, Location v2)
