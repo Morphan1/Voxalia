@@ -8,45 +8,14 @@ using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    public class GlowstickEntity: PhysicsEntity
+    public class GlowstickEntity: GrenadeEntity
     {
         public int Color;
 
         public GlowstickEntity(int col, Region tregion) :
-            base(tregion, true)
+            base(tregion)
         {
-            ConvexEntityShape = new CylinderShape(0.2f, 0.05f);
-            Shape = ConvexEntityShape;
             Color = col;
-            Bounciness = 0.95f;
-            SetMass(1);
-        }
-
-        bool pActive = false;
-
-        public double deltat = 0;
-        
-        public override void Tick()
-        {
-            // TODO: Generic physent method for all this
-            if (Body == null)
-            {
-                return;
-            }
-            if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
-            {
-                pActive = Body.ActivityInformation.IsActive;
-                TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
-            }
-            if (!pActive && GetMass() > 0)
-            {
-                deltat += TheRegion.Delta;
-                if (deltat > 2.0)
-                {
-                    TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
-                }
-            }
-            base.Tick();
         }
     }
 }

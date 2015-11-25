@@ -64,6 +64,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 int col = Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4));
                 ce = new GlowstickEntity(TheClient.TheRegion, col);
             }
+            else if (type == 6)
+            {
+                ce = new GrenadeEntity(TheClient.TheRegion, true);
+            }
             else
             {
                 SysConsole.Output(OutputType.WARNING, "Unknown physent type " + type);

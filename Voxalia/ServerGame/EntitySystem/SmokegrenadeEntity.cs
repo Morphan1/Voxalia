@@ -9,12 +9,12 @@ using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    public class SmokegrenadeEntity: GlowstickEntity
+    public class SmokegrenadeEntity: GrenadeEntity
     {
         Location colo;
 
         public SmokegrenadeEntity(int col, Region tregion):
-            base(col, tregion)
+            base(tregion)
         {
             System.Drawing.Color tcol = System.Drawing.Color.FromArgb(col);
             colo = new Location(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f);

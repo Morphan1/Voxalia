@@ -85,6 +85,7 @@
     <Compile Include="ServerGame\EntitySystem\EntityLiving.cs" />
     <Compile Include="ServerGame\EntitySystem\EntityTargettable.cs" />
     <Compile Include="ServerGame\EntitySystem\EntityUseable.cs" />
+    <Compile Include="ServerGame\EntitySystem\GrenadeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\SmokegrenadeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\GlowstickEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\ItemEntity.cs" />
