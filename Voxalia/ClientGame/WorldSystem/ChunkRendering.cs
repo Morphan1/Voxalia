@@ -26,36 +26,7 @@ namespace Voxalia.ClientGame.WorldSystem
         }
 
         public ASyncScheduleItem rendering = null;
-
-        BlockInternal TryAll(Location pos, int x, int y, int z)
-        {
-            if (PosMultiplier == 1)
-            {
-                return OwningRegion.GetBlockInternal(pos);
-            }
-            else
-            {
-                int px = x == 0 ? 1 : x * PosMultiplier;
-                int py = y == 0 ? 1 : y * PosMultiplier;
-                int pz = z == 0 ? 1 : z * PosMultiplier;
-                for (int xe = 0; xe < px; xe++)
-                {
-                    for (int ye = 0; ye < py; ye++)
-                    {
-                        for (int ze = 0; ze < pz; ze++)
-                        {
-                            BlockInternal bi = OwningRegion.GetBlockInternal(pos + new Location(xe, ye, ze));
-                            if (bi.BlockMaterial == 0 || bi.BlockData != 0)
-                            {
-                                return BlockInternal.AIR;
-                            }
-                        }
-                    }
-                }
-                return new BlockInternal((ushort)Material.AIR, (byte)0, (byte)0); // NOTE: This also works if set to STONE or similar fullblocksolidopaque block.
-            }
-        }
-
+        
         public static Vector3i[] dirs = new Vector3i[] { new Vector3i(1, 0, 0), new Vector3i(0, 1, 0), new Vector3i(0, 0, 1), new Vector3i(1, 1, 0), new Vector3i(0, 1, 1), new Vector3i(1, 0, 1),
         new Vector3i(-1, 1, 0), new Vector3i(0, -1, 1), new Vector3i(-1, 0, 1), new Vector3i(1, 1, 1), new Vector3i(-1, 1, 1), new Vector3i(1, -1, 1), new Vector3i(1, 1, -1), new Vector3i(-1, -1, 1),
         new Vector3i(-1, 1, -1), new Vector3i(1, -1, -1) };
@@ -74,6 +45,13 @@ namespace Voxalia.ClientGame.WorldSystem
                 List<Vector4> Cols = new List<Vector4>(CSize * CSize * CSize * 6);
                 Vector3 ppos = ClientUtilities.Convert(WorldPosition * 30);
                 bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
+                Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Location(0, 0, 1));
+                Chunk c_zm = OwningRegion.GetChunk(WorldPosition + new Location(0, 0, -1));
+                Chunk c_yp = OwningRegion.GetChunk(WorldPosition + new Location(0, 1, 0));
+                Chunk c_ym = OwningRegion.GetChunk(WorldPosition + new Location(0, -1, 0));
+                Chunk c_xp = OwningRegion.GetChunk(WorldPosition + new Location(1, 0, 0));
+                Chunk c_xm = OwningRegion.GetChunk(WorldPosition + new Location(-1, 0, 0));
+                BlockInternal t_air = new BlockInternal(0, 0, 0);
                 for (int x = 0; x < CSize; x++)
                 {
                     for (int y = 0; y < CSize; y++)
@@ -84,12 +62,12 @@ namespace Voxalia.ClientGame.WorldSystem
                             if (((Material)c.BlockMaterial).RendersAtAll())
                             {
                                 // TODO: Handle ALL blocks against the surface when low-LOD
-                                BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : TryAll(ClientUtilities.Convert(ppos) + new Location(x * PosMultiplier, y * PosMultiplier, 30), 1, 1, 0);
-                                BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : TryAll(ClientUtilities.Convert(ppos) + new Location(x * PosMultiplier, y * PosMultiplier, -1), 1, 1, 0);
-                                BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(x * PosMultiplier, 30, z * PosMultiplier), 1, 0, 1);
-                                BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(x * PosMultiplier, -1, z * PosMultiplier), 1, 0, 1);
-                                BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(30, y * PosMultiplier, z * PosMultiplier), 0, 1, 1);
-                                BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : TryAll(ClientUtilities.Convert(ppos) + new Location(-1, y * PosMultiplier, z * PosMultiplier), 0, 1, 1);
+                                BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : (c_zp == null ? t_air : c_zp.GetBlockAt(x, y, z + 1 - CSize));
+                                BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : (c_zm == null ? t_air : c_zm.GetBlockAt(x, y, z - 1 + CSize));
+                                BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : (c_yp == null ? t_air : c_yp.GetBlockAt(x, y + 1 - CSize, z));
+                                BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : (c_ym == null ? t_air : c_ym.GetBlockAt(x, y - 1 + CSize, z));
+                                BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : (c_xp == null ? t_air : c_xp.GetBlockAt(x + 1 - CSize, y, z));
+                                BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : (c_xm == null ? t_air : c_xm.GetBlockAt(x - 1 + CSize, y, z));
                                 bool rAS = !((Material)c.BlockMaterial).GetCanRenderAgainstSelf();
                                 bool zps = (((Material)zp.BlockMaterial).IsOpaque() || (rAS && (zp.BlockMaterial == c.BlockMaterial))) && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
                                 bool zms = (((Material)zm.BlockMaterial).IsOpaque() || (rAS && (zm.BlockMaterial == c.BlockMaterial))) && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
@@ -126,6 +104,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                         Vector3i rel = dirs[f];
                                         if ((me.X == rel.X || rel.X == 0) && (me.Y == rel.Y || rel.Y == 0) && (me.Z == rel.Z || rel.Z == 0))
                                         {
+                                            // TODO: No special get!
                                             tp += SpecialGetBlockAt(x + rel.X, y + rel.Y, z + rel.Z).BlockLocalData / 255f;
                                             tc += 1;
                                         }
@@ -138,6 +117,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                         rel.Z = -rel.Z;
                                         if ((me.X == rel.X || rel.X == 0) && (me.Y == rel.Y || rel.Y == 0) && (me.Z == rel.Z || rel.Z == 0))
                                         {
+                                            // TODO: No special get!
                                             tp += SpecialGetBlockAt(x + rel.X, y + rel.Y, z + rel.Z).BlockLocalData / 255f;
                                             tc += 1;
                                         }
