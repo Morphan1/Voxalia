@@ -12,12 +12,14 @@ namespace Voxalia.ServerGame.EntitySystem
     public class SmokegrenadeEntity: GrenadeEntity
     {
         Location colo;
+        ParticleEffectNetType SmokeType;
 
-        public SmokegrenadeEntity(int col, Region tregion):
+        public SmokegrenadeEntity(int col, Region tregion, ParticleEffectNetType smokeType):
             base(tregion)
         {
             System.Drawing.Color tcol = System.Drawing.Color.FromArgb(col);
             colo = new Location(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f);
+            SmokeType = smokeType;
         }
 
         public double timer = 0;
@@ -29,7 +31,7 @@ namespace Voxalia.ServerGame.EntitySystem
             timer += TheRegion.Delta;
             while (timer > pulse)
             {
-                TheRegion.SendToAll(new ParticleEffectPacketOut(ParticleEffectNetType.SMOKE, 5, GetPosition(), colo));
+                TheRegion.SendToAll(new ParticleEffectPacketOut(SmokeType, 5, GetPosition(), colo));
                 timer -= pulse;
             }
             base.Tick();

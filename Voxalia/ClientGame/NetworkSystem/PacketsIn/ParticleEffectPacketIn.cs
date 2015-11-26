@@ -31,6 +31,9 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 case ParticleEffectNetType.SMOKE:
                     TheClient.Particles.Smoke(pos, fdata1, ldata2);
                     break;
+                case ParticleEffectNetType.BIG_SMOKE:
+                    TheClient.Particles.BigSmoke(pos, fdata1, ldata2);
+                    break;
                 default:
                     return false;
             }

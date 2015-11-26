@@ -153,6 +153,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("bullet", "rifle_ammo", TheServer, 1000, "items/weapons/ammo/rifle_round_ico", "Assault Rifle Ammo", "Very rapid!", Color.White.ToArgb(), "items/weapons/ammo/rifle_round", false));
             Items.GiveItem(new ItemStack("glowstick", TheServer, 10, "items/common/glowstick_ico", "Glowstick", "Pretty colors!", Color.Cyan.ToArgb(), "items/common/glowstick", false));
             Items.GiveItem(new ItemStack("smokegrenade", TheServer, 10, "items/weapons/smokegrenade_ico", "Smoke Grenade", "Not safe around those with asthma!", Color.FromArgb(255, 128, 128).ToArgb(), "items/weapons/smokegrenade", false));
+            Items.GiveItem(new ItemStack("smokegrenade", TheServer, 10, "items/weapons/smokesignal_ico", "Smoke Signal", "Avoid when hiding from aircraft!", Color.FromArgb(255, 128, 128).ToArgb(), "items/weapons/smokesignal", false, "big_smoke", "1"));
             Items.GiveItem(new ItemStack("smokemachine", TheServer, 10, "items/common/smokemachine_ico", "Smoke Machine", "Do not inhale!", Color.White.ToArgb(), "items/common/smokemachine", false));
             SetHealth(Health);
             CGroup = CollisionUtil.Player;

@@ -44,6 +44,7 @@ namespace Voxalia.Shared
     public enum ParticleEffectNetType : byte
     {
         EXPLOSION = 0,
-        SMOKE = 1
+        SMOKE = 1,
+        BIG_SMOKE = 2
     }
 }

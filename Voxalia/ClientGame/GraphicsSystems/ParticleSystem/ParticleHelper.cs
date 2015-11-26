@@ -64,6 +64,15 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                 (o) => new Location(1f), (o) => 0, 10, color, color, true, SmokeT);
         }
 
+        public void BigSmoke(Location pos, float spread, Location color)
+        {
+            double xoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+            double yoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+            double zoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+            Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + new Location(xoff, yoff, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.5f + zoff) * (1 - o.TTL / o.O_TTL),
+                (o) => new Location(10f * (1 - o.TTL / o.O_TTL)), (o) => 0, 35, color, color, true, SmokeT);
+        }
+
         public void PathMark(Location pos, Func<Location> target)
         {
             Location height = new Location(0, 0, 5);
