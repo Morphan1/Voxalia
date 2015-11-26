@@ -12,8 +12,17 @@ using BEPUphysics;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
+    /// <summary>
+    /// Represents a standard serverside entity that interacts with the physics world.
+    /// </summary>
     public abstract class PhysicsEntity: Entity
     {
+        /// <summary>
+        /// Construct the physics entity.
+        /// Sets its gravity to the world default and collisiongroup to Solid.
+        /// </summary>
+        /// <param name="tregion">The region the entity will be spawned in.</param>
+        /// <param name="ticks">Whether the entity should tick. Currently required for water floating!</param>
         public PhysicsEntity(Region tregion, bool ticks)
             : base(tregion, ticks)
         {
@@ -21,6 +30,9 @@ namespace Voxalia.ServerGame.EntitySystem
             CGroup = CollisionUtil.Solid;
         }
 
+        /// <summary>
+        /// The widest this entity gets at its furthest corner. Can be used to generate a bounding sphere.
+        /// </summary>
         public float Widest = 1;
 
         /// <summary>
@@ -73,10 +85,16 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public EntityShape Shape = null;
 
+        /// <summary>
+        /// The best encompassing convex shape for the entity, for tracing.
+        /// </summary>
         public ConvexShape ConvexEntityShape = null;
-
+        
         public Location InternalOffset;
 
+        /// <summary>
+        /// What collision group this entity belongs to.
+        /// </summary>
         public CollisionGroup CGroup;
 
         bool IgnoreEverythingButWater(BroadPhaseEntry entry)
@@ -84,6 +102,10 @@ namespace Voxalia.ServerGame.EntitySystem
             return entry.CollisionRules.Group == CollisionUtil.Water;
         }
 
+        /// <summary>
+        /// Causes the entity to float in water.
+        /// WARNING: Simplistic base implementation. Needs rework! (Possibly to center in the physics code itself!)
+        /// </summary>
         void DoWaterFloat()
         {
             RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
@@ -102,6 +124,9 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        /// <summary>
+        /// Ticks the physics entity, currently only causing water float but may do more in the future.
+        /// </summary>
         public override void Tick()
         {
             if (GetMass() > 0)
@@ -373,6 +398,13 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        /// <summary>
+        /// Applies a force directly to the physics entity's body.
+        /// The force is assumed to be perfectly central to the entity.
+        /// Note: this is a force, not a velocity. Mass is relevant.
+        /// This will activate the entity.
+        /// </summary>
+        /// <param name="force">The force to apply.</param>
         public void ApplyForce(Location force)
         {
             if (Body != null)
@@ -387,6 +419,14 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        /// <summary>
+        /// Applies a force directly to the physics entity's body, at a specified relative origin point.
+        /// The origin is relevant to the body's centerpoint.
+        /// The further you get from the centerpoint, the more spin and less linear motion will be applied.
+        /// Note: this is a force, not a velocity. Mass is relevant.
+        /// This will activate the entity.
+        /// </summary>
+        /// <param name="force">The force to apply.</param>
         public void ApplyForce(Location origin, Location force)
         {
             if (Body != null)

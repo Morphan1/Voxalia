@@ -18,20 +18,44 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class PlayerEntity: EntityLiving
     {
+        /// <summary>
+        /// Half the size of the player, if needed for a cuboid trace.
+        /// </summary>
         public Location HalfSize = new Location(0.55f, 0.55f, 1.3f);
 
+        /// <summary>
+        /// The primary connection to the player over the network.
+        /// </summary>
         public Connection Network;
 
+        /// <summary>
+        /// The secondary (chunk packets) connection to the player over the network.
+        /// </summary>
         public Connection ChunkNetwork;
 
+        /// <summary>
+        /// The global time of the last received KeysPacketIn.
+        /// </summary>
         public double LastKPI = 0;
 
+        /// <summary>
+        /// The name of the player.
+        /// </summary>
         public string Name;
 
+        /// <summary>
+        /// The address the player connected to, to join this server.
+        /// </summary>
         public string Host;
 
+        /// <summary>
+        /// The port the player connected to, to join this server.
+        /// </summary>
         public string Port;
 
+        /// <summary>
+        /// The IP address of this player.
+        /// </summary>
         public string IP;
 
         public byte LastPingByte = 0;
@@ -39,14 +63,24 @@ namespace Voxalia.ServerGame.EntitySystem
         public byte LastCPingByte = 0;
 
         public bool Upward = false;
+
         public bool Forward = false;
+
         public bool Backward = false;
+
         public bool Leftward = false;
+
         public bool Rightward = false;
+
         public bool Walk = false;
+
         public bool Sprint = false;
+        
         public bool Downward = false;
 
+        /// <summary>
+        /// Returns whether this player is currently crouching.
+        /// </summary>
         public bool IsCrouching
         {
             get
@@ -56,20 +90,43 @@ namespace Voxalia.ServerGame.EntitySystem
         }
 
         public bool Click = false;
+
         public bool AltClick = false;
 
         bool pkick = false;
 
         public bool FlashLightOn = false;
 
+        /// <summary>
+        /// The player's primary inventory.
+        /// TODO: Split to 'quickbar' and 'maininventory'!
+        /// </summary>
         public PlayerInventory Items;
 
+        /// <summary>
+        /// The animation of the player's head.
+        /// </summary>
         public SingleAnimation hAnim = null;
+
+        /// <summary>
+        /// The animation of the player's torso.
+        /// </summary>
         public SingleAnimation tAnim = null;
+
+        /// <summary>
+        /// The animation of the player's legs.
+        /// </summary>
         public SingleAnimation lAnim = null;
 
+        /// <summary>
+        /// How far (in chunks) the player can see, as a cubic radius, excluding the chunk the player is in.
+        /// </summary>
         public int ViewRadiusInChunks = 4;
 
+        /// <summary>
+        /// Kicks the player from the server with a specified message.
+        /// </summary>
+        /// <param name="message">The kick reason.</param>
         public void Kick(string message)
         {
             if (pkick)
@@ -94,8 +151,14 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        /// <summary>
+        /// The default mass of the player.
+        /// </summary>
         public float tmass = 100;
 
+        /// <summary>
+        /// The direction the player is currently facing, as Yaw/Pitch.
+        /// </summary>
         public Location Direction;
 
         public ModelEntity CursorMarker = null;
@@ -119,7 +182,7 @@ namespace Voxalia.ServerGame.EntitySystem
             : base(tregion, true, 100f)
         {
             Network = conn;
-            SetMass(tmass / 2f);
+            SetMass(tmass);
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
             Items = new PlayerInventory(this);
@@ -167,6 +230,9 @@ namespace Voxalia.ServerGame.EntitySystem
             CGroup = CollisionUtil.Player;
         }
 
+        /// <summary>
+        /// The internal physics character body.
+        /// </summary>
         public CharacterController CBody;
 
         public override void SpawnBody()
