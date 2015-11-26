@@ -372,5 +372,35 @@ namespace Voxalia.ServerGame.EntitySystem
                 WorldTransform = Matrix.CreateFromQuaternion(rot) * Matrix.CreateTranslation(WorldTransform.Translation);
             }
         }
+
+        public void ApplyForce(Location force)
+        {
+            if (Body != null)
+            {
+                Vector3 vec = force.ToBVector();
+                Body.ApplyLinearImpulse(ref vec);
+                Body.ActivityInformation.Activate();
+            }
+            else
+            {
+                LVel += force / Mass;
+            }
+        }
+
+        public void ApplyForce(Location origin, Location force)
+        {
+            if (Body != null)
+            {
+                Vector3 ori = origin.ToBVector();
+                Vector3 vec = force.ToBVector();
+                Body.ApplyImpulse(ref ori, ref vec);
+                Body.ActivityInformation.Activate();
+            }
+            else
+            {
+                // TODO: Account for spin?
+                LVel += force / Mass;
+            }
+        }
     }
 }

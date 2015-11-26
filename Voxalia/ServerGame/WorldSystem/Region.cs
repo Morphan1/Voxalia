@@ -985,8 +985,8 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         Location offs = e.GetPosition() - pos;
                         float dpower = (float)((rad * 5) - offs.Length()); // TODO: Efficiency?
-                        Vector3 force = new Vector3(rad, rad, rad * 3) * dpower;
-                        ((PhysicsEntity)e).Body.ApplyLinearImpulse(ref force);
+                        Location force = new Location(rad, rad, rad * 3) * dpower;
+                        ((PhysicsEntity)e).ApplyForce(force);
                     }
                 }
             }
