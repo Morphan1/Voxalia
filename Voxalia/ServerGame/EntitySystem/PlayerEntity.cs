@@ -47,6 +47,14 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool Sprint = false;
         public bool Downward = false;
 
+        public bool IsCrouching
+        {
+            get
+            {
+                return Downward || DesiredStance == Stance.Crouching;
+            }
+        }
+
         public bool Click = false;
         public bool AltClick = false;
 
