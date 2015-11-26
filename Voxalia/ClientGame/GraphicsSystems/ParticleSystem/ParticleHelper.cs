@@ -34,7 +34,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public void Sort()
         {
-            Engine.ActiveEffects = Engine.ActiveEffects.OrderBy(o => (Engine.TheClient.CameraPos - o.Start(o)).LengthSquared()).ToList();
+            Engine.ActiveEffects = Engine.ActiveEffects.OrderBy((o) => -(Engine.TheClient.CameraPos - o.Start(o)).LengthSquared()).ToList();
         }
 
         public ParticleEngine Engine;

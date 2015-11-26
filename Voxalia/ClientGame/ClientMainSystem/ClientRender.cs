@@ -28,8 +28,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
         }
-
-        public void TranspBlend()
+        
+        public void GodrayBlend()
         {
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
         }
@@ -618,11 +618,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.UniformMatrix4(2, false, ref def);
                 GL.Uniform1(4, DesaturationAmount);
                 FBOid = 3;
-                //TranspBlend();
                 GL.DepthMask(false);
                 Render3D(false);
                 FBOid = 0;
-                //StandardBlend();
                 if (CVars.r_godrays.ValueB)
                 {
                     GL.Disable(EnableCap.CullFace);
@@ -633,7 +631,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     s_godray.Bind();
                     GL.UniformMatrix4(1, false, ref mat);
                     GL.UniformMatrix4(2, false, ref matident);
-                    TranspBlend();
+                    GodrayBlend();
                     Rendering.RenderRectangle(-1, -1, 1, 1);
                     StandardBlend();
                 }
