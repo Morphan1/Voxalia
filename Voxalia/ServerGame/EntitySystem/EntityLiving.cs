@@ -1,4 +1,5 @@
-﻿using Voxalia.ServerGame.WorldSystem;
+﻿using System;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -27,7 +28,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public virtual void SetHealth(float health)
         {
-            Health = health;
+            Health = Math.Min(health, MaxHealth);
             if (MaxHealth != 0 && Health <= 0)
             {
                 Die();
