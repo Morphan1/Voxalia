@@ -326,6 +326,7 @@ namespace Voxalia.ServerGame.WorldSystem
             PhysicsWorld = new Space(pl);
             PhysicsWorld.TimeStepSettings.MaximumTimeStepsPerFrame = 10;
             PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f * 3f / 2f);
+            PhysicsWorld.Add(new LiquidForceField(this));
             Collision = new CollisionUtil(PhysicsWorld);
             string fname = "saves/" + Name + "/region.yml";
             if (Program.Files.Exists(fname))
@@ -351,7 +352,7 @@ namespace Voxalia.ServerGame.WorldSystem
             TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-world scheduler // Also don't freeze the entire server just because we're waiting on chunks >.>
             SysConsole.Output(OutputType.INIT, "Finished building chunks! Now have " + LoadedChunks.Count + " chunks!");
         }
-
+        
         const int SeedMax = ushort.MaxValue;
 
         bool CFGEdited = false;
@@ -383,7 +384,6 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public bool SpecialCaseRayTrace(Location start, Location dir, float len, MaterialSolidity considerSolid, Func<BroadPhaseEntry, bool> filter, out RayCastResult rayHit)
         {
-            CheckThreadValidity();
             Ray ray = new Ray(start.ToBVector(), dir.ToBVector());
             RayCastResult best = new RayCastResult(new RayHit() { T = len }, null);
             bool hA = false;
@@ -427,7 +427,6 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public bool SpecialCaseConvexTrace(ConvexShape shape, Location start, Location dir, float len, MaterialSolidity considerSolid, Func<BroadPhaseEntry, bool> filter, out RayCastResult rayHit)
         {
-            CheckThreadValidity();
             RigidTransform rt = new RigidTransform(start.ToBVector(), BEPUutilities.Quaternion.Identity);
             BEPUutilities.Vector3 sweep = (dir * len).ToBVector();
             RayCastResult best = new RayCastResult(new RayHit() { T = len }, null);

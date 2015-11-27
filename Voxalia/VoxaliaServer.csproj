@@ -200,6 +200,7 @@
     <Compile Include="ServerGame\WorldSystem\BlockPopulator.cs" />
     <Compile Include="ServerGame\WorldSystem\Chunk.cs" />
     <Compile Include="ServerGame\WorldSystem\ChunkFlags.cs" />
+    <Compile Include="ServerGame\WorldSystem\LiquidForceField.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleFrozenLakeBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleColdMountainBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleDesertBiome.cs" />

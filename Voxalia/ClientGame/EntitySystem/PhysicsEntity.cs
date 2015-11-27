@@ -80,31 +80,10 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             return entry.CollisionRules.Group == CollisionUtil.Water;
         }
-
-        void DoWaterFloat()
-        {
-            RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
-            Location sweep = new Location(0, 0, -1);
-            RayCastResult rcr;
-            if (TheRegion.SpecialCaseConvexTrace(ConvexEntityShape, new Location(Body.Position), sweep, 0.001f, MaterialSolidity.LIQUID, IgnoreEverythingButWater, out rcr))
-            {
-                if (GetVelocity().Z > 2f)
-                {
-                    return;
-                }
-                // TODO: Better calculations - depth inside the water ++ floatiness factor!
-                Vector3 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * GetMass() * (float)TheRegion.Delta;
-                Body.ApplyLinearImpulse(ref impulse);
-                Body.ActivityInformation.Activate();
-            }
-        }
-
+        
         public override void Tick()
         {
-            if (GetMass() > 0)
-            {
-                DoWaterFloat();
-            }
+            // NOTE: Do nothing here.
         }
 
         /// <summary>

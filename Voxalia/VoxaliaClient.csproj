@@ -224,6 +224,7 @@
     <Compile Include="ClientGame\UISystem\UIConsole.cs" />
     <Compile Include="ClientGame\WorldSystem\Chunk.cs" />
     <Compile Include="ClientGame\WorldSystem\ChunkRendering.cs" />
+    <Compile Include="ClientGame\WorldSystem\LiquidForceField.cs" />
     <Compile Include="ClientGame\WorldSystem\LoadAllChunksSystem.cs" />
     <Compile Include="ClientGame\WorldSystem\Region.cs" />
   </ItemGroup>
