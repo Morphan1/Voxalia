@@ -43,6 +43,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             BoneWeights = null;
             BoneIDs2 = null;
             BoneWeights2 = null;
+            verts = null;
+            indices = null;
+            normals = null;
+            texts = null;
         }
 
         int vC;
