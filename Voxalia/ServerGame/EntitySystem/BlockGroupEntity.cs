@@ -57,29 +57,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             return Blocks[BlockIndex(x, y, z)];
         }
-
-        public bool pActive = false;
-
-        public double deltat = 0;
         
-        public override void Tick() // TODO: Move to phys ent?
-        {
-            if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
-            {
-                pActive = Body.ActivityInformation.IsActive;
-                TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
-            }
-            if (!pActive && GetMass() > 0)
-            {
-                deltat += TheRegion.Delta;
-                if (deltat > 2.0)
-                {
-                    TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
-                }
-            }
-            base.Tick();
-        }
-
         // TODO: Async?
         public EntityShape CalculateHullShape(BGETraceMode mode, out Location offs)
         {

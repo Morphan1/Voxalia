@@ -9,6 +9,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
 using BEPUphysics;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -17,15 +18,18 @@ namespace Voxalia.ServerGame.EntitySystem
     /// </summary>
     public abstract class PhysicsEntity: Entity
     {
+        bool Transmit;
+
         /// <summary>
         /// Construct the physics entity.
         /// Sets its gravity to the world default and collisiongroup to Solid.
         /// </summary>
         /// <param name="tregion">The region the entity will be spawned in.</param>
-        /// <param name="ticks">Whether the entity should tick. Currently required for water floating!</param>
-        public PhysicsEntity(Region tregion, bool ticks)
-            : base(tregion, ticks)
+        /// <param name="transmit">Whether the entity should transmit itself across the network.</param>
+        public PhysicsEntity(Region tregion, bool transmit)
+            : base(tregion, true)
         {
+            Transmit = transmit;
             Gravity = new Location(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
             CGroup = CollisionUtil.Solid;
         }
@@ -124,11 +128,31 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        public bool netpActive = false;
+
+        public double netdeltat = 0;
+        
         /// <summary>
-        /// Ticks the physics entity, currently only causing water float but may do more in the future.
+        /// Ticks the physics entity, currently only causing water float and transmitting to the network.
         /// </summary>
         public override void Tick()
         {
+            if (Transmit)
+            {
+                if (Body.ActivityInformation.IsActive || (netpActive && !Body.ActivityInformation.IsActive))
+                {
+                    netpActive = Body.ActivityInformation.IsActive;
+                    TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                }
+                if (!netpActive && GetMass() > 0)
+                {
+                    netdeltat += TheRegion.Delta;
+                    if (netdeltat > 2.0)
+                    {
+                        TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                    }
+                }
+            }
             if (GetMass() > 0)
             {
                 DoWaterFloat();

@@ -20,34 +20,8 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             model = mod;
         }
-
-        bool pActive = false;
-
-        public double deltat = 0;
-
+        
         public ModelCollisionMode mode = ModelCollisionMode.AABB;
-
-        public override void Tick()
-        {
-            if (Body == null)
-            {
-                return;
-            }
-            if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
-            {
-                pActive = Body.ActivityInformation.IsActive;
-                TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
-            }
-            if (!pActive && GetMass() > 0)
-            {
-                deltat += TheRegion.Delta;
-                if (deltat > 2.0)
-                {
-                    TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
-                }
-            }
-            base.Tick();
-        }
         
         public Location offset;
 

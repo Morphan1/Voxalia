@@ -23,29 +23,7 @@ namespace Voxalia.ServerGame.EntitySystem
             SetPosition(pos.GetBlockLocation() + offset);
             Mat = mat;
         }
-
-        public bool pActive = false;
-
-        public double deltat = 0;
-
-        public override void Tick()
-        {
-            if (Body.ActivityInformation.IsActive || (pActive && !Body.ActivityInformation.IsActive))
-            {
-                pActive = Body.ActivityInformation.IsActive;
-                TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
-            }
-            if (!pActive && GetMass() > 0)
-            {
-                deltat += TheRegion.Delta;
-                if (deltat > 2.0)
-                {
-                    TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
-                }
-            }
-            base.Tick();
-        }
-
+        
         // TODO: If settled (deactivated) for too long (minutes?), or loaded in via chunkload, revert to a block
 
         /// <summary>

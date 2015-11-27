@@ -179,7 +179,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public List<Location> Breadcrumbs = new List<Location>();
         
         public PlayerEntity(WorldSystem.Region tregion, Connection conn)
-            : base(tregion, true, 100f)
+            : base(tregion, false, 100f)
         {
             Network = conn;
             SetMass(tmass);
