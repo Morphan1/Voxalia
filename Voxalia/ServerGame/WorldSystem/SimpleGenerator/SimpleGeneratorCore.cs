@@ -7,14 +7,23 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
     public class SimpleGeneratorCore: BlockPopulator
     {
         public SimpleBiomeGenerator Biomes = new SimpleBiomeGenerator();
+
         public const float GlobalHeightMapSize = 400;
+
         public const float LocalHeightMapSize = 40;
+
         public const float SolidityMapSize = 100;
+
         public const float SolidityTolerance = 0.8f;
+
         public const float OreMapSize = 70;
+
         public const float OreTypeMapSize = 150;
+
         public const float OreMapTolerance = 0.90f;
+
         public const float OreMapThickTolerance = 0.94f;
+
         public SimpleGeneratorCore()
         {
             try
@@ -26,6 +35,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                 SysConsole.Output("Loading tree structures", ex);
             }
         }
+
         public Structure tempTree;
         
         public Material GetMatType(int seed2, int seed3, int seed4, int seed5, int x, int y, int z)
@@ -77,10 +87,12 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         
         // TODO: Clean, reduce to only what's necessary. Every entry in this list makes things that much more expensive.
         public static Vector3i[] Rels = new Vector3i[] { new Vector3i(-10, 10, 0), new Vector3i(-10, -10, 0), new Vector3i(10, 10, 0), new Vector3i(10, -10, 0),
+        new Vector3i(-15, 15, 0), new Vector3i(-15, -15, 0), new Vector3i(15, 15, 0), new Vector3i(15, -15, 0),
         new Vector3i(-20, 20, 0), new Vector3i(-20, -20, 0), new Vector3i(20, 20, 0), new Vector3i(20, -20, 0),
         new Vector3i(-5, 5, 0), new Vector3i(-5, -5, 0), new Vector3i(5, 5, 0), new Vector3i(5, -5, 0),
         new Vector3i(-10, 0, 0), new Vector3i(0, -10, 0), new Vector3i(10, 0, 0), new Vector3i(0, 10, 0),
         new Vector3i(-20, 0, 0), new Vector3i(0, -20, 0), new Vector3i(20, 0, 0), new Vector3i(0, 20, 0),
+        new Vector3i(-15, 0, 0), new Vector3i(0, -15, 0), new Vector3i(15, 0, 0), new Vector3i(0, 15, 0),
         new Vector3i(-5, 0, 0), new Vector3i(0, -5, 0), new Vector3i(5, 0, 0), new Vector3i(0, 5, 0)};
 
         float relmod = 1f;
