@@ -112,6 +112,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             if (Transmit)
             {
+                // TODO: Timer of some form, to prevent packet flood on a speedy server?
                 if (Body.ActivityInformation.IsActive || (netpActive && !Body.ActivityInformation.IsActive))
                 {
                     netpActive = Body.ActivityInformation.IsActive;

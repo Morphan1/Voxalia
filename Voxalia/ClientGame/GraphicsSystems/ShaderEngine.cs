@@ -168,6 +168,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 FS = FS.Replace("#INCLUDE_STATEMENTS_HERE", "");
             }
+            if (ClientMainSystem.Client.Central.CVars.r_toonify.ValueB) // TODO: CVars reference
+            {
+                FS = FS.Replace("#INCLUDE_TOONIFY_HERE", "#define MCM_TOONIFY");
+            }
+            else
+            {
+                FS = FS.Replace("#INCLUDE_TOONIFY_HERE", "");
+            }
             GL.ShaderSource(FragmentObject, FS);
             GL.CompileShader(FragmentObject);
             string FS_Info = GL.GetShaderInfoLog(FragmentObject);

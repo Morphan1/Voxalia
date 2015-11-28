@@ -1,6 +1,7 @@
 #version 430 core
 
 #INCLUDE_STATEMENTS_HERE
+#INCLUDE_TOONIFY_HERE
 
 layout (binding = 0) uniform sampler2D colortex;
 layout (binding = 1) uniform sampler2D positiontex;
@@ -37,12 +38,12 @@ layout (location = 25) uniform float HEIGHT = 720.0;
 layout (location = 0) out vec4 color;
 layout (location = 1) out vec4 godray;
 
-float linearizeDepth(float rinput)
+float linearizeDepth(in float rinput)
 {
 	return (2 * MIN_DEPTH) / (MAX_DEPTH + MIN_DEPTH - rinput * (MAX_DEPTH - MIN_DEPTH));
 }
 
-vec4 raytrace(vec3 reflectionVector, float startDepth)
+vec4 raytrace(in vec3 reflectionVector, in float startDepth)
 {
 	float stepSize = 0.01; //rayStepSize;
 	reflectionVector = normalize(reflectionVector) * stepSize;
@@ -76,7 +77,7 @@ vec4 ssr()
 	return raytrace(reflectionVector.xyz / reflectionVector.w, currDepth);
 }
 
-vec4 regularize(vec4 input_r) // TODO: Is this working the best it can?
+vec4 regularize(in vec4 input_r) // TODO: Is this working the best it can?
 {
 	if (input_r.x <= 1.0 && input_r.y <= 1.0 && input_r.z <= 1.0)
 	{
@@ -101,12 +102,12 @@ vec4 getGodRay()
 	return c * wexposure;
 }
 
-vec3 desaturate(vec3 c)
+vec3 desaturate(in vec3 c)
 {
 	return mix(c, vec3(0.95, 0.77, 0.55) * dot(c, vec3(1.0)), desaturationAmount);
 }
 
-vec4 getColor(vec2 pos)
+vec4 getColor(in vec2 pos)
 {
 	vec4 shadow_light_color = texture(shtex, pos);
 	vec4 colortex_color = texture(colortex, pos);
@@ -154,10 +155,161 @@ vec3 fxaaColor()
 	}
 }
 
+const float edge_thres = 0.2;
+const float edge_thres2 = 5.0;
+
+#define HueLevCount 7
+#define SatLevCount 11
+#define ValLevCount 4
+const float[HueLevCount] HueLevels = float[] (0.0, 60.0, 120.0, 180.0, 240.0, 300.0, 360.0);
+const float[SatLevCount] SatLevels = float[] (0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0);
+const float[ValLevCount] ValLevels = float[] (0.0, 0.33, 0.66, 1.0);
+
+vec3 RGBtoHSV(in float r, in float g, in float b)
+{
+	float minv = min(min(r, g), b);
+	float maxv = max(max(r, g), b);
+	vec3 res;
+	res.z = maxv;
+	float delta = maxv - minv;
+	if( maxv != 0.0 )
+	{
+		res.y = delta / maxv;
+	}
+	else
+	{
+		res.y = 0.0;
+		res.x = -1.0;
+		return res;
+	}
+	if(r == maxv)
+	{
+		res.x = (g - b) / delta;
+	}
+	else if(g == maxv)
+	{
+		res.x = 2.0 + (b - r) / delta;
+	}
+	else
+	{
+		res.x = 4.0 + (r - g) / delta;
+	}
+	res.x = res.x * 60.0;
+	if(res.x < 0.0)
+	{
+      res.x = res.x + 360.0;
+	}
+	return res;
+}
+
+vec3 HSVtoRGB(in float h, in float s, in float v)
+{
+	if(s == 0.0)
+	{
+		return vec3(v, v, v);
+	}
+	float ht = h / 60.0;
+	float i = floor(ht);
+	float f = ht - i;
+	float p = v * (1.0 - s);
+	float q = v * (1.0 - s * f);
+	float t = v * ( 1.0 - s * (1.0 - f));
+	switch(int(i))
+	{
+		case 0:
+			return vec3(v, t, p);
+		case 1:
+			return vec3(q, v, p);
+		case 2:
+			return vec3(p, v, t);
+		case 3:
+			return vec3(p, q, v);
+		case 4:
+			return vec3(t, p, v);
+		default:
+			return vec3(v, p, q);
+	}
+}
+
+float nearestLevel(in float col, in int mode)
+{
+	int levCount;
+	if (mode == 0)
+	{
+		levCount = HueLevCount;
+	}
+	else if (mode == 1)
+	{
+		levCount = SatLevCount;
+	}
+	else
+	{
+		levCount = ValLevCount;
+	}
+	for (int i = 0; i < levCount - 1; i++)
+	{
+		if (mode == 0)
+		{
+			if (col >= HueLevels[i] && col <= HueLevels[i + 1])
+			{
+				return HueLevels[i + 1];
+			}
+		}
+		else if (mode == 1)
+		{
+			if (col >= SatLevels[i] && col <= SatLevels[i + 1])
+			{
+				return SatLevels[i + 1];
+			}
+		}
+		else
+		{
+			if (col >= ValLevels[i] && col <= ValLevels[i + 1])
+			{
+				return ValLevels[i + 1];
+			}
+		}
+	}
+	return 0;
+}
+
+float avg_intensity(in vec4 pix) 
+{
+	return (pix.r + pix.g + pix.b) / 3.0;
+}
+
+float IsEdge(in vec2 coords)
+{
+	float dxtex = 1.0 / WIDTH;
+	float dytex = 1.0 / HEIGHT;
+	float pix[9];
+	int k = -1;
+	float delta;
+	for (int x = -1; x < 2; x++)
+	{
+		for(int y = -1; y < 2; y++)
+		{
+			k++;
+			pix[k] = avg_intensity(getColor(coords + vec2(float(x) * dxtex, float(y) * dytex)));
+		}
+	}
+	delta = (abs(pix[1] - pix[7])+ abs(pix[5] - pix[3]) + abs(pix[0] - pix[8])+ abs(pix[2] - pix[6])) / 4.0;
+  return clamp(edge_thres2 * delta, 0.0, 1.0);
+}
+
 void main()
 {
+	vec4 light_color = getColor(f_texcoord);
+#ifdef MCM_TOONIFY
+    vec3 vHSV = RGBtoHSV(light_color.r, light_color.g, light_color.b);
+    vHSV.x = nearestLevel(vHSV.x, 0);
+    vHSV.y = nearestLevel(vHSV.y, 1);
+    vHSV.z = nearestLevel(vHSV.z, 2);
+    float edg = IsEdge(f_texcoord);
+    vec3 vRGB = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : HSVtoRGB(vHSV.x, vHSV.y, vHSV.z);
+    light_color = vec4(vRGB.x, vRGB.y, vRGB.z, 1.0);
+#endif
 #ifdef MCM_GOOD_GRAPHICS
-	vec4 light_color = getColor(f_texcoord);//vec4(fxaaColor(), 1.0);
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
 	float dist = texture(depthtex, f_texcoord).r;
 	godray = getGodRay() * vec4(grcolor, 1.0);
@@ -176,7 +328,6 @@ void main()
 		godray = vec4(desaturate(godray.xyz), godray.w);
 	}
 #else
-	vec4 light_color = getColor(f_texcoord);
 	color = vec4(light_color.xyz, 1.0);
 	godray = vec4(0.0);
 #endif
