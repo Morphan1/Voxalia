@@ -35,6 +35,8 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Location WorldPosition;
 
+        public volatile ASyncScheduleItem LoadSchedule = null;
+
         public Chunk()
         {
             BlocksInternal = new BlockInternal[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];

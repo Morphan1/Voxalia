@@ -483,7 +483,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     for (double z = minc.Z; z <= maxc.Z; z++)
                     {
-                        LoadChunk_Background(new Location(x, y, z), (o) => { lock (locker) { done++; } });
+                        LoadChunk_Background_Startup(new Location(x, y, z), (o) => { lock (locker) { done++; } }, LoadTimeScheduler);
                         c++;
                     }
                 }
@@ -492,7 +492,7 @@ namespace Voxalia.ServerGame.WorldSystem
             double time = 0;
             while (cont)
             {
-                TheServer.Schedule.RunAllSyncTasks(0.016);
+                LoadTimeScheduler.RunAllSyncTasks(0.016);
                 lock (locker)
                 {
                     cont = done < c;
@@ -505,6 +505,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
                 Thread.Sleep(16);
             }
+            LoadTimeScheduler.RunAllSyncTasks(0.016);
             TheServer.Schedule.RunAllSyncTasks(0.016);
             if (announce)
             {
@@ -715,6 +716,7 @@ namespace Voxalia.ServerGame.WorldSystem
             Chunk chunk;
             if (LoadedChunks.TryGetValue(cpos, out chunk))
             {
+                // Be warned, it may still be loading here!
                 return chunk;
             }
             chunk = new Chunk();
@@ -739,6 +741,10 @@ namespace Voxalia.ServerGame.WorldSystem
             Chunk chunk;
             if (LoadedChunks.TryGetValue(cpos, out chunk))
             {
+                while (chunk.LoadSchedule != null)
+                {
+                    Thread.Sleep(1); // TODO: Handle loading a loading chunk more cleanly.
+                }
                 if (chunk.Flags.HasFlag(ChunkFlags.ISCUSTOM))
                 {
                     chunk.Flags &= ~ChunkFlags.ISCUSTOM;
@@ -761,56 +767,90 @@ namespace Voxalia.ServerGame.WorldSystem
             chunk.AddToWorld();
             return chunk;
         }
+
+        void Loadchunkbgint(Chunk ch, Action<bool> callback, Scheduler schedule)
+        {
+            if (!ch.Flags.HasFlag(ChunkFlags.ISCUSTOM))
+            {
+                if (callback != null)
+                {
+                    callback.Invoke(true);
+                }
+            }
+            else
+            {
+                ChunksToDestroy.Remove(ch);
+                ch.AddToWorld();
+                ch.LoadSchedule = schedule.AddASyncTask(() =>
+                {
+                    PopulateChunk(ch, false);
+                    ch.LoadSchedule = null;
+                    schedule.ScheduleSyncTask(() =>
+                    {
+                        if (callback != null)
+                        {
+                            callback.Invoke(false);
+                        }
+                    });
+                });
+                ch.LoadSchedule.RunMe();
+            }
+        }
+
+        Scheduler LoadTimeScheduler = new Scheduler();
         
         /// <summary>
         /// Designed for startup time.
         /// </summary>
-        public void LoadChunk_Background(Location cpos, Action<bool> callback = null)
+        void LoadChunk_Background_Startup(Location cpos, Action<bool> callback, Scheduler schedule)
         {
-            TheServer.Schedule.ScheduleSyncTask(() =>
+            Chunk ch;
+            if (LoadedChunks.TryGetValue(cpos, out ch))
             {
-                CheckThreadValidity();
-                Chunk ch;
-                if (LoadedChunks.TryGetValue(cpos, out ch))
+                if (ch.LoadSchedule == null)
                 {
-                    if (!ch.Flags.HasFlag(ChunkFlags.ISCUSTOM))
-                    {
-                        if (callback != null)
-                        {
-                            callback.Invoke(true);
-                        }
-                        return;
-                    }
-                    else
-                    {
-                        ChunksToDestroy.Remove(ch);
-                        ch.AddToWorld();
-                        TheServer.Schedule.StartASyncTask(() =>
-                        {
-                            PopulateChunk(ch, false);
-                            if (callback != null)
-                            {
-                                callback.Invoke(false);
-                            }
-                        });
-                        return;
-                    }
+                    Loadchunkbgint(ch, callback, schedule);
                 }
-                ch = new Chunk();
-                ch.OwningRegion = this;
-                ch.WorldPosition = cpos;
-                LoadedChunks.Add(cpos, ch);
-                ch.AddToWorld();
-                TheServer.Schedule.StartASyncTask(() =>
+                else
                 {
-                    PopulateChunk(ch, true);
+                    ch.LoadSchedule.ReplaceOrFollowWith(schedule.AddASyncTask(() =>
+                    {
+                        schedule.ScheduleSyncTask(() =>
+                        {
+                            Loadchunkbgint(ch, callback, schedule);
+                        });
+                    }));
+                }
+                return;
+            }
+            ch = new Chunk();
+            ch.OwningRegion = this;
+            ch.WorldPosition = cpos;
+            LoadedChunks.Add(cpos, ch);
+            ch.AddToWorld();
+            ch.LoadSchedule = schedule.AddASyncTask(() =>
+            {
+                PopulateChunk(ch, true);
+                ch.LoadSchedule = null;
+                schedule.ScheduleSyncTask(() =>
+                {
                     if (callback != null)
                     {
                         callback.Invoke(false);
                     }
                 });
             });
+            ch.LoadSchedule.RunMe();
         }
+
+        public void LoadChunk_Background(Location cpos, Action<bool> callback = null)
+        {
+            TheServer.Schedule.ScheduleSyncTask(() =>
+            {
+                LoadChunk_Background_Startup(cpos, callback, TheServer.Schedule);
+            });
+        }
+
         
         public Chunk GetChunk(Location cpos)
         {

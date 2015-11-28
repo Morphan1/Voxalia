@@ -159,6 +159,10 @@ namespace Voxalia.Shared
         {
             lock (Locker)
             {
+                if (Started && !Done)
+                {
+                    return;
+                }
                 Started = true;
                 Done = false;
             }
