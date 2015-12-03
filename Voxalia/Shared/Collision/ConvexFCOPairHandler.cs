@@ -129,6 +129,11 @@ namespace Voxalia.Shared.Collision
                 }
             }
         }
+
+        public void ContactInfo(int index, out ContactInformation info)
+        {
+            GetContactInformation(index, out info);
+        }
         
         protected override void GetContactInformation(int index, out ContactInformation info)
         {

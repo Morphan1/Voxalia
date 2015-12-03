@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Voxalia.Shared;
 using Voxalia.ClientGame.WorldSystem;
 using OpenTK;
@@ -55,30 +56,52 @@ namespace Voxalia.ClientGame.EntitySystem
             Body.CollisionInformation.Events.ContactCreated += Events_ContactCreated; // TODO: Perhaps better more direct event?
         }
 
-        double soundlastplayed = 0;
-
+        public double lastSoundTime;
+        
         void Events_ContactCreated(EntityCollidable sender, Collidable other, CollidablePairHandler pair, ContactData contact)
         {
+            if (TheRegion.GlobalTickTimeLocal - lastSoundTime < soundmaxrate)
+            {
+                return;
+            }
+            lastSoundTime = TheRegion.GlobalTickTimeLocal;
             if (other is FullChunkObject)
             {
-                if (TheRegion.GlobalTickTimeLocal - soundlastplayed < soundmaxrate)
+                ContactInformation info;
+                ((ConvexFCOPairHandler)pair).ContactInfo(/*contact.Id*/0, out info);
+                float vellen = Math.Abs(info.RelativeVelocity.X) + Math.Abs(info.RelativeVelocity.Y) + Math.Abs(info.RelativeVelocity.Z);
+                float mod = vellen / 5;
+                if (mod > 2)
                 {
-                    return; // TODO: Better method of managing when to play sounds!
+                    mod = 2;
                 }
-                soundlastplayed = TheRegion.GlobalTickTimeLocal;
                 Location block = new Location(contact.Position - contact.Normal * 0.01f);
                 BlockInternal bi = TheRegion.GetBlockInternal(block);
                 MaterialSound sound = ((Material)bi.BlockMaterial).Sound();
                 if (sound != MaterialSound.NONE)
                 {
-                    // TODO: Adjust pitch/volume with impact velocity?
-                    new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(block, sound, 1, 1);
+                    new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(block, sound, mod, 0.5f * mod);
                 }
                 MaterialSound sound2 = Mat.Sound();
                 if (sound2 != MaterialSound.NONE)
                 {
-                    // TODO: Adjust pitch/volume with impact velocity?
-                    new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(block, sound2, 1, 1);
+                    new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(block, sound2, mod, 0.5f * mod);
+                }
+            }
+            else if (other is EntityCollidable)
+            {
+                BEPUphysics.Entities.Entity e = ((EntityCollidable)other).Entity;
+                BEPUutilities.Vector3 relvel = Body.LinearVelocity - e.LinearVelocity;
+                float vellen = Math.Abs(relvel.X) + Math.Abs(relvel.Y) + Math.Abs(relvel.Z);
+                float mod = vellen / 5;
+                if (mod > 2)
+                {
+                    mod = 2;
+                }
+                MaterialSound sound = Mat.Sound();
+                if (sound != MaterialSound.NONE)
+                {
+                    new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(new Location(contact.Position), sound, mod, 0.5f * mod);
                 }
             }
         }
