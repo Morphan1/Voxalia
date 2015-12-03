@@ -5,6 +5,12 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.OtherSystems;
+using BEPUphysics.BroadPhaseEntries;
+using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using BEPUphysics.NarrowPhaseSystems.Pairs;
+using BEPUphysics.CollisionTests;
+using Voxalia.ClientGame.NetworkSystem.PacketsIn;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -12,6 +18,7 @@ namespace Voxalia.ClientGame.EntitySystem
     {
         public Material Mat;
         public byte Dat;
+        public double soundmaxrate = 0.2;
 
         public BlockItemEntity(Region tregion, Material tmat, byte dat)
             : base(tregion, false, true)
@@ -45,6 +52,35 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             vbo.GenerateVBO();
             base.SpawnBody();
+            Body.CollisionInformation.Events.ContactCreated += Events_ContactCreated; // TODO: Perhaps better more direct event?
+        }
+
+        double soundlastplayed = 0;
+
+        void Events_ContactCreated(EntityCollidable sender, Collidable other, CollidablePairHandler pair, ContactData contact)
+        {
+            if (other is FullChunkObject)
+            {
+                if (TheRegion.GlobalTickTimeLocal - soundlastplayed < soundmaxrate)
+                {
+                    return; // TODO: Better method of managing when to play sounds!
+                }
+                soundlastplayed = TheRegion.GlobalTickTimeLocal;
+                Location block = new Location(contact.Position - contact.Normal * 0.01f);
+                BlockInternal bi = TheRegion.GetBlockInternal(block);
+                MaterialSound sound = ((Material)bi.BlockMaterial).Sound();
+                if (sound != MaterialSound.NONE)
+                {
+                    // TODO: Adjust pitch/volume with impact velocity?
+                    new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(block, sound, 1, 1);
+                }
+                MaterialSound sound2 = Mat.Sound();
+                if (sound2 != MaterialSound.NONE)
+                {
+                    // TODO: Adjust pitch/volume with impact velocity?
+                    new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(block, sound2, 1, 1);
+                }
+            }
         }
 
         public override void DestroyBody()

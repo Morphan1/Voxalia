@@ -176,7 +176,8 @@ namespace Voxalia.Shared
         STONE = 5,
         SNOW = 6,
         DIRT = 7,
-        WOOD = 8
+        WOOD = 8,
+        COUNT = 9
     }
 
     [Flags]
