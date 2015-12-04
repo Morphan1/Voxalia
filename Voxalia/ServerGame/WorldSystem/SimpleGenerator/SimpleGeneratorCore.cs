@@ -49,9 +49,13 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             float tval = SimplexNoise.Generate((float)seed5 + (x / OreTypeMapSize), (float)seed3 + (y / OreTypeMapSize), (float)seed2 + (z / OreTypeMapSize));
             if (thick)
             {
-                if (tval > 0.5f)
+                if (tval > 0.66f)
                 {
                     return Material.TIN_ORE;
+                }
+                else if (tval > 0.33f)
+                {
+                    return Material.COAL_ORE;
                 }
                 else
                 {
@@ -60,9 +64,13 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             }
             else
             {
-                if (tval > 0.5f)
+                if (tval > 0.66f)
                 {
                     return Material.TIN_ORE_SPARSE;
+                }
+                else if (tval > 0.33f)
+                {
+                    return Material.COAL_ORE_SPARSE;
                 }
                 else
                 {
