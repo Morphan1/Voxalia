@@ -350,6 +350,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         
         Matrix4 globalInverse = Matrix4.Identity;
 
+        public Dictionary<string, Matrix4> CustomAnimationAdjustments = new Dictionary<string, Matrix4>();
+        
         public void UpdateTransforms(ModelNode pNode, Matrix4 transf)
         {
             string nodename = pNode.Name;
@@ -366,6 +368,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 trans.Transpose();
                 Matrix4 rot;
                 Matrix4.CreateFromQuaternion(ref oquat, out rot);
+                Matrix4 r2;
+                if (CustomAnimationAdjustments.TryGetValue(nodename, out r2))
+                {
+                    rot *= r2;
+                }
                 rot.Transpose();
                 Matrix4.Mult(ref trans, ref rot, out nodeTransf);
             }

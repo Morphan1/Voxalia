@@ -711,6 +711,7 @@ namespace Voxalia.ClientGame.EntitySystem
                     * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
                 GL.UniformMatrix4(2, false, ref mat);
                 TheClient.Rendering.SetMinimumLight(0.0f);
+                model.CustomAnimationAdjustments["spine05"] = OpenTK.Matrix4.CreateRotationX(-(float)(Direction.Pitch / 2f * Utilities.PI180));
                 model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
                 if (!TheClient.RenderingShadows)
                 {
