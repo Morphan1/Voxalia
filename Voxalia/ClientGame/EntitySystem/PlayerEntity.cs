@@ -26,7 +26,7 @@ using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
-    public class PlayerEntity: PhysicsEntity, EntityAnimated
+    public class PlayerEntity : PhysicsEntity, EntityAnimated
     {
         public YourStatusFlags ServerFlags = YourStatusFlags.NONE;
 
@@ -103,7 +103,7 @@ namespace Voxalia.ClientGame.EntitySystem
         bool pup = false;
 
         public Model model;
-        
+
         public PlayerEntity(Region tregion)
             : base(tregion, true, true)
         {
@@ -143,7 +143,7 @@ namespace Voxalia.ClientGame.EntitySystem
         double lPT;
 
         public Space NMTWOWorld = new Space(null);
-        
+
         Dictionary<Location, FullChunkObject> NMTWOMeshes = new Dictionary<Location, FullChunkObject>();
 
         double lGTT = 0;
@@ -164,7 +164,7 @@ namespace Voxalia.ClientGame.EntitySystem
         }
 
         HashSet<Location> Quiet = new HashSet<Location>();
-        
+
         public void UpdateForPacketFromServer(double gtt, long ID, Location pos, Location vel, bool _pup)
         {
             double now = TheRegion.GlobalTickTimeLocal;
@@ -309,7 +309,7 @@ namespace Voxalia.ClientGame.EntitySystem
                  | (Leftward ? KeysPacketData.LEFTWARD : 0) | (Rightward ? KeysPacketData.RIGHTWARD : 0)
                  | (Upward ? KeysPacketData.UPWARD : 0) | (Walk ? KeysPacketData.WALK : 0)
                   | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK : 0)
-                  | (Sprint ? KeysPacketData.SPRINT: 0) | (Downward ? KeysPacketData.DOWNWARD : 0);
+                  | (Sprint ? KeysPacketData.SPRINT : 0) | (Downward ? KeysPacketData.DOWNWARD : 0);
             TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction));
         }
 
@@ -364,7 +364,7 @@ namespace Voxalia.ClientGame.EntitySystem
                     move = move.Normalize();
                 }
                 Location forw = Utilities.RotateVector(move, Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                cc.Body.Position += (forw * delta * CBStandSpeed * 2 * (uis.Sprint ? 2 : (uis.Walk ? 0.5: 1))).ToBVector();
+                cc.Body.Position += (forw * delta * CBStandSpeed * 2 * (uis.Sprint ? 2 : (uis.Walk ? 0.5 : 1))).ToBVector();
                 cc.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 cc.Body.LinearVelocity = new Vector3(0, 0, 0);
             }
@@ -540,7 +540,7 @@ namespace Voxalia.ClientGame.EntitySystem
         }
 
         public CharacterController NMTWOCBody = null;
-        
+
         public override void SpawnBody()
         {
             if (CBody != null)
@@ -609,13 +609,14 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Location GetEyePosition()
         {
-           // return GetPosition() + new Location(0, 0, HalfSize.Z * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8: 1.5));
             if (tAnim != null)
             {
-                SingleAnimationNode head = tAnim.GetNode("head");
+                SingleAnimationNode head = tAnim.GetNode("special06.r");
                 Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
-                adjs["spine05"] = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 2f * Utilities.PI180)));
-                Matrix m4 = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f)) * head.GetBoneTotalMatrix(0, adjs);
+                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 1.3f * Utilities.PI180)));
+                adjs["spine05"] = rotforw;
+                Matrix m4 = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
+                    * head.GetBoneTotalMatrix(0, adjs) * (rotforw * Matrix.CreateTranslation(new Vector3(0, 0, 0.2f)));
                 m4.Transpose();
                 return GetPosition() + new Location(m4.Translation) * 1.5f;
             }
@@ -700,24 +701,29 @@ namespace Voxalia.ClientGame.EntitySystem
                 TheClient.Rendering.RenderLine(ServerLocation, GetPosition());
                 TheClient.Rendering.RenderLineBox(ServerLocation + new Location(-0.2), ServerLocation + new Location(0.2));
             }
-            if (TheClient.RenderingShadows || !TheClient.CVars.g_firstperson.ValueB)
+            if (!TheClient.RenderingShadows)
             {
-                if (!TheClient.RenderingShadows)
-                {
-                    TheClient.Rendering.SetReflectionAmt(0.7f);
-                }
-                OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(1.5f)
-                    * OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
-                    * PlayerAngleMat
-                    * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
-                GL.UniformMatrix4(2, false, ref mat);
-                TheClient.Rendering.SetMinimumLight(0.0f);
-                model.CustomAnimationAdjustments["spine05"] = OpenTK.Matrix4.CreateRotationX(-(float)(Direction.Pitch / 2f * Utilities.PI180));
-                model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
-                if (!TheClient.RenderingShadows)
-                {
-                    TheClient.Rendering.SetReflectionAmt(0f);
-                }
+                TheClient.Rendering.SetReflectionAmt(0.7f);
+            }
+            OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(1.5f)
+                * OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
+                * PlayerAngleMat
+                * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
+            GL.UniformMatrix4(2, false, ref mat);
+            TheClient.Rendering.SetMinimumLight(0.0f);
+            model.CustomAnimationAdjustments["spine05"] = OpenTK.Matrix4.CreateRotationX(-(float)(Direction.Pitch / 1.5f * Utilities.PI180));
+            if (!TheClient.RenderingShadows && TheClient.CVars.g_firstperson.ValueB)
+            {
+                model.CustomAnimationAdjustments["neck01"] = OpenTK.Matrix4.CreateRotationX(-(float)(90f * Utilities.PI180));
+            }
+            else
+            {
+                model.CustomAnimationAdjustments["neck01"] = OpenTK.Matrix4.Identity;
+            }
+            model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
+            if (!TheClient.RenderingShadows)
+            {
+                TheClient.Rendering.SetReflectionAmt(0f);
             }
         }
     }
