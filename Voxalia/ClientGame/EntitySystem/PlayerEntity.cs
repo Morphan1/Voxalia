@@ -609,19 +609,20 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Location GetEyePosition()
         {
-            return GetPosition() + new Location(0, 0, HalfSize.Z * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8: 1.5));
-            /*
+           // return GetPosition() + new Location(0, 0, HalfSize.Z * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8: 1.5));
             if (tAnim != null)
             {
                 SingleAnimationNode head = tAnim.GetNode("head");
-                Matrix m4 = head.GetBoneTotalMatrix(0);
+                Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
+                adjs["spine05"] = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 2f * Utilities.PI180)));
+                Matrix m4 = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f)) * head.GetBoneTotalMatrix(0, adjs);
                 m4.Transpose();
-                return GetPosition() + new Location(m4.Translation);
+                return GetPosition() + new Location(m4.Translation) * 1.5f;
             }
             else
             {
-                return GetPosition() + new Location(0, 0, HalfSize.Z * 1.8f);
-            }*/
+                return GetPosition() + new Location(0, 0, HalfSize.Z * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8 : 1.5));
+            }
         }
 
         public Location ForwardVector()

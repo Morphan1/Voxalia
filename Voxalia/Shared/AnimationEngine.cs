@@ -323,16 +323,25 @@ namespace Voxalia.Shared
             return res;
         }
 
-        public Matrix GetBoneTotalMatrix(double aTime)
+        public Matrix GetBoneTotalMatrix(double aTime, Dictionary<string, Matrix> adjs = null)
         {
             Matrix pos = Matrix.CreateTranslation(lerpPos(aTime));
             Matrix rot = Matrix.CreateFromQuaternion(lerpRotate(aTime));
             pos.Transpose();
             rot.Transpose();
-            Matrix combined = pos * rot;
+            Matrix combined;
+            Matrix t;
+            if (adjs != null && adjs.TryGetValue(Name, out t))
+            {
+                combined = pos * rot * t;
+            }
+            else
+            {
+                combined = pos * rot;
+            }
             if (Parent != null)
             {
-                combined = Parent.GetBoneTotalMatrix(aTime) * combined;
+                combined = Parent.GetBoneTotalMatrix(aTime, adjs) * combined;
                 //combined *= Parent.GetBoneTotalMatrix(aTime);
             }
             return combined;
