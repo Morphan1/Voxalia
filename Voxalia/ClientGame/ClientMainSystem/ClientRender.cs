@@ -893,6 +893,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         const string timeformat = "#.000";
 
+        const string healthformat = "#.0";
+
         public int ChunksRenderingCurrently = 0;
 
         public void Render2D()
@@ -915,6 +917,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         Window.Width - 10), new Location(0, 0, 0));
                 }
                 int center = Window.Width / 2;
+                int bottomup = 32;
                 if (RenderExtraItems > 0)
                 {
                     RenderExtraItems -= gDelta;
@@ -922,27 +925,38 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     {
                         RenderExtraItems = 0;
                     }
-                    RenderItem(GetItemForSlot(QuickBarPos - 5), new Location(center - (32 + 32 + 32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
-                    RenderItem(GetItemForSlot(QuickBarPos - 4), new Location(center - (32 + 32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
-                    RenderItem(GetItemForSlot(QuickBarPos - 3), new Location(center - (32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
-                    RenderItem(GetItemForSlot(QuickBarPos + 3), new Location(center + (32 + 32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
-                    RenderItem(GetItemForSlot(QuickBarPos + 4), new Location(center + (32 + 32 + 32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
-                    RenderItem(GetItemForSlot(QuickBarPos + 5), new Location(center + (32 + 32 + 32 + 32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
+                    RenderItem(GetItemForSlot(QuickBarPos - 5), new Location(center - (32 + 32 + 32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16 + bottomup), 0), 32);
+                    RenderItem(GetItemForSlot(QuickBarPos - 4), new Location(center - (32 + 32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16 + bottomup), 0), 32);
+                    RenderItem(GetItemForSlot(QuickBarPos - 3), new Location(center - (32 + 32 + 32 + 32 + 3), Window.Height - (32 + 16 + bottomup), 0), 32);
+                    RenderItem(GetItemForSlot(QuickBarPos + 3), new Location(center + (32 + 32 + 32 + 2), Window.Height - (32 + 16 + bottomup), 0), 32);
+                    RenderItem(GetItemForSlot(QuickBarPos + 4), new Location(center + (32 + 32 + 32 + 32 + 2), Window.Height - (32 + 16 + bottomup), 0), 32);
+                    RenderItem(GetItemForSlot(QuickBarPos + 5), new Location(center + (32 + 32 + 32 + 32 + 32 + 2), Window.Height - (32 + 16 + bottomup), 0), 32);
                 }
-                RenderItem(GetItemForSlot(QuickBarPos - 2), new Location(center - (32 + 32 + 32 + 3), Window.Height - (32 + 16), 0), 32);
-                RenderItem(GetItemForSlot(QuickBarPos - 1), new Location(center - (32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
-                RenderItem(GetItemForSlot(QuickBarPos + 1), new Location(center + (32 + 1), Window.Height - (32 + 16), 0), 32);
-                RenderItem(GetItemForSlot(QuickBarPos + 2), new Location(center + (32 + 32 + 2), Window.Height - (32 + 16), 0), 32);
-                RenderItem(GetItemForSlot(QuickBarPos), new Location(center - (32 + 1), Window.Height - 64, 0), 64);
+                RenderItem(GetItemForSlot(QuickBarPos - 2), new Location(center - (32 + 32 + 32 + 3), Window.Height - (32 + 16 + bottomup), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos - 1), new Location(center - (32 + 32 + 2), Window.Height - (32 + 16 + bottomup), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos + 1), new Location(center + (32 + 1), Window.Height - (32 + 16 + bottomup), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos + 2), new Location(center + (32 + 32 + 2), Window.Height - (32 + 16 + bottomup), 0), 32);
+                RenderItem(GetItemForSlot(QuickBarPos), new Location(center - (32 + 1), Window.Height - (64 + bottomup), 0), 64);
                 string it = "^%^e^7" + GetItemForSlot(QuickBarPos).DisplayName;
                 float size = FontSets.Standard.MeasureFancyText(it);
-                FontSets.Standard.DrawColoredText(it, new Location(center - size / 2f, Window.Height - 64 - FontSets.Standard.font_default.Height - 5, 0));
+                FontSets.Standard.DrawColoredText(it, new Location(center - size / 2f, Window.Height - (64 + bottomup) - FontSets.Standard.font_default.Height - 5, 0));
                 float percent = 0;
                 if (Player.MaxHealth != 0)
                 {
                     percent = (float)Math.Round((Player.Health / Player.MaxHealth) * 10000) / 100f;
                 }
-                FontSets.Standard.DrawColoredText("^@^e^0" + Player.Health + "/" + Player.MaxHealth + " = " + percent + "%", new Location(5, Window.Height - FontSets.Standard.font_default.Height - 5, 0));
+                int healthbaroffset = 300;
+                Textures.White.Bind();
+                Rendering.SetColor(Color4.Black);
+                Rendering.RenderRectangle(center - healthbaroffset, Window.Height - 30, center + healthbaroffset, Window.Height - 2);
+                Rendering.SetColor(Color4.Red);
+                Rendering.RenderRectangle(center - healthbaroffset + 2, Window.Height - 28, center - (healthbaroffset - 2) * ((100 - percent) / 100), Window.Height - 4);
+                Rendering.SetColor(Color4.Cyan);
+                Rendering.RenderRectangle(center + 2, Window.Height - 28, center + healthbaroffset - 2, Window.Height - 4); // TODO: Armor percent
+                FontSets.SlightlyBigger.DrawColoredText("^S^!^e^0Health: " + Player.Health.ToString(healthformat) + "/" + Player.MaxHealth.ToString(healthformat) + " = " + percent.ToString(healthformat) + "%",
+                    new Location(center - healthbaroffset + 4, Window.Height - 26, 0));
+                FontSets.SlightlyBigger.DrawColoredText("^S^%^e^0Armor: " + "100.0" + "/" + "100.0" + " = " + "100.0" + "%", // TODO: Armor values!
+                    new Location(center + 4, Window.Height - 26, 0));
                 int cX = Window.Width / 2;
                 int cY = Window.Height / 2;
                 int move = (int)Player.GetVelocity().LengthSquared() / 5;
