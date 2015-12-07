@@ -24,6 +24,12 @@ namespace Voxalia.Shared.Files
             base.Write(bits, 0, bits.Length);
         }
 
+        public void WriteFullBytes(byte[] data)
+        {
+            WriteInt(data.Length);
+            WriteBytes(data);
+        }
+
         public void WriteFullString(string str)
         {
             byte[] data = FileHandler.encoding.GetBytes(str);

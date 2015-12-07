@@ -24,6 +24,12 @@ namespace Voxalia.Shared.Files
             return FileHandler.encoding.GetString(base.ReadBytes(length));
         }
 
+        public byte[] ReadFullBytes()
+        {
+            int len = ReadInt();
+            return ReadBytes(len);
+        }
+
         public string ReadFullString()
         {
             int len = ReadInt();

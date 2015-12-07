@@ -6,6 +6,7 @@ using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries;
 using Voxalia.Shared.Files;
 using Voxalia.Shared.Collision;
+using Voxalia.ServerGame.EntitySystem;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -42,6 +43,12 @@ namespace Voxalia.ServerGame.WorldSystem
             BlocksInternal = new BlockInternal[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
         }
 
+        public bool Contains(Location loc)
+        {
+            return loc.X >= WorldPosition.X * CHUNK_SIZE && loc.Y >= WorldPosition.Y * CHUNK_SIZE && loc.Z >= WorldPosition.Z * CHUNK_SIZE
+                && loc.X <= WorldPosition.X * CHUNK_SIZE + CHUNK_SIZE && loc.Y <= WorldPosition.Y * CHUNK_SIZE + CHUNK_SIZE && loc.Z <= WorldPosition.Z * CHUNK_SIZE + CHUNK_SIZE;
+        }
+
         public BlockInternal[] BlocksInternal;
 
         /// <summary>
@@ -66,10 +73,7 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public void SetBlockAt(int x, int y, int z, BlockInternal mat)
         {
-            lock (EditSessionLock)
-            {
-                BlocksInternal[BlockIndex(x, y, z)] = mat;
-            }
+            BlocksInternal[BlockIndex(x, y, z)] = mat;
         }
 
         public double LastEdited = -1;
@@ -79,17 +83,13 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public BlockInternal GetBlockAt(int x, int y, int z)
         {
-            //lock (EditSessionLock) // TODO: How do we magic this to be possible?
-            {
-                return BlocksInternal[BlockIndex(x, y, z)];
-            }
+            return BlocksInternal[BlockIndex(x, y, z)];
         }
         
         public FullChunkObject FCO = null;
         
         /// <summary>
         /// Sync only.
-        /// Probably.
         /// </summary>
         public void AddToWorld()
         {
@@ -104,21 +104,22 @@ namespace Voxalia.ServerGame.WorldSystem
             FCO = new FullChunkObject(WorldPosition.ToBVector() * 30, BlocksInternal);
             FCO.CollisionRules.Group = CollisionUtil.Solid;
             OwningRegion.AddChunk(FCO);
+            foreach (Entity e in entsToSpawn)
+            {
+                OwningRegion.SpawnEntity(e);
+            }
+            entsToSpawn.Clear();
         }
 
         public Object EditSessionLock = new Object();
         
-        /// <summary>
-        /// Asyncable.
-        /// TODO: Local edit session lock.
-        /// </summary>
-        public byte[] GetSaveData()
+        public byte[] GetChunkSaveData()
         {
             lock (EditSessionLock)
             {
                 byte[] bytes = new byte[12 + BlocksInternal.Length * 4];
                 Encoding.ASCII.GetBytes("VOX_").CopyTo(bytes, 0); // General Header
-                Utilities.IntToBytes(2).CopyTo(bytes, 4); // Saves Version
+                Utilities.IntToBytes(3).CopyTo(bytes, 4); // Saves Version
                 Utilities.IntToBytes((int)Flags).CopyTo(bytes, 8);
                 for (int i = 0; i < BlocksInternal.Length; i++)
                 {
@@ -129,10 +130,41 @@ namespace Voxalia.ServerGame.WorldSystem
                 return FileHandler.GZip(bytes);
             }
         }
-        
+
+        public byte[] GetEntitySaveData()
+        {
+            using (DataStream ds = new DataStream())
+            {
+                DataWriter dw = new DataWriter(ds);
+                for (int i = 0; i < OwningRegion.Entities.Count; i++)
+                {
+                    if (Contains(OwningRegion.Entities[i].GetPosition()))
+                    {
+                        byte[] dat = OwningRegion.Entities[i].GetSaveBytes();
+                        if (dat != null)
+                        {
+                            dw.WriteInt((int)OwningRegion.Entities[i].GetEntityType());
+                            dw.WriteFullBytes(dat);
+                        }
+                    }
+                }
+                return FileHandler.GZip(ds.ToArray());
+            }
+        }
+
+        void clearentities()
+        {
+            for (int i = 0; i < OwningRegion.Entities.Count; i++)
+            {
+                if (Contains(OwningRegion.Entities[i].GetPosition()))
+                {
+                    OwningRegion.DespawnEntity(OwningRegion.Entities[i--]);
+                }
+            }
+        }
+
         /// <summary>
         /// Sync only.
-        /// Call OwningWorld.AddChunk(null) to recalculate after done.
         /// </summary>
         public void UnloadSafely(Action callback = null)
         {
@@ -140,28 +172,20 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 OwningRegion.RemoveChunkQuiet(FCO);
             }
-            if (LastEdited >= 0)
-            {
-                SaveToFile(callback);
-            }
-            else
-            {
-                if (callback != null)
-                {
-                    callback.Invoke();
-                }
-            }
+            SaveToFile(callback);
+            clearentities();
         }
-
+        
         /// <summary>
-        /// Asyncable (just launches async internals + 1 safe edit).
+        /// Sync only.
         /// </summary>
         public void SaveToFile(Action callback = null)
         {
-            LastEdited = -1; // TODO: Lock around something for touching LastEdited? ++ All other references to LastEdited.
+            LastEdited = -1;
+            byte[] ents = GetEntitySaveData();
             OwningRegion.TheServer.Schedule.StartASyncTask(() =>
             {
-                SaveToFileI();
+                SaveToFileI(ents);
                 if (callback != null)
                 {
                     callback.Invoke();
@@ -177,14 +201,19 @@ namespace Voxalia.ServerGame.WorldSystem
             return "saves/" + OwningRegion.Name.ToLower() + "/chunks/" + WorldPosition.Z + "/" + WorldPosition.Y + "/" + WorldPosition.X + ".chk";
         }
 
-        void SaveToFileI()
+        void SaveToFileI(byte[] saves2)
         {
             try
             {
-                byte[] saves = GetSaveData();
+                byte[] saves1 = GetChunkSaveData();
+                byte[] res = new byte[4 + saves1.Length + 4 + saves2.Length];
+                Utilities.IntToBytes(saves1.Length).CopyTo(res, 0);
+                saves1.CopyTo(res, 4);
+                Utilities.IntToBytes(saves2.Length).CopyTo(res, 4 + saves1.Length);
+                saves2.CopyTo(res, 4 + saves1.Length + 4);
                 lock (GetLocker())
                 {
-                    Program.Files.WriteBytes(GetFileName(), saves);
+                    Program.Files.WriteBytes(GetFileName(), res);
                 }
             }
             catch (Exception ex)
@@ -193,30 +222,59 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
+        List<Entity> entsToSpawn = new List<Entity>();
+
         /// <summary>
         /// Asyncable (Just don't add the chunk to the world while this is running!)
         /// </summary>
         public void LoadFromSaveData(byte[] data)
         {
-            // TODO: Lock safely?
-            byte[] bytes = FileHandler.UnGZip(data);
+            int clen = Utilities.BytesToInt(Utilities.BytesPartial(data, 0, 4));
+            // Begin: blocks
+            byte[] bytes = FileHandler.UnGZip(Utilities.BytesPartial(data, 4, clen));
             string engine = Encoding.ASCII.GetString(bytes, 0, 4);
             if (engine != "VOX_")
             {
                 throw new Exception("Invalid save data ENGINE format: " + engine + "!");
             }
             int revision = Utilities.BytesToInt(Utilities.BytesPartial(bytes, 4, 4));
-            if (revision != 2)
+            if (revision != 3)
             {
                 throw new Exception("Invalid save data REVISION: " + revision + "!");
             }
-            int flags = Utilities.BytesToInt(Utilities.BytesPartial(bytes, 8, 4));
+            int flags = Utilities.BytesToInt(Utilities.BytesPartial(bytes, 4 + 4, 4));
             Flags = (ChunkFlags)flags & ~(ChunkFlags.POPULATING);
             for (int i = 0; i < BlocksInternal.Length; i++)
             {
-                BlocksInternal[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(bytes, 12 + i * 2, 2));
-                BlocksInternal[i].BlockData = bytes[12 + BlocksInternal.Length * 2 + i];
-                BlocksInternal[i].BlockLocalData = bytes[12 + BlocksInternal.Length * 3 + i];
+                BlocksInternal[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(bytes, 4 + 4 + 4 + i * 2, 2));
+                BlocksInternal[i].BlockData = bytes[4 + 4 + 4 + BlocksInternal.Length * 2 + i];
+                BlocksInternal[i].BlockLocalData = bytes[4 + 4 + 4 + BlocksInternal.Length * 3 + i];
+            }
+            // Begin: entities
+            int elen = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + clen, 4));
+            byte[] ebytes = FileHandler.UnGZip(Utilities.BytesPartial(data, 4 + clen + 4, elen));
+            if (ebytes.Length > 0)
+            {
+                SysConsole.Output(OutputType.INFO, "TEMP: " + ebytes.Length);
+                using (DataStream eds = new DataStream(ebytes))
+                {
+                    DataReader edr = new DataReader(eds);
+                    SysConsole.Output(OutputType.INFO, "TEMP2: " + eds.Length + ", " + eds.Position);
+                    while (eds.Length - eds.Position > 0)
+                    {
+                        int EType = edr.ReadInt();
+                        byte[] dat = edr.ReadFullBytes();
+                        try
+                        {
+                            entsToSpawn.Add(OwningRegion.ConstructorFor((EntityType)EType).Create(OwningRegion, dat));
+                            SysConsole.Output(OutputType.INFO, "Spawning a " + (EntityType)EType + " at " + entsToSpawn[entsToSpawn.Count - 1].GetPosition());
+                        }
+                        catch (Exception ex)
+                        {
+                            SysConsole.Output("Spawning an entity of type " + EType, ex);
+                        }
+                    }
+                }
             }
         }
     }

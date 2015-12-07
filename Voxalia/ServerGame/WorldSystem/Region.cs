@@ -348,6 +348,11 @@ namespace Voxalia.ServerGame.WorldSystem
             Seed3 = (seedGen.Next(SeedMax) - SeedMax / 2);
             Seed4 = (seedGen.Next(SeedMax) - SeedMax / 2);
             Seed5 = (seedGen.Next(SeedMax) - SeedMax / 2);
+            EntityConstructors.Add(EntityType.ITEM, new ItemEntityConstructor());
+            EntityConstructors.Add(EntityType.BLOCK_ITEM, new BlockItemEntityConstructor());
+            EntityConstructors.Add(EntityType.GLOWSTICK, new GlowstickEntityConstructor());
+            EntityConstructors.Add(EntityType.MODEL, new ModelEntityConstructor());
+            EntityConstructors.Add(EntityType.SMOKE_GRENADE, new SmokegrenadeEntityConstructor());
             LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30), true);
             TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-world scheduler // Also don't freeze the entire server just because we're waiting on chunks >.>
             SysConsole.Output(OutputType.INIT, "Finished building chunks! Now have " + LoadedChunks.Count + " chunks!");
@@ -1052,6 +1057,18 @@ namespace Voxalia.ServerGame.WorldSystem
                 return new SmokegrenadeEntity(item.DrawColor, this, item.GetAttributeI("big_smoke", 0) == 0 ? ParticleEffectNetType.SMOKE: ParticleEffectNetType.BIG_SMOKE);
             }
             return new ItemEntity(item, this);
+        }
+
+        public Dictionary<EntityType, EntityConstructor> EntityConstructors = new Dictionary<EntityType, EntityConstructor>();
+
+        public EntityConstructor ConstructorFor(EntityType etype)
+        {
+            EntityConstructor ec;
+            if (EntityConstructors.TryGetValue(etype, out ec))
+            {
+                return ec;
+            }
+            return null;
         }
     }
 }
