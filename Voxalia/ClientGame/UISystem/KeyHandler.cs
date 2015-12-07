@@ -42,6 +42,7 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.LControl, "+movedown");
             BindKey(Key.F1, "toggle u_showhud");
             BindKey(Key.F2, "toggle u_highlight_targetblock;toggle u_highlight_placeblock");
+            BindKey(Key.F3, "toggle u_debug");
             BindKey(Key.F12, "screenshot");
             BindKey(Key.F35, "+attack");
             BindKey(Key.F34, "+secondary");

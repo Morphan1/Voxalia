@@ -234,6 +234,18 @@ namespace Voxalia.Shared
             return "(" + X + ", " + Y + ", " + Z + ")";
         }
 
+        const string basicformat = "#.00";
+
+        /// <summary>
+        /// Returns the location as a string in the form (X, Y, Z) with short decimals (2 places).
+        /// Inverts .FromString()
+        /// </summary>
+        /// <returns>The basic location string.</returns>
+        public string ToBasicString()
+        {
+            return "(" + X.ToString(basicformat) + ", " + Y.ToString(basicformat) + ", " + Z.ToString(basicformat) + ")";
+        }
+
         /// <summary>
         /// Returns the location as a string in the form: X, Y, Z
         /// Inverts .FromString()

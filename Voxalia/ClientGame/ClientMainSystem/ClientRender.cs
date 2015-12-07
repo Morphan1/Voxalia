@@ -900,16 +900,20 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.Disable(EnableCap.CullFace);
             if (CVars.u_showhud.ValueB && CInvMenu == null)
             {
-                FontSets.Standard.DrawColoredText(FontSets.Standard.SplitAppropriately("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
-                    + "\nHeld Item: " + GetItemForSlot(QuickBarPos).ToString()
-                    + "\nTimes -> Phyiscs: " + TheRegion.PhysTime.ToString(timeformat) + ", Shadows: " + ShadowTime.ToString(timeformat)
-                    + ", FBO: " + FBOTime.ToString(timeformat) + ", Lights: " + LightsTime.ToString(timeformat) + ", 2D: " + TWODTime.ToString(timeformat)
-                    + ", Tick: " + TickTime.ToString(timeformat) + ", Finish: " + FinishTime.ToString(timeformat)
-                    + "\nSpike Times -> Shadows: " + ShadowSpikeTime.ToString(timeformat)
-                    + ", FBO: " + FBOSpikeTime.ToString(timeformat) + ", Lights: " + LightsSpikeTime.ToString(timeformat) + ", 2D: " + TWODSpikeTime.ToString(timeformat)
-                    + ", Tick: " + TickSpikeTime.ToString(timeformat) + ", Finish: " + FinishSpikeTime.ToString(timeformat)
-                    + "\nChunks loaded: " + TheRegion.LoadedChunks.Count + ", Chunks rendering currently: " + ChunksRenderingCurrently,
-                    Window.Width - 10), new Location(0, 0, 0));
+                if (CVars.u_debug.ValueB)
+                {
+                    FontSets.Standard.DrawColoredText(FontSets.Standard.SplitAppropriately("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
+                        + "\nHeld Item: " + GetItemForSlot(QuickBarPos).ToString()
+                        + "\nTimes -> Phyiscs: " + TheRegion.PhysTime.ToString(timeformat) + ", Shadows: " + ShadowTime.ToString(timeformat)
+                        + ", FBO: " + FBOTime.ToString(timeformat) + ", Lights: " + LightsTime.ToString(timeformat) + ", 2D: " + TWODTime.ToString(timeformat)
+                        + ", Tick: " + TickTime.ToString(timeformat) + ", Finish: " + FinishTime.ToString(timeformat)
+                        + "\nSpike Times -> Shadows: " + ShadowSpikeTime.ToString(timeformat)
+                        + ", FBO: " + FBOSpikeTime.ToString(timeformat) + ", Lights: " + LightsSpikeTime.ToString(timeformat) + ", 2D: " + TWODSpikeTime.ToString(timeformat)
+                        + ", Tick: " + TickSpikeTime.ToString(timeformat) + ", Finish: " + FinishSpikeTime.ToString(timeformat)
+                        + "\nChunks loaded: " + TheRegion.LoadedChunks.Count + ", Chunks rendering currently: " + ChunksRenderingCurrently
+                        + "\nPosition: " + Player.GetPosition().ToBasicString() + ", velocity: " + Player.GetVelocity().ToBasicString() + ", direction: " + Player.Direction.ToBasicString(),
+                        Window.Width - 10), new Location(0, 0, 0));
+                }
                 int center = Window.Width / 2;
                 if (RenderExtraItems > 0)
                 {
