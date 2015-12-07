@@ -393,6 +393,20 @@ namespace Voxalia.ServerGame.EntitySystem
         }
 
         /// <summary>
+        /// Returns the gravity value for this physics entity, if it has one.
+        /// Otherwise, returns the body's default gravity.
+        /// </summary>
+        /// <returns>The gravity value.</returns>
+        public Location GetGravity()
+        {
+            if (Body != null && Body.Gravity.HasValue)
+            {
+                return new Location(Body.Gravity.Value);
+            }
+            return Gravity;
+        }
+
+        /// <summary>
         /// Applies a force directly to the physics entity's body.
         /// The force is assumed to be perfectly central to the entity.
         /// Note: this is a force, not a velocity. Mass is relevant.
@@ -435,6 +449,30 @@ namespace Voxalia.ServerGame.EntitySystem
                 // TODO: Account for spin?
                 LVel += force / Mass;
             }
+        }
+
+        /// <summary>
+        /// Gets the binary save data for a generic physics entity, used as part of the save procedure for a physics entity.
+        /// Returns 76 bytes currently.
+        /// </summary>
+        /// <returns>The binary data.</returns>
+        public byte[] GetPhysicsBytes()
+        {
+            byte[] bytes = new byte[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4];
+            GetPosition().ToBytes().CopyTo(bytes, 0);
+            GetVelocity().ToBytes().CopyTo(bytes, 12);
+            GetAngularVelocity().ToBytes().CopyTo(bytes, 12 + 12);
+            Quaternion quat = GetOrientation();
+            Utilities.FloatToBytes(quat.X).CopyTo(bytes, 12 + 12 + 12);
+            Utilities.FloatToBytes(quat.Y).CopyTo(bytes, 12 + 12 + 12 + 4);
+            Utilities.FloatToBytes(quat.Z).CopyTo(bytes, 12 + 12 + 12 + 4 + 4);
+            Utilities.FloatToBytes(quat.W).CopyTo(bytes, 12 + 12 + 12 + 4 + 4 + 4);
+            int p = 12 + 12 + 12 + 4 + 4 + 4 + 4;
+            GetGravity().ToBytes().CopyTo(bytes, p);
+            Utilities.FloatToBytes(GetBounciness()).CopyTo(bytes, p + 12);
+            Utilities.FloatToBytes(GetFriction()).CopyTo(bytes, p + 12 + 4);
+            Utilities.FloatToBytes(GetMass()).CopyTo(bytes, p + 12 + 4 + 4);
+            return bytes;
         }
     }
 }

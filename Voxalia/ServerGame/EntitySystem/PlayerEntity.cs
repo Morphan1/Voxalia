@@ -18,6 +18,17 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class PlayerEntity: EntityLiving
     {
+        public override EntityType GetEntityType()
+        {
+            return EntityType.PLAYER;
+        }
+
+        public override byte[] GetSaveBytes()
+        {
+            // Does not save!
+            return null;
+        }
+
         /// <summary>
         /// Half the size of the player, if needed for a cuboid trace.
         /// </summary>

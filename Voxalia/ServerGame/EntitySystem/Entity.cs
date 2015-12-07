@@ -77,5 +77,9 @@ namespace Voxalia.ServerGame.EntitySystem
         public abstract void SetOrientation(BEPUutilities.Quaternion quat);
 
         public bool Visible = true;
+
+        public abstract EntityType GetEntityType();
+
+        public abstract byte[] GetSaveBytes();
     }
 }

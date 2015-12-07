@@ -124,5 +124,23 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             Angles = quat;
         }
+
+        /// <summary>
+        /// Gets the binary save data for a generic physics entity, used as part of the save procedure for a physics entity.
+        /// Returns 52 bytes currently.
+        /// </summary>
+        /// <returns>The binary data.</returns>
+        public byte[] GetPrimitiveBytes()
+        {
+            byte[] bytes = new byte[12 + 12 + 4 + 4 + 4 + 4 + 12];
+            GetPosition().ToBytes().CopyTo(bytes, 0);
+            GetVelocity().ToBytes().CopyTo(bytes, 12);
+            Utilities.FloatToBytes(Angles.X).CopyTo(bytes, 12 + 12);
+            Utilities.FloatToBytes(Angles.Y).CopyTo(bytes, 12 + 12 + 4);
+            Utilities.FloatToBytes(Angles.Z).CopyTo(bytes, 12 + 12 + 4 + 4);
+            Utilities.FloatToBytes(Angles.W).CopyTo(bytes, 12 + 12 + 4 + 4 + 4);
+            Gravity.ToBytes().CopyTo(bytes, 12 + 12 + 4 + 4 + 4 + 4);
+            return bytes;
+        }
     }
 }

@@ -9,9 +9,10 @@ using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
+    // TODO: Maximum smoke usage counter!
     public class SmokegrenadeEntity: GrenadeEntity
     {
-        Location colo;
+        Location colo; // TODO: Int?
         ParticleEffectNetType SmokeType;
 
         public SmokegrenadeEntity(int col, Region tregion, ParticleEffectNetType smokeType):
@@ -20,6 +21,21 @@ namespace Voxalia.ServerGame.EntitySystem
             System.Drawing.Color tcol = System.Drawing.Color.FromArgb(col);
             colo = new Location(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f);
             SmokeType = smokeType;
+        }
+
+        public override EntityType GetEntityType()
+        {
+            return EntityType.SMOKE_GRENADE;
+        }
+
+        public override byte[] GetSaveBytes()
+        {
+            byte[] bbytes = GetPhysicsBytes();
+            byte[] res = new byte[bbytes.Length + 12 + 1];
+            bbytes.CopyTo(res, 0);
+            colo.ToBytes().CopyTo(res, bbytes.Length);
+            res[bbytes.Length + 12] = (byte)SmokeType;
+            return res;
         }
 
         public double timer = 0;

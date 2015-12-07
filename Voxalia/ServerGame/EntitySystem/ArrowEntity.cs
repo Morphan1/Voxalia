@@ -18,6 +18,17 @@ namespace Voxalia.ServerGame.EntitySystem
             Scale = new Location(0.05f, 0.05f, 0.05f);
         }
 
+        public override EntityType GetEntityType()
+        {
+            return EntityType.ARROW;
+        }
+
+        public override byte[] GetSaveBytes()
+        {
+            // Does not save!
+            return null;
+        }
+
         public float Damage = 1;
         public float DamageTimesVelocity = 1;
 

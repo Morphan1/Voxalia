@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntityType.cs" />
     <Compile Include="Shared\BlockShapes\BSD64_68.cs" />
     <Compile Include="Shared\BlockShapes\BSD58.cs" />
     <Compile Include="Shared\BlockShapes\BSD57.cs" />

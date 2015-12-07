@@ -8,7 +8,7 @@ using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    public class GrenadeEntity : PhysicsEntity
+    public abstract class GrenadeEntity : PhysicsEntity
     {
         public GrenadeEntity(Region tregion) :
             base(tregion, true)

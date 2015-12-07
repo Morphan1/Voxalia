@@ -1,4 +1,5 @@
-﻿using Voxalia.ServerGame.WorldSystem;
+﻿using System;
+using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -10,6 +11,17 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             network = false;
             NetworkMe = false;
+        }
+
+        public override EntityType GetEntityType()
+        {
+            return EntityType.LEGACY_SPAWNPOINT;
+        }
+
+        public override byte[] GetSaveBytes()
+        {
+            // Does not save!
+            return null;
         }
     }
 }

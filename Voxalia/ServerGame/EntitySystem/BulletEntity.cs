@@ -14,6 +14,17 @@ namespace Voxalia.ServerGame.EntitySystem
             Gravity = new Location(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
         }
 
+        public override EntityType GetEntityType()
+        {
+            return EntityType.BULLET;
+        }
+
+        public override byte[] GetSaveBytes()
+        {
+            // Does not save!
+            return null;
+        }
+
         public void OnCollide(object sender, CollisionEventArgs args)
         {
             if (args.Info.HitEnt != null)

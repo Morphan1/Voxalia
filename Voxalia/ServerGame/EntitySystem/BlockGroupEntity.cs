@@ -48,6 +48,17 @@ namespace Voxalia.ServerGame.EntitySystem
             SetPosition(GetPosition() + shapeOffs);
         }
 
+        public override EntityType GetEntityType()
+        {
+            return EntityType.BLOCK_GROUP;
+        }
+
+        public override byte[] GetSaveBytes()
+        {
+            // TODO: Save properly!
+            return null;
+        }
+
         public int BlockIndex(int x, int y, int z)
         {
             return z * YWidth * XWidth + y * XWidth + x;

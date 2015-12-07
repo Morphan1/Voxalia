@@ -4,6 +4,7 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared.Collision;
+using System;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -23,7 +24,22 @@ namespace Voxalia.ServerGame.EntitySystem
             SetPosition(pos.GetBlockLocation() + offset);
             Mat = mat;
         }
-        
+
+        public override EntityType GetEntityType()
+        {
+            return EntityType.BLOCK_ITEM;
+        }
+
+        public override byte[] GetSaveBytes()
+        {
+            byte[] bbytes = GetPhysicsBytes();
+            byte[] res = new byte[bbytes.Length + 3];
+            bbytes.CopyTo(res, 0);
+            Utilities.UshortToBytes((ushort)Mat).CopyTo(res, bbytes.Length);
+            res[bbytes.Length + 2] = Dat;
+            return res;
+        }
+
         // TODO: If settled (deactivated) for too long (minutes?), or loaded in via chunkload, revert to a block
 
         /// <summary>

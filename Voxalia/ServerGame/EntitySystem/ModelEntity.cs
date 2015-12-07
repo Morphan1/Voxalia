@@ -11,6 +11,23 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class ModelEntity: PhysicsEntity
     {
+        public override EntityType GetEntityType()
+        {
+            return EntityType.MODEL;
+        }
+
+        public override byte[] GetSaveBytes()
+        {
+            byte[] modelname = Utilities.encoding.GetBytes(model);
+            byte[] bbytes = GetPhysicsBytes();
+            byte[] res = new byte[bbytes.Length + 1 + 4 + modelname.Length];
+            bbytes.CopyTo(res, 0);
+            res[bbytes.Length + 12] = (byte)mode;
+            Utilities.IntToBytes(modelname.Length).CopyTo(res, bbytes.Length + 1);
+            modelname.CopyTo(res, bbytes.Length + 1 + 4);
+            return res;
+        }
+
         public string model;
 
         public Location scale = Location.One;

@@ -22,6 +22,17 @@ namespace Voxalia.ServerGame.EntitySystem
             Seats.Add(DriverSeat);
         }
 
+        public override EntityType GetEntityType()
+        {
+            return EntityType.VEHICLE;
+        }
+
+        public override byte[] GetSaveBytes()
+        {
+            // TODO: Save properly!
+            return null;
+        }
+
         public bool hasWheels = false;
 
         List<Model3DNode> GetNodes(Model3DNode node)
