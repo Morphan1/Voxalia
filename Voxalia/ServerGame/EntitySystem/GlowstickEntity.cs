@@ -33,4 +33,16 @@ namespace Voxalia.ServerGame.EntitySystem
             return res;
         }
     }
+
+    public class GlowstickEntityConstructor : EntityConstructor
+    {
+        public override Entity Create(Region tregion, byte[] input)
+        {
+            int plen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4;
+            int colo = Utilities.BytesToInt(Utilities.BytesPartial(input, plen, 4));
+            GlowstickEntity glowstick = new GlowstickEntity(colo, tregion);
+            glowstick.ApplyBytes(input);
+            return glowstick;
+        }
+    }
 }

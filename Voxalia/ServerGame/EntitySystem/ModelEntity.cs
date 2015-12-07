@@ -22,7 +22,7 @@ namespace Voxalia.ServerGame.EntitySystem
             byte[] bbytes = GetPhysicsBytes();
             byte[] res = new byte[bbytes.Length + 1 + 4 + modelname.Length];
             bbytes.CopyTo(res, 0);
-            res[bbytes.Length + 12] = (byte)mode;
+            res[bbytes.Length] = (byte)mode;
             Utilities.IntToBytes(modelname.Length).CopyTo(res, bbytes.Length + 1);
             modelname.CopyTo(res, bbytes.Length + 1 + 4);
             return res;
@@ -104,5 +104,20 @@ namespace Voxalia.ServerGame.EntitySystem
         AABB = 2,
         SPHERE = 3
         // TODO: ConvexHull!
+    }
+
+    public class ModelEntityConstructor : EntityConstructor
+    {
+        public override Entity Create(Region tregion, byte[] input)
+        {
+            int plen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4;
+            byte mode = input[plen];
+            int namelen = Utilities.BytesToInt(Utilities.BytesPartial(input, plen + 1, 4));
+            string name = Utilities.encoding.GetString(input, plen + 1 + 4, namelen);
+            ModelEntity ent = new ModelEntity(name, tregion);
+            ent.mode = (ModelCollisionMode)mode;
+            ent.ApplyBytes(input);
+            return ent;
+        }
     }
 }

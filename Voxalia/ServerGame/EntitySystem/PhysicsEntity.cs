@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using Voxalia.Shared;
 using BEPUutilities;
 using Voxalia.ServerGame.JointSystem;
@@ -407,6 +408,19 @@ namespace Voxalia.ServerGame.EntitySystem
         }
 
         /// <summary>
+        /// Sets the gravity value for this physics entity.
+        /// </summary>
+        /// <param name="gravity">The gravity value.</param>
+        public void SetGravity(Location gravity)
+        {
+            Gravity = gravity;
+            if (Body != null)
+            {
+                Body.Gravity = gravity.ToBVector();
+            }
+        }
+
+        /// <summary>
         /// Applies a force directly to the physics entity's body.
         /// The force is assumed to be perfectly central to the entity.
         /// Note: this is a force, not a velocity. Mass is relevant.
@@ -473,6 +487,31 @@ namespace Voxalia.ServerGame.EntitySystem
             Utilities.FloatToBytes(GetFriction()).CopyTo(bytes, p + 12 + 4);
             Utilities.FloatToBytes(GetMass()).CopyTo(bytes, p + 12 + 4 + 4);
             return bytes;
+        }
+
+        /// <summary>
+        /// Applies binary save data to this entity.
+        /// </summary>
+        /// <param name="data">The save data.</param>
+        public void ApplyBytes(byte[] data)
+        {
+            if (data.Length < 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4)
+            {
+                throw new Exception("Invalid binary physics entity data!");
+            }
+            SetPosition(Location.FromBytes(data, 0));
+            SetVelocity(Location.FromBytes(data, 12));
+            SetAngularVelocity(Location.FromBytes(data, 12 + 12));
+            Quaternion quat = new Quaternion();
+            quat.X = Utilities.BytesToFloat(Utilities.BytesPartial(data, 12 + 12 + 12, 4));
+            quat.Y = Utilities.BytesToFloat(Utilities.BytesPartial(data, 12 + 12 + 12 + 4, 4));
+            quat.Z = Utilities.BytesToFloat(Utilities.BytesPartial(data, 12 + 12 + 12 + 4 + 4, 4));
+            quat.W = Utilities.BytesToFloat(Utilities.BytesPartial(data, 12 + 12 + 12 + 4 + 4 + 4, 4));
+            int p = 12 + 12 + 12 + 4 + 4 + 4 + 4;
+            SetGravity(Location.FromBytes(data, p));
+            SetBounciness(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12, 4)));
+            SetFriction(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12 + 4, 4)));
+            SetMass(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12 + 4 + 4, 4)));
         }
     }
 }

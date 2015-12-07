@@ -82,4 +82,9 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public abstract byte[] GetSaveBytes();
     }
+
+    public abstract class EntityConstructor
+    {
+        public abstract Entity Create(Region tregion, byte[] input);
+    }
 }

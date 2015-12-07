@@ -24,7 +24,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override byte[] GetSaveBytes()
         {
-            byte[] bbytes = base.GetSaveBytes();
+            byte[] bbytes = GetPhysicsBytes();
             byte[] item = Stack.ToBytes(); // TODO: Serverside byte constructor, for server-only data.
             byte[] res = new byte[bbytes.Length + 4 + item.Length];
             bbytes.CopyTo(res, 0);
@@ -42,6 +42,19 @@ namespace Voxalia.ServerGame.EntitySystem
                 return true;
             }
             return false;
+        }
+    }
+
+    public class ItemEntityConstructor : EntityConstructor
+    {
+        public override Entity Create(Region tregion, byte[] input)
+        {
+            int plen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4;
+            int stacklen = Utilities.BytesToInt(Utilities.BytesPartial(input, plen, 4));
+            ItemStack stack = new ItemStack(Utilities.BytesPartial(input, plen + 4, stacklen), tregion.TheServer);
+            ItemEntity ent = new ItemEntity(stack, tregion);
+            ent.ApplyBytes(input);
+            return ent;
         }
     }
 }

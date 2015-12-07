@@ -1,10 +1,9 @@
-﻿using System.Drawing;
+﻿using System;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared.Collision;
-using System;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -13,7 +12,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public Material Mat;
         public byte Dat;
 
-        public BlockItemEntity(WorldSystem.Region tregion, Material mat, byte dat, Location pos)
+        public BlockItemEntity(Region tregion, Material mat, byte dat, Location pos)
             : base(tregion, true)
         {
             SetMass(5);
@@ -49,7 +48,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             // TODO: Proper texture / model / ...
             return new ItemStack("block", Mat.ToString(), TheServer, 1, "", Mat.GetName(),
-                    "A standard block of " + Mat.ToString(), Color.White.ToArgb(), "cube", false) { Datum = (ushort)Mat };
+                    "A standard block of " + Mat.ToString(), System.Drawing.Color.White.ToArgb(), "cube", false) { Datum = (ushort)Mat };
         }
 
         public bool Use(Entity user)
@@ -61,6 +60,19 @@ namespace Voxalia.ServerGame.EntitySystem
                 return true;
             }
             return false;
+        }
+    }
+
+    public class BlockItemEntityConstructor: EntityConstructor
+    {
+        public override Entity Create(Region tregion, byte[] input)
+        {
+            int plen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4;
+            ushort tmat = Utilities.BytesToUshort(Utilities.BytesPartial(input, plen, 2));
+            byte tdat = input[plen + 2];
+            BlockItemEntity ent = new BlockItemEntity(tregion, (Material)tmat, tdat, Location.Zero);
+            ent.ApplyBytes(input);
+            return ent;
         }
     }
 }
