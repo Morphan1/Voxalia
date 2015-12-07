@@ -255,11 +255,9 @@ namespace Voxalia.ServerGame.WorldSystem
             byte[] ebytes = FileHandler.UnGZip(Utilities.BytesPartial(data, 4 + clen + 4, elen));
             if (ebytes.Length > 0)
             {
-                SysConsole.Output(OutputType.INFO, "TEMP: " + ebytes.Length);
                 using (DataStream eds = new DataStream(ebytes))
                 {
                     DataReader edr = new DataReader(eds);
-                    SysConsole.Output(OutputType.INFO, "TEMP2: " + eds.Length + ", " + eds.Position);
                     while (eds.Length - eds.Position > 0)
                     {
                         int EType = edr.ReadInt();
@@ -267,7 +265,6 @@ namespace Voxalia.ServerGame.WorldSystem
                         try
                         {
                             entsToSpawn.Add(OwningRegion.ConstructorFor((EntityType)EType).Create(OwningRegion, dat));
-                            SysConsole.Output(OutputType.INFO, "Spawning a " + (EntityType)EType + " at " + entsToSpawn[entsToSpawn.Count - 1].GetPosition());
                         }
                         catch (Exception ex)
                         {
