@@ -342,7 +342,7 @@ namespace Voxalia.Shared
         /// </summary>
         /// <param name="vec">The original vector.</param>
         /// <param name="yaw">The yaw to rotate by.</param>
-        /// <returns>The rotated vector..</returns>
+        /// <returns>The rotated vector.</returns>
         public static Location RotateVector(Location vec, double yaw)
         {
             double cos = (float)Math.Cos(yaw);

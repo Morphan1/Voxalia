@@ -13,6 +13,7 @@ using Voxalia.ClientGame.JointSystem;
 using Voxalia.Shared.Collision;
 using System.Diagnostics;
 using Frenetic;
+using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -57,7 +58,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_godray = Shaders.GetShader("godray");
             s_pointlightadder = Shaders.GetShader("pointlightadder");
             s_pointshadowadder = Shaders.GetShader("pointshadowadder");
+            s_mapvox = Shaders.GetShader("map_vox");
             generateLightHelpers();
+            generateMapHelpers();
             skybox = new VBO[6];
             for (int i = 0; i < 6; i++)
             {
@@ -76,6 +79,35 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
         }
 
+        int map_fbo_main;
+        int map_fbo_texture;
+        int map_fbo_depthtex;
+
+        public void generateMapHelpers()
+        {
+            // TODO: Helper class!
+            map_fbo_texture = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, map_fbo_texture);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 256, 256, 0, PixelFormat.Rgba, PixelType.Byte, IntPtr.Zero); // TODO: Custom size!
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            map_fbo_depthtex = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, map_fbo_depthtex);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32, 256, 256, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero); // TODO: Custom size!
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            map_fbo_main = GL.GenFramebuffer();
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, map_fbo_main);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, map_fbo_texture, 0);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, map_fbo_depthtex, 0);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+        
         VBO[] skybox;
 
         public void destroyLightHelpers()
@@ -146,6 +178,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, fbo_godray_texture, 0);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment1, TextureTarget.Texture2D, fbo_godray_texture2, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
         public Shader s_shadow;
@@ -160,6 +193,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_shadowvox;
         public Shader s_pointlightadder;
         public Shader s_pointshadowadder;
+        public Shader s_mapvox;
         RenderSurface4Part RS4P;
 
         public Location CameraUp = Location.UnitZ;
@@ -263,7 +297,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public double LightsSpikeTime;
         public double FinishSpikeTime;
         public double TWODSpikeTime;
-
+        
+        public double mapLastRendered = 0;
 
         public void renderGame()
         {
@@ -289,6 +324,33 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     {
                         CameraPos = cr.Position;
                     }
+                }
+                if (CVars.u_showmap.ValueB && mapLastRendered + 1.0 < TheRegion.GlobalTickTimeLocal) // TODO: 1.0 -> custom
+                {
+                    mapLastRendered = TheRegion.GlobalTickTimeLocal;
+                    AABB box = new AABB() { Min = Player.GetPosition(), Max = Player.GetPosition() };
+                    foreach (Chunk ch in TheRegion.LoadedChunks.Values)
+                    {
+                        box.Include(ch.WorldPosition * Chunk.CHUNK_SIZE);
+                        box.Include(ch.WorldPosition * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE));
+                    }
+                    Matrix4 ortho = Matrix4.CreateOrthographicOffCenter((float)box.Min.X, (float)box.Max.X, (float)box.Min.Y, (float)box.Max.Y, (float)box.Min.Z, (float)box.Max.Z);
+                    Matrix4 oident = Matrix4.Identity;
+                    s_mapvox.Bind();
+                    GL.UniformMatrix4(1, false, ref ortho);
+                    GL.Viewport(0, 0, 256, 256); // TODO: Customizable!
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, map_fbo_main);
+                    GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
+                    GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 1.0f, 0.0f, 1.0f });
+                    GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
+                    GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
+                    foreach (Chunk chunk in TheRegion.LoadedChunks.Values)
+                    {
+                        chunk.Render();
+                    }
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                    GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                    GL.DrawBuffer(DrawBufferMode.Back);
                 }
                 sortEntities();
                 SetViewport();
@@ -957,6 +1019,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     new Location(center - healthbaroffset + 4, Window.Height - 26, 0));
                 FontSets.SlightlyBigger.DrawColoredText("^S^%^e^0Armor: " + "100.0" + "/" + "100.0" + " = " + "100.0" + "%", // TODO: Armor values!
                     new Location(center + 4, Window.Height - 26, 0));
+                if (CVars.u_showmap.ValueB)
+                {
+                    Textures.White.Bind();
+                    Rendering.SetColor(Color4.Black);
+                    Rendering.RenderRectangle(Window.Width - 16 - 200, 16, Window.Width - 16, 16 + 200); // TODO: Dynamic size?
+                    Rendering.SetColor(Color4.White);
+                    GL.BindTexture(TextureTarget.Texture2D, map_fbo_texture);
+                    Rendering.RenderRectangle(Window.Width - 16 - (200 - 2), 16 + 2, Window.Width - 16 - 2, 16 + (200 - 2));
+                }
                 int cX = Window.Width / 2;
                 int cY = Window.Height / 2;
                 int move = (int)Player.GetVelocity().LengthSquared() / 5;
@@ -965,7 +1036,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     move = 20;
                 }
                 Rendering.SetColor(Color4.White);
-                Textures.GetTexture("ui/hud/reticles/" + CVars.u_reticle.Value + "_tl").Bind();
+                Textures.GetTexture("ui/hud/reticles/" + CVars.u_reticle.Value + "_tl").Bind(); // TODO: Save! Don't re-grab every tick!
                 Rendering.RenderRectangle(cX - CVars.u_reticlescale.ValueI - move, cY - CVars.u_reticlescale.ValueI - move, cX - move, cY - move);
                 Textures.GetTexture("ui/hud/reticles/" + CVars.u_reticle.Value + "_tr").Bind();
                 Rendering.RenderRectangle(cX + move, cY - CVars.u_reticlescale.ValueI - move, cX + CVars.u_reticlescale.ValueI + move, cY - move);
