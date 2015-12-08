@@ -39,7 +39,8 @@ namespace Voxalia.ClientGame.CommandSystem
 
         // UI CVars
         public CVar u_mouse_sensitivity, u_reticle, u_reticlescale, u_showhud,
-            u_highlight_targetblock, u_highlight_placeblock, u_debug, u_showmap;
+            u_highlight_targetblock, u_highlight_placeblock,
+            u_debug, u_showmap, u_showrangefinder;
 
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
@@ -111,6 +112,7 @@ namespace Voxalia.ClientGame.CommandSystem
             u_highlight_placeblock = Register("u_highlight_placeblock", "true", CVarFlag.Boolean, "Whether to highlight the targeted placement block.");
             u_debug = Register("u_debug", "false", CVarFlag.Boolean, "Whether to display debug information on the HUD.");
             u_showmap = Register("u_showmap", "false", CVarFlag.Boolean | CVarFlag.ServerControl, "Whether to display a map on the HUD.");
+            u_showrangefinder = Register("u_showrangefinder", "false", CVarFlag.Boolean | CVarFlag.ServerControl, "Whether to display a range finder on the HUD.");
         }
 
         CVar Register(string name, string value, CVarFlag flags, string desc = null)

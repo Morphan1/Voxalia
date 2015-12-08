@@ -1044,6 +1044,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Rendering.RenderRectangle(cX - CVars.u_reticlescale.ValueI - move, cY + move, cX - move, cY + CVars.u_reticlescale.ValueI + move);
                 Textures.GetTexture("ui/hud/reticles/" + CVars.u_reticle.Value + "_br").Bind();
                 Rendering.RenderRectangle(cX + move, cY + move, cX + CVars.u_reticlescale.ValueI + move, cY + CVars.u_reticlescale.ValueI + move);
+                if (CVars.u_showrangefinder.ValueB)
+                {
+                    FontSets.Standard.DrawColoredText(CameraDistance.ToString("#.0"), new Location(cX + move + CVars.u_reticlescale.ValueI, cY + move + CVars.u_reticlescale.ValueI, 0));
+                }
             }
             RenderInvMenu();
         }
