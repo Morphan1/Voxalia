@@ -111,7 +111,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public override void Tick()
         {
-            if (Transmit)
+            if (Transmit && NetworkMe)
             {
                 // TODO: Timer of some form, to prevent packet flood on a speedy server?
                 if (Body.ActivityInformation.IsActive || (netpActive && !Body.ActivityInformation.IsActive))

@@ -192,6 +192,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public PlayerEntity(WorldSystem.Region tregion, Connection conn)
             : base(tregion, false, 100f)
         {
+            CanSave = false;
             Network = conn;
             SetMass(tmass);
             CanRotate = false;
@@ -278,6 +279,8 @@ namespace Voxalia.ServerGame.EntitySystem
                 CursorMarker.mode = ModelCollisionMode.AABB;
                 CursorMarker.CGroup = CollisionUtil.NonSolid;
                 CursorMarker.Visible = false;
+                CursorMarker.CanSave = false;
+                CursorMarker.NetworkMe = false;
                 TheRegion.SpawnEntity(CursorMarker);
             }
         }

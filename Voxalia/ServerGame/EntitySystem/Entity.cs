@@ -24,6 +24,11 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool NetworkMe = true; // TODO: Readonly? Toggler method?
 
         /// <summary>
+        /// Whether this entity is allowed to save to file.
+        /// </summary>
+        public bool CanSave = true;
+
+        /// <summary>
         /// The unique ID for this entity.
         /// </summary>
         public long EID;

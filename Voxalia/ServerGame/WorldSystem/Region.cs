@@ -894,6 +894,10 @@ namespace Voxalia.ServerGame.WorldSystem
                 if (allowFile && Program.Files.Exists(chunk.GetFileName()))
                 {
                     chunk.LoadFromSaveData(Program.Files.ReadBytes(chunk.GetFileName()));
+                    TheServer.Schedule.ScheduleSyncTask(() =>
+                    {
+                        chunk.AddToWorld();
+                    });
                     if (!chunk.Flags.HasFlag(ChunkFlags.ISCUSTOM))
                     {
                         chunk.Flags &= ~ChunkFlags.POPULATING;

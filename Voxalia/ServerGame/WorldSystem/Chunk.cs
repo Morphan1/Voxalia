@@ -93,6 +93,11 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public void AddToWorld()
         {
+            foreach (Entity e in entsToSpawn)
+            {
+                OwningRegion.SpawnEntity(e);
+            }
+            entsToSpawn.Clear();
             if (Flags.HasFlag(ChunkFlags.ISCUSTOM))
             {
                 return;
@@ -104,11 +109,6 @@ namespace Voxalia.ServerGame.WorldSystem
             FCO = new FullChunkObject(WorldPosition.ToBVector() * 30, BlocksInternal);
             FCO.CollisionRules.Group = CollisionUtil.Solid;
             OwningRegion.AddChunk(FCO);
-            foreach (Entity e in entsToSpawn)
-            {
-                OwningRegion.SpawnEntity(e);
-            }
-            entsToSpawn.Clear();
         }
 
         public Object EditSessionLock = new Object();
@@ -138,11 +138,12 @@ namespace Voxalia.ServerGame.WorldSystem
                 DataWriter dw = new DataWriter(ds);
                 for (int i = 0; i < OwningRegion.Entities.Count; i++)
                 {
-                    if (Contains(OwningRegion.Entities[i].GetPosition()))
+                    if (OwningRegion.Entities[i].CanSave && Contains(OwningRegion.Entities[i].GetPosition()))
                     {
                         byte[] dat = OwningRegion.Entities[i].GetSaveBytes();
                         if (dat != null)
                         {
+                            SysConsole.Output(OutputType.INFO, "Save: " + OwningRegion.Entities[i] + ", " + OwningRegion.Entities[i].GetPosition());
                             dw.WriteInt((int)OwningRegion.Entities[i].GetEntityType());
                             dw.WriteFullBytes(dat);
                         }
@@ -223,10 +224,7 @@ namespace Voxalia.ServerGame.WorldSystem
         }
 
         List<Entity> entsToSpawn = new List<Entity>();
-
-        /// <summary>
-        /// Asyncable (Just don't add the chunk to the world while this is running!)
-        /// </summary>
+        
         public void LoadFromSaveData(byte[] data)
         {
             int clen = Utilities.BytesToInt(Utilities.BytesPartial(data, 0, 4));
