@@ -1,5 +1,6 @@
 ﻿using System;
 using Voxalia.ServerGame.WorldSystem;
+using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.EntitySystem
 {

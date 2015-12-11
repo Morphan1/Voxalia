@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Voxalia
+namespace Voxalia.Shared
 {
     public enum EntityType: int
     {
