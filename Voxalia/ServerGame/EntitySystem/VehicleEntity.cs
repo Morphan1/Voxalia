@@ -13,10 +13,10 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public string vehName;
         public Seat DriverSeat;
-        public JointMotor DrivingMotorLeft;
-        public JointMotor DrivingMotorRight;
-        public JointMotor SteeringMotorLeft;
-        public JointMotor SteeringMotorRight;
+        public JointVehicleMotor DrivingMotorLeft;
+        public JointVehicleMotor DrivingMotorRight;
+        public JointVehicleMotor SteeringMotorLeft;
+        public JointVehicleMotor SteeringMotorRight;
 
         public VehicleEntity(string vehicle, Region tregion)
             : base("vehicles/" + vehicle + "_base", tregion)
@@ -57,105 +57,84 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void SpawnBody()
         {
-            TheServer.Schedule.ScheduleSyncTask(() =>
+            base.SpawnBody();
+            if (!hasWheels)
             {
-                if (!hasWheels) // TODO: Efficiency. We shouldn't have to check this every tick!
+                Model mod = TheServer.Models.GetModel(model);
+                if (mod == null) // TODO: mod should return a cube when all else fails?
                 {
-                    Model mod = TheServer.Models.GetModel(model);
-                    if (mod == null) // TODO: mod should return a cube when all else fails?
-                    {
-                        // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
-                        return;
-                    }
-                    Model3D scene = mod.Original;
-                    if (scene == null) // TODO: Scene should return a cube when all else fails?
-                    {
-                        // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
-                        return;
-                    }
-                    SetOrientation(BEPUutilities.Quaternion.Identity);
-                    List<Model3DNode> nodes = GetNodes(scene.RootNode);
-                    for (int i = 0; i < nodes.Count; i++)
-                    {
-                        string name = nodes[i].Name.ToLower();
-                        if (name.Contains("wheel"))
-                        {
-                            Matrix mat = nodes[i].MatrixA;
-                            Model3DNode tnode = nodes[i].Parent;
-                            while (tnode != null)
-                            {
-                                mat = tnode.MatrixA * mat;
-                                tnode = tnode.Parent;
-                            }
-                            Location pos = GetPosition() + new Location(mat.M14, mat.M34, mat.M24); // TODO: Why are the matrices transposed?! // TODO: Why are Y and Z flipped?!
-                            ModelEntity wheel = new ModelEntity("vehicles/" + vehName + "_wheel", TheRegion);
-                            wheel.SetPosition(pos);
-                            wheel.SetOrientation(Quaternion.Identity); // TOOD: orient
-                            wheel.Gravity = Gravity;
-                            wheel.CGroup = CGroup;
-                            wheel.SetMass(5);
-                            wheel.mode = ModelCollisionMode.SPHERE;
-                            TheRegion.SpawnEntity(wheel);
-                            //JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
-                            
-                            if (name.EndsWith("01f"))
-                            {
-                                SteeringMotorLeft = ConnectWheel(wheel, false);
-                            }
-                            else if (name.EndsWith("02f"))
-                            {
-                                SteeringMotorRight = ConnectWheel(wheel, false);
-                            }
-                            else if (name.EndsWith("01b"))
-                            {
-                                DrivingMotorLeft = ConnectWheel(wheel, true);
-                            }
-                            else if (name.EndsWith("02b"))
-                            {
-                                DrivingMotorRight = ConnectWheel(wheel, true);
-                            }
-
-                            BEPUutilities.Vector3 angvel = new BEPUutilities.Vector3(10, 0, 0);
-                            wheel.Body.ApplyAngularImpulse(ref angvel);
-                            wheel.Body.ActivityInformation.Activate();
-                        }
-                    }
-                    hasWheels = true;
+                    // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
+                    return;
                 }
-            }, 0.1);
+                Model3D scene = mod.Original;
+                if (scene == null) // TODO: Scene should return a cube when all else fails?
+                {
+                    // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
+                    return;
+                }
+                SetOrientation(Quaternion.Identity); // TODO: Remove need for this!
+                List<Model3DNode> nodes = GetNodes(scene.RootNode);
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    string name = nodes[i].Name.ToLower();
+                    if (name.Contains("wheel"))
+                    {
+                        Matrix mat = nodes[i].MatrixA;
+                        Model3DNode tnode = nodes[i].Parent;
+                        while (tnode != null)
+                        {
+                            mat = tnode.MatrixA * mat;
+                            tnode = tnode.Parent;
+                        }
+                        Location pos = GetPosition() + new Location(mat.M14, mat.M34, mat.M24); // TODO: Why are the matrices transposed?! // TODO: Why are Y and Z flipped?!
+                        VehiclePartEntity wheel = new VehiclePartEntity(TheRegion, "vehicles/" + vehName + "_wheel");
+                        wheel.SetPosition(pos);
+                        wheel.SetOrientation(Quaternion.Identity); // TOOD: orient
+                        wheel.Gravity = Gravity;
+                        wheel.CGroup = CGroup;
+                        wheel.SetMass(5);
+                        wheel.mode = ModelCollisionMode.SPHERE;
+                        TheRegion.SpawnEntity(wheel);
+                        //JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
+                        if (name.EndsWith("01f"))
+                        {
+                            SteeringMotorLeft = ConnectWheel(wheel, false);
+                        }
+                        else if (name.EndsWith("02f"))
+                        {
+                            SteeringMotorRight = ConnectWheel(wheel, false);
+                        }
+                        else if (name.EndsWith("01b"))
+                        {
+                            DrivingMotorLeft = ConnectWheel(wheel, true);
+                        }
+                        else if (name.EndsWith("02b"))
+                        {
+                            DrivingMotorRight = ConnectWheel(wheel, true);
+                        }
+                        Vector3 angvel = new Vector3(10, 0, 0);
+                        wheel.Body.ApplyAngularImpulse(ref angvel);
+                        wheel.Body.ActivityInformation.Activate();
+                    }
+                }
+                hasWheels = true;
+            }
         }
 
-        public JointMotor ConnectWheel(ModelEntity wheel, bool driving)
+        public JointVehicleMotor ConnectWheel(VehiclePartEntity wheel, bool driving)
         {
             wheel.SetFriction(2.5f);
-
-            BEPUutilities.Vector3 left = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(-1, 0, 0), wheel.GetOrientation());
-            //BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
-            BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(new BEPUutilities.Vector3(0, 0, 1), wheel.GetOrientation());
-
+            BEPUutilities.Vector3 left = Quaternion.Transform(new Vector3(-1, 0, 0), wheel.GetOrientation());
+            //BEPUutilities.Vector3 forward = Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
+            BEPUutilities.Vector3 up = Quaternion.Transform(new Vector3(0, 0, 1), wheel.GetOrientation());
             JointSlider pointOnLineJoint = new JointSlider(this, wheel, new Location(left));
             //LinearAxisLimit suspensionLimit = new LinearAxisLimit(body, wheel, wheel.Position, wheel.Position, Vector3.Down, -1, 0);
             //LinearAxisMotor suspensionSpring = new LinearAxisMotor(body, wheel, wheel.Position, wheel.Position, Vector3.Down);
             //SwivelHingeAngularJoint swivelHingeAngularJoint = new SwivelHingeAngularJoint(body, wheel, Vector3.Up, Vector3.Right);
             TheRegion.AddJoint(pointOnLineJoint);
-
-            if (driving)
-            {
-                JointMotor drivingMotor = new JointMotor(this, wheel, new Location(left));
-                TheRegion.AddJoint(drivingMotor);
-                drivingMotor.Motor.Settings.VelocityMotor.Softness = 0.2f;
-                drivingMotor.Motor.Settings.MaximumForce = 150;
-                return drivingMotor;
-            }
-            else
-            {
-                JointMotor steeringMotor = new JointMotor(this, wheel, new Location(up));
-                TheRegion.AddJoint(steeringMotor);
-                steeringMotor.Motor.Settings.Mode = MotorMode.Servomechanism;
-                steeringMotor.Motor.Basis.SetWorldAxes(Vector3.UnitZ, Vector3.UnitX);
-                steeringMotor.Motor.TestAxis = Vector3.UnitX;
-                return steeringMotor;
-            }
+            JointVehicleMotor motor = new JointVehicleMotor(this, wheel, new Location(left), !driving);
+            TheRegion.AddJoint(motor);
+            return motor;
         }
 
         public bool Use(Entity user)

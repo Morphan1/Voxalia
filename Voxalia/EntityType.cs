@@ -17,6 +17,7 @@ namespace Voxalia
         MODEL = 8,
         ITEM = 9,
         VEHICLE = 10,
+        VEHICLE_PART = 11,
         LEGACY_SPAWNPOINT = 100
     }
 }

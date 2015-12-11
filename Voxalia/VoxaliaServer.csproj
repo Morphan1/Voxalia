@@ -96,6 +96,7 @@
     <Compile Include="ServerGame\EntitySystem\Seat.cs" />
     <Compile Include="ServerGame\EntitySystem\SpawnPointEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\VehicleEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\VehiclePartEntity.cs" />
     <Compile Include="ServerGame\ItemSystem\BaseItemInfo.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BaseAmmoItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BaseGunItem.cs" />
@@ -129,7 +130,7 @@
     <Compile Include="ServerGame\JointSystem\JointBallSocket.cs" />
     <Compile Include="ServerGame\JointSystem\JointDistance.cs" />
     <Compile Include="ServerGame\JointSystem\JointForceWeld.cs" />
-    <Compile Include="ServerGame\JointSystem\JointMotor.cs" />
+    <Compile Include="ServerGame\JointSystem\JointVehicleMotor.cs" />
     <Compile Include="ServerGame\JointSystem\JointPushPull.cs" />
     <Compile Include="ServerGame\JointSystem\JointSlider.cs" />
     <Compile Include="ServerGame\JointSystem\JointSpinner.cs" />

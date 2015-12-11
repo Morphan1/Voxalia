@@ -60,11 +60,12 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 Data = new byte[len];
                 Data[0] = 7;
             }
-            else if (joint is JointMotor)
+            else if (joint is JointVehicleMotor)
             {
-                Data = new byte[len + 12];
+                Data = new byte[len + 12 + 1];
                 Data[0] = 8;
-                ((JointMotor)joint).Direction.ToBytes().CopyTo(Data, len);
+                ((JointVehicleMotor)joint).Direction.ToBytes().CopyTo(Data, len);
+                Data[len + 12] = (byte)(((JointVehicleMotor)joint).IsSteering ? 1 : 0);
             }
             Utilities.LongToBytes(joint.One.EID).CopyTo(Data, 1);
             Utilities.LongToBytes(joint.Two.EID).CopyTo(Data, 1 + 8);

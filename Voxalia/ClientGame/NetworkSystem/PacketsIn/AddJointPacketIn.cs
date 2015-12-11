@@ -133,13 +133,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 8)
             {
-                if (data.Length != len + 12)
+                if (data.Length != len + 12 + 1)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
                 Location dir = Location.FromBytes(data, len);
-                JointMotor jm = new JointMotor((PhysicsEntity)pe1, (PhysicsEntity)pe2, dir);
+                bool issteering = data[len + 12] == 1;
+                JointVehicleMotor jm = new JointVehicleMotor((PhysicsEntity)pe1, (PhysicsEntity)pe2, dir, issteering);
                 jm.JID = JID;
                 TheClient.TheRegion.AddJoint(jm);
                 return true;
