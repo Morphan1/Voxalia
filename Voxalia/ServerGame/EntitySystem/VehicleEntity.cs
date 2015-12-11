@@ -13,10 +13,8 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public string vehName;
         public Seat DriverSeat;
-        public JointVehicleMotor DrivingMotorLeft;
-        public JointVehicleMotor DrivingMotorRight;
-        public JointVehicleMotor SteeringMotorLeft;
-        public JointVehicleMotor SteeringMotorRight;
+        public List<JointVehicleMotor> DrivingMotors = new List<JointVehicleMotor>();
+        public List<JointVehicleMotor> SteeringMotors = new List<JointVehicleMotor>();
 
         public VehicleEntity(string vehicle, Region tregion)
             : base("vehicles/" + vehicle + "_base", tregion)
@@ -96,21 +94,13 @@ namespace Voxalia.ServerGame.EntitySystem
                         wheel.mode = ModelCollisionMode.SPHERE;
                         TheRegion.SpawnEntity(wheel);
                         //JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
-                        if (name.EndsWith("01f"))
+                        if (name.EndsWith("f"))
                         {
-                            SteeringMotorLeft = ConnectWheel(wheel, false);
+                            SteeringMotors.Add(ConnectWheel(wheel, false));
                         }
-                        else if (name.EndsWith("02f"))
+                        else if (name.EndsWith("b"))
                         {
-                            SteeringMotorRight = ConnectWheel(wheel, false);
-                        }
-                        else if (name.EndsWith("01b"))
-                        {
-                            DrivingMotorLeft = ConnectWheel(wheel, true);
-                        }
-                        else if (name.EndsWith("02b"))
-                        {
-                            DrivingMotorRight = ConnectWheel(wheel, true);
+                            DrivingMotors.Add(ConnectWheel(wheel, true));
                         }
                         Vector3 angvel = new Vector3(10, 0, 0);
                         wheel.Body.ApplyAngularImpulse(ref angvel);
