@@ -3,6 +3,7 @@ using Frenetic.CommandSystem;
 using Voxalia.ServerGame.CommandSystem.CommonCommands;
 using Voxalia.ServerGame.CommandSystem.PlayerCommands;
 using Voxalia.ServerGame.CommandSystem.FileCommands;
+using Voxalia.ServerGame.TagSystem.TagBases;
 
 namespace Voxalia.ServerGame.CommandSystem
 {
@@ -50,6 +51,9 @@ namespace Voxalia.ServerGame.CommandSystem
             
             // Player Management Commands
             CommandSystem.RegisterCommand(new KickCommand(TheServer));
+
+            // Tag Bases
+            CommandSystem.TagSystem.Register(new LocationTagBase());
         }
 
         /// <summary>
