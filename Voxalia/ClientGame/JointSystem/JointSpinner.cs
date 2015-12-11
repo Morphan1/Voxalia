@@ -6,7 +6,7 @@ using BEPUphysics.Constraints;
 
 namespace Voxalia.ClientGame.JointSystem
 {
-    class JointSpinner : BaseJoint
+    public class JointSpinner : BaseJoint
     {
         public JointSpinner(PhysicsEntity e1, PhysicsEntity e2, Location dir)
         {
