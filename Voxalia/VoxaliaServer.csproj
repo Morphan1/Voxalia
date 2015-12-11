@@ -132,6 +132,7 @@
     <Compile Include="ServerGame\JointSystem\JointBallSocket.cs" />
     <Compile Include="ServerGame\JointSystem\JointDistance.cs" />
     <Compile Include="ServerGame\JointSystem\JointForceWeld.cs" />
+    <Compile Include="ServerGame\JointSystem\JointMotor.cs" />
     <Compile Include="ServerGame\JointSystem\JointPushPull.cs" />
     <Compile Include="ServerGame\JointSystem\JointSlider.cs" />
     <Compile Include="ServerGame\JointSystem\JointSpinner.cs" />

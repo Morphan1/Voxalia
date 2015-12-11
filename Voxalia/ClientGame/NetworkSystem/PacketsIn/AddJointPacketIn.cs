@@ -131,6 +131,19 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 TheClient.TheRegion.AddJoint(jw);
                 return true;
             }
+            else if (type == 8)
+            {
+                if (data.Length != len + 12)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
+                    return false;
+                }
+                Location dir = Location.FromBytes(data, len);
+                JointMotor jm = new JointMotor((PhysicsEntity)pe1, (PhysicsEntity)pe2, dir);
+                jm.JID = JID;
+                TheClient.TheRegion.AddJoint(jm);
+                return true;
+            }
             else
             {
                 SysConsole.Output(OutputType.WARNING, "Unknown joint type " + type);
