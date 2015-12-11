@@ -56,6 +56,11 @@ namespace Voxalia.ServerGame.EntitySystem
         public override void SpawnBody()
         {
             base.SpawnBody();
+            TheServer.Schedule.ScheduleSyncTask(HandleWheels);
+        }
+
+        public void HandleWheels()
+        {
             if (!hasWheels)
             {
                 Model mod = TheServer.Models.GetModel(model);
@@ -102,6 +107,7 @@ namespace Voxalia.ServerGame.EntitySystem
                         {
                             DrivingMotors.Add(ConnectWheel(wheel, true));
                         }
+                        // TODO: else { handle wheels that are neither powering nor steering! }
                         Vector3 angvel = new Vector3(10, 0, 0);
                         wheel.Body.ApplyAngularImpulse(ref angvel);
                         wheel.Body.ActivityInformation.Activate();
@@ -114,16 +120,20 @@ namespace Voxalia.ServerGame.EntitySystem
         public JointVehicleMotor ConnectWheel(VehiclePartEntity wheel, bool driving)
         {
             wheel.SetFriction(2.5f);
-            BEPUutilities.Vector3 left = Quaternion.Transform(new Vector3(-1, 0, 0), wheel.GetOrientation());
-            //BEPUutilities.Vector3 forward = Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
-            BEPUutilities.Vector3 up = Quaternion.Transform(new Vector3(0, 0, 1), wheel.GetOrientation());
-            JointSlider pointOnLineJoint = new JointSlider(this, wheel, new Location(left));
-            //LinearAxisLimit suspensionLimit = new LinearAxisLimit(body, wheel, wheel.Position, wheel.Position, Vector3.Down, -1, 0);
-            //LinearAxisMotor suspensionSpring = new LinearAxisMotor(body, wheel, wheel.Position, wheel.Position, Vector3.Down);
+            Vector3 left = Quaternion.Transform(new Vector3(-1, 0, 0), wheel.GetOrientation());
+            //Vector3 forward = Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
+            Vector3 up = Quaternion.Transform(new Vector3(0, 0, 1), wheel.GetOrientation());
+            JointSlider pointOnLineJoint = new JointSlider(this, wheel, -new Location(up));
+            JointLAxisLimit suspensionLimit = new JointLAxisLimit(this, wheel, -0.1f, 0, wheel.GetPosition(), wheel.GetPosition(), -new Location(up));
+            JointPullPush spring = new JointPullPush(this, wheel, 100, -new Location(up));
             //SwivelHingeAngularJoint swivelHingeAngularJoint = new SwivelHingeAngularJoint(body, wheel, Vector3.Up, Vector3.Right);
+            JointVehicleMotor motor = new JointVehicleMotor(this, wheel, new Location(driving ? left : up), !driving);
+            JointSpinner spinner = new JointSpinner(this, wheel, new Location(-left));
             TheRegion.AddJoint(pointOnLineJoint);
-            JointVehicleMotor motor = new JointVehicleMotor(this, wheel, new Location(left), !driving);
+            TheRegion.AddJoint(suspensionLimit);
+            TheRegion.AddJoint(spring);
             TheRegion.AddJoint(motor);
+            TheRegion.AddJoint(spinner);
             return motor;
         }
 

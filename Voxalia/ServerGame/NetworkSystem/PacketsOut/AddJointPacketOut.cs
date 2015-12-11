@@ -33,9 +33,10 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             }
             else if (joint is JointPullPush)
             {
-                Data = new byte[len + 4];
+                Data = new byte[len + 12 + 4];
                 Data[0] = 3;
                 Utilities.FloatToBytes(((JointPullPush)joint).Strength).CopyTo(Data, len);
+                ((JointPullPush)joint).Axis.ToBytes().CopyTo(Data, len + 4);
             }
             else if (joint is JointForceWeld)
             {
@@ -66,6 +67,16 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 Data[0] = 8;
                 ((JointVehicleMotor)joint).Direction.ToBytes().CopyTo(Data, len);
                 Data[len + 12] = (byte)(((JointVehicleMotor)joint).IsSteering ? 1 : 0);
+            }
+            else if (joint is JointLAxisLimit)
+            {
+                Data = new byte[len + 12 + 12 + 12 + 4 + 4];
+                Data[0] = 9;
+                ((JointLAxisLimit)joint).CPos1.ToBytes().CopyTo(Data, len);
+                ((JointLAxisLimit)joint).CPos2.ToBytes().CopyTo(Data, len + 12);
+                ((JointLAxisLimit)joint).Axis.ToBytes().CopyTo(Data, len + 12 + 12);
+                Utilities.FloatToBytes(((JointLAxisLimit)joint).Min).CopyTo(Data, len + 12 + 12 + 12);
+                Utilities.FloatToBytes(((JointLAxisLimit)joint).Max).CopyTo(Data, len + 12 + 12 + 12 + 4);
             }
             Utilities.LongToBytes(joint.One.EID).CopyTo(Data, 1);
             Utilities.LongToBytes(joint.Two.EID).CopyTo(Data, 1 + 8);

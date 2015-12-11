@@ -69,13 +69,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 3)
             {
-                if (data.Length != len + 4)
+                if (data.Length != len + 4 + 12)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
                 float stren = Utilities.BytesToFloat(Utilities.BytesPartial(data, len, 4));
-                JointPullPush jpp = new JointPullPush((PhysicsEntity)pe1, (PhysicsEntity)pe2, stren);
+                Location axis = Location.FromBytes(data, len + 4);
+                JointPullPush jpp = new JointPullPush((PhysicsEntity)pe1, (PhysicsEntity)pe2, stren, axis);
                 jpp.JID = JID;
                 TheClient.TheRegion.AddJoint(jpp);
                 return true;
@@ -143,6 +144,23 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 JointVehicleMotor jm = new JointVehicleMotor((PhysicsEntity)pe1, (PhysicsEntity)pe2, dir, issteering);
                 jm.JID = JID;
                 TheClient.TheRegion.AddJoint(jm);
+                return true;
+            }
+            else if (type == 9)
+            {
+                if (data.Length != len + 12 + 12 + 12 + 4 + 4)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
+                    return false;
+                }
+                Location cpos1 = Location.FromBytes(data, len);
+                Location cpos2 = Location.FromBytes(data, len + 12);
+                Location axis = Location.FromBytes(data, len + 12 + 12);
+                float min = Utilities.BytesToFloat(Utilities.BytesPartial(data, len + 12 + 12 + 12, 4));
+                float max = Utilities.BytesToFloat(Utilities.BytesPartial(data, len + 12 + 12 + 12 + 4, 4));
+                JointLAxisLimit jlal = new JointLAxisLimit((PhysicsEntity)pe1, (PhysicsEntity)pe2, min, max, cpos1, cpos2, axis);
+                jlal.JID = JID;
+                TheClient.TheRegion.AddJoint(jlal);
                 return true;
             }
             else
