@@ -1198,6 +1198,19 @@
             </summary>
             <returns>The copy.</returns>
         </member>
+        <member name="T:Frenetic.EnumExtensions">
+            <summary>
+            Adds HasFlag to the CVarFlag enum, for .NET 3.5 usage of a .NET 4.0 trick.
+            </summary>
+        </member>
+        <member name="M:Frenetic.EnumExtensions.HasFlag(Frenetic.CVarFlag,Frenetic.CVarFlag)">
+            <summary>
+            Returns whether the Flag set has a specific flag.
+            </summary>
+            <param name="tenum">The flag set.</param>
+            <param name="val">The specific flag.</param>
+            <returns>Whether it is had.</returns>
+        </member>
         <member name="T:Frenetic.CVarFlag">
             <summary>
             The various possible information flags a CVar can hold.
@@ -1748,17 +1761,17 @@
             Informational output type, 3.
             </summary>
         </member>
-        <member name="T:Frenetic.TagHandlers.Common.ColorTags">
+        <member name="T:Frenetic.TagHandlers.Common.TextColorTags">
             <summary>
-            Returns the various default color objects within the tag system.
+            Returns the various default colors within the tag system.
             </summary>
         </member>
-        <member name="M:Frenetic.TagHandlers.Common.ColorTags.#ctor">
+        <member name="M:Frenetic.TagHandlers.Common.TextColorTags.#ctor">
             <summary>
             Construct the ColorTags - for internal use only.
             </summary>
         </member>
-        <member name="M:Frenetic.TagHandlers.Common.ColorTags.Handle(Frenetic.TagHandlers.TagData)">
+        <member name="M:Frenetic.TagHandlers.Common.TextColorTags.Handle(Frenetic.TagHandlers.TagData)">
             <summary>
             Handles a 'color' tag.
             </summary>
