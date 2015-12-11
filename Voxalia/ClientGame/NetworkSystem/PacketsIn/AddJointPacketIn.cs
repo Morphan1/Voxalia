@@ -69,14 +69,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 3)
             {
-                if (data.Length != len + 4 + 12)
+                if (data.Length != len + 12 + 1)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
-                float stren = Utilities.BytesToFloat(Utilities.BytesPartial(data, len, 4));
-                Location axis = Location.FromBytes(data, len + 4);
-                JointPullPush jpp = new JointPullPush((PhysicsEntity)pe1, (PhysicsEntity)pe2, stren, axis);
+                Location axis = Location.FromBytes(data, len);
+                bool mode = data[len + 12] == 1;
+                JointPullPush jpp = new JointPullPush((PhysicsEntity)pe1, (PhysicsEntity)pe2, axis, mode);
                 jpp.JID = JID;
                 TheClient.TheRegion.AddJoint(jpp);
                 return true;

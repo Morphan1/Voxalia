@@ -33,10 +33,10 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             }
             else if (joint is JointPullPush)
             {
-                Data = new byte[len + 12 + 4];
+                Data = new byte[len + 12 + 1];
                 Data[0] = 3;
-                Utilities.FloatToBytes(((JointPullPush)joint).Strength).CopyTo(Data, len);
-                ((JointPullPush)joint).Axis.ToBytes().CopyTo(Data, len + 4);
+                ((JointPullPush)joint).Axis.ToBytes().CopyTo(Data, len);
+                Data[len + 12] = (byte)(((JointPullPush)joint).Mode ? 1 : 0);
             }
             else if (joint is JointForceWeld)
             {

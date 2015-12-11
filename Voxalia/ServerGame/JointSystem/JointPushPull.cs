@@ -8,25 +8,25 @@ namespace Voxalia.ServerGame.JointSystem
 {
     class JointPullPush : BaseJoint
     {
-        public JointPullPush(PhysicsEntity e1, PhysicsEntity e2, float stren, Location axis)
+        public JointPullPush(PhysicsEntity e1, PhysicsEntity e2, Location axis, bool mode)
         {
             Ent1 = e1;
             Ent2 = e2;
-            Strength = stren;
             Axis = axis;
+            Mode = mode;
         }
 
         public Location Axis;
 
-        public float Strength;
-
+        public bool Mode;
+        
         public override SolverUpdateable GetBaseJoint()
         {
             LinearAxisMotor lam = new LinearAxisMotor(Ent1.Body, Ent2.Body, Ent1.GetPosition().ToBVector(), Ent2.GetPosition().ToBVector(), Axis.ToBVector());
-            //lam.Settings.Mode = MotorMode.VelocityMotor;
-            //lam.Settings.MaximumForce = 100 * 5; // TODO: Factor of strength?
-            //lam.Settings.VelocityMotor.Softness = 0.01f;
-            //lam.Settings.VelocityMotor.GoalVelocity = Strength;
+            lam.Settings.Mode = Mode ? MotorMode.Servomechanism : MotorMode.VelocityMotor;
+            lam.Settings.Servo.Goal = 0;
+            lam.Settings.Servo.SpringSettings.Stiffness = 300;
+            lam.Settings.Servo.SpringSettings.Damping = 70;
             return lam;
         }
     }

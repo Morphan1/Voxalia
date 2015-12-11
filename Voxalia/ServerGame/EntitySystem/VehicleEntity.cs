@@ -125,7 +125,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Vector3 up = Quaternion.Transform(new Vector3(0, 0, 1), wheel.GetOrientation());
             JointSlider pointOnLineJoint = new JointSlider(this, wheel, -new Location(up));
             JointLAxisLimit suspensionLimit = new JointLAxisLimit(this, wheel, -0.1f, 0, wheel.GetPosition(), wheel.GetPosition(), -new Location(up));
-            JointPullPush spring = new JointPullPush(this, wheel, 100, -new Location(up));
+            JointPullPush spring = new JointPullPush(this, wheel, -new Location(up), true);
             //SwivelHingeAngularJoint swivelHingeAngularJoint = new SwivelHingeAngularJoint(body, wheel, Vector3.Up, Vector3.Right);
             JointVehicleMotor motor = new JointVehicleMotor(this, wheel, new Location(driving ? left : up), !driving);
             JointSpinner spinner = new JointSpinner(this, wheel, new Location(-left));
