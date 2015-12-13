@@ -38,7 +38,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                     return new RegionTag(r).Handle(data.Shrink());
                 }
             }
-            return new TextTag("{NULL}").Handle(data.Shrink());
+            return new TextTag("&{NULL}").Handle(data.Shrink());
         }
     }
 }

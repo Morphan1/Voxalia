@@ -136,7 +136,7 @@ namespace Voxalia.Shared
         }
 
         /// <summary>
-        /// Converts a string to a ushort Returns 0 if the string is not a valid ushort.
+        /// Converts a string to a ushort. Returns 0 if the string is not a valid ushort.
         /// </summary>
         /// <param name="input">The string to convert.</param>
         /// <returns>The converted ushort.</returns>
@@ -154,7 +154,7 @@ namespace Voxalia.Shared
         }
 
         /// <summary>
-        /// Converts a string to a int Returns 0 if the string is not a valid int.
+        /// Converts a string to a int. Returns 0 if the string is not a valid int.
         /// </summary>
         /// <param name="input">The string to convert.</param>
         /// <returns>The converted int.</returns>
@@ -172,10 +172,10 @@ namespace Voxalia.Shared
         }
 
         /// <summary>
-        /// Converts a string to a long Returns 0 if the string is not a valid long.
+        /// Converts a string to a long. Returns 0 if the string is not a valid long.
         /// </summary>
         /// <param name="input">The string to convert.</param>
-        /// <returns>The converted int.</returns>
+        /// <returns>The converted long.</returns>
         public static long StringToLong(string input)
         {
             long output;

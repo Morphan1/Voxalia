@@ -36,7 +36,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "Fortifier" .name returns "Fortifier".
                 // -->
                 case "name":
-                    return new TextTag(ToString()).Handle(data.Shrink());
+                    return new TextTag(Internal.Name).Handle(data.Shrink());
                 // <--[tag]
                 // @Base PlayerTag.health
                 // @Group Status

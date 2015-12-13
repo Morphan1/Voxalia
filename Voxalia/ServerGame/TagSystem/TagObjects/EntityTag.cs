@@ -37,13 +37,13 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 case "location":
                     return new LocationTag(Internal.GetPosition()).Handle(data.Shrink());
                 // <--[tag]
-                // @Base EntityTag.id
+                // @Base EntityTag.eid
                 // @Group General Information
                 // @ReturnType TextTag
-                // @Returns the entity's ID.
-                // @Example "2" .location would return "2".
+                // @Returns the entity's Entity Identification number (EID).
+                // @Example "2" .eid returns "2".
                 // -->
-                case "id":
+                case "eid":
                     return new TextTag(Internal.EID).Handle(data.Shrink());
 
                 default:

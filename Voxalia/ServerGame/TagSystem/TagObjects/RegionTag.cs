@@ -35,7 +35,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "default" .name returns "default".
                 // -->
                 case "name":
-                    return new TextTag(ToString()).Handle(data.Shrink());
+                    return new TextTag(Internal.Name).Handle(data.Shrink());
 
                 default:
                     return new TextTag(ToString()).Handle(data);
