@@ -9,7 +9,7 @@ using Voxalia.ServerGame.ServerMainSystem;
 
 namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
-    class PlayerTag : TemplateTags
+    public class PlayerTag : TemplateObject
     {
 
         public PlayerEntity Internal;

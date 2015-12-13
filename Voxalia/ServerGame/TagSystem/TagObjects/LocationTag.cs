@@ -9,7 +9,7 @@ using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
-    class LocationTag : TemplateTags
+    public class LocationTag : TemplateObject
     {
         public Location Internal;
 
