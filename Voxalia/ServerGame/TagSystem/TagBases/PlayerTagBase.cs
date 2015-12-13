@@ -30,11 +30,25 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
         public override string Handle(TagData data)
         {
             string pname = data.GetModifier(0).ToLower();
-            foreach (PlayerEntity player in TheServer.Players)
+            long pid;
+            if (long.TryParse(pname, out pid))
             {
-                if (player.Name.ToLower() == pname)
+                foreach (PlayerEntity player in TheServer.Players)
                 {
-                    return new PlayerTag(player).Handle(data.Shrink());
+                    if (player.EID == pid)
+                    {
+                        return new PlayerTag(player).Handle(data.Shrink());
+                    }
+                }
+            }
+            else
+            {
+                foreach (PlayerEntity player in TheServer.Players)
+                {
+                    if (player.Name.ToLower() == pname)
+                    {
+                        return new PlayerTag(player).Handle(data.Shrink());
+                    }
                 }
             }
             return new TextTag("{NULL}").Handle(data.Shrink());

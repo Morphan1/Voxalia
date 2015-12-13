@@ -172,6 +172,24 @@ namespace Voxalia.Shared
         }
 
         /// <summary>
+        /// Converts a string to a long Returns 0 if the string is not a valid long.
+        /// </summary>
+        /// <param name="input">The string to convert.</param>
+        /// <returns>The converted int.</returns>
+        public static long StringToLong(string input)
+        {
+            long output;
+            if (long.TryParse(input, out output))
+            {
+                return output;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
         /// Returns a string representation of the specified time.
         /// </summary>
         /// <returns>The time as a string.</returns>

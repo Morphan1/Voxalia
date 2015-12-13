@@ -55,6 +55,8 @@ namespace Voxalia.ServerGame.CommandSystem
             // Tag Bases
             CommandSystem.TagSystem.Register(new LocationTagBase());
             CommandSystem.TagSystem.Register(new PlayerTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new EntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new RegionTagBase(TheServer));
         }
 
         /// <summary>

@@ -36,16 +36,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "Fortifier" .name returns "Fortifier".
                 // -->
                 case "name":
-                    return new TextTag(Internal.Name).Handle(data.Shrink());
-                // <--[tag]
-                // @Base PlayerTag.name
-                // @Group General Information
-                // @ReturnType LocationTag
-                // @Returns the player's location.
-                // @Example "Fortifier" .location could return "(1, 1, 1)".
-                // -->
-                case "location":
-                    return new LocationTag(Internal.GetPosition()).Handle(data.Shrink());
+                    return new TextTag(ToString()).Handle(data.Shrink());
                 // <--[tag]
                 // @Base PlayerTag.health
                 // @Group Status
@@ -54,10 +45,10 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "Fortifier" .health could return "100".
                 // -->
                 case "health":
-                    return new TextTag(Internal.Health.ToString()).Handle(data.Shrink());
+                    return new TextTag(Internal.Health).Handle(data.Shrink());
 
                 default:
-                    return new TextTag(ToString()).Handle(data);
+                    return new EntityTag((Entity)Internal).Handle(data);
             }
         }
 
