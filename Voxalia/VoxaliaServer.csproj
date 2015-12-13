@@ -200,9 +200,11 @@
     <Compile Include="ServerGame\TagSystem\TagBases\EntityTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\LocationTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\PlayerTagBase.cs" />
+    <Compile Include="ServerGame\TagSystem\TagBases\RegionTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\EntityTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\LocationTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\PlayerTag.cs" />
+    <Compile Include="ServerGame\TagSystem\TagObjects\RegionTag.cs" />
     <Compile Include="ServerGame\WorldSystem\BlockFlags.cs" />
     <Compile Include="ServerGame\WorldSystem\Biome.cs" />
     <Compile Include="ServerGame\WorldSystem\BiomeGenerator.cs" />
