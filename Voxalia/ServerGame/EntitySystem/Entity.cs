@@ -31,7 +31,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// The unique ID for this entity.
         /// </summary>
-        public long EID;
+        public long EID = 0;
 
         /// <summary>
         /// The ID used to identify this entity to joints.

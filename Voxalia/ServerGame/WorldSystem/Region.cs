@@ -109,9 +109,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             SendToAll(new DestroyJointPacketOut(joint));
         }
-
-        public long cID = 0;
-
+        
         public Dictionary<string, Entity> JointTargets = new Dictionary<string, Entity>();
 
         public void ChunkSendToAll(AbstractPacketOut packet, Location cpos)
@@ -152,7 +150,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        public void SpawnEntity(Entity e) // TODO: Move me to World
+        public void SpawnEntity(Entity e, long eid = -1)
         {
             if (e.IsSpawned)
             {
@@ -162,7 +160,14 @@ namespace Voxalia.ServerGame.WorldSystem
             JointTargets.Add(e.JointTargetID, e);
             Entities.Add(e);
             e.IsSpawned = true;
-            e.EID = cID++;
+            if (eid == -1)
+            {
+                e.EID = TheServer.AdvanceCID();
+            }
+            else
+            {
+                e.EID = eid;
+            }
             if (e.Ticks)
             {
                 Tickers.Add(e);

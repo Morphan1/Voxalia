@@ -74,6 +74,18 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 LoadedRegions[i].Tick(delta);
             }
         }
+
+        long cID = 1; // TODO: Save/load value!
+
+        Object CIDLock = new Object();
+
+        public long AdvanceCID()
+        {
+            lock (CIDLock)
+            {
+                return cID++;
+            }
+        }
     }
 
     public class RegionLoadEventArgs : EventArgs
