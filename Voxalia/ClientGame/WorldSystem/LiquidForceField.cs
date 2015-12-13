@@ -52,6 +52,9 @@ namespace Voxalia.ClientGame.WorldSystem
             if (TheRegion.SpecialCaseConvexTrace(cshape, new Location(e.Position), new Location(0, 0, 1), 0.001f, MaterialSolidity.LIQUID, IgnoreEverythingButWater, out rcr))
             {
                 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * e.Mass * dt;
+                // TODO: Calculate submerged amount!
+                e.ModifyLinearDamping(0.5f);
+                e.ModifyAngularDamping(0.5f);
             }
             else
             {
