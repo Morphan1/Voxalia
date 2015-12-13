@@ -115,6 +115,8 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         public PluginManager Plugins;
 
+        public YAMLConfiguration Config;
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
@@ -131,6 +133,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             CVars = new ServerCVar();
             CVars.Init(Commands.Output);
             SysConsole.Output(OutputType.INIT, "Loading default settings...");
+            Config = new YAMLConfiguration(Program.Files.ReadText("server_config.yml"));
             if (Program.Files.Exists("serverdefaultsettings.cfg"))
             {
                 string contents = Program.Files.ReadText("serverdefaultsettings.cfg");
@@ -150,8 +153,11 @@ namespace Voxalia.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Loading plugins...");
             Plugins = new PluginManager(this);
             Plugins.Init();
-            SysConsole.Output(OutputType.INIT, "Building an initial world...");
-            LoadRegion("default");
+            SysConsole.Output(OutputType.INIT, "Building initial world(s)...");
+            foreach (string str in Config.ReadStringList("server.regions"))
+            {
+                LoadRegion(str.ToLower());
+            }
             if (loaded != null)
             {
                 loaded.Invoke();
