@@ -29,6 +29,15 @@ namespace Voxalia.ServerGame.EntitySystem
             return null;
         }
 
+        public string AnimToHold(ItemStack item)
+        {
+            if (item.Name == "rifle_gun")
+            {
+                return "torso_armed_rifle";
+            }
+            return "idle01";
+        }
+
         /// <summary>
         /// Half the size of the player, if needed for a cuboid trace.
         /// </summary>
@@ -523,20 +532,20 @@ namespace Voxalia.ServerGame.EntitySystem
                     TheServer.Players[i].Network.SendPacket(pupo);
                 }
             }
+            ItemStack cit = Items.GetItemForSlot(Items.cItem);
             if (GetVelocity().LengthSquared() > 1)
             {
                 // TODO: Replicate animation automation on client?
-                SetAnimation("human/stand/run", 1);
+                SetAnimation("human/stand/run", 0);
+                SetAnimation("human/stand/" + AnimToHold(cit), 1);
                 SetAnimation("human/stand/run", 2);
-                SetAnimation("human/stand/run", 3);
             }
             else
             {
-                SetAnimation("human/stand/idle01", 1);
+                SetAnimation("human/stand/idle01", 0);
+                SetAnimation("human/stand/" + AnimToHold(cit), 1);
                 SetAnimation("human/stand/idle01", 2);
-                SetAnimation("human/stand/idle01", 3);
             }
-            ItemStack cit = Items.GetItemForSlot(Items.cItem);
             if (Click)
             {
                 cit.Info.Click(this, cit);
