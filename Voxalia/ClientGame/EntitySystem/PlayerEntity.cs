@@ -725,6 +725,30 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 TheClient.Rendering.SetReflectionAmt(0f);
             }
+            Model mod = TheClient.GetItemForSlot(TheClient.QuickBarPos).Mod;
+            if (tAnim != null && mod != null)
+            {
+                mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
+                GL.UniformMatrix4(2, false, ref mat);
+                Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
+                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 1.5f * Utilities.PI180)));
+                adjs["spine05"] = rotforw;
+                SingleAnimationNode hand = tAnim.GetNode("metacarpal2.l");
+                Matrix m4 = Matrix.CreateScale(1.5f, 1.5f, 1.5f)
+                    * (Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
+                    * hand.GetBoneTotalMatrix(aTTime, adjs));
+                OpenTK.Matrix4 bonemat = new OpenTK.Matrix4(m4.M11, m4.M12, m4.M13, m4.M14, m4.M21, m4.M22, m4.M23, m4.M24,
+                    m4.M31, m4.M32, m4.M33, m4.M34, m4.M41, m4.M42, m4.M43, m4.M44);
+                GL.UniformMatrix4(10, false, ref bonemat);
+                mod.LoadSkin(TheClient.Textures);
+                mod.Draw();
+                bonemat = OpenTK.Matrix4.Identity;
+                GL.UniformMatrix4(10, false, ref bonemat);
+                if (!TheClient.RenderingShadows)
+                {
+                    TheClient.Rendering.SetReflectionAmt(0f);
+                }
+            }
         }
     }
 

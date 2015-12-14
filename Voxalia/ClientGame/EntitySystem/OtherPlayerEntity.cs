@@ -362,7 +362,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 OpenTK.Matrix4 nrot = OpenTK.Matrix4.CreateRotationY(180f * (float)Utilities.PI180);
                 bonemat *= nrot;
                 GL.UniformMatrix4(10, false, ref bonemat);
-                TheClient.Models.GetModel("items/weapons/gun01.dae").Draw();
+                TheClient.Models.GetModel("items/weapons/gun01").Draw(); // TODO: Grab correct model!
                 bonemat = OpenTK.Matrix4.Identity;
                 GL.UniformMatrix4(10, false, ref bonemat);
                 if (!TheClient.RenderingShadows)
