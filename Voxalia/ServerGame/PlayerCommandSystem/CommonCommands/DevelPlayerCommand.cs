@@ -74,6 +74,13 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 entry.Player.Items.GiveItem(new ItemStack("structurepaste", arg1, entry.Player.TheServer, 1, "items/admin/strucutre_paste",
                     "Structor Paster", "Pastes a " + arg1 + " structure!", System.Drawing.Color.White.ToArgb(), "items/admin/structure_paste", false));
             }
+            else if (arg0 == "spawnTree")
+            {
+                ModelEntity me = new ModelEntity("mapobjects/plants/pinetest", entry.Player.TheRegion);
+                me.SetPosition(entry.Player.GetPosition());
+                me.SetOrientation(BEPUutilities.Quaternion.CreateFromAxisAngle(new BEPUutilities.Vector3(1, 0, 0), 90f * (float)Utilities.PI180));
+                entry.Player.TheRegion.SpawnEntity(me);
+            }
             else
             {
                 entry.Player.Network.SendMessage("/devel <subcommand> [ values ... ]");
