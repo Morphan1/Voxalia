@@ -512,6 +512,7 @@ namespace Voxalia.ServerGame.EntitySystem
             quat.Y = Utilities.BytesToFloat(Utilities.BytesPartial(data, 12 + 12 + 12 + 4, 4));
             quat.Z = Utilities.BytesToFloat(Utilities.BytesPartial(data, 12 + 12 + 12 + 4 + 4, 4));
             quat.W = Utilities.BytesToFloat(Utilities.BytesPartial(data, 12 + 12 + 12 + 4 + 4 + 4, 4));
+            SetOrientation(quat);
             int p = 12 + 12 + 12 + 4 + 4 + 4 + 4;
             SetGravity(Location.FromBytes(data, p));
             SetBounciness(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12, 4)));

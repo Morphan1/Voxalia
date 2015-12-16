@@ -300,13 +300,13 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     // Special case: trees.
                     if (hheight > 0 && top >= 0 && top < Chunk.CHUNK_SIZE)
                     {
-                        Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000));
+                        Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000)); // TODO: Improve!
                         if (spotr.Next(300) == 1) // TODO: Efficiency! // TODO: Biome based chance!
                         {
                             chunk.OwningRegion.TheServer.Schedule.ScheduleSyncTask(() =>
                             {
                                 // TODO: Different trees per biome!
-                                chunk.OwningRegion.SpawnTree("oak01", new Location(cx, cy, top));
+                                chunk.OwningRegion.SpawnTree("oak01", new Location(cx, cy, hheight));
                             });
                         }
                     }
