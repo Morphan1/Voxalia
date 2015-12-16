@@ -4,6 +4,7 @@ using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
 using BEPUphysics;
+using BEPUutilities;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
@@ -77,15 +78,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             }
             else if (arg0 == "spawnTree" && entry.InputArguments.Count > 1)
             {
-                ModelEntity me = new ModelEntity("plants/trees/" + entry.InputArguments[1].ToLower(), entry.Player.TheRegion);
-                Location pos = entry.Player.GetPosition() + new Location(0, 0, 1);
-                RayCastResult rcr;
-                bool h = entry.Player.TheRegion.SpecialCaseRayTrace(pos, -Location.UnitZ, 50, MaterialSolidity.FULLSOLID, entry.Player.IgnorePlayers, out rcr);
-                me.SetPosition(h ? new Location(rcr.HitData.Location): pos);
-                me.SetOrientation(BEPUutilities.Quaternion.CreateFromAxisAngle(new BEPUutilities.Vector3(1, 0, 0), 90f * (float)Utilities.PI180));
-                entry.Player.TheRegion.SpawnEntity(me);
-                me.SetPosition(me.GetPosition() - new Location(BEPUutilities.Quaternion.Transform(me.offset.ToBVector(), me.GetOrientation())));
-                me.ForceNetwork();
+                entry.Player.TheRegion.SpawnTree(entry.InputArguments[1].ToLower(), entry.Player.GetPosition());
             }
             else
             {

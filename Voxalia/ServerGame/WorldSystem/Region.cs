@@ -14,6 +14,7 @@ using Voxalia.ServerGame.WorldSystem.SimpleGenerator;
 using System.Threading;
 using System.Threading.Tasks;
 using BEPUphysics.BroadPhaseEntries;
+using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.ItemSystem;
@@ -1078,6 +1079,29 @@ namespace Voxalia.ServerGame.WorldSystem
                 return ec;
             }
             return null;
+        }
+
+        public bool IgnoreEntities(BroadPhaseEntry entry)
+        {
+            return !(entry is EntityCollidable); 
+        }
+
+        public void SpawnTree(string tree, Location opos)
+        {
+            // TODO: Efficiency!
+            ModelEntity me = new ModelEntity("plants/trees/" + tree, this);
+            Location pos = opos + new Location(0, 0, 1);
+            RayCastResult rcr;
+            bool h = SpecialCaseRayTrace(pos, -Location.UnitZ, 50, MaterialSolidity.FULLSOLID, IgnoreEntities, out rcr);
+            me.SetPosition(h ? new Location(rcr.HitData.Location) : pos);
+            Vector3 treealign = new Vector3(0, 1, 0);
+            Vector3 norm = h ? rcr.HitData.Normal : new Vector3(0, 0, 1);
+            Quaternion orient;
+            Quaternion.GetQuaternionBetweenNormalizedVectors(ref treealign, ref norm, out orient);
+            me.SetOrientation(orient);
+            SpawnEntity(me);
+            me.SetPosition(me.GetPosition() - new Location(Quaternion.Transform(me.offset.ToBVector(), orient)));
+            me.ForceNetwork();
         }
     }
 }

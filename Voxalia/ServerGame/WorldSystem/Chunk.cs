@@ -143,7 +143,6 @@ namespace Voxalia.ServerGame.WorldSystem
                         byte[] dat = OwningRegion.Entities[i].GetSaveBytes();
                         if (dat != null)
                         {
-                            SysConsole.Output(OutputType.INFO, "Save: " + OwningRegion.Entities[i] + ", " + OwningRegion.Entities[i].GetPosition());
                             dw.WriteInt((int)OwningRegion.Entities[i].GetEntityType());
                             dw.WriteFullBytes(dat);
                         }

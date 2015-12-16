@@ -23,20 +23,6 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         public const float OreMapTolerance = 0.90f;
 
         public const float OreMapThickTolerance = 0.94f;
-
-        public SimpleGeneratorCore()
-        {
-            try
-            {
-                tempTree = new Structure(Program.Files.ReadBytes("structures/tree.str"));
-            }
-            catch (Exception ex)
-            {
-                SysConsole.Output("Loading tree structures", ex);
-            }
-        }
-
-        public Structure tempTree;
         
         public Material GetMatType(int seed2, int seed3, int seed4, int seed5, int x, int y, int z)
         {
@@ -312,22 +298,18 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         }
                     }
                     // Special case: trees.
-                    // NOTE: Temporarily disabled.
-                    // TODO: Entity trees!
-                    /*if (hheight > 0 && top >= -7 && top < 30)
+                    if (hheight > 0 && top >= 0 && top < Chunk.CHUNK_SIZE)
                     {
                         Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000));
-                        if (spotr.Next(75) == 1) // TODO: Efficiency!
+                        if (spotr.Next(300) == 1) // TODO: Efficiency! // TODO: Biome based chance!
                         {
-                            if (tempTree != null)
+                            chunk.OwningRegion.TheServer.Schedule.ScheduleSyncTask(() =>
                             {
-                                chunk.OwningRegion.TheServer.Schedule.ScheduleSyncTask(() =>
-                                {
-                                    tempTree.PasteCustom(chunk.OwningRegion, new Location(cx - (float)tempTree.Size.X / 2f, cy - (float)tempTree.Size.Y / 2f, hheight));
-                                });
-                            }
+                                // TODO: Different trees per biome!
+                                chunk.OwningRegion.SpawnTree("oak01", new Location(cx, cy, top));
+                            });
                         }
-                    }*/
+                    }
                 }
             }
         }
