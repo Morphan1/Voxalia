@@ -130,6 +130,11 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        public void ForceNetwork()
+        {
+            TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+        }
+
         /// <summary>
         /// Builds and spawns the body into the world.
         /// </summary>

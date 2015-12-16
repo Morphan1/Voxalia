@@ -391,7 +391,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             PhysicsWorld.Remove(mesh);
         }
-
+        
         public bool SpecialCaseRayTrace(Location start, Location dir, float len, MaterialSolidity considerSolid, Func<BroadPhaseEntry, bool> filter, out RayCastResult rayHit)
         {
             Ray ray = new Ray(start.ToBVector(), dir.ToBVector());
