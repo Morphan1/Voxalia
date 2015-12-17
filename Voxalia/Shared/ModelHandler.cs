@@ -3,6 +3,7 @@ using BEPUutilities;
 using System;
 using BEPUphysics.CollisionShapes;
 using Voxalia.Shared.Files;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace Voxalia.Shared
 {
@@ -153,6 +154,12 @@ namespace Voxalia.Shared
                 indices.Add(indices.Count);
             }
             return new MobileMeshShape(vertices.ToArray(), indices.ToArray(), AffineTransform.Identity, MobileMeshSolidity.DoubleSided);
+        }
+
+        public ConvexHullShape MeshToBepuConvex(Model3D input)
+        {
+            List<Vector3> vertices = GetCollisionVertices(input);
+            return new ConvexHullShape(vertices);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Voxalia.ServerGame.JointSystem
             {
                 Motor.Settings.Mode = MotorMode.VelocityMotor;
                 Motor.Settings.VelocityMotor.Softness = 0.2f;
-                Motor.Settings.MaximumForce = 150;
+                Motor.Settings.MaximumForce = 1500;
             }
             return Motor;
         }

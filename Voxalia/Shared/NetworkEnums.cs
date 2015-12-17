@@ -47,4 +47,13 @@ namespace Voxalia.Shared
         SMOKE = 1,
         BIG_SMOKE = 2
     }
+
+    public enum ModelCollisionMode : byte
+    {
+        PRECISE = 1,
+        AABB = 2,
+        SPHERE = 3,
+        CONVEXHULL = 4
+        // TODO: ConvexHull!
+    }
 }

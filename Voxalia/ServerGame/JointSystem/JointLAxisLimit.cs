@@ -33,6 +33,7 @@ namespace Voxalia.ServerGame.JointSystem
 
         public override SolverUpdateable GetBaseJoint()
         {
+            // TODO: Assume the CPos values?
             return new LinearAxisLimit(Ent1.Body, Ent2.Body, CPos1.ToBVector(), CPos2.ToBVector(), Axis.ToBVector(), Min, Max);
         }
     }

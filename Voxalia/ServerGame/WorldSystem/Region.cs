@@ -1101,7 +1101,7 @@ namespace Voxalia.ServerGame.WorldSystem
             me.SetOrientation(orient);
             me.SetPosition(pos);
             SpawnEntity(me);
-            me.SetPosition(pos + new Location(0, 0, -1) - new Location(Quaternion.Transform(me.offset.ToBVector(), orient)));
+            me.SetPosition(pos - new Location(norm) - new Location(Quaternion.Transform(me.offset.ToBVector(), orient)));
             me.ForceNetwork();
         }
     }

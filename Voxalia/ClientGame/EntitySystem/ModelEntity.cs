@@ -54,6 +54,10 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 Shape = TheClient.Models.Handler.MeshToBepu(model.Original);
             }
+            else if (mode == ModelCollisionMode.CONVEXHULL)
+            {
+                Shape = TheClient.Models.Handler.MeshToBepuConvex(model.Original);
+            }
             else if (mode == ModelCollisionMode.AABB)
             {
                 List<BEPUutilities.Vector3> vecs = TheClient.Models.Handler.GetCollisionVertices(model.Original);
@@ -108,11 +112,5 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             model.Draw(); // TODO: Animation?
         }
-    }
-
-    public enum ModelCollisionMode : byte
-    {
-        PRECISE = 1,
-        AABB = 2
     }
 }

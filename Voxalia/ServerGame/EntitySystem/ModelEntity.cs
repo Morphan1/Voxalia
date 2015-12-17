@@ -60,6 +60,10 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 Shape = TheServer.Models.handler.MeshToBepu(smodel); // TODO: Scale!
             }
+            if (mode == ModelCollisionMode.CONVEXHULL)
+            {
+                Shape = TheServer.Models.handler.MeshToBepuConvex(smodel); // TODO: Scale!
+            }
             else if (mode == ModelCollisionMode.AABB)
             {
                 List<BEPUutilities.Vector3> vecs = TheServer.Models.handler.GetCollisionVertices(smodel);
@@ -96,14 +100,6 @@ namespace Voxalia.ServerGame.EntitySystem
                 offset = InternalOffset;
             }
         }
-    }
-
-    public enum ModelCollisionMode : byte
-    {
-        PRECISE = 1,
-        AABB = 2,
-        SPHERE = 3
-        // TODO: ConvexHull!
     }
 
     public class ModelEntityConstructor : EntityConstructor

@@ -17,7 +17,7 @@ namespace Voxalia.ClientGame.JointSystem
 
         public override SolverUpdateable GetBaseJoint()
         {
-            return new PointOnLineJoint(Ent1.Body, Ent2.Body, Ent1.GetPosition().ToBVector(), Direction.Normalize().ToBVector(), Ent1.GetPosition().ToBVector());
+            return new PointOnLineJoint(Ent1.Body, Ent2.Body, Ent2.GetPosition().ToBVector(), Direction.Normalize().ToBVector(), Ent2.GetPosition().ToBVector());
         }
 
         public Location Direction;

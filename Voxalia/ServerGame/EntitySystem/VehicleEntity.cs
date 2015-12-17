@@ -96,7 +96,7 @@ namespace Voxalia.ServerGame.EntitySystem
                         wheel.Gravity = Gravity;
                         wheel.CGroup = CGroup;
                         wheel.SetMass(5);
-                        wheel.mode = ModelCollisionMode.SPHERE;
+                        wheel.mode = ModelCollisionMode.CONVEXHULL;
                         TheRegion.SpawnEntity(wheel);
                         //JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
                         if (name.EndsWith("f"))
@@ -124,7 +124,7 @@ namespace Voxalia.ServerGame.EntitySystem
             //Vector3 forward = Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
             Vector3 up = Quaternion.Transform(new Vector3(0, 0, 1), wheel.GetOrientation());
             JointSlider pointOnLineJoint = new JointSlider(this, wheel, -new Location(up));
-            JointLAxisLimit suspensionLimit = new JointLAxisLimit(this, wheel, -0.1f, 0, wheel.GetPosition(), wheel.GetPosition(), -new Location(up));
+            JointLAxisLimit suspensionLimit = new JointLAxisLimit(this, wheel, 0f, 0.1f, wheel.GetPosition(), wheel.GetPosition(), -new Location(up));
             JointPullPush spring = new JointPullPush(this, wheel, -new Location(up), true);
             //SwivelHingeAngularJoint swivelHingeAngularJoint = new SwivelHingeAngularJoint(body, wheel, Vector3.Up, Vector3.Right);
             JointVehicleMotor motor = new JointVehicleMotor(this, wheel, new Location(driving ? left : up), !driving);

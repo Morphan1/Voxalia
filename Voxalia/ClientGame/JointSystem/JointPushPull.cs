@@ -24,9 +24,9 @@ namespace Voxalia.ClientGame.JointSystem
 
         public override SolverUpdateable GetBaseJoint()
         {
-            LinearAxisMotor lam = new LinearAxisMotor(Ent1.Body, Ent2.Body, Ent1.GetPosition().ToBVector(), Ent2.GetPosition().ToBVector(), Axis.ToBVector());
+            LinearAxisMotor lam = new LinearAxisMotor(Ent1.Body, Ent2.Body, Ent2.GetPosition().ToBVector(), Ent2.GetPosition().ToBVector(), Axis.ToBVector());
             lam.Settings.Mode = Mode ? MotorMode.Servomechanism : MotorMode.VelocityMotor;
-            lam.Settings.Servo.Goal = 0;
+            lam.Settings.Servo.Goal = 1;
             lam.Settings.Servo.SpringSettings.Stiffness = 300;
             lam.Settings.Servo.SpringSettings.Damping = 70;
             return lam;
