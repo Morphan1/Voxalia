@@ -8,6 +8,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.Shared.Collision;
 using Voxalia.ClientGame.OtherSystems;
+using BEPUutilities;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -24,6 +25,9 @@ namespace Voxalia.ClientGame.EntitySystem
         public Location Offset;
 
         public ModelCollisionMode mode = ModelCollisionMode.AABB;
+
+        public BEPUutilities.Vector3 ModelMin;
+        public BEPUutilities.Vector3 ModelMax;
 
         public ModelEntity(string model_in, Region tregion)
             : base(tregion, true, true)
@@ -94,11 +98,32 @@ namespace Voxalia.ClientGame.EntitySystem
                 Offset = InternalOffset;
             }
             transform = Matrix4.CreateTranslation(ClientUtilities.Convert(Offset));
+            List<BEPUutilities.Vector3> tvecs = TheClient.Models.Handler.GetVertices(model.Original);
+            ModelMin = tvecs[0];
+            ModelMax = tvecs[0];
+            foreach (BEPUutilities.Vector3 vec in tvecs)
+            {
+                if (vec.X < ModelMin.X) { ModelMin.X = vec.X; }
+                if (vec.Y < ModelMin.Y) { ModelMin.Y = vec.Y; }
+                if (vec.Z < ModelMin.Z) { ModelMin.Z = vec.Z; }
+                if (vec.X > ModelMax.X) { ModelMax.X = vec.X; }
+                if (vec.Y > ModelMax.Y) { ModelMax.Y = vec.Y; }
+                if (vec.Z > ModelMax.Z) { ModelMax.Z = vec.Z; }
+            }
         }
 
         public override void Render()
         {
             if (!Visible)
+            {
+                return;
+            }
+            RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
+            BEPUutilities.Vector3 bmin;
+            BEPUutilities.Vector3 bmax;
+            RigidTransform.Transform(ref ModelMin, ref rt, out bmin);
+            RigidTransform.Transform(ref ModelMax, ref rt, out bmax);
+            if (TheClient.CFrust == null || !TheClient.CFrust.ContainsBox(new Location(bmin), new Location(bmax)))
             {
                 return;
             }

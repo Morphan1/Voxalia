@@ -120,6 +120,19 @@ namespace Voxalia.Shared
             //return new Matrix(a1, b1, c1, d1, a2, b2, c2, d2, a3, b3, c3, d3, a4, b4, c4, d4);
         }
 
+        public List<Vector3> GetVertices(Model3D input)
+        {
+            List<Vector3> vertices = new List<Vector3>(input.Meshes.Count * 100);
+            foreach (Model3DMesh mesh in input.Meshes)
+            {
+                for (int i = 0; i < mesh.Indices.Count; i++)
+                {
+                    vertices.Add(mesh.Vertices[mesh.Indices[i]]);
+                }
+            }
+            return vertices;
+        }
+
         public List<Vector3> GetCollisionVertices(Model3D input)
         {
             List<Vector3> vertices = new List<Vector3>(input.Meshes.Count * 100);
