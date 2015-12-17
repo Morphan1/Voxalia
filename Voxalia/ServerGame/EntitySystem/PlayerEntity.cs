@@ -475,50 +475,57 @@ namespace Voxalia.ServerGame.EntitySystem
             CBody.AirForce = CBAirForce * frictionmod * Mass;
             CBody.TractionForce = CBTractionForce * frictionmod * Mass;
             CBody.VerticalMotionConstraint.MaximumGlueForce = CBGlueForce * Mass;
-            Vector3 movement = new Vector3(0, 0, 0);
-            if (Leftward)
+            if (CurrentSeat == null)
             {
-                movement.X = -1;
-            }
-            if (Rightward)
-            {
-                movement.X = 1;
-            }
-            if (Backward)
-            {
-                movement.Y = -1;
-            }
-            if (Forward)
-            {
-                movement.Y = 1;
-            }
-            if (Upward && IsFlying)
-            {
-                movement.Z = 1;
-            }
-            else if (Downward && IsFlying)
-            {
-                movement.Z = -1;
-            }
-            if (movement.LengthSquared() > 0)
-            {
-                movement.Normalize();
-            }
-            if (Downward)
-            {
-                CBody.StanceManager.DesiredStance = Stance.Crouching;
+                Vector3 movement = new Vector3(0, 0, 0);
+                if (Leftward)
+                {
+                    movement.X = -1;
+                }
+                if (Rightward)
+                {
+                    movement.X = 1;
+                }
+                if (Backward)
+                {
+                    movement.Y = -1;
+                }
+                if (Forward)
+                {
+                    movement.Y = 1;
+                }
+                if (Upward && IsFlying)
+                {
+                    movement.Z = 1;
+                }
+                else if (Downward && IsFlying)
+                {
+                    movement.Z = -1;
+                }
+                if (movement.LengthSquared() > 0)
+                {
+                    movement.Normalize();
+                }
+                if (Downward)
+                {
+                    CBody.StanceManager.DesiredStance = Stance.Crouching;
+                }
+                else
+                {
+                    CBody.StanceManager.DesiredStance = DesiredStance;
+                }
+                CBody.HorizontalMotionConstraint.MovementDirection = new Vector2(movement.X, movement.Y);
+                if (IsFlying)
+                {
+                    Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, movement.Z), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
+                    SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Sprint ? 2 : (Walk ? 0.5 : 1)));
+                    CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
+                    Body.LinearVelocity = new Vector3(0, 0, 0);
+                }
             }
             else
             {
-                CBody.StanceManager.DesiredStance = DesiredStance;
-            }
-            CBody.HorizontalMotionConstraint.MovementDirection = new Vector2(movement.X, movement.Y);
-            if (IsFlying)
-            {
-                Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, movement.Z), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Sprint ? 2: (Walk ? 0.5 : 1)));
-                CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
-                Body.LinearVelocity = new Vector3(0, 0, 0);
+                CurrentSeat.HandleInput(this);
             }
             CursorMarker.SetPosition(GetEyePosition() + ForwardVector() * 0.9f);
             CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(Direction.Pitch * Utilities.PI180)) * // TODO: ensure pitch works properly

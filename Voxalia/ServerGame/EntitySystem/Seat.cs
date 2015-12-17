@@ -69,5 +69,13 @@ namespace Voxalia.ServerGame.EntitySystem
             OldPosition = Location.Zero;
             jw = null;
         }
+
+        public void HandleInput(PlayerEntity player)
+        {
+            if (SeatHolder is VehicleEntity)
+            {
+                ((VehicleEntity)SeatHolder).HandleInput(player);
+            }
+        }
     }
 }

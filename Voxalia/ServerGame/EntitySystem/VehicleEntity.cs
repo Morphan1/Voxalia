@@ -146,5 +146,51 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             return DriverSeat.Accept((PhysicsEntity)user);
         }
+
+        public void HandleInput(PlayerEntity player)
+        {
+            if (player.Forward)
+            {
+                foreach (JointVehicleMotor motor in DrivingMotors)
+                {
+                    motor.Motor.Settings.VelocityMotor.GoalVelocity = 25f;
+                }
+            }
+            else if (player.Backward)
+            {
+                foreach (JointVehicleMotor motor in DrivingMotors)
+                {
+                    motor.Motor.Settings.VelocityMotor.GoalVelocity = -25f;
+                }
+            }
+            else
+            {
+                foreach (JointVehicleMotor motor in DrivingMotors)
+                {
+                    motor.Motor.Settings.VelocityMotor.GoalVelocity = 0f;
+                }
+            }
+            if (player.Rightward)
+            {
+                foreach (JointVehicleMotor motor in SteeringMotors)
+                {
+                    motor.Motor.Settings.Servo.Goal = 2f;
+                }
+            }
+            else if (player.Leftward)
+            {
+                foreach (JointVehicleMotor motor in SteeringMotors)
+                {
+                    motor.Motor.Settings.Servo.Goal = -2f;
+                }
+            }
+            else
+            {
+                foreach (JointVehicleMotor motor in SteeringMotors)
+                {
+                    motor.Motor.Settings.Servo.Goal = 0f;
+                }
+            }
+        }
     }
 }
