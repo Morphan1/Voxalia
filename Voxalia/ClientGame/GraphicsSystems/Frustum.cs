@@ -65,22 +65,19 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
                 if (inC == 0)
                 {
+                    // Backup
+                    if (Contains(min)) { return true; }
+                    else if (Contains(max)) { return true; }
+                    else if (Contains(new Location(min.X, min.Y, max.Z))) { return true; }
+                    else if (Contains(new Location(min.X, max.Y, max.Z))) { return true; }
+                    else if (Contains(new Location(max.X, min.Y, max.Z))) { return true; }
+                    else if (Contains(new Location(max.X, min.Y, min.Z))) { return true; }
+                    else if (Contains(new Location(max.X, max.Y, min.Z))) { return true; }
+                    else if (Contains(new Location(min.X, max.Y, min.Z))) { return true; }
                     return false;
                 }
             }
             return true;
-            /*
-            bool any = false;
-            if (Contains(min)) { any = true; }
-            else if (Contains(max)) { any = true; }
-            else if (Contains(new Location(min.X, min.Y, max.Z))) { any = true; }
-            else if (Contains(new Location(min.X, max.Y, max.Z))) { any = true; }
-            else if (Contains(new Location(max.X, min.Y, max.Z))) { any = true; }
-            else if (Contains(new Location(max.X, min.Y, min.Z))) { any = true; }
-            else if (Contains(new Location(max.X, max.Y, min.Z))) { any = true; }
-            else if (Contains(new Location(min.X, max.Y, min.Z))) { any = true; }
-            return any;
-            */
         }
 
         /// <summary>

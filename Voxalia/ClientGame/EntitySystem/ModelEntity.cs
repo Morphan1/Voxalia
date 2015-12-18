@@ -97,18 +97,20 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 Offset = InternalOffset;
             }
+            BEPUutilities.Vector3 offs = Offset.ToBVector();
             transform = Matrix4.CreateTranslation(ClientUtilities.Convert(Offset));
             List<BEPUutilities.Vector3> tvecs = TheClient.Models.Handler.GetVertices(model.Original);
             ModelMin = tvecs[0];
             ModelMax = tvecs[0];
             foreach (BEPUutilities.Vector3 vec in tvecs)
             {
-                if (vec.X < ModelMin.X) { ModelMin.X = vec.X; }
-                if (vec.Y < ModelMin.Y) { ModelMin.Y = vec.Y; }
-                if (vec.Z < ModelMin.Z) { ModelMin.Z = vec.Z; }
-                if (vec.X > ModelMax.X) { ModelMax.X = vec.X; }
-                if (vec.Y > ModelMax.Y) { ModelMax.Y = vec.Y; }
-                if (vec.Z > ModelMax.Z) { ModelMax.Z = vec.Z; }
+                BEPUutilities.Vector3 tvec = vec + offs;
+                if (tvec.X < ModelMin.X) { ModelMin.X = tvec.X; }
+                if (tvec.Y < ModelMin.Y) { ModelMin.Y = tvec.Y; }
+                if (tvec.Z < ModelMin.Z) { ModelMin.Z = tvec.Z; }
+                if (tvec.X > ModelMax.X) { ModelMax.X = tvec.X; }
+                if (tvec.Y > ModelMax.Y) { ModelMax.Y = tvec.Y; }
+                if (tvec.Z > ModelMax.Z) { ModelMax.Z = tvec.Z; }
             }
         }
 
@@ -124,7 +126,7 @@ namespace Voxalia.ClientGame.EntitySystem
             BEPUutilities.Vector3 bmax;
             RigidTransform.Transform(ref ModelMin, ref rt, out bmin);
             RigidTransform.Transform(ref ModelMax, ref rt, out bmax);
-            if (TheClient.CFrust == null || !TheClient.CFrust.ContainsBox(new Location(bmin), new Location(bmax)))
+            if (TheClient.CFrust != null && !TheClient.CFrust.ContainsBox(new Location(bmin), new Location(bmax)))
             {
                 return;
             }

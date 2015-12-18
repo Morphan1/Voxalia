@@ -125,9 +125,9 @@ namespace Voxalia.Shared
             List<Vector3> vertices = new List<Vector3>(input.Meshes.Count * 100);
             foreach (Model3DMesh mesh in input.Meshes)
             {
-                for (int i = 0; i < mesh.Indices.Count; i++)
+                for (int i = 0; i < mesh.Vertices.Count; i++)
                 {
-                    vertices.Add(mesh.Vertices[mesh.Indices[i]]);
+                    vertices.Add(mesh.Vertices[i]);
                 }
             }
             return vertices;
