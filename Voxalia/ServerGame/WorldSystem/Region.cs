@@ -1086,6 +1086,26 @@ namespace Voxalia.ServerGame.WorldSystem
             return !(entry is EntityCollidable); 
         }
 
+        public void SpawnSmallPlant(string plant, Location opos)
+        {
+            // TODO: Efficiency!
+            ModelEntity me = new ModelEntity("plants/small/" + plant, this);
+            Location pos = opos + new Location(0, 0, 1);
+            /*RayCastResult rcr;
+            bool h = SpecialCaseRayTrace(pos, -Location.UnitZ, 50, MaterialSolidity.FULLSOLID, IgnoreEntities, out rcr);
+            me.SetPosition(h ? new Location(rcr.HitData.Location) : pos);*/
+            //Vector3 treealign = new Vector3(0, 1, 0);
+            Vector3 norm = /*h ? rcr.HitData.Normal : */new Vector3(0, 0, 1);
+            Quaternion orient = Quaternion.Identity;
+            //Quaternion.GetQuaternionBetweenNormalizedVectors(ref treealign, ref norm, out orient);
+            me.SetOrientation(orient);
+            me.SetPosition(pos);
+            me.CGroup = CollisionUtil.NonSolid;
+            SpawnEntity(me);
+            me.SetPosition(pos - new Location(norm) - new Location(Quaternion.Transform(me.offset.ToBVector(), orient)));
+            me.ForceNetwork();
+        }
+
         public void SpawnTree(string tree, Location opos)
         {
             // TODO: Efficiency!

@@ -118,6 +118,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
+            // TODO: If farther away than a given distance (set by server), render as a sprite instead of a full model!
             RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
             BEPUutilities.Vector3 bmin;
             BEPUutilities.Vector3 bmax;
