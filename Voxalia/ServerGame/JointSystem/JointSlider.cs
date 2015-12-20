@@ -20,19 +20,7 @@ namespace Voxalia.ServerGame.JointSystem
         {
             return new PointOnLineJoint(Ent1.Body, Ent2.Body, Ent2.GetPosition().ToBVector(), Direction.Normalize().ToBVector(), Ent2.GetPosition().ToBVector());
         }
-
-        public override bool ApplyVar(Region tregion, string var, string value)
-        {
-            switch (var)
-            {
-                case "direction":
-                    Direction = Location.FromString(value);
-                    return true;
-                default:
-                    return base.ApplyVar(tregion, var, value);
-            }
-        }
-
+        
         public Location Direction;
     }
 }

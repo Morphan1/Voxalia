@@ -2,6 +2,8 @@
 using Voxalia.Shared;
 using BEPUutilities;
 using Voxalia.ServerGame.WorldSystem;
+using Voxalia.ServerGame.NetworkSystem;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -23,6 +25,11 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             // Does not save!
             return null;
+        }
+
+        public override AbstractPacketOut GetSpawnPacket()
+        {
+            return new SpawnBulletPacketOut(this); // TODO: Why is this separate?
         }
 
         public void OnCollide(object sender, CollisionEventArgs args)

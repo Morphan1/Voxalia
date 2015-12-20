@@ -974,7 +974,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         + "\nSpike Times -> Shadows: " + ShadowSpikeTime.ToString(timeformat)
                         + ", FBO: " + FBOSpikeTime.ToString(timeformat) + ", Lights: " + LightsSpikeTime.ToString(timeformat) + ", 2D: " + TWODSpikeTime.ToString(timeformat)
                         + ", Tick: " + TickSpikeTime.ToString(timeformat) + ", Finish: " + FinishSpikeTime.ToString(timeformat)
-                        + "\nChunks loaded: " + TheRegion.LoadedChunks.Count + ", Chunks rendering currently: " + ChunksRenderingCurrently
+                        + "\nChunks loaded: " + TheRegion.LoadedChunks.Count + ", Chunks rendering currently: " + ChunksRenderingCurrently + ", Entities loaded: " + TheRegion.Entities.Count
                         + "\nPosition: " + Player.GetPosition().ToBasicString() + ", velocity: " + Player.GetVelocity().ToBasicString() + ", direction: " + Player.Direction.ToBasicString(),
                         Window.Width - 10), new Location(0, 0, 0));
                 }

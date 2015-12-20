@@ -199,10 +199,12 @@ namespace Voxalia.ServerGame.EntitySystem
         public List<Location> Breadcrumbs = new List<Location>();
         
         public PlayerEntity(WorldSystem.Region tregion, Connection conn)
-            : base(tregion, false, 100f)
+            : base(tregion, 100f)
         {
             CanSave = false;
+            NetworkMe = false;
             Network = conn;
+            TransmitMe = false;
             SetMass(tmass);
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
@@ -627,6 +629,18 @@ namespace Voxalia.ServerGame.EntitySystem
             base.Tick();
         }
 
+        public bool ShouldSeeChunkPreviously(Location cpos)
+        {
+            Location wpos = TheRegion.ChunkLocFor(lPos);
+            if (Math.Abs(cpos.X - wpos.X) > ViewRadiusInChunks
+                || Math.Abs(cpos.Y - wpos.Y) > ViewRadiusInChunks
+                || Math.Abs(cpos.Z - wpos.Z) > ViewRadiusInChunks)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public bool ShouldSeeChunk(Location cpos)
         {
             Location wpos = TheRegion.ChunkLocFor(GetPosition());
@@ -637,6 +651,24 @@ namespace Voxalia.ServerGame.EntitySystem
                 return false;
             }
             return true;
+        }
+
+        public bool ShouldSeePositionPreviously(Location pos)
+        {
+            if (pos.IsNaN() || lPos.IsNaN())
+            {
+                return false;
+            }
+            return ShouldSeeChunkPreviously(TheRegion.ChunkLocFor(pos));
+        }
+
+        public bool ShouldSeePosition(Location pos)
+        {
+            if (pos.IsNaN())
+            {
+                return false;
+            }
+            return ShouldSeeChunk(TheRegion.ChunkLocFor(pos));
         }
         
         public int BreadcrumbRadius = 6;

@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.EntitySystem
     public abstract class GrenadeEntity : PhysicsEntity
     {
         public GrenadeEntity(Region tregion) :
-            base(tregion, true)
+            base(tregion)
         {
             ConvexEntityShape = new CylinderShape(0.2f, 0.05f);
             Shape = ConvexEntityShape;

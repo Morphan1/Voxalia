@@ -111,8 +111,6 @@ namespace Voxalia.ServerGame.WorldSystem
             SendToAll(new DestroyJointPacketOut(joint));
         }
         
-        public Dictionary<string, Entity> JointTargets = new Dictionary<string, Entity>();
-
         public void ChunkSendToAll(AbstractPacketOut packet, Location cpos)
         {
             if (cpos.IsNaN())
@@ -157,8 +155,6 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 return;
             }
-            JointTargets.Remove(e.JointTargetID);
-            JointTargets.Add(e.JointTargetID, e);
             Entities.Add(e);
             e.IsSpawned = true;
             if (eid == -1)
@@ -178,14 +174,9 @@ namespace Voxalia.ServerGame.WorldSystem
                 Targetables.Add((EntityTargettable)e);
             }
             e.TheRegion = this;
-            AbstractPacketOut packet = null;
             if (e is PhysicsEntity && !(e is PlayerEntity))
             {
                 ((PhysicsEntity)e).SpawnBody();
-                if (e.NetworkMe)
-                {
-                    packet = new SpawnPhysicsEntityPacketOut((PhysicsEntity)e);
-                }
             }
             else if (e is PrimitiveEntity)
             {
@@ -194,21 +185,6 @@ namespace Voxalia.ServerGame.WorldSystem
             if (e is SpawnPointEntity)
             {
                 SpawnPoints.Add((SpawnPointEntity)e);
-            }
-            else if (e is BulletEntity)
-            {
-                packet = new SpawnBulletPacketOut((BulletEntity)e);
-            }
-            else if (e is PrimitiveEntity)
-            {
-                if (e.NetworkMe)
-                {
-                    packet = new SpawnPrimitiveEntityPacketOut((PrimitiveEntity)e);
-                }
-            }
-            if (packet != null)
-            {
-                SendToAll(packet);
             }
             if (e is PlayerEntity)
             {
@@ -219,40 +195,11 @@ namespace Voxalia.ServerGame.WorldSystem
                     ((PlayerEntity)e).Network.SendPacket(new NetStringPacketOut(TheServer.Networking.Strings.Strings[i]));
                 }
                 ((PlayerEntity)e).SpawnBody();
-                packet = new SpawnPhysicsEntityPacketOut((PlayerEntity)e);
-                for (int i = 0; i < Players.Count; i++)
-                {
-                    if (Players[i] != e)
-                    {
-                        Players[i].Network.SendPacket(packet);
-                    }
-                }
                 ((PlayerEntity)e).Network.SendPacket(new YourEIDPacketOut(e.EID));
                 ((PlayerEntity)e).Network.SendPacket(new CVarSetPacketOut(TheServer.CVars.g_timescale, TheServer));
                 ((PlayerEntity)e).SetAnimation("human/stand/idle01", 0);
                 ((PlayerEntity)e).SetAnimation("human/stand/idle01", 1);
                 ((PlayerEntity)e).SetAnimation("human/stand/idle01", 2);
-                for (int i = 0; i < Entities.Count - 2; i++)
-                {
-                    if (Entities[i] is PhysicsEntity)
-                    {
-                        if (Entities[i].NetworkMe)
-                        {
-                            ((PlayerEntity)e).Network.SendPacket(new SpawnPhysicsEntityPacketOut((PhysicsEntity)Entities[i]));
-                        }
-                    }
-                    else if (Entities[i] is BulletEntity)
-                    {
-                        ((PlayerEntity)e).Network.SendPacket(new SpawnBulletPacketOut((BulletEntity)Entities[i]));
-                    }
-                    else if (Entities[i] is PrimitiveEntity)
-                    {
-                        if (Entities[i].NetworkMe)
-                        {
-                            ((PlayerEntity)e).Network.SendPacket(new SpawnPrimitiveEntityPacketOut((PrimitiveEntity)Entities[i]));
-                        }
-                    }
-                }
             }
         }
 
@@ -262,7 +209,6 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 return;
             }
-            JointTargets.Remove(e.JointTargetID);
             Entities.Remove(e);
             e.IsSpawned = false;
             if (e.Ticks)
@@ -294,7 +240,23 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             if (e.NetworkMe)
             {
-                SendToAll(new DespawnEntityPacketOut(e.EID));
+                Location lpos = Location.NaN;
+                if (e is PhysicsEntity)
+                {
+                    lpos = ((PhysicsEntity)e).lPos;
+                }
+                else if (e is PrimitiveEntity)
+                {
+                    lpos = ((PrimitiveEntity)e).lPos;
+                }
+                DespawnEntityPacketOut desppack = new DespawnEntityPacketOut(e.EID);
+                foreach (PlayerEntity player in Players)
+                {
+                    if (player.ShouldSeePositionPreviously(lpos))
+                    {
+                        player.Network.SendPacket(desppack);
+                    }
+                }
             }
         }
         
@@ -594,6 +556,13 @@ namespace Voxalia.ServerGame.WorldSystem
             for (int i = 0; i < Tickers.Count; i++)
             {
                 Tickers[i].Tick();
+            }
+            for (int i = 0; i < Tickers.Count; i++)
+            {
+                if (Tickers[i] is PhysicsEntity)
+                {
+                    ((PhysicsEntity)Tickers[i]).EndTick();
+                }
             }
             for (int i = 0; i < Joints.Count; i++) // TODO: Optimize!
             {

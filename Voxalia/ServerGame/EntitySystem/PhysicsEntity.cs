@@ -11,6 +11,7 @@ using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
 using BEPUphysics;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.ServerGame.NetworkSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -19,18 +20,16 @@ namespace Voxalia.ServerGame.EntitySystem
     /// </summary>
     public abstract class PhysicsEntity: Entity
     {
-        bool Transmit;
+        public bool TransmitMe;
 
         /// <summary>
         /// Construct the physics entity.
         /// Sets its gravity to the world default and collisiongroup to Solid.
         /// </summary>
         /// <param name="tregion">The region the entity will be spawned in.</param>
-        /// <param name="transmit">Whether the entity should transmit itself across the network.</param>
-        public PhysicsEntity(Region tregion, bool transmit)
+        public PhysicsEntity(Region tregion)
             : base(tregion, true)
         {
-            Transmit = transmit;
             Gravity = new Location(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
             CGroup = CollisionUtil.Solid;
         }
@@ -105,29 +104,65 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool netpActive = false;
 
         public double netdeltat = 0;
+
+        public Location lPos = Location.NaN;
         
         /// <summary>
         /// Ticks the physics entity, currently only causing water float and transmitting to the network.
         /// </summary>
         public override void Tick()
         {
-            if (Transmit && NetworkMe)
+            if (NetworkMe)
             {
+                bool sme = false;
                 // TODO: Timer of some form, to prevent packet flood on a speedy server?
                 if (Body.ActivityInformation.IsActive || (netpActive && !Body.ActivityInformation.IsActive))
                 {
                     netpActive = Body.ActivityInformation.IsActive;
-                    TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                    sme = true;
                 }
                 if (!netpActive && GetMass() > 0)
                 {
                     netdeltat += TheRegion.Delta;
                     if (netdeltat > 2.0)
                     {
-                        TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+                        sme = true;
+                    }
+                }
+                Location pos = GetPosition();
+                if (!TransmitMe)
+                {
+                    sme = false;
+                }
+                PhysicsEntityUpdatePacketOut physupd = sme ? new PhysicsEntityUpdatePacketOut(this): null;
+                foreach (PlayerEntity player in TheRegion.Players)
+                {
+                    bool shouldseec = player.ShouldSeePosition(pos);
+                    bool shouldseel = player.ShouldSeePositionPreviously(lPos);
+                    if (shouldseec && !shouldseel)
+                    {
+                        player.Network.SendPacket(GetSpawnPacket());
+                    }
+                    if (shouldseel && !shouldseec)
+                    {
+                        player.Network.SendPacket(new DespawnEntityPacketOut(EID));
+                    }
+                    if (sme && shouldseec)
+                    {
+                        player.Network.SendPacket(physupd);
                     }
                 }
             }
+        }
+
+        public void EndTick()
+        {
+            lPos = GetPosition();
+        }
+
+        public override AbstractPacketOut GetSpawnPacket()
+        {
+            return new SpawnPhysicsEntityPacketOut(this);
         }
 
         public void ForceNetwork()

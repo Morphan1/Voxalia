@@ -4,6 +4,7 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.WorldSystem;
+using Voxalia.ServerGame.NetworkSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -64,6 +65,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public Server TheServer = null;
 
         public List<InternalBaseJoint> Joints = new List<InternalBaseJoint>();
+
+        public abstract AbstractPacketOut GetSpawnPacket();
 
         /// <summary>
         /// Tick the entity. Default implementation throws exception.

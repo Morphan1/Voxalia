@@ -26,7 +26,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public BlockInternal[] Blocks = null;
         
-        public BlockGroupEntity(Location baseloc, BGETraceMode mode, Region tregion, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth) : base(tregion, true)
+        public BlockGroupEntity(Location baseloc, BGETraceMode mode, Region tregion, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth) : base(tregion)
         {
             SetMass(blocks.Length);
             SetPosition(baseloc);

@@ -20,19 +20,7 @@ namespace Voxalia.ServerGame.JointSystem
         {
             return new BallSocketJoint(Ent1.Body, Ent2.Body, Position.ToBVector());
         }
-
-        public override bool ApplyVar(Region tregion, string var, string value)
-        {
-            switch (var)
-            {
-                case "position":
-                    Position = Location.FromString(value);
-                    return true;
-                default:
-                    return base.ApplyVar(tregion, var, value);
-            }
-        }
-
+        
         public Location Position;
     }
 }

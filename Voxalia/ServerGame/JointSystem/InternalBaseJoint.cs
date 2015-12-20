@@ -15,18 +15,5 @@ namespace Voxalia.ServerGame.JointSystem
         public abstract void Enable();
 
         public bool Enabled = false;
-
-        public virtual bool ApplyVar(Region tregion, string var, string value)
-        {
-            switch (var)
-            {
-                case "one":
-                    return tregion.JointTargets.TryGetValue(value, out One);
-                case "two":
-                    return tregion.JointTargets.TryGetValue(value, out Two);
-                default:
-                    return false;
-            }
-        }
     }
 }

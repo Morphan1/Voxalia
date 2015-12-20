@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public byte Dat;
 
         public BlockItemEntity(Region tregion, Material mat, byte dat, Location pos)
-            : base(tregion, true)
+            : base(tregion)
         {
             SetMass(5);
             CGroup = CollisionUtil.Item;

@@ -11,9 +11,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 return false;
             }
-            Entity e = TheClient.TheRegion.GetEntity(Utilities.BytesToLong(data));
+            long eid = Utilities.BytesToLong(data);
+            Entity e = TheClient.TheRegion.GetEntity(eid);
             if (e == null)
             {
+                SysConsole.Output(OutputType.WARNING, "Cannot find entity: " + eid);
                 return false;
             }
             TheClient.TheRegion.Despawn(e);

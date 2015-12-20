@@ -4,6 +4,7 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
+using Voxalia.ServerGame.NetworkSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -47,9 +48,12 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             return true;
         }
+        
+        public double netdeltat = 0;
 
         public override void Tick()
         {
+            bool sme = false;
             SetVelocity(GetVelocity() * 0.99f + Gravity * TheRegion.Delta);
             if (GetVelocity().LengthSquared() > 0)
             {
@@ -59,20 +63,58 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     Collide(this, new CollisionEventArgs(cr));
                 }
-                if (IsSpawned)
+                if (!IsSpawned)
                 {
-                    if (vel == GetVelocity())
-                    {
-                        SetVelocity((cr.Position - GetPosition()) / TheRegion.Delta);
-                    }
-                    SetPosition(cr.Position);
-                    if (network && vel != GetVelocity())
-                    {
-                        TheRegion.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
-                    }
+                    return;
+                }
+                if (vel == GetVelocity())
+                {
+                    SetVelocity((cr.Position - GetPosition()) / TheRegion.Delta);
+                }
+                SetPosition(cr.Position);
+                // TODO: Timer
+                if (network)
+                {
+                    sme = true;
+                }
+                netdeltat = 2;
+            }
+            else
+            {
+                netdeltat += TheRegion.Delta;
+                if (netdeltat > 2.0)
+                {
+                    sme = true;
                 }
             }
+            Location pos = GetPosition();
+            PrimitiveEntityUpdatePacketOut primupd = sme ? new PrimitiveEntityUpdatePacketOut(this) : null;
+            foreach (PlayerEntity player in TheRegion.Players)
+            {
+                bool shouldseec = player.ShouldSeePosition(pos);
+                bool shouldseel = player.ShouldSeePositionPreviously(lPos);
+                if (shouldseec && !shouldseel)
+                {
+                    player.Network.SendPacket(GetSpawnPacket());
+                }
+                if (shouldseel && !shouldseec)
+                {
+                    player.Network.SendPacket(new DespawnEntityPacketOut(EID));
+                }
+                if (sme && shouldseec)
+                {
+                    player.Network.SendPacket(primupd);
+                }
+            }
+            lPos = pos;
         }
+
+        public override AbstractPacketOut GetSpawnPacket()
+        {
+            return new SpawnPrimitiveEntityPacketOut(this);
+        }
+
+        public Location lPos = Location.NaN;
 
         public EventHandler<CollisionEventArgs> Collide;
 
