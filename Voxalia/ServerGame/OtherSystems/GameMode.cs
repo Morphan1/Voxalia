@@ -59,17 +59,17 @@ namespace Voxalia.ServerGame.OtherSystems
 
     public class GameModeDetails
     {
-        public bool CanFly = false;
+        public bool CanFly = false; // TODO: Implement!
 
         public bool CanPlace = true;
 
         public bool CanBreak = true;
 
-        public bool HasInfiniteItems = false;
+        public bool HasInfiniteItems = false; // TODO: Implement!
 
-        public bool CanHaveItems = true;
+        public bool CanHaveItems = true; // TODO: Implement!
 
-        public bool FancyBlockEditor = false;
+        public bool FancyBlockEditor = false; // TODO: Implement!
 
         public bool FastBreak = false;
     }

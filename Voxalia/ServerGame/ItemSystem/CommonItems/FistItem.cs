@@ -43,10 +43,28 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 if (rcr.HitObject != null && rcr.HitObject is EntityCollidable && ((EntityCollidable)rcr.HitObject).Entity != null)
                 {
                     // TODO: Damage
+                    return;
                 }
-                else if (player.Mode.GetDetails().CanBreak && player.TheRegion.GlobalTickTime - player.LastBlockBreak >= 0.2)
+                if (!player.Mode.GetDetails().CanBreak)
                 {
-                    Location block = new Location(rcr.HitData.Location) - new Location(rcr.HitData.Normal).Normalize() * 0.01;
+                    return;
+                }
+                bool breakIt = false;
+                Location block = new Location(rcr.HitData.Location) - new Location(rcr.HitData.Normal).Normalize() * 0.01;
+                if (player.Mode.GetDetails().FastBreak)
+                {
+                    breakIt = player.TheRegion.GlobalTickTime - player.LastBlockBreak >= 0.2;
+                }
+                else
+                {
+                    if (player.BlockBreakStarted <= 0)
+                    {
+                        player.BlockBreakStarted = player.TheRegion.GlobalTickTime;
+                    }
+                    breakIt = player.TheRegion.GlobalTickTime - player.BlockBreakStarted > player.TheRegion.GetBlockMaterial(block).GetBreakTime();
+                }
+                if (breakIt)
+                {
                     Material mat = player.TheRegion.GetBlockMaterial(block);
                     if (mat != Material.AIR) // TODO: IsBreakable?
                     {
@@ -54,6 +72,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                         player.Network.SendPacket(new DefaultSoundPacketOut(block, DefaultSound.BREAK, (byte)mat.Sound()));
                         player.LastBlockBreak = player.TheRegion.GlobalTickTime;
                     }
+                    player.BlockBreakStarted = 0;
                 }
             }
         }

@@ -881,6 +881,10 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             SetPosition(spe.GetPosition());
         }
+
+        public Location BlockBreakTarget;
+
+        public double BlockBreakStarted = 0;
     }
 
     public class ChunkAwarenessInfo
