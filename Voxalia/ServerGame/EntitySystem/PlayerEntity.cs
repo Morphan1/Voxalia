@@ -11,6 +11,7 @@ using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.ItemSystem.CommonItems;
 using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.WorldSystem;
+using Voxalia.ServerGame.OtherSystems;
 using Voxalia.Shared.Collision;
 using BEPUphysics.Character;
 
@@ -18,6 +19,8 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class PlayerEntity: EntityLiving
     {
+        public GameMode Mode = GameMode.SURVIVOR;
+
         public override EntityType GetEntityType()
         {
             return EntityType.PLAYER;

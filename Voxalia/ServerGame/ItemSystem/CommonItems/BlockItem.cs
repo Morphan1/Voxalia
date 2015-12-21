@@ -6,6 +6,7 @@ using BEPUphysics;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using Voxalia.ServerGame.OtherSystems;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
@@ -39,7 +40,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 {
                     // TODO: ???
                 }
-                else if (player.TheRegion.GlobalTickTime - player.LastBlockPlace >= 0.2)
+                else if (player.Mode.GetDetails().CanPlace && player.TheRegion.GlobalTickTime - player.LastBlockPlace >= 0.2)
                 {
                     Location block = new Location(rcr.HitData.Location) + new Location(rcr.HitData.Normal).Normalize() * 0.9f;
                     block = block.GetBlockLocation();

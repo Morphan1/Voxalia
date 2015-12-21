@@ -6,6 +6,7 @@ using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.ServerGame.OtherSystems;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
@@ -43,7 +44,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 {
                     // TODO: Damage
                 }
-                else if (player.TheRegion.GlobalTickTime - player.LastBlockBreak >= 0.2)
+                else if (player.Mode.GetDetails().CanBreak && player.TheRegion.GlobalTickTime - player.LastBlockBreak >= 0.2)
                 {
                     Location block = new Location(rcr.HitData.Location) - new Location(rcr.HitData.Normal).Normalize() * 0.01;
                     Material mat = player.TheRegion.GetBlockMaterial(block);
