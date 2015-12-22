@@ -609,6 +609,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Location GetEyePosition()
         {
+            Location start = GetPosition() + new Location(0, 0, HalfSize.Z * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8 : 1.5));
             if (tAnim != null)
             {
                 SingleAnimationNode head = tAnim.GetNode("special06.r");
@@ -618,11 +619,20 @@ namespace Voxalia.ClientGame.EntitySystem
                 Matrix m4 = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
                     * head.GetBoneTotalMatrix(0, adjs) * (rotforw * Matrix.CreateTranslation(new Vector3(0, 0, 0.2f)));
                 m4.Transpose();
-                return GetPosition() + new Location(m4.Translation) * 1.5f;
+                Location end = GetPosition() + new Location(m4.Translation) * 1.5f;
+                start.Z = end.Z; // FUTURE: Maybe handle player rotation?
+                double len = (end - start).Length();
+                Location normdir = (end - start) / len;
+                RayCastResult rcr;
+                if (TheRegion.SpecialCaseRayTrace(start, normdir, (float)len, MaterialSolidity.ANY, IgnoreThis, out rcr))
+                {
+                    return new Location(rcr.HitData.Location + rcr.HitData.Normal * 0.2f);
+                }
+                return end;
             }
             else
             {
-                return GetPosition() + new Location(0, 0, HalfSize.Z * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8 : 1.5));
+                return start;
             }
         }
 
@@ -711,6 +721,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
+            // TODO: safe (no-collision) rotation check?
             model.CustomAnimationAdjustments["spine04"] = OpenTK.Matrix4.CreateRotationX(-(float)(Direction.Pitch / 2f * Utilities.PI180));
             if (!TheClient.RenderingShadows && TheClient.CVars.g_firstperson.ValueB)
             {
