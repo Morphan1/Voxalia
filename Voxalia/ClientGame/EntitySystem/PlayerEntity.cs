@@ -613,8 +613,8 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 SingleAnimationNode head = tAnim.GetNode("special06.r");
                 Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
-                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 1.3f * Utilities.PI180)));
-                adjs["spine05"] = rotforw;
+                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 1.75f * Utilities.PI180)));
+                adjs["spine04"] = rotforw;
                 Matrix m4 = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
                     * head.GetBoneTotalMatrix(0, adjs) * (rotforw * Matrix.CreateTranslation(new Vector3(0, 0, 0.2f)));
                 m4.Transpose();
@@ -711,7 +711,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
-            model.CustomAnimationAdjustments["spine05"] = OpenTK.Matrix4.CreateRotationX(-(float)(Direction.Pitch / 1.5f * Utilities.PI180));
+            model.CustomAnimationAdjustments["spine04"] = OpenTK.Matrix4.CreateRotationX(-(float)(Direction.Pitch / 2f * Utilities.PI180));
             if (!TheClient.RenderingShadows && TheClient.CVars.g_firstperson.ValueB)
             {
                 model.CustomAnimationAdjustments["neck01"] = OpenTK.Matrix4.CreateRotationX(-(float)(90f * Utilities.PI180));
@@ -731,8 +731,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
                 GL.UniformMatrix4(2, false, ref mat);
                 Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
-                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 1.5f * Utilities.PI180)));
-                adjs["spine05"] = rotforw;
+                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 2f * Utilities.PI180)));
+                adjs["spine04"] = rotforw;
                 SingleAnimationNode hand = tAnim.GetNode("metacarpal2.l");
                 Matrix m4 = Matrix.CreateScale(1.5f, 1.5f, 1.5f)
                     * (Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
