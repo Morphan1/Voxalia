@@ -40,12 +40,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             return "idle01";
         }
-
-        /// <summary>
-        /// Half the size of the player, if needed for a cuboid trace.
-        /// </summary>
-        public Location HalfSize = new Location(0.55f, 0.55f, 1.3f);
-
+        
         /// <summary>
         /// The primary connection to the player over the network.
         /// </summary>
@@ -270,8 +265,8 @@ namespace Voxalia.ServerGame.EntitySystem
                 DestroyBody();
             }
             // TODO: Better variable control! (Server should command every detail!)
-            CBody = new CharacterController(WorldTransform.Translation, (float)HalfSize.Z * 2f, (float)HalfSize.Z * 1.1f,
-                (float)HalfSize.Z * 1f, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
+            CBody = new CharacterController(WorldTransform.Translation, CBHHeight * 2f, CBHHeight * 1.1f,
+                CBHHeight * 1f, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
                 CBTractionForce * Mass, CBSlideSpeed, CBSlideForce * Mass, CBAirSpeed, CBAirForce * Mass, CBJumpSpeed, CBSlideJumpSpeed, CBGlueForce * Mass);
             CBody.StanceManager.DesiredStance = Stance.Standing;
             CBody.ViewDirection = new Vector3(1f, 0f, 0f);
@@ -299,6 +294,8 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        public float CBHHeight = 1.3f;
+
         public float CBProneSpeed = 1f;
 
         public float CBMargin = 0.01f;
@@ -307,7 +304,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public float CBDownStepHeight = 0.6f;
 
-        public float CBRadius = 0.55f;
+        public float CBRadius = 0.75f;
 
         public float CBMaxTractionSlope = 1.0f;
 
@@ -778,7 +775,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 SingleAnimationNode head = tAnim.GetNode("special06.r");
                 Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
-                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 1.3f * Utilities.PI180)));
+                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 1.75f * Utilities.PI180)));
                 adjs["spine05"] = rotforw;
                 Matrix m4 = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
                     * head.GetBoneTotalMatrix(0, adjs) * (rotforw * Matrix.CreateTranslation(new Vector3(0, 0, 0.2f)));
@@ -787,7 +784,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             else
             {
-                return GetPosition() + new Location(0, 0, HalfSize.Z * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8 : 1.5));
+                return GetPosition() + new Location(0, 0, CBHHeight * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8 : 1.5));
             }
         }
 
@@ -800,7 +797,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
                 return base.GetPosition() + new Location(0, 0, box.Min.Z);
             }
-            return base.GetPosition() - new Location(0, 0, HalfSize.Z);
+            return base.GetPosition() - new Location(0, 0, CBHHeight);
         }
 
         public override void SetPosition(Location pos)
@@ -814,7 +811,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             else
             {
-                base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
+                base.SetPosition(pos + new Location(0, 0, CBHHeight));
             }
         }
 
@@ -874,7 +871,7 @@ namespace Voxalia.ServerGame.EntitySystem
             for (int i = 0; i < 10; i++)
             {
                 spe = TheRegion.SpawnPoints[Utilities.UtilRandom.Next(TheRegion.SpawnPoints.Count)];
-                if (!TheRegion.Collision.CuboidLineTrace(HalfSize, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.01f)).Hit)
+                if (!TheRegion.Collision.CuboidLineTrace(new Location(CBRadius, CBRadius, CBHHeight) * 1.9f, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.01f)).Hit)
                 {
                     break;
                 }

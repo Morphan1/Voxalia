@@ -61,8 +61,6 @@ namespace Voxalia.ClientGame.EntitySystem
             }
         }
 
-        public Location HalfSize = new Location(0.55f, 0.55f, 1.3f);
-
         public Location Direction = new Location(0, 0, 0);
 
         public bool Forward = false;
@@ -78,10 +76,9 @@ namespace Voxalia.ClientGame.EntitySystem
 
         bool pup = false;
         
-        public OtherPlayerEntity(Region tregion, Location half)
+        public OtherPlayerEntity(Region tregion)
             : base (tregion, true, true)
         {
-            HalfSize = half;
             SetMass(tmass / 2f);
             CanRotate = false;
             EID = -1;
@@ -231,8 +228,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 DestroyBody();
             }
             // TODO: Better variable control! (Server should command every detail!)
-            CBody = new CharacterController(WorldTransform.Translation, (float)HalfSize.Z * 2f, (float)HalfSize.Z * 1.1f,
-                (float)HalfSize.Z * 1f, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
+            CBody = new CharacterController(WorldTransform.Translation, CBHHeight * 2f, CBHHeight * 1.1f,
+                CBHHeight * 1f, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
                 CBTractionForce * Mass, CBSlideSpeed, CBSlideForce * Mass, CBAirSpeed, CBAirForce * Mass, CBJumpSpeed, CBSlideJumpSpeed, CBGlueForce * Mass);
             CBody.StanceManager.DesiredStance = Stance.Standing;
             CBody.ViewDirection = new Vector3(1f, 0f, 0f);
@@ -249,6 +246,8 @@ namespace Voxalia.ClientGame.EntitySystem
             TheRegion.PhysicsWorld.Add(CBody);
         }
 
+        public float CBHHeight = 1.3f;
+
         public float CBProneSpeed = 1f;
 
         public float CBMargin = 0.01f;
@@ -257,7 +256,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public float CBDownStepHeight = 0.6f;
 
-        public float CBRadius = 0.55f;
+        public float CBRadius = 0.75f;
 
         public float CBMaxTractionSlope = 1.0f;
 
@@ -296,7 +295,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Location GetEyePosition()
         {
-            return GetPosition() + new Location(0, 0, HalfSize.Z * 1.8f);
+            return GetPosition() + new Location(0, 0, CBHHeight * 1.8f);
         }
 
         public Location ForwardVector()
@@ -313,7 +312,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
                 return base.GetPosition() + new Location(0, 0, box.Min.Z);
             }
-            return base.GetPosition() - new Location(0, 0, HalfSize.Z);
+            return base.GetPosition() - new Location(0, 0, CBHHeight);
         }
 
         public override void SetPosition(Location pos)
@@ -327,7 +326,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             else
             {
-                base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
+                base.SetPosition(pos + new Location(0, 0, CBHHeight));
             }
         }
 

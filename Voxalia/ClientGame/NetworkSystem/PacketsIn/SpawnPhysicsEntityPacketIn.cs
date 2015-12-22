@@ -27,7 +27,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             int start = len - (4 + 1);
             if (type == 1)
             {
-                ce = new OtherPlayerEntity(TheClient.TheRegion, halfsize);
+                ce = new OtherPlayerEntity(TheClient.TheRegion);
             }
             else if (type == 2)
             {

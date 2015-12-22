@@ -30,7 +30,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             // TODO: handle different e-types cleanly
             if (e is PlayerEntity)
             {
-                ((PlayerEntity)e).HalfSize.ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
+                // TODO: Use this slot?
+                new Location(0, 0, 0).ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
             else if (e is ModelEntity)
             {

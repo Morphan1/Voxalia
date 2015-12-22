@@ -80,9 +80,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 aLTime = 0;
             }
         }
-
-        public Location HalfSize = new Location(0.55f, 0.55f, 1.3f);
-
+        
         public Location Direction = new Location(0, 0, 0);
 
         public Location ServerLocation = new Location(0, 0, 0);
@@ -523,8 +521,8 @@ namespace Voxalia.ClientGame.EntitySystem
         CharacterController GenCharCon()
         {
             // TODO: Better variable control! (Server should command every detail!)
-            CharacterController cb = new CharacterController(ServerLocation.ToBVector(), (float)HalfSize.Z * 2f, (float)HalfSize.Z * 1.1f,
-                (float)HalfSize.Z * 1f, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
+            CharacterController cb = new CharacterController(ServerLocation.ToBVector(), CBHHeight * 2f, CBHHeight * 1.1f,
+                CBHHeight * 1f, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
                 CBTractionForce * Mass, CBSlideSpeed, CBSlideForce * Mass, CBAirSpeed, CBAirForce * Mass, CBJumpSpeed, CBSlideJumpSpeed, CBGlueForce * Mass);
             cb.StanceManager.DesiredStance = Stance.Standing;
             cb.ViewDirection = new Vector3(1f, 0f, 0f);
@@ -556,6 +554,8 @@ namespace Voxalia.ClientGame.EntitySystem
             NMTWOWorld.Add(NMTWOCBody);
         }
 
+        public float CBHHeight = 1.3f;
+
         public float CBProneSpeed = 1f;
 
         public float CBMargin = 0.01f;
@@ -564,7 +564,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public float CBDownStepHeight = 0.6f;
 
-        public float CBRadius = 0.55f;
+        public float CBRadius = 0.75f;
 
         public float CBMaxTractionSlope = 1.0f;
 
@@ -609,7 +609,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Location GetEyePosition()
         {
-            Location start = GetPosition() + new Location(0, 0, HalfSize.Z * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8 : 1.5));
+            Location start = GetPosition() + new Location(0, 0, CBHHeight * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8 : 1.5));
             if (tAnim != null)
             {
                 SingleAnimationNode head = tAnim.GetNode("special06.r");
@@ -650,7 +650,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
                 return base.GetPosition() + new Location(0, 0, box.Min.Z);
             }
-            return base.GetPosition() - new Location(0, 0, HalfSize.Z);
+            return base.GetPosition() - new Location(0, 0, CBHHeight);
         }
 
         public override void SetPosition(Location pos)
@@ -664,7 +664,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             else
             {
-                base.SetPosition(pos + new Location(0, 0, HalfSize.Z));
+                base.SetPosition(pos + new Location(0, 0, CBHHeight));
             }
         }
 
@@ -725,7 +725,7 @@ namespace Voxalia.ClientGame.EntitySystem
             model.CustomAnimationAdjustments["spine04"] = OpenTK.Matrix4.CreateRotationX(-(float)(Direction.Pitch / 2f * Utilities.PI180));
             if (!TheClient.RenderingShadows && TheClient.CVars.g_firstperson.ValueB)
             {
-                model.CustomAnimationAdjustments["neck01"] = OpenTK.Matrix4.CreateRotationX(-(float)(90f * Utilities.PI180));
+                model.CustomAnimationAdjustments["neck01"] = OpenTK.Matrix4.CreateRotationX(-(float)(160f * Utilities.PI180));
             }
             else
             {
