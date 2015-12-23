@@ -624,7 +624,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 double len = (end - start).Length();
                 Location normdir = (end - start) / len;
                 RayCastResult rcr;
-                if (TheRegion.SpecialCaseRayTrace(start, normdir, (float)len, MaterialSolidity.ANY, IgnoreThis, out rcr))
+                if (TheRegion.SpecialCaseRayTrace(start, normdir, (float)len, MaterialSolidity.FULLSOLID, IgnoreThis, out rcr))
                 {
                     return new Location(rcr.HitData.Location + rcr.HitData.Normal * 0.2f);
                 }
