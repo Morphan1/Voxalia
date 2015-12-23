@@ -42,17 +42,48 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             Location min = new Location(e.CollisionInformation.BoundingBox.Min);
             Location max = new Location(e.CollisionInformation.BoundingBox.Max);
-            if (TheRegion.InWater(min, max))
+            min = min.GetBlockLocation();
+            max = max.GetUpperBlockBorder();
+            for (int x = (int)min.X; x < max.X; x++)
             {
-                double vol = e.CollisionInformation.Shape.Volume;
-                double dens = (e.Mass / vol);
-                double WaterDens = 5; // TODO: Read from material. // TODO: Sanity of values.
-                float modifier = (float)(WaterDens / dens);
-                // TODO: Tracing accuracy! For-each-contained-liquid-block, apply a force at that location.
-                Vector3 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * e.Mass * dt * modifier;
-                e.ApplyLinearImpulse(ref impulse);
-                e.ModifyLinearDamping(0.5f); // TODO: Modifier?
-                e.ModifyAngularDamping(0.5f);
+                for (int y = (int)min.Y; y < max.Y; y++)
+                {
+                    for (int z = (int)min.Z; z < max.Z; z++)
+                    {
+                        Location c = new Location(x, y, z);
+                        Material mat = (Material)TheRegion.GetBlockInternal(c).BlockMaterial;
+                        if (mat.GetSolidity() != MaterialSolidity.LIQUID)
+                        {
+                            continue;
+                        }
+                        // TODO: Account for block shape?
+                        double vol = e.CollisionInformation.Shape.Volume;
+                        double dens = (e.Mass / vol);
+                        double WaterDens = 5; // TODO: Read from material. // TODO: Sanity of values.
+                        float modifier = (float)(WaterDens / dens);
+                        float submod = 0.3f;
+                        // TODO: Tracing accuracy!
+                        for (float x2 = 0.25f; x2 < 1; x2 += 0.5f)
+                        {
+                            for (float y2 = 0.25f; y2 < 1; y2 += 0.5f)
+                            {
+                                for (float z2 = 0.25f; z2 < 1; z2 += 0.5f)
+                                {
+                                    Location lc = c + new Location(x2, y2, z2);
+                                    RayHit rh;
+                                    if (e.CollisionInformation.RayCast(new Ray(lc.ToBVector(), new Vector3(0, 0, 1)), 0.01f, out rh)) // TODO: Efficiency!
+                                    {
+                                        Vector3 center = lc.ToBVector();
+                                        Vector3 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * e.Mass * dt * modifier * submod;
+                                        e.ApplyImpulse(ref center, ref impulse);
+                                        e.ModifyLinearDamping(0.5f * submod); // TODO: Modifier?
+                                        e.ModifyAngularDamping(0.5f * submod);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
