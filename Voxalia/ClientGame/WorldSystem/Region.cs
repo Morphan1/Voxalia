@@ -54,7 +54,7 @@ namespace Voxalia.ClientGame.WorldSystem
             PhysicsWorld.TimeStepSettings.MaximumTimeStepsPerFrame = 10;
             // Set the world's general default gravity
             PhysicsWorld.ForceUpdater.Gravity = new BEPUutilities.Vector3(0, 0, -9.8f * 3f / 2f);
-            PhysicsWorld.Add(new LiquidForceField(this));
+            PhysicsWorld.DuringForcesUpdateables.Add(new LiquidVolume(this));
             // Load a CollisionUtil instance
             Collision = new CollisionUtil(PhysicsWorld);
         }

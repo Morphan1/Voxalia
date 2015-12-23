@@ -294,7 +294,7 @@ namespace Voxalia.ServerGame.WorldSystem
             PhysicsWorld = new Space(pl);
             PhysicsWorld.TimeStepSettings.MaximumTimeStepsPerFrame = 10;
             PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f * 3f / 2f);
-            PhysicsWorld.Add(new LiquidForceField(this));
+            PhysicsWorld.DuringForcesUpdateables.Add(new LiquidVolume(this));
             Collision = new CollisionUtil(PhysicsWorld);
             string fname = "saves/" + Name + "/region.yml";
             if (Program.Files.Exists(fname))
@@ -325,7 +325,7 @@ namespace Voxalia.ServerGame.WorldSystem
             TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-world scheduler // Also don't freeze the entire server just because we're waiting on chunks >.>
             SysConsole.Output(OutputType.INIT, "Finished building chunks! Now have " + LoadedChunks.Count + " chunks!");
         }
-        
+
         const int SeedMax = ushort.MaxValue;
 
         bool CFGEdited = false;

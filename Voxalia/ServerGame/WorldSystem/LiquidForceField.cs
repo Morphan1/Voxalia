@@ -8,50 +8,51 @@ using BEPUphysics.UpdateableSystems.ForceFields;
 using BEPUutilities;
 using BEPUphysics.CollisionShapes;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using BEPUphysics.UpdateableSystems;
 using Voxalia.Shared;
 using BEPUphysics.BroadPhaseEntries;
 using Voxalia.Shared.Collision;
+using BEPUutilities.DataStructures;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
-    class LiquidForceField : ForceField // TODO: Rework to have its own update system, instead of relying on ForceField?s
+    public class LiquidVolume : Updateable, IDuringForcesUpdateable
     {
-        Region TheRegion;
-        
-        public LiquidForceField(Region tregion): 
-            base (new InfiniteForceFieldShape())
+        public Region TheRegion;
+
+        public LiquidVolume(Region tregion)
         {
             TheRegion = tregion;
         }
 
-        bool IgnoreEverythingButWater(BroadPhaseEntry entry)
+        public void Update(float dt)
         {
-            return entry.CollisionRules.Group == CollisionUtil.Water;
+            ReadOnlyList<Entity> ents = TheRegion.PhysicsWorld.Entities; // TODO: Direct/raw read?
+            TheRegion.PhysicsWorld.ParallelLooper.ForLoop(0, ents.Count, (i) =>
+            {
+                ApplyLiquidForcesTo(ents[i], dt);
+            });
         }
 
-        protected override void CalculateImpulse(Entity e, float dt, out Vector3 impulse)
+        void ApplyLiquidForcesTo(Entity e, float dt)
         {
             if (e.Mass <= 0)
             {
-                impulse = Vector3.Zero;
                 return;
             }
             Location min = new Location(e.CollisionInformation.BoundingBox.Min);
             Location max = new Location(e.CollisionInformation.BoundingBox.Max);
             if (TheRegion.InWater(min, max))
             {
-                double vol = e.CollisionInformation.Shape.Volume; // TODO: Accuracy! Perhaps, based on how much is submerged in the current blocK?
+                double vol = e.CollisionInformation.Shape.Volume;
                 double dens = (e.Mass / vol);
                 double WaterDens = 5; // TODO: Read from material. // TODO: Sanity of values.
                 float modifier = (float)(WaterDens / dens);
                 // TODO: Tracing accuracy! For-each-contained-liquid-block, apply a force at that location.
-                impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * e.Mass * dt * modifier;
+                Vector3 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * e.Mass * dt * modifier;
+                e.ApplyLinearImpulse(ref impulse);
                 e.ModifyLinearDamping(0.5f); // TODO: Modifier?
                 e.ModifyAngularDamping(0.5f);
-            }
-            else
-            {
-                impulse = Vector3.Zero;
             }
         }
     }
