@@ -585,7 +585,6 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Material GetBlockMaterial(Location pos)
         {
-            CheckThreadValidity();
             Chunk ch = LoadChunk(ChunkLocFor(pos));
             int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
@@ -595,7 +594,6 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public BlockInternal GetBlockInternal(Location pos)
         {
-            CheckThreadValidity();
             Chunk ch = LoadChunk(ChunkLocFor(pos));
             int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
             int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
@@ -605,7 +603,6 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, byte locdat = (byte)BlockFlags.EDITED, bool broadcast = true, bool regen = true, bool override_protection = false)
         {
-            CheckThreadValidity();
             Chunk ch = LoadChunk(ChunkLocFor(pos));
             lock (ch.EditSessionLock)
             {
@@ -1092,6 +1089,27 @@ namespace Voxalia.ServerGame.WorldSystem
             SpawnEntity(me);
             me.SetPosition(pos - new Location(norm) - new Location(Quaternion.Transform(me.offset.ToBVector(), orient)));
             me.ForceNetwork();
+        }
+
+        public bool InWater(Location min, Location max)
+        {
+            // TODO: Efficiency!
+            min = min.GetBlockLocation();
+            max = max.GetUpperBlockBorder();
+            for (int x = (int)min.X; x < max.X; x++)
+            {
+                for (int y = (int)min.Y; y < max.Y; y++)
+                {
+                    for (int z = (int)min.Z; z < max.Z; z++)
+                    {
+                        if (((Material)GetBlockInternal_NoLoad(min + new Location(x, y, z)).BlockMaterial).GetSolidity() == MaterialSolidity.LIQUID)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 }

@@ -476,5 +476,26 @@ namespace Voxalia.ClientGame.WorldSystem
                 LoadedChunks.Remove(cpos);
             }
         }
+
+        public bool InWater(Location min, Location max)
+        {
+            // TODO: Efficiency!
+            min = min.GetBlockLocation();
+            max = max.GetUpperBlockBorder();
+            for (int x = (int)min.X; x < max.X; x++)
+            {
+                for (int y = (int)min.Y; y < max.Y; y++)
+                {
+                    for (int z = (int)min.Z; z < max.Z; z++)
+                    {
+                        if (GetBlockMaterial(min + new Location(x, y, z)).GetSolidity() == MaterialSolidity.LIQUID)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

@@ -453,5 +453,10 @@ namespace Voxalia.Shared
         {
             return new Location(Math.Floor(X), Math.Floor(Y), Math.Floor(Z));
         }
+        
+        public Location GetUpperBlockBorder()
+        {
+            return new Location(Math.Ceiling(X), Math.Ceiling(Y), Math.Ceiling(Z));
+        }
     }
 }
