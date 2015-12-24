@@ -1188,8 +1188,8 @@ namespace Voxalia.ServerGame.WorldSystem
                     Material mzm = (Material)zm.BlockMaterial;
                     if (mzm == Material.AIR)
                     {
-                        SetBlockMaterial(lzm, cmat);
-                        SetBlockMaterial(block, Material.AIR);
+                        PhysicsSetBlock(lzm, cmat);
+                        PhysicsSetBlock(block, Material.AIR);
                     }
                     else if (mxp == Material.AIR && myp == Material.AIR && mxm == Material.AIR && mym == Material.AIR)
                     {
@@ -1286,6 +1286,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         LiquidSpread1(block, cmat, lym, remainingperc);
                     }
                     // else { give up! We're surrounded! }
+                    // TODO: Spread into other liquid of same type!
                 }
             }
         }

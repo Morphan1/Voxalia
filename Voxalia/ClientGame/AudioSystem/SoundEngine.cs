@@ -37,6 +37,14 @@ namespace Voxalia.ClientGame.AudioSystem
 
         public void Update(Location position, Location forward, Location up, Location velocity, bool selected)
         {
+            ALError err = AL.GetError();
+            if (err != ALError.NoError)
+            {
+                SysConsole.Output(OutputType.WARNING, "Found audio error " + err + ", rebuilding audio...");
+                Context.Dispose();
+                Init(TheClient, CVars);
+                return;
+            }
             bool sel = CVars.a_quietondeselect.ValueB ? selected : true;
             Selected = sel;
             for (int i = 0; i < PlayingNow.Count; i++)
