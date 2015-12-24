@@ -659,6 +659,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     // TODO: Activate any nearby physents!
                     ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0, (byte)BlockFlags.EDITED));
                     ch.LastEdited = GlobalTickTime;
+                    SurroundBlockPhysics(pos);
                     if (regentrans)
                     {
                         ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { Material.AIR }, new byte[] { 0 }), ch.WorldPosition);
@@ -1110,6 +1111,293 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
             }
             return false;
+        }
+
+        public void SurroundBlockPhysics(Location start)
+        {
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    for (int z = -1; z <= 1; z++)
+                    {
+                        RunBlockPhysics(start + new Location(x, y, z));
+                    }
+                }
+            }
+        }
+
+        public void PhysicsSetBlock(Location block, Material mat, byte dat = 0)
+        {
+            SetBlockMaterial(block, mat, dat);
+            TheServer.Schedule.ScheduleSyncTask(() => { RunBlockPhysics(block); }, 0.1);
+        }
+
+        public void RunBlockPhysics(Location block)
+        {
+            block = block.GetBlockLocation();
+            BlockInternal c = GetBlockInternal(block);
+            Material cmat = (Material)c.BlockMaterial;
+            if (cmat.ShouldSpread())
+            {
+                int remainingperc;
+                switch (c.BlockLocalData)
+                {
+                    case 0:
+                        remainingperc = 100;
+                        break;
+                    case 1:
+                        remainingperc = 84;
+                        break;
+                    case 2:
+                        remainingperc = 68;
+                        break;
+                    case 3:
+                        remainingperc = 50;
+                        break;
+                    case 4:
+                        remainingperc = 34;
+                        break;
+                    case 5:
+                        remainingperc = 13;
+                        break;
+                    default:
+                        remainingperc = 0;
+                        break;
+                }
+                if (remainingperc == 0)
+                {
+                    SetBlockMaterial(block, Material.AIR);
+                }
+                else
+                {
+                    Location lxp = block + new Location(1, 0, 0);
+                    BlockInternal xp = GetBlockInternal(lxp);
+                    Material mxp = (Material)xp.BlockMaterial;
+                    Location lxm = block + new Location(-1, 0, 0);
+                    BlockInternal xm = GetBlockInternal(lxm);
+                    Material mxm = (Material)xm.BlockMaterial;
+                    Location lyp = block + new Location(0, 1, 0);
+                    BlockInternal yp = GetBlockInternal(lyp);
+                    Material myp = (Material)yp.BlockMaterial;
+                    Location lym = block + new Location(0, -1, 0);
+                    BlockInternal ym = GetBlockInternal(lym);
+                    Material mym = (Material)ym.BlockMaterial;
+                    Location lzm = block + new Location(0, 0, -1);
+                    BlockInternal zm = GetBlockInternal(lzm);
+                    Material mzm = (Material)zm.BlockMaterial;
+                    if (mzm == Material.AIR)
+                    {
+                        SetBlockMaterial(lzm, cmat);
+                        SetBlockMaterial(block, Material.AIR);
+                    }
+                    else if (mxp == Material.AIR && myp == Material.AIR && mxm == Material.AIR && mym == Material.AIR)
+                    {
+                        if (remainingperc == 100)
+                        {
+                            PhysicsSetBlock(lxp, cmat, 5);
+                            PhysicsSetBlock(lxm, cmat, 5);
+                            PhysicsSetBlock(lyp, cmat, 5);
+                            PhysicsSetBlock(lym, cmat, 5);
+                            PhysicsSetBlock(block, cmat, 4);
+                        }
+                        else if (remainingperc == 84)
+                        {
+                            PhysicsSetBlock(lxp, cmat, 5);
+                            PhysicsSetBlock(lxm, cmat, 5);
+                            PhysicsSetBlock(lyp, cmat, 5);
+                            PhysicsSetBlock(lym, cmat, 5);
+                            PhysicsSetBlock(block, cmat, 5);
+                        }
+                        else if (remainingperc == 68)
+                        {
+                            PhysicsSetBlock(lxp, cmat, 5);
+                            PhysicsSetBlock(lxm, cmat, 5);
+                            PhysicsSetBlock(lyp, cmat, 5);
+                            PhysicsSetBlock(lym, cmat, 5);
+                            PhysicsSetBlock(block, Material.AIR);
+                        }
+                        else if (remainingperc == 50)
+                        {
+                            PhysicsSetBlock(lxp, cmat, 5);
+                            PhysicsSetBlock(lxm, cmat, 5);
+                            PhysicsSetBlock(lyp, cmat, 5);
+                            PhysicsSetBlock(block, Material.AIR);
+                        }
+                        else if (remainingperc == 34)
+                        {
+                            PhysicsSetBlock(lxp, cmat, 5);
+                            PhysicsSetBlock(lxm, cmat, 5);
+                            PhysicsSetBlock(block, Material.AIR);
+                        }
+                        // 13 doesn't move!
+                    }
+                    else if (mxp == Material.AIR && myp == Material.AIR && mxm == Material.AIR)
+                    {
+                        LiquidSpread3(block, cmat, lxp, lyp, lxm, remainingperc);
+                    }
+                    else if (mxp == Material.AIR && myp == Material.AIR && mym == Material.AIR)
+                    {
+                        LiquidSpread3(block, cmat, lxp, lyp, lym, remainingperc);
+                    }
+                    else if (mxp == Material.AIR && mym == Material.AIR && mxm == Material.AIR)
+                    {
+                        LiquidSpread3(block, cmat, lxp, lym, lxm, remainingperc);
+                    }
+                    else if (mym == Material.AIR && myp == Material.AIR && mxm == Material.AIR)
+                    {
+                        LiquidSpread3(block, cmat, lym, lyp, lxm, remainingperc);
+                    }
+                    else if (mym == Material.AIR && myp == Material.AIR)
+                    {
+                        LiquidSpread2(block, cmat, lym, lyp, remainingperc);
+                    }
+                    else if (mym == Material.AIR && mxp == Material.AIR)
+                    {
+                        LiquidSpread2(block, cmat, lym, lxp, remainingperc);
+                    }
+                    else if (mym == Material.AIR && mxm == Material.AIR)
+                    {
+                        LiquidSpread2(block, cmat, lym, lxm, remainingperc);
+                    }
+                    else if (myp == Material.AIR && mxm == Material.AIR)
+                    {
+                        LiquidSpread2(block, cmat, lyp, lxm, remainingperc);
+                    }
+                    else if (myp == Material.AIR && mxp == Material.AIR)
+                    {
+                        LiquidSpread2(block, cmat, lyp, lxp, remainingperc);
+                    }
+                    else if (mxp == Material.AIR && mxm == Material.AIR)
+                    {
+                        LiquidSpread2(block, cmat, lxp, lxm, remainingperc);
+                    }
+                    else if (mxp == Material.AIR)
+                    {
+                        LiquidSpread1(block, cmat, lxp, remainingperc);
+                    }
+                    else if (mxm == Material.AIR)
+                    {
+                        LiquidSpread1(block, cmat, lxm, remainingperc);
+                    }
+                    else if (myp == Material.AIR)
+                    {
+                        LiquidSpread1(block, cmat, lyp, remainingperc);
+                    }
+                    else if (mym == Material.AIR)
+                    {
+                        LiquidSpread1(block, cmat, lym, remainingperc);
+                    }
+                    // else { give up! We're surrounded! }
+                }
+            }
+        }
+
+        void LiquidSpread1(Location block, Material cmat, Location one, float remainingperc)
+        {
+            SysConsole.Output(OutputType.INFO, "Spread1");
+            if (remainingperc == 100)
+            {
+                PhysicsSetBlock(one, cmat, 3);
+                PhysicsSetBlock(block, cmat, 3);
+            }
+            else if (remainingperc == 84)
+            {
+                PhysicsSetBlock(one, cmat, 4);
+                PhysicsSetBlock(block, cmat, 3);
+            }
+            else if (remainingperc == 68)
+            {
+                PhysicsSetBlock(one, cmat, 4);
+                PhysicsSetBlock(block, cmat, 4);
+            }
+            else if (remainingperc == 50)
+            {
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(block, cmat, 4);
+            }
+            else if (remainingperc == 34)
+            {
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(block, cmat, 5);
+            }
+            // 13 doesn't move!
+        }
+
+        void LiquidSpread2(Location block, Material cmat, Location one, Location two, float remainingperc)
+        {
+            SysConsole.Output(OutputType.INFO, "Spread2");
+            if (remainingperc == 100)
+            {
+                PhysicsSetBlock(one, cmat, 4);
+                PhysicsSetBlock(two, cmat, 4);
+                PhysicsSetBlock(block, cmat, 4);
+            }
+            else if (remainingperc == 84)
+            {
+                PhysicsSetBlock(one, cmat, 4);
+                PhysicsSetBlock(two, cmat, 4);
+                PhysicsSetBlock(block, cmat, 5);
+            }
+            else if (remainingperc == 68)
+            {
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(two, cmat, 5);
+                PhysicsSetBlock(block, cmat, 4);
+            }
+            else if (remainingperc == 50)
+            {
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(two, cmat, 5);
+                PhysicsSetBlock(block, cmat, 5);
+            }
+            else if (remainingperc == 34)
+            {
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(two, cmat, 5);
+                PhysicsSetBlock(block, Material.AIR);
+            }
+            // 13 doesn't move!
+        }
+
+        void LiquidSpread3(Location block, Material cmat, Location one, Location two, Location three, float remainingperc)
+        {
+            SysConsole.Output(OutputType.INFO, "Spread3");
+            if (remainingperc == 100)
+            {
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(two, cmat, 5);
+                PhysicsSetBlock(three, cmat, 5);
+                PhysicsSetBlock(block, cmat, 3);
+            }
+            else if (remainingperc == 84)
+            {
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(two, cmat, 5);
+                PhysicsSetBlock(three, cmat, 5);
+                PhysicsSetBlock(block, cmat, 4);
+            }
+            else if (remainingperc == 68)
+            {
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(two, cmat, 5);
+                PhysicsSetBlock(three, cmat, 5);
+                PhysicsSetBlock(block, cmat, 5);
+            }
+            else if (remainingperc == 50)
+            {
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(two, cmat, 5);
+                PhysicsSetBlock(three, cmat, 5);
+                PhysicsSetBlock(block, Material.AIR);
+            }
+            else if (remainingperc == 34)
+            {
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(two, cmat, 5);
+                PhysicsSetBlock(block, Material.AIR);
+            }
+            // 13 doesn't move!
         }
     }
 }

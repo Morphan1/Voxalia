@@ -46,7 +46,7 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.STONE) { SpeedMod = 1.1f, Sound = MaterialSound.STONE, Hardness = 20, BreakTime = 2 },
                 new MaterialInfo((int)Material.GRASS_FOREST) { Sound = MaterialSound.GRASS, BreakTime = 1 },
                 new MaterialInfo((int)Material.DIRT) { Sound = MaterialSound.DIRT, BreakTime = 1 },
-                new MaterialInfo((int)Material.WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1), Hardness = 5, BreakTime = 0.2f },
+                new MaterialInfo((int)Material.WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1), Hardness = 5, BreakTime = 0.2f, Spreads = true },
                 new MaterialInfo((int)Material.DEBUG) { Sound = MaterialSound.METAL, Hardness = 100, BreakTime = 2f },
                 new MaterialInfo((int)Material.LEAVES1) { Opaque = false, SpeedMod = 0.7f, FogAlpha = 0, CanRenderAgainstSelf = true, Sound = MaterialSound.LEAVES, BreakTime = 0.5f },
                 new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f, Sound = MaterialSound.STONE, Hardness = 25, BreakTime = 3f },
@@ -146,6 +146,11 @@ namespace Voxalia.Shared
             return ALL_MATS[(int)mat].CanRenderAgainstSelf;
         }
 
+        public static bool ShouldSpread(this Material mat)
+        {
+            return ALL_MATS[(int)mat].Spreads;
+        }
+
         public static float GetBreakTime(this Material mat)
         {
             return ALL_MATS[(int)mat].BreakTime;
@@ -236,6 +241,8 @@ namespace Voxalia.Shared
         public MaterialSound Sound = MaterialSound.NONE;
 
         public MaterialSolidity Solidity = MaterialSolidity.FULLSOLID;
+
+        public bool Spreads = false;
         
         public int[] TID = new int[(int)MaterialSide.COUNT];
     }

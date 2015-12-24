@@ -52,7 +52,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                         if (!hit.Hit)
                         {
                             Material matx = (Material)item.Datum;
-                            player.TheRegion.SetBlockMaterial(block, matx);
+                            player.TheRegion.PhysicsSetBlock(block, matx);
                             player.Network.SendPacket(new DefaultSoundPacketOut(block, DefaultSound.PLACE, (byte)matx.Sound()));
                             item.Count = item.Count - 1;
                             if (item.Count <= 0)
