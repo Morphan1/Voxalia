@@ -1141,7 +1141,7 @@ namespace Voxalia.ServerGame.WorldSystem
             if (cmat.ShouldSpread())
             {
                 int remainingperc;
-                switch (c.BlockLocalData)
+                switch (c.BlockData)
                 {
                     case 0:
                         remainingperc = 100;
@@ -1214,21 +1214,18 @@ namespace Voxalia.ServerGame.WorldSystem
                             PhysicsSetBlock(lxp, cmat, 5);
                             PhysicsSetBlock(lxm, cmat, 5);
                             PhysicsSetBlock(lyp, cmat, 5);
-                            PhysicsSetBlock(lym, cmat, 5);
-                            PhysicsSetBlock(block, Material.AIR);
+                            PhysicsSetBlock(block, cmat, 5);
                         }
                         else if (remainingperc == 50)
                         {
                             PhysicsSetBlock(lxp, cmat, 5);
                             PhysicsSetBlock(lxm, cmat, 5);
-                            PhysicsSetBlock(lyp, cmat, 5);
-                            PhysicsSetBlock(block, Material.AIR);
+                            PhysicsSetBlock(block, cmat, 5);
                         }
                         else if (remainingperc == 34)
                         {
                             PhysicsSetBlock(lxp, cmat, 5);
-                            PhysicsSetBlock(lxm, cmat, 5);
-                            PhysicsSetBlock(block, Material.AIR);
+                            PhysicsSetBlock(block, cmat, 5);
                         }
                         // 13 doesn't move!
                     }
@@ -1295,21 +1292,20 @@ namespace Voxalia.ServerGame.WorldSystem
 
         void LiquidSpread1(Location block, Material cmat, Location one, float remainingperc)
         {
-            SysConsole.Output(OutputType.INFO, "Spread1");
             if (remainingperc == 100)
             {
-                PhysicsSetBlock(one, cmat, 3);
-                PhysicsSetBlock(block, cmat, 3);
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(block, cmat, 1);
             }
             else if (remainingperc == 84)
             {
-                PhysicsSetBlock(one, cmat, 4);
-                PhysicsSetBlock(block, cmat, 3);
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(block, cmat, 2);
             }
             else if (remainingperc == 68)
             {
-                PhysicsSetBlock(one, cmat, 4);
-                PhysicsSetBlock(block, cmat, 4);
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(block, cmat, 3);
             }
             else if (remainingperc == 50)
             {
@@ -1326,18 +1322,17 @@ namespace Voxalia.ServerGame.WorldSystem
 
         void LiquidSpread2(Location block, Material cmat, Location one, Location two, float remainingperc)
         {
-            SysConsole.Output(OutputType.INFO, "Spread2");
             if (remainingperc == 100)
             {
-                PhysicsSetBlock(one, cmat, 4);
-                PhysicsSetBlock(two, cmat, 4);
-                PhysicsSetBlock(block, cmat, 4);
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(two, cmat, 5);
+                PhysicsSetBlock(block, cmat, 2);
             }
             else if (remainingperc == 84)
             {
-                PhysicsSetBlock(one, cmat, 4);
-                PhysicsSetBlock(two, cmat, 4);
-                PhysicsSetBlock(block, cmat, 5);
+                PhysicsSetBlock(one, cmat, 5);
+                PhysicsSetBlock(two, cmat, 5);
+                PhysicsSetBlock(block, cmat, 3);
             }
             else if (remainingperc == 68)
             {
@@ -1354,15 +1349,13 @@ namespace Voxalia.ServerGame.WorldSystem
             else if (remainingperc == 34)
             {
                 PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(two, cmat, 5);
-                PhysicsSetBlock(block, Material.AIR);
+                PhysicsSetBlock(block, cmat, 5);
             }
             // 13 doesn't move!
         }
 
         void LiquidSpread3(Location block, Material cmat, Location one, Location two, Location three, float remainingperc)
         {
-            SysConsole.Output(OutputType.INFO, "Spread3");
             if (remainingperc == 100)
             {
                 PhysicsSetBlock(one, cmat, 5);
@@ -1388,14 +1381,12 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 PhysicsSetBlock(one, cmat, 5);
                 PhysicsSetBlock(two, cmat, 5);
-                PhysicsSetBlock(three, cmat, 5);
-                PhysicsSetBlock(block, Material.AIR);
+                PhysicsSetBlock(block, cmat, 5);
             }
             else if (remainingperc == 34)
             {
                 PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(two, cmat, 5);
-                PhysicsSetBlock(block, Material.AIR);
+                PhysicsSetBlock(block, cmat, 5);
             }
             // 13 doesn't move!
         }
