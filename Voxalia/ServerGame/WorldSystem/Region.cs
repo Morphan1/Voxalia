@@ -1133,6 +1133,27 @@ namespace Voxalia.ServerGame.WorldSystem
             TheServer.Schedule.ScheduleSyncTask(() => { SurroundBlockPhysics(block); }, 0.1);
         }
 
+        int remPercFor(byte b)
+        {
+            switch (b)
+            {
+                case 0:
+                    return 100;
+                case 1:
+                    return 84;
+                case 2:
+                    return 68;
+                case 3:
+                    return 50;
+                case 4:
+                    return 34;
+                case 5:
+                    return 13;
+                default:
+                    return 0;
+            }
+        }
+
         public void RunBlockPhysics(Location block)
         {
             // TODO: Avoid re-physicsing a block twice in one tick?
@@ -1141,31 +1162,7 @@ namespace Voxalia.ServerGame.WorldSystem
             Material cmat = (Material)c.BlockMaterial;
             if (cmat.ShouldSpread())
             {
-                int remainingperc;
-                switch (c.BlockData)
-                {
-                    case 0:
-                        remainingperc = 100;
-                        break;
-                    case 1:
-                        remainingperc = 84;
-                        break;
-                    case 2:
-                        remainingperc = 68;
-                        break;
-                    case 3:
-                        remainingperc = 50;
-                        break;
-                    case 4:
-                        remainingperc = 34;
-                        break;
-                    case 5:
-                        remainingperc = 13;
-                        break;
-                    default:
-                        remainingperc = 0;
-                        break;
-                }
+                int remainingperc = remPercFor(c.BlockData);
                 if (remainingperc == 0)
                 {
                     SetBlockMaterial(block, Material.AIR);
@@ -1194,7 +1191,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     }
                     else if (mzm == cmat && zm.BlockData != 0)
                     {
-                        CombineWater(remainingperc, cmat, zm.BlockData, block, lzm);
+                        CombineWater(remainingperc, cmat, remPercFor(zm.BlockData), block, lzm);
                     }
                     else if (mxp == Material.AIR && myp == Material.AIR && mxm == Material.AIR && mym == Material.AIR)
                     {
@@ -1290,16 +1287,37 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         LiquidSpread1(block, cmat, lym, remainingperc);
                     }
-                    // else { give up! We're surrounded! }
-                    // TODO: Spread into other liquid of same type!
+                    else
+                    {
+                        int rxp = remPercFor(xp.BlockData);
+                        int rxm = remPercFor(xm.BlockData);
+                        int ryp = remPercFor(yp.BlockData);
+                        int rym = remPercFor(ym.BlockData);
+                        if (mxp == cmat && rxp < remainingperc)
+                        {
+                            CombineWater(remainingperc, cmat, rxp, block, lxp);
+                        }
+                        else if (mxm == cmat && rxm < remainingperc)
+                        {
+                            CombineWater(remainingperc, cmat, rxm, block, lxm);
+                        }
+                        else if (myp == cmat && ryp < remainingperc)
+                        {
+                            CombineWater(remainingperc, cmat, ryp, block, lyp);
+                        }
+                        else if (mym == cmat && rym < remainingperc)
+                        {
+                            CombineWater(remainingperc, cmat, rym, block, lym);
+                        }
+                    }
                 }
             }
         }
 
-        void CombineWater(int rempart, Material cmat, byte bdat, Location block, Location one)
+        void CombineWater(int rempart, Material cmat, int remperc, Location block, Location one)
         {
             // TODO: Simplify!
-            if (bdat == 1)
+            if (remperc == 84)
             {
                 if (rempart == 100)
                 {
@@ -1327,7 +1345,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
                 PhysicsSetBlock(one, cmat, 0);
             }
-            else if (bdat == 2)
+            else if (remperc == 68)
             {
                 if (rempart == 100)
                 {
@@ -1360,7 +1378,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     PhysicsSetBlock(one, cmat, 1);
                 }
             }
-            else if (bdat == 3)
+            else if (remperc == 50)
             {
                 if (rempart == 100)
                 {
@@ -1393,7 +1411,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     PhysicsSetBlock(one, cmat, 2);
                 }
             }
-            else if (bdat == 4)
+            else if (remperc == 34)
             {
                 if (rempart == 100)
                 {
@@ -1426,7 +1444,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     PhysicsSetBlock(one, cmat, 3);
                 }
             }
-            else if (bdat == 5)
+            else if (remperc == 13)
             {
                 if (rempart == 100)
                 {
