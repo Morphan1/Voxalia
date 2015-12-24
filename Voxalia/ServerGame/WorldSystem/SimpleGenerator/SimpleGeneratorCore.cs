@@ -191,27 +191,6 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     for (int z = Math.Max(top - 1, 0); z < Math.Min(top, 30); z++)
                     {
                         chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0);
-                    };
-                    if (top >= 0 && top < 30)
-                    {
-                        Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1500 * 1500));
-                        int n = spotr.Next(50);
-                        if (n == 1)
-                        {
-                            Material tmat = biome.TallGrassBlock();
-                            if (tmat != Material.AIR)
-                            {
-                                chunk.BlocksInternal[chunk.BlockIndex(x, y, top)] = new BlockInternal((ushort)tmat, 52, 0);
-                            }
-                        }
-                        else if (n == 2)
-                        {
-                            Material tmat = biome.TallGrassBlock();
-                            if (tmat != Material.AIR)
-                            {
-                                chunk.BlocksInternal[chunk.BlockIndex(x, y, top)] = new BlockInternal((ushort)tmat, 127, 0);
-                            }
-                        }
                     }
                     // Smooth terrain cap
                     Biome tempb;

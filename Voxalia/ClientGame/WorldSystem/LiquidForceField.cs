@@ -61,7 +61,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         double dens = (e.Mass / vol);
                         double WaterDens = 5; // TODO: Read from material. // TODO: Sanity of values.
                         float modifier = (float)(WaterDens / dens);
-                        float submod = 0.3f;
+                        float submod = 0.125f;
                         // TODO: Tracing accuracy!
                         for (float x2 = 0.25f; x2 < 1; x2 += 0.5f)
                         {

@@ -64,7 +64,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         double dens = (e.Mass / vol);
                         double WaterDens = 5; // TODO: Read from material. // TODO: Sanity of values.
                         float modifier = (float)(WaterDens / dens);
-                        float submod = 0.3f;
+                        float submod = 0.125f;
                         // TODO: Tracing accuracy!
                         Vector3 rel = new Vector3(0.25f, 0.25f, 0.25f);
                         for (float x2 = 0.25f; x2 < 1; x2 += 0.5f)
@@ -73,11 +73,6 @@ namespace Voxalia.ServerGame.WorldSystem
                             {
                                 for (float z2 = 0.25f; z2 < 1; z2 += 0.5f)
                                 {
-                                    /*
-                                    Location lc = c + new Location(x2, y2, z2);
-                                    Vector3 lcb = lc.ToBVector();
-                                    BoundingBox lcbb = new BoundingBox(lcb - rel, lcb + rel);
-                                    if (entbb.Intersects(lcbb)) // TODO: Accuracy!*/
                                     Location lc = c + new Location(x2, y2, z2);
                                     RayHit rh;
                                     if (e.CollisionInformation.RayCast(new Ray(lc.ToBVector(), new Vector3(0, 0, 1)), 0.01f, out rh)) // TODO: Efficiency!
@@ -85,8 +80,8 @@ namespace Voxalia.ServerGame.WorldSystem
                                         Vector3 center = lc.ToBVector();
                                         Vector3 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * e.Mass * dt * modifier * submod;
                                         e.ApplyImpulse(ref center, ref impulse);
-                                        e.ModifyLinearDamping(0.5f * submod); // TODO: Modifier?
-                                        e.ModifyAngularDamping(0.5f * submod);
+                                        e.ModifyLinearDamping(0.3f); // TODO: Modifier? Submod?
+                                        e.ModifyAngularDamping(0.3f);
                                     }
                                 }
                             }
