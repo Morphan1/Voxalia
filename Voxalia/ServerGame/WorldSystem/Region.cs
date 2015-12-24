@@ -1130,11 +1130,12 @@ namespace Voxalia.ServerGame.WorldSystem
         public void PhysicsSetBlock(Location block, Material mat, byte dat = 0)
         {
             SetBlockMaterial(block, mat, dat);
-            TheServer.Schedule.ScheduleSyncTask(() => { RunBlockPhysics(block); }, 0.1);
+            TheServer.Schedule.ScheduleSyncTask(() => { SurroundBlockPhysics(block); }, 0.1);
         }
 
         public void RunBlockPhysics(Location block)
         {
+            // TODO: Avoid re-physicsing a block twice in one tick?
             block = block.GetBlockLocation();
             BlockInternal c = GetBlockInternal(block);
             Material cmat = (Material)c.BlockMaterial;
@@ -1190,6 +1191,10 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         PhysicsSetBlock(lzm, cmat);
                         PhysicsSetBlock(block, Material.AIR);
+                    }
+                    else if (mzm == cmat && zm.BlockData != 0)
+                    {
+                        CombineWater(remainingperc, cmat, zm.BlockData, block, lzm);
                     }
                     else if (mxp == Material.AIR && myp == Material.AIR && mxm == Material.AIR && mym == Material.AIR)
                     {
@@ -1287,6 +1292,171 @@ namespace Voxalia.ServerGame.WorldSystem
                     }
                     // else { give up! We're surrounded! }
                     // TODO: Spread into other liquid of same type!
+                }
+            }
+        }
+
+        void CombineWater(int rempart, Material cmat, byte bdat, Location block, Location one)
+        {
+            // TODO: Simplify!
+            if (bdat == 1)
+            {
+                if (rempart == 100)
+                {
+                    PhysicsSetBlock(block, cmat, 1);
+                }
+                else if (rempart == 84)
+                {
+                    PhysicsSetBlock(block, cmat, 2);
+                }
+                else if (rempart == 68)
+                {
+                    PhysicsSetBlock(block, cmat, 3);
+                }
+                else if (rempart == 50)
+                {
+                    PhysicsSetBlock(block, cmat, 4);
+                }
+                else if (rempart == 34)
+                {
+                    PhysicsSetBlock(block, cmat, 5);
+                }
+                else if (rempart == 13)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                }
+                PhysicsSetBlock(one, cmat, 0);
+            }
+            else if (bdat == 2)
+            {
+                if (rempart == 100)
+                {
+                    PhysicsSetBlock(block, cmat, 2);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 84)
+                {
+                    PhysicsSetBlock(block, cmat, 3);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 68)
+                {
+                    PhysicsSetBlock(block, cmat, 4);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 50)
+                {
+                    PhysicsSetBlock(block, cmat, 5);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 34)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 13)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 1);
+                }
+            }
+            else if (bdat == 3)
+            {
+                if (rempart == 100)
+                {
+                    PhysicsSetBlock(block, cmat, 3);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 84)
+                {
+                    PhysicsSetBlock(block, cmat, 4);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 68)
+                {
+                    PhysicsSetBlock(block, cmat, 5);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 50)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 34)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 1);
+                }
+                else if (rempart == 13)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 2);
+                }
+            }
+            else if (bdat == 4)
+            {
+                if (rempart == 100)
+                {
+                    PhysicsSetBlock(block, cmat, 4);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 84)
+                {
+                    PhysicsSetBlock(block, cmat, 5);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 68)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 50)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 1);
+                }
+                else if (rempart == 34)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 2);
+                }
+                else if (rempart == 13)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 3);
+                }
+            }
+            else if (bdat == 5)
+            {
+                if (rempart == 100)
+                {
+                    PhysicsSetBlock(block, cmat, 5);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 84)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 0);
+                }
+                else if (rempart == 68)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 1);
+                }
+                else if (rempart == 50)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 2);
+                }
+                else if (rempart == 34)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 3);
+                }
+                else if (rempart == 13)
+                {
+                    PhysicsSetBlock(block, Material.AIR);
+                    PhysicsSetBlock(one, cmat, 4);
                 }
             }
         }
