@@ -24,10 +24,21 @@ namespace Voxalia.ClientGame.AudioSystem
         
         public void Init(Client tclient, ClientCVar cvar)
         {
+            if (Context != null)
+            {
+                Context.Dispose();
+            }
             TheClient = tclient;
             CVars = cvar;
             Context = new AudioContext(AudioContext.DefaultDevice, 0, 0, false, true);
             Context.MakeCurrent();
+            if (Effects != null)
+            {
+                foreach (SoundEffect sfx in Effects.Values)
+                {
+                    sfx.Internal = -2;
+                }
+            }
             Effects = new Dictionary<string, SoundEffect>();
             PlayingNow = new List<ActiveSound>();
             Noise = LoadSound(new DataStream(Convert.FromBase64String(NoiseDefault.NoiseB64)), "noise");
@@ -41,7 +52,6 @@ namespace Voxalia.ClientGame.AudioSystem
             if (err != ALError.NoError)
             {
                 SysConsole.Output(OutputType.WARNING, "Found audio error " + err + ", rebuilding audio...");
-                Context.Dispose();
                 Init(TheClient, CVars);
                 return;
             }
@@ -86,6 +96,11 @@ namespace Voxalia.ClientGame.AudioSystem
         /// </summary>
         public void Play(SoundEffect sfx, bool loop, Location pos, float pitch = 1, float volume = 1, float seek_seconds = 0, Action<ActiveSound> callback = null)
         {
+            if (sfx.Internal == -2)
+            {
+                Play(GetSound(sfx.Name), loop, pos, pitch, volume, seek_seconds, callback);
+                return;
+            }
             if (pitch <= 0 || pitch > 2)
             {
                 throw new ArgumentException("Must be between 0 and 2", "pitch");
