@@ -60,7 +60,8 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             double xoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
             double yoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
             double zoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
-            Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + new Location(xoff, yoff, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.33f + zoff) * (1 - o.TTL / o.O_TTL),
+            Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + new Location(xoff, yoff, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.33f + zoff) * (1 - o.TTL / o.O_TTL)
+                + new Location(xoff, yoff, 0) * Math.Sqrt(1 - o.TTL / o.O_TTL), // TODO: Speed this up a lotta bit!
                 (o) => new Location(1f), (o) => 0, 10, color, color, true, SmokeT);
         }
 
