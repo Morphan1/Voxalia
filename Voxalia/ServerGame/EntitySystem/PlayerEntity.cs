@@ -590,6 +590,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     TrySet(pos, ViewRadiusInChunks, 0, 1, false);
                     TrySet(pos, ViewRadiusInChunks + 1, 0, 1, true);
                     loadedInitially = true;
+                    ChunkNetwork.SendPacket(new TeleportPacketOut(GetPosition()));
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 1));
                 }
                 else
