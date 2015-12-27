@@ -70,7 +70,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Upward = false;
         public bool Walk = false;
         
-        public float tmass = 100;
+        public float tmass = 50;
 
         public Model model;
 
@@ -79,7 +79,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public OtherPlayerEntity(Region tregion)
             : base (tregion, true, true)
         {
-            SetMass(tmass / 2f);
+            SetMass(tmass);
             CanRotate = false;
             EID = -1;
             model = TheClient.Models.GetModel("players/human_male_004");

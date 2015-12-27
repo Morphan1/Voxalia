@@ -96,7 +96,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Sprint = false;
         public bool Downward = false;
 
-        public float tmass = 100;
+        public float tmass = 50;
 
         bool pup = false;
 
@@ -105,7 +105,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public PlayerEntity(Region tregion)
             : base(tregion, true, true)
         {
-            SetMass(tmass / 2f);
+            SetMass(tmass);
             CanRotate = false;
             EID = -1;
             model = TheClient.Models.GetModel("players/human_male_004");
