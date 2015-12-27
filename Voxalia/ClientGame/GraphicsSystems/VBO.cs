@@ -290,7 +290,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Vector3[] norms = normals == null ? Normals.ToArray() : normals;
             Vector3[] texs = texts == null ? TexCoords.ToArray() : texts;
             Vector4[] cols = null;
-            vC = vecs.Length;
+            vC = inds.Length;
             if (Colors != null)
             {
                 cols = Colors.ToArray();
