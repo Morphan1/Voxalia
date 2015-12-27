@@ -114,7 +114,8 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             if (NetworkMe)
             {
-                bool sme = false;
+                bool sme = needNetworking;
+                needNetworking = false;
                 // TODO: Timer of some form, to prevent packet flood on a speedy server?
                 if (Body.ActivityInformation.IsActive || (netpActive && !Body.ActivityInformation.IsActive))
                 {
@@ -165,9 +166,11 @@ namespace Voxalia.ServerGame.EntitySystem
             return new SpawnPhysicsEntityPacketOut(this);
         }
 
+        bool needNetworking = false;
+
         public void ForceNetwork()
         {
-            TheRegion.SendToAll(new PhysicsEntityUpdatePacketOut(this));
+            needNetworking = true;
         }
 
         /// <summary>
