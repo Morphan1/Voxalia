@@ -25,7 +25,7 @@ namespace Voxalia.ServerGame.CommandSystem.PlayerCommands
                 ShowUsage(entry);
                 return;
             }
-            ListTag list = new ListTag(entry.GetArgument(0));
+            ListTag list = ListTag.For(entry.GetArgument(0));
             string message = "Kicked by the server.";
             if (entry.Arguments.Count >= 2)
             {

@@ -34,30 +34,30 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // <--[tag]
                 // @Name LocationTag.x
                 // @Group General Information
-                // @ReturnType TextTag
+                // @ReturnType NumberTag
                 // @Returns the X coordinate of this location.
                 // @Example "0,1,2" .x returns "0".
                 // -->
                 case "x":
-                    return new TextTag(Internal.X).Handle(data.Shrink());
+                    return new NumberTag(Internal.X).Handle(data.Shrink());
                 // <--[tag]
                 // @Name LocationTag.y
                 // @Group General Information
-                // @ReturnType TextTag
+                // @ReturnType NumberTag
                 // @Returns the Y coordinate of this location.
                 // @Example "0,1,2" .y returns "1".
                 // -->
                 case "y":
-                    return new TextTag(Internal.Y).Handle(data.Shrink());
+                    return new NumberTag(Internal.Y).Handle(data.Shrink());
                 // <--[tag]
                 // @Name LocationTag.z
                 // @Group General Information
-                // @ReturnType TextTag
+                // @ReturnType NumberTag
                 // @Returns the Z coordinate of this location.
                 // @Example "0,1,2" .z returns "2".
                 // -->
                 case "z":
-                    return new TextTag(Internal.Z).Handle(data.Shrink());
+                    return new NumberTag(Internal.Z).Handle(data.Shrink());
 
                 default:
                     return new TextTag(ToString()).Handle(data);

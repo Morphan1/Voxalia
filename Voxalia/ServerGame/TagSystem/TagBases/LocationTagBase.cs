@@ -8,7 +8,7 @@ using Voxalia.ServerGame.TagSystem.TagObjects;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
-    class LocationTagBase : TemplateTags
+    class LocationTagBase : TemplateTagBase
     {
         // <--[tag]
         // @Base location[<TextTag>]

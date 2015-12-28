@@ -12,7 +12,7 @@ using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
-    class RegionTagBase : TemplateTags
+    class RegionTagBase : TemplateTagBase
     {
         Server TheServer;
 

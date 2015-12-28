@@ -11,7 +11,7 @@ using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
-    class PlayerTagBase : TemplateTags
+    class PlayerTagBase : TemplateTagBase
     {
         Server TheServer;
 

@@ -39,12 +39,12 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // <--[tag]
                 // @Base EntityTag.eid
                 // @Group General Information
-                // @ReturnType TextTag
+                // @ReturnType NumberTag
                 // @Returns the entity's Entity Identification number (EID).
                 // @Example "2" .eid returns "2".
                 // -->
                 case "eid":
-                    return new TextTag(Internal.EID).Handle(data.Shrink());
+                    return new NumberTag(Internal.EID).Handle(data.Shrink());
 
                 default:
                     return new TextTag(ToString()).Handle(data);

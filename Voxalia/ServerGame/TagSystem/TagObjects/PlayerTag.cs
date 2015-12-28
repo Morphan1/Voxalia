@@ -40,12 +40,12 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // <--[tag]
                 // @Base PlayerTag.health
                 // @Group Status
-                // @ReturnType TextTag
+                // @ReturnType NumberTag
                 // @Returns the player's health.
                 // @Example "Fortifier" .health could return "100".
                 // -->
                 case "health":
-                    return new TextTag(Internal.Health).Handle(data.Shrink());
+                    return new NumberTag(Internal.Health).Handle(data.Shrink());
 
                 default:
                     return new EntityTag((Entity)Internal).Handle(data);

@@ -12,7 +12,7 @@ using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
-    class EntityTagBase : TemplateTags
+    class EntityTagBase : TemplateTagBase
     {
 
         public Entity Internal;

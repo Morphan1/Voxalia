@@ -65,7 +65,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
                         string val = CVars.system.CVarList[i].Value;
                         if (val.Contains('\"'))
                         {
-                            val = "<{unescape[" + EscapeTags.Escape(val) + "]}>";
+                            val = "<{unescape[" + EscapeTagBase.Escape(val) + "]}>";
                         }
                         cvarsave.Append("set \"" + CVars.system.CVarList[i].Name + "\" \"" + val + "\";\n");
                     }

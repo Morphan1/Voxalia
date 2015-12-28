@@ -28,11 +28,11 @@ namespace Voxalia.ClientGame.CommandSystem.TagObjects.EntityTagObjects
                 // <--[tag]
                 // @Name PlayerTag.held_item_slot
                 // @Group Inventory
-                // @ReturnType TextTag
+                // @ReturnType NumberTag
                 // @Returns the slot of the item the player is currently holding (in their QuickBar).
                 // -->
                 case "held_item_slot":
-                    return new TextTag(TheClient.QuickBarPos).Handle(data.Shrink());
+                    return new NumberTag(TheClient.QuickBarPos).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }
