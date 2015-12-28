@@ -28,33 +28,7 @@ namespace Voxalia.ServerGame.WorldSystem
         /// How much time has elapsed since the last tick started.
         /// </summary>
         public double Delta;
-
-        public List<Entity> GetTargets(string target)
-        {
-            List<Entity> ents = new List<Entity>();
-            for (int i = 0; i < Targetables.Count; i++)
-            {
-                if (Targetables[i].GetTargetName() == target)
-                {
-                    ents.Add((Entity)Targetables[i]);
-                }
-            }
-            return ents;
-        }
-
-        public void Trigger(string target, Entity ent, Entity user)
-        {
-            for (int i = 0; i < Targetables.Count; i++)
-            {
-                if (Targetables[i].GetTargetName() == target)
-                {
-                    Targetables[i].Trigger(ent, user);
-                }
-            }
-        }
-
-        public List<EntityTargettable> Targetables = new List<EntityTargettable>();
-
+        
         /// <summary>
         /// All spawnpoint-type entities that exist on this server.
         /// </summary>
@@ -169,10 +143,6 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 Tickers.Add(e);
             }
-            if (e is EntityTargettable)
-            {
-                Targetables.Add((EntityTargettable)e);
-            }
             e.TheRegion = this;
             if (e is PhysicsEntity && !(e is PlayerEntity))
             {
@@ -214,10 +184,6 @@ namespace Voxalia.ServerGame.WorldSystem
             if (e.Ticks)
             {
                 Tickers.Remove(e);
-            }
-            if (e is EntityTargettable)
-            {
-                Targetables.Remove((EntityTargettable)e);
             }
             if (e is PhysicsEntity)
             {
