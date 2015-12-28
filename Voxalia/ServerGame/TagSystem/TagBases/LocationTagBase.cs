@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
     class LocationTagBase : TemplateTagBase
     {
         // <--[tag]
-        // @Base location[<TextTag>]
+        // @Base location[<LocationTag>]
         // @Group Mathematics
         // @ReturnType LocationTag
         // @Returns the location at the corresponding coordinates.

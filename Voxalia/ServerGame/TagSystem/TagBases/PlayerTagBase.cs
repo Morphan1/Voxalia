@@ -16,7 +16,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
         Server TheServer;
 
         // <--[tag]
-        // @Base player[<TextTag>]
+        // @Base player[<PlayerTag>]
         // @Group Entities
         // @ReturnType PlayerTag
         // @Returns the player with the given name.

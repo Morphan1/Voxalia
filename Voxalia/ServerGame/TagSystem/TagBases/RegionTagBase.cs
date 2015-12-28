@@ -17,7 +17,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
         Server TheServer;
 
         // <--[tag]
-        // @Base region[<TextTag>]
+        // @Base region[<RegionTag>]
         // @Group World
         // @ReturnType RegionTag
         // @Returns the region with the given name.

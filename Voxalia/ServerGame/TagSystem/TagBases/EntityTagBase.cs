@@ -19,7 +19,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
         Server TheServer;
 
         // <--[tag]
-        // @Base entity[<TextTag>]
+        // @Base entity[<EntityTag>]
         // @Group Entities
         // @ReturnType EntityTag
         // @Returns the entity with the given ID or name.
