@@ -32,7 +32,25 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             switch (data.Input[0])
             {
-                // TODO: Tags
+                // <--[tag]
+                // @Name PrimitiveEntityTag.velocity
+                // @Group General Information
+                // @ReturnType LocationTag
+                // @Returns the PrimitiveEntity's velocity as a LocationTag.
+                // @Example "10" .velocity could return "(40, 10, 0)".
+                // -->
+                case "velocity":
+                    return new LocationTag(Internal.GetVelocity()).Handle(data.Shrink());
+                // <--[tag]
+                // @Name PrimitiveEntityTag.scale
+                // @Group General Information
+                // @ReturnType LocationTag
+                // @Returns the PrimitiveEntity's scale as a LocationTag.
+                // @Example "5" .scale could return "(1, 1, 1)".
+                // -->
+                case "scale":
+                    return new LocationTag(Internal.Scale).Handle(data.Shrink());
+
                 default:
                     return new EntityTag((Entity)Internal).Handle(data);
             }

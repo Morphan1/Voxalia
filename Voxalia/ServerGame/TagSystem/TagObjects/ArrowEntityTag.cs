@@ -32,7 +32,16 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             switch (data.Input[0])
             {
-                // TODO: Tags
+                // <--[tag]
+                // @Name ArrowEntityTag.damage
+                // @Group General Information
+                // @ReturnType NumberTag
+                // @Returns the amount of damage the ArrowEntity will do, not counting velocity-based damage.
+                // @Example "10" .damage could return "1".
+                // -->
+                case "damage":
+                    return new NumberTag(Internal.Damage).Handle(data.Shrink());
+
                 default:
                     return new PrimitiveEntityTag((PrimitiveEntity)Internal).Handle(data);
             }

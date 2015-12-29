@@ -33,7 +33,34 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             switch (data.Input[0])
             {
-                // TODO: Tags
+                // <--[tag]
+                // @Name BlockGroupEntityTag.width_x
+                // @Group General Information
+                // @ReturnType NumberTag
+                // @Returns the width of the BlockGroupEntity along its X axis.
+                // @Example "10" .width_x could return "1".
+                // -->
+                case "width_x":
+                    return new NumberTag(Internal.XWidth).Handle(data.Shrink());
+                // <--[tag]
+                // @Name BlockGroupEntityTag.width_y
+                // @Group General Information
+                // @ReturnType NumberTag
+                // @Returns the width of the BlockGroupEntity along its Y axis.
+                // @Example "10" .width_y could return "1".
+                // -->
+                case "width_y":
+                    return new NumberTag(Internal.YWidth).Handle(data.Shrink());
+                // <--[tag]
+                // @Name BlockGroupEntityTag.width_y
+                // @Group General Information
+                // @ReturnType NumberTag
+                // @Returns the width of the BlockGroupEntity along its Z axis.
+                // @Example "10" .width_z could return "1".
+                // -->
+                case "width_z":
+                    return new NumberTag(Internal.ZWidth).Handle(data.Shrink());
+
                 default:
                     return new PhysicsEntityTag((PhysicsEntity)Internal).Handle(data);
             }

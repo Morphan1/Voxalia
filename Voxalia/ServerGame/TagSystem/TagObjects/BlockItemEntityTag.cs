@@ -33,7 +33,15 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             switch (data.Input[0])
             {
-                // TODO: Tags
+                // <--[tag]
+                // @Name BlockItemEntityTag.material
+                // @Group General Information
+                // @ReturnType MaterialTag
+                // @Returns the BlockItemEntity's material.
+                // @Example "2" .material could return "stone".
+                // -->
+                case "material":
+                    return new MaterialTag(Internal.Mat).Handle(data.Shrink());
                 default:
                     return new PhysicsEntityTag((PhysicsEntity)Internal).Handle(data);
             }

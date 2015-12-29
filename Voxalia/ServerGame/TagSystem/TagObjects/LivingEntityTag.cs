@@ -32,7 +32,34 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             switch (data.Input[0])
             {
-                // TODO: Tags
+                // <--[tag]
+                // @Name LivingEntityTag.health
+                // @Group General Information
+                // @ReturnType NumberTag
+                // @Returns the LivingEntity's health.
+                // @Example "5" .health could return "100".
+                // -->
+                case "health":
+                    return new NumberTag(Internal.Health).Handle(data.Shrink());
+                // <--[tag]
+                // @Name LivingEntityTag.max_health
+                // @Group General Information
+                // @ReturnType NumberTag
+                // @Returns the LivingEntity's maximum health.
+                // @Example "5" .max_health could return "100".
+                // -->
+                case "max_health":
+                    return new NumberTag(Internal.MaxHealth).Handle(data.Shrink());
+                // <--[tag]
+                // @Name LivingEntityTag.health_percentage
+                // @Group General Information
+                // @ReturnType NumberTag
+                // @Returns the LivingEntity's health as a percentage of its maximum health.
+                // @Example "5" .health_percentage could return "70" - indicating 70%.
+                // -->
+                case "health_percentage":
+                    return new NumberTag((Internal.MaxHealth / Internal.Health) * 100).Handle(data.Shrink());
+
                 default:
                     return new PhysicsEntityTag((PhysicsEntity)Internal).Handle(data);
             }

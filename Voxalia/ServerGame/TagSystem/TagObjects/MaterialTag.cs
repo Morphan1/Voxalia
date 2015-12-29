@@ -12,7 +12,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
     {
         // <--[object]
         // @Type MaterialTag
-        // @SubType NONE
+        // @SubType TextTag
         // @Group To Be Decided.
         // @Description Represents any material.
         // -->

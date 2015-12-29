@@ -32,7 +32,25 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             switch (data.Input[0])
             {
-                // TODO: Tags
+                // <--[tag]
+                // @Name ModelEntityTag.model
+                // @Group General Information
+                // @ReturnType TextTag
+                // @Returns the ModelEntity's model.
+                // @Example "5" .model could return "cube".
+                // -->
+                case "model":
+                    return new TextTag(Internal.model).Handle(data.Shrink());
+                // <--[tag]
+                // @Name ModelEntityTag.scale
+                // @Group General Information
+                // @ReturnType LocationTag
+                // @Returns the ModelEntity's scale as a LocationTag.
+                // @Example "5" .scale could return "(1, 1, 1)".
+                // -->
+                case "scale":
+                    return new LocationTag(Internal.scale).Handle(data.Shrink());
+
                 default:
                     return new PhysicsEntityTag((PhysicsEntity)Internal).Handle(data);
             }

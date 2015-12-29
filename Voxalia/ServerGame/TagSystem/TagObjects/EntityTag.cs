@@ -50,6 +50,15 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // -->
                 case "eid":
                     return new NumberTag(Internal.EID).Handle(data.Shrink());
+                // <--[tag]
+                // @Name EntityTag.entity_type
+                // @Group General Information
+                // @ReturnType TextTag
+                // @Returns the entity's entity type.
+                // @Example "2" .entity_type could return "BulletEntity".
+                // -->
+                case "entity_type":
+                    return new TextTag(Internal.GetEntityType().ToString()).Handle(data.Shrink());
 
                 default:
                     return new TextTag(ToString()).Handle(data);

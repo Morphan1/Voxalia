@@ -32,7 +32,25 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             switch (data.Input[0])
             {
-                // TODO: Tags
+                // <--[tag]
+                // @Name PhysicsEntityTag.mass
+                // @Group General Information
+                // @ReturnType NumberTag
+                // @Returns the PhysicsEntity's mass.
+                // @Example "10" .mass could return "40".
+                // -->
+                case "mass":
+                    return new NumberTag(Internal.Mass).Handle(data.Shrink());
+                // <--[tag]
+                // @Name PhysicsEntityTag.bounciness
+                // @Group General Information
+                // @ReturnType NumberTag
+                // @Returns the PhysicsEntity's bounciness (how much it bounces).
+                // @Example "10" .bounciness could return "0.5".
+                // -->
+                case "bounciness":
+                    return new NumberTag(Internal.GetBounciness()).Handle(data.Shrink());
+
                 default:
                     return new EntityTag((Entity)Internal).Handle(data);
             }

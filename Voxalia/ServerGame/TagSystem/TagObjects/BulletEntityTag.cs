@@ -32,7 +32,25 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             switch (data.Input[0])
             {
-                // TODO: Tags
+                // <--[tag]
+                // @Name BulletEntityTag.damage
+                // @Group General Information
+                // @ReturnType NumberTag
+                // @Returns the amount of damage the BulletEntity will do, not counting splash or other special damage.
+                // @Example "10" .damage could return "1".
+                // -->
+                case "damage":
+                    return new NumberTag(Internal.Damage).Handle(data.Shrink());
+                // <--[tag]
+                // @Name BulletEntityTag.splash_size
+                // @Group General Information
+                // @ReturnType NumberTag
+                // @Returns the radius of the BulletEntity's splash damage area in blocks.
+                // @Example "10" .splash_size could return "0".
+                // -->
+                case "splash_size":
+                    return new NumberTag(Internal.SplashSize).Handle(data.Shrink());
+
                 default:
                     return new PrimitiveEntityTag((PrimitiveEntity)Internal).Handle(data);
             }
