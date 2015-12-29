@@ -49,7 +49,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// What color to draw this item as.
         /// </summary>
-        public int DrawColor = Color.White.ToArgb();
+        public System.Drawing.Color DrawColor = Color.White;
 
         public abstract string GetTextureName();
 
@@ -65,7 +65,7 @@ namespace Voxalia.Shared
             DataWriter dw = new DataWriter(ds);
             dw.WriteInt(Count);
             dw.WriteInt(Datum);
-            dw.WriteInt(DrawColor);
+            dw.WriteInt(DrawColor.ToArgb());
             dw.WriteFullString(Name);
             dw.WriteFullString(SecondaryName == null ? "" : SecondaryName);
             dw.WriteFullString(DisplayName);
@@ -86,7 +86,7 @@ namespace Voxalia.Shared
             Name = name;
         }
 
-        public void Load(string name, string secondary_name, int count, string tex, string display, string descrip, int color, string model)
+        public void Load(string name, string secondary_name, int count, string tex, string display, string descrip, System.Drawing.Color color, string model)
         {
             SetName(name);
             SecondaryName = secondary_name;
@@ -105,7 +105,7 @@ namespace Voxalia.Shared
             DataReader dr = new DataReader(ds);
             Count = dr.ReadInt();
             Datum = dr.ReadInt();
-            DrawColor = dr.ReadInt();
+            DrawColor = System.Drawing.Color.FromArgb(dr.ReadInt());
             SetName(dr.ReadFullString());
             string secondary_name = dr.ReadFullString();
             SecondaryName = secondary_name.Length == 0 ? null : secondary_name;

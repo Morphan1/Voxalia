@@ -48,7 +48,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             // TODO: Proper texture / model / ...
             return new ItemStack("block", Mat.ToString(), TheServer, 1, "", Mat.GetName(),
-                    "A standard block of " + Mat.ToString(), System.Drawing.Color.White.ToArgb(), "cube", false) { Datum = (ushort)Mat };
+                    "A standard block of " + Mat.ToString(), System.Drawing.Color.White, "cube", false) { Datum = (ushort)Mat };
         }
 
         public bool Use(Entity user)

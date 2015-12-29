@@ -28,7 +28,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             player.WaitingForClickRelease = true;
-            System.Drawing.Color tcol = System.Drawing.Color.FromArgb(item.DrawColor);
+            System.Drawing.Color tcol = item.DrawColor;
             Location colo = new Location(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f);
             player.TheRegion.SendToAll(new ParticleEffectPacketOut(ParticleEffectNetType.SMOKE, 7, player.GetPosition(), colo)); // TODO: only send to those in range
         }

@@ -26,7 +26,7 @@ namespace Voxalia.ClientGame.OtherSystems
 
         public Color4 GetColor()
         {
-            Color col = Color.FromArgb(DrawColor);
+            Color col = DrawColor;
             return new Color4(col.R, col.G, col.B, col.A);
         }
 

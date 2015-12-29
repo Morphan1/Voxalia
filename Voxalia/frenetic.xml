@@ -82,13 +82,14 @@
             The parts that build up the argument.
             </summary>
         </member>
-        <member name="M:Frenetic.CommandSystem.Arguments.Argument.Parse(System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode)">
+        <member name="M:Frenetic.CommandSystem.Arguments.Argument.Parse(System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode,System.Action{System.String})">
             <summary>
             Parse the argument, reading any tags or other special data.
             </summary>
             <param name="base_color">The base color for color tags.</param>
             <param name="vars">The variables for var tags.</param>
             <param name="mode">The debug mode to use when parsing tags.</param>
+            <param name="error">What to invoke if there is an error.</param>
             <returns>The parsed final text.</returns>
         </member>
         <member name="M:Frenetic.CommandSystem.Arguments.Argument.ToString">
@@ -107,13 +108,14 @@
             The relevant command system.
             </summary>
         </member>
-        <member name="M:Frenetic.CommandSystem.Arguments.ArgumentBit.Parse(System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode)">
+        <member name="M:Frenetic.CommandSystem.Arguments.ArgumentBit.Parse(System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode,System.Action{System.String})">
             <summary>
             Parse the argument part, reading any tags or other special data.
             </summary>
             <param name="base_color">The base color for color tags.</param>
             <param name="vars">The variables for var tags.</param>
             <param name="mode">The debug mode to use when parsing tags.</param>
+            <param name="error">What to invoke if there is an error.</param>
             <returns>The parsed final text.</returns>
         </member>
         <member name="T:Frenetic.CommandSystem.Arguments.TagArgumentBit">
@@ -126,13 +128,14 @@
             The pieces that make up the tag.
             </summary>
         </member>
-        <member name="M:Frenetic.CommandSystem.Arguments.TagArgumentBit.Parse(System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode)">
+        <member name="M:Frenetic.CommandSystem.Arguments.TagArgumentBit.Parse(System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode,System.Action{System.String})">
             <summary>
             Parse the argument part, reading any tags.
             </summary>
             <param name="base_color">The base color for color tags.</param>
             <param name="vars">The variables for var tags.</param>
             <param name="mode">The debug mode to use when parsing tags.</param>
+            <param name="error">What to invoke if there is an error.</param>
             <returns>The parsed final text.</returns>
         </member>
         <member name="M:Frenetic.CommandSystem.Arguments.TagArgumentBit.ToString">
@@ -157,13 +160,14 @@
             The input text.
             </summary>
         </member>
-        <member name="M:Frenetic.CommandSystem.Arguments.TextArgumentBit.Parse(System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode)">
+        <member name="M:Frenetic.CommandSystem.Arguments.TextArgumentBit.Parse(System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode,System.Action{System.String})">
             <summary>
             Returns the input text.
             </summary>
             <param name="base_color">The base color for color tags.</param>
             <param name="vars">The variables for var tags.</param>
             <param name="mode">The debug mode to use when parsing tags.</param>
+            <param name="error">What to invoke if there is an error.</param>
             <returns>The parsed final text.</returns>
         </member>
         <member name="M:Frenetic.CommandSystem.Arguments.TextArgumentBit.ToString">
@@ -177,7 +181,7 @@
             All the information for a command being currently run.
             </summary>
         </member>
-        <member name="M:Frenetic.CommandSystem.CommandEntry.FromInput(System.String,System.Collections.Generic.List{Frenetic.CommandSystem.CommandEntry},Frenetic.CommandSystem.CommandEntry,Frenetic.CommandSystem.Commands)">
+        <member name="M:Frenetic.CommandSystem.CommandEntry.FromInput(System.String,System.Collections.Generic.List{Frenetic.CommandSystem.CommandEntry},Frenetic.CommandSystem.CommandEntry,Frenetic.CommandSystem.Commands,System.String,System.Int32)">
             <summary>
             Creates a CommandEntry from the given input and queue information.
             </summary>
@@ -185,9 +189,11 @@
             <param name="_block">The command block that held this entry.</param>
             <param name="_owner">The command entry that owns the block that held this entry.</param>
             <param name="system">The command system to work from.</param>
+            <param name="script">The name of the creating script.</param>
+            <param name="line">The line in the creating script.</param>
             <returns>The command system.</returns>
         </member>
-        <member name="M:Frenetic.CommandSystem.CommandEntry.CreateInvalidOutput(System.String,System.Collections.Generic.List{Frenetic.CommandSystem.CommandEntry},System.Collections.Generic.List{Frenetic.CommandSystem.Arguments.Argument},Frenetic.CommandSystem.CommandEntry,Frenetic.CommandSystem.Commands,System.String,System.Int32,System.Boolean)">
+        <member name="M:Frenetic.CommandSystem.CommandEntry.CreateInvalidOutput(System.String,System.Collections.Generic.List{Frenetic.CommandSystem.CommandEntry},System.Collections.Generic.List{Frenetic.CommandSystem.Arguments.Argument},Frenetic.CommandSystem.CommandEntry,Frenetic.CommandSystem.Commands,System.String,System.Int32,System.Boolean,System.String,System.Int32)">
             <summary>
             Create an entry that represents invalid output.
             </summary>
@@ -217,7 +223,17 @@
             Whether the &amp;waitable command entry should be waited for.
             </summary>
         </member>
-        <member name="M:Frenetic.CommandSystem.CommandEntry.#ctor(System.String,System.Collections.Generic.List{Frenetic.CommandSystem.CommandEntry},Frenetic.CommandSystem.CommandEntry,Frenetic.CommandSystem.AbstractCommand,System.Collections.Generic.List{Frenetic.CommandSystem.Arguments.Argument},System.String,System.Int32)">
+        <member name="F:Frenetic.CommandSystem.CommandEntry.ScriptName">
+            <summary>
+            The name of the creating script.
+            </summary>
+        </member>
+        <member name="F:Frenetic.CommandSystem.CommandEntry.ScriptLine">
+            <summary>
+            The line number in the creating script.
+            </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommandEntry.#ctor(System.String,System.Collections.Generic.List{Frenetic.CommandSystem.CommandEntry},Frenetic.CommandSystem.CommandEntry,Frenetic.CommandSystem.AbstractCommand,System.Collections.Generic.List{Frenetic.CommandSystem.Arguments.Argument},System.String,System.Int32,System.String,System.Int32)">
             <summary>
             Full constructor, recommended.
             </summary>
@@ -304,9 +320,16 @@
         </member>
         <member name="M:Frenetic.CommandSystem.CommandEntry.Bad(System.String)">
             <summary>
-            Used to output a failure message.
+            Used to output a failure message. This is considered a 'warning' and will not induce an error.
             </summary>
             <param name="text">The text to output, with tags included.</param>
+        </member>
+        <member name="M:Frenetic.CommandSystem.CommandEntry.Error(System.String)">
+            <summary>
+            Used to indicate an error has occured, and have the system react accordingly.
+            It is recommended you "return;" immediately after invoking this.
+            </summary>
+            <param name="EMsg">The error message.</param>
         </member>
         <member name="M:Frenetic.CommandSystem.CommandEntry.Duplicate(Frenetic.CommandSystem.CommandEntry)">
             <summary>
@@ -551,6 +574,13 @@
             <param name="Delta">The time passed this tick.</param>
             </summary>
         </member>
+        <member name="M:Frenetic.CommandSystem.CommandQueue.HandleError(Frenetic.CommandSystem.CommandEntry,System.String)">
+            <summary>
+            Handles an error as appropriate to the situation, in the current queue, from the current command.
+            </summary>
+            <param name="entry">The command entry that errored.</param>
+            <param name="message">The error message.</param>
+        </member>
         <member name="M:Frenetic.CommandSystem.CommandQueue.GetCommand(System.Int32)">
             <summary>
             Gets the command at the specified index.
@@ -792,10 +822,12 @@
             <param name="system">The command system to create the script within.</param>
             <returns>A list of command strings.</returns>
         </member>
-        <member name="M:Frenetic.CommandSystem.CommandScript.CreateBlock(System.Collections.Generic.List{System.String},Frenetic.CommandSystem.CommandEntry,Frenetic.CommandSystem.Commands)">
+        <member name="M:Frenetic.CommandSystem.CommandScript.CreateBlock(System.String,System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{System.String},Frenetic.CommandSystem.CommandEntry,Frenetic.CommandSystem.Commands)">
             <summary>
             Converts a list of command strings to a CommandEntry list, handling any { braced } blocks inside.
             </summary>
+            <param name="name">The name of the script.</param>
+            <param name="lines">The file line numbers for the corresponding command strings.</param>
             <param name="from">The command strings.</param>
             <param name="entry">The entry that owns this block.</param>
             <param name="system">The command system to create this block inside.</param>
@@ -927,6 +959,11 @@
             </summary>
             <param name="entry">Entry to be executed.</param>
         </member>
+        <member name="T:Frenetic.CommandSystem.ErrorInducedException">
+            <summary>
+            Represents an exception induced by a script error. Should be ignored/re-thrown to let the error propogate up to the script level.
+            </summary>
+        </member>
         <member name="T:Frenetic.CommandSystem.Outputter">
             <summary>
             An abstract class, implementations should provide methods that output to a console or equivalent.
@@ -978,6 +1015,12 @@
             <summary>
             Whether the game is still setting up currently.
             </summary>
+        </member>
+        <member name="M:Frenetic.CommandSystem.QueueCmds.CatchCommand.Execute(Frenetic.CommandSystem.CommandEntry)">
+            <summary>
+            Executes the command.
+            </summary>
+            <param name="entry">Entry to be executed.</param>
         </member>
         <member name="M:Frenetic.CommandSystem.QueueCmds.GotoCommand.Execute(Frenetic.CommandSystem.CommandEntry)">
             <summary>
@@ -2137,17 +2180,12 @@
             The 'base color' set by the tag requesting code.
             </summary>
         </member>
-        <member name="M:Frenetic.TagHandlers.TagData.#ctor(Frenetic.TagHandlers.TagParser,System.Collections.Generic.List{Frenetic.TagHandlers.TagBit},System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode)">
+        <member name="F:Frenetic.TagHandlers.TagData.Error">
             <summary>
-            Constructs the tag information container.
+            What to invoke if there is an error.
             </summary>
-            <param name="_system">The command system to use.</param>
-            <param name="_input">The input tag pieces.</param>
-            <param name="_basecolor">The default color to use for output.</param>
-            <param name="_vars">Any variables involved in the queue.</param>
-            <param name="_mode">What debug mode to use.</param>
         </member>
-        <member name="M:Frenetic.TagHandlers.TagData.#ctor(Frenetic.TagHandlers.TagParser,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode)">
+        <member name="M:Frenetic.TagHandlers.TagData.#ctor(Frenetic.TagHandlers.TagParser,System.Collections.Generic.List{Frenetic.TagHandlers.TagBit},System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode,System.Action{System.String})">
             <summary>
             Constructs the tag information container.
             </summary>
@@ -2156,6 +2194,18 @@
             <param name="_basecolor">The default color to use for output.</param>
             <param name="_vars">Any variables involved in the queue.</param>
             <param name="_mode">What debug mode to use.</param>
+            <param name="_error">What to invoke if there is an error.</param>
+        </member>
+        <member name="M:Frenetic.TagHandlers.TagData.#ctor(Frenetic.TagHandlers.TagParser,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode,System.Action{System.String})">
+            <summary>
+            Constructs the tag information container.
+            </summary>
+            <param name="_system">The command system to use.</param>
+            <param name="_input">The input tag pieces.</param>
+            <param name="_basecolor">The default color to use for output.</param>
+            <param name="_vars">Any variables involved in the queue.</param>
+            <param name="_mode">What debug mode to use.</param>
+            <param name="_error">What to invoke if there is an error.</param>
         </member>
         <member name="M:Frenetic.TagHandlers.TagData.Shrink">
             <summary>
@@ -2217,7 +2267,7 @@
             <param name="input">The original text.</param>
             <returns>The parsed Argument.</returns>
         </member>
-        <member name="M:Frenetic.TagHandlers.TagParser.ParseTags(Frenetic.CommandSystem.Arguments.TagArgumentBit,System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode)">
+        <member name="M:Frenetic.TagHandlers.TagParser.ParseTags(Frenetic.CommandSystem.Arguments.TagArgumentBit,System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode,System.Action{System.String})">
             <summary>
             Reads and parses all tags inside a list of tag bits.
             </summary>
@@ -2225,9 +2275,10 @@
             <param name="vars">Any variables in this tag's context.</param>
             <param name="bits">The tag data.</param>
             <param name="mode">What debugmode to use.</param>
+            <param name="error">What to invoke if there's an error.</param>
             <returns>The string with tags parsed.</returns>
         </member>
-        <member name="M:Frenetic.TagHandlers.TagParser.ParseTagsFromText(System.String,System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode)">
+        <member name="M:Frenetic.TagHandlers.TagParser.ParseTagsFromText(System.String,System.String,System.Collections.Generic.Dictionary{System.String,Frenetic.TagHandlers.TemplateObject},Frenetic.CommandSystem.DebugMode,System.Action{System.String})">
             <summary>
             Reads and parses all tags inside a string.
             </summary>
@@ -2235,6 +2286,7 @@
             <param name="vars">Any variables in this tag's context.</param>
             <param name="input">The tagged string.</param>
             <param name="mode">What debugmode to use.</param>
+            <param name="error">What to invoke if there's an error.</param>
             <returns>The string with tags parsed.</returns>
         </member>
         <member name="T:Frenetic.TagHandlers.TemplateObject">

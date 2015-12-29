@@ -73,7 +73,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             }
             else if (e is GlowstickEntity)
             {
-                Utilities.IntToBytes(((GlowstickEntity)e).Color).CopyTo(Data, start);
+                Utilities.IntToBytes(((GlowstickEntity)e).Color.ToArgb()).CopyTo(Data, start);
             }
             else if (e is GrenadeEntity)
             {

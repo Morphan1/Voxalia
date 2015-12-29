@@ -46,7 +46,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 return new ItemStack(this, "Air")
                 {
-                    DrawColor = Color.White.ToArgb(),
+                    DrawColor = Color.White,
                     Tex = Textures.Clear,
                     Description = "An empty slot.",
                     Count = 0,

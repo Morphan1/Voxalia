@@ -69,13 +69,13 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 string arg1 = entry.InputArguments[1];
                 entry.Player.Items.GiveItem(new ItemStack("structurecreate", arg1, entry.Player.TheServer, 1, "items/admin/strucutre_create",
-                    "Structure Creator", "Creates a " + arg1 + " structure!", System.Drawing.Color.White.ToArgb(), "items/admin/structure_create", false));
+                    "Structure Creator", "Creates a " + arg1 + " structure!", System.Drawing.Color.White, "items/admin/structure_create", false));
             }
             else if (arg0 == "structurePaste" && entry.InputArguments.Count > 1)
             {
                 string arg1 = entry.InputArguments[1];
                 entry.Player.Items.GiveItem(new ItemStack("structurepaste", arg1, entry.Player.TheServer, 1, "items/admin/strucutre_paste",
-                    "Structor Paster", "Pastes a " + arg1 + " structure!", System.Drawing.Color.White.ToArgb(), "items/admin/structure_paste", false));
+                    "Structor Paster", "Pastes a " + arg1 + " structure!", System.Drawing.Color.White, "items/admin/structure_paste", false));
             }
             else if (arg0 == "spawnSmallPlant" && entry.InputArguments.Count > 1)
             {

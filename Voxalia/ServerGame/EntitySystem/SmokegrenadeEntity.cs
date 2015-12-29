@@ -12,10 +12,10 @@ namespace Voxalia.ServerGame.EntitySystem
     // TODO: Maximum smoke usage counter!
     public class SmokegrenadeEntity: GrenadeEntity
     {
-        int col;
+        System.Drawing.Color col;
         ParticleEffectNetType SmokeType;
 
-        public SmokegrenadeEntity(int _col, Region tregion, ParticleEffectNetType smokeType):
+        public SmokegrenadeEntity(System.Drawing.Color _col, Region tregion, ParticleEffectNetType smokeType):
             base(tregion)
         {
             col = _col;
@@ -32,7 +32,7 @@ namespace Voxalia.ServerGame.EntitySystem
             byte[] bbytes = GetPhysicsBytes();
             byte[] res = new byte[bbytes.Length + 4 + 1];
             bbytes.CopyTo(res, 0);
-            Utilities.IntToBytes(col).CopyTo(res, bbytes.Length);
+            Utilities.IntToBytes(col.ToArgb()).CopyTo(res, bbytes.Length);
             res[bbytes.Length + 4] = (byte)SmokeType;
             return res;
         }
@@ -46,8 +46,7 @@ namespace Voxalia.ServerGame.EntitySystem
             timer += TheRegion.Delta;
             while (timer > pulse)
             {
-                System.Drawing.Color tcol = System.Drawing.Color.FromArgb(col);
-                Location colo = new Location(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f);
+                Location colo = new Location(col.R / 255f, col.G / 255f, col.B / 255f);
                 TheRegion.SendToAll(new ParticleEffectPacketOut(SmokeType, 5, GetPosition(), colo));
                 timer -= pulse;
             }
@@ -62,7 +61,7 @@ namespace Voxalia.ServerGame.EntitySystem
             int plen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4;
             int colo = Utilities.BytesToInt(Utilities.BytesPartial(input, plen, 4));
             byte effecttype = input[plen + 4];
-            SmokegrenadeEntity grenade = new SmokegrenadeEntity(colo, tregion, (ParticleEffectNetType)effecttype);
+            SmokegrenadeEntity grenade = new SmokegrenadeEntity(System.Drawing.Color.FromArgb(colo), tregion, (ParticleEffectNetType)effecttype);
             grenade.ApplyBytes(input);
             return grenade;
         }

@@ -30,7 +30,7 @@ namespace Voxalia.ServerGame.ItemSystem
             }
             if (slot == 0)
             {
-                return new ItemStack("Air", TheWorld.TheServer, 1, "clear", "Air", "An empty slot.", Color.White.ToArgb(), "blank.dae", true);
+                return new ItemStack("Air", TheWorld.TheServer, 1, "clear", "Air", "An empty slot.", Color.White, "blank.dae", true);
             }
             else
             {

@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.ItemSystem
     {
         public Server TheServer;
 
-        public ItemStack(string name, string secondary_name, Server tserver, int count, string tex, string display, string descrip, int color, string model, bool bound, params string[] attrs)
+        public ItemStack(string name, string secondary_name, Server tserver, int count, string tex, string display, string descrip, System.Drawing.Color color, string model, bool bound, params string[] attrs)
         {
             TheServer = tserver;
             Load(name, secondary_name, count, tex, display, descrip, color, model);
@@ -25,7 +25,7 @@ namespace Voxalia.ServerGame.ItemSystem
             }
         }
 
-        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, int color, string model, bool bound, params string[] attrs)
+        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, System.Drawing.Color color, string model, bool bound, params string[] attrs)
             : this(name, null, tserver, count, tex, display, descrip, color, model, bound, attrs)
         {
         }
