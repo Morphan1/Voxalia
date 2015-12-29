@@ -5,6 +5,7 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
 using Frenetic.TagHandlers;
 using Frenetic.TagHandlers.Common;
+using Voxalia.ServerGame.TagSystem.TagObjects;
 
 namespace Voxalia.ServerGame.ItemSystem
 {
@@ -132,7 +133,7 @@ namespace Voxalia.ServerGame.ItemSystem
         {
             return TagParser.Escape(Name) + "[secondary=" + (SecondaryName == null ? "" : EscapeTagBase.Escape(SecondaryName)) + ";display=" + EscapeTagBase.Escape(DisplayName) + ";count=" + Count
                 + ";description=" + EscapeTagBase.Escape(Description) + ";texture=" + EscapeTagBase.Escape(GetTextureName()) + ";model=" + EscapeTagBase.Escape(GetModelName()) + ";bound=" + (IsBound ? "true": "false")
-                + ";drawcolor=" + DrawColor /* TODO: Color Tag System! */ + ";datum=" + Datum + ";shared=" + EscapedSharedStr() + ";local=" + EscapedLocalStr() + "]";
+                + ";drawcolor=" + new ColorTag(DrawColor) + ";datum=" + Datum + ";shared=" + EscapedSharedStr() + ";local=" + EscapedLocalStr() + "]";
         }
 
         static List<KeyValuePair<string, string>> SplitUpPairs(string input)
@@ -183,6 +184,7 @@ namespace Voxalia.ServerGame.ItemSystem
             string shared = "";
             string local = "";
             int datum = 0;
+            System.Drawing.Color color = System.Drawing.Color.White;
             foreach (KeyValuePair<string, string> pair in pairs)
             {
                 string tkey = UnescapeTagBase.Unescape(pair.Key);
@@ -211,6 +213,7 @@ namespace Voxalia.ServerGame.ItemSystem
                         bound = tval == "true";
                         break;
                     case "drawcolor":
+                        color = (ColorTag.For(tval) ?? new ColorTag(color)).Internal;
                         break; // TODO
                     case "datum":
                         datum = Utilities.StringToInt(tval);
@@ -225,7 +228,7 @@ namespace Voxalia.ServerGame.ItemSystem
                         throw new Exception("Invalid item key: " + tkey);
                 }
             }
-            ItemStack item = new ItemStack(name, secname, tserver, count, tex, display, descrip, System.Drawing.Color.White /* TODO */, model, bound);
+            ItemStack item = new ItemStack(name, secname, tserver, count, tex, display, descrip, color, model, bound);
             item.Datum = datum;
             pairs = SplitUpPairs(shared.Substring(1, shared.Length - 2));
             foreach (KeyValuePair<string, string> pair in pairs)
