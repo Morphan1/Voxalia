@@ -11,7 +11,12 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
     class RegionTag : TemplateObject
     {
-
+        // <--[object]
+        // @Type RegionTag
+        // @SubType TextTag
+        // @Group Entities
+        // @Description Represents any Region.
+        // -->
         Region Internal;
 
         public RegionTag(Region r)
@@ -28,7 +33,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             switch (data.Input[0])
             {
                 // <--[tag]
-                // @Base RegionTag.name
+                // @Name RegionTag.name
                 // @Group General Information
                 // @ReturnType TextTag
                 // @Returns the region's name.

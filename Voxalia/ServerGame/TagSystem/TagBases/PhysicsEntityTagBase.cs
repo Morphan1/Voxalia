@@ -12,35 +12,35 @@ using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
-    class EntityTagBase : TemplateTagBase
+    class PhysicsEntityTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base entity[<EntityTag>]
+        // @Base physics_entity[<PhysicsEntityTag>]
         // @Group Entities
-        // @ReturnType EntityTag
-        // @Returns the entity with the given entity ID or name.
+        // @ReturnType PhysicsEntityTag
+        // @Returns the physics entity with the given entity ID or name.
         // -->
         Server TheServer;
 
-        public EntityTagBase(Server tserver)
+        public PhysicsEntityTagBase(Server tserver)
         {
-            Name = "entity";
+            Name = "physics_entity";
             TheServer = tserver;
         }
 
         public override string Handle(TagData data)
         {
             long eid;
-            string input = data.GetModifier(0).ToLowerInvariant();
+            string input = data.GetModifier(0).ToLower();
             if (long.TryParse(input, out eid))
             {
                 foreach (Region r in TheServer.LoadedRegions)
                 {
                     foreach (Entity e in r.Entities)
                     {
-                        if (e.EID == eid)
+                        if (e.EID == eid && e is PhysicsEntity)
                         {
-                            return new EntityTag(e).Handle(data.Shrink());
+                            return new PhysicsEntityTag((PhysicsEntity)e).Handle(data.Shrink());
                         }
                     }
                 }
@@ -49,9 +49,9 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             {
                 foreach (PlayerEntity p in TheServer.Players)
                 {
-                    if (p.Name.ToLowerInvariant() == input)
+                    if (p.Name.ToLower() == input)
                     {
-                        return new EntityTag((Entity) p).Handle(data.Shrink());
+                        return new PhysicsEntityTag((PhysicsEntity)p).Handle(data.Shrink());
                     }
                 }
             }

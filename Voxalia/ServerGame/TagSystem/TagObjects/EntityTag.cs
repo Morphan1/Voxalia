@@ -11,7 +11,12 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
     class EntityTag : TemplateObject
     {
-
+        // <--[object]
+        // @Type EntityTag
+        // @SubType TextTag
+        // @Group Entities
+        // @Description Represents any Entity.
+        // -->
         Entity Internal;
 
         public EntityTag(Entity ent)
@@ -28,7 +33,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             switch (data.Input[0])
             {
                 // <--[tag]
-                // @Base EntityTag.location
+                // @Name EntityTag.location
                 // @Group General Information
                 // @ReturnType LocationTag
                 // @Returns the entity's location.
@@ -37,7 +42,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 case "location":
                     return new LocationTag(Internal.GetPosition()).Handle(data.Shrink());
                 // <--[tag]
-                // @Base EntityTag.eid
+                // @Name EntityTag.eid
                 // @Group General Information
                 // @ReturnType NumberTag
                 // @Returns the entity's Entity Identification number (EID).
@@ -45,6 +50,15 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // -->
                 case "eid":
                     return new NumberTag(Internal.EID).Handle(data.Shrink());
+                // <--[tag]
+                // @Name EntityTag.entity_type
+                // @Group General Information
+                // @ReturnType TextTag
+                // @Returns the entity's entity type.
+                // @Example "2" .entity_type could return "BulletEntity".
+                // -->
+                case "entity_type":
+                    return new TextTag(Internal.GetEntityType().ToString()).Handle(data.Shrink());
 
                 default:
                     return new TextTag(ToString()).Handle(data);

@@ -11,6 +11,12 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
     public class LocationTag : TemplateObject
     {
+        // <--[object]
+        // @Type LocationTag
+        // @SubType TextTag
+        // @Group Mathematics
+        // @Description Represents any Location.
+        // -->
         public Location Internal;
 
         public LocationTag(Location loc)

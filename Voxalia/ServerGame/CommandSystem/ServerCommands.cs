@@ -53,10 +53,26 @@ namespace Voxalia.ServerGame.CommandSystem
             CommandSystem.RegisterCommand(new KickCommand(TheServer));
 
             // Tag Bases
-            CommandSystem.TagSystem.Register(new LocationTagBase());
-            CommandSystem.TagSystem.Register(new PlayerTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new ArrowEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new BlockGroupEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new BlockItemEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new BulletEntityTagBase(TheServer));
             CommandSystem.TagSystem.Register(new EntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new GlowstickEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new GrenadeEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new ItemEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new LivingEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new LocationTagBase());
+            CommandSystem.TagSystem.Register(new MaterialTagBase());
+            CommandSystem.TagSystem.Register(new ModelEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new PhysicsEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new PlayerTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new PrimitiveEntityTagBase(TheServer));
             CommandSystem.TagSystem.Register(new RegionTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new ServerTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new SmokeGrenadeEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new VehicleEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new VehiclePartEntityTagBase(TheServer));
         }
 
         /// <summary>

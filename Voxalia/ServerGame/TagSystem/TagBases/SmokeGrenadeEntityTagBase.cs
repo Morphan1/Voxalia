@@ -12,46 +12,36 @@ using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
-    class EntityTagBase : TemplateTagBase
+    class SmokeGrenadeEntityTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base entity[<EntityTag>]
+        // @Base smoke_grenade_entity[<SmokeGrenadeEntityTag>]
         // @Group Entities
-        // @ReturnType EntityTag
-        // @Returns the entity with the given entity ID or name.
+        // @ReturnType SmokeGrenadeEntityTag
+        // @Returns the smoke grenade entity with the given entity ID.
         // -->
         Server TheServer;
 
-        public EntityTagBase(Server tserver)
+        public SmokeGrenadeEntityTagBase(Server tserver)
         {
-            Name = "entity";
+            Name = "smoke_grenade_entity";
             TheServer = tserver;
         }
 
         public override string Handle(TagData data)
         {
             long eid;
-            string input = data.GetModifier(0).ToLowerInvariant();
+            string input = data.GetModifier(0).ToLower();
             if (long.TryParse(input, out eid))
             {
                 foreach (Region r in TheServer.LoadedRegions)
                 {
                     foreach (Entity e in r.Entities)
                     {
-                        if (e.EID == eid)
+                        if (e.EID == eid && e is SmokegrenadeEntity)
                         {
-                            return new EntityTag(e).Handle(data.Shrink());
+                            return new SmokeGrenadeEntityTag((SmokegrenadeEntity)e).Handle(data.Shrink());
                         }
-                    }
-                }
-            }
-            else
-            {
-                foreach (PlayerEntity p in TheServer.Players)
-                {
-                    if (p.Name.ToLowerInvariant() == input)
-                    {
-                        return new EntityTag((Entity) p).Handle(data.Shrink());
                     }
                 }
             }
