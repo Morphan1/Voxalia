@@ -14,14 +14,14 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
 {
     class RegionTagBase : TemplateTagBase
     {
-        Server TheServer;
-
-        // <--[tag]
+        // <--[tagbase]
         // @Base region[<RegionTag>]
         // @Group World
         // @ReturnType RegionTag
         // @Returns the region with the given name.
         // -->
+        Server TheServer;
+
         public RegionTagBase(Server tserver)
         {
             Name = "region";

@@ -12,19 +12,19 @@ using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
-    class EntityTagBase : TemplateTagBase
+    class LivingEntityTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base entity[<EntityTag>]
+        // @Base living_entity[<LivingEntityTag>]
         // @Group Entities
-        // @ReturnType EntityTag
-        // @Returns the entity with the given entity ID or name.
+        // @ReturnType LivingEntityTag
+        // @Returns the living entity with the given entity ID or name.
         // -->
         Server TheServer;
 
-        public EntityTagBase(Server tserver)
+        public LivingEntityTagBase(Server tserver)
         {
-            Name = "entity";
+            Name = "living_entity";
             TheServer = tserver;
         }
 
@@ -38,9 +38,9 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 {
                     foreach (Entity e in r.Entities)
                     {
-                        if (e.EID == eid)
+                        if (e.EID == eid && e is EntityLiving)
                         {
-                            return new EntityTag(e).Handle(data.Shrink());
+                            return new LivingEntityTag((EntityLiving)e).Handle(data.Shrink());
                         }
                     }
                 }
@@ -51,7 +51,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 {
                     if (p.Name.ToLower() == input)
                     {
-                        return new EntityTag((Entity) p).Handle(data.Shrink());
+                        return new LivingEntityTag((EntityLiving)p).Handle(data.Shrink());
                     }
                 }
             }

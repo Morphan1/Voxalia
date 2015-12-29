@@ -12,19 +12,19 @@ using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
-    class EntityTagBase : TemplateTagBase
+    class ArrowEntityTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base entity[<EntityTag>]
+        // @Base arrow_entity[<ArrowEntityTag>]
         // @Group Entities
-        // @ReturnType EntityTag
-        // @Returns the entity with the given entity ID or name.
+        // @ReturnType ArrowEntityTag
+        // @Returns the arrow entity with the given entity ID.
         // -->
         Server TheServer;
 
-        public EntityTagBase(Server tserver)
+        public ArrowEntityTagBase(Server tserver)
         {
-            Name = "entity";
+            Name = "arrow_entity";
             TheServer = tserver;
         }
 
@@ -38,20 +38,10 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 {
                     foreach (Entity e in r.Entities)
                     {
-                        if (e.EID == eid)
+                        if (e.EID == eid && e is ArrowEntity)
                         {
-                            return new EntityTag(e).Handle(data.Shrink());
+                            return new ArrowEntityTag((ArrowEntity)e).Handle(data.Shrink());
                         }
-                    }
-                }
-            }
-            else
-            {
-                foreach (PlayerEntity p in TheServer.Players)
-                {
-                    if (p.Name.ToLower() == input)
-                    {
-                        return new EntityTag((Entity) p).Handle(data.Shrink());
                     }
                 }
             }

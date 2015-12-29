@@ -10,7 +10,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
 {
     class LocationTagBase : TemplateTagBase
     {
-        // <--[tag]
+        // <--[tagbase]
         // @Base location[<LocationTag>]
         // @Group Mathematics
         // @ReturnType LocationTag

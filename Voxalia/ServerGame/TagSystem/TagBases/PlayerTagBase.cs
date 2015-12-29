@@ -13,14 +13,14 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
 {
     class PlayerTagBase : TemplateTagBase
     {
-        Server TheServer;
-
-        // <--[tag]
+        // <--[tagbase]
         // @Base player[<PlayerTag>]
         // @Group Entities
         // @ReturnType PlayerTag
-        // @Returns the player with the given name.
+        // @Returns the player with the given name or entity ID.
         // -->
+        Server TheServer;
+
         public PlayerTagBase(Server tserver)
         {
             Name = "player";
