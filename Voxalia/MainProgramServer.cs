@@ -4,7 +4,6 @@ using System.Text;
 using System.Diagnostics;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
-using Voxalia.ClientGame.ClientMainSystem;
 using System.IO;
 using System.Threading;
 using System.Globalization;
@@ -41,14 +40,7 @@ namespace Voxalia
                 Program.Files = new FileHandler();
                 Program.Files.Init();
                 Program.Init();
-                if (args.Length > 0 && args[0] == "server")
-                {
-                    Server.Init(arger.ToString().Substring("server".Length).Trim());
-                }
-                else
-                {
-                    Client.Init(arger.ToString());
-                }
+                Server.Init(arger.ToString());
             }
             catch (Exception ex)
             {

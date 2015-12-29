@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EE5A02F5-5105-4B5F-8580-1E8F6E091773}</ProjectGuid>
+    <ProjectGuid>{EE5A02F5-5105-4B5F-8580-1E8F6E091779}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Voxalia</RootNamespace>
-    <AssemblyName>Voxalia</AssemblyName>
+    <AssemblyName>VoxaliaServerExe</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -52,18 +52,8 @@
     <Reference Include="BEPUutilities">
       <HintPath>.\BEPUutilities.dll</HintPath>
     </Reference>
-    <Reference Include="csogg">
-      <HintPath>.\csogg.dll</HintPath>
-    </Reference>
-    <Reference Include="csvorbis">
-      <HintPath>.\csvorbis.dll</HintPath>
-    </Reference>
     <Reference Include="Frenetic">
       <HintPath>.\Frenetic.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -79,7 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainProgram.cs" />
+    <Compile Include="MainProgramServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -108,10 +98,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="VoxaliaClient.csproj">
-      <Project>{ee5a02f5-5105-4b5f-8580-1e8f6e091774}</Project>
-      <Name>VoxaliaClient</Name>
-    </ProjectReference>
     <ProjectReference Include="VoxaliaServer.csproj">
       <Project>{ee5a02f5-5105-4b5f-8580-1e8f6e091775}</Project>
       <Name>VoxaliaServer</Name>

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoxaliaServer", "Voxalia\Vo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voxalia", "Voxalia\Voxalia.csproj", "{EE5A02F5-5105-4B5F-8580-1E8F6E091773}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoxaliaServerExe", "Voxalia\VoxaliaServerExe.csproj", "{EE5A02F5-5105-4B5F-8580-1E8F6E091779}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release|x64 = Release|x64
@@ -24,6 +26,8 @@ Global
 		{EE5A02F5-5105-4B5F-8580-1E8F6E091775}.Release|x64.Build.0 = Release|Any CPU
 		{EE5A02F5-5105-4B5F-8580-1E8F6E091773}.Release|x64.ActiveCfg = Release|x64
 		{EE5A02F5-5105-4B5F-8580-1E8F6E091773}.Release|x64.Build.0 = Release|x64
+		{EE5A02F5-5105-4B5F-8580-1E8F6E091779}.Release|x64.ActiveCfg = Release|x64
+		{EE5A02F5-5105-4B5F-8580-1E8F6E091779}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

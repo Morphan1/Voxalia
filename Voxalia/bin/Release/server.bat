@@ -1,1 +1,0 @@
-Voxalia.exe server

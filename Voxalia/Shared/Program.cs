@@ -9,9 +9,9 @@ namespace Voxalia.Shared
 {
     public class Program
     {
-        public static string GameName;
+        public static string GameName = "Voxalia";
 
-        public static string GameVersion;
+        public static string GameVersion = "0.0.6";
 
         public static FileHandler Files;
 
