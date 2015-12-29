@@ -57,6 +57,7 @@ namespace Voxalia.ServerGame.CommandSystem
             CommandSystem.TagSystem.Register(new BlockGroupEntityTagBase(TheServer));
             CommandSystem.TagSystem.Register(new BlockItemEntityTagBase(TheServer));
             CommandSystem.TagSystem.Register(new BulletEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new ColorTagBase());
             CommandSystem.TagSystem.Register(new EntityTagBase(TheServer));
             CommandSystem.TagSystem.Register(new GlowstickEntityTagBase(TheServer));
             CommandSystem.TagSystem.Register(new GrenadeEntityTagBase(TheServer));

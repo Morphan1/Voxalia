@@ -13,7 +13,6 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
     {
         // <--[tagbase]
         // @Base material[<MaterialTag>]
-        // @Group To Be Decided
         // @ReturnType MaterialTag
         // @Returns the material with the given material ID or name.
         // -->

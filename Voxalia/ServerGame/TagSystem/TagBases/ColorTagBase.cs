@@ -9,30 +9,28 @@ using Voxalia.ServerGame.ServerMainSystem;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
-    class ItemTagBase : TemplateTagBase
+    class ColorTagBase : TemplateTagBase
     {
-        public Server TheServer;
-
         // <--[tagbase]
-        // @Base item[<ItemTag>]
+        // @Base color[<ColorTag>]
+        // @Group Mathematics
         // @ReturnType ItemTag
-        // @Returns the item described by the given input.
+        // @Returns the color described by the given input.
         // -->
-        public ItemTagBase(Server tserver)
+        public ColorTagBase()
         {
-            TheServer = tserver;
-            Name = "item";
+            Name = "color";
         }
 
         public override string Handle(TagData data)
         {
-            string iname = data.GetModifier(0);
-            ItemTag itag = ItemTag.For(TheServer, iname);
-            if (itag == null)
+            string cname = data.GetModifier(0);
+            ColorTag ctag = ColorTag.For(cname);
+            if (ctag == null)
             {
                 return new TextTag("&{NULL}").Handle(data.Shrink());
             }
-            return itag.Handle(data.Shrink());
+            return ctag.Handle(data.Shrink());
         }
     }
 }
