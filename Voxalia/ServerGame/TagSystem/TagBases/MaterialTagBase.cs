@@ -23,7 +23,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
 
         public override string Handle(TagData data)
         {
-            string input = data.GetModifier(0).ToLower();
+            string input = data.GetModifier(0).ToLowerInvariant();
             try
             {
                 Material mat = MaterialHelpers.FromNameOrNumber(input);
