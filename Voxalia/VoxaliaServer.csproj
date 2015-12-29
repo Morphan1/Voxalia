@@ -204,6 +204,7 @@
     <Compile Include="ServerGame\TagSystem\TagBases\GlowstickEntityTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\GrenadeEntityTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\ItemEntityTagBase.cs" />
+    <Compile Include="ServerGame\TagSystem\TagBases\ItemTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\LivingEntityTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\LocationTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\MaterialTagBase.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="ServerGame\TagSystem\TagObjects\GlowstickEntityTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\GrenadeEntityTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\ItemEntityTag.cs" />
+    <Compile Include="ServerGame\TagSystem\TagObjects\ItemTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\LivingEntityTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\LocationTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\MaterialTag.cs" />

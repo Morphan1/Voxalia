@@ -6,7 +6,6 @@ using Frenetic.TagHandlers;
 using Frenetic.TagHandlers.Objects;
 using Voxalia.Shared;
 
-
 namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
     public class LocationTag : TemplateObject
@@ -26,7 +25,12 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
 
         public static LocationTag For(string input)
         {
-            return new LocationTag(Location.FromString(input));
+            Location loc = Location.FromString(input);
+            if (loc.IsNaN())
+            {
+                return null;
+            }
+            return new LocationTag(loc);
         }
 
         public override string Handle(TagData data)
@@ -64,7 +68,6 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // -->
                 case "z":
                     return new NumberTag(Internal.Z).Handle(data.Shrink());
-
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

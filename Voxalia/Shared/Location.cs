@@ -411,7 +411,7 @@ namespace Voxalia.Shared
             string[] data = input.Replace('(', ' ').Replace(')', ' ').Replace(" ", "").Split(',');
             if (data.Length != 3)
             {
-                return new Location(0);
+                return Location.NaN;
             }
             return new Location(Utilities.StringToDouble(data[0]), Utilities.StringToDouble(data[1]), Utilities.StringToDouble(data[2]));
         }

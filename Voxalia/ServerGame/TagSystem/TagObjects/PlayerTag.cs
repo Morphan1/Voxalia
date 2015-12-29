@@ -32,7 +32,6 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             switch (data.Input[0])
             {
-
                 // <--[tag]
                 // @Name PlayerTag.name
                 // @Group General Information
@@ -51,7 +50,15 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // -->
                 case "health":
                     return new NumberTag(Internal.Health).Handle(data.Shrink());
-
+                // <--[tag]
+                // @Name PlayerTag.held_item
+                // @Group Status
+                // @ReturnType ItemTag
+                // @Returns the item the player is currently holding.
+                // @Example "mcmonkey" .held_item could return "bullet".
+                // -->
+                case "held_item":
+                    return new ItemTag(Internal.Items.GetItemForSlot(Internal.Items.cItem)).Handle(data.Shrink());
                 default:
                     return new LivingEntityTag((LivingEntity)Internal).Handle(data);
             }
