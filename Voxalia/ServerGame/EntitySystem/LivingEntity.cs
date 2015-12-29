@@ -3,9 +3,9 @@ using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    public abstract class EntityLiving: PhysicsEntity, EntityDamageable
+    public abstract class LivingEntity: PhysicsEntity, EntityDamageable
     {
-        public EntityLiving(Region tregion, float maxhealth)
+        public LivingEntity(Region tregion, float maxhealth)
             : base(tregion)
         {
             MaxHealth = maxhealth;

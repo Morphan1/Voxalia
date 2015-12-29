@@ -17,7 +17,7 @@ using BEPUphysics.Character;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    public class PlayerEntity: EntityLiving
+    public class PlayerEntity: LivingEntity
     {
         public GameMode Mode = GameMode.SURVIVOR;
 
