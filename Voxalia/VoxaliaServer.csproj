@@ -211,6 +211,10 @@
     <Compile Include="ServerGame\WorldSystem\Chunk.cs" />
     <Compile Include="ServerGame\WorldSystem\ChunkFlags.cs" />
     <Compile Include="ServerGame\WorldSystem\LiquidForceField.cs" />
+    <Compile Include="ServerGame\WorldSystem\RegionBlockPhysics.cs" />
+    <Compile Include="ServerGame\WorldSystem\RegionChunks.cs" />
+    <Compile Include="ServerGame\WorldSystem\RegionEntities.cs" />
+    <Compile Include="ServerGame\WorldSystem\RegionPhysics.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleFrozenLakeBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleColdMountainBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleDesertBiome.cs" />
@@ -227,7 +231,7 @@
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleBiomeGenerator.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleGeneratorCore.cs" />
-    <Compile Include="ServerGame\WorldSystem\Region.cs" />
+    <Compile Include="ServerGame\WorldSystem\RegionBase.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\AbstractPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\SayPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\PlayerCommandEngine.cs" />
