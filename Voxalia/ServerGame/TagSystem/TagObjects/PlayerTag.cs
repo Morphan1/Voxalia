@@ -53,7 +53,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                     return new NumberTag(Internal.Health).Handle(data.Shrink());
 
                 default:
-                    return new LivingEntityTag((EntityLiving)Internal).Handle(data);
+                    return new LivingEntityTag((LivingEntity)Internal).Handle(data);
             }
         }
 

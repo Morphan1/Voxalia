@@ -17,9 +17,9 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
         // @Group Entities
         // @Description Represents any LivingEntity.
         // -->
-        EntityLiving Internal;
+        LivingEntity Internal;
 
-        public LivingEntityTag(EntityLiving ent)
+        public LivingEntityTag(LivingEntity ent)
         {
             Internal = ent;
         }
