@@ -45,7 +45,8 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                     }
                 }
             }
-            return new TextTag("&{NULL}").Handle(data.Shrink());
+            data.Error("Invalid model entity '" + TagParser.Escape(input) + "'!");
+            return "&{NULL}";
         }
     }
 }

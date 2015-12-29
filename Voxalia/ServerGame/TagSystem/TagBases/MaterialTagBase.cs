@@ -24,13 +24,15 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
         public override string Handle(TagData data)
         {
             string input = data.GetModifier(0).ToLower();
-            try {
+            try
+            {
                 Material mat = MaterialHelpers.FromNameOrNumber(input);
                 return new MaterialTag(mat).Handle(data.Shrink());
             }
             catch (Exception)
             {
-                return new TextTag("${NULL}").Handle(data.Shrink());
+                data.Error("Invalid material '" + TagParser.Escape(input) + "'!");
+                return "&{NULL}";
             }
         }
     }

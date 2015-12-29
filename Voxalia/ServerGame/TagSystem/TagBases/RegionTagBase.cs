@@ -38,7 +38,8 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                     return new RegionTag(r).Handle(data.Shrink());
                 }
             }
-            return new TextTag("&{NULL}").Handle(data.Shrink());
+            data.Error("Invalid region '" + TagParser.Escape(rname) + "'!");
+            return "&{NULL}";
         }
     }
 }

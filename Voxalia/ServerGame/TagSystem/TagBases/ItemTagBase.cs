@@ -30,7 +30,8 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             ItemTag itag = ItemTag.For(TheServer, iname);
             if (itag == null)
             {
-                return new TextTag("&{NULL}").Handle(data.Shrink());
+                data.Error("Invalid item '" + TagParser.Escape(iname) + "'!");
+                return "&{NULL}";
             }
             return itag.Handle(data.Shrink());
         }

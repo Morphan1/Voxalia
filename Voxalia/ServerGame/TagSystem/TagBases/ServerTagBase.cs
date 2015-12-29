@@ -72,10 +72,12 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 // @Example .match_player[Fort] out of a group of "Fortifier", "Fort", and "Forty" would return "Fort".
                 // -->
                 case "match_player":
-                    PlayerEntity player = TheServer.GetPlayerFor(data.GetModifier(0));
+                    string pname = data.GetModifier(0);
+                    PlayerEntity player = TheServer.GetPlayerFor(pname);
                     if (player == null)
                     {
-                        return new TextTag("&{NULL}").Handle(data.Shrink());
+                        data.Error("Invalid player '" + TagParser.Escape(pname) + "'!");
+                        return "&{NULL}";
                     }
                     return new PlayerTag(player).Handle(data.Shrink());
                 default:

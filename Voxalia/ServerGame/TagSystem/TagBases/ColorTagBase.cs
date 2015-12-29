@@ -28,7 +28,8 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             ColorTag ctag = ColorTag.For(cname);
             if (ctag == null)
             {
-                return new TextTag("&{NULL}").Handle(data.Shrink());
+                data.Error("Invalid color '" + TagParser.Escape(cname) + "'!");
+                return "&{NULL}";
             }
             return ctag.Handle(data.Shrink());
         }
