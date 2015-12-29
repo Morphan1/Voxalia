@@ -139,7 +139,7 @@ namespace Voxalia.Shared
             bool colOnly = false;
             foreach (Model3DMesh mesh in input.Meshes)
             {
-                if (mesh.Name.ToLower().Contains("collision"))
+                if (mesh.Name.ToLowerInvariant().Contains("collision"))
                 {
                     colOnly = true;
                     break;
@@ -147,7 +147,7 @@ namespace Voxalia.Shared
             }
             foreach (Model3DMesh mesh in input.Meshes)
             {
-                if ((!colOnly || mesh.Name.ToLower().Contains("collision")) && !mesh.Name.ToLower().Contains("nocollide"))
+                if ((!colOnly || mesh.Name.ToLowerInvariant().Contains("collision")) && !mesh.Name.ToLowerInvariant().Contains("nocollide"))
                 {
                     for (int i = 0; i < mesh.Indices.Count; i ++)
                     {

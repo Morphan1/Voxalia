@@ -67,22 +67,22 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             for (int i = 0; i < families.Length; i++)
             {
-                if (family_priority < 20 && families[i].Name.ToLower() == "dejavu serif")
+                if (family_priority < 20 && families[i].Name.ToLowerInvariant() == "dejavu serif")
                 {
                     family = families[i];
                     family_priority = 20;
                 }
-                else if (family_priority < 10 && families[i].Name.ToLower() == "segoe ui")
+                else if (family_priority < 10 && families[i].Name.ToLowerInvariant() == "segoe ui")
                 {
                     family = families[i];
                     family_priority = 10;
                 }
-                else if (family_priority < 5 && families[i].Name.ToLower() == "arial")
+                else if (family_priority < 5 && families[i].Name.ToLowerInvariant() == "arial")
                 {
                     family = families[i];
                     family_priority = 5;
                 }
-                else if (family_priority < 2 && families[i].Name.ToLower() == "calibri")
+                else if (family_priority < 2 && families[i].Name.ToLowerInvariant() == "calibri")
                 {
                     family = families[i];
                     family_priority = 2;
@@ -143,10 +143,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>A valid font object.</returns>
         public GLFont GetFont(string name, bool bold, bool italic, int size)
         {
-            string namelow = name.ToLower();
+            string namelow = name.ToLowerInvariant();
             for (int i = 0; i < Fonts.Count; i++)
             {
-                if (Fonts[i].Name.ToLower() == namelow && bold == Fonts[i].Bold && italic == Fonts[i].Italic && size == Fonts[i].Size)
+                if (Fonts[i].Name.ToLowerInvariant() == namelow && bold == Fonts[i].Bold && italic == Fonts[i].Italic && size == Fonts[i].Size)
                 {
                     return Fonts[i];
                 }

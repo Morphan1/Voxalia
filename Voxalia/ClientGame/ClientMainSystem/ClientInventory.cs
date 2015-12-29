@@ -128,7 +128,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             string filter = UI_Inv_Filter.Text;
             for (int i = 0; i < Items.Count; i++)
             {
-                if (filter.Length == 0 || Items[i].ToString().ToLower().Contains(filter.ToLower()))
+                if (filter.Length == 0 || Items[i].ToString().ToLowerInvariant().Contains(filter.ToLowerInvariant()))
                 {
                     string name = Items[i].DisplayName;
                     UITextLink p = prev;

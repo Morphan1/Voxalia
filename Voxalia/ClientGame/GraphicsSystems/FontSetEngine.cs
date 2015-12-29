@@ -50,7 +50,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>The specified font.</returns>
         public FontSet GetFont(string fontname, int fontsize)
         {
-            string namelow = fontname.ToLower();
+            string namelow = fontname.ToLowerInvariant();
             for (int i = 0; i < Fonts.Count; i++)
             {
                 if (Fonts[i].font_default.Size == fontsize && Fonts[i].Name == namelow)
@@ -86,7 +86,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public FontSet(string _name, FontSetEngine engine)
         {
-            Name = _name.ToLower();
+            Name = _name.ToLowerInvariant();
             Engine = engine;
             VBO = new TextVBO(Engine.GLFonts);
         }

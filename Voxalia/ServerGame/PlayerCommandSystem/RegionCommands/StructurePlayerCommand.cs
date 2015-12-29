@@ -22,7 +22,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                 entry.Player.Network.SendMessage("^1/structure paste <name>");
                 return;
             }
-            string cmd = entry.InputArguments[0].ToLower();
+            string cmd = entry.InputArguments[0].ToLowerInvariant();
             if (cmd == "create")
             {
                 if (entry.InputArguments.Count < 2)
@@ -30,7 +30,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                     entry.Player.Network.SendMessage("^1/structure create <name>");
                     return;
                 }
-                string name = entry.InputArguments[1].ToLower();
+                string name = entry.InputArguments[1].ToLowerInvariant();
                 Structure created = null;
                 try
                 {
@@ -52,7 +52,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                     entry.Player.Network.SendMessage("^1/structure create <name>");
                     return;
                 }
-                string name = entry.InputArguments[1].ToLower();
+                string name = entry.InputArguments[1].ToLowerInvariant();
                 string fn = "structures/" + name + ".str";
                 if (!Program.Files.Exists(fn))
                 {

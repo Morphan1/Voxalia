@@ -441,7 +441,7 @@ namespace Voxalia.ClientGame.UISystem
         public static Key GetKeyForName(string name)
         {
             Key key;
-            if (namestokeys.TryGetValue(name.ToLower(), out key))
+            if (namestokeys.TryGetValue(name.ToLowerInvariant(), out key))
             {
                 return key;
             }

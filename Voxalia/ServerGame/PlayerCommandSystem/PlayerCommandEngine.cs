@@ -63,7 +63,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem
         public AbstractPlayerCommand GetCommand(string name)
         {
             AbstractPlayerCommand apc;
-            Commands.TryGetValue(name.ToLower(), out apc);
+            Commands.TryGetValue(name.ToLowerInvariant(), out apc);
             return apc;
         }
     }

@@ -149,7 +149,7 @@ namespace Voxalia.ClientGame.AudioSystem
 
         public SoundEffect GetSound(string name)
         {
-            string namelow = name.ToLower();
+            string namelow = name.ToLowerInvariant();
             SoundEffect sfx;
             if (Effects.TryGetValue(namelow, out sfx))
             {

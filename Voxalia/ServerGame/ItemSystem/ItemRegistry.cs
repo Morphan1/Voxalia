@@ -38,13 +38,13 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public void Register(BaseItemInfo info)
         {
-            Infos.Add(info.Name.ToLower(), info);
+            Infos.Add(info.Name.ToLowerInvariant(), info);
         }
 
         public BaseItemInfo GetInfoFor(string name)
         {
             BaseItemInfo bii;
-            if (Infos.TryGetValue(name.ToLower(), out bii))
+            if (Infos.TryGetValue(name.ToLowerInvariant(), out bii))
             {
                 return bii;
             }

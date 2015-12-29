@@ -198,7 +198,7 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public string GetFileName()
         {
-            return "saves/" + OwningRegion.Name.ToLower() + "/chunks/" + WorldPosition.Z + "/" + WorldPosition.Y + "/" + WorldPosition.X + ".chk";
+            return "saves/" + OwningRegion.Name.ToLowerInvariant() + "/chunks/" + WorldPosition.Z + "/" + WorldPosition.Y + "/" + WorldPosition.X + ".chk";
         }
 
         void SaveToFileI(byte[] saves2)

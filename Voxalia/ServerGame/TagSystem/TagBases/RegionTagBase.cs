@@ -30,10 +30,10 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
 
         public override string Handle(TagData data)
         {
-            string rname = data.GetModifier(0).ToLower();
+            string rname = data.GetModifier(0).ToLowerInvariant();
             foreach (Region r in TheServer.LoadedRegions)
             {
-                if (r.Name.ToLower() == rname)
+                if (r.Name.ToLowerInvariant() == rname)
                 {
                     return new RegionTag(r).Handle(data.Shrink());
                 }

@@ -33,7 +33,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
         public override string Handle(TagData data)
         {
             long eid;
-            string input = data.GetModifier(0).ToLower();
+            string input = data.GetModifier(0).ToLowerInvariant();
             if (long.TryParse(input, out eid))
             {
                 foreach (Region r in TheServer.LoadedRegions)
@@ -51,7 +51,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             {
                 foreach (PlayerEntity p in TheServer.Players)
                 {
-                    if (p.Name.ToLower() == input)
+                    if (p.Name.ToLowerInvariant() == input)
                     {
                         return new EntityTag((Entity) p).Handle(data.Shrink());
                     }

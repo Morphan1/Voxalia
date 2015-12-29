@@ -65,7 +65,7 @@ namespace Voxalia.ClientGame.OtherSystems
             {
                 if (Name == "block")
                 {
-                    Tex = TheClient.Textures.GetTexture("blocks/icons/" + SecondaryName.ToLower());
+                    Tex = TheClient.Textures.GetTexture("blocks/icons/" + SecondaryName.ToLowerInvariant());
                 }
                 else
                 {

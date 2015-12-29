@@ -42,7 +42,7 @@ namespace Voxalia.ServerGame.PluginSystem
                     string[] depends = pl.Dependencies;
                     foreach (string depend in depends)
                     {
-                        string dep = depend.ToLower();
+                        string dep = depend.ToLowerInvariant();
                         bool has = false;
                         foreach (string possib in poss)
                         {

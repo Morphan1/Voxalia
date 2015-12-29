@@ -26,7 +26,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                 return;
             }
             BGETraceMode tm = BGETraceMode.CONVEX;
-            if (entry.InputArguments[0].ToLower() == "perfect")
+            if (entry.InputArguments[0].ToLowerInvariant() == "perfect")
             {
                 tm = BGETraceMode.PERFECT;
             }

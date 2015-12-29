@@ -19,7 +19,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 entry.Player.Network.SendMessage("^r^1/stance <stance>"); // TODO: ShowUsage
                 return;
             }
-            string stance = entry.InputArguments[0].ToLower();
+            string stance = entry.InputArguments[0].ToLowerInvariant();
             // TOOD: Implement!
             if (stance == "stand")
             {

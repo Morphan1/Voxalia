@@ -29,7 +29,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
 
         public override string Handle(TagData data)
         {
-            string pname = data.GetModifier(0).ToLower();
+            string pname = data.GetModifier(0).ToLowerInvariant();
             long pid;
             if (long.TryParse(pname, out pid))
             {
@@ -45,7 +45,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             {
                 foreach (PlayerEntity player in TheServer.Players)
                 {
-                    if (player.Name.ToLower() == pname)
+                    if (player.Name.ToLowerInvariant() == pname)
                     {
                         return new PlayerTag(player).Handle(data.Shrink());
                     }

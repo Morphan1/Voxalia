@@ -79,16 +79,16 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             }
             else if (arg0 == "spawnSmallPlant" && entry.InputArguments.Count > 1)
             {
-                entry.Player.TheRegion.SpawnSmallPlant(entry.InputArguments[1].ToLower(), entry.Player.GetPosition());
+                entry.Player.TheRegion.SpawnSmallPlant(entry.InputArguments[1].ToLowerInvariant(), entry.Player.GetPosition());
             }
             else if (arg0 == "spawnTree" && entry.InputArguments.Count > 1)
             {
-                entry.Player.TheRegion.SpawnTree(entry.InputArguments[1].ToLower(), entry.Player.GetPosition());
+                entry.Player.TheRegion.SpawnTree(entry.InputArguments[1].ToLowerInvariant(), entry.Player.GetPosition());
             }
             else if (arg0 == "gameMode" && entry.InputArguments.Count > 1)
             {
                 GameMode mode;
-                if (Enum.TryParse(entry.InputArguments[1].ToUpper(), out mode))
+                if (Enum.TryParse(entry.InputArguments[1].ToUpperInvariant(), out mode))
                 {
                     entry.Player.Mode = mode;
                 }

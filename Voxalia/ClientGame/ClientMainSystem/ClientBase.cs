@@ -217,7 +217,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CVars.s_glversion.Value = GLVersion;
             GLRenderer = GL.GetString(StringName.Renderer);
             CVars.s_glrenderer.Value = GLRenderer;
-            if (GLVendor.ToLower().Contains("intel"))
+            if (GLVendor.ToLowerInvariant().Contains("intel"))
             {
                 SysConsole.Output(OutputType.INIT, "Disabling good graphics (Appears to be Intel: '" + GLVendor + "')");
                 Shaders.MCM_GOOD_GRAPHICS = false;

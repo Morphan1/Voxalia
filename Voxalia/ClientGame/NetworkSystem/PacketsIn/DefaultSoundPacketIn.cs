@@ -51,7 +51,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 case MaterialSound.STONE:
                 case MaterialSound.SNOW:
                     // TODO: Don't manually search the sound list every time!
-                    TheClient.Sounds.Play(TheClient.Sounds.GetSound("sfx/steps/humanoid/" + sound.ToString().ToLower() + (Utilities.UtilRandom.Next(4) + 1)), false, pos, pitch, volume);
+                    TheClient.Sounds.Play(TheClient.Sounds.GetSound("sfx/steps/humanoid/" + sound.ToString().ToLowerInvariant() + (Utilities.UtilRandom.Next(4) + 1)), false, pos, pitch, volume);
                     break;
                 default:
                     return;

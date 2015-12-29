@@ -160,12 +160,12 @@ namespace Voxalia.Shared
 
         public static Material FromNameOrNumber(string input)
         {
-            int t;
-            if (int.TryParse(input, out t))
+            ushort t;
+            if (ushort.TryParse(input, out t))
             {
                 return (Material)t;
             }
-            return (Material)Enum.Parse(MaterialType, input, true);
+            return (Material)Enum.Parse(MaterialType, input.ToUpperInvariant());
         }
     }
 

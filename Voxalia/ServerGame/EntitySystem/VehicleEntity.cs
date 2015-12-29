@@ -79,7 +79,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 List<Model3DNode> nodes = GetNodes(scene.RootNode);
                 for (int i = 0; i < nodes.Count; i++)
                 {
-                    string name = nodes[i].Name.ToLower();
+                    string name = nodes[i].Name.ToLowerInvariant();
                     if (name.Contains("wheel"))
                     {
                         Matrix mat = nodes[i].MatrixA;

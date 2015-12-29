@@ -24,7 +24,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                 ShowUsage(entry);
                 return;
             }
-            string arg = entry.GetArgument(0).ToLower();
+            string arg = entry.GetArgument(0).ToLowerInvariant();
             bool success = false;
             bool is_all = arg == "all";
             if (arg == "chunks" || is_all)

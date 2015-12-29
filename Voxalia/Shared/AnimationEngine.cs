@@ -39,7 +39,7 @@ namespace Voxalia.Shared
 
         public SingleAnimation GetAnimation(string name)
         {
-            string namelow = name.ToLower();
+            string namelow = name.ToLowerInvariant();
             SingleAnimation sa;
             if (Animations.TryGetValue(namelow, out sa))
             {
@@ -108,7 +108,7 @@ namespace Voxalia.Shared
                     if (!isgeneral)
                     {
                         node = new SingleAnimationNode();
-                        node.Name = type.ToLower();
+                        node.Name = type.ToLowerInvariant();
                     }
                     foreach (KeyValuePair<string, string> entry in entries)
                     {
@@ -155,7 +155,7 @@ namespace Voxalia.Shared
                             }
                             else if (entry.Key == "parent")
                             {
-                                node.ParentName = entry.Value.ToLower();
+                                node.ParentName = entry.Value.ToLowerInvariant();
                             }
                             else if (entry.Key == "offset")
                             {

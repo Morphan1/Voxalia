@@ -156,7 +156,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Building initial world(s)...");
             foreach (string str in Config.ReadStringList("server.regions"))
             {
-                LoadRegion(str.ToLower());
+                LoadRegion(str.ToLowerInvariant());
             }
             if (loaded != null)
             {
@@ -227,24 +227,24 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// </summary>
         public PlayerEntity GetPlayerFor(string name)
         {
-            string namelow = name.ToLower();
+            string namelow = name.ToLowerInvariant();
             for (int i = 0; i < Players.Count; i++)
             {
-                if (Players[i].Name.ToLower() == namelow)
+                if (Players[i].Name.ToLowerInvariant() == namelow)
                 {
                     return Players[i];
                 }
             }
             for (int i = 0; i < Players.Count; i++)
             {
-                if (Players[i].Name.ToLower().StartsWith(namelow))
+                if (Players[i].Name.ToLowerInvariant().StartsWith(namelow))
                 {
                     return Players[i];
                 }
             }
             for (int i = 0; i < Players.Count; i++)
             {
-                if (Players[i].Name.ToLower().Contains(namelow))
+                if (Players[i].Name.ToLowerInvariant().Contains(namelow))
                 {
                     return Players[i];
                 }

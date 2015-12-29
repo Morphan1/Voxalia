@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.OtherSystems
 
         public Model GetModel(string name)
         {
-            string nl = name.ToLower();
+            string nl = name.ToLowerInvariant();
             Model temp;
             if (Models.TryGetValue(nl, out temp))
             {

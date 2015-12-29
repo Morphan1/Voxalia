@@ -401,7 +401,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                     {
                         throw new Exception("Empty address list for DNS server at '" + LastIP + "'");
                     }
-                    if (TheClient.CVars.n_first.Value.ToLower() == "ipv4")
+                    if (TheClient.CVars.n_first.Value.ToLowerInvariant() == "ipv4")
                     {
                         foreach (IPAddress saddress in entry.AddressList)
                         {
@@ -412,7 +412,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                             }
                         }
                     }
-                    else if (TheClient.CVars.n_first.Value.ToLower() == "ipv6")
+                    else if (TheClient.CVars.n_first.Value.ToLowerInvariant() == "ipv6")
                     {
                         foreach (IPAddress saddress in entry.AddressList)
                         {
