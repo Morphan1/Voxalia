@@ -46,7 +46,7 @@ namespace Voxalia.ServerGame.CommandSystem
 
         public override string ReadTextFile(string name)
         {
-            return Program.Files.ReadText("scripts/" + name);
+            return Program.Files.ReadText("scripts/server/" + name);
         }
     }
 }

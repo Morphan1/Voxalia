@@ -153,6 +153,8 @@ namespace Voxalia.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Loading plugins...");
             Plugins = new PluginManager(this);
             Plugins.Init();
+            SysConsole.Output(OutputType.INIT, "Loading scripts...");
+            AutorunScripts();
             SysConsole.Output(OutputType.INIT, "Building initial world(s)...");
             foreach (string str in Config.ReadStringList("server.regions"))
             {
@@ -220,6 +222,26 @@ namespace Voxalia.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INFO, "[Shutdown] Clearing plugins...");
             Plugins.UnloadPlugins();
             SysConsole.Output(OutputType.INFO, "[Shutdown] Exiting server main!");
+        }
+
+        public void AutorunScripts()
+        {
+            string[] files = System.IO.Directory.GetFiles(Environment.CurrentDirectory + "/data/scripts/server/", "*.cfg", System.IO.SearchOption.AllDirectories);
+            foreach (string file in files)
+            {
+                try
+                {
+                    string cmd = System.IO.File.ReadAllText(file).Replace("\r", "").Replace("\0", "\\0");
+                    if (cmd.StartsWith("/// AUTORUN\n"))
+                    {
+                        Commands.ExecuteCommands(cmd);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    SysConsole.Output("Handling autorun script '" + file.Replace(Environment.CurrentDirectory, "") + "'", ex);
+                }
+            }
         }
 
         /// <summary>
