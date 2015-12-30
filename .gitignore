@@ -26,3 +26,4 @@ Voxalia/bin/Release/data/plugins/
 Voxalia/bin/Release/*.dll
 Voxalia/bin/Release/*.pdb
 Voxalia/bin/Release/*.xml
+Voxalia/bin/Release/bin/
