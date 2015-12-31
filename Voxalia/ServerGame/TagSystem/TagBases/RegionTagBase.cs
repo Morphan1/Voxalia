@@ -28,7 +28,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             TheServer = tserver;
         }
 
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             string rname = data.GetModifier(0).ToLowerInvariant();
             foreach (Region r in TheServer.LoadedRegions)
@@ -39,7 +39,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 }
             }
             data.Error("Invalid region '" + TagParser.Escape(rname) + "'!");
-            return "&{NULL}";
+            return new TextTag("&{NULL}");
         }
     }
 }

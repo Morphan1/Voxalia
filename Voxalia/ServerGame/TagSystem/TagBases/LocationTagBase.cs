@@ -21,14 +21,14 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             Name = "location";
         }
 
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             string lname = data.GetModifier(0);
             LocationTag ltag = LocationTag.For(lname);
             if (ltag == null)
             {
                 data.Error("Invalid location '" + TagParser.Escape(lname) + "'!");
-                return "&{NULL}";
+                return new TextTag("&{NULL}");
             }
             return ltag.Handle(data.Shrink());
         }

@@ -21,7 +21,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             Name = "material";
         }
 
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             string input = data.GetModifier(0).ToLowerInvariant();
             try
@@ -32,7 +32,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             catch (Exception)
             {
                 data.Error("Invalid material '" + TagParser.Escape(input) + "'!");
-                return "&{NULL}";
+                return new TextTag("&{NULL}");
             }
         }
     }

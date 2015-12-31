@@ -285,6 +285,13 @@
             What marker was used. 0 = none, 1 = +, 2 = -, 3 = !
             </summary>
         </member>
+        <member name="M:Frenetic.CommandSystem.CommandEntry.GetArgumentObject(System.Int32)">
+            <summary>
+            Gets an argument at a specified place, handling any tags.
+            </summary>
+            <param name="place">The argument place number.</param>
+            <returns>The parsed argument.</returns>
+        </member>
         <member name="M:Frenetic.CommandSystem.CommandEntry.GetArgument(System.Int32)">
             <summary>
             Gets an argument at a specified place, handling any tags.

@@ -28,7 +28,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             TheServer = tserver;
         }
 
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             long eid;
             string input = data.GetModifier(0).ToLowerInvariant();
@@ -46,7 +46,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 }
             }
             data.Error("Invalid vehicle part entity '" + TagParser.Escape(input) + "'!");
-            return "&{NULL}";
+            return new TextTag("&{NULL}");
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             TheServer = tserver;
         }
 
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             string pname = data.GetModifier(0).ToLowerInvariant();
             long pid;
@@ -52,7 +52,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 }
             }
             data.Error("Invalid player '" + TagParser.Escape(pname) + "'!");
-            return "&{NULL}";
+            return new TextTag("&{NULL}");
         }
     }
 }

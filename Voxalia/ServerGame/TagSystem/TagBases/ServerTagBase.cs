@@ -27,12 +27,12 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             TheServer = tserver;
         }
 
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             data.Shrink();
             if (data.Input.Count == 0)
             {
-                return ToString();
+                return new TextTag(ToString());
             }
             switch (data.Input[0])
             {
@@ -77,7 +77,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                     if (player == null)
                     {
                         data.Error("Invalid player '" + TagParser.Escape(pname) + "'!");
-                        return "&{NULL}";
+                        return new TextTag("&{NULL}");
                     }
                     return new PlayerTag(player).Handle(data.Shrink());
                 default:

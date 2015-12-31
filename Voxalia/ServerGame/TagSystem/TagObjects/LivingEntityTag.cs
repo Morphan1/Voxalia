@@ -24,11 +24,11 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             Internal = ent;
         }
 
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             if (data.Input.Count == 0)
             {
-                return ToString();
+                return this;
             }
             switch (data.Input[0])
             {

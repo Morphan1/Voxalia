@@ -22,14 +22,14 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             Name = "color";
         }
 
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             string cname = data.GetModifier(0);
             ColorTag ctag = ColorTag.For(cname);
             if (ctag == null)
             {
                 data.Error("Invalid color '" + TagParser.Escape(cname) + "'!");
-                return "&{NULL}";
+                return new TextTag("&{NULL}");
             }
             return ctag.Handle(data.Shrink());
         }

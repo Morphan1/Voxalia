@@ -24,14 +24,14 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             Name = "item";
         }
 
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             string iname = data.GetModifier(0);
             ItemTag itag = ItemTag.For(TheServer, iname);
             if (itag == null)
             {
                 data.Error("Invalid item '" + TagParser.Escape(iname) + "'!");
-                return "&{NULL}";
+                return new TextTag("&{NULL}");
             }
             return itag.Handle(data.Shrink());
         }
