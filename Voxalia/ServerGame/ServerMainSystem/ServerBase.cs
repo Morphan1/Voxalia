@@ -10,6 +10,7 @@ using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.OtherSystems;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.PluginSystem;
+using Frenetic.CommandSystem;
 
 namespace Voxalia.ServerGame.ServerMainSystem
 {
@@ -234,7 +235,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
                     string cmd = System.IO.File.ReadAllText(file).Replace("\r", "").Replace("\0", "\\0");
                     if (cmd.StartsWith("/// AUTORUN\n"))
                     {
-                        Commands.ExecuteCommands(cmd);
+                        CommandScript.SeparateCommands(file.Replace(Environment.CurrentDirectory, ""), cmd, Commands.CommandSystem).ToQueue(Commands.CommandSystem).Execute();
                     }
                 }
                 catch (Exception ex)
