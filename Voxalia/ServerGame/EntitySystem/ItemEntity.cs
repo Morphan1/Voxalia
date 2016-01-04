@@ -35,10 +35,14 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool Use(Entity user)
         {
+            if (Removed)
+            {
+                return false;
+            }
             if (user is PlayerEntity)
             {
                 ((PlayerEntity)user).Items.GiveItem(Stack);
-                TheRegion.DespawnEntity(this);
+                RemoveMe();
                 return true;
             }
             return false;

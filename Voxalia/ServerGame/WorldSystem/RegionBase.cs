@@ -251,15 +251,23 @@ namespace Voxalia.ServerGame.WorldSystem
             // TODO: Async tick
             for (int i = 0; i < Tickers.Count; i++)
             {
-                Tickers[i].Tick();
+                if (!Tickers[i].Removed)
+                {
+                    Tickers[i].Tick();
+                }
             }
             for (int i = 0; i < Tickers.Count; i++)
             {
-                if (Tickers[i] is PhysicsEntity)
+                if (!Tickers[i].Removed && Tickers[i] is PhysicsEntity)
                 {
                     ((PhysicsEntity)Tickers[i]).EndTick();
                 }
             }
+            for (int i = 0; i < DespawnQuick.Count; i++)
+            {
+                DespawnEntity(DespawnQuick[i]);
+            }
+            DespawnQuick.Clear();
             for (int i = 0; i < Joints.Count; i++) // TODO: Optimize!
             {
                 if (Joints[i].Enabled && Joints[i] is BaseFJoint)

@@ -158,7 +158,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (Contains(OwningRegion.Entities[i].GetPosition()))
                 {
-                    OwningRegion.DespawnEntity(OwningRegion.Entities[i--]);
+                    OwningRegion.Entities[i--].RemoveMe();
                 }
             }
         }

@@ -43,6 +43,8 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public List<Entity> Tickers = new List<Entity>();
 
+        public List<Entity> DespawnQuick = new List<Entity>();
+
         long jID = 0;
 
         public void AddJoint(InternalBaseJoint joint)

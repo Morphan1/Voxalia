@@ -104,7 +104,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 {
                     if (player.Hooks[i].IsBar)
                     {
-                        player.TheRegion.DespawnEntity(player.Hooks[i].Hit);
+                        player.Hooks[i].Hit.RemoveMe();
                     }
                 }
                 player.Hooks.Clear();

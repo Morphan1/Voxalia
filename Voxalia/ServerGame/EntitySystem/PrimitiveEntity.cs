@@ -63,7 +63,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     Collide(this, new CollisionEventArgs(cr));
                 }
-                if (!IsSpawned)
+                if (!IsSpawned || Removed)
                 {
                     return;
                 }

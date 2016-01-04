@@ -89,6 +89,18 @@ namespace Voxalia.ServerGame.EntitySystem
         public abstract EntityType GetEntityType();
 
         public abstract byte[] GetSaveBytes();
+
+        public bool Removed = false;
+
+        public void RemoveMe()
+        {
+            if (Removed)
+            {
+                return;
+            }
+            Removed = true;
+            TheRegion.DespawnQuick.Add(this);
+        }
     }
 
     public abstract class EntityConstructor

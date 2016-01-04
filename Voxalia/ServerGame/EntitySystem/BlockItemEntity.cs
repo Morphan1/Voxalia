@@ -7,7 +7,7 @@ using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    public class BlockItemEntity : PhysicsEntity, EntityUseable
+    public class BlockItemEntity : PhysicsEntity, EntityUseable, EntityDamageable
     {
         public Material Mat;
         public byte Dat;
@@ -53,13 +53,50 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool Use(Entity user)
         {
+            if (Removed)
+            {
+                return false;
+            }
             if (user is PlayerEntity)
             {
                 ((PlayerEntity)user).Items.GiveItem(GetItem());
-                TheRegion.DespawnEntity(this);
+                RemoveMe();
                 return true;
             }
             return false;
+        }
+
+        public float Health = 5;
+
+        public float MaxHealth = 5;
+
+        public float GetHealth()
+        {
+            return Health;
+        }
+
+        public float GetMaxHealth()
+        {
+            return MaxHealth;
+        }
+
+        public void SetHealth(float health)
+        {
+            Health = health;
+            if (health < 0)
+            {
+                RemoveMe();
+            }
+        }
+
+        public void SetMaxHealth(float health)
+        {
+            MaxHealth = health;
+        }
+
+        public void Damage(float amount)
+        {
+            SetHealth(GetHealth() - amount);
         }
     }
 

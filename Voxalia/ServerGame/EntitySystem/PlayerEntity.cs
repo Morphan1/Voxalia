@@ -160,12 +160,12 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             // TODO: Broadcast kick message
             SysConsole.Output(OutputType.INFO, "Kicking " + this.ToString() + ": " + message);
-            if (IsSpawned)
+            if (IsSpawned && !Removed)
             {
                 ItemStack it = Items.GetItemForSlot(Items.cItem);
                 it.Info.SwitchFrom(this, it);
                 HookItem.RemoveHook(this);
-                TheRegion.DespawnEntity(this);
+                RemoveMe();
             }
         }
 
@@ -339,9 +339,9 @@ namespace Voxalia.ServerGame.EntitySystem
             TheRegion.PhysicsWorld.Remove(CBody);
             CBody = null;
             Body = null;
-            if (CursorMarker.IsSpawned)
+            if (CursorMarker.IsSpawned && !CursorMarker.Removed)
             {
-                TheRegion.DespawnEntity(CursorMarker);
+                CursorMarker.RemoveMe();
                 CursorMarker = null;
             }
         }
@@ -428,10 +428,6 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
-            if (!IsSpawned)
-            {
-                return;
-            }
             if (TheRegion.Delta <= 0)
             {
                 return;

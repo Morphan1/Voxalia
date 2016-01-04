@@ -42,7 +42,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 if (!StuckTo.IsSpawned)
                 {
-                    TheRegion.DespawnEntity(this);
+                    RemoveMe();
                 }
             }
             else

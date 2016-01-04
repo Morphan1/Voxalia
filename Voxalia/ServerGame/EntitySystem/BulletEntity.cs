@@ -51,7 +51,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 // TODO: Apply Splash Damage
                 // TODO: Apply Splash Impulses
             }
-            TheRegion.DespawnEntity(this);
+            RemoveMe();
         }
 
         public float Size = 1;
