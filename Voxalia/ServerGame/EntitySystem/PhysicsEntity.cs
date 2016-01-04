@@ -20,7 +20,7 @@ namespace Voxalia.ServerGame.EntitySystem
     /// </summary>
     public abstract class PhysicsEntity: Entity
     {
-        public bool TransmitMe;
+        public bool TransmitMe = true;
 
         /// <summary>
         /// Construct the physics entity.
@@ -127,6 +127,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     netdeltat += TheRegion.Delta;
                     if (netdeltat > 2.0)
                     {
+                        netdeltat -= 2.0;
                         sme = true;
                     }
                 }

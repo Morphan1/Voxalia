@@ -84,6 +84,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 netdeltat += TheRegion.Delta;
                 if (netdeltat > 2.0)
                 {
+                    netdeltat -= 2.0;
                     sme = true;
                 }
             }
