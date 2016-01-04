@@ -45,5 +45,7 @@ void main()
 	pos1 *= simplebone_matrix;
 	f_pos = projection * model_matrix * vec4(pos1.xyz, 1.0);
 	f_texcoord = texcoords;
+	f_pos.x = sign(f_pos.x) * sqrt(abs(f_pos.x));
+	f_pos.y = sign(f_pos.y) * sqrt(abs(f_pos.y));
 	gl_Position = f_pos;
 }

@@ -73,6 +73,8 @@ void main()
 	vec3 R = reflect(L, N);
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(R, V), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
+	f_spos.x = sign(f_spos.x) * sqrt(abs(f_spos.x));
+	f_spos.y = sign(f_spos.y) * sqrt(abs(f_spos.y));
 	vec4 fs = f_spos / f_spos.w / 2.0 + vec4(0.5, 0.5, 0.5, 0.0);
 	fs.w = 1.0;
 	float depth;
