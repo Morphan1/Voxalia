@@ -389,9 +389,25 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     Matrix4 tident = Matrix4.Identity;
                                     GL.UniformMatrix4(2, false, ref tident);
                                     Lights[i].InternalLights[x].SetProj();
+                                    if (Lights[i].InternalLights[x] is LightOrtho)
+                                    {
+                                        GL.Uniform1(3, 1.0f);
+                                    }
+                                    else
+                                    {
+                                        GL.Uniform1(3,0.0f);
+                                    }
                                     FBOid = 4;
                                     s_shadow.Bind();
                                     GL.UniformMatrix4(2, false, ref tident);
+                                    if (Lights[i].InternalLights[x] is LightOrtho)
+                                    {
+                                        GL.Uniform1(3, 1.0f);
+                                    }
+                                    else
+                                    {
+                                        GL.Uniform1(3, 0.0f);
+                                    }
                                     Lights[i].InternalLights[x].Attach();
                                     // TODO: Render settings
                                     Render3D(true);
@@ -586,10 +602,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                         if (Lights[i].InternalLights[x] is LightOrtho)
                                         {
                                             GL.Uniform1(9, 0f);
+                                            GL.Uniform1(7, 1.0f);
                                         }
                                         else
                                         {
                                             GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
+                                            GL.Uniform1(7, 0.0f);
                                         }
                                         if (CVars.r_shadows.ValueB)
                                         {

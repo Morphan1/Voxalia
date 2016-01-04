@@ -13,7 +13,7 @@ layout (location = 3) uniform mat4 shadow_matrix;
 layout (location = 4) uniform vec3 light_pos = vec3(5.0, 5.0, 5.0);
 layout (location = 5) uniform vec3 diffuse_albedo = vec3(0.7, 0.7, 0.7);
 layout (location = 6) uniform float specular_albedo = 0.7;
-// ...
+layout (location = 7) uniform float should_sqrt = 0.0;
 layout (location = 8) uniform vec3 light_color = vec3(1.0, 1.0, 1.0);
 layout (location = 9) uniform float light_radius = 30.0;
 layout (location = 10) uniform vec3 eye_pos = vec3(0.0, 0.0, 0.0);

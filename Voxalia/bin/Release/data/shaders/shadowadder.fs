@@ -16,7 +16,7 @@ layout (location = 3) uniform mat4 shadow_matrix;
 layout (location = 4) uniform vec3 light_pos = vec3(5.0, 5.0, 5.0);
 layout (location = 5) uniform vec3 diffuse_albedo = vec3(0.7, 0.7, 0.7);
 layout (location = 6) uniform float specular_albedo = 0.7;
-// ...
+layout (location = 7) uniform float should_sqrt = 0.0;
 layout (location = 8) uniform vec3 light_color = vec3(1.0, 1.0, 1.0);
 layout (location = 9) uniform float light_radius = 30.0;
 layout (location = 10) uniform vec3 eye_pos = vec3(0.0, 0.0, 0.0);
@@ -73,8 +73,11 @@ void main()
 	vec3 R = reflect(L, N);
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(R, V), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
-	f_spos.x = sign(f_spos.x) * sqrt(abs(f_spos.x));
-	f_spos.y = sign(f_spos.y) * sqrt(abs(f_spos.y));
+	if (should_sqrt >= 1.0)
+	{
+		f_spos.x = sign(f_spos.x) * sqrt(abs(f_spos.x));
+		f_spos.y = sign(f_spos.y) * sqrt(abs(f_spos.y));
+	}
 	vec4 fs = f_spos / f_spos.w / 2.0 + vec4(0.5, 0.5, 0.5, 0.0);
 	fs.w = 1.0;
 	float depth;

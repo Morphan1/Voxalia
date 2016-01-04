@@ -119,7 +119,6 @@ namespace Voxalia.ServerGame.WorldSystem
                             }
                         }
                     }
-                    // TODO: Activate any nearby physents!
                     ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0, (byte)BlockFlags.EDITED));
                     ch.LastEdited = GlobalTickTime;
                     SurroundBlockPhysics(pos);

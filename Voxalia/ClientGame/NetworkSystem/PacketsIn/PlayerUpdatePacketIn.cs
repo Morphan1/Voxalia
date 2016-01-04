@@ -10,6 +10,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
         {
             if (data.Length != 8 + 12 + 12 + 2 + 4 + 4 + 1)
             {
+                SysConsole.Output(OutputType.WARNING, "Invalid length for PlayerUpdatePacketIn!");
                 return false;
             }
             long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 0, 8));
@@ -47,6 +48,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     }
                 }
             }
+            SysConsole.Output(OutputType.WARNING, "Invalid entity (" + eID + ") for PlayerUpdatePacketIn!");
             return false;
         }
     }

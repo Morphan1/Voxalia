@@ -92,6 +92,10 @@ namespace Voxalia.ServerGame.EntitySystem
         public void SetMaxHealth(float health)
         {
             MaxHealth = health;
+            if (Health > MaxHealth)
+            {
+                SetHealth(MaxHealth);
+            }
         }
 
         public void Damage(float amount)

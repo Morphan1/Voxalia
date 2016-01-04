@@ -9,6 +9,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
         {
             if (data.Length != 12 + 12 + 16 + 12 + 1 + 8)
             {
+                SysConsole.Output(OutputType.WARNING, "Invalid physentupdtpacket: invalid length!");
                 return false;
             }
             Location pos = Location.FromBytes(data, 0);
@@ -43,6 +44,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     }
                 }
             }
+            SysConsole.Output(OutputType.WARNING, "Invalid physentupdtpacket: invalid EID: " + eID);
             return false;
         }
     }

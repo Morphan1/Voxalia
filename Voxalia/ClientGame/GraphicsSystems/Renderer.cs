@@ -316,7 +316,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public void SetColor(Vector4 col)
         {
-            GL.Uniform4(3, ref col);
+            if (!Client.Central.RenderingShadows)
+            {
+                GL.Uniform4(3, ref col);
+            }
         }
 
         public void SetColor(Color4 c)
