@@ -289,7 +289,6 @@ namespace Voxalia.ServerGame.EntitySystem
                 CursorMarker.CGroup = CollisionUtil.NonSolid;
                 CursorMarker.Visible = false;
                 CursorMarker.CanSave = false;
-                CursorMarker.NetworkMe = false;
                 TheRegion.SpawnEntity(CursorMarker);
             }
         }

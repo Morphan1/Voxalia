@@ -20,9 +20,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             long JID = Utilities.BytesToLong(Utilities.BytesPartial(data, 1 + 8 + 8, 8));
             Entity pe1 = TheClient.TheRegion.GetEntity(EID1);
             Entity pe2 = TheClient.TheRegion.GetEntity(EID2);
-            if (pe1 == null || pe2 == null)
+            if (pe1 == null)
             {
-                SysConsole.Output(OutputType.WARNING, "Invalid EID(s) " + EID1 + " and/or " + EID2);
+                SysConsole.Output(OutputType.WARNING, "Joint Packet: Invalid EID-1 " + EID1);
+                return false;
+            }
+            if (pe2 == null)
+            {
+                SysConsole.Output(OutputType.WARNING, "Joint Packet: Invalid EID-2 " + EID2);
                 return false;
             }
             if (type == 0)

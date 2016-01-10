@@ -103,6 +103,7 @@ namespace Voxalia.ServerGame.WorldSystem
             e.TheRegion = this;
             if (e is PhysicsEntity && !(e is PlayerEntity))
             {
+                ((PhysicsEntity)e).ForceNetwork();
                 ((PhysicsEntity)e).SpawnBody();
             }
             else if (e is PrimitiveEntity)

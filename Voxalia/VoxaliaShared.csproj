@@ -130,6 +130,7 @@
     <Compile Include="Shared\NetworkEnums.cs" />
     <Compile Include="Shared\SysConsole.cs" />
     <Compile Include="Shared\Files\UnknownFileException.cs" />
+    <Compile Include="Shared\SystemExtensions.cs" />
     <Compile Include="Shared\Utilities.cs" />
     <Compile Include="Shared\Files\ZipStorer.cs" />
     <Compile Include="Shared\YAMLConfiguration.cs" />

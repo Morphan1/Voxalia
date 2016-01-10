@@ -112,12 +112,17 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public override void Tick()
         {
+            NetworkTick();
+        }
+
+        void NetworkTick()
+        {
             if (NetworkMe)
             {
                 bool sme = needNetworking;
                 needNetworking = false;
                 // TODO: Timer of some form, to prevent packet flood on a speedy server?
-                if (Body.ActivityInformation.IsActive || (netpActive && !Body.ActivityInformation.IsActive))
+                if (Body != null && (Body.ActivityInformation.IsActive || (netpActive && !Body.ActivityInformation.IsActive)))
                 {
                     netpActive = Body.ActivityInformation.IsActive;
                     sme = true;
@@ -136,7 +141,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     sme = false;
                 }
-                PhysicsEntityUpdatePacketOut physupd = sme ? new PhysicsEntityUpdatePacketOut(this): null;
+                PhysicsEntityUpdatePacketOut physupd = sme ? new PhysicsEntityUpdatePacketOut(this) : null;
                 foreach (PlayerEntity player in TheRegion.Players)
                 {
                     bool shouldseec = player.ShouldSeePosition(pos);
@@ -168,10 +173,12 @@ namespace Voxalia.ServerGame.EntitySystem
         }
 
         bool needNetworking = false;
-
+        
         public void ForceNetwork()
         {
             needNetworking = true;
+            NetworkTick();
+            EndTick();
         }
 
         /// <summary>

@@ -56,7 +56,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public override void SpawnBody()
         {
             base.SpawnBody();
-            TheServer.Schedule.ScheduleSyncTask(HandleWheels);
+            HandleWheels();
         }
 
         public void HandleWheels()
@@ -89,7 +89,7 @@ namespace Voxalia.ServerGame.EntitySystem
                             mat = tnode.MatrixA * mat;
                             tnode = tnode.Parent;
                         }
-                        Location pos = GetPosition() + new Location(mat.M14, mat.M34, mat.M24); // TODO: Why are the matrices transposed?! // TODO: Why are Y and Z flipped?!
+                        Location pos = GetPosition() + new Location(mat.M14, mat.M34, -mat.M44); // TODO: Why are the matrices transposed?! // TODO: Why are Y and Z flipped?!
                         VehiclePartEntity wheel = new VehiclePartEntity(TheRegion, "vehicles/" + vehName + "_wheel");
                         wheel.SetPosition(pos);
                         wheel.SetOrientation(Quaternion.Identity); // TOOD: orient
@@ -98,16 +98,18 @@ namespace Voxalia.ServerGame.EntitySystem
                         wheel.SetMass(5);
                         wheel.mode = ModelCollisionMode.CONVEXHULL;
                         TheRegion.SpawnEntity(wheel);
-                        //JointBallSocket jbs = new JointBallSocket(this, wheel, pos);
-                        if (name.EndsWith("f"))
+                        if (name.After("wheel").StartsWith("f"))
                         {
-                            SteeringMotors.Add(ConnectWheel(wheel, false));
+                            SteeringMotors.Add(ConnectWheel(wheel, false, true));
                         }
-                        else if (name.EndsWith("b"))
+                        else if (name.After("wheel").StartsWith("b"))
                         {
-                            DrivingMotors.Add(ConnectWheel(wheel, true));
+                            DrivingMotors.Add(ConnectWheel(wheel, true, true));
                         }
-                        // TODO: else { handle wheels that are neither powering nor steering! }
+                        else
+                        {
+                            ConnectWheel(wheel, true, false);
+                        }
                         Vector3 angvel = new Vector3(10, 0, 0);
                         wheel.Body.ApplyAngularImpulse(ref angvel);
                         wheel.Body.ActivityInformation.Activate();
@@ -117,7 +119,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
-        public JointVehicleMotor ConnectWheel(VehiclePartEntity wheel, bool driving)
+        public JointVehicleMotor ConnectWheel(VehiclePartEntity wheel, bool driving, bool powered)
         {
             wheel.SetFriction(2.5f);
             Vector3 left = Quaternion.Transform(new Vector3(-1, 0, 0), wheel.GetOrientation());
@@ -127,14 +129,18 @@ namespace Voxalia.ServerGame.EntitySystem
             JointLAxisLimit suspensionLimit = new JointLAxisLimit(this, wheel, 0f, 0.1f, wheel.GetPosition(), wheel.GetPosition(), -new Location(up));
             JointPullPush spring = new JointPullPush(this, wheel, -new Location(up), true);
             //SwivelHingeAngularJoint swivelHingeAngularJoint = new SwivelHingeAngularJoint(body, wheel, Vector3.Up, Vector3.Right);
-            JointVehicleMotor motor = new JointVehicleMotor(this, wheel, new Location(driving ? left : up), !driving);
             JointSpinner spinner = new JointSpinner(this, wheel, new Location(-left));
             TheRegion.AddJoint(pointOnLineJoint);
             TheRegion.AddJoint(suspensionLimit);
             TheRegion.AddJoint(spring);
-            TheRegion.AddJoint(motor);
             TheRegion.AddJoint(spinner);
-            return motor;
+            if (powered)
+            {
+                JointVehicleMotor motor = new JointVehicleMotor(this, wheel, new Location(driving ? left : up), !driving);
+                TheRegion.AddJoint(motor);
+                return motor;
+            }
+            return null;
         }
 
         public bool Use(Entity user)
@@ -174,14 +180,14 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 foreach (JointVehicleMotor motor in SteeringMotors)
                 {
-                    motor.Motor.Settings.Servo.Goal = 2f;
+                    motor.Motor.Settings.Servo.Goal = -2f;
                 }
             }
             else if (player.Leftward)
             {
                 foreach (JointVehicleMotor motor in SteeringMotors)
                 {
-                    motor.Motor.Settings.Servo.Goal = -2f;
+                    motor.Motor.Settings.Servo.Goal = 2f;
                 }
             }
             else
