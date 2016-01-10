@@ -159,14 +159,14 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 foreach (JointVehicleMotor motor in DrivingMotors)
                 {
-                    motor.Motor.Settings.VelocityMotor.GoalVelocity = 25f;
+                    motor.Motor.Settings.VelocityMotor.GoalVelocity = 45f;
                 }
             }
             else if (player.Backward)
             {
                 foreach (JointVehicleMotor motor in DrivingMotors)
                 {
-                    motor.Motor.Settings.VelocityMotor.GoalVelocity = -25f;
+                    motor.Motor.Settings.VelocityMotor.GoalVelocity = -45f;
                 }
             }
             else
@@ -180,14 +180,14 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 foreach (JointVehicleMotor motor in SteeringMotors)
                 {
-                    motor.Motor.Settings.Servo.Goal = -2f;
+                    motor.Motor.Settings.Servo.Goal = -20f;
                 }
             }
             else if (player.Leftward)
             {
                 foreach (JointVehicleMotor motor in SteeringMotors)
                 {
-                    motor.Motor.Settings.Servo.Goal = 2f;
+                    motor.Motor.Settings.Servo.Goal = 20f;
                 }
             }
             else

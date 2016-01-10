@@ -28,12 +28,14 @@ namespace Voxalia.ClientGame.JointSystem
                 Motor.Settings.Mode = MotorMode.Servomechanism;
                 Motor.Basis.SetWorldAxes(Vector3.UnitZ, Vector3.UnitX);
                 Motor.TestAxis = Vector3.UnitX;
+                Motor.Settings.Servo.BaseCorrectiveSpeed = 1;
+                Motor.Settings.Servo.MaxCorrectiveVelocity = 5;
             }
             else
             {
                 Motor.Settings.Mode = MotorMode.VelocityMotor;
                 Motor.Settings.VelocityMotor.Softness = 0.2f;
-                Motor.Settings.MaximumForce = 1500;
+                Motor.Settings.MaximumForce = 2500;
             }
             return Motor;
         }
