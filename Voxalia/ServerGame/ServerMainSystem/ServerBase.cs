@@ -15,7 +15,7 @@ using Frenetic.CommandSystem;
 namespace Voxalia.ServerGame.ServerMainSystem
 {
     /// <summary>
-    /// The center of all server activity in Shadow Operations.
+    /// The center of all server activity in Voxalia.
     /// </summary>
     public partial class Server
     {

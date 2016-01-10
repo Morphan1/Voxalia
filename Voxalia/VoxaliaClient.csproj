@@ -213,6 +213,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ClientGame\OtherSystems\ClientUtilities.cs" />
     <Compile Include="ClientGame\OtherSystems\ItemStack.cs" />
+    <Compile Include="ClientGame\UISystem\GamePadHandler.cs" />
     <Compile Include="ClientGame\UISystem\KeyHandler.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIItemGroup.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIMenu.cs" />

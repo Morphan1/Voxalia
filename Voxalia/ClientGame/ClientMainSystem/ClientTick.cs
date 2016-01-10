@@ -178,6 +178,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Shaders.Update(GlobalTickTimeLocal);
                     Models.Update(GlobalTickTimeLocal);
                     KeyHandler.Tick();
+                    GamePadHandler.Tick(Delta);
                     MouseHandler.Tick();
                     UIConsole.Tick();
                     Commands.Tick();

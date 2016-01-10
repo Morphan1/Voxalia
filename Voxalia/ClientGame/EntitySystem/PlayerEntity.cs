@@ -440,6 +440,17 @@ namespace Voxalia.ClientGame.EntitySystem
             SoundTimeout = (Utilities.UtilRandom.NextDouble() * 0.2 + 1.0) / GetVelocity().Length();
         }
 
+        public bool PGPLeft;
+        public bool PGPRight;
+        public bool PGPUp;
+        public bool PGPDown;
+        public bool PGPJump;
+        public bool PGPPrimary;
+        public bool PGPSecondary;
+        public bool PGPDPadLeft;
+        public bool PGPDPadRight;
+        public bool PGPUse;
+        
         public override void Tick()
         {
             if (!(TheClient.CScreen is GameScreen))
@@ -452,6 +463,113 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             Direction.Yaw += MouseHandler.MouseDelta.X;
             Direction.Pitch += MouseHandler.MouseDelta.Y;
+            Direction.Yaw += GamePadHandler.TotalDirectionX * 90f * TheRegion.Delta;
+            Direction.Pitch += GamePadHandler.TotalDirectionY * 45f * TheRegion.Delta;
+            if (GamePadHandler.TotalMovementX > 0.5)
+            {
+                PGPRight = true;
+                Rightward = true;
+            }
+            else if (PGPRight)
+            {
+                Rightward = false;
+                PGPRight = false;
+            }
+            if (GamePadHandler.TotalMovementY > 0.5)
+            {
+                PGPUp = true;
+                Forward = true;
+            }
+            else if (PGPUp)
+            {
+                Forward = false;
+                PGPUp = false;
+            }
+            if (GamePadHandler.TotalMovementX < -0.5)
+            {
+                PGPLeft = true;
+                Leftward = true;
+            }
+            else if (PGPLeft)
+            {
+                Leftward = false;
+                PGPLeft = false;
+            }
+            if (GamePadHandler.TotalMovementY < -0.5)
+            {
+                PGPDown = true;
+                Backward = true;
+            }
+            else if (PGPDown)
+            {
+                Backward = false;
+                PGPDown = false;
+            }
+            if (GamePadHandler.JumpKey)
+            {
+                PGPJump = true;
+                Upward = true;
+            }
+            else if (PGPJump)
+            {
+                Upward = false;
+                PGPJump = false;
+            }
+            if (GamePadHandler.PrimaryKey)
+            {
+                PGPPrimary = true;
+                Click = true;
+            }
+            else if (PGPPrimary)
+            {
+                Click = false;
+                PGPPrimary = false;
+            }
+            if (GamePadHandler.SecondaryKey)
+            {
+                PGPSecondary = true;
+                AltClick = true;
+            }
+            else if (PGPSecondary)
+            {
+                AltClick = false;
+                PGPSecondary = false;
+            }
+            if (GamePadHandler.DPadLeft)
+            {
+                if (!PGPDPadLeft)
+                {
+                    PGPDPadLeft = true;
+                    TheClient.Commands.ExecuteCommands("itemprev"); // TODO: Less lazy!
+                }
+            }
+            else
+            {
+                PGPDPadLeft = false;
+            }
+            if (GamePadHandler.DPadRight)
+            {
+                if (!PGPDPadRight)
+                {
+                    PGPDPadRight = true;
+                    TheClient.Commands.ExecuteCommands("itemnext"); // TODO: Less lazy!
+                }
+            }
+            else
+            {
+                PGPDPadRight = false;
+            }
+            if (GamePadHandler.UseKey)
+            {
+                PGPUse = true;
+                TheClient.Commands.ExecuteCommands("use");
+                //TODO: Use = true;
+            }
+            else if (PGPUse)
+            {
+                PGPUse = false;
+                //TODO: Use = false;
+            }
             while (Direction.Yaw < 0)
             {
                 Direction.Yaw += 360;

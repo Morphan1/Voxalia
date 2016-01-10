@@ -1,12 +1,12 @@
 ﻿using System;
 using Voxalia.Shared;
 using OpenTK;
+using OpenTK.Input;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.EntitySystem;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.UISystem;
-using OpenTK.Input;
 using Voxalia.ClientGame.CommandSystem;
 using System.Diagnostics;
 using Voxalia.ClientGame.NetworkSystem;
@@ -20,7 +20,7 @@ using System.Drawing;
 namespace Voxalia.ClientGame.ClientMainSystem
 {
     /// <summary>
-    /// The center of all client activity in Shadow Operations.
+    /// The center of all client activity in Voxalia.
     /// </summary>
     public partial class Client
     {
@@ -247,8 +247,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             InitRendering();
             SysConsole.Output(OutputType.INIT, "Loading particle effect engine...");
             Particles = new ParticleHelper(this) { Engine = new ParticleEngine(this) };
-            SysConsole.Output(OutputType.INIT, "Preparing mouse and keyboard handlers...");
+            SysConsole.Output(OutputType.INIT, "Preparing mouse, keyboard, and gamepad handlers...");
             KeyHandler.Init();
+            GamePadHandler.Init();
             SysConsole.Output(OutputType.INIT, "Building the sound system...");
             Sounds = new SoundEngine();
             Sounds.Init(this, CVars);
