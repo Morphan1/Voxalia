@@ -219,6 +219,10 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     motor.Motor.Settings.Servo.Goal = 0f;
                 }
+                foreach (JointVehicleMotor motor in InverseSteeringMotors)
+                {
+                    motor.Motor.Settings.Servo.Goal = 0f;
+                }
             }
         }
     }
