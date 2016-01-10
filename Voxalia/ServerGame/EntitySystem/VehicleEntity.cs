@@ -15,6 +15,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public Seat DriverSeat;
         public List<JointVehicleMotor> DrivingMotors = new List<JointVehicleMotor>();
         public List<JointVehicleMotor> SteeringMotors = new List<JointVehicleMotor>();
+        public List<JointVehicleMotor> InverseSteeringMotors = new List<JointVehicleMotor>();
 
         public VehicleEntity(string vehicle, Region tregion)
             : base("vehicles/" + vehicle + "_base", tregion)
@@ -96,19 +97,25 @@ namespace Voxalia.ServerGame.EntitySystem
                         wheel.Gravity = Gravity;
                         wheel.CGroup = CGroup;
                         wheel.SetMass(5);
+                        wheel.SetFriction(1);
                         wheel.mode = ModelCollisionMode.CONVEXHULL;
                         TheRegion.SpawnEntity(wheel);
+                        JointVehicleMotor inverse;
                         if (name.After("wheel").StartsWith("f"))
                         {
-                            SteeringMotors.Add(ConnectWheel(wheel, false, true));
+                            SteeringMotors.Add(ConnectWheel(wheel, false, true, out inverse));
                         }
                         else if (name.After("wheel").StartsWith("b"))
                         {
-                            DrivingMotors.Add(ConnectWheel(wheel, true, true));
+                            DrivingMotors.Add(ConnectWheel(wheel, true, true, out inverse));
+                            if (inverse != null)
+                            {
+                                InverseSteeringMotors.Add(inverse);
+                            }
                         }
                         else
                         {
-                            ConnectWheel(wheel, true, false);
+                            ConnectWheel(wheel, true, false, out inverse);
                         }
                         Vector3 angvel = new Vector3(10, 0, 0);
                         wheel.Body.ApplyAngularImpulse(ref angvel);
@@ -119,16 +126,14 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
-        public JointVehicleMotor ConnectWheel(VehiclePartEntity wheel, bool driving, bool powered)
+        public JointVehicleMotor ConnectWheel(VehiclePartEntity wheel, bool driving, bool powered, out JointVehicleMotor inverse)
         {
             wheel.SetFriction(2.5f);
             Vector3 left = Quaternion.Transform(new Vector3(-1, 0, 0), wheel.GetOrientation());
-            //Vector3 forward = Quaternion.Transform(new BEPUutilities.Vector3(0, 1, 0), wheel.GetOrientation());
             Vector3 up = Quaternion.Transform(new Vector3(0, 0, 1), wheel.GetOrientation());
             JointSlider pointOnLineJoint = new JointSlider(this, wheel, -new Location(up));
             JointLAxisLimit suspensionLimit = new JointLAxisLimit(this, wheel, 0f, 0.1f, wheel.GetPosition(), wheel.GetPosition(), -new Location(up));
             JointPullPush spring = new JointPullPush(this, wheel, -new Location(up), true);
-            //SwivelHingeAngularJoint swivelHingeAngularJoint = new SwivelHingeAngularJoint(body, wheel, Vector3.Up, Vector3.Right);
             JointSpinner spinner = new JointSpinner(this, wheel, new Location(-left));
             TheRegion.AddJoint(pointOnLineJoint);
             TheRegion.AddJoint(suspensionLimit);
@@ -136,10 +141,20 @@ namespace Voxalia.ServerGame.EntitySystem
             TheRegion.AddJoint(spinner);
             if (powered)
             {
+                if (driving)
+                {
+                    inverse = new JointVehicleMotor(this, wheel, new Location(up), true);
+                    TheRegion.AddJoint(inverse);
+                }
+                else
+                {
+                    inverse = null;
+                }
                 JointVehicleMotor motor = new JointVehicleMotor(this, wheel, new Location(driving ? left : up), !driving);
                 TheRegion.AddJoint(motor);
                 return motor;
             }
+            inverse = null;
             return null;
         }
 
@@ -182,12 +197,20 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     motor.Motor.Settings.Servo.Goal = -20f;
                 }
+                foreach (JointVehicleMotor motor in InverseSteeringMotors)
+                {
+                    motor.Motor.Settings.Servo.Goal = 20f;
+                }
             }
             else if (player.Leftward)
             {
                 foreach (JointVehicleMotor motor in SteeringMotors)
                 {
                     motor.Motor.Settings.Servo.Goal = 20f;
+                }
+                foreach (JointVehicleMotor motor in InverseSteeringMotors)
+                {
+                    motor.Motor.Settings.Servo.Goal = -20f;
                 }
             }
             else
