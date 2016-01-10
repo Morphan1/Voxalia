@@ -1,4 +1,4 @@
-﻿using Frenetic.TagHandlers;
+﻿using FreneticScript.TagHandlers;
 using Voxalia.ClientGame.CommandSystem.TagObjects.EntityTagObjects;
 using Voxalia.ClientGame.ClientMainSystem;
 

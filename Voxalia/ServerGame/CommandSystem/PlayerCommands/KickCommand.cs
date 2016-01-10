@@ -1,7 +1,7 @@
-﻿using Frenetic.CommandSystem;
+﻿using FreneticScript.CommandSystem;
 using Voxalia.ServerGame.ServerMainSystem;
-using Frenetic.TagHandlers;
-using Frenetic.TagHandlers.Objects;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 using Voxalia.ServerGame.EntitySystem;
 
 namespace Voxalia.ServerGame.CommandSystem.PlayerCommands

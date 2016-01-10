@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
-using Frenetic;
-using Frenetic.CommandSystem;
+using FreneticScript;
+using FreneticScript.CommandSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.UISystem;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;

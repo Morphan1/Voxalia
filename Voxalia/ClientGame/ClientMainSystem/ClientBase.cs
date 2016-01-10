@@ -54,7 +54,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public GameWindow Window;
 
         /// <summary>
-        /// Handles all command line (console) input from the client via Frenetic.
+        /// Handles all command line (console) input from the client via FreneticScript.
         /// </summary>
         public ClientCommands Commands;
 

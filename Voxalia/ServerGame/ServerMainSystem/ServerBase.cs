@@ -10,7 +10,7 @@ using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.OtherSystems;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.PluginSystem;
-using Frenetic.CommandSystem;
+using FreneticScript.CommandSystem;
 
 namespace Voxalia.ServerGame.ServerMainSystem
 {

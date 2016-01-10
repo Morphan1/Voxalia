@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Frenetic.CommandSystem;
+using FreneticScript.CommandSystem;
 using OpenTK;
 using OpenTK.Input;
 using Voxalia.ClientGame.ClientMainSystem;

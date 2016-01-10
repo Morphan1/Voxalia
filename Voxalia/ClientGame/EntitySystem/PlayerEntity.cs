@@ -21,7 +21,7 @@ using Voxalia.ClientGame.OtherSystems;
 using Voxalia.Shared.Collision;
 using BEPUphysics.Character;
 using OpenTK.Graphics.OpenGL4;
-using Frenetic;
+using FreneticScript;
 using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.EntitySystem

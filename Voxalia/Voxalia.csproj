@@ -58,8 +58,8 @@
     <Reference Include="csvorbis">
       <HintPath>.\csvorbis.dll</HintPath>
     </Reference>
-    <Reference Include="Frenetic">
-      <HintPath>.\Frenetic.dll</HintPath>
+    <Reference Include="FreneticScript">
+      <HintPath>.\FreneticScript.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -2,7 +2,7 @@
 using Voxalia.Shared;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.ClientMainSystem;
-using Frenetic;
+using FreneticScript;
 using OpenTK.Graphics;
 using System.Linq;
 

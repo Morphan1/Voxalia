@@ -1,8 +1,8 @@
-﻿using Frenetic.CommandSystem;
+﻿using FreneticScript.CommandSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.UISystem;
 using OpenTK.Input;
-using Frenetic.TagHandlers;
+using FreneticScript.TagHandlers;
 
 namespace Voxalia.ClientGame.CommandSystem.UICommands
 {

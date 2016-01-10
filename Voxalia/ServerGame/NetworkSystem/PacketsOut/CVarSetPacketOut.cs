@@ -1,4 +1,4 @@
-﻿using Frenetic;
+﻿using FreneticScript;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared.Files;
 

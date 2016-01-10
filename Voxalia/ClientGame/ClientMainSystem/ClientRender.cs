@@ -12,7 +12,7 @@ using Voxalia.ClientGame.OtherSystems;
 using Voxalia.ClientGame.JointSystem;
 using Voxalia.Shared.Collision;
 using System.Diagnostics;
-using Frenetic;
+using FreneticScript;
 using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem

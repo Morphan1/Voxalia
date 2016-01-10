@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Voxalia.ServerGame.WorldSystem;
-using Frenetic;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.ServerMainSystem
 {
@@ -16,21 +16,21 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// For purely listening to a region load after the fact, use <see cref="OnRegionLoadPostEvent"/>.
         /// TODO: Move to an event helper!
         /// </summary>
-        public FreneticEventHandler<RegionLoadPreEventArgs> OnRegionLoadPreEvent = new FreneticEventHandler<RegionLoadPreEventArgs>();
+        public FreneticScriptEventHandler<RegionLoadPreEventArgs> OnRegionLoadPreEvent = new FreneticScriptEventHandler<RegionLoadPreEventArgs>();
 
         /// <summary>
         /// Fired when a region is loaded and is going to be added; can be cancelled.
         /// For purely listening to a region load after the fact, use <see cref="OnRegionLoadPostEvent"/>.
         /// TODO: Move to an event helper!
         /// </summary>
-        public FreneticEventHandler<RegionLoadEventArgs> OnRegionLoadEvent = new FreneticEventHandler<RegionLoadEventArgs>();
+        public FreneticScriptEventHandler<RegionLoadEventArgs> OnRegionLoadEvent = new FreneticScriptEventHandler<RegionLoadEventArgs>();
 
         /// <summary>
         /// Fired when a region has been loaded; is purely informative.
         /// For cancelling a region load, use <see cref="OnRegionLoadPreEvent"/>.
         /// TODO: Move to an event helper!
         /// </summary>
-        public FreneticEventHandler<RegionLoadPostEventArgs> OnRegionLoadPostEvent = new FreneticEventHandler<RegionLoadPostEventArgs>();
+        public FreneticScriptEventHandler<RegionLoadPostEventArgs> OnRegionLoadPostEvent = new FreneticScriptEventHandler<RegionLoadPostEventArgs>();
 
         public Region LoadRegion(string name)
         {

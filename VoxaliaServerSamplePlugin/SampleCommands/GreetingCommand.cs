@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.CommandSystem;
-using Frenetic.TagHandlers;
+using FreneticScript.CommandSystem;
+using FreneticScript.TagHandlers;
 
 namespace VoxaliaServerSamplePlugin.SampleCommands
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Voxalia.Shared;
-using Frenetic;
-using Frenetic.CommandSystem;
+using FreneticScript;
+using FreneticScript.CommandSystem;
 using Voxalia.ServerGame.ServerMainSystem;
 
 namespace Voxalia.ServerGame.CommandSystem

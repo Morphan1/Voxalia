@@ -6,8 +6,8 @@ using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.NetworkSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using System.Threading;
-using Frenetic;
-using Frenetic.TagHandlers.Common;
+using FreneticScript;
+using FreneticScript.TagHandlers.Common;
 using System.Linq;
 
 namespace Voxalia.ServerGame.ServerMainSystem

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Drawing.Imaging;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared;
-using Frenetic;
+using FreneticScript;
 using Voxalia.Shared.Files;
 
 namespace Voxalia.ClientGame.GraphicsSystems

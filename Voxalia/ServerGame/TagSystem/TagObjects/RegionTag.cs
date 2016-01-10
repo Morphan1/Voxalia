@@ -1,5 +1,5 @@
-﻿using Frenetic.TagHandlers;
-using Frenetic.TagHandlers.Objects;
+﻿using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;

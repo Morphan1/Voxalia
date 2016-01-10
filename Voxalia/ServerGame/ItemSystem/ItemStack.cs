@@ -3,8 +3,8 @@ using System.Text;
 using System.Collections.Generic;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
-using Frenetic.TagHandlers;
-using Frenetic.TagHandlers.Common;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Common;
 using Voxalia.ServerGame.TagSystem.TagObjects;
 
 namespace Voxalia.ServerGame.ItemSystem

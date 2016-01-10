@@ -1,6 +1,6 @@
 ﻿using Voxalia.ClientGame.ClientMainSystem;
-using Frenetic.TagHandlers;
-using Frenetic.TagHandlers.Objects;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ClientGame.CommandSystem.TagObjects.EntityTagObjects
 {

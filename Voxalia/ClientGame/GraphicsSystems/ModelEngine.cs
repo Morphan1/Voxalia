@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Voxalia.Shared;
-using Frenetic;
+using FreneticScript;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared.Files;

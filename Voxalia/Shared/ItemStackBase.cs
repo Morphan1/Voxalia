@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 using Voxalia.Shared.Files;
-using Frenetic.TagHandlers;
+using FreneticScript.TagHandlers;
 
 namespace Voxalia.Shared
 {

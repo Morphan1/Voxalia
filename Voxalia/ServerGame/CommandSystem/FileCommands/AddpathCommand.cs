@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.CommandSystem;
+using FreneticScript.CommandSystem;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared;
 

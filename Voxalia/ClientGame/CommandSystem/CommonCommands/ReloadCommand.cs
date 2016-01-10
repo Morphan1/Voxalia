@@ -1,4 +1,4 @@
-﻿using Frenetic.CommandSystem;
+﻿using FreneticScript.CommandSystem;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using OpenTK;

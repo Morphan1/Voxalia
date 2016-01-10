@@ -1,5 +1,5 @@
-﻿using Frenetic;
-using Frenetic.CommandSystem;
+﻿using FreneticScript;
+using FreneticScript.CommandSystem;
 using Voxalia.Shared.Files;
 using Voxalia.Shared;
 

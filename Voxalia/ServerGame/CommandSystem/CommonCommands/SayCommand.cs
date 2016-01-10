@@ -1,5 +1,5 @@
 ﻿using System;
-using Frenetic.CommandSystem;
+using FreneticScript.CommandSystem;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared;
 

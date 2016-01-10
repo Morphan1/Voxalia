@@ -1,4 +1,4 @@
-﻿using Frenetic.CommandSystem;
+﻿using FreneticScript.CommandSystem;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.EntitySystem;

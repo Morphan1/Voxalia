@@ -1,4 +1,4 @@
-﻿using Frenetic.CommandSystem;
+﻿using FreneticScript.CommandSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared;
