@@ -41,7 +41,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <NoWarn>
     </NoWarn>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <DocumentationFile>bin\Release\VoxaliaShared.XML</DocumentationFile>
     <WarningLevel>3</WarningLevel>
   </PropertyGroup>

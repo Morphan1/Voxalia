@@ -1547,11 +1547,6 @@
             Drops all references held by the pool.
             </summary>
         </member>
-        <member name="P:BEPUutilities.ResourceManagement.BufferPool`1.CheckIfReturnedBuffersAreClean">
-            <summary>
-            Gets or sets whether to check buffers for cleanliness when they are returned when compiled in debug mode. A clean buffer is defined as one that contains all default values.
-            </summary>
-        </member>
         <member name="T:BEPUutilities.ResourceManagement.BufferPools`1">
             <summary>
             Contains locking and thread static buffer pools for the specified type.

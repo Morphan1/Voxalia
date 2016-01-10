@@ -41,7 +41,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <NoWarn>
     </NoWarn>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Release\VoxaliaServerGame.XML</DocumentationFile>
   </PropertyGroup>
