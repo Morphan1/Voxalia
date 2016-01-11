@@ -20,7 +20,7 @@ namespace Voxalia.ServerGame.EntitySystem
             : base("vehicles/" + vehicle + "_base", tregion)
         {
             vehName = vehicle;
-            SetMass(500);
+            SetMass(1500);
             DriverSeat = new Seat(this, Location.UnitZ * 2);
             Seats = new List<Seat>();
             Seats.Add(DriverSeat);
@@ -94,7 +94,7 @@ namespace Voxalia.ServerGame.EntitySystem
                         wheel.SetOrientation(Quaternion.Identity);
                         wheel.Gravity = Gravity;
                         wheel.CGroup = CGroup;
-                        wheel.SetMass(5);
+                        wheel.SetMass(30);
                         wheel.mode = ModelCollisionMode.CONVEXHULL;
                         TheRegion.SpawnEntity(wheel);
                         if (name.After("wheel").StartsWith("f"))

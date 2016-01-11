@@ -16,6 +16,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         private JointWeld jw = null;
 
+        private JointBallSocket jbs = null;
+
         public Seat(PhysicsEntity seatHolder, Location posOffset)
         {
             SeatHolder = seatHolder;
@@ -35,27 +37,37 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             Sitter.CurrentSeat = this;
             OldPosition = Sitter.GetPosition();
+            Sitter.SetOrientation(SeatHolder.GetOrientation());
             if (Sitter is PlayerEntity)
             {
                 ((PlayerEntity)Sitter).Teleport(SeatHolder.GetPosition() + PositionOffset); // TODO: Teleport method on all entities!
+                jbs = new JointBallSocket(SeatHolder, sitter, sitter.GetPosition());
             }
             else
             {
                 Sitter.SetPosition(SeatHolder.GetPosition() + PositionOffset);
+                jw = new JointWeld(SeatHolder, Sitter);
+                SeatHolder.TheRegion.AddJoint(jw);
             }
-            Sitter.SetOrientation(SeatHolder.GetOrientation());
-            jw = new JointWeld(SeatHolder, Sitter);
-            SeatHolder.TheRegion.AddJoint(jw);
             return true;
         }
 
         public void Kick()
         {
-            if (jw == null)
+            if (jw == null && jbs == null)
             {
                 return;
             }
-            SeatHolder.TheRegion.DestroyJoint(jw);
+            if (jw == null)
+            {
+                SeatHolder.TheRegion.DestroyJoint(jbs);
+                jbs = null;
+            }
+            else
+            {
+                SeatHolder.TheRegion.DestroyJoint(jw);
+                jw = null;
+            }
             if (Sitter is PlayerEntity)
             {
                 ((PlayerEntity)Sitter).Teleport(OldPosition);
@@ -67,7 +79,6 @@ namespace Voxalia.ServerGame.EntitySystem
             Sitter.CurrentSeat = null;
             Sitter = null;
             OldPosition = Location.Zero;
-            jw = null;
         }
 
         public void HandleInput(PlayerEntity player)

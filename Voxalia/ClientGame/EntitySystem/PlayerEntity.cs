@@ -96,7 +96,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Sprint = false;
         public bool Downward = false;
 
-        public float tmass = 50;
+        public float tmass = 70;
 
         bool pup = false;
 

@@ -172,7 +172,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// The default mass of the player.
         /// </summary>
-        public float tmass = 50;
+        public float tmass = 70;
 
         /// <summary>
         /// The direction the player is currently facing, as Yaw/Pitch.

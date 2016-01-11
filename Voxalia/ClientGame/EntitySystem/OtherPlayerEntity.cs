@@ -70,7 +70,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Upward = false;
         public bool Walk = false;
         
-        public float tmass = 50;
+        public float tmass = 70;
 
         public Model model;
 
