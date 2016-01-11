@@ -16,6 +16,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         private JointWeld jw = null;
 
+        private JointSlider js = null;
         private JointBallSocket jbs = null;
 
         public Seat(PhysicsEntity seatHolder, Location posOffset)
@@ -40,8 +41,12 @@ namespace Voxalia.ServerGame.EntitySystem
             Sitter.SetOrientation(SeatHolder.GetOrientation());
             if (Sitter is PlayerEntity)
             {
+                float len = (float)PositionOffset.Length();
                 ((PlayerEntity)Sitter).Teleport(SeatHolder.GetPosition() + PositionOffset); // TODO: Teleport method on all entities!
+                js = new JointSlider(SeatHolder, sitter, PositionOffset / len);
                 jbs = new JointBallSocket(SeatHolder, sitter, sitter.GetPosition());
+                SeatHolder.TheRegion.AddJoint(js);
+                SeatHolder.TheRegion.AddJoint(jbs);
             }
             else
             {
@@ -54,13 +59,15 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public void Kick()
         {
-            if (jw == null && jbs == null)
+            if (jw == null && js == null)
             {
                 return;
             }
             if (jw == null)
             {
+                SeatHolder.TheRegion.DestroyJoint(js);
                 SeatHolder.TheRegion.DestroyJoint(jbs);
+                js = null;
                 jbs = null;
             }
             else
