@@ -78,6 +78,13 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 Utilities.FloatToBytes(((JointLAxisLimit)joint).Min).CopyTo(Data, len + 12 + 12 + 12);
                 Utilities.FloatToBytes(((JointLAxisLimit)joint).Max).CopyTo(Data, len + 12 + 12 + 12 + 4);
             }
+            else if (joint is JointSwivelHinge)
+            {
+                Data = new byte[len + 12 + 12];
+                Data[0] = 10;
+                ((JointSwivelHinge)joint).WorldHinge.ToBytes().CopyTo(Data, len);
+                ((JointSwivelHinge)joint).WorldTwist.ToBytes().CopyTo(Data, len + 12);
+            }
             Utilities.LongToBytes(joint.One.EID).CopyTo(Data, 1);
             Utilities.LongToBytes(joint.Two.EID).CopyTo(Data, 1 + 8);
             Utilities.LongToBytes(joint.JID).CopyTo(Data, 1 + 8 + 8);

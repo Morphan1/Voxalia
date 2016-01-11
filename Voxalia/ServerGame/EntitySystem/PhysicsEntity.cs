@@ -31,7 +31,6 @@ namespace Voxalia.ServerGame.EntitySystem
             : base(tregion, true)
         {
             Gravity = new Location(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
-            CGroup = CollisionUtil.Solid;
         }
 
         /// <summary>
@@ -99,7 +98,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// What collision group this entity belongs to.
         /// </summary>
-        public CollisionGroup CGroup;
+        public CollisionGroup CGroup = CollisionUtil.Solid;
         
         public bool netpActive = false;
 

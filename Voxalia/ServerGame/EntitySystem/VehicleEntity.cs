@@ -15,7 +15,6 @@ namespace Voxalia.ServerGame.EntitySystem
         public Seat DriverSeat;
         public List<JointVehicleMotor> DrivingMotors = new List<JointVehicleMotor>();
         public List<JointVehicleMotor> SteeringMotors = new List<JointVehicleMotor>();
-        public List<JointVehicleMotor> InverseSteeringMotors = new List<JointVehicleMotor>();
 
         public VehicleEntity(string vehicle, Region tregion)
             : base("vehicles/" + vehicle + "_base", tregion)
@@ -67,17 +66,16 @@ namespace Voxalia.ServerGame.EntitySystem
                 Model mod = TheServer.Models.GetModel(model);
                 if (mod == null) // TODO: mod should return a cube when all else fails?
                 {
-                    // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
                     return;
                 }
                 Model3D scene = mod.Original;
                 if (scene == null) // TODO: Scene should return a cube when all else fails?
                 {
-                    // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
                     return;
                 }
-                SetOrientation(Quaternion.Identity); // TODO: Remove need for this!
+                SetOrientation(Quaternion.Identity);
                 List<Model3DNode> nodes = GetNodes(scene.RootNode);
+                List<VehiclePartEntity> frontwheels = new List<VehiclePartEntity>();
                 for (int i = 0; i < nodes.Count; i++)
                 {
                     string name = nodes[i].Name.ToLowerInvariant();
@@ -90,43 +88,41 @@ namespace Voxalia.ServerGame.EntitySystem
                             mat = tnode.MatrixA * mat;
                             tnode = tnode.Parent;
                         }
-                        Location pos = GetPosition() + new Location(mat.M14, mat.M34, -mat.M44); // TODO: Why are the matrices transposed?! // TODO: Why are Y and Z flipped?!
+                        Location pos = GetPosition() + new Location(mat.M14, mat.M34, -mat.M44); // NOTE: wtf happened to this matrix?
                         VehiclePartEntity wheel = new VehiclePartEntity(TheRegion, "vehicles/" + vehName + "_wheel");
                         wheel.SetPosition(pos);
-                        wheel.SetOrientation(Quaternion.Identity); // TOOD: orient
+                        wheel.SetOrientation(Quaternion.Identity);
                         wheel.Gravity = Gravity;
                         wheel.CGroup = CGroup;
                         wheel.SetMass(5);
-                        wheel.SetFriction(1);
                         wheel.mode = ModelCollisionMode.CONVEXHULL;
                         TheRegion.SpawnEntity(wheel);
-                        JointVehicleMotor inverse;
                         if (name.After("wheel").StartsWith("f"))
                         {
-                            SteeringMotors.Add(ConnectWheel(wheel, false, true, out inverse));
+                            SteeringMotors.Add(ConnectWheel(wheel, false, true));
+                            frontwheels.Add(wheel);
                         }
                         else if (name.After("wheel").StartsWith("b"))
                         {
-                            DrivingMotors.Add(ConnectWheel(wheel, true, true, out inverse));
-                            if (inverse != null)
-                            {
-                                InverseSteeringMotors.Add(inverse);
-                            }
+                            DrivingMotors.Add(ConnectWheel(wheel, true, true));
                         }
                         else
                         {
-                            ConnectWheel(wheel, true, false, out inverse);
+                            ConnectWheel(wheel, true, false);
                         }
-                        Vector3 angvel = new Vector3(10, 0, 0);
-                        wheel.Body.ApplyAngularImpulse(ref angvel);
                         wheel.Body.ActivityInformation.Activate();
                     }
+                }
+                if (frontwheels.Count == 2)
+                {
+                    JointSpinner js = new JointSpinner(frontwheels[0], frontwheels[1], new Location(1, 0, 0));
+                    TheRegion.AddJoint(js);
                 }
                 hasWheels = true;
             }
         }
 
-        public JointVehicleMotor ConnectWheel(VehiclePartEntity wheel, bool driving, bool powered, out JointVehicleMotor inverse)
+        public JointVehicleMotor ConnectWheel(VehiclePartEntity wheel, bool driving, bool powered)
         {
             wheel.SetFriction(2.5f);
             Vector3 left = Quaternion.Transform(new Vector3(-1, 0, 0), wheel.GetOrientation());
@@ -134,27 +130,26 @@ namespace Voxalia.ServerGame.EntitySystem
             JointSlider pointOnLineJoint = new JointSlider(this, wheel, -new Location(up));
             JointLAxisLimit suspensionLimit = new JointLAxisLimit(this, wheel, 0f, 0.1f, wheel.GetPosition(), wheel.GetPosition(), -new Location(up));
             JointPullPush spring = new JointPullPush(this, wheel, -new Location(up), true);
-            JointSpinner spinner = new JointSpinner(this, wheel, new Location(-left));
+            BEPUphysics.CollisionRuleManagement.CollisionRules.AddRule(wheel.Body, this.Body, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
+            if (driving)
+            {
+                JointSpinner spinner = new JointSpinner(this, wheel, new Location(-left));
+                TheRegion.AddJoint(spinner);
+            }
+            else
+            {
+                JointSwivelHinge swivelhinge = new JointSwivelHinge(this, wheel, new Location(up), new Location(-left));
+                TheRegion.AddJoint(swivelhinge);
+            }
             TheRegion.AddJoint(pointOnLineJoint);
             TheRegion.AddJoint(suspensionLimit);
             TheRegion.AddJoint(spring);
-            TheRegion.AddJoint(spinner);
             if (powered)
             {
-                if (driving)
-                {
-                    inverse = new JointVehicleMotor(this, wheel, new Location(up), true);
-                    TheRegion.AddJoint(inverse);
-                }
-                else
-                {
-                    inverse = null;
-                }
                 JointVehicleMotor motor = new JointVehicleMotor(this, wheel, new Location(driving ? left : up), !driving);
                 TheRegion.AddJoint(motor);
                 return motor;
             }
-            inverse = null;
             return null;
         }
 
@@ -170,18 +165,19 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public void HandleInput(PlayerEntity player)
         {
+            // TODO: Transmit / predict / etc.
             if (player.Forward)
             {
                 foreach (JointVehicleMotor motor in DrivingMotors)
                 {
-                    motor.Motor.Settings.VelocityMotor.GoalVelocity = 45f;
+                    motor.Motor.Settings.VelocityMotor.GoalVelocity = 100f;
                 }
             }
             else if (player.Backward)
             {
                 foreach (JointVehicleMotor motor in DrivingMotors)
                 {
-                    motor.Motor.Settings.VelocityMotor.GoalVelocity = -45f;
+                    motor.Motor.Settings.VelocityMotor.GoalVelocity = -100f;
                 }
             }
             else
@@ -195,31 +191,19 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 foreach (JointVehicleMotor motor in SteeringMotors)
                 {
-                    motor.Motor.Settings.Servo.Goal = -20f;
-                }
-                foreach (JointVehicleMotor motor in InverseSteeringMotors)
-                {
-                    motor.Motor.Settings.Servo.Goal = 20f;
+                    motor.Motor.Settings.Servo.Goal = MathHelper.Pi * -0.2f;
                 }
             }
             else if (player.Leftward)
             {
                 foreach (JointVehicleMotor motor in SteeringMotors)
                 {
-                    motor.Motor.Settings.Servo.Goal = 20f;
-                }
-                foreach (JointVehicleMotor motor in InverseSteeringMotors)
-                {
-                    motor.Motor.Settings.Servo.Goal = -20f;
+                    motor.Motor.Settings.Servo.Goal = MathHelper.Pi * 0.2f;
                 }
             }
             else
             {
                 foreach (JointVehicleMotor motor in SteeringMotors)
-                {
-                    motor.Motor.Settings.Servo.Goal = 0f;
-                }
-                foreach (JointVehicleMotor motor in InverseSteeringMotors)
                 {
                     motor.Motor.Settings.Servo.Goal = 0f;
                 }

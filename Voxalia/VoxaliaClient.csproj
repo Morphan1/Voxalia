@@ -160,6 +160,7 @@
     <Compile Include="ClientGame\JointSystem\BaseFJoint.cs" />
     <Compile Include="ClientGame\JointSystem\BaseJoint.cs" />
     <Compile Include="ClientGame\JointSystem\JointLAxisLimit.cs" />
+    <Compile Include="ClientGame\JointSystem\JointSwivelHinge.cs" />
     <Compile Include="ClientGame\JointSystem\JointVehicleMotor.cs" />
     <Compile Include="ClientGame\JointSystem\JointTwist.cs" />
     <Compile Include="ClientGame\JointSystem\InternalBaseJoint.cs" />

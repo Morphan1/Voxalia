@@ -24,6 +24,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public VehiclePartEntity(Region tregion, string model)
             : base(model, tregion)
         {
+            SetFriction(3.5f);
         }
     }
 }

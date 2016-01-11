@@ -130,6 +130,7 @@
     <Compile Include="ServerGame\JointSystem\JointDistance.cs" />
     <Compile Include="ServerGame\JointSystem\JointForceWeld.cs" />
     <Compile Include="ServerGame\JointSystem\JointLAxisLimit.cs" />
+    <Compile Include="ServerGame\JointSystem\JointSwivelHinge.cs" />
     <Compile Include="ServerGame\JointSystem\JointVehicleMotor.cs" />
     <Compile Include="ServerGame\JointSystem\JointPushPull.cs" />
     <Compile Include="ServerGame\JointSystem\JointSlider.cs" />
