@@ -233,6 +233,10 @@ namespace Voxalia.ClientGame.WorldSystem
             if (e is PhysicsEntity)
             {
                 ((PhysicsEntity)e).DestroyBody();
+                for (int i = 0; i < ((PhysicsEntity)e).Joints.Count; i++)
+                {
+                    DestroyJoint(((PhysicsEntity)e).Joints[i]);
+                }
             }
             else if (e is PrimitiveEntity)
             {

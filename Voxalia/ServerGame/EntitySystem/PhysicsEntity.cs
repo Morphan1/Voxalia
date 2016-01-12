@@ -148,6 +148,13 @@ namespace Voxalia.ServerGame.EntitySystem
                     if (shouldseec && !shouldseel)
                     {
                         player.Network.SendPacket(GetSpawnPacket());
+                        foreach (InternalBaseJoint joint in Joints)
+                        {
+                            if (player.ShouldSeePosition(joint.One.GetPosition()) && player.ShouldSeePosition(joint.Two.GetPosition()))
+                            {
+                                player.Network.SendPacket(new AddJointPacketOut(joint));
+                            }
+                        }
                     }
                     if (shouldseel && !shouldseec)
                     {
