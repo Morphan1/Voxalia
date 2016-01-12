@@ -131,7 +131,7 @@ namespace Voxalia.ServerGame.EntitySystem
             JointSlider pointOnLineJoint = new JointSlider(this, wheel, -new Location(up));
             JointLAxisLimit suspensionLimit = new JointLAxisLimit(this, wheel, 0f, 0.1f, wheel.GetPosition(), wheel.GetPosition(), -new Location(up));
             JointPullPush spring = new JointPullPush(this, wheel, -new Location(up), true);
-            BEPUphysics.CollisionRuleManagement.CollisionRules.AddRule(wheel.Body, this.Body, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase);
+            BEPUphysics.CollisionRuleManagement.CollisionRules.AddRule(wheel.Body, this.Body, BEPUphysics.CollisionRuleManagement.CollisionRule.NoBroadPhase); // TODO: How necessary is this? Should we replicate this clientside?
             if (driving)
             {
                 JointSpinner spinner = new JointSpinner(this, wheel, new Location(-left));
@@ -154,14 +154,19 @@ namespace Voxalia.ServerGame.EntitySystem
             return null;
         }
 
-        public bool Use(Entity user)
+        public void StartUse(Entity user)
         {
             if (user.CurrentSeat == DriverSeat)
             {
                 DriverSeat.Kick();
-                return true;
+                return;
             }
-            return DriverSeat.Accept((PhysicsEntity)user);
+            DriverSeat.Accept((PhysicsEntity)user);
+        }
+        
+        public void StopUse(Entity user)
+        {
+            // Do nothing.
         }
 
         public void Accepted(PlayerEntity player)

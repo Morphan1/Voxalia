@@ -23,6 +23,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             Player.Downward = val.HasFlag(KeysPacketData.DOWNWARD);
             Player.Click = val.HasFlag(KeysPacketData.CLICK);
             Player.AltClick = val.HasFlag(KeysPacketData.ALTCLICK);
+            Player.Use = val.HasFlag(KeysPacketData.USE);
             Player.Network.SendPacket(new YourPositionPacketOut(Player.TheRegion.GlobalTickTime, tid,
                 Player.GetPosition(), Player.GetVelocity(), new Location(0, 0, 0), Player.CBody.StanceManager.CurrentStance, Player.pup));
             Player.LastKPI = Player.TheRegion.GlobalTickTime;
@@ -43,6 +44,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
         CLICK = 64,
         ALTCLICK = 128,
         SPRINT = 256,
-        DOWNWARD = 512
+        DOWNWARD = 256 * 2,
+        USE = 256 * 4
     }
 }

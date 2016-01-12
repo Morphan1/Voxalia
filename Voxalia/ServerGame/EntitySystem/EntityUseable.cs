@@ -2,6 +2,8 @@
 {
     public interface EntityUseable
     {
-        bool Use(Entity user);
+        void StartUse(Entity user);
+
+        void StopUse(Entity user);
     }
 }

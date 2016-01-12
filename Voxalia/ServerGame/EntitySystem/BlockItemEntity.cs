@@ -51,19 +51,21 @@ namespace Voxalia.ServerGame.EntitySystem
                     "A standard block of " + Mat.ToString(), System.Drawing.Color.White, "cube", false) { Datum = (ushort)Mat };
         }
 
-        public bool Use(Entity user)
+        public void StartUse(Entity user)
         {
-            if (Removed)
+            if (!Removed)
             {
-                return false;
+                if (user is PlayerEntity)
+                {
+                    ((PlayerEntity)user).Items.GiveItem(GetItem());
+                    RemoveMe();
+                }
             }
-            if (user is PlayerEntity)
-            {
-                ((PlayerEntity)user).Items.GiveItem(GetItem());
-                RemoveMe();
-                return true;
-            }
-            return false;
+        }
+
+        public void StopUse(Entity user)
+        {
+            // Do nothing.
         }
 
         public float Health = 5;

@@ -109,6 +109,7 @@
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\StartlocalserverCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\TagBases\PlayerTags.cs" />
     <Compile Include="ClientGame\CommandSystem\TagObjects\EntityTagObjects\PlayerTag.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\UseCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\AttackCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BindblockCommand.cs" />

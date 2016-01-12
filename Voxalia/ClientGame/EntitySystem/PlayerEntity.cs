@@ -96,6 +96,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Walk = false;
         public bool Sprint = false;
         public bool Downward = false;
+        public bool Use = false;
 
         public float tmass = 70;
 
@@ -308,7 +309,8 @@ namespace Voxalia.ClientGame.EntitySystem
                  | (Leftward ? KeysPacketData.LEFTWARD : 0) | (Rightward ? KeysPacketData.RIGHTWARD : 0)
                  | (Upward ? KeysPacketData.UPWARD : 0) | (Walk ? KeysPacketData.WALK : 0)
                   | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK : 0)
-                  | (Sprint ? KeysPacketData.SPRINT : 0) | (Downward ? KeysPacketData.DOWNWARD : 0);
+                  | (Sprint ? KeysPacketData.SPRINT : 0) | (Downward ? KeysPacketData.DOWNWARD : 0)
+                  | (Use ? KeysPacketData.USE : 0);
             TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction));
         }
 

@@ -53,6 +53,7 @@ namespace Voxalia.ClientGame.CommandSystem
             CommandSystem.RegisterCommand(new SprintCommand(TheClient));
             CommandSystem.RegisterCommand(new UnbindCommand(TheClient));
             CommandSystem.RegisterCommand(new UpwardCommand(TheClient));
+            CommandSystem.RegisterCommand(new UseCommand(TheClient));
             CommandSystem.RegisterCommand(new WalkCommand(TheClient));
 
             // Common Commands

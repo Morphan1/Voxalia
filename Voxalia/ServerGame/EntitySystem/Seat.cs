@@ -12,10 +12,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public PhysicsEntity SeatHolder;
         public Location PositionOffset;
         public PhysicsEntity Sitter = null;
-        public Location OldPosition = Location.Zero;
-
-        private JointWeld jw = null;
-
+        public Location OldPosition = Location.Zero; // TODO: Track orientation too!
+        
         private JointSlider js = null;
         private JointBallSocket jbs = null;
 
@@ -41,19 +39,17 @@ namespace Voxalia.ServerGame.EntitySystem
             Sitter.SetOrientation(SeatHolder.GetOrientation());
             if (Sitter is PlayerEntity)
             {
-                float len = (float)PositionOffset.Length();
                 ((PlayerEntity)Sitter).Teleport(SeatHolder.GetPosition() + PositionOffset); // TODO: Teleport method on all entities!
-                js = new JointSlider(SeatHolder, sitter, PositionOffset / len);
-                jbs = new JointBallSocket(SeatHolder, sitter, sitter.GetPosition());
-                SeatHolder.TheRegion.AddJoint(js);
-                SeatHolder.TheRegion.AddJoint(jbs);
             }
             else
             {
                 Sitter.SetPosition(SeatHolder.GetPosition() + PositionOffset);
-                jw = new JointWeld(SeatHolder, Sitter);
-                SeatHolder.TheRegion.AddJoint(jw);
             }
+            float len = (float)PositionOffset.Length();
+            js = new JointSlider(SeatHolder, sitter, PositionOffset / len);
+            jbs = new JointBallSocket(SeatHolder, sitter, sitter.GetPosition());
+            SeatHolder.TheRegion.AddJoint(js);
+            SeatHolder.TheRegion.AddJoint(jbs);
             if (SeatHolder is VehicleEntity && sitter is PlayerEntity)
             {
                 ((VehicleEntity)SeatHolder).Accepted((PlayerEntity)sitter);
@@ -63,22 +59,14 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public void Kick()
         {
-            if (jw == null && js == null)
+            if (js == null)
             {
                 return;
             }
-            if (jw == null)
-            {
-                SeatHolder.TheRegion.DestroyJoint(js);
-                SeatHolder.TheRegion.DestroyJoint(jbs);
-                js = null;
-                jbs = null;
-            }
-            else
-            {
-                SeatHolder.TheRegion.DestroyJoint(jw);
-                jw = null;
-            }
+            SeatHolder.TheRegion.DestroyJoint(js);
+            SeatHolder.TheRegion.DestroyJoint(jbs);
+            js = null;
+            jbs = null;
             if (Sitter is PlayerEntity)
             {
                 ((PlayerEntity)Sitter).Teleport(OldPosition + SeatHolder.GetPosition());

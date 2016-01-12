@@ -33,19 +33,22 @@ namespace Voxalia.ServerGame.EntitySystem
             return res;
         }
 
-        public bool Use(Entity user)
+        public void StartUse(Entity user)
         {
-            if (Removed)
+            if (!Removed)
             {
-                return false;
+                if (user is PlayerEntity)
+                {
+                    ((PlayerEntity)user).Items.GiveItem(Stack);
+                    RemoveMe();
+                    return;
+                }
             }
-            if (user is PlayerEntity)
-            {
-                ((PlayerEntity)user).Items.GiveItem(Stack);
-                RemoveMe();
-                return true;
-            }
-            return false;
+        }
+
+        public void StopUse(Entity user)
+        {
+            // Do nothing.
         }
     }
 

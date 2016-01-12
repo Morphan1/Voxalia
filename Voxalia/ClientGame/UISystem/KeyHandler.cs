@@ -46,7 +46,7 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.F12, "screenshot");
             BindKey(Key.F35, "+attack");
             BindKey(Key.F34, "+secondary");
-            BindKey(Key.F, "use");
+            BindKey(Key.F, "+use");
             BindKey(Key.B, "drop");
             BindKey(Key.G, "throw");
             BindKey(Key.R, "weaponreload");

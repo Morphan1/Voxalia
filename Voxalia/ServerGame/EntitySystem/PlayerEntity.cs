@@ -111,6 +111,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool AltClick = false;
 
+        public bool Use = false;
+
         bool pkick = false;
 
         public bool FlashLightOn = false;
@@ -152,6 +154,10 @@ namespace Voxalia.ServerGame.EntitySystem
                 return;
             }
             pkick = true;
+            if (UsedNow != null && ((Entity)UsedNow).IsSpawned)
+            {
+                UsedNow.StopUse(this);
+            }
             if (Network.Alive)
             {
                 Network.SendMessage("Kicking you: " + message);
@@ -622,8 +628,43 @@ namespace Voxalia.ServerGame.EntitySystem
                     // TODO: Effect?
                 }
             }
+            if (Use)
+            {
+                Location forw = ForwardVector();
+                CollisionResult cr = TheRegion.Collision.RayTrace(GetEyePosition(), GetEyePosition() + forw * 5, IgnoreThis);
+                if (cr.Hit && cr.HitEnt != null && cr.HitEnt.Tag is EntityUseable)
+                {
+                    if (UsedNow != (EntityUseable)cr.HitEnt.Tag)
+                    {
+                        if (UsedNow != null && ((Entity)UsedNow).IsSpawned)
+                        {
+                            UsedNow.StopUse(this);
+                        }
+                        UsedNow = (EntityUseable)cr.HitEnt.Tag;
+                        UsedNow.StartUse(this);
+                    }
+                }
+                else if (UsedNow != null)
+                {
+                    if (((Entity)UsedNow).IsSpawned)
+                    {
+                        UsedNow.StopUse(this);
+                    }
+                    UsedNow = null;
+                }
+            }
+            else if (UsedNow != null)
+            {
+                if (((Entity)UsedNow).IsSpawned)
+                {
+                    UsedNow.StopUse(this);
+                }
+                UsedNow = null;
+            }
             base.Tick();
         }
+
+        public EntityUseable UsedNow = null;
 
         public bool ShouldSeeChunkPreviously(Location cpos)
         {
