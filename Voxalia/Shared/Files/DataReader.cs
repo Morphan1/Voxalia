@@ -14,6 +14,11 @@ namespace Voxalia.Shared.Files
             return Utilities.BytesToInt(base.ReadBytes(4));
         }
 
+        public long ReadLong()
+        {
+            return Utilities.BytesToLong(base.ReadBytes(8));
+        }
+
         public float ReadFloat()
         {
             return Utilities.BytesToFloat(base.ReadBytes(4));

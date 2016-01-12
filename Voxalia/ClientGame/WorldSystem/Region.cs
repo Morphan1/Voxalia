@@ -240,6 +240,18 @@ namespace Voxalia.ClientGame.WorldSystem
             }
         }
 
+        public InternalBaseJoint GetJoint(long JID)
+        {
+            for (int i = 0; i < Joints.Count; i++)
+            {
+                if (Joints[i].JID == JID)
+                {
+                    return Joints[i];
+                }
+            }
+            return null;
+        }
+
         public Entity GetEntity(long EID)
         {
             for (int i = 0; i < Entities.Count; i++)

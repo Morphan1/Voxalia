@@ -19,6 +19,11 @@ namespace Voxalia.Shared.Files
             base.Write(Utilities.FloatToBytes(x), 0, 4);
         }
 
+        public void WriteLong(long x)
+        {
+            base.Write(Utilities.LongToBytes(x), 0, 8);
+        }
+
         public void WriteBytes(byte[] bits)
         {
             base.Write(bits, 0, bits.Length);

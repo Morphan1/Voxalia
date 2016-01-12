@@ -20,9 +20,11 @@ namespace Voxalia.ClientGame.JointSystem
             IsSteering = isSteering;
         }
 
+        public RevoluteMotor Motor;
+
         public override SolverUpdateable GetBaseJoint()
         {
-            RevoluteMotor Motor = new RevoluteMotor(Ent1.Body, Ent2.Body, Direction.ToBVector());
+            Motor = new RevoluteMotor(Ent1.Body, Ent2.Body, Direction.ToBVector());
             if (IsSteering)
             {
                 Motor.Settings.Mode = MotorMode.Servomechanism;

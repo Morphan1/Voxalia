@@ -255,6 +255,9 @@ namespace Voxalia.ClientGame.NetworkSystem
                     case 33:
                         packet = new DefaultSoundPacketIn();
                         break;
+                    case 34:
+                        packet = new GainControlOfVehiclePacketIn();
+                        break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);
                 }

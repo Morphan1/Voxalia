@@ -23,6 +23,7 @@ using BEPUphysics.Character;
 using OpenTK.Graphics.OpenGL4;
 using FreneticScript;
 using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.JointSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -450,7 +451,57 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool PGPDPadLeft;
         public bool PGPDPadRight;
         public bool PGPUse;
-        
+
+        public List<JointVehicleMotor> DrivingMotors = new List<JointVehicleMotor>();
+
+        public List<JointVehicleMotor> SteeringMotors = new List<JointVehicleMotor>();
+
+        public void MoveVehicle()
+        {
+            if (Forward)
+            {
+                foreach (JointVehicleMotor motor in DrivingMotors)
+                {
+                    motor.Motor.Settings.VelocityMotor.GoalVelocity = 100f;
+                }
+            }
+            else if (Backward)
+            {
+                foreach (JointVehicleMotor motor in DrivingMotors)
+                {
+                    motor.Motor.Settings.VelocityMotor.GoalVelocity = -100f;
+                }
+            }
+            else
+            {
+                foreach (JointVehicleMotor motor in DrivingMotors)
+                {
+                    motor.Motor.Settings.VelocityMotor.GoalVelocity = 0f;
+                }
+            }
+            if (Rightward)
+            {
+                foreach (JointVehicleMotor motor in SteeringMotors)
+                {
+                    motor.Motor.Settings.Servo.Goal = MathHelper.Pi * -0.2f;
+                }
+            }
+            else if (Leftward)
+            {
+                foreach (JointVehicleMotor motor in SteeringMotors)
+                {
+                    motor.Motor.Settings.Servo.Goal = MathHelper.Pi * 0.2f;
+                }
+            }
+            else
+            {
+                foreach (JointVehicleMotor motor in SteeringMotors)
+                {
+                    motor.Motor.Settings.Servo.Goal = 0f;
+                }
+            }
+        }
+
         public override void Tick()
         {
             if (!(TheClient.CScreen is GameScreen))
@@ -592,6 +643,7 @@ namespace Voxalia.ClientGame.EntitySystem
             FlyForth(CBody, lUIS, TheRegion.Delta);
             SetBodyMovement(CBody, lUIS);
             PlayRelevantSounds();
+            MoveVehicle();
             if (Flashlight != null)
             {
                 Flashlight.Direction = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch);

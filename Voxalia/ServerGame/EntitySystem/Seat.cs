@@ -54,6 +54,10 @@ namespace Voxalia.ServerGame.EntitySystem
                 jw = new JointWeld(SeatHolder, Sitter);
                 SeatHolder.TheRegion.AddJoint(jw);
             }
+            if (SeatHolder is VehicleEntity && sitter is PlayerEntity)
+            {
+                ((VehicleEntity)SeatHolder).Accepted((PlayerEntity)sitter);
+            }
             return true;
         }
 

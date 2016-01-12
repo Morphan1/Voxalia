@@ -6,6 +6,7 @@ using Voxalia.ServerGame.OtherSystems;
 using BEPUutilities;
 using BEPUphysics.Constraints.TwoEntity.JointLimits;
 using BEPUphysics.Constraints.TwoEntity.Motors;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -163,9 +164,22 @@ namespace Voxalia.ServerGame.EntitySystem
             return DriverSeat.Accept((PhysicsEntity)user);
         }
 
+        public void Accepted(PlayerEntity player)
+        {
+            GainControlOfVehiclePacketOut gcovpo = new GainControlOfVehiclePacketOut(player, this);
+            foreach (PlayerEntity plent in TheRegion.Players)
+            {
+                if (plent.ShouldSeePosition(GetPosition()))
+                {
+                    plent.Network.SendPacket(gcovpo);
+                }
+            }
+            // TODO: handle players coming into/out-of view of the vehicle + driver!
+        }
+
         public void HandleInput(PlayerEntity player)
         {
-            // TODO: Transmit / predict / etc.
+            // TODO: Dynamic potential values.
             if (player.Forward)
             {
                 foreach (JointVehicleMotor motor in DrivingMotors)
