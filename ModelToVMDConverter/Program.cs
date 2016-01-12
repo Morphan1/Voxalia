@@ -28,7 +28,8 @@ namespace ModelToVMDConverter
                 return;
             }
             AssimpContext ac = new AssimpContext();
-            Scene fdata = ac.ImportFile(fname, PostProcessSteps.Triangulate | PostProcessSteps.FlipWindingOrder);
+            PostProcessSteps temp = (args.Length > 1 && args[1].ToLower() == "pretrans") ? PostProcessSteps.PreTransformVertices : PostProcessSteps.None;
+            Scene fdata = ac.ImportFile(fname, PostProcessSteps.Triangulate | PostProcessSteps.FlipWindingOrder | temp);
             if (File.Exists(fname + ".vmd"))
             {
                 File.Delete(fname + ".vmd");
