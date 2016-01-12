@@ -37,7 +37,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Sitter.CurrentSeat.Kick();
             }
             Sitter.CurrentSeat = this;
-            OldPosition = Sitter.GetPosition();
+            OldPosition = Sitter.GetPosition() - SeatHolder.GetPosition();
             Sitter.SetOrientation(SeatHolder.GetOrientation());
             if (Sitter is PlayerEntity)
             {
@@ -81,11 +81,11 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             if (Sitter is PlayerEntity)
             {
-                ((PlayerEntity)Sitter).Teleport(OldPosition);
+                ((PlayerEntity)Sitter).Teleport(OldPosition + SeatHolder.GetPosition());
             }
             else
             {
-                Sitter.SetPosition(OldPosition);
+                Sitter.SetPosition(OldPosition + SeatHolder.GetPosition());
             }
             Sitter.CurrentSeat = null;
             Sitter = null;
