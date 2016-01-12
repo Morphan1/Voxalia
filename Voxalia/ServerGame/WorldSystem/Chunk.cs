@@ -107,7 +107,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 return;
             }
             FCO = new FullChunkObject(WorldPosition.ToBVector() * 30, BlocksInternal);
-            FCO.CollisionRules.Group = CollisionUtil.Solid;
+            FCO.CollisionRules.Group = CollisionUtil.WorldSolid;
             OwningRegion.AddChunk(FCO);
         }
 
