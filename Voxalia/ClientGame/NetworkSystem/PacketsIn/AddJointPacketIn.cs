@@ -8,7 +8,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            int len = 1 + 8 + 8 + 8;
+            int len = 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 4;
             if (data.Length < len)
             {
                 SysConsole.Output(OutputType.WARNING, "Joint packet: Bad initial length!");
@@ -30,6 +30,24 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 SysConsole.Output(OutputType.WARNING, "Joint Packet: Invalid EID-2 " + EID2);
                 return false;
             }
+            Location pos1 = Location.FromBytes(data, 1 + 8 + 8 + 8);
+            float qx1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12, 4));
+            float qy1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 4, 4));
+            float qz1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 4 + 4, 4));
+            float qw1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4, 4));
+            BEPUutilities.Quaternion quat1 = new BEPUutilities.Quaternion(qx1, qy1, qz1, qw1);
+            pe1.SetPosition(pos1);
+            pe1.SetOrientation(quat1);
+            Location pos2 = Location.FromBytes(data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4);
+            float qx2 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 12 + 4 + 4 + 4 + 4, 4));
+            float qy2 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 4 + 12 + 4 + 4 + 4 + 4, 4));
+            float qz2 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 12 + 4 + 4 + 4 + 4, 4));
+            float qw2 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 4, 4));
+            BEPUutilities.Quaternion quat2 = new BEPUutilities.Quaternion(qx2, qy2, qz2, qw2);
+            pe1.SetPosition(pos1);
+            pe1.SetOrientation(quat1);
+            pe2.SetPosition(pos2);
+            pe2.SetOrientation(quat2);
             if (type == 0)
             {
                 if (data.Length != len + 12)

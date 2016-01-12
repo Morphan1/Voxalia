@@ -8,7 +8,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         public AddJointPacketOut(InternalBaseJoint joint)
         {
             ID = 12;
-            int len = 1 + 8 + 8 + 8;
+            int len = 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 4;
             if (joint is JointBallSocket)
             {
                 Data = new byte[len + 12];
@@ -88,6 +88,18 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             Utilities.LongToBytes(joint.One.EID).CopyTo(Data, 1);
             Utilities.LongToBytes(joint.Two.EID).CopyTo(Data, 1 + 8);
             Utilities.LongToBytes(joint.JID).CopyTo(Data, 1 + 8 + 8);
+            joint.One.GetPosition().ToBytes().CopyTo(Data, 1 + 8 + 8 + 8);
+            BEPUutilities.Quaternion quat = joint.One.GetOrientation();
+            Utilities.FloatToBytes(quat.X).CopyTo(Data, 1 + 8 + 8 + 8 + 12);
+            Utilities.FloatToBytes(quat.Y).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4);
+            Utilities.FloatToBytes(quat.Z).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4);
+            Utilities.FloatToBytes(quat.W).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4);
+            joint.Two.GetPosition().ToBytes().CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4);
+            BEPUutilities.Quaternion quat2 = joint.Two.GetOrientation();
+            Utilities.FloatToBytes(quat2.X).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12);
+            Utilities.FloatToBytes(quat2.Y).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4);
+            Utilities.FloatToBytes(quat2.Z).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4);
+            Utilities.FloatToBytes(quat2.W).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4);
         }
     }
 }
