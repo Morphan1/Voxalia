@@ -96,10 +96,6 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 Data[Data.Length - 1] |= 8;
             }
-            else if (e.CGroup == CollisionUtil.Trigger)
-            {
-                Data[Data.Length - 1] |= 4 | 8;
-            }
         }
     }
 }

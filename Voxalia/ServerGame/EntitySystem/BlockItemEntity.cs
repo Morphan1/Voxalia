@@ -108,7 +108,7 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public override Entity Create(Region tregion, byte[] input)
         {
-            int plen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4;
+            int plen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1;
             ushort tmat = Utilities.BytesToUshort(Utilities.BytesPartial(input, plen, 2));
             byte tdat = input[plen + 2];
             BlockItemEntity ent = new BlockItemEntity(tregion, (Material)tmat, tdat, Location.Zero);

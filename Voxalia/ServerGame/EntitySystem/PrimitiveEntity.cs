@@ -41,8 +41,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     return false;
                 }
             }
-            if (entry.CollisionRules.Group == CollisionUtil.NonSolid
-                || entry.CollisionRules.Group == CollisionUtil.Trigger)
+            if (entry.CollisionRules.Group == CollisionUtil.NonSolid)
             {
                 return false;
             }

@@ -24,11 +24,6 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 return true;
             }
-            if (entry.CollisionRules.Group == CollisionUtil.Trigger
-                && ((EntityCollidable)entry).Entity.Tag is EntityUseable)
-            {
-                return true;
-            }
             return false;
         }
 

@@ -31,9 +31,7 @@ namespace Voxalia.Shared.Collision
         public Space World;
 
         public static CollisionGroup NonSolid = new CollisionGroup();
-
-        public static CollisionGroup Trigger = new CollisionGroup();
-
+        
         public static CollisionGroup Solid = new CollisionGroup();
 
         public static CollisionGroup Player = new CollisionGroup();
@@ -44,7 +42,7 @@ namespace Voxalia.Shared.Collision
 
         public bool ShouldCollide(BroadPhaseEntry entry)
         {
-            if (entry.CollisionRules.Group == NonSolid || entry.CollisionRules.Group == Trigger || entry.CollisionRules.Group == Water)
+            if (entry.CollisionRules.Group == NonSolid || entry.CollisionRules.Group == Water)
             {
                 return false;
             }
@@ -62,24 +60,12 @@ namespace Voxalia.Shared.Collision
             CollisionGroup.DefineCollisionRule(Player, NonSolid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(NonSolid, Player, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Player, Player, CollisionRule.NoBroadPhase);
-            // Trigger Vs. Player,Solid,NonSolid (All)
-            CollisionGroup.DefineCollisionRule(Trigger, Player, CollisionRule.NoBroadPhase);
-            CollisionGroup.DefineCollisionRule(Trigger, Solid, CollisionRule.NoBroadPhase);
-            CollisionGroup.DefineCollisionRule(Trigger, NonSolid, CollisionRule.NoBroadPhase);
-            CollisionGroup.DefineCollisionRule(Player, Trigger, CollisionRule.NoBroadPhase);
-            CollisionGroup.DefineCollisionRule(Solid, Trigger, CollisionRule.NoBroadPhase);
-            CollisionGroup.DefineCollisionRule(NonSolid, Trigger, CollisionRule.NoBroadPhase);
-            CollisionGroup.DefineCollisionRule(Trigger, Trigger, CollisionRule.NoBroadPhase);
-            // Item Vs. Trigger,NonSolid (All)
-            CollisionGroup.DefineCollisionRule(Item, Trigger, CollisionRule.NoBroadPhase);
-            CollisionGroup.DefineCollisionRule(Trigger, Item, CollisionRule.NoBroadPhase);
+            // Item Vs. NonSolid (All)
             CollisionGroup.DefineCollisionRule(Item, NonSolid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(NonSolid, Item, CollisionRule.NoBroadPhase);
-            // Water Vs. NonSolid,Trigger,Solid,Player,Item (All)
+            // Water Vs. NonSolid,Solid,Player,Item (All)
             CollisionGroup.DefineCollisionRule(Water, NonSolid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(NonSolid, Water, CollisionRule.NoBroadPhase);
-            CollisionGroup.DefineCollisionRule(Water, Trigger, CollisionRule.NoBroadPhase);
-            CollisionGroup.DefineCollisionRule(Trigger, Water, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Water, Solid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Solid, Water, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Water, Player, CollisionRule.NoBroadPhase);

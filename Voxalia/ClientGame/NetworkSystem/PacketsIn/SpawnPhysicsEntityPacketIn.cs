@@ -92,10 +92,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 ce.CGroup = CollisionUtil.Player;
             }
-            else if (solidity == (4 | 8))
-            {
-                ce.CGroup = CollisionUtil.Trigger;
-            }
             else if (solidity == (2 | 8))
             {
                 ce.CGroup = CollisionUtil.Solid; // PlaceHolder

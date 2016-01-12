@@ -522,7 +522,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <returns>The binary data.</returns>
         public byte[] GetPhysicsBytes()
         {
-            byte[] bytes = new byte[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4];
+            byte[] bytes = new byte[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1];
             GetPosition().ToBytes().CopyTo(bytes, 0);
             GetVelocity().ToBytes().CopyTo(bytes, 12);
             GetAngularVelocity().ToBytes().CopyTo(bytes, 12 + 12);
@@ -536,6 +536,24 @@ namespace Voxalia.ServerGame.EntitySystem
             Utilities.FloatToBytes(GetBounciness()).CopyTo(bytes, p + 12);
             Utilities.FloatToBytes(GetFriction()).CopyTo(bytes, p + 12 + 4);
             Utilities.FloatToBytes(GetMass()).CopyTo(bytes, p + 12 + 4 + 4);
+            byte cg = 0;
+            if (CGroup == CollisionUtil.Solid)
+            {
+                cg = 1;
+            }
+            else if (CGroup == CollisionUtil.Player)
+            {
+                cg = 2;
+            }
+            else if (CGroup == CollisionUtil.Item)
+            {
+                cg = 3;
+            }
+            else if (CGroup == CollisionUtil.Water)
+            {
+                cg = 4;
+            }
+            bytes[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4] = cg;
             return bytes;
         }
 
@@ -545,7 +563,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <param name="data">The save data.</param>
         public void ApplyBytes(byte[] data)
         {
-            if (data.Length < 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4)
+            if (data.Length < 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1)
             {
                 throw new Exception("Invalid binary physics entity data!");
             }
@@ -563,6 +581,27 @@ namespace Voxalia.ServerGame.EntitySystem
             SetBounciness(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12, 4)));
             SetFriction(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12 + 4, 4)));
             SetMass(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12 + 4 + 4, 4)));
+            byte cg = data[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4];
+            if (cg == 0)
+            {
+                CGroup = CollisionUtil.NonSolid;
+            }
+            else if (cg == 1)
+            {
+                CGroup = CollisionUtil.Solid;
+            }
+            else if (cg == 2)
+            {
+                CGroup = CollisionUtil.Player;
+            }
+            else if (cg == 3)
+            {
+                CGroup = CollisionUtil.Item;
+            }
+            else
+            {
+                CGroup = CollisionUtil.Water;
+            }
         }
     }
 }
