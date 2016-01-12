@@ -588,7 +588,7 @@ namespace Voxalia.ServerGame.EntitySystem
             SetBounciness(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12, 4)));
             SetFriction(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12 + 4, 4)));
             SetMass(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12 + 4 + 4, 4)));
-            byte cg = data[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4];
+            byte cg = data[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4];
             if (cg == 0)
             {
                 CGroup = CollisionUtil.NonSolid;

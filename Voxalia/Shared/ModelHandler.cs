@@ -172,6 +172,7 @@ namespace Voxalia.Shared
         public ConvexHullShape MeshToBepuConvex(Model3D input)
         {
             List<Vector3> vertices = GetCollisionVertices(input);
+            ConvexHullHelper.RemoveRedundantPoints(vertices);
             return new ConvexHullShape(vertices);
         }
     }

@@ -98,6 +98,7 @@ namespace Voxalia.ServerGame.EntitySystem
                         wheel.SetMass(30);
                         wheel.mode = ModelCollisionMode.CONVEXHULL;
                         TheRegion.SpawnEntity(wheel);
+                        wheel.SetPosition(pos);
                         if (name.After("wheel").StartsWith("f"))
                         {
                             SteeringMotors.Add(ConnectWheel(wheel, false, true));
