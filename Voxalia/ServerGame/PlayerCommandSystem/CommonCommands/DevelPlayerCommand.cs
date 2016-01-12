@@ -25,9 +25,9 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 return;
             }
             string arg0 = entry.InputArguments[0];
-            if (arg0 == "spawnVehicle")
+            if (arg0 == "spawnVehicle" && entry.InputArguments.Count > 1)
             {
-                VehicleEntity ve = new VehicleEntity("failmobile", entry.Player.TheRegion);
+                VehicleEntity ve = new VehicleEntity(entry.InputArguments[1], entry.Player.TheRegion);
                 ve.SetPosition(entry.Player.GetEyePosition() + entry.Player.ForwardVector() * 5);
                 entry.Player.TheRegion.SpawnEntity(ve);
             }
