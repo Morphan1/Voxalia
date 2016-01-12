@@ -825,8 +825,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.Enable(EnableCap.CullFace);
             Matrix4 ident = Matrix4.Identity;
             GL.UniformMatrix4(2, false, ref ident);
-            Rendering.SetMinimumLight(0);
             Rendering.SetColor(Color4.White);
+            if (FBOid == 3)
+            {
+                TheRegion.RenderClouds();
+            }
+            Rendering.SetMinimumLight(0);
         }
         
         public void Establish2D()

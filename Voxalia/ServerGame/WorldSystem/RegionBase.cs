@@ -196,6 +196,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         void OncePerSecondActions()
         {
+            TickClouds();
             foreach (Chunk o in LoadedChunks.Values)
             {
                 if (o.LastEdited >= 0)

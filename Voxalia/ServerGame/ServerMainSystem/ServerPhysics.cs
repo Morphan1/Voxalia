@@ -86,6 +86,18 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 return cID++;
             }
         }
+
+        long CloudID = 1;
+
+        Object CloudIDLock = new Object();
+
+        public long AdvanceCloudID()
+        {
+            lock (CloudIDLock)
+            {
+                return CloudID++;
+            }
+        }
     }
 
     public class RegionLoadEventArgs : EventArgs

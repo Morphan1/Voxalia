@@ -147,6 +147,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\HoldItemPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\KeysPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddCloudPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddJointPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AnimationPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\BlockEditPacketOut.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PlayerUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PrimitiveEntityUpdatePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\RemoveCloudPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\RemoveItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetHeldItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetItemPacketOut.cs" />
@@ -246,9 +248,11 @@
     <Compile Include="ServerGame\WorldSystem\BlockPopulator.cs" />
     <Compile Include="ServerGame\WorldSystem\Chunk.cs" />
     <Compile Include="ServerGame\WorldSystem\ChunkFlags.cs" />
+    <Compile Include="ServerGame\WorldSystem\Cloud.cs" />
     <Compile Include="ServerGame\WorldSystem\LiquidForceField.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionBlockPhysics.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionChunks.cs" />
+    <Compile Include="ServerGame\WorldSystem\RegionWeather.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionEntities.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionPhysics.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleFrozenLakeBiome.cs" />

@@ -30,6 +30,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     JointVehicleMotor jvm = (JointVehicleMotor)TheClient.TheRegion.GetJoint(jid);
                     if (jvm == null)
                     {
+                        dr.Close();
                         return false;
                     }
                     player.DrivingMotors.Add(jvm);
@@ -40,12 +41,15 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     JointVehicleMotor jvm = (JointVehicleMotor)TheClient.TheRegion.GetJoint(jid);
                     if (jvm == null)
                     {
+                        dr.Close();
                         return false;
                     }
                     player.SteeringMotors.Add(jvm);
                 }
+                dr.Close();
                 return true;
             }
+            dr.Close();
             // TODO: OtherPlayerEntity
             return false;
         }

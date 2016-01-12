@@ -26,6 +26,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 dw.WriteLong(vehicle.SteeringMotors[i].JID);
             }
+            dw.Flush();
             Data = ds.ToArray();
             dw.Close();
         }

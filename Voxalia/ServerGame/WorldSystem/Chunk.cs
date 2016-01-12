@@ -109,6 +109,7 @@ namespace Voxalia.ServerGame.WorldSystem
             FCO = new FullChunkObject(WorldPosition.ToBVector() * 30, BlocksInternal);
             FCO.CollisionRules.Group = CollisionUtil.WorldSolid;
             OwningRegion.AddChunk(FCO);
+            OwningRegion.AddCloudsToNewChunk(this);
         }
 
         public Object EditSessionLock = new Object();
@@ -174,6 +175,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             SaveToFile(callback);
             clearentities();
+            OwningRegion.RemoveCloudsFrom(this);
         }
         
         /// <summary>

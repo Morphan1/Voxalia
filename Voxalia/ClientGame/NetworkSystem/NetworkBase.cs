@@ -258,6 +258,12 @@ namespace Voxalia.ClientGame.NetworkSystem
                     case 34:
                         packet = new GainControlOfVehiclePacketIn();
                         break;
+                    case 35:
+                        packet = new AddCloudPacketIn();
+                        break;
+                    case 36:
+                        packet = new RemoveCloudPacketIn();
+                        break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);
                 }

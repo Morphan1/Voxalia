@@ -18,7 +18,7 @@ using System.Diagnostics;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
-    public class Region
+    public partial class Region
     {
         /// <summary>
         /// The physics world in which all physics-related activity takes place.
@@ -181,6 +181,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 Tickers[i].Tick();
             }
             SolveJoints();
+            TickClouds();
         }
 
         public void SolveJoints()

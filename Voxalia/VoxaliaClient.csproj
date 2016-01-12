@@ -176,6 +176,7 @@
     <Compile Include="ClientGame\NetworkSystem\AbstractPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\NetStringManager.cs" />
     <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddCloudPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddJointPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AnimationPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\BlockEditPacketIn.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PlayerUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PrimitiveEntityUpdatePacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\RemoveCloudPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\RemoveItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetHeldItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetItemPacketIn.cs" />
@@ -230,9 +232,11 @@
     <Compile Include="ClientGame\UISystem\UIConsole.cs" />
     <Compile Include="ClientGame\WorldSystem\Chunk.cs" />
     <Compile Include="ClientGame\WorldSystem\ChunkRendering.cs" />
+    <Compile Include="ClientGame\WorldSystem\Cloud.cs" />
     <Compile Include="ClientGame\WorldSystem\LiquidForceField.cs" />
     <Compile Include="ClientGame\WorldSystem\LoadAllChunksSystem.cs" />
     <Compile Include="ClientGame\WorldSystem\Region.cs" />
+    <Compile Include="ClientGame\WorldSystem\RegionWeather.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
