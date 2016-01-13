@@ -73,13 +73,13 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void AddToCloud(Cloud cloud, float start)
         {
-            double modif = Math.Sqrt(cloud.Points.Count);
+            double modif = Math.Sqrt(cloud.Points.Count) * 1.5;
             double d1 = Utilities.UtilRandom.NextDouble() * modif * 2 - modif;
             double d2 = Utilities.UtilRandom.NextDouble() * modif * 2 - modif;
             double d3 = Utilities.UtilRandom.NextDouble() * modif * 2 - modif;
-            double d4 = Utilities.UtilRandom.NextDouble() * 10;
+            double d4 = Utilities.UtilRandom.NextDouble() * 10 * modif;
             cloud.Points.Add(new Location(d1, d2, d3));
-            cloud.Sizes.Add(start);
+            cloud.Sizes.Add(start > d4 ? (float)d4 : start);
             cloud.EndSizes.Add((float)d4);
         }
 
