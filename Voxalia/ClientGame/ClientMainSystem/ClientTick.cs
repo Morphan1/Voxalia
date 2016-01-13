@@ -15,6 +15,7 @@ using Voxalia.Shared.Collision;
 using BEPUphysics;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using Voxalia.ClientGame.NetworkSystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -135,6 +136,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             LightsSpikeTime = 0;
             FinishSpikeTime = 0;
             TWODSpikeTime = 0;
+            for (int i = 0; i < (int)NetUsageType.COUNT; i++)
+            {
+                Network.UsagesLastSecond[i] = Network.UsagesThisSecond[i];
+                Network.UsagesThisSecond[i] = 0;
+            }
     }
 
         Object saveLock = new Object();

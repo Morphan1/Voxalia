@@ -109,6 +109,12 @@ namespace Voxalia.ClientGame.NetworkSystem
 
         bool pLive = false;
 
+        public long[] UsagesLastSecond = new long[(int)NetUsageType.COUNT];
+
+        public long[] UsagesThisSecond = new long[(int)NetUsageType.COUNT];
+
+        public long[] UsagesTotal = new long[(int)NetUsageType.COUNT];
+
         public void TickSocket(Socket sock, ref byte[] rd, ref int rdsf)
         {
             int avail = sock.Available;
@@ -151,122 +157,160 @@ namespace Voxalia.ClientGame.NetworkSystem
                 rdsf -= len + 5;
                 AbstractPacketIn packet;
                 bool asyncable = false;
+                NetUsageType usage;
                 switch (packetID) // TODO: Packet registry?
                 {
                     case 0:
                         packet = new PingPacketIn();
+                        usage = NetUsageType.PINGS;
                         break;
                     case 1:
                         packet = new YourPositionPacketIn();
+                        usage = NetUsageType.PLAYERS;
                         break;
                     case 2:
                         packet = new SpawnPhysicsEntityPacketIn();
+                        usage = NetUsageType.ENTITIES;
                         break;
                     case 3:
                         packet = new PhysicsEntityUpdatePacketIn();
+                        usage = NetUsageType.ENTITIES;
                         break;
                     case 4:
                         // TODO: Use slot!
                         throw new NotImplementedException();
                     case 5:
                         packet = new MessagePacketIn();
+                        usage = NetUsageType.GENERAL;
                         break;
                     case 6:
                         packet = new PlayerUpdatePacketIn();
+                        usage = NetUsageType.PLAYERS;
                         break;
                     case 7:
                         packet = new SpawnBulletPacketIn();
+                        usage = NetUsageType.ENTITIES;
                         break;
                     case 8:
                         packet = new DespawnEntityPacketIn();
+                        usage = NetUsageType.ENTITIES;
                         break;
                     case 9:
                         packet = new NetStringPacketIn();
+                        usage = NetUsageType.GENERAL;
                         break;
                     case 10:
                         packet = new SpawnItemPacketIn();
+                        usage = NetUsageType.GENERAL;
                         break;
                     case 11:
                         packet = new YourStatusPacketIn();
+                        usage = NetUsageType.PLAYERS;
                         break;
                     case 12:
                         packet = new AddJointPacketIn();
+                        usage = NetUsageType.ENTITIES;
                         break;
                     case 13:
                         packet = new YourEIDPacketIn();
+                        usage = NetUsageType.GENERAL;
                         break;
                     case 14:
                         packet = new DestroyJointPacketIn();
+                        usage = NetUsageType.ENTITIES;
                         break;
                     case 15:
                         packet = new SpawnPrimitiveEntityPacketIn();
+                        usage = NetUsageType.ENTITIES;
                         break;
                     case 16:
                         packet = new PrimitiveEntityUpdatePacketIn();
+                        usage = NetUsageType.ENTITIES;
                         break;
                     case 17:
                         packet = new AnimationPacketIn();
+                        usage = NetUsageType.PLAYERS;
                         break;
                     case 18:
                         packet = new FlashLightPacketIn();
+                        usage = NetUsageType.PLAYERS;
                         break;
                     case 19:
                         packet = new RemoveItemPacketIn();
+                        usage = NetUsageType.GENERAL;
                         break;
                     case 20:
-                        // TODO: packet = new JointStatusPacketIn();
+                        // TODO: Use slot!
                         throw new NotImplementedException();
                     case 21:
                         packet = new SetItemPacketIn();
+                        usage = NetUsageType.GENERAL;
                         break;
                     case 22:
                         packet = new CVarSetPacketIn();
+                        usage = NetUsageType.GENERAL;
                         break;
                     case 23:
                         packet = new SetHeldItemPacketIn();
+                        usage = NetUsageType.GENERAL;
                         break;
                     case 24:
                         packet = new ChunkInfoPacketIn();
+                        usage = NetUsageType.CHUNKS;
                         break;
                     case 25:
                         packet = new BlockEditPacketIn();
+                        usage = NetUsageType.CHUNKS;
                         break;
                     case 26:
                         packet = new SunAnglePacketIn();
+                        usage = NetUsageType.EFFECTS;
                         break;
                     case 27:
                         packet = new TeleportPacketIn();
+                        usage = NetUsageType.PLAYERS;
                         break;
                     case 28:
                         packet = new OperationStatusPacketIn();
+                        usage = NetUsageType.GENERAL;
                         break;
                     case 29:
                         packet = new ParticleEffectPacketIn();
+                        usage = NetUsageType.EFFECTS;
                         break;
                     case 30:
                         packet = new PathPacketIn();
+                        usage = NetUsageType.EFFECTS;
                         break;
                     case 31:
                         packet = new ChunkForgetPacketIn();
+                        usage = NetUsageType.CHUNKS;
                         break;
                     case 32:
                         packet = new FlagEntityPacketIn();
+                        usage = NetUsageType.ENTITIES;
                         break;
                     case 33:
                         packet = new DefaultSoundPacketIn();
+                        usage = NetUsageType.EFFECTS;
                         break;
                     case 34:
                         packet = new GainControlOfVehiclePacketIn();
+                        usage = NetUsageType.ENTITIES;
                         break;
                     case 35:
                         packet = new AddCloudPacketIn();
+                        usage = NetUsageType.CLOUDS;
                         break;
                     case 36:
                         packet = new RemoveCloudPacketIn();
+                        usage = NetUsageType.CLOUDS;
                         break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);
                 }
+                UsagesThisSecond[(int)usage] += 5 + data.Length;
+                UsagesTotal[(int)usage] += 5 + data.Length;
                 packet.TheClient = TheClient;
                 packet.ChunkN = sock == ChunkSocket;
                 int pid = packetID;
@@ -527,6 +571,17 @@ namespace Voxalia.ClientGame.NetworkSystem
             }
             throw new Exception("Maximum byte count reached without valid ender");
         }
+    }
 
+    public enum NetUsageType: byte
+    {
+        EFFECTS = 0,
+        ENTITIES = 1,
+        PLAYERS = 2,
+        CLOUDS = 3,
+        PINGS = 4,
+        CHUNKS = 5,
+        GENERAL = 6,
+        COUNT = 7
     }
 }

@@ -9,13 +9,13 @@ namespace Voxalia.ServerGame.JointSystem
         public override void Enable()
         {
             Enabled = true;
-            One.TheRegion.SendToAll(new JointStatusPacketOut(this));
+            //TODO: Transmit!
         }
 
         public override void Disable()
         {
             Enabled = false;
-            One.TheRegion.SendToAll(new JointStatusPacketOut(this));
+            //TODO: Transmit!
         }
     }
 }
