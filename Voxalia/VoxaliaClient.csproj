@@ -179,6 +179,7 @@
     <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddCloudPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddJointPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddToCloudPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AnimationPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\BlockEditPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\ChunkForgetPacketIn.cs" />

@@ -32,42 +32,54 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 Location ppos = Clouds[i].Position;
                 Clouds[i].Position = ppos + Wind + Clouds[i].Velocity;
+                bool changed = (Utilities.UtilRandom.Next(100) > Clouds[i].Points.Count)
+                    && (Utilities.UtilRandom.Next(100) > Clouds[i].Points.Count)
+                    && (Utilities.UtilRandom.Next(100) > Clouds[i].Points.Count)
+                    && (Utilities.UtilRandom.Next(100) > Clouds[i].Points.Count);
+                for (int s = 0; s < Clouds[i].Sizes.Count; s++)
+                {
+                    Clouds[i].Sizes[s] += 0.1f;
+                    if (Clouds[i].Sizes[s] > Clouds[i].EndSizes[s])
+                    {
+                        Clouds[i].Sizes[s] = Clouds[i].EndSizes[s];
+                    }
+                }
+                foreach (PlayerEntity player in Players)
+                {
+                    bool prev = player.ShouldSeePositionOneSecondAgo(ppos);
+                    bool curr = player.ShouldSeePosition(Clouds[i].Position);
+                    if (prev && !curr)
+                    {
+                        player.Network.SendPacket(new RemoveCloudPacketOut(Clouds[i].CID));
+                    }
+                    else if (curr && (Clouds[i].IsNew || !prev))
+                    {
+                        player.Network.SendPacket(new AddCloudPacketOut(Clouds[i]));
+                    }
+                }
+                Clouds[i].IsNew = false;
+                if (changed)
+                {
+                    AddToCloud(Clouds[i], 0f);
+                    foreach (PlayerEntity player in Players)
+                    {
+                        bool curr = player.ShouldSeePosition(Clouds[i].Position);
+                        if (curr)
+                        {
+                            player.Network.SendPacket(new AddToCloudPacketOut(Clouds[i], Clouds[i].Points.Count - 1));
+                        }
+                    }
+                }
                 Location cpos = ChunkLocFor(Clouds[i].Position);
                 if (!LoadedChunks.ContainsKey(cpos))
                 {
                     DeleteCloud(Clouds[i]);
                     continue;
                 }
-                bool changed = (Utilities.UtilRandom.Next(100) > Clouds[i].Points.Count)
-                    && (Utilities.UtilRandom.Next(100) > Clouds[i].Points.Count)
-                    && (Utilities.UtilRandom.Next(100) > Clouds[i].Points.Count)
-                    && (Utilities.UtilRandom.Next(100) > Clouds[i].Points.Count);
-                if (changed)
-                {
-                    AddToCloud(Clouds[i], 0f);
-                }
-                for (int s = 0; s < Clouds[i].Sizes.Count; s++)
-                {
-                    Clouds[i].Sizes[s] += (float)Utilities.UtilRandom.NextDouble() * 0.2f;
-                    if (Clouds[i].Sizes[s] > Clouds[i].EndSizes[s])
-                    {
-                        Clouds[i].Sizes[s] = Clouds[i].EndSizes[s];
-                    }
-
-                }
-                foreach (PlayerEntity player in Players)
-                {
-                    bool prev = player.ShouldSeePositionPreviously(ppos);
-                    bool curr = player.ShouldSeePosition(Clouds[i].Position);
-                    if (prev && !curr)
-                    {
-                        player.Network.SendPacket(new RemoveCloudPacketOut(Clouds[i].CID));
-                    }
-                    else if (curr)// && (!prev || changed))
-                    {
-                        player.Network.SendPacket(new AddCloudPacketOut(Clouds[i]));
-                    }
-                }
+            }
+            foreach (PlayerEntity player in Players)
+            {
+                player.losPos = player.GetPosition();
             }
         }
 

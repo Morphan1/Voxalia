@@ -149,6 +149,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddCloudPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddJointPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddToCloudPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AnimationPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\BlockEditPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\ChunkForgetPacketOut.cs" />

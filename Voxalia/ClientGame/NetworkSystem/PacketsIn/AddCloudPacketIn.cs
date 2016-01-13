@@ -33,6 +33,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 cloud.Points.Add(Location.FromBytes(dr.ReadBytes(12), 0));
                 cloud.Sizes.Add(dr.ReadFloat());
+                cloud.EndSizes.Add(dr.ReadFloat());
             }
             TheClient.TheRegion.Clouds.Add(cloud);
             dr.Close();

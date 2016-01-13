@@ -16,6 +16,8 @@ namespace Voxalia.ServerGame.WorldSystem
         
         public long CID;
 
+        public bool IsNew = true;
+
         public Region TheRegion;
 
         public Location Position = Location.Zero;

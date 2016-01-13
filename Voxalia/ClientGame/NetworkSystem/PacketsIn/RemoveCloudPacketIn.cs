@@ -23,7 +23,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     return true;
                 }
             }
-            return false;
+            // Pass anyway, it's not important.
+            return true;
         }
     }
 }

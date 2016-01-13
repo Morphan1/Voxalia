@@ -25,5 +25,7 @@ namespace Voxalia.ClientGame.WorldSystem
         public List<Location> Points = new List<Location>();
 
         public List<float> Sizes = new List<float>();
+
+        public List<float> EndSizes = new List<float>();
     }
 }

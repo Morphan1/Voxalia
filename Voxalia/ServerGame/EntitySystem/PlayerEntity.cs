@@ -664,7 +664,21 @@ namespace Voxalia.ServerGame.EntitySystem
             base.Tick();
         }
 
+        public Location losPos = Location.NaN;
+
         public EntityUseable UsedNow = null;
+
+        public bool ShouldSeeChunkOneSecondAgo(Location cpos)
+        {
+            Location wpos = TheRegion.ChunkLocFor(losPos);
+            if (Math.Abs(cpos.X - wpos.X) > ViewRadiusInChunks
+                || Math.Abs(cpos.Y - wpos.Y) > ViewRadiusInChunks
+                || Math.Abs(cpos.Z - wpos.Z) > ViewRadiusInChunks)
+            {
+                return false;
+            }
+            return true;
+        }
 
         public bool ShouldSeeChunkPreviously(Location cpos)
         {
@@ -688,6 +702,15 @@ namespace Voxalia.ServerGame.EntitySystem
                 return false;
             }
             return true;
+        }
+
+        public bool ShouldSeePositionOneSecondAgo(Location pos)
+        {
+            if (pos.IsNaN() || losPos.IsNaN())
+            {
+                return false;
+            }
+            return ShouldSeeChunkOneSecondAgo(TheRegion.ChunkLocFor(pos));
         }
 
         public bool ShouldSeePositionPreviously(Location pos)

@@ -306,6 +306,10 @@ namespace Voxalia.ClientGame.NetworkSystem
                         packet = new RemoveCloudPacketIn();
                         usage = NetUsageType.CLOUDS;
                         break;
+                    case 37:
+                        packet = new AddToCloudPacketIn();
+                        usage = NetUsageType.CLOUDS;
+                        break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);
                 }
