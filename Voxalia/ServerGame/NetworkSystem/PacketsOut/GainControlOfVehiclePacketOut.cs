@@ -10,12 +10,12 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     public class GainControlOfVehiclePacketOut: AbstractPacketOut
     {
-        public GainControlOfVehiclePacketOut(PlayerEntity player, VehicleEntity vehicle)
+        public GainControlOfVehiclePacketOut(CharacterEntity character, VehicleEntity vehicle)
         {
             ID = 34;
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);
-            dw.WriteLong(player.EID);
+            dw.WriteLong(character.EID);
             dw.WriteInt(vehicle.DrivingMotors.Count);
             dw.WriteInt(vehicle.SteeringMotors.Count);
             for (int i = 0; i < vehicle.DrivingMotors.Count; i++)

@@ -170,9 +170,9 @@ namespace Voxalia.ServerGame.EntitySystem
             // Do nothing.
         }
 
-        public void Accepted(PlayerEntity player)
+        public void Accepted(CharacterEntity character)
         {
-            GainControlOfVehiclePacketOut gcovpo = new GainControlOfVehiclePacketOut(player, this);
+            GainControlOfVehiclePacketOut gcovpo = new GainControlOfVehiclePacketOut(character, this);
             foreach (PlayerEntity plent in TheRegion.Players)
             {
                 if (plent.ShouldSeePosition(GetPosition()))
@@ -183,17 +183,17 @@ namespace Voxalia.ServerGame.EntitySystem
             // TODO: handle players coming into/out-of view of the vehicle + driver!
         }
 
-        public void HandleInput(PlayerEntity player)
+        public void HandleInput(CharacterEntity character)
         {
             // TODO: Dynamic potential values.
-            if (player.Forward)
+            if (character.Forward)
             {
                 foreach (JointVehicleMotor motor in DrivingMotors)
                 {
                     motor.Motor.Settings.VelocityMotor.GoalVelocity = 100f;
                 }
             }
-            else if (player.Backward)
+            else if (character.Backward)
             {
                 foreach (JointVehicleMotor motor in DrivingMotors)
                 {
@@ -207,14 +207,14 @@ namespace Voxalia.ServerGame.EntitySystem
                     motor.Motor.Settings.VelocityMotor.GoalVelocity = 0f;
                 }
             }
-            if (player.Rightward)
+            if (character.Rightward)
             {
                 foreach (JointVehicleMotor motor in SteeringMotors)
                 {
                     motor.Motor.Settings.Servo.Goal = MathHelper.Pi * -0.2f;
                 }
             }
-            else if (player.Leftward)
+            else if (character.Leftward)
             {
                 foreach (JointVehicleMotor motor in SteeringMotors)
                 {

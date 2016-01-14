@@ -128,6 +128,111 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        public override void Tick()
+        {
+            if (TheRegion.Delta <= 0)
+            {
+                return;
+            }
+            while (Direction.Yaw < 0)
+            {
+                Direction.Yaw += 360;
+            }
+            while (Direction.Yaw > 360)
+            {
+                Direction.Yaw -= 360;
+            }
+            if (Direction.Pitch > 89.9f)
+            {
+                Direction.Pitch = 89.9f;
+            }
+            if (Direction.Pitch < -89.9f)
+            {
+                Direction.Pitch = -89.9f;
+            }
+            CBody.ViewDirection = Utilities.ForwardVector_Deg(Direction.Yaw, Direction.Pitch).ToBVector();
+            if (Upward && !IsFlying && !pup && CBody.SupportFinder.HasSupport)
+            {
+                CBody.Jump();
+                pup = true;
+            }
+            else if (!Upward)
+            {
+                pup = false;
+            }
+            float speedmod = Sprint ? 1.5f : (Walk ? 0.5f : 1f);
+            if (ItemDoSpeedMod)
+            {
+                speedmod *= ItemSpeedMod;
+            }
+            Material mat = TheRegion.GetBlockMaterial(GetPosition() + new Location(0, 0, -0.05f));
+            speedmod *= mat.GetSpeedMod();
+            CBody.StandingSpeed = CBStandSpeed * speedmod;
+            CBody.CrouchingSpeed = CBCrouchSpeed * speedmod;
+            float frictionmod = 1f;
+            frictionmod *= mat.GetFrictionMod();
+            CBody.SlidingForce = CBSlideForce * frictionmod * Mass;
+            CBody.AirForce = CBAirForce * frictionmod * Mass;
+            CBody.TractionForce = CBTractionForce * frictionmod * Mass;
+            CBody.VerticalMotionConstraint.MaximumGlueForce = CBGlueForce * Mass;
+            if (CurrentSeat == null)
+            {
+                Vector3 movement = new Vector3(0, 0, 0);
+                if (Leftward)
+                {
+                    movement.X = -1;
+                }
+                if (Rightward)
+                {
+                    movement.X = 1;
+                }
+                if (Backward)
+                {
+                    movement.Y = -1;
+                }
+                if (Forward)
+                {
+                    movement.Y = 1;
+                }
+                if (Upward && IsFlying)
+                {
+                    movement.Z = 1;
+                }
+                else if (Downward && IsFlying)
+                {
+                    movement.Z = -1;
+                }
+                if (movement.LengthSquared() > 0)
+                {
+                    movement.Normalize();
+                }
+                if (Downward)
+                {
+                    CBody.StanceManager.DesiredStance = Stance.Crouching;
+                }
+                else
+                {
+                    CBody.StanceManager.DesiredStance = DesiredStance;
+                }
+                CBody.HorizontalMotionConstraint.MovementDirection = new Vector2(movement.X, movement.Y);
+                if (IsFlying)
+                {
+                    Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, movement.Z), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
+                    SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Sprint ? 2 : (Walk ? 0.5 : 1)));
+                    CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
+                    Body.LinearVelocity = new Vector3(0, 0, 0);
+                }
+            }
+            else
+            {
+                CurrentSeat.HandleInput(this);
+            }
+            CursorMarker.SetPosition(GetEyePosition() + ForwardVector() * 0.9f);
+            CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(Direction.Pitch * Utilities.PI180)) *
+                Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(Direction.Yaw * Utilities.PI180)));
+            base.Tick();
+        }
+
         public float CBHHeight = 1.3f;
 
         public float CBProneSpeed = 1f;
@@ -186,9 +291,26 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool IsFlying = false;
         public float PreFlyMass = 0;
 
-        public abstract void Fly();
+        public virtual void Fly()
+        {
+            if (IsFlying)
+            {
+                return;
+            }
+            PreFlyMass = GetMass();
+            IsFlying = true;
+            SetMass(0);
+        }
 
-        public abstract void Unfly();
+        public virtual void Unfly()
+        {
+            if (!IsFlying)
+            {
+                return;
+            }
+            SetMass(PreFlyMass);
+            IsFlying = false;
+        }
 
         public Stance DesiredStance = Stance.Standing;
 

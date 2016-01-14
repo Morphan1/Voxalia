@@ -180,10 +180,10 @@ namespace Voxalia.ClientGame.EntitySystem
                 TheClient.Models.GetModel("items/weapons/gun01").Draw(); // TODO: Grab correct model!
                 bonemat = OpenTK.Matrix4.Identity;
                 GL.UniformMatrix4(10, false, ref bonemat);
-                if (!TheClient.RenderingShadows)
-                {
-                    TheClient.Rendering.SetReflectionAmt(0f);
-                }
+            }
+            if (!TheClient.RenderingShadows)
+            {
+                TheClient.Rendering.SetReflectionAmt(0f);
             }
         }
     }

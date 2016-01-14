@@ -7,24 +7,25 @@ using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    class TargetEntity: ModelEntity, EntityDamageable
+    class TargetEntity: CharacterEntity
     {
         public TargetEntity(Region tregion) :
-            base ("cube", tregion)
+            base (tregion, 100)
         {
-            SetMass(10);
+            SetMass(70);
         }
 
-        public float Health = 100;
-
-        public float MaxHealth = 100;
-
-        public float GetHealth()
+        public override EntityType GetEntityType()
         {
-            return Health;
+            return EntityType.TARGET_ENTITY;
         }
 
         public double NextBoing = 0;
+
+        public override byte[] GetSaveBytes()
+        {
+            return null; // TODO: Save
+        }
 
         public override void Tick()
         {
@@ -33,35 +34,15 @@ namespace Voxalia.ServerGame.EntitySystem
             if (NextBoing <= 0)
             {
                 NextBoing = Utilities.UtilRandom.NextDouble() * 2;
-                ApplyForce(new Location(Utilities.UtilRandom.NextDouble() * GetMass(), Utilities.UtilRandom.NextDouble() * GetMass(), GetMass() * Utilities.UtilRandom.NextDouble() * 10));
+                Forward = Utilities.UtilRandom.Next(100) > 50;
+                Backward = Utilities.UtilRandom.Next(100) > 50;
+                Leftward = Utilities.UtilRandom.Next(100) > 50;
+                Rightward = Utilities.UtilRandom.Next(100) > 50;
+                Upward = Utilities.UtilRandom.Next(100) > 75;
             }
         }
-
-        public float GetMaxHealth()
-        {
-            return MaxHealth;
-        }
-
-        public void SetHealth(float health)
-        {
-            Health = health;
-            if (Health <= 0)
-            {
-                Kill();
-            }
-        }
-
-        public void SetMaxHealth(float health)
-        {
-            MaxHealth = health;
-        }
-
-        public void Damage(float amount)
-        {
-            SetHealth(GetHealth() - amount);
-        }
-
-        public void Kill()
+        
+        public override void Die()
         {
             if (Removed)
             {
