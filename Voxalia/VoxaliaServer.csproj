@@ -80,6 +80,7 @@
     <Compile Include="ServerGame\EntitySystem\BlockItemEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\BulletEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\BlockGroupEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\CharacterEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
     <Compile Include="ServerGame\EntitySystem\EntityDamageable.cs" />
     <Compile Include="ServerGame\EntitySystem\LivingEntity.cs" />
