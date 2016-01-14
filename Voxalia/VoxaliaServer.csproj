@@ -95,6 +95,7 @@
     <Compile Include="ServerGame\EntitySystem\Seat.cs" />
     <Compile Include="ServerGame\EntitySystem\SmokeGrenadeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\SpawnPointEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\TargetEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\VehicleEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\VehiclePartEntity.cs" />
     <Compile Include="ServerGame\ItemSystem\BaseItemInfo.cs" />

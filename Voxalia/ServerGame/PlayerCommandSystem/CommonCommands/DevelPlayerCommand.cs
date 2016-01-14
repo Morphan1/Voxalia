@@ -85,6 +85,12 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 entry.Player.TheRegion.SpawnTree(entry.InputArguments[1].ToLowerInvariant(), entry.Player.GetPosition());
             }
+            else if (arg0 == "spawnTarget")
+            {
+                TargetEntity te = new TargetEntity(entry.Player.TheRegion);
+                te.SetPosition(entry.Player.GetPosition() + entry.Player.ForwardVector() * 5);
+                te.TheRegion.SpawnEntity(te);
+            }
             else if (arg0 == "gameMode" && entry.InputArguments.Count > 1)
             {
                 GameMode mode;
