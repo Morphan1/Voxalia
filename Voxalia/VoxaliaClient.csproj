@@ -127,6 +127,7 @@
     <Compile Include="ClientGame\EntitySystem\BasicPrimitiveEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\BlockItemEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\BlockGroupEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\CharacterEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\Entity.cs" />
     <Compile Include="ClientGame\EntitySystem\EntityAnimated.cs" />
     <Compile Include="ClientGame\EntitySystem\GlowstickEntity.cs" />
