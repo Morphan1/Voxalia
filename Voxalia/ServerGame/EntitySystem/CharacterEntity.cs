@@ -21,18 +21,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool Upward = false;
 
-        public bool Forward = false;
+        public float XMove;
 
-        public bool Backward = false;
-
-        public bool Leftward = false;
-
-        public bool Rightward = false;
-
-        public bool Walk = false;
-
-        public bool Sprint = false;
-
+        public float YMove;
+        
         public bool Downward = false;
 
         public bool Click = false;
@@ -160,7 +152,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 pup = false;
             }
-            float speedmod = Sprint ? 1.5f : (Walk ? 0.5f : 1f);
+            float speedmod = new Vector2(XMove, YMove).Length() * 2;
             if (ItemDoSpeedMod)
             {
                 speedmod *= ItemSpeedMod;
@@ -177,23 +169,7 @@ namespace Voxalia.ServerGame.EntitySystem
             CBody.VerticalMotionConstraint.MaximumGlueForce = CBGlueForce * Mass;
             if (CurrentSeat == null)
             {
-                Vector3 movement = new Vector3(0, 0, 0);
-                if (Leftward)
-                {
-                    movement.X = -1;
-                }
-                if (Rightward)
-                {
-                    movement.X = 1;
-                }
-                if (Backward)
-                {
-                    movement.Y = -1;
-                }
-                if (Forward)
-                {
-                    movement.Y = 1;
-                }
+                Vector3 movement = new Vector3(XMove, YMove, 0);
                 if (Upward && IsFlying)
                 {
                     movement.Z = 1;
@@ -218,7 +194,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 if (IsFlying)
                 {
                     Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, movement.Z), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                    SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Sprint ? 2 : (Walk ? 0.5 : 1)));
+                    SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * speedmod);
                     CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                     Body.LinearVelocity = new Vector3(0, 0, 0);
                 }

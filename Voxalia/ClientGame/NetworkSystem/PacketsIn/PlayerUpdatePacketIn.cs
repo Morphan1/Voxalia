@@ -8,7 +8,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 8 + 12 + 12 + 2 + 4 + 4 + 1)
+            if (data.Length != 8 + 12 + 12 + 2 + 4 + 4 + 1 + 4 + 4)
             {
                 SysConsole.Output(OutputType.WARNING, "Invalid length for PlayerUpdatePacketIn!");
                 return false;
@@ -23,6 +23,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             ang.Yaw = dX;
             ang.Pitch = dY;
             byte st = data[8 + 12 + 12 + 2 + 4 + 4];
+            float xm = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 12 + 12 + 2 + 4 + 4 + 1, 4));
+            float ym = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 12 + 12 + 2 + 4 + 4 + 1 + 4, 4));
             Stance stance = Stance.Standing;
             if (st == 1)
             {
@@ -38,12 +40,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                         e.SetPosition(pos);
                         e.SetVelocity(vel);
                         e.Direction = ang;
-                        e.Forward = (keys & 1) == 1;
-                        e.Backward = (keys & 2) == 2;
-                        e.Leftward = (keys & 4) == 4;
-                        e.Rightward = (keys & 8) == 8;
-                        e.Upward = (keys & 16) == 16;
+                        e.Upward = (keys & 1) == 1;
+                        e.Downward = (keys & 8) == 8;
                         e.CBody.StanceManager.DesiredStance = stance;
+                        e.XMove = xm;
+                        e.YMove = ym;
                         return true;
                     }
                 }

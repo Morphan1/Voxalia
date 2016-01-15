@@ -1,5 +1,6 @@
 ﻿using Voxalia.Shared;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
+using BEPUutilities;
 
 namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
 {
@@ -7,19 +8,13 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 8 + 2 + 4 + 4)
+            if (data.Length != 8 + 2 + 4 + 4 + 4 + 4)
             {
                 return false;
             }
             long tid = Utilities.BytesToLong(Utilities.BytesPartial(data, 0, 8));
             KeysPacketData val = (KeysPacketData)Utilities.BytesToUshort(Utilities.BytesPartial(data, 8, 2));
-            Player.Forward = val.HasFlag(KeysPacketData.FORWARD);
-            Player.Backward = val.HasFlag(KeysPacketData.BACKWARD);
-            Player.Leftward = val.HasFlag(KeysPacketData.LEFTWARD);
-            Player.Rightward = val.HasFlag(KeysPacketData.RIGHTWARD);
             Player.Upward = val.HasFlag(KeysPacketData.UPWARD);
-            Player.Walk = val.HasFlag(KeysPacketData.WALK);
-            Player.Sprint = val.HasFlag(KeysPacketData.SPRINT);
             Player.Downward = val.HasFlag(KeysPacketData.DOWNWARD);
             Player.Click = val.HasFlag(KeysPacketData.CLICK);
             Player.AltClick = val.HasFlag(KeysPacketData.ALTCLICK);
@@ -29,22 +24,25 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             Player.LastKPI = Player.TheRegion.GlobalTickTime;
             Player.Direction.Yaw = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2, 4));
             Player.Direction.Pitch = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4, 4));
+            float x = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4 + 4, 4));
+            float y = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4 + 4 + 4, 4));
+            Vector2 tmove = new Vector2(x, y);
+            if (tmove.LengthSquared() > 1f)
+            {
+                tmove.Normalize();
+            }
+            Player.XMove = tmove.X;
+            Player.YMove = tmove.Y;
             return true;
         }
     }
 
     public enum KeysPacketData : ushort // TODO: Network enum?
     {
-        FORWARD = 1,
-        BACKWARD = 2,
-        LEFTWARD = 4,
-        RIGHTWARD = 8,
-        UPWARD = 16,
-        WALK = 32,
-        CLICK = 64,
-        ALTCLICK = 128,
-        SPRINT = 256,
-        DOWNWARD = 256 * 2,
-        USE = 256 * 4
+        UPWARD = 1,
+        CLICK = 2,
+        ALTCLICK = 4,
+        DOWNWARD = 8,
+        USE = 16
     }
 }

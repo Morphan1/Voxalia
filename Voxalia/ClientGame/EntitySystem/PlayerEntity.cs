@@ -233,12 +233,8 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 ID = cPacketID++,
                 Upward = Upward,
-                Sprint = Sprint,
-                Walk = Walk,
-                Forward = Forward,
-                Backward = Backward,
-                Leftward = Leftward,
-                Rightward = Rightward,
+                XMove = XMove,
+                YMove = YMove,
                 Direction = Direction,
                 Position = GetPosition(),
                 Velocity = GetVelocity(),
@@ -254,34 +250,16 @@ namespace Voxalia.ClientGame.EntitySystem
         public void UpdateLocalMovement()
         {
             AddUIS();
-            KeysPacketData kpd = (Forward ? KeysPacketData.FORWARD : 0) | (Backward ? KeysPacketData.BACKWARD : 0)
-                 | (Leftward ? KeysPacketData.LEFTWARD : 0) | (Rightward ? KeysPacketData.RIGHTWARD : 0)
-                 | (Upward ? KeysPacketData.UPWARD : 0) | (Walk ? KeysPacketData.WALK : 0)
+            KeysPacketData kpd = (Upward ? KeysPacketData.UPWARD : 0)
                   | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK : 0)
-                  | (Sprint ? KeysPacketData.SPRINT : 0) | (Downward ? KeysPacketData.DOWNWARD : 0)
+                  | (Downward ? KeysPacketData.DOWNWARD : 0)
                   | (Use ? KeysPacketData.USE : 0);
-            TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction));
+            TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction, lUIS.XMove, lUIS.YMove));
         }
 
         public void SetBodyMovement(CharacterController cc, UserInputSet uis)
         {
-            Vector2 movement = new Vector2(0, 0);
-            if (uis.Leftward)
-            {
-                movement.X = -1;
-            }
-            if (uis.Rightward)
-            {
-                movement.X = 1;
-            }
-            if (uis.Backward)
-            {
-                movement.Y = -1;
-            }
-            if (uis.Forward)
-            {
-                movement.Y = 1;
-            }
+            Vector2 movement = new Vector2(uis.XMove, uis.YMove);
             if (movement.LengthSquared() > 0)
             {
                 movement.Normalize();
@@ -314,7 +292,7 @@ namespace Voxalia.ClientGame.EntitySystem
                     move = move.Normalize();
                 }
                 Location forw = Utilities.RotateVector(move, Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                cc.Body.Position += (forw * delta * CBStandSpeed * 2 * (uis.Sprint ? 2 : (uis.Walk ? 0.5 : 1))).ToBVector();
+                cc.Body.Position += (forw * delta * CBStandSpeed * 4 * (new Vector2(uis.XMove, uis.YMove).Length())).ToBVector();
                 cc.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 cc.Body.LinearVelocity = new Vector3(0, 0, 0);
             }
@@ -344,7 +322,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public void SetMoveSpeed(CharacterController cc, UserInputSet uis)
         {
-            float speedmod = uis.Sprint ? 1.5f : (uis.Walk ? 0.5f : 1f);
+            float speedmod = new Vector2(uis.XMove, uis.YMove).Length() * 2;
             if (Click)
             {
                 ItemStack item = TheClient.GetItemForSlot(TheClient.QuickBarPos);
@@ -369,6 +347,20 @@ namespace Voxalia.ClientGame.EntitySystem
             cc.VerticalMotionConstraint.MaximumGlueForce = CBGlueForce * Mass;
         }
 
+        public bool PGPJump;
+        public bool PGPPrimary;
+        public bool PGPSecondary;
+        public bool PGPDPadLeft;
+        public bool PGPDPadRight;
+        public bool PGPUse;
+
+        public bool Forward;
+        public bool Backward;
+        public bool Leftward;
+        public bool Rightward;
+        public bool Sprint;
+        public bool Walk;
+
         public override void Tick()
         {
             if (!(TheClient.CScreen is GameScreen))
@@ -383,46 +375,60 @@ namespace Voxalia.ClientGame.EntitySystem
             Direction.Pitch += MouseHandler.MouseDelta.Y;
             Direction.Yaw += GamePadHandler.TotalDirectionX * 90f * TheRegion.Delta;
             Direction.Pitch += GamePadHandler.TotalDirectionY * 45f * TheRegion.Delta;
-            if (GamePadHandler.TotalMovementX > 0.5)
+            Vector2 tmove;
+            if (Math.Abs(GamePadHandler.TotalMovementX) > 0.05) // TODO: Threshold CVar!
             {
-                PGPRight = true;
-                Rightward = true;
+                tmove.X = (float)GamePadHandler.TotalMovementX;
             }
-            else if (PGPRight)
+            else
             {
-                Rightward = false;
-                PGPRight = false;
+                tmove.X = 0;
             }
-            if (GamePadHandler.TotalMovementY > 0.5)
+            if (Math.Abs(GamePadHandler.TotalMovementY) > 0.05)
             {
-                PGPUp = true;
-                Forward = true;
+                tmove.Y = (float)GamePadHandler.TotalMovementY;
             }
-            else if (PGPUp)
+            else
             {
-                Forward = false;
-                PGPUp = false;
+                tmove.Y = 0;
             }
-            if (GamePadHandler.TotalMovementX < -0.5)
+            if (tmove.LengthSquared() > 1)
             {
-                PGPLeft = true;
-                Leftward = true;
+                tmove.Normalize();
             }
-            else if (PGPLeft)
+            if (tmove.X == 0 && tmove.Y == 0)
             {
-                Leftward = false;
-                PGPLeft = false;
+                if (Forward)
+                {
+                    tmove.Y = 1;
+                }
+                if (Backward)
+                {
+                    tmove.Y = -1;
+                }
+                if (Rightward)
+                {
+                    tmove.X = 1;
+                }
+                if (Leftward)
+                {
+                    tmove.X = -1;
+                }
+                if (tmove.LengthSquared() > 1)
+                {
+                    tmove.Normalize();
+                    if (Walk)
+                    {
+                        tmove *= 0.5f;
+                    }
+                    if (!Sprint)
+                    {
+                        tmove *= 0.5f;
+                    }
+                }
             }
-            if (GamePadHandler.TotalMovementY < -0.5)
-            {
-                PGPDown = true;
-                Backward = true;
-            }
-            else if (PGPDown)
-            {
-                Backward = false;
-                PGPDown = false;
-            }
+            XMove = tmove.X;
+            YMove = tmove.Y;
             if (GamePadHandler.JumpKey)
             {
                 PGPJump = true;
@@ -481,12 +487,12 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 PGPUse = true;
                 TheClient.Commands.ExecuteCommands("use");
-                //TODO: Use = true;
+                Use = true;
             }
             else if (PGPUse)
             {
                 PGPUse = false;
-                //TODO: Use = false;
+                Use = false;
             }
             while (Direction.Yaw < 0)
             {
@@ -667,18 +673,10 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Upward;
 
         public bool pup;
+        
+        public float XMove;
 
-        public bool Walk;
-
-        public bool Sprint;
-
-        public bool Forward;
-
-        public bool Backward;
-
-        public bool Leftward;
-
-        public bool Rightward;
+        public float YMove;
 
         public bool Downward;
 

@@ -34,16 +34,10 @@ namespace Voxalia.ClientGame.EntitySystem
             : base(tregion, true, true)
         {
         }
-
-        public bool Forward = false;
-        public bool Backward = false;
-        public bool Leftward = false;
-        public bool Rightward = false;
+        
         public bool Upward = false;
         public bool Click = false;
         public bool AltClick = false;
-        public bool Walk = false;
-        public bool Sprint = false;
         public bool Downward = false;
         public bool Use = false;
 
@@ -103,17 +97,10 @@ namespace Voxalia.ClientGame.EntitySystem
             new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(GetPosition(), sound, 1f, 0.14f * (float)GetVelocity().Length());
             SoundTimeout = (Utilities.UtilRandom.NextDouble() * 0.2 + 1.0) / GetVelocity().Length();
         }
+        
+        public float XMove = 0;
 
-        public bool PGPLeft;
-        public bool PGPRight;
-        public bool PGPUp;
-        public bool PGPDown;
-        public bool PGPJump;
-        public bool PGPPrimary;
-        public bool PGPSecondary;
-        public bool PGPDPadLeft;
-        public bool PGPDPadRight;
-        public bool PGPUse;
+        public float YMove = 0;
 
         public List<JointVehicleMotor> DrivingMotors = new List<JointVehicleMotor>();
 
@@ -121,47 +108,13 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public void MoveVehicle()
         {
-            if (Forward)
+            foreach (JointVehicleMotor motor in DrivingMotors)
             {
-                foreach (JointVehicleMotor motor in DrivingMotors)
-                {
-                    motor.Motor.Settings.VelocityMotor.GoalVelocity = 100f;
-                }
+                motor.Motor.Settings.VelocityMotor.GoalVelocity = YMove * 100;
             }
-            else if (Backward)
+            foreach (JointVehicleMotor motor in SteeringMotors)
             {
-                foreach (JointVehicleMotor motor in DrivingMotors)
-                {
-                    motor.Motor.Settings.VelocityMotor.GoalVelocity = -100f;
-                }
-            }
-            else
-            {
-                foreach (JointVehicleMotor motor in DrivingMotors)
-                {
-                    motor.Motor.Settings.VelocityMotor.GoalVelocity = 0f;
-                }
-            }
-            if (Rightward)
-            {
-                foreach (JointVehicleMotor motor in SteeringMotors)
-                {
-                    motor.Motor.Settings.Servo.Goal = MathHelper.Pi * -0.2f;
-                }
-            }
-            else if (Leftward)
-            {
-                foreach (JointVehicleMotor motor in SteeringMotors)
-                {
-                    motor.Motor.Settings.Servo.Goal = MathHelper.Pi * 0.2f;
-                }
-            }
-            else
-            {
-                foreach (JointVehicleMotor motor in SteeringMotors)
-                {
-                    motor.Motor.Settings.Servo.Goal = 0f;
-                }
+                motor.Motor.Settings.Servo.Goal = MathHelper.Pi * -0.2f * XMove;
             }
         }
 

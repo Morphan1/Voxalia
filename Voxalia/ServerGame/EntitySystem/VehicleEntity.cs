@@ -185,48 +185,14 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public void HandleInput(CharacterEntity character)
         {
-            // TODO: Dynamic potential values.
-            if (character.Forward)
+            // TODO: Dynamic multiplier values.
+            foreach (JointVehicleMotor motor in DrivingMotors)
             {
-                foreach (JointVehicleMotor motor in DrivingMotors)
-                {
-                    motor.Motor.Settings.VelocityMotor.GoalVelocity = 100f;
-                }
+                motor.Motor.Settings.VelocityMotor.GoalVelocity = character.YMove * 100;
             }
-            else if (character.Backward)
+            foreach (JointVehicleMotor motor in SteeringMotors)
             {
-                foreach (JointVehicleMotor motor in DrivingMotors)
-                {
-                    motor.Motor.Settings.VelocityMotor.GoalVelocity = -100f;
-                }
-            }
-            else
-            {
-                foreach (JointVehicleMotor motor in DrivingMotors)
-                {
-                    motor.Motor.Settings.VelocityMotor.GoalVelocity = 0f;
-                }
-            }
-            if (character.Rightward)
-            {
-                foreach (JointVehicleMotor motor in SteeringMotors)
-                {
-                    motor.Motor.Settings.Servo.Goal = MathHelper.Pi * -0.2f;
-                }
-            }
-            else if (character.Leftward)
-            {
-                foreach (JointVehicleMotor motor in SteeringMotors)
-                {
-                    motor.Motor.Settings.Servo.Goal = MathHelper.Pi * 0.2f;
-                }
-            }
-            else
-            {
-                foreach (JointVehicleMotor motor in SteeringMotors)
-                {
-                    motor.Motor.Settings.Servo.Goal = 0f;
-                }
+                motor.Motor.Settings.Servo.Goal = MathHelper.Pi * -0.2f * character.XMove;
             }
         }
     }

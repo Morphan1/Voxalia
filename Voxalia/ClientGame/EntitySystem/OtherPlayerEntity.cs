@@ -80,7 +80,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 pup = false;
             }
-            float speedmod = 1f;
+            float speedmod = new Vector2(XMove, YMove).Length();
             Material mat = TheRegion.GetBlockMaterial(GetPosition() + new Location(0, 0, -0.05f));
             speedmod *= mat.GetSpeedMod();
             CBody.StandingSpeed = CBStandSpeed * speedmod;
@@ -91,32 +91,17 @@ namespace Voxalia.ClientGame.EntitySystem
             CBody.AirForce = CBAirForce * frictionmod * Mass;
             CBody.TractionForce = CBTractionForce * frictionmod * Mass;
             CBody.VerticalMotionConstraint.MaximumGlueForce = CBGlueForce * Mass;
-            Vector2 movement = new Vector2(0, 0);
-            if (Leftward)
-            {
-                movement.X = -1;
-            }
-            if (Rightward)
-            {
-                movement.X = 1;
-            }
-            if (Backward)
-            {
-                movement.Y = -1;
-            }
-            if (Forward)
-            {
-                movement.Y = 1;
-            }
+            Vector2 movement = new Vector2(XMove, YMove);
             if (movement.LengthSquared() > 0)
             {
                 movement.Normalize();
             }
             CBody.HorizontalMotionConstraint.MovementDirection = movement;
+            // TODO: Update all this movement stuff
             if (IsFlying)
             {
                 Location forw = Utilities.RotateVector(new Location(-movement.Y, movement.X, 0), Direction.Yaw * Utilities.PI180, Direction.Pitch * Utilities.PI180);
-                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * (Upward ? 2 : 1));
+                SetPosition(GetPosition() + forw * TheRegion.Delta * CBStandSpeed * 2 * speedmod);
                 CBody.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 Body.LinearVelocity = new Vector3(0, 0, 0);
             }
