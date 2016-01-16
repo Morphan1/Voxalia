@@ -31,7 +31,7 @@ namespace Voxalia.ServerGame.ItemSystem
             ItemStack ist;
             if (BaseItems.TryGetValue(low, out ist))
             {
-                return ist;
+                return ist.Duplicate();
             }
             ist = Load(low);
             if (ist == null)
@@ -39,7 +39,7 @@ namespace Voxalia.ServerGame.ItemSystem
                 return Air;
             }
             BaseItems.Add(low, ist);
-            return ist;
+            return ist.Duplicate();
         }
 
         private ItemStack Load(string name)
@@ -62,6 +62,7 @@ namespace Voxalia.ServerGame.ItemSystem
                 string res_model = "";
                 string res_bound = "";
                 string res_subtype = null;
+                string res_datum = "0";
                 foreach (string line in split)
                 {
                     if (line.Trim().Length < 3)
@@ -97,12 +98,18 @@ namespace Voxalia.ServerGame.ItemSystem
                         case "bound":
                             res_bound = dat_val;
                             break;
+                        case "datum":
+                            res_datum = dat_val;
+                            break;
                         default:
                             break;
                     }
                 }
                 // TODO: Both types of params, somehow!
-                return new ItemStack(res_type, res_subtype, TheServer, 1, res_icon, res_display, res_description, ColorTag.For(res_color).Internal, res_model, res_bound.ToLower() == "true");
+                return new ItemStack(res_type, res_subtype, TheServer, 1, res_icon, res_display, res_description, ColorTag.For(res_color).Internal, res_model, res_bound.ToLower() == "true")
+                {
+                    Datum = Utilities.StringToInt(res_datum)
+                };
             }
             catch (Exception ex)
             {

@@ -1,0 +1,8 @@
+type: block
+icon: blocks/transparent/tallgrass
+display: Tall Grass
+description: Stands tall and proud!
+color: 1,1,1
+model: block
+bound: false
+datum: 12

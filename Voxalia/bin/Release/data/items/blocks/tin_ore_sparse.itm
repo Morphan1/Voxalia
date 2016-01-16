@@ -1,0 +1,8 @@
+type: block
+icon: blocks/solid/ore/tin_ore_sparse
+display: Sparse Tin Ore
+description: Slightly tinny!
+color: 1,1,1
+model: block
+bound: false
+datum: 19

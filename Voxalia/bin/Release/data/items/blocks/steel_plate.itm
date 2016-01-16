@@ -1,0 +1,8 @@
+type: block
+icon: blocks/solid/metals/steel_plate
+display: Plated Steel
+description: Plated for extra strength!
+color: 1,1,1
+model: block
+bound: false
+datum: 15

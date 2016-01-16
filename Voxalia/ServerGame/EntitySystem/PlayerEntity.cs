@@ -146,27 +146,12 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("flashantilight", TheServer, 1, "items/common/flashlight_ico", "Flashantilight", "Lights things down!", Color.White, "items/common/flashlight", false));
             Items.GiveItem(new ItemStack("sun_angler", TheServer, 1, "items/tools/sun_angler", "Sun Angler", "Moves the sun itself!", Color.White, "items/tools/sun_angler", false));
             Items.GiveItem(new ItemStack("breadcrumb", TheServer, 1, "items/common/breadcrumbs", "Bread Crumbs", "Finds the way back, even over the river and through the woods!", Color.White, "items/common/breadcrumbs", false));
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/dirt", "Dirt", "Dirty!", Color.White, "items/block", false) { Datum = (int)Material.DIRT });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/stone", "Stone", "Gets things stoned!", Color.White, "items/block", false) { Datum = (int)Material.STONE });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/grass_forest_side", "Forest Grass", "Grassy!", Color.White, "items/block", false) { Datum = (int)Material.GRASS_FOREST });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/grass_plains_side", "Plains Grass", "Light and grassy!", Color.White, "items/block", false) { Datum = (int)Material.GRASS_PLAINS });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/special/db_top", "DebugBlock", "Not buggy!", Color.White, "items/block", false) { Datum = (int)Material.DEBUG });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/made/concrete", "Concrete", "Solid!", Color.White, "items/block", false) { Datum = (int)Material.CONCRETE });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/metals/steel_solid", "Solid Steel", "*very* solid!", Color.White, "items/block", false) { Datum = (int)Material.STEEL_SOLID });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/metals/steel_plate", "Plated Steel", "Plated for extra strength!", Color.White, "items/block", false) { Datum = (int)Material.STEEL_PLATE });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/wood", "Wood Log", "Makes a rather woody sound, doe'n'it?!", Color.White, "items/block", false) { Datum = (int)Material.LOG_OAK });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/liquid/water", "Water", "Wet!", Color.White, "items/block", false) { Datum = (int)Material.WATER });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/liquid/smoke", "Smoke", "Gaseous!", Color.White, "items/block", false) { Datum = (int)Material.SMOKE });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/liquid/slipgoo", "Slip Goo", "Slippery!", Color.White, "items/block", false) { Datum = (int)Material.SLIPGOO });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/snow", "Snow", "Cold!", Color.White, "items/block", false) { Datum = (int)Material.SNOW });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/natural/sand", "Sand", "Literally, it's sand!", Color.White, "items/block", false) { Datum = (int)Material.SAND });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/transparent/leaves_basic1", "Leaves", "Transparent in parts!", Color.White, "items/block", false) { Datum = (int)Material.LEAVES1 });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/ore/tin_ore", "Tin Ore", "Tinny!", Color.White, "items/block", false) { Datum = (int)Material.TIN_ORE });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/ore/tin_ore_sparse", "Sparse Tin Ore", "Slightly tinny!", Color.White, "items/block", false) { Datum = (int)Material.TIN_ORE_SPARSE });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/ore/copper_ore", "Copper Ore", "Coppery!", Color.White, "items/block", false) { Datum = (int)Material.COPPER_ORE });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/ore/copper_ore_sparse", "Sparse Copper Ore", "Slightly coppery!", Color.White, "items/block", false) { Datum = (int)Material.COPPER_ORE_SPARSE });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/ore/coal_ore", "Coal Ore", "Fresh from Santa!", Color.White, "items/block", false) { Datum = (int)Material.COAL_ORE });
-            Items.GiveItem(new ItemStack("block", TheServer, 100, "blocks/solid/ore/coal_ore_sparse", "Sparse Coal Ore", "Mildly bad children get some coal!", Color.White, "items/block", false) { Datum = (int)Material.COAL_ORE_SPARSE });
+            for (int i = 1; i < (int)Material.NUM_DEFAULT; i++)
+            {
+                ItemStack its = TheServer.Items.GetItem("blocks/" + ((Material)i).ToString());
+                its.Count = 100;
+                Items.GiveItem(its);
+            }
             Items.GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol_ico", "9mm Pistol", "It shoots bullets!", Color.White, "items/weapons/silenced_pistol", false));
             Items.GiveItem(new ItemStack("shotgun_gun", TheServer, 1, "items/weapons/shotgun_ico", "Shotgun", "It shoots many bullets!", Color.White, "items/weapons/shotgun", false));
             Items.GiveItem(new ItemStack("bow", TheServer, 1, "items/weapons/bow_ico", "Bow", "It shoots arrows!", Color.White, "items/weapons/bow", false));

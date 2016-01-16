@@ -1,0 +1,8 @@
+type: block
+icon: clear
+display: Air
+description: Empty Air
+color: 1,1,1
+model: none
+bound: false
+datum: 0

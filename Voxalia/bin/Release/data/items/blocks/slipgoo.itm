@@ -1,0 +1,8 @@
+type: block
+icon: blocks/liquid/slipgoo
+display: Slip-Goo
+description: Slippery!
+color: 1,1,1
+model: block
+bound: false
+datum: 8

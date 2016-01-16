@@ -1,0 +1,8 @@
+type: block
+icon: blocks/solid/metals/steel_solid
+display: Solid Steel
+description: *Very* solid!
+color: 1,1,1
+model: block
+bound: false
+datum: 14

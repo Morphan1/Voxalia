@@ -46,9 +46,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public ItemStack GetItem()
         {
-            // TODO: Proper texture / model / ...
-            return new ItemStack("block", Mat.ToString(), TheServer, 1, "", Mat.GetName(),
-                    "A standard block of " + Mat.ToString(), System.Drawing.Color.White, "cube", false) { Datum = (ushort)Mat };
+            return TheServer.Items.GetItem("blocks/" + Mat.ToString());
         }
 
         public void StartUse(Entity user)

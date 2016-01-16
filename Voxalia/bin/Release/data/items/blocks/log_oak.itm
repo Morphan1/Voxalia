@@ -1,0 +1,8 @@
+type: block
+icon: blocks/solid/natural/wood
+display: Oak Wood Log
+description: Makes a rather woody sound, doe'n'it?!
+color: 1,1,1
+model: block
+bound: false
+datum: 11

@@ -1,0 +1,8 @@
+type: block
+icon: blocks/solid/ore/tin_ore
+display: Tin Ore
+description: Tinny!
+color: 1,1,1
+model: block
+bound: false
+datum: 18

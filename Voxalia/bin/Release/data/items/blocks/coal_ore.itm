@@ -1,0 +1,8 @@
+type: block
+icon: blocks/solid/ore/coal_ore
+display: Coal Ore
+description: Fresh from Santa!
+color: 1,1,1
+model: block
+bound: false
+datum: 22
