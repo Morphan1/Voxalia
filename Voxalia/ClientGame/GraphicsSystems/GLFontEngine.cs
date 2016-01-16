@@ -262,6 +262,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     string chr = Engine.textfile[i] == '\t' ? "    " : Engine.textfile[i].ToString();
                     float nwidth = (float)Math.Ceiling(gfx.MeasureString(chr, font, new PointF(0, 0), sf).Width);
+                    if (font.Italic)
+                    {
+                        nwidth += 1;
+                    }
                     if (X + nwidth >= Engine.bwidth)
                     {
                         Y += Height + 4;
