@@ -4,13 +4,13 @@ using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.ItemSystem
 {
-    public class ItemRegistry
+    public class ItemInfoRegistry
     {
         public Dictionary<string, BaseItemInfo> Infos;
 
         public BaseItemInfo Generic;
 
-        public ItemRegistry()
+        public ItemInfoRegistry()
         {
             Infos = new Dictionary<string, BaseItemInfo>();
             Register(new ExplodobowItem());
