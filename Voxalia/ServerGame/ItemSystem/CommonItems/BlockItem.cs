@@ -84,13 +84,13 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
         public override void Click(Entity entity, ItemStack item)
         {
             // TODO: Possible store fist item info reference?
-            entity.TheServer.Items.Infos["fist"].Click(entity, item);
+            entity.TheServer.ItemInfos.Infos["fist"].Click(entity, item);
         }
 
         public override void ReleaseClick(Entity entity, ItemStack item)
         {
             // TODO: Possible store fist item info reference?
-            entity.TheServer.Items.Infos["fist"].ReleaseClick(entity, item);
+            entity.TheServer.ItemInfos.Infos["fist"].ReleaseClick(entity, item);
         }
 
         public override void Use(Entity entity, ItemStack item)

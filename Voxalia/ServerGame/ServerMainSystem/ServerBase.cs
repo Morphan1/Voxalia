@@ -56,7 +56,12 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// <summary>
         /// The system that tracks all 'item types' for use by ItemStacks.
         /// </summary>
-        public ItemInfoRegistry Items;
+        public ItemInfoRegistry ItemInfos;
+
+        /// <summary>
+        /// The system that tracks all base items.
+        /// </summary>
+        public ItemRegistry Items;
 
         /// <summary>
         /// The system that tracks all 3D models, for collision tracing purposes.
@@ -143,7 +148,8 @@ namespace Voxalia.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Loading player command engine...");
             PCEngine = new PlayerCommandEngine();
             SysConsole.Output(OutputType.INIT, "Loading item registry...");
-            Items = new ItemInfoRegistry();
+            ItemInfos = new ItemInfoRegistry();
+            Items = new ItemRegistry(this);
             SysConsole.Output(OutputType.INIT, "Loading model handler...");
             Models = new ModelEngine();
             SysConsole.Output(OutputType.INIT, "Loading animation handler...");

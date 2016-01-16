@@ -18,7 +18,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             ItemStack stack = entry.Player.Items.GetItemForSlot(entry.Player.Items.cItem);
             if (stack.IsBound)
             {
-                if (stack.Info == entry.Player.TheServer.Items.GetInfoFor("open_hand"))
+                if (stack.Info == entry.Player.TheServer.ItemInfos.GetInfoFor("open_hand")) // TODO: Better handling of special cases
                 {
                     if (entry.Player.GrabJoint != null)
                     {
