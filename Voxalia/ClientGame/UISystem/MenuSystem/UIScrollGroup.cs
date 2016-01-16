@@ -81,7 +81,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
             if (watchMouse)
             {
-                Scroll += MouseHandler.MouseScroll * 10;
+                Scroll -= MouseHandler.MouseScroll * 10;
                 if (Scroll < 0)
                 {
                     Scroll = 0;
