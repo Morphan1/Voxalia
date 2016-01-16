@@ -81,13 +81,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public byte LastCPingByte = 0;
 
         bool pkick = false;
-
-        /// <summary>
-        /// The player's primary inventory.
-        /// TODO: Split to 'quickbar' and 'maininventory'!
-        /// </summary>
-        public PlayerInventory Items;
-
+        
         /// <summary>
         /// How far (in chunks) the player can see, as a cubic radius, excluding the chunk the player is in.
         /// </summary>
@@ -144,6 +138,7 @@ namespace Voxalia.ServerGame.EntitySystem
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
             Items = new PlayerInventory(this);
+            // TODO: Better way to gather item details!
             Items.GiveItem(new ItemStack("open_hand", TheServer, 1, "items/common/open_hand_ico", "Open Hand", "Grab things!", Color.White, "items/common/hand", true));
             Items.GiveItem(new ItemStack("fist", TheServer, 1, "items/common/fist_ico", "Fist", "Hit things!", Color.White, "items/common/fist", true));
             Items.GiveItem(new ItemStack("hook", TheServer, 1, "items/common/hook_ico", "Grappling Hook", "Grab distant things!", Color.White, "items/common/hook", true));
@@ -548,8 +543,6 @@ namespace Voxalia.ServerGame.EntitySystem
             return Name;
         }
 
-        public YourStatusFlags Flags = YourStatusFlags.NONE;
-
         public override void SetHealth(float health)
         {
             base.SetHealth(health);
@@ -579,7 +572,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     break;
                 }
             }
-            SetPosition(spe.GetPosition());
+            Teleport(spe.GetPosition());
         }
     }
 

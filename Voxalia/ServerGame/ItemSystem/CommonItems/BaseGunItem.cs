@@ -43,24 +43,24 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void Click(Entity entity, ItemStack item)
         {
-            if (!(entity is PlayerEntity))
+            if (!(entity is CharacterEntity))
             {
-                // TODO: non-player support
+                // TODO: non-character support
                 return;
             }
-            PlayerEntity player = (PlayerEntity)entity;
+            CharacterEntity character = (CharacterEntity)entity;
             float fireRate = FireRate * item.GetAttributeF("firerate_mod", 1f);
-            if (item.Datum != 0 && !player.WaitingForClickRelease && (player.TheRegion.GlobalTickTime - player.LastGunShot >= fireRate))
+            if (item.Datum != 0 && !character.WaitingForClickRelease && (character.TheRegion.GlobalTickTime - character.LastGunShot >= fireRate))
             {
                 float spread = Spread * item.GetAttributeF("spread_mod", 1f);
                 float speed = Speed * item.GetAttributeF("speed_mod", 1f);
                 int shots = (int)((float)Shots * item.GetAttributeF("shots_mod", 1f));
                 for (int i = 0; i < shots; i++)
                 {
-                    BulletEntity be = new BulletEntity(player.TheRegion);
-                    be.SetPosition(player.GetEyePosition());
-                    be.NoCollide.Add(player.EID);
-                    Location ang = player.Direction;
+                    BulletEntity be = new BulletEntity(character.TheRegion);
+                    be.SetPosition(character.GetEyePosition());
+                    be.NoCollide.Add(character.EID);
+                    Location ang = character.Direction;
                     ang.Yaw += Utilities.UtilRandom.NextDouble() * spread * 2 - spread;
                     ang.Pitch += Utilities.UtilRandom.NextDouble() * spread * 2 - spread;
                     be.SetVelocity(Utilities.ForwardVector_Deg(ang.Yaw, ang.Pitch) * speed);
@@ -68,34 +68,37 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     be.Damage = ImpactDamage;
                     be.SplashSize = SplashSize;
                     be.SplashDamage = SplashMaxDamage;
-                    player.TheRegion.SpawnEntity(be);
+                    character.TheRegion.SpawnEntity(be);
                 }
                 if (ShotPerClick)
                 {
-                    player.WaitingForClickRelease = true;
+                    character.WaitingForClickRelease = true;
                 }
-                player.LastGunShot = player.TheRegion.GlobalTickTime;
+                character.LastGunShot = character.TheRegion.GlobalTickTime;
                 item.Datum -= 1;
-                player.Network.SendPacket(new SetItemPacketOut(player.Items.Items.IndexOf(item), item));
+                if (character is PlayerEntity)
+                {
+                    ((PlayerEntity)character).Network.SendPacket(new SetItemPacketOut(character.Items.Items.IndexOf(item), item));
+                }
             }
-            else if (item.Datum == 0 && !player.WaitingForClickRelease)
+            else if (item.Datum == 0 && !character.WaitingForClickRelease)
             {
-                Reload(player, item);
+                Reload(character, item);
             }
         }
 
-        public bool Reload(PlayerEntity player, ItemStack item)
+        public bool Reload(CharacterEntity character, ItemStack item)
         {
-            if (player.Flags.HasFlag(YourStatusFlags.RELOADING))
+            if (character.Flags.HasFlag(YourStatusFlags.RELOADING))
             {
                 return false;
             }
             int clipSize = (int)((float)ClipSize * item.GetAttributeF("clipsize_mod", 1f));
             if (item.Datum < clipSize)
             {
-                for (int i = 0; i < player.Items.Items.Count; i++)
+                for (int i = 0; i < character.Items.Items.Count; i++)
                 {
-                    ItemStack itemStack = player.Items.Items[i];
+                    ItemStack itemStack = character.Items.Items[i];
                     if (itemStack.Info is BulletItem && itemStack.SecondaryName == AmmoType)
                     {
                         if (itemStack.Count > 0)
@@ -106,21 +109,27 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                                 reloading = itemStack.Count;
                             }
                             item.Datum += reloading;
-                            player.Network.SendPacket(new SetItemPacketOut(player.Items.Items.IndexOf(item), item));
+                            if (character is PlayerEntity)
+                            {
+                                ((PlayerEntity)character).Network.SendPacket(new SetItemPacketOut(character.Items.Items.IndexOf(item), item));
+                            }
                             itemStack.Count -= reloading;
                             if (itemStack.Count <= 0)
                             {
-                                player.Items.RemoveItem(i + 1);
+                                character.Items.RemoveItem(i + 1);
                             }
                             else
                             {
-                                player.Network.SendPacket(new SetItemPacketOut(i, itemStack));
+                                if (character is PlayerEntity)
+                                {
+                                    ((PlayerEntity)character).Network.SendPacket(new SetItemPacketOut(i, itemStack));
+                                }
                             }
                         }
-                        player.Flags |= YourStatusFlags.RELOADING;
-                        player.WaitingForClickRelease = true;
-                        player.LastGunShot = player.TheRegion.GlobalTickTime + ReloadDelay;
-                        UpdatePlayer(player);
+                        character.Flags |= YourStatusFlags.RELOADING;
+                        character.WaitingForClickRelease = true;
+                        character.LastGunShot = character.TheRegion.GlobalTickTime + ReloadDelay;
+                        UpdatePlayer(character);
                         return true;
                     }
                 }
@@ -134,13 +143,13 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void ReleaseClick(Entity entity, ItemStack item)
         {
-            if (!(entity is PlayerEntity))
+            if (!(entity is CharacterEntity))
             {
-                // TODO: non-player support
+                // TODO: non-character support
                 return;
             }
-            PlayerEntity player = (PlayerEntity)entity;
-            player.WaitingForClickRelease = false;
+            CharacterEntity character = (CharacterEntity)entity;
+            character.WaitingForClickRelease = false;
         }
 
         public override void ReleaseAltClick(Entity player, ItemStack item)
@@ -153,14 +162,19 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void SwitchFrom(Entity entity, ItemStack item)
         {
+            if (!(entity is CharacterEntity))
+            {
+                // TODO: non-character support
+                return;
+            }
+            CharacterEntity character = (CharacterEntity)entity;
+            character.WaitingForClickRelease = false;
+            character.LastGunShot = 0;
             if (!(entity is PlayerEntity))
             {
-                // TODO: non-player support
                 return;
             }
             PlayerEntity player = (PlayerEntity)entity;
-            player.WaitingForClickRelease = false;
-            player.LastGunShot = 0;
             player.Flags &= ~YourStatusFlags.RELOADING;
             player.Flags &= ~YourStatusFlags.NEEDS_RELOAD;
             UpdatePlayer(player);
@@ -172,38 +186,41 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void Tick(Entity entity, ItemStack item)
         {
-            if (!(entity is PlayerEntity))
+            if (!(entity is CharacterEntity))
             {
-                // TODO: non-player support
+                // TODO: non-character support
                 return;
             }
-            PlayerEntity player = (PlayerEntity)entity;
-            if (player.Flags.HasFlag(YourStatusFlags.RELOADING) && (player.TheRegion.GlobalTickTime - player.LastGunShot >= FireRate))
+            CharacterEntity character = (CharacterEntity)entity;
+            if (character.Flags.HasFlag(YourStatusFlags.RELOADING) && (character.TheRegion.GlobalTickTime - character.LastGunShot >= FireRate))
             {
-                player.Flags &= ~YourStatusFlags.RELOADING;
-                UpdatePlayer(player);
+                character.Flags &= ~YourStatusFlags.RELOADING;
+                UpdatePlayer(character);
             }
-            else if (!player.Flags.HasFlag(YourStatusFlags.RELOADING) && (player.TheRegion.GlobalTickTime - player.LastGunShot < FireRate))
+            else if (!character.Flags.HasFlag(YourStatusFlags.RELOADING) && (character.TheRegion.GlobalTickTime - character.LastGunShot < FireRate))
             {
-                player.Flags |= YourStatusFlags.RELOADING;
-                UpdatePlayer(player);
+                character.Flags |= YourStatusFlags.RELOADING;
+                UpdatePlayer(character);
             }
-            if (!player.Flags.HasFlag(YourStatusFlags.NEEDS_RELOAD) && item.Datum == 0)
+            if (!character.Flags.HasFlag(YourStatusFlags.NEEDS_RELOAD) && item.Datum == 0)
             {
-                player.Flags |= YourStatusFlags.NEEDS_RELOAD;
-                UpdatePlayer(player);
+                character.Flags |= YourStatusFlags.NEEDS_RELOAD;
+                UpdatePlayer(character);
             }
-            else if (player.Flags.HasFlag(YourStatusFlags.NEEDS_RELOAD) && item.Datum != 0)
+            else if (character.Flags.HasFlag(YourStatusFlags.NEEDS_RELOAD) && item.Datum != 0)
             {
-                player.Flags &= ~YourStatusFlags.NEEDS_RELOAD;
-                UpdatePlayer(player);
+                character.Flags &= ~YourStatusFlags.NEEDS_RELOAD;
+                UpdatePlayer(character);
             }
         }
 
-        public void UpdatePlayer(PlayerEntity player)
+        public void UpdatePlayer(CharacterEntity character)
         {
             // TODO: Should this be a method on PlayerEntity?
-            player.Network.SendPacket(new YourStatusPacketOut(player.GetHealth(), player.GetMaxHealth(), player.Flags));
+            if (character is PlayerEntity)
+            {
+                ((PlayerEntity)character).Network.SendPacket(new YourStatusPacketOut(character.GetHealth(), character.GetMaxHealth(), character.Flags));
+            }
         }
     }
 }

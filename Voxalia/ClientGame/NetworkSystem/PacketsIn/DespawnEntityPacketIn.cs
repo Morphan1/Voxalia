@@ -15,8 +15,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Entity e = TheClient.TheRegion.GetEntity(eid);
             if (e == null)
             {
-                SysConsole.Output(OutputType.WARNING, "Cannot find entity: " + eid);
-                return false;
+                // Who cares?
+                return true;
             }
             TheClient.TheRegion.Despawn(e);
             return true;

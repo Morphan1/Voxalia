@@ -9,6 +9,7 @@ using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.ItemSystem.CommonItems;
 using BEPUphysics.Character;
 using BEPUutilities;
+using Voxalia.ServerGame.ItemSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -18,6 +19,10 @@ namespace Voxalia.ServerGame.EntitySystem
             : base(tregion, maxhealth)
         {
         }
+
+        public YourStatusFlags Flags = YourStatusFlags.NONE;
+
+        public EntityInventory Items;
 
         public bool Upward = false;
 
