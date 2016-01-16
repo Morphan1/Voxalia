@@ -113,8 +113,10 @@ namespace Voxalia.ServerGame.WorldSystem
             Config.Set("general.IMPORTANT_NOTE", "Edit this configuration at your own risk!");
             Config.Set("general.name", Name);
             Config.Default("general.seed", Utilities.UtilRandom.Next(SeedMax) - SeedMax / 2);
+            Config.Default("general.spawnpoint", new Location(0, 0, 50).ToString());
             CFGEdited = true;
             Seed = Config.ReadInt("general.seed", 100);
+            SpawnPoint = Location.FromString(Config.ReadString("general.spawnpoint", "ERR"));
             Random seedGen = new Random(Seed);
             Seed2 = (seedGen.Next(SeedMax) - SeedMax / 2);
             Seed3 = (seedGen.Next(SeedMax) - SeedMax / 2);
@@ -129,6 +131,8 @@ namespace Voxalia.ServerGame.WorldSystem
             TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-world scheduler // Also don't freeze the entire server just because we're waiting on chunks >.>
             SysConsole.Output(OutputType.INIT, "Finished building chunks! Now have " + LoadedChunks.Count + " chunks!");
         }
+
+        public Location SpawnPoint;
 
         const int SeedMax = ushort.MaxValue;
 

@@ -543,21 +543,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public override void Die()
         {
             SetHealth(MaxHealth);
-            if (TheRegion.SpawnPoints.Count == 0)
-            {
-                SysConsole.Output(OutputType.WARNING, "No spawn points... generating one!");
-                TheRegion.SpawnEntity(new SpawnPointEntity(TheRegion) { Position = new Location(0, 0, 70) });
-            }
-            SpawnPointEntity spe = null; // TODO: Scrap old spawn point code, handle more sanely!
-            for (int i = 0; i < 10; i++)
-            {
-                spe = TheRegion.SpawnPoints[Utilities.UtilRandom.Next(TheRegion.SpawnPoints.Count)];
-                if (!TheRegion.Collision.CuboidLineTrace(new Location(CBRadius, CBRadius, CBHHeight) * 1.9f, spe.GetPosition(), spe.GetPosition() + new Location(0, 0, 0.01f)).Hit)
-                {
-                    break;
-                }
-            }
-            Teleport(spe.GetPosition());
+            Teleport(TheRegion.SpawnPoint);
         }
     }
 

@@ -24,11 +24,6 @@ namespace Voxalia.ServerGame.WorldSystem
 {
     public partial class Region
     {
-        /// <summary>
-        /// All spawnpoint-type entities that exist on this server.
-        /// </summary>
-        public List<SpawnPointEntity> SpawnPoints = new List<SpawnPointEntity>();
-
         public List<InternalBaseJoint> Joints = new List<InternalBaseJoint>();
 
         public List<PlayerEntity> Players = new List<PlayerEntity>();
@@ -110,10 +105,6 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 ((PrimitiveEntity)e).Spawn();
             }
-            if (e is SpawnPointEntity)
-            {
-                SpawnPoints.Add((SpawnPointEntity)e);
-            }
             if (e is PlayerEntity)
             {
                 TheServer.Players.Add((PlayerEntity)e);
@@ -154,11 +145,6 @@ namespace Voxalia.ServerGame.WorldSystem
             else if (e is PrimitiveEntity)
             {
                 ((PrimitiveEntity)e).Destroy();
-            }
-
-            if (e is SpawnPointEntity)
-            {
-                SpawnPoints.Remove((SpawnPointEntity)e);
             }
             else if (e is PlayerEntity)
             {
