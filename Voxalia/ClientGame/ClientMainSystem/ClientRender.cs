@@ -29,6 +29,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
         }
+
+        public void TranspBlend()
+        {
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+
+        }
         
         public void GodrayBlend()
         {
@@ -699,7 +705,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.Uniform1(4, DesaturationAmount);
                 FBOid = 3;
                 GL.DepthMask(false);
+                TranspBlend();
                 Render3D(false);
+                StandardBlend();
                 FBOid = 0;
                 if (CVars.r_godrays.ValueB)
                 {
