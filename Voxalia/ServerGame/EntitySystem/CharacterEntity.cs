@@ -12,6 +12,7 @@ using BEPUutilities;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.NetworkSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -54,6 +55,62 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        public Location TargetPosition = Location.NaN;
+
+        public Entity TargetEntity = null;
+
+        public double MaxPathFindDistance = 10;
+
+        public void GoTo(Location pos)
+        {
+            TargetPosition = pos;
+            TargetEntity = null;
+            UpdatePath();
+        }
+
+        public void GoTo(Entity e)
+        {
+            TargetPosition = Location.NaN;
+            TargetEntity = e;
+            UpdatePath();
+        }
+
+        public ListQueue<Location> Path = null;
+
+        public float PathFindCloseEnough = 0.8f * 0.8f;
+
+        public void UpdatePath()
+        {
+            Location goal = TargetPosition;
+            if (goal.IsNaN())
+            {
+                if (TargetEntity == null)
+                {
+                    Path = null;
+                    return;
+                }
+                goal = TargetEntity.GetPosition();
+            }
+            Location selfpos = GetPosition();
+            if ((goal - selfpos).LengthSquared() > MaxPathFindDistance * MaxPathFindDistance)
+            {
+                TargetPosition = Location.NaN; // TODO: Configurable "can't find path" result -> giveup vs. teleport
+                TargetEntity = null;
+                Path = null;
+                return;
+            }
+            List<Location> tpath = TheRegion.FindPath(selfpos, goal, MaxPathFindDistance, 1);
+            if (tpath == null)
+            {
+                TargetPosition = Location.NaN; // TODO: Configurable "can't find path" result -> giveup vs. teleport
+                TargetEntity = null;
+                Path = null;
+                return;
+            }
+            Path = new ListQueue<Location>(tpath);
+            PathUpdate = 1; // TODO: Configurable update time
+        }
+
         /// <summary>
         /// The internal physics character body.
         /// </summary>
@@ -89,6 +146,10 @@ namespace Voxalia.ServerGame.EntitySystem
             return new PlayerUpdatePacketOut(this);
         }
 
+        public double PathUpdate = 0;
+
+        bool PathMovement = false;
+
         public override void Tick()
         {
             if (TheRegion.Delta <= 0)
@@ -98,6 +159,46 @@ namespace Voxalia.ServerGame.EntitySystem
             if (!IsSpawned)
             {
                 return;
+            }
+            PathUpdate -= TheRegion.Delta;
+            if (PathUpdate <= 0)
+            {
+                UpdatePath();
+            }
+            if (Path != null)
+            {
+                PathMovement = true;
+                Location spos = GetPosition();
+                while (Path.Length > 0 && ((Path.Peek() - spos).LengthSquared() < PathFindCloseEnough || (Path.Peek() - spos + new Location(0, 0, -1.5)).LengthSquared() < PathFindCloseEnough))
+                {
+                    Path.Pop();
+                }
+                if (Path.Length <= 0)
+                {
+                    Path = null;
+                }
+                else
+                {
+                    Location targetdir = (Path.Peek() - spos).Normalize();
+                    Location movegoal = Utilities.RotateVector(targetdir, (270 + Direction.Yaw) * Utilities.PI180);
+                    Vector2 movegoal2 = new Vector2((float)movegoal.X, (float)movegoal.Y);
+                    if (movegoal2.LengthSquared() > 0)
+                    {
+                        movegoal2.Normalize();
+                    }
+                    XMove = movegoal2.X;
+                    YMove = movegoal2.Y;
+                    if (movegoal.Z > 0.4)
+                    {
+                        CBody.Jump();
+                    }
+                }
+            }
+            if (Path == null && PathMovement)
+            {
+                XMove = 0;
+                YMove = 0;
+                PathMovement = false;
             }
             while (Direction.Yaw < 0)
             {

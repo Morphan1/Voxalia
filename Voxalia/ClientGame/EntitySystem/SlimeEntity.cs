@@ -21,6 +21,9 @@ namespace Voxalia.ClientGame.EntitySystem
             CBStepHeight = 0.1f;
             CBDownStepHeight = 0.1f;
             CBRadius = 0.3f;
+            CBStandSpeed = 3.0f;
+            CBAirSpeed = 3.0f;
+            CBAirForce = 100f;
             SetMass(10);
         }
 

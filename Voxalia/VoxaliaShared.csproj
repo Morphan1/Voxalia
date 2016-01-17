@@ -69,6 +69,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PriorityQueue\FastPriorityQueue.cs" />
+    <Compile Include="PriorityQueue\FastPriorityQueueNode.cs" />
+    <Compile Include="PriorityQueue\IPriorityQueue.cs" />
+    <Compile Include="PriorityQueue\SimplePriorityQueue.cs" />
     <Compile Include="Shared\EntityType.cs" />
     <Compile Include="Shared\BlockShapes\BSD64_68.cs" />
     <Compile Include="Shared\BlockShapes\BSD58.cs" />

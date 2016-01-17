@@ -256,6 +256,7 @@
     <Compile Include="ServerGame\WorldSystem\LiquidForceField.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionBlockPhysics.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionChunks.cs" />
+    <Compile Include="ServerGame\WorldSystem\RegionPathfinder.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionWeather.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionEntities.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionPhysics.cs" />

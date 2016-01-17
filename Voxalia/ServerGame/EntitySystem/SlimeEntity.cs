@@ -22,6 +22,10 @@ namespace Voxalia.ServerGame.EntitySystem
             CBStepHeight = 0.1f;
             CBDownStepHeight = 0.1f;
             CBRadius = 0.3f;
+            CBStandSpeed = 3.0f;
+            CBAirSpeed = 3.0f;
+            CBAirForce = 100f;
+            PathFindCloseEnough = 1f;
             SetMass(10);
         }
 
@@ -58,13 +62,13 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public float DamageAmt = 5;
 
-        public double DamageDelay = 1;
+        public double DamageDelay = 0.5f;
 
         public double ApplyDamage = 0;
 
         public override void Tick()
         {
-            if (CBody.SupportFinder.HasSupport)
+            if (Math.Abs(XMove) > 0.1 || Math.Abs(YMove) > 0.1)
             {
                 CBody.Jump();
             }
@@ -72,8 +76,46 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 ApplyDamage -= TheRegion.Delta;
             }
+            TargetPlayers -= TheRegion.Delta;
+            if (TargetPlayers <= 0)
+            {
+                double dist;
+                PlayerEntity player = NearestPlayer(out dist);
+                if (player != null && dist < MaxPathFindDistance * MaxPathFindDistance)
+                {
+                    GoTo(player);
+                    CBody.Jump();
+                    ApplyForce((player.GetCenter() - GetCenter()).Normalize() * GetMass());
+                    SysConsole.Output(OutputType.INFO, "Attack: " + player + "? " + (Path != null));
+                }
+                else
+                {
+                    GoTo(null);
+                }
+                TargetPlayers = 1;
+            }
             base.Tick();
         }
+
+        public PlayerEntity NearestPlayer(out double distSquared)
+        {
+            PlayerEntity player = null;
+            double distsq = double.MaxValue;
+            Location p = GetCenter();
+            foreach (PlayerEntity tester in TheRegion.Players)
+            {
+                double td = (tester.GetCenter() - p).LengthSquared();
+                if (td < distsq)
+                {
+                    player = tester;
+                    distsq = td;
+                }
+            }
+            distSquared = distsq;
+            return player;
+        }
+
+        public double TargetPlayers = 0;
 
         public override byte[] GetSaveBytes()
         {
