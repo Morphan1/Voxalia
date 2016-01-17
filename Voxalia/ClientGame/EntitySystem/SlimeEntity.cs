@@ -6,6 +6,7 @@ using Voxalia.ClientGame.WorldSystem;
 using Voxalia.ClientGame.GraphicsSystems;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -33,7 +34,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public override void Render()
         {
             TheClient.Rendering.SetMinimumLight(0.0f);
-            Matrix4 mat = GetTransformationMatrix();
+            Matrix4 mat = Matrix4.CreateRotationX(-90 * (float)Utilities.PI180) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
             model.Draw();
         }

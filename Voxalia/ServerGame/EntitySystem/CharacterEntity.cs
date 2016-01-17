@@ -10,6 +10,8 @@ using Voxalia.ServerGame.ItemSystem.CommonItems;
 using BEPUphysics.Character;
 using BEPUutilities;
 using Voxalia.ServerGame.ItemSystem;
+using Voxalia.ServerGame.NetworkSystem;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -48,7 +50,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             get
             {
-                return Downward || DesiredStance == Stance.Crouching;
+                return Downward || DesiredStance == Stance.Crouching || (CBody != null && CBody.StanceManager.CurrentStance == Stance.Crouching);
             }
         }
 
@@ -82,9 +84,18 @@ namespace Voxalia.ServerGame.EntitySystem
             TheRegion.PhysicsWorld.Add(CBody);
         }
 
+        public override AbstractPacketOut GetUpdatePacket()
+        {
+            return new PlayerUpdatePacketOut(this);
+        }
+
         public override void Tick()
         {
             if (TheRegion.Delta <= 0)
+            {
+                return;
+            }
+            if (!IsSpawned)
             {
                 return;
             }

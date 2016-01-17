@@ -132,10 +132,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             base.SetMaxHealth(100);
             base.SetHealth(100);
-            CanSave = false;
-            NetworkMe = false;
             Network = conn;
-            TransmitMe = false;
             SetMass(tmass);
             CanRotate = false;
             SetPosition(new Location(0, 0, 50));
@@ -243,19 +240,15 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
+            if (!IsSpawned)
+            {
+                return;
+            }
             if (TheRegion.Delta <= 0)
             {
                 return;
             }
             base.Tick();
-            PlayerUpdatePacketOut pupo = new PlayerUpdatePacketOut(this);
-            for (int i = 0; i < TheServer.Players.Count; i++)
-            {
-                if (TheServer.Players[i] != this)
-                {
-                    TheServer.Players[i].Network.SendPacket(pupo);
-                }
-            }
             ItemStack cit = Items.GetItemForSlot(Items.cItem);
             if (GetVelocity().LengthSquared() > 1) // TODO: Move animation to CharacterEntity
             {

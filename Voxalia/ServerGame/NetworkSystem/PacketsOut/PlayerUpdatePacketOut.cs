@@ -17,7 +17,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             Utilities.UshortToBytes(dat).CopyTo(Data, 8 + 12 + 12);
             Utilities.FloatToBytes((float)player.Direction.Yaw).CopyTo(Data, 8 + 12 + 12 + 2);
             Utilities.FloatToBytes((float)player.Direction.Pitch).CopyTo(Data, 8 + 12 + 12 + 2 + 4);
-            Data[8 + 12 + 12 + 2 + 4 + 4] = (byte)(player.CBody.StanceManager.CurrentStance == Stance.Standing ? 0 : 1);
+            Data[8 + 12 + 12 + 2 + 4 + 4] = (byte)(player.IsCrouching ? 1 : 0);
             Utilities.FloatToBytes((float)player.XMove).CopyTo(Data, 8 + 12 + 12 + 2 + 4 + 4 + 1);
             Utilities.FloatToBytes((float)player.YMove).CopyTo(Data, 8 + 12 + 12 + 2 + 4 + 4 + 1 + 4);
         }

@@ -66,11 +66,6 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 NextAttack = Utilities.UtilRandom.NextDouble();
             }
-            PlayerUpdatePacketOut pupo = new PlayerUpdatePacketOut(this);
-            for (int i = 0; i < TheServer.Players.Count; i++)
-            {
-                TheServer.Players[i].Network.SendPacket(pupo);
-            }
         }
 
         public PlayerEntity NearestPlayer(out double distSquared)

@@ -140,9 +140,13 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     sme = false;
                 }
-                PhysicsEntityUpdatePacketOut physupd = sme ? new PhysicsEntityUpdatePacketOut(this) : null;
+                AbstractPacketOut physupd = sme ? GetUpdatePacket() : null;
                 foreach (PlayerEntity player in TheRegion.Players)
                 {
+                    if (player == this)
+                    {
+                        continue;
+                    }
                     bool shouldseec = player.ShouldSeePosition(pos);
                     bool shouldseel = player.ShouldSeePositionPreviously(lPos);
                     if (shouldseec && !shouldseel)
@@ -171,6 +175,11 @@ namespace Voxalia.ServerGame.EntitySystem
         public void EndTick()
         {
             lPos = GetPosition();
+        }
+
+        public virtual AbstractPacketOut GetUpdatePacket()
+        {
+            return new PhysicsEntityUpdatePacketOut(this);
         }
 
         public override AbstractPacketOut GetSpawnPacket()

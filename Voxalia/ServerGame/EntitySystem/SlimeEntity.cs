@@ -64,15 +64,13 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
-            Upward = !Upward;
+            if (CBody.SupportFinder.HasSupport)
+            {
+                CBody.Jump();
+            }
             if (ApplyDamage > 0)
             {
                 ApplyDamage -= TheRegion.Delta;
-            }
-            PlayerUpdatePacketOut pupo = new PlayerUpdatePacketOut(this);
-            for (int i = 0; i < TheServer.Players.Count; i++)
-            {
-                TheServer.Players[i].Network.SendPacket(pupo);
             }
             base.Tick();
         }
