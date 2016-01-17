@@ -41,6 +41,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         continue;
                     }
+                    // TODO: Check solidity from entities too!
                     if (GetBlockMaterial(neighb).GetSolidity() != MaterialSolidity.NONSOLID) // TODO: Better solidity check
                     {
                         continue;

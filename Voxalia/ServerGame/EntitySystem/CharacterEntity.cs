@@ -59,7 +59,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Entity TargetEntity = null;
 
-        public double MaxPathFindDistance = 10;
+        public double MaxPathFindDistance = 20;
 
         public void GoTo(Location pos)
         {
