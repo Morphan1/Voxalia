@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
 using BEPUphysics;
 using BEPUutilities;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.ServerGame.OtherSystems;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
@@ -96,6 +99,19 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 SlimeEntity se = new SlimeEntity(entry.Player.TheRegion);
                 se.SetPosition(entry.Player.GetPosition() + entry.Player.ForwardVector() * 5);
                 se.TheRegion.SpawnEntity(se);
+            }
+            else if (arg0 == "timePathfind" && entry.InputArguments.Count > 1)
+            {
+                double dist = Utilities.StringToDouble(entry.InputArguments[1]);
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                List<Location> locs = entry.Player.TheRegion.FindPath(entry.Player.GetPosition(), entry.Player.GetPosition() + new Location(dist, 0, 0), dist * 2, 2);
+                sw.Stop();
+                if (locs != null)
+                {
+                    entry.Player.Network.SendPacket(new PathPacketOut(locs));
+                }
+                entry.Player.Network.SendMessage("Took " + sw.ElapsedMilliseconds + "ms, passed: " + (locs != null));
             }
             else if (arg0 == "gameMode" && entry.InputArguments.Count > 1)
             {

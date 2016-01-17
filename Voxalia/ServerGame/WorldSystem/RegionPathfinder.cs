@@ -19,7 +19,7 @@ namespace Voxalia.ServerGame.WorldSystem
             double gosq = goaldist * goaldist;
             PathFindNode start = new PathFindNode() { Internal = startloc, F = 0 };
             PathFindNode end = new PathFindNode() { Internal = endloc, F = 0 };
-            SimplePriorityQueue<PathFindNode> open = new SimplePriorityQueue<PathFindNode>();
+            FastPriorityQueue<PathFindNode> open = new FastPriorityQueue<PathFindNode>(10000);
             HashSet<Location> closed = new HashSet<Location>();
             open.Enqueue(start, start.F);
             while (open.Count > 0)
@@ -45,14 +45,22 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         continue;
                     }
-                    // TODO: Don't fly up!
+                    if (GetBlockMaterial(neighb + new Location(0, 0, -1)).GetSolidity() == MaterialSolidity.NONSOLID)
+                    {
+                        continue;
+                    }
                     PathFindNode node = new PathFindNode() { Internal = neighb };
+                    node.F = next.F + next.DistanceSq(node);
+                    node.Parent = next;
                     if (open.Contains(node))
                     {
                         continue;
                     }
-                    node.F = next.F + next.DistanceSq(node);
-                    node.Parent = next;
+                    if (open.Count >= open.MaxSize)
+                    {
+                        SysConsole.Output(OutputType.INFO, "Resize to " + open.MaxSize);
+                        open.Resize(open.MaxSize * 10);
+                    }
                     open.Enqueue(node, node.F);
                 }
             }
@@ -73,7 +81,7 @@ namespace Voxalia.ServerGame.WorldSystem
         }
     }
 
-    public class PathFindNode: IComparable<PathFindNode>, IEquatable<PathFindNode>
+    public class PathFindNode: FastPriorityQueueNode, IComparable<PathFindNode>, IEquatable<PathFindNode>, IComparer<PathFindNode>, IEqualityComparer<PathFindNode>
     {
         public Location Internal;
         
@@ -148,6 +156,21 @@ namespace Voxalia.ServerGame.WorldSystem
         public override int GetHashCode()
         {
             return Internal.GetHashCode();
+        }
+
+        public int Compare(PathFindNode x, PathFindNode y)
+        {
+            return x.CompareTo(y);
+        }
+
+        public bool Equals(PathFindNode x, PathFindNode y)
+        {
+            return x == y;
+        }
+
+        public int GetHashCode(PathFindNode obj)
+        {
+            return obj.GetHashCode();
         }
     }
 }
