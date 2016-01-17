@@ -17,9 +17,9 @@ namespace Voxalia.ServerGame.WorldSystem
             endloc = endloc.GetBlockLocation() + new Location(0.5, 0.5, 1.0);
             double mrsq = maxRadius * maxRadius;
             double gosq = goaldist * goaldist;
-            PathFindNode start = new PathFindNode() { Internal = startloc, F = 0 };
-            PathFindNode end = new PathFindNode() { Internal = endloc, F = 0 };
-            FastPriorityQueue<PathFindNode> open = new FastPriorityQueue<PathFindNode>(10000);
+            PathFindNode start = new PathFindNode() { Internal = startloc, F = 0, G = 0 };
+            PathFindNode end = new PathFindNode() { Internal = endloc, F = 0, G = 0 };
+            SimplePriorityQueue<PathFindNode> open = new SimplePriorityQueue<PathFindNode>();
             HashSet<Location> closed = new HashSet<Location>();
             open.Enqueue(start, start.F);
             while (open.Count > 0)
@@ -45,26 +45,23 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         continue;
                     }
-                    if (GetBlockMaterial(neighb + new Location(0, 0, -1)).GetSolidity() == MaterialSolidity.NONSOLID)
+                    // TODO: Better in-air check? Perhaps based on node.parent!
+                    if (GetBlockMaterial(neighb + new Location(0, 0, -1)).GetSolidity() == MaterialSolidity.NONSOLID
+                        && GetBlockMaterial(neighb + new Location(0, 0, -2)).GetSolidity() == MaterialSolidity.NONSOLID)
                     {
                         continue;
                     }
                     PathFindNode node = new PathFindNode() { Internal = neighb };
-                    node.F = next.F + next.DistanceSq(node);
+                    node.G = next.G + next.Distance(node);
+                    node.F = node.G + node.Distance(end);
                     node.Parent = next;
                     if (open.Contains(node))
                     {
                         continue;
                     }
-                    if (open.Count >= open.MaxSize)
-                    {
-                        SysConsole.Output(OutputType.INFO, "Resize to " + open.MaxSize);
-                        open.Resize(open.MaxSize * 10);
-                    }
                     open.Enqueue(node, node.F);
                 }
             }
-            SysConsole.Output(OutputType.INFO, "Failed to find path from " + startloc + " to " + endloc + " with closed: " + closed.Count);
             return null;
         }
 
@@ -87,13 +84,15 @@ namespace Voxalia.ServerGame.WorldSystem
         
         public double F;
 
+        public double G;
+
         public PathFindNode Parent;
 
         public static Location[] Neighbors = new Location[] { Location.UnitX, Location.UnitY, Location.UnitZ, -Location.UnitX, -Location.UnitY, -Location.UnitZ };
 
-        public double DistanceSq(PathFindNode other)
+        public double Distance(PathFindNode other)
         {
-            return (Internal - other.Internal).LengthSquared();
+            return (Internal - other.Internal).Length();
         }
 
         public int CompareTo(PathFindNode other)
