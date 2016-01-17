@@ -5,14 +5,17 @@ using System.Text;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    class TargetEntity: CharacterEntity
+    class TargetEntity: HumanoidEntity
     {
         public TargetEntity(Region tregion) :
-            base (tregion, 100)
+            base (tregion)
         {
+            SetMaxHealth(100);
+            SetHealth(100);
             SetMass(70);
             Items = new EntityInventory(tregion, this);
             // TODO: Better way to gather item details!
@@ -62,6 +65,11 @@ namespace Voxalia.ServerGame.EntitySystem
                     Items.Items[0].Info.ReleaseClick(this, Items.Items[0]);
                 }
                 NextAttack = Utilities.UtilRandom.NextDouble();
+            }
+            PlayerUpdatePacketOut pupo = new PlayerUpdatePacketOut(this);
+            for (int i = 0; i < TheServer.Players.Count; i++)
+            {
+                TheServer.Players[i].Network.SendPacket(pupo);
             }
         }
 

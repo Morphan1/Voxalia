@@ -47,7 +47,13 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 new Location(1, 1, 1).ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
             // TODO: LOL PLS CLEAN
-            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is GlowstickEntity ? 5: (e is GrenadeEntity ? 6 : (e is BlockGroupEntity ? 4: (e is CharacterEntity ? 1 : (e is BlockItemEntity ? 3: (e is ModelEntity ? 2: 0))))));
+            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is GlowstickEntity ? 5:
+                (e is GrenadeEntity ? 6 :
+                (e is SlimeEntity ? 7 :
+                (e is BlockGroupEntity ? 4:
+                (e is CharacterEntity ? 1 :
+                (e is BlockItemEntity ? 3:
+                (e is ModelEntity ? 2: 0)))))));
             int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
             if (e is BlockItemEntity)
             {

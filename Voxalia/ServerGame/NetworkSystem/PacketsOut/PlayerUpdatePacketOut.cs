@@ -4,9 +4,9 @@ using BEPUphysics.Character;
 
 namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
-    class PlayerUpdatePacketOut: AbstractPacketOut
+    class PlayerUpdatePacketOut: AbstractPacketOut // TODO: CharacterUpdatePacketOut
     {
-        public PlayerUpdatePacketOut(PlayerEntity player)
+        public PlayerUpdatePacketOut(CharacterEntity player)
         {
             ID = 6;
             Data = new byte[8 + 12 + 12 + 2 + 4 + 4 + 1 + 4 + 4];

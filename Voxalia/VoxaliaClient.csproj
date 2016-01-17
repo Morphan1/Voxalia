@@ -137,6 +137,7 @@
     <Compile Include="ClientGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PlayerEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PrimitiveEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\SlimeEntity.cs" />
     <Compile Include="ClientGame\GraphicsSystems\FontSetEngine.cs" />
     <Compile Include="ClientGame\GraphicsSystems\Frustum.cs" />
     <Compile Include="ClientGame\GraphicsSystems\GLFontEngine.cs" />

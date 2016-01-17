@@ -19,6 +19,7 @@ namespace Voxalia.Shared
         VEHICLE = 10,
         VEHICLE_PART = 11,
         TARGET_ENTITY = 12,
+        SLIME = 13,
         LEGACY_SPAWNPOINT = 100
     }
 }

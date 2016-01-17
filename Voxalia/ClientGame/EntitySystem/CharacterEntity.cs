@@ -41,10 +41,10 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Downward = false;
         public bool Use = false;
 
+        // TODO: This block -> HumanoidEntity?
         public SingleAnimation hAnim;
         public SingleAnimation tAnim;
         public SingleAnimation lAnim;
-
         public double aHTime;
         public double aTTime;
         public double aLTime;

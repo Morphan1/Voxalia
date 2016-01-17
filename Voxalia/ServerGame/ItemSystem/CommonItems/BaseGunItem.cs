@@ -43,12 +43,12 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void Click(Entity entity, ItemStack item)
         {
-            if (!(entity is CharacterEntity))
+            if (!(entity is HumanoidEntity))
             {
-                // TODO: non-character support
+                // TODO: non-humanoid support
                 return;
             }
-            CharacterEntity character = (CharacterEntity)entity;
+            HumanoidEntity character = (HumanoidEntity)entity;
             float fireRate = FireRate * item.GetAttributeF("firerate_mod", 1f);
             if (item.Datum != 0 && !character.WaitingForClickRelease && (character.TheRegion.GlobalTickTime - character.LastGunShot >= fireRate))
             {
@@ -87,7 +87,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
         }
 
-        public bool Reload(CharacterEntity character, ItemStack item)
+        public bool Reload(HumanoidEntity character, ItemStack item)
         {
             if (character.Flags.HasFlag(YourStatusFlags.RELOADING))
             {
@@ -143,12 +143,12 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void ReleaseClick(Entity entity, ItemStack item)
         {
-            if (!(entity is CharacterEntity))
+            if (!(entity is HumanoidEntity))
             {
-                // TODO: non-character support
+                // TODO: non-humanoid support
                 return;
             }
-            CharacterEntity character = (CharacterEntity)entity;
+            HumanoidEntity character = (HumanoidEntity)entity;
             character.WaitingForClickRelease = false;
         }
 
@@ -162,12 +162,12 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void SwitchFrom(Entity entity, ItemStack item)
         {
-            if (!(entity is CharacterEntity))
+            if (!(entity is HumanoidEntity))
             {
-                // TODO: non-character support
+                // TODO: non-humanoid support
                 return;
             }
-            CharacterEntity character = (CharacterEntity)entity;
+            HumanoidEntity character = (HumanoidEntity)entity;
             character.WaitingForClickRelease = false;
             character.LastGunShot = 0;
             if (!(entity is PlayerEntity))
@@ -186,12 +186,12 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void Tick(Entity entity, ItemStack item)
         {
-            if (!(entity is CharacterEntity))
+            if (!(entity is HumanoidEntity))
             {
-                // TODO: non-character support
+                // TODO: non-humanoid support
                 return;
             }
-            CharacterEntity character = (CharacterEntity)entity;
+            HumanoidEntity character = (HumanoidEntity)entity;
             if (character.Flags.HasFlag(YourStatusFlags.RELOADING) && (character.TheRegion.GlobalTickTime - character.LastGunShot >= FireRate))
             {
                 character.Flags &= ~YourStatusFlags.RELOADING;
@@ -214,7 +214,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
         }
 
-        public void UpdatePlayer(CharacterEntity character)
+        public void UpdatePlayer(HumanoidEntity character)
         {
             // TODO: Should this be a method on PlayerEntity?
             if (character is PlayerEntity)

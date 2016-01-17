@@ -32,9 +32,9 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             for (int i = 0; i < TheClient.TheRegion.Entities.Count; i++)
             {
-                if (TheClient.TheRegion.Entities[i] is OtherPlayerEntity)
+                if (TheClient.TheRegion.Entities[i] is CharacterEntity)
                 {
-                    OtherPlayerEntity e = (OtherPlayerEntity)TheClient.TheRegion.Entities[i];
+                    CharacterEntity e = (CharacterEntity)TheClient.TheRegion.Entities[i];
                     if (e.EID == eID)
                     {
                         e.SetPosition(pos);

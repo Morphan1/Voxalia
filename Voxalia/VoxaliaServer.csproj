@@ -83,6 +83,7 @@
     <Compile Include="ServerGame\EntitySystem\CharacterEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
     <Compile Include="ServerGame\EntitySystem\EntityDamageable.cs" />
+    <Compile Include="ServerGame\EntitySystem\HumanoidEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\LivingEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\EntityUseable.cs" />
     <Compile Include="ServerGame\EntitySystem\GrenadeEntity.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PrimitiveEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\Seat.cs" />
+    <Compile Include="ServerGame\EntitySystem\SlimeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\SmokeGrenadeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\TargetEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\VehicleEntity.cs" />

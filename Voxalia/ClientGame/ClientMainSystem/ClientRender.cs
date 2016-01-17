@@ -29,11 +29,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
         }
-
+        
         public void TranspBlend()
         {
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
-
         }
         
         public void GodrayBlend()

@@ -17,7 +17,7 @@ using BEPUphysics.Character;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    public class PlayerEntity: CharacterEntity
+    public class PlayerEntity: HumanoidEntity
     {
         public GameMode Mode = GameMode.SURVIVOR;
 
@@ -128,8 +128,10 @@ namespace Voxalia.ServerGame.EntitySystem
         public List<Location> Breadcrumbs = new List<Location>();
         
         public PlayerEntity(WorldSystem.Region tregion, Connection conn)
-            : base(tregion, 100f)
+            : base(tregion)
         {
+            base.SetMaxHealth(100);
+            base.SetHealth(100);
             CanSave = false;
             NetworkMe = false;
             Network = conn;

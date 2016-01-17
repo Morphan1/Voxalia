@@ -68,6 +68,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 ce = new GrenadeEntity(TheClient.TheRegion, true);
             }
+            else if (type == 7)
+            {
+                ce = new SlimeEntity(TheClient.TheRegion);
+            }
             else
             {
                 SysConsole.Output(OutputType.WARNING, "Unknown physent type " + type);

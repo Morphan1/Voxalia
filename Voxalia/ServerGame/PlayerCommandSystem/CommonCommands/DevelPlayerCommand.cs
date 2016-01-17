@@ -91,6 +91,12 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 te.SetPosition(entry.Player.GetPosition() + entry.Player.ForwardVector() * 5);
                 te.TheRegion.SpawnEntity(te);
             }
+            else if (arg0 == "spawnSlime")
+            {
+                SlimeEntity se = new SlimeEntity(entry.Player.TheRegion);
+                se.SetPosition(entry.Player.GetPosition() + entry.Player.ForwardVector() * 5);
+                se.TheRegion.SpawnEntity(se);
+            }
             else if (arg0 == "gameMode" && entry.InputArguments.Count > 1)
             {
                 GameMode mode;
