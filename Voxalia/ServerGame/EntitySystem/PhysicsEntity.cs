@@ -353,7 +353,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return new Location(WorldTransform.Translation.X, WorldTransform.Translation.Y, WorldTransform.Translation.Z);
             }
-            Vector3 pos = Body.WorldTransform.Translation;
+            Vector3 pos = Body.Position;
             return new Location(pos.X, pos.Y, pos.Z);
         }
 

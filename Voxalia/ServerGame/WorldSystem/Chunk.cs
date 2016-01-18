@@ -7,6 +7,7 @@ using BEPUphysics.BroadPhaseEntries;
 using Voxalia.Shared.Files;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.EntitySystem;
+using System.Threading;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -156,11 +157,12 @@ namespace Voxalia.ServerGame.WorldSystem
 
         void clearentities()
         {
+            // TODO: Efficiency
             for (int i = 0; i < OwningRegion.Entities.Count; i++)
             {
                 if (Contains(OwningRegion.Entities[i].GetPosition()))
                 {
-                    OwningRegion.Entities[i--].RemoveMe();
+                    OwningRegion.Entities[i].RemoveMe();
                 }
             }
         }
@@ -186,9 +188,10 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             LastEdited = -1;
             byte[] ents = GetEntitySaveData();
+            byte[] saves1 = GetChunkSaveData();
             OwningRegion.TheServer.Schedule.StartASyncTask(() =>
             {
-                SaveToFileI(ents);
+                SaveToFileI(saves1, ents);
                 if (callback != null)
                 {
                     callback.Invoke();
@@ -204,11 +207,10 @@ namespace Voxalia.ServerGame.WorldSystem
             return "saves/" + OwningRegion.Name.ToLowerInvariant() + "/chunks/" + WorldPosition.Z + "/" + WorldPosition.Y + "/" + WorldPosition.X + ".chk";
         }
 
-        void SaveToFileI(byte[] saves2)
+        void SaveToFileI(byte[] saves1, byte[] saves2)
         {
             try
             {
-                byte[] saves1 = GetChunkSaveData();
                 byte[] res = new byte[4 + saves1.Length + 4 + saves2.Length];
                 Utilities.IntToBytes(saves1.Length).CopyTo(res, 0);
                 saves1.CopyTo(res, 4);
@@ -217,6 +219,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 lock (GetLocker())
                 {
                     Program.Files.WriteBytes(GetFileName(), res);
+                    Thread.Sleep(50);
                 }
             }
             catch (Exception ex)

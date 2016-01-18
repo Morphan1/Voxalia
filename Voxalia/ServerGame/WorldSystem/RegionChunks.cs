@@ -26,7 +26,6 @@ namespace Voxalia.ServerGame.WorldSystem
     {
         public void AddChunk(FullChunkObject mesh)
         {
-            CheckThreadValidity();
             if (mesh == null)
             {
                 return;
@@ -36,7 +35,6 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void RemoveChunkQuiet(FullChunkObject mesh)
         {
-            CheckThreadValidity();
             if (mesh == null)
             {
                 return;

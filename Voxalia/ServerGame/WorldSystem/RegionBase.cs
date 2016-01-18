@@ -127,8 +127,8 @@ namespace Voxalia.ServerGame.WorldSystem
             EntityConstructors.Add(EntityType.GLOWSTICK, new GlowstickEntityConstructor());
             EntityConstructors.Add(EntityType.MODEL, new ModelEntityConstructor());
             EntityConstructors.Add(EntityType.SMOKE_GRENADE, new SmokegrenadeEntityConstructor());
-            LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30), true);
-            TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-world scheduler // Also don't freeze the entire server just because we're waiting on chunks >.>
+            //LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30), true);
+            //TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-region scheduler // Also don't freeze the entire server/region just because we're waiting on chunks >.>
             SysConsole.Output(OutputType.INIT, "Finished building chunks! Now have " + LoadedChunks.Count + " chunks!");
         }
 
@@ -201,29 +201,31 @@ namespace Voxalia.ServerGame.WorldSystem
         void OncePerSecondActions()
         {
             TickClouds();
+            List<Location> DelMe = new List<Location>();
             foreach (Chunk o in LoadedChunks.Values)
             {
                 if (o.LastEdited >= 0)
                 {
-                    Chunk to = o;
-                    Action cb = null;/*
-                    if (ChunksToDestroy.Contains(o))
-                    {
-                        cb = () =>
-                        {
-                            TheServer.Schedule.ScheduleSyncTask(() =>
-                            {
-                                if (ChunksToDestroy.Contains(to) && to.LastEdited < 0) // TODO: Handle rare case
-                                {
-                                    ChunksToDestroy.Remove(to);
-                                    LoadedChunks.Remove(to.WorldPosition);
-                                }
-                            });
-                        };
-                    }*/
-                    o.SaveToFile(cb);
+                    o.SaveToFile(null);
                 }
-                // TODO: If distant from all players, unload
+                bool seen = false;
+                foreach (PlayerEntity player in Players)
+                {
+                    if (player.ShouldLoadChunk(o.WorldPosition))
+                    {
+                        seen = true;
+                        break;
+                    }
+                }
+                if (!seen)
+                {
+                    o.UnloadSafely();
+                    DelMe.Add(o.WorldPosition);
+                }
+            }
+            foreach (Location loc in DelMe)
+            {
+                LoadedChunks.Remove(loc);
             }
             if (CFGEdited)
             {

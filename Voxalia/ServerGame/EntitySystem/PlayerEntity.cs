@@ -375,6 +375,18 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Location losPos = Location.NaN;
 
+        public bool ShouldLoadChunk(Location cpos)
+        {
+            Location wpos = TheRegion.ChunkLocFor(GetPosition());
+            if (Math.Abs(cpos.X - wpos.X) >( ViewRadiusInChunks + 1)
+                || Math.Abs(cpos.Y - wpos.Y) > (ViewRadiusInChunks + 1)
+                || Math.Abs(cpos.Z - wpos.Z) > (ViewRadiusInChunks + 1))
+            {
+                return false;
+            }
+            return true;
+        }
+
         public bool ShouldSeeChunkOneSecondAgo(Location cpos)
         {
             Location wpos = TheRegion.ChunkLocFor(losPos);
