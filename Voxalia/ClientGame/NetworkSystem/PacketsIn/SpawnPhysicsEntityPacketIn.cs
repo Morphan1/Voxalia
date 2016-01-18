@@ -25,11 +25,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Location halfsize = Location.FromBytes(data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             PhysicsEntity ce;
             int start = len - (4 + 1);
-            if (type == 1)
-            {
-                ce = new OtherPlayerEntity(TheClient.TheRegion);
-            }
-            else if (type == 2)
+            if (type == 2)
             {
                 NetStringManager strings = TheClient.Network.Strings;
                 ModelEntity me = new ModelEntity(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4))), TheClient.TheRegion);
@@ -68,10 +64,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 ce = new GrenadeEntity(TheClient.TheRegion, true);
             }
-            else if (type == 7)
-            {
-                ce = new SlimeEntity(TheClient.TheRegion);
-            }
             else
             {
                 SysConsole.Output(OutputType.WARNING, "Unknown physent type " + type);
@@ -98,11 +90,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (solidity == (2 | 8))
             {
-                ce.CGroup = CollisionUtil.Solid; // PlaceHolder
+                ce.CGroup = CollisionUtil.Water;
             }
             else if (solidity == (2 | 4 | 8))
             {
-                ce.CGroup = CollisionUtil.Solid; // PlaceHolder
+                ce.CGroup = CollisionUtil.WorldSolid;
             }
             ce.Visible = Visible;
             ce.SetMass(mass);

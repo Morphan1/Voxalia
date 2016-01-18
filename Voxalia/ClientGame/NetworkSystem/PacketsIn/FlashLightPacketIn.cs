@@ -9,15 +9,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
         public void Destroy(Entity ent)
         {
             SpotLight sl = null;
-            if (ent is PlayerEntity)
+            if (ent is CharacterEntity)
             {
-                sl = ((PlayerEntity)ent).Flashlight;
-                ((PlayerEntity)ent).Flashlight = null;
-            }
-            else
-            {
-                sl = ((OtherPlayerEntity)ent).Flashlight;
-                ((OtherPlayerEntity)ent).Flashlight = null;
+                sl = ((CharacterEntity)ent).Flashlight;
+                ((CharacterEntity)ent).Flashlight = null;
             }
             if (sl != null)
             {
@@ -37,7 +32,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             float distance = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 1, 4));
             Location color = Location.FromBytes(data, 8 + 1 + 4);
             Entity ent = TheClient.TheRegion.GetEntity(EID);
-            if (ent == null || !(ent is PlayerEntity || ent is OtherPlayerEntity))
+            if (ent == null || !(ent is PlayerEntity || ent is CharacterEntity))
             {
                 return false;
             }
@@ -45,17 +40,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             if (enabled)
             {
                 SpotLight sl = new SpotLight(ent.GetPosition(), TheClient.CVars.r_shadowquality_flashlight.ValueI, distance, color, Location.UnitX, 45);
-                if (ent is PlayerEntity)
+                if (ent is CharacterEntity)
                 {
-                    sl.Direction = ((PlayerEntity)ent).ForwardVector();
+                    sl.Direction = ((CharacterEntity)ent).ForwardVector();
                     sl.Reposition(ent.GetPosition());
-                    ((PlayerEntity)ent).Flashlight = sl;
-                }
-                else
-                {
-                    sl.Direction = ((OtherPlayerEntity)ent).ForwardVector();
-                    sl.Reposition(ent.GetPosition());
-                    ((OtherPlayerEntity)ent).Flashlight = sl;
+                    ((CharacterEntity)ent).Flashlight = sl;
                 }
                 TheClient.Lights.Add(sl);
             }

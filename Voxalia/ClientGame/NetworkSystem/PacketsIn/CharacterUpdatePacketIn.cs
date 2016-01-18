@@ -4,7 +4,7 @@ using BEPUphysics.Character;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
-    class PlayerUpdatePacketIn: AbstractPacketIn
+    class CharacterUpdatePacketIn: AbstractPacketIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {

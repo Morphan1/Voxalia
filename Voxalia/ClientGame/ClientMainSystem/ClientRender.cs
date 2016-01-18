@@ -968,9 +968,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.Enable(EnableCap.CullFace);
             for (int i = 0; i < TheRegion.Entities.Count; i++)
             {
-                Rendering.SetColor(TheRegion.Entities[i].Color);
+                Rendering.SetColor(TheRegion.Entities[i].WireColor);
                 TheRegion.Entities[i].Render();
             }
+            Rendering.SetColor(Color4.White);
             TheRegion.Render();
             // TODO: Render joints?
             GL.Enable(EnableCap.DepthTest);

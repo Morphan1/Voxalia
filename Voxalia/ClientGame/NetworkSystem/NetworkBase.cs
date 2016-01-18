@@ -184,7 +184,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                         usage = NetUsageType.GENERAL;
                         break;
                     case 6:
-                        packet = new PlayerUpdatePacketIn();
+                        packet = new CharacterUpdatePacketIn();
                         usage = NetUsageType.PLAYERS;
                         break;
                     case 7:
@@ -309,6 +309,10 @@ namespace Voxalia.ClientGame.NetworkSystem
                     case 37:
                         packet = new AddToCloudPacketIn();
                         usage = NetUsageType.CLOUDS;
+                        break;
+                    case 38:
+                        packet = new SpawnCharacterPacketIn();
+                        usage = NetUsageType.ENTITIES;
                         break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);

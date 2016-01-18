@@ -27,6 +27,8 @@ namespace Voxalia.ServerGame.EntitySystem
             CBAirForce = 100f;
             PathFindCloseEnough = 1f;
             SetMass(10);
+            model = "mobs/slimes/slime";
+            mod_xrot = -90;
         }
 
         public override EntityType GetEntityType()
@@ -86,7 +88,6 @@ namespace Voxalia.ServerGame.EntitySystem
                     GoTo(player);
                     CBody.Jump();
                     ApplyForce((player.GetCenter() - GetCenter()).Normalize() * GetMass());
-                    SysConsole.Output(OutputType.INFO, "Attack: " + player + "? " + (Path != null));
                 }
                 else
                 {

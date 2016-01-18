@@ -183,13 +183,14 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PathPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PhysicsEntityUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
-    <Compile Include="ServerGame\NetworkSystem\PacketsOut\PlayerUpdatePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\CharacterUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\PrimitiveEntityUpdatePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\RemoveCloudPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\RemoveItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetHeldItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnBulletPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnCharacterPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPhysicsEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPrimitiveEntityPacketOut.cs" />

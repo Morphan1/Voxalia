@@ -38,16 +38,19 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                             ((PlayerEntity)e).Unfly();
                         }
                     }
-                    else if (e is OtherPlayerEntity)
+                    else if (e is CharacterEntity)
                     {
+                        // TODO
+                        /*
                         if (value > 0.5f)
                         {
-                            ((OtherPlayerEntity)e).Fly();
+                            ((CharacterEntity)e).Fly();
                         }
                         else
                         {
-                            ((OtherPlayerEntity)e).Unfly();
+                            ((CharacterEntity)e).Unfly();
                         }
+                        */
                     }
                     else
                     {

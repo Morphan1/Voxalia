@@ -130,6 +130,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public PlayerEntity(WorldSystem.Region tregion, Connection conn)
             : base(tregion)
         {
+            model = "players/human_male_004";
+            mod_zrot = 270;
             base.SetMaxHealth(100);
             base.SetHealth(100);
             Network = conn;

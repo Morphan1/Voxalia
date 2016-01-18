@@ -99,6 +99,14 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 Data[Data.Length - 1] |= 8;
             }
+            else if (e.CGroup == CollisionUtil.Water)
+            {
+                Data[Data.Length - 1] |= 2 | 8;
+            }
+            else if (e.CGroup == CollisionUtil.WorldSolid)
+            {
+                Data[Data.Length - 1] |= 2 | 4 | 8;
+            }
         }
     }
 }

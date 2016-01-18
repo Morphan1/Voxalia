@@ -16,12 +16,20 @@ using FreneticScript;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    public abstract class CharacterEntity: LivingEntity // TODO: SpawnCharacterEntityPacket
+    public abstract class CharacterEntity: LivingEntity
     {
         public CharacterEntity(Region tregion, float maxhealth)
             : base(tregion, maxhealth)
         {
         }
+
+        public string model = "cube";
+
+        public float mod_xrot = 0;
+        public float mod_yrot = 0;
+        public float mod_zrot = 0;
+
+        public System.Drawing.Color mod_color = System.Drawing.Color.White;
 
         public bool Upward = false;
 
@@ -143,7 +151,12 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override AbstractPacketOut GetUpdatePacket()
         {
-            return new PlayerUpdatePacketOut(this);
+            return new CharacterUpdatePacketOut(this);
+        }
+
+        public override AbstractPacketOut GetSpawnPacket()
+        {
+            return new SpawnCharacterPacketOut(this);
         }
 
         public double PathUpdate = 0;

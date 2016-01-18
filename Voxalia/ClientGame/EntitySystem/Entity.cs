@@ -12,14 +12,14 @@ namespace Voxalia.ClientGame.EntitySystem
     /// </summary>
     public abstract class Entity
     {
-        public OpenTK.Graphics.Color4 Color;
+        public OpenTK.Graphics.Color4 WireColor;
 
         public Entity(Region tregion, bool tickme, bool cast_shadows)
         {
             TheRegion = tregion;
             TheClient = tregion.TheClient;
             Ticks = tickme;
-            Color = new OpenTK.Graphics.Color4((float)Utilities.UtilRandom.NextDouble(), (float)Utilities.UtilRandom.NextDouble(), 0f, 1f);
+            WireColor = new OpenTK.Graphics.Color4((float)Utilities.UtilRandom.NextDouble(), (float)Utilities.UtilRandom.NextDouble(), 0f, 1f);
             CastShadows = cast_shadows;
         }
 
