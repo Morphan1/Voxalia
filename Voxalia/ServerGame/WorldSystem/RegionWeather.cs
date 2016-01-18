@@ -18,7 +18,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (chunk.WorldPosition.Z >= 3 && chunk.WorldPosition.Z <= 7)
                 {
-                    if (Utilities.UtilRandom.Next(300) > 297)
+                    if (Utilities.UtilRandom.Next(400) > 399)
                     {
                         double d1 = Utilities.UtilRandom.NextDouble() * Chunk.CHUNK_SIZE;
                         double d2 = Utilities.UtilRandom.NextDouble() * Chunk.CHUNK_SIZE;
@@ -38,7 +38,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     && (Utilities.UtilRandom.Next(100) > Clouds[i].Points.Count);
                 for (int s = 0; s < Clouds[i].Sizes.Count; s++)
                 {
-                    Clouds[i].Sizes[s] += 0.1f;
+                    Clouds[i].Sizes[s] += 0.05f;
                     if (Clouds[i].Sizes[s] > Clouds[i].EndSizes[s])
                     {
                         Clouds[i].Sizes[s] = Clouds[i].EndSizes[s];

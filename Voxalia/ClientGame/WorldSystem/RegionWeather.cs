@@ -15,7 +15,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 Clouds[i].Position += Clouds[i].Velocity * Delta;
                 for (int s = 0; s < Clouds[i].Sizes.Count; s++)
                 {
-                    Clouds[i].Sizes[s] += 0.1f * (float)Delta;
+                    Clouds[i].Sizes[s] += 0.05f * (float)Delta;
                     if (Clouds[i].Sizes[s] > Clouds[i].EndSizes[s])
                     {
                         Clouds[i].Sizes[s] = Clouds[i].EndSizes[s];
