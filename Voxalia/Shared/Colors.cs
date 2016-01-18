@@ -33,6 +33,8 @@ namespace Voxalia.Shared
         public static Color LIGHT_CYAN = Color.FromArgb(128, 255, 255);
         public static Color ORANGE = Color.FromArgb(255, 128, 0);
         public static Color BROWN = Color.FromArgb(128, 64, 0);
+        public static Color PURPLE = Color.FromArgb(128, 0, 255);
+        public static Color PINK = Color.FromArgb(255, 128, 255);
 
         public static Dictionary<string, Color> KnownColorNames = new Dictionary<string, Color>();
 
@@ -78,6 +80,8 @@ namespace Voxalia.Shared
             Register("DARK_CYAN", DARK_CYAN);
             Register("ORANGE", ORANGE);
             Register("BROWN", BROWN);
+            Register("PURPLE", PURPLE);
+            Register("PINK", PINK);
         }
     }
 }
