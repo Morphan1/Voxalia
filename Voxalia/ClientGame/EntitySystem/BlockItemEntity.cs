@@ -19,13 +19,15 @@ namespace Voxalia.ClientGame.EntitySystem
     {
         public Material Mat;
         public byte Dat;
+        public byte Paint;
         public double soundmaxrate = 0.2;
 
-        public BlockItemEntity(Region tregion, Material tmat, byte dat)
+        public BlockItemEntity(Region tregion, Material tmat, byte dat, byte tpaint)
             : base(tregion, false, true)
         {
             Mat = tmat;
             Dat = dat;
+            Paint = tpaint;
             Shape = BlockShapeRegistry.BSD[dat].GetShape(out Offset);
             SetMass(5);
         }
@@ -44,12 +46,16 @@ namespace Voxalia.ClientGame.EntitySystem
             vbo.Normals = new List<OpenTK.Vector3>();
             vbo.TexCoords = new List<OpenTK.Vector3>();
             vbo.Indices = new List<uint>();
+            vbo.Colors = new List<Vector4>();
+            System.Drawing.Color col = Colors.ForByte(Paint);
+            Vector4 vcol = new Vector4(col.R / 255f, col.G / 255f, col.B / 255f, col.A / 255f);
             for (int i = 0; i < vecs.Count; i++)
             {
                 vbo.Vertices.Add(new OpenTK.Vector3(vecs[i].X, vecs[i].Y, vecs[i].Z));
                 vbo.Normals.Add(new OpenTK.Vector3(norms[i].X, norms[i].Y, norms[i].Z));
                 vbo.TexCoords.Add(new OpenTK.Vector3(tcoord[i].X, tcoord[i].Y, tcoord[i].Z));
                 vbo.Indices.Add((uint)i);
+                vbo.Colors.Add(vcol);
             }
             vbo.GenerateVBO();
             base.SpawnBody();

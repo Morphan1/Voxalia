@@ -18,7 +18,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             }
             // TODO: LOL PLS CLEAN
             Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + 
-                (e is GlowstickEntity ? 4: (e is BlockGroupEntity ? bge.Blocks.Length * 3 + 1 :(e is BlockItemEntity ? 3: (e is ModelEntity ? 4 + 1: (e is GrenadeEntity ? 0: 0))))) + 4 + 1];
+                (e is GlowstickEntity ? 4: (e is BlockGroupEntity ? bge.Blocks.Length * 4 + 1 :(e is BlockItemEntity ? 4: (e is ModelEntity ? 4 + 1: (e is GrenadeEntity ? 0: 0))))) + 4 + 1];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
@@ -52,14 +52,15 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 (e is SlimeEntity ? 7 :
                 (e is BlockGroupEntity ? 4:
                 (e is CharacterEntity ? 1 :
-                (e is BlockItemEntity ? 3:
+                (e is BlockItemEntity ? 4:
                 (e is ModelEntity ? 2: 0)))))));
             int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
             if (e is BlockItemEntity)
             {
                 BlockItemEntity bie = (BlockItemEntity)e;
-                Utilities.UshortToBytes((ushort)bie.Mat).CopyTo(Data, start);
-                Data[start + 2] = bie.Dat;
+                Utilities.UshortToBytes(bie.Original.BlockMaterial).CopyTo(Data, start);
+                Data[start + 2] = bie.Original.BlockData;
+                Data[start + 3] = bie.Original.BlockPaint;
             }
             else if (e is ModelEntity)
             {
@@ -74,8 +75,9 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 {
                     Utilities.UshortToBytes(bge.Blocks[i].BlockMaterial).CopyTo(Data, start + i * 2);
                     Data[start + bge.Blocks.Length * 2 + i] = bge.Blocks[i].BlockData;
+                    Data[start + bge.Blocks.Length * 3 + i] = bge.Blocks[i].BlockPaint;
                 }
-                Data[start + bge.Blocks.Length * 3] = (byte)bge.TraceMode;
+                Data[start + bge.Blocks.Length * 4] = (byte)bge.TraceMode;
             }
             else if (e is GlowstickEntity)
             {

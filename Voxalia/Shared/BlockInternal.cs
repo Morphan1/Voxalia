@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace Voxalia.Shared
 {
@@ -6,6 +7,16 @@ namespace Voxalia.Shared
     public struct BlockInternal
     {
         public static BlockInternal AIR = new BlockInternal(0, 0, 0, 0);
+
+        public static BlockInternal FromItemDatum(int dat)
+        {
+            return FromItemDatumU(BitConverter.ToUInt32(BitConverter.GetBytes(dat), 0)); // TODO: Less stupid conversion
+        }
+
+        public static BlockInternal FromItemDatumU(uint dat)
+        {
+            return new BlockInternal((ushort)(dat & (255u | (255u * 256u))), (byte)((dat & (255u * 256u * 256u)) / (256u * 256u)), (byte)((dat & (255u * 256u * 256u * 256u)) / (256u * 256u * 256)), 0);
+        }
 
         public ushort BlockMaterial;
         public byte BlockData;
@@ -18,6 +29,16 @@ namespace Voxalia.Shared
             BlockData = dat;
             BlockPaint = paint;
             BlockLocalData = loc;
+        }
+
+        public int GetItemDatum()
+        {
+            return BitConverter.ToInt32(BitConverter.GetBytes(GetItemDatumU()), 0); // TODO: Less stupid conversion
+        }
+
+        public uint GetItemDatumU()
+        {
+            return (uint)BlockMaterial | ((uint)BlockData * 256u * 256u) | ((uint)BlockPaint * 256u * 256u * 256u);
         }
     }
 }

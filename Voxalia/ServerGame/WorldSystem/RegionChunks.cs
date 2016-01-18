@@ -126,7 +126,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { Material.AIR }, new byte[] { 0 }, new byte[] { 0 }), ch.WorldPosition);
                     }
-                    BlockItemEntity bie = new BlockItemEntity(this, mat, bi.BlockData, pos);
+                    BlockItemEntity bie = new BlockItemEntity(this, new BlockInternal((ushort)mat, bi.BlockData, bi.BlockPaint, 0), pos);
                     SpawnEntity(bie);
                 }
             }

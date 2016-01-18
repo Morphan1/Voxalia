@@ -207,9 +207,7 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             if (item.Info is BlockItem)
             {
-                int mat = item.Datum & (255 + 255 * 256);
-                int dat = item.Datum & (255 * 256 * 256);
-                return new BlockItemEntity(this, (Material)mat, (byte)dat, Location.Zero);
+                return new BlockItemEntity(this, BlockInternal.FromItemDatum(item.Datum), Location.Zero);
             }
             if (item.Info is GlowstickItem)
             {

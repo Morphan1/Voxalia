@@ -9,19 +9,17 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class BlockItemEntity : PhysicsEntity, EntityUseable, EntityDamageable
     {
-        public Material Mat;
-        public byte Dat;
+        public BlockInternal Original;
 
-        public BlockItemEntity(Region tregion, Material mat, byte dat, Location pos)
+        public BlockItemEntity(Region tregion, BlockInternal orig, Location pos)
             : base(tregion)
         {
             SetMass(5);
             CGroup = CollisionUtil.Item;
-            Dat = dat;
+            Original = orig;
             Location offset;
-            Shape = BlockShapeRegistry.BSD[dat].GetShape(out offset);
+            Shape = BlockShapeRegistry.BSD[orig.BlockData].GetShape(out offset);
             SetPosition(pos.GetBlockLocation() + offset);
-            Mat = mat;
         }
 
         public override EntityType GetEntityType()
@@ -32,10 +30,11 @@ namespace Voxalia.ServerGame.EntitySystem
         public override byte[] GetSaveBytes()
         {
             byte[] bbytes = GetPhysicsBytes();
-            byte[] res = new byte[bbytes.Length + 3];
+            byte[] res = new byte[bbytes.Length + 4];
             bbytes.CopyTo(res, 0);
-            Utilities.UshortToBytes((ushort)Mat).CopyTo(res, bbytes.Length);
-            res[bbytes.Length + 2] = Dat;
+            Utilities.UshortToBytes(Original.BlockMaterial).CopyTo(res, bbytes.Length);
+            res[bbytes.Length + 2] = Original.BlockData;
+            res[bbytes.Length + 3] = Original.BlockPaint;
             return res;
         }
 
@@ -46,7 +45,9 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public ItemStack GetItem()
         {
-            return TheServer.Items.GetItem("blocks/" + Mat.ToString());
+            ItemStack its = TheServer.Items.GetItem("blocks/" + ((Material)Original.BlockMaterial).ToString());
+            its.Datum = Original.GetItemDatum();
+            return its;
         }
 
         public void StartUse(Entity user)
@@ -111,7 +112,8 @@ namespace Voxalia.ServerGame.EntitySystem
             int plen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1;
             ushort tmat = Utilities.BytesToUshort(Utilities.BytesPartial(input, plen, 2));
             byte tdat = input[plen + 2];
-            BlockItemEntity ent = new BlockItemEntity(tregion, (Material)tmat, tdat, Location.Zero);
+            byte tpaint = input[plen + 3];
+            BlockItemEntity ent = new BlockItemEntity(tregion, new BlockInternal(tmat, tdat, tpaint, 0), Location.Zero);
             ent.ApplyBytes(input);
             return ent;
         }

@@ -6,6 +6,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using Voxalia.ServerGame.TagSystem.TagObjects;
 using Voxalia.ServerGame.EntitySystem;
+using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
@@ -41,7 +42,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "2" .material could return "stone".
                 // -->
                 case "material":
-                    return new MaterialTag(Internal.Mat).Handle(data.Shrink());
+                    return new MaterialTag((Material)Internal.Original.BlockMaterial).Handle(data.Shrink());
                 default:
                     return new PhysicsEntityTag((PhysicsEntity)Internal).Handle(data);
             }

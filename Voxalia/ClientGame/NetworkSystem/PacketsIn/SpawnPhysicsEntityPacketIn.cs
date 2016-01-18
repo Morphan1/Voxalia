@@ -37,7 +37,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 Material mat = (Material)Utilities.BytesToUshort(Utilities.BytesPartial(data, start, 2));
                 byte dat = data[start + 2];
-                BlockItemEntity bie = new BlockItemEntity(TheClient.TheRegion, mat, dat);
+                byte tpa = data[start + 3];
+                BlockItemEntity bie = new BlockItemEntity(TheClient.TheRegion, mat, dat, tpa);
                 ce = bie;
             }
             else if (type == 4)
@@ -50,8 +51,9 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 {
                     bi[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(data, start + i * 2, 2));
                     bi[i].BlockData = data[start + bi.Length * 2 + i];
+                    bi[i].BlockPaint = data[start + bi.Length * 3 + i];
                 }
-                BGETraceMode tm = (BGETraceMode)data[start + bi.Length * 3];
+                BGETraceMode tm = (BGETraceMode)data[start + bi.Length * 4];
                 BlockGroupEntity bge = new BlockGroupEntity(TheClient.TheRegion, tm, bi, xwidth, ywidth, zwidth);
                 ce = bge;
             }
