@@ -14,10 +14,15 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
         {
             if (entry.InputArguments.Count < 1)
             {
-                entry.Player.Network.SendMessage("/blockshape <data>");
+                entry.Player.Network.SendMessage("/blockshape <data> [color]");
                 return;
             }
             byte dat = (byte)Utilities.StringToInt(entry.InputArguments[0]);
+            byte col = 0;
+            if (entry.InputArguments.Count > 1)
+            {
+                col = (byte)Utilities.StringToInt(entry.InputArguments[1]);
+            }
             Location eye = entry.Player.GetEyePosition();
             CollisionResult cr = entry.Player.TheRegion.Collision.RayTrace(eye, eye + entry.Player.ForwardVector() * 5, entry.Player.IgnoreThis);
             if (cr.Hit && cr.HitEnt == null)
@@ -26,7 +31,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                 Material mat = entry.Player.TheRegion.GetBlockMaterial(block);
                 if (mat != Material.AIR)
                 {
-                    entry.Player.TheRegion.SetBlockMaterial(block, mat, dat);
+                    entry.Player.TheRegion.SetBlockMaterial(block, mat, dat, col);
                     entry.Player.Network.SendMessage("Set.");
                     return;
                 }

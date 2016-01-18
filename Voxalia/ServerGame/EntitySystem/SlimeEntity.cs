@@ -29,7 +29,7 @@ namespace Voxalia.ServerGame.EntitySystem
             SetMass(10);
             model = "mobs/slimes/slime";
             mod_xrot = -90;
-            mod_color = System.Drawing.Color.FromArgb(Utilities.UtilRandom.Next(128) + 128, Utilities.UtilRandom.Next(128) + 128, Utilities.UtilRandom.Next(128) + 128);
+            mod_color = System.Drawing.Color.FromArgb(Utilities.UtilRandom.Next(255), Utilities.UtilRandom.Next(255), Utilities.UtilRandom.Next(255));
         }
 
         public override EntityType GetEntityType()

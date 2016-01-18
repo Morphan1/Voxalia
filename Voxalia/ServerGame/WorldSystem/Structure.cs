@@ -85,13 +85,13 @@ namespace Voxalia.ServerGame.WorldSystem
             Blocks = new BlockInternal[Size.X * Size.Y * Size.Z];
             for (int i = 0; i < Blocks.Length; i++)
             {
-                Blocks[i] = new BlockInternal(Utilities.BytesToUshort(Utilities.BytesPartial(dat, 12 + 12 + i * 2, 2)), dat[12 + 12 + Blocks.Length * 2 + i], dat[12 + 12 + Blocks.Length * 3 + i]);
+                Blocks[i] = new BlockInternal(Utilities.BytesToUshort(Utilities.BytesPartial(dat, 12 + 12 + i * 2, 2)), dat[12 + 12 + Blocks.Length * 2 + i], dat[12 + 12 + Blocks.Length * 4 + i], dat[12 + 12 + Blocks.Length * 3 + i]);
             }
         }
 
         public byte[] ToBytes()
         {
-            byte[] dat = new byte[12 + 12 + Blocks.Length * 4];
+            byte[] dat = new byte[12 + 12 + Blocks.Length * 5];
             Utilities.IntToBytes(Size.X).CopyTo(dat, 0);
             Utilities.IntToBytes(Size.Y).CopyTo(dat, 4);
             Utilities.IntToBytes(Size.Z).CopyTo(dat, 8);
@@ -103,6 +103,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 Utilities.UshortToBytes(Blocks[i].BlockMaterial).CopyTo(dat, 12 + 12 + i * 2);
                 dat[12 + 12 + Blocks.Length * 2 + i] = Blocks[i].BlockData;
                 dat[12 + 12 + Blocks.Length * 3 + i] = Blocks[i].BlockLocalData;
+                dat[12 + 12 + Blocks.Length * 4 + i] = Blocks[i].BlockPaint;
             }
             return dat;
         }
@@ -122,7 +123,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         if ((Material)bi.BlockMaterial != Material.AIR)
                         {
                             bi.BlockLocalData = (byte)(bi.BlockLocalData | ((int)BlockFlags.EDITED));
-                            tregion.SetBlockMaterial(corner + new Location(x, y, z), (Material)bi.BlockMaterial, bi.BlockData, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED));
+                            tregion.SetBlockMaterial(corner + new Location(x, y, z), (Material)bi.BlockMaterial, bi.BlockData, bi.BlockPaint, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED));
                         }
                     }
                 }

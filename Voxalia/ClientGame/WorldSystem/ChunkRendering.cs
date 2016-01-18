@@ -51,7 +51,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 Chunk c_ym = OwningRegion.GetChunk(WorldPosition + new Location(0, -1, 0));
                 Chunk c_xp = OwningRegion.GetChunk(WorldPosition + new Location(1, 0, 0));
                 Chunk c_xm = OwningRegion.GetChunk(WorldPosition + new Location(-1, 0, 0));
-                BlockInternal t_air = new BlockInternal(0, 0, 0);
+                BlockInternal t_air = new BlockInternal(0, 0, 0, 0);
                 for (int x = 0; x < CSize; x++)
                 {
                     for (int y = 0; y < CSize; y++)
@@ -123,7 +123,8 @@ namespace Voxalia.ClientGame.WorldSystem
                                         }
                                     }
                                     float cCol = tp / tc;
-                                    Cols.Add(new Vector4(cCol, cCol, cCol, 1f));
+                                    System.Drawing.Color tcol = Colors.ForByte(c.BlockPaint);
+                                    Cols.Add(new Vector4(cCol * (tcol.R / 255f), cCol * (tcol.G / 255f), cCol * (tcol.B / 255f), 1f * (tcol.A / 255f)));
                                 }
                                 if (!((Material)c.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
                                 {

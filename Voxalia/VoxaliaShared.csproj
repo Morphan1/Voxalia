@@ -84,6 +84,8 @@
     <Compile Include="PriorityQueue\FastPriorityQueueNode.cs" />
     <Compile Include="PriorityQueue\IPriorityQueue.cs" />
     <Compile Include="PriorityQueue\SimplePriorityQueue.cs" />
+    <Compile Include="Shared\BlockInternal.cs" />
+    <Compile Include="Shared\Colors.cs" />
     <Compile Include="Shared\EntityType.cs" />
     <Compile Include="Shared\BlockShapes\BSD64_68.cs" />
     <Compile Include="Shared\BlockShapes\BSD58.cs" />
@@ -106,7 +108,6 @@
     <Compile Include="Shared\Model3D.cs" />
     <Compile Include="Shared\Collision\AABB.cs" />
     <Compile Include="Shared\AnimationEngine.cs" />
-    <Compile Include="Shared\BlockInternal.cs" />
     <Compile Include="Shared\BlockShapeRegistry.cs" />
     <Compile Include="Shared\BlockShapes\BSD83.cs" />
     <Compile Include="Shared\BlockShapes\BSD82.cs" />

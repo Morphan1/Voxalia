@@ -26,9 +26,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 mats.Add((Material)Utilities.BytesToUshort(dr.ReadBytes(2)));
             }
             byte[] dats = dr.ReadBytes(len);
+            byte[] paints = dr.ReadBytes(len);
             for (int i = 0; i < len; i++)
             {
-                TheClient.TheRegion.SetBlockMaterial(locs[i], mats[i], dats[i], true); // TODO: Regen in PBAE not SBM.
+                TheClient.TheRegion.SetBlockMaterial(locs[i], mats[i], dats[i], paints[i], true); // TODO: Regen in PBAE not SBM.
             }
             return true;
         }

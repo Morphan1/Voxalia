@@ -33,7 +33,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             byte[] data_orig = FileHandler.UnGZip(data_unzipped);
             if (posMult == 1)
             {
-                if (data_orig.Length != Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 3)
+                if (data_orig.Length != Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 4)
                 {
                     SysConsole.Output(OutputType.WARNING, "Invalid chunk size! Expected " + (Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 3) + ", got " + data_orig.Length + ")");
                     return;
@@ -78,6 +78,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 for (int i = 0; i < chk.BlocksInternal.Length; i++)
                 {
                     chk.BlocksInternal[i].BlockData = data_orig[chk.BlocksInternal.Length * 2 + i];
+                    chk.BlocksInternal[i].BlockPaint = data_orig[chk.BlocksInternal.Length * 3 + i];
                 }
             }
             else

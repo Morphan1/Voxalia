@@ -172,25 +172,25 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             {
                                 shape = OreShapes[new Random((int)((hheight + cx + cy + cpos.Z + z) * 5)).Next(OreShapes.Length)];
                             }
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(typex == Material.AIR ? basb : typex), shape, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(typex == Material.AIR ? basb : typex), shape, 0, 0);
                         }
                         else if ((CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z - 1) || (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z + 1))) &&
                             (CanBeSolid(seed3, seed4, seed5, cx + 1, cy, (int)cpos.Z + z) || CanBeSolid(seed3, seed4, seed5, cx, cy + 1, (int)cpos.Z + z)
                                 || CanBeSolid(seed3, seed4, seed5, cx - 1, cy, (int)cpos.Z + z) || CanBeSolid(seed3, seed4, seed5, cx, cy - 1, (int)cpos.Z + z)))
                         {
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)basb, 3, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)basb, 3, 0, 0);
                         }
                     }
                     for (int z = Math.Max(top - 5, 0); z < Math.Min(top - 1, 30); z++)
                     {
                         if (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z))
                         {
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)seco, 0, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)seco, 0, 0, 0);
                         }
                     }
                     for (int z = Math.Max(top - 1, 0); z < Math.Min(top, 30); z++)
                     {
-                        chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0);
+                        chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0);
                     }
                     // Smooth terrain cap
                     Biome tempb;
@@ -212,22 +212,22 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             bool ym = topfym > topf && topfym - Math.Round(topfym) <= 0;
                             if (xm && xp) { /* Fine as-is */ }
                             else if (ym && yp) { /* Fine as-is */ }
-                            else if (yp && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0); } // TODO: Shape
-                            else if (yp && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0); } // TODO: Shape
-                            else if (xp && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0); } // TODO: Shape
-                            else if (xp && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0); } // TODO: Shape
-                            else if (ym && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0); } // TODO: Shape
-                            else if (ym && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0); } // TODO: Shape
-                            else if (xm && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0); } // TODO: Shape
-                            else if (xm && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0); } // TODO: Shape
-                            else if (xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 80, 0); }
-                            else if (xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 81, 0); }
-                            else if (yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 82, 0); }
-                            else if (ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 83, 0); }
-                            else { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0); }
+                            else if (yp && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
+                            else if (yp && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
+                            else if (xp && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
+                            else if (xp && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
+                            else if (ym && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
+                            else if (ym && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
+                            else if (xm && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
+                            else if (xm && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
+                            else if (xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 80, 0, 0); }
+                            else if (xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 81, 0, 0); }
+                            else if (yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 82, 0, 0); }
+                            else if (ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 83, 0, 0); }
+                            else { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); }
                             if (z > 0)
                             {
-                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z - 1)] = new BlockInternal((ushort)seco, 0, 0);
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z - 1)] = new BlockInternal((ushort)seco, 0, 0, 0);
                             }
                         }
                         else
@@ -238,18 +238,18 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             bool ym = topfym > topf && topfym - Math.Round(topfym) > 0;
                             if (xm && xp) { /* Fine as-is */ }
                             else if (ym && yp) { /* Fine as-is */ }
-                            else if (yp && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0); } // TODO: Shape
-                            else if (yp && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0); } // TODO: Shape
-                            else if (xp && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0); } // TODO: Shape
-                            else if (xp && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0); } // TODO: Shape
-                            else if (ym && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0); } // TODO: Shape
-                            else if (ym && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0); } // TODO: Shape
-                            else if (xm && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0); } // TODO: Shape
-                            else if (xm && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0); } // TODO: Shape
-                            else if (xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 73, 0); }
-                            else if (xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 72, 0); }
-                            else if (yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 74, 0); }
-                            else if (ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 75, 0); }
+                            else if (yp && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
+                            else if (yp && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
+                            else if (xp && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
+                            else if (xp && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
+                            else if (ym && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
+                            else if (ym && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
+                            else if (xm && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
+                            else if (xm && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
+                            else if (xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 73, 0, 0); }
+                            else if (xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 72, 0, 0); }
+                            else if (yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 74, 0, 0); }
+                            else if (ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 75, 0, 0); }
                             else { /* Fine as-is */ }
                         }
                     }
@@ -259,11 +259,11 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     {
                         for (int z = Math.Max(top, 0); z < Math.Min(top + 1, Chunk.CHUNK_SIZE); z++)
                         {
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.SAND, 0, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.SAND, 0, 0, 0);
                         }
                         for (int z = Math.Max(top + 1, 0); z <= Math.Min(level, Chunk.CHUNK_SIZE - 1); z++)
                         {
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.WATER, 0, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.WATER, 0, 0, 0);
                         }
                     }
                     else
@@ -272,7 +272,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         {
                             if (Math.Round(heightfxp) <= 0 || Math.Round(heightfxm) <= 0 || Math.Round(heightfyp) <= 0 || Math.Round(heightfym) <= 0)
                             {
-                                chunk.BlocksInternal[chunk.BlockIndex(x, y, level)] = new BlockInternal((ushort)Material.SAND, 0, 0);
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, level)] = new BlockInternal((ushort)Material.SAND, 0, 0, 0);
                             }
                         }
                     }

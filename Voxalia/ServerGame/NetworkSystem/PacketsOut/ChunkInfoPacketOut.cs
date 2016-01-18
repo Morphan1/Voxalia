@@ -17,7 +17,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             byte[] data_orig;
             if (lod == 1)
             {
-                data_orig = new byte[chunk.BlocksInternal.Length * 3];
+                data_orig = new byte[chunk.BlocksInternal.Length * 4];
                 int csize = Chunk.CHUNK_SIZE;
                 for (int x = 0; x < csize; x++)
                 {
@@ -29,9 +29,11 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                         }
                     }
                 }
+                // TODO: Why is the above and below different?
                 for (int i = 0; i < chunk.BlocksInternal.Length; i++)
                 {
                     data_orig[chunk.BlocksInternal.Length * 2 + i] = chunk.BlocksInternal[i].BlockData;
+                    data_orig[chunk.BlocksInternal.Length * 3 + i] = chunk.BlocksInternal[i].BlockPaint;
                 }
             }
             else

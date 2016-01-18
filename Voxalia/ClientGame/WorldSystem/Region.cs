@@ -337,7 +337,7 @@ namespace Voxalia.ClientGame.WorldSystem
             Chunk ch = GetChunk(ChunkLocFor(pos));
             if (ch == null)
             {
-                return new BlockInternal((ushort)Material.AIR, 0, 128);
+                return new BlockInternal((ushort)Material.AIR, 0, 0, 128);
             }
             int x = (int)Math.Floor(((int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30) / (float)ch.PosMultiplier);
             int y = (int)Math.Floor(((int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30) / (float)ch.PosMultiplier);
@@ -345,13 +345,13 @@ namespace Voxalia.ClientGame.WorldSystem
             return ch.GetBlockAt(x, y, z);
         }
 
-        public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, bool regen = true)
+        public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, byte paint = 0, bool regen = true)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos), 1);
             int x = (int)Math.Floor(((int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30) / (float)ch.PosMultiplier);
             int y = (int)Math.Floor(((int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30) / (float)ch.PosMultiplier);
             int z = (int)Math.Floor(((int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30) / (float)ch.PosMultiplier);
-            ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat, 1));
+            ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat, paint, 0));
             if (regen)
             {
                 UpdateChunk(ch);

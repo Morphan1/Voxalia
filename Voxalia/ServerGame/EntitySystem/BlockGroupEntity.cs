@@ -82,7 +82,7 @@ namespace Voxalia.ServerGame.EntitySystem
                         BlockInternal c = GetBlockAt(x, y, z);
                         if (((Material)c.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
                         {
-                            BlockInternal def = new BlockInternal(0, 0, 0);
+                            BlockInternal def = new BlockInternal(0, 0, 0, 0);
                             BlockInternal zp = z + 1 < ZWidth ? GetBlockAt(x, y, z + 1) : def;
                             BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : def;
                             BlockInternal yp = y + 1 < YWidth ? GetBlockAt(x, y + 1, z) : def;

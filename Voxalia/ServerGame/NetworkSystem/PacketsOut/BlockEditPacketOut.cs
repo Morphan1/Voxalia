@@ -5,7 +5,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     public class BlockEditPacketOut: AbstractPacketOut
     {
-        public BlockEditPacketOut(Location[] pos, Material[] mat, byte[] dat)
+        public BlockEditPacketOut(Location[] pos, Material[] mat, byte[] dat, byte[] paints)
         {
             ID = 25;
             DataStream outp = new DataStream();
@@ -20,6 +20,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 dw.WriteBytes(Utilities.UshortToBytes((ushort)mat[i]));
             }
             dw.WriteBytes(dat);
+            dw.WriteBytes(paints);
             dw.Flush();
             Data = outp.ToArray();
         }

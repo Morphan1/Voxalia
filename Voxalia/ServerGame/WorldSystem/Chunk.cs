@@ -118,7 +118,7 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             lock (EditSessionLock)
             {
-                byte[] bytes = new byte[12 + BlocksInternal.Length * 4];
+                byte[] bytes = new byte[12 + BlocksInternal.Length * 5];
                 Encoding.ASCII.GetBytes("VOX_").CopyTo(bytes, 0); // General Header
                 Utilities.IntToBytes(3).CopyTo(bytes, 4); // Saves Version
                 Utilities.IntToBytes((int)Flags).CopyTo(bytes, 8);
@@ -127,6 +127,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     Utilities.UshortToBytes(BlocksInternal[i].BlockMaterial).CopyTo(bytes, 12 + i * 2);
                     bytes[12 + BlocksInternal.Length * 2 + i] = BlocksInternal[i].BlockData;
                     bytes[12 + BlocksInternal.Length * 3 + i] = BlocksInternal[i].BlockLocalData;
+                    bytes[12 + BlocksInternal.Length * 4 + i] = BlocksInternal[i].BlockPaint;
                 }
                 return FileHandler.GZip(bytes);
             }
@@ -248,6 +249,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 BlocksInternal[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(bytes, 4 + 4 + 4 + i * 2, 2));
                 BlocksInternal[i].BlockData = bytes[4 + 4 + 4 + BlocksInternal.Length * 2 + i];
                 BlocksInternal[i].BlockLocalData = bytes[4 + 4 + 4 + BlocksInternal.Length * 3 + i];
+                BlocksInternal[i].BlockPaint = bytes[4 + 4 + 4 + BlocksInternal.Length * 4 + i];
             }
             // Begin: entities
             int elen = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + clen, 4));

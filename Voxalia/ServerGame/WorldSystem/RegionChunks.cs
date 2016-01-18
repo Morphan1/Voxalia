@@ -64,7 +64,7 @@ namespace Voxalia.ServerGame.WorldSystem
             return ch.GetBlockAt(x, y, z);
         }
 
-        public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, byte locdat = (byte)BlockFlags.EDITED, bool broadcast = true, bool regen = true, bool override_protection = false)
+        public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, byte paint = 0, byte locdat = (byte)BlockFlags.EDITED, bool broadcast = true, bool regen = true, bool override_protection = false)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos));
             lock (ch.EditSessionLock)
@@ -76,12 +76,12 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     return;
                 }
-                ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat, locdat));
+                ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat, paint, locdat));
                 ch.LastEdited = GlobalTickTime;
                 if (broadcast)
                 {
                     // TODO: Send per-person based on chunk awareness details
-                    ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { mat }, new byte[] { dat }), ch.WorldPosition);
+                    ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { mat }, new byte[] { dat }, new byte[] { paint }), ch.WorldPosition);
                 }
             }
         }
@@ -119,12 +119,12 @@ namespace Voxalia.ServerGame.WorldSystem
                             }
                         }
                     }
-                    ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0, (byte)BlockFlags.EDITED));
+                    ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0, 0, (byte)BlockFlags.EDITED));
                     ch.LastEdited = GlobalTickTime;
                     SurroundBlockPhysics(pos);
                     if (regentrans)
                     {
-                        ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { Material.AIR }, new byte[] { 0 }), ch.WorldPosition);
+                        ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { Material.AIR }, new byte[] { 0 }, new byte[] { 0 }), ch.WorldPosition);
                     }
                     BlockItemEntity bie = new BlockItemEntity(this, mat, bi.BlockData, pos);
                     SpawnEntity(bie);

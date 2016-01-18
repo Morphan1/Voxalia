@@ -80,6 +80,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public EntityShape CalculateHullShape(BGETraceMode mode, out Location offs)
         {
             List<Vector3> Vertices = new List<Vector3>(XWidth * YWidth * ZWidth);
+            BlockInternal def = new BlockInternal(0, 0, 0, 0);
             for (int x = 0; x < XWidth; x++)
             {
                 for (int y = 0; y < YWidth; y++)
@@ -89,7 +90,6 @@ namespace Voxalia.ClientGame.EntitySystem
                         BlockInternal c = GetBlockAt(x, y, z);
                         if (((Material)c.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
                         {
-                            BlockInternal def = new BlockInternal(0, 0, 0);
                             BlockInternal zp = z + 1 < ZWidth ? GetBlockAt(x, y, z + 1) : def;
                             BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : def;
                             BlockInternal yp = y + 1 < YWidth ? GetBlockAt(x, y + 1, z) : def;
@@ -205,7 +205,7 @@ namespace Voxalia.ClientGame.EntitySystem
                         BlockInternal c = GetBlockAt(x, y, z);
                         if (((Material)c.BlockMaterial).RendersAtAll())
                         {
-                            BlockInternal def = new BlockInternal(0, 0, 0);
+                            BlockInternal def = new BlockInternal(0, 0, 0, 0);
                             BlockInternal zp = z + 1 < ZWidth ? GetBlockAt(x, y, z + 1) : def;
                             BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : def;
                             BlockInternal yp = y + 1 < YWidth ? GetBlockAt(x, y + 1, z) : def;
