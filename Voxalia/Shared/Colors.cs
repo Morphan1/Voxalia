@@ -40,10 +40,18 @@ namespace Voxalia.Shared
 
         public static Color[] KnownColorsArray = new Color[32];
 
+        public static string[] KnownColorNamesArray = new string[32];
+
         public static Color ForByte(byte input)
         {
             int baseinp = input & (1 | 2 | 4 | 8 | 16);
             return KnownColorsArray[baseinp];
+        }
+
+        public static string NameForByte(byte input)
+        {
+            int baseinp = input & (1 | 2 | 4 | 8 | 16);
+            return KnownColorNamesArray[baseinp];
         }
 
         static int inc = 0;
@@ -51,6 +59,7 @@ namespace Voxalia.Shared
         static void Register(string name, Color col)
         {
             KnownColorNames.Add(name, col);
+            KnownColorNamesArray[inc] = name;
             KnownColorsArray[inc++] = col;
         }
 
