@@ -312,17 +312,17 @@ namespace Voxalia.ServerGame.EntitySystem
                     TrySet(pos, ViewRadiusInChunks + 1, 0, 1, true);
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
                 }
-                List<Location> removes = new List<Location>();
+                List<Chunk> removes = new List<Chunk>();
                 foreach (ChunkAwarenessInfo ch in ChunksAwareOf.Values)
                 {
                     if (!ShouldSeeChunk(ch.ChunkPos))
                     {
-                        removes.Add(ch.ChunkPos);
+                        removes.Add(TheRegion.GetChunk(ch.ChunkPos));
                     }
                 }
-                foreach (Location loc in removes)
+                foreach (Chunk loc in removes)
                 {
-                    ForgetChunk(loc);
+                    ForgetChunk(loc, loc.WorldPosition);
                 }
                 pChunkLoc = cpos;
             }
@@ -378,7 +378,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool ShouldLoadChunk(Location cpos)
         {
             Location wpos = TheRegion.ChunkLocFor(GetPosition());
-            if (Math.Abs(cpos.X - wpos.X) >( ViewRadiusInChunks + 1)
+            if (Math.Abs(cpos.X - wpos.X) > (ViewRadiusInChunks + 1)
                 || Math.Abs(cpos.Y - wpos.Y) > (ViewRadiusInChunks + 1)
                 || Math.Abs(cpos.Z - wpos.Z) > (ViewRadiusInChunks + 1))
             {
@@ -516,10 +516,17 @@ namespace Voxalia.ServerGame.EntitySystem
             return ChunksAwareOf.ContainsKey(cpos);
         }
 
-        public bool ForgetChunk(Location cpos)
+        public bool ForgetChunk(Chunk ch, Location cpos)
         {
             if (ChunksAwareOf.Remove(cpos))
             {
+                foreach (Entity ent in TheRegion.Entities)
+                {
+                    if (ch.Contains(ent.GetPosition()))
+                    {
+                        Network.SendPacket(new DespawnEntityPacketOut(ent.EID));
+                    }
+                }
                 ChunkNetwork.SendPacket(new ChunkForgetPacketOut(cpos));
                 return true;
             }

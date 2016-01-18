@@ -163,10 +163,11 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     lpos = ((PrimitiveEntity)e).lPos;
                 }
+                Location tpos = e.GetPosition();
                 DespawnEntityPacketOut desppack = new DespawnEntityPacketOut(e.EID);
                 foreach (PlayerEntity player in Players)
                 {
-                    if (player.ShouldSeePositionPreviously(lpos))
+                    if (player.ShouldSeePositionPreviously(lpos) || player.ShouldSeePosition(tpos))
                     {
                         player.Network.SendPacket(desppack);
                     }

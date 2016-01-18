@@ -105,13 +105,17 @@ namespace Voxalia.ServerGame.EntitySystem
         public double netdeltat = 0;
 
         public Location lPos = Location.NaN;
+
+        public void PreTick()
+        {
+            NetworkTick();
+        }
         
         /// <summary>
-        /// Ticks the physics entity, currently only causing water float and transmitting to the network.
+        /// Ticks the physics entity, doing nothing at all.
         /// </summary>
         public override void Tick()
         {
-            NetworkTick();
         }
 
         void NetworkTick()

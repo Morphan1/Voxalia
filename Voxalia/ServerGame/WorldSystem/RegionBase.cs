@@ -258,6 +258,13 @@ namespace Voxalia.ServerGame.WorldSystem
             // TODO: Async tick
             for (int i = 0; i < Tickers.Count; i++)
             {
+                if (!Tickers[i].Removed && Tickers[i] is PhysicsEntity)
+                {
+                    ((PhysicsEntity)Tickers[i]).PreTick();
+                }
+            }
+            for (int i = 0; i < Tickers.Count; i++)
+            {
                 if (!Tickers[i].Removed)
                 {
                     Tickers[i].Tick();
