@@ -172,12 +172,13 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public void UnloadSafely(Action callback = null)
         {
+            SaveToFile(callback);
+            clearentities();
             if (FCO != null)
             {
                 OwningRegion.RemoveChunkQuiet(FCO);
+                FCO = null;
             }
-            SaveToFile(callback);
-            clearentities();
             OwningRegion.RemoveCloudsFrom(this);
         }
         
@@ -186,6 +187,10 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public void SaveToFile(Action callback = null)
         {
+            if (FCO == null)
+            {
+                return;
+            }
             LastEdited = -1;
             byte[] ents = GetEntitySaveData();
             byte[] saves1 = GetChunkSaveData();
