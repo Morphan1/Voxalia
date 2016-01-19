@@ -31,7 +31,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_maxfps,
             r_lightmaxdistance, r_fallbacklighting,
             r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun, r_shadowpace, r_shadows,
-            r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth, r_toonify, r_transplighting,
+            r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth, r_toonify, r_transplighting, r_transpshadows,
             r_godrays, r_godray_samples, r_godray_wexposure, r_godray_decay, r_godray_density, r_godray_color;
 
         // Audio CVars
@@ -97,6 +97,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_godray_color = Register("r_godray_color", "1,1,1", CVarFlag.Textual, "What color to use for GodRays.");
             r_toonify = Register("r_toonify", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use a 'toonify' post-processing effect."); // TODO: callback to auto-set
             r_transplighting = Register("r_transplighting", "true", CVarFlag.Boolean, "Whether transparent objects should be lit properly (otherwise, fullbright).");
+            r_transpshadows = Register("r_transpshadows", "true", CVarFlag.Boolean, "Whether transparent objects should be lit using HD shadows (Requires r_shadows true).");
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric, "What volume the music should be.");
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");

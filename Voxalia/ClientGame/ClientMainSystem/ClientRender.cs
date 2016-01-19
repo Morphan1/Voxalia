@@ -62,6 +62,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_transponlyvox = Shaders.GetShader("transponlyvox");
             s_transponlylit = Shaders.GetShader("transponlylit");
             s_transponlyvoxlit = Shaders.GetShader("transponlyvoxlit");
+            s_transponlylitsh = Shaders.GetShader("transponlylitsh");
+            s_transponlyvoxlitsh = Shaders.GetShader("transponlyvoxlitsh");
             s_godray = Shaders.GetShader("godray");
             s_pointlightadder = Shaders.GetShader("pointlightadder");
             s_pointshadowadder = Shaders.GetShader("pointshadowadder");
@@ -229,6 +231,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_transponlyvox;
         public Shader s_transponlylit;
         public Shader s_transponlyvoxlit;
+        public Shader s_transponlylitsh;
+        public Shader s_transponlyvoxlitsh;
         public Shader s_godray;
         public Shader s_shadowvox;
         public Shader s_pointlightadder;
@@ -731,7 +735,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Particles.Sort();
                 if (CVars.r_transplighting.ValueB)
                 {
-                    s_transponlyvoxlit.Bind();
+                    if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
+                    {
+                        s_transponlyvoxlitsh.Bind();
+                    }
+                    else
+                    {
+                        s_transponlyvoxlit.Bind();
+                    }
                     GL.Uniform3(9, ClientUtilities.Convert(CameraPos));
                 }
                 else
@@ -743,9 +754,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.Uniform1(4, DesaturationAmount);
                 if (CVars.r_transplighting.ValueB)
                 {
-                    s_transponlylit.Bind();
+                    if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
+                    {
+                        s_transponlylitsh.Bind();
+                        FBOid = 8;
+                    }
+                    else
+                    {
+                        s_transponlylit.Bind();
+                        FBOid = 7;
+                    }
                     GL.Uniform3(9, ClientUtilities.Convert(CameraPos));
-                    FBOid = 7;
                 }
                 else
                 {
@@ -773,20 +792,53 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         {
                             for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                             {
-                                s_transponlyvoxlit.Bind();
+                                if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
+                                {
+                                    s_transponlyvoxlitsh.Bind();
+                                    GL.ActiveTexture(TextureUnit.Texture2);
+                                    GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
+                                    GL.ActiveTexture(TextureUnit.Texture0);
+                                }
+                                else
+                                {
+                                    s_transponlyvoxlit.Bind();
+                                }
                                 Matrix4 lmat = Lights[i].InternalLights[x].GetMatrix();
                                 GL.UniformMatrix4(6, false, ref lmat);
                                 GL.Uniform3(7, Lights[i].InternalLights[x].color);
-                                GL.Uniform1(8, (Lights[i].InternalLights[x] is LightOrtho) ? 0f : Lights[i].InternalLights[x].maxrange);
-                                s_transponlylit.Bind();
+                                float maxrange = (Lights[i].InternalLights[x] is LightOrtho) ? 0f : Lights[i].InternalLights[x].maxrange;
+                                Matrix4 matxyz = new Matrix4(Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero);
+                                matxyz[0, 0] = maxrange;
+                                // TODO: Diffuse Albedo
+                                matxyz[0, 1] = 0.7f;
+                                matxyz[0, 2] = 0.7f;
+                                matxyz[0, 3] = 0.7f;
+                                // TODO: Specular Albedo
+                                matxyz[1, 0] = 0.7f;
+                                matxyz[1, 3] = (Lights[i] is SpotLight) ? 1f : 0f;
+                                matxyz[2, 0] = (Lights[i].InternalLights[x] is LightOrtho) ? 1f : 0f;
+                                matxyz[2, 1] = 1f / Lights[i].InternalLights[x].texsize;
+                                matxyz[2, 2] = 0.5f;
+                                GL.UniformMatrix4(8, false, ref matxyz);
+                                if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
+                                {
+                                    s_transponlylitsh.Bind();
+                                }
+                                else
+                                {
+                                    s_transponlylit.Bind();
+                                }
                                 GL.UniformMatrix4(6, false, ref lmat);
                                 GL.Uniform3(7, Lights[i].InternalLights[x].color);
-                                GL.Uniform1(8, (Lights[i].InternalLights[x] is LightOrtho) ? 0f : Lights[i].InternalLights[x].maxrange);
+                                GL.UniformMatrix4(8, false, ref matxyz);
                                 Render3D(false);
                                 lightc++;
                             }
                         }
                     }
+                    GL.ActiveTexture(TextureUnit.Texture2);
+                    GL.BindTexture(TextureTarget.Texture2D, 0);
+                    GL.ActiveTexture(TextureUnit.Texture0);
                 }
                 else
                 {
@@ -1002,6 +1054,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 s_transponlyvoxlit.Bind();
             }
+            else if (FBOid == 8)
+            {
+                s_transponlyvoxlitsh.Bind();
+            }
             else if (FBOid == 4)
             {
                 s_shadowvox.Bind();
@@ -1019,6 +1075,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             else if (FBOid == 7)
             {
                 s_transponlylit.Bind();
+            }
+            else if (FBOid == 8)
+            {
+                s_transponlylitsh.Bind();
             }
             else if (FBOid == 4)
             {

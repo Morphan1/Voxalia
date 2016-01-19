@@ -5,15 +5,11 @@
 layout (binding = 0) uniform sampler2DArray tex;
 layout (binding = 1) uniform sampler2DArray htex;
 
-const vec3 diffuse_albedo = vec3(0.7, 0.7, 0.7);
-const float specular_albedo = 0.7;
-const float light_type = 0.0;
-
 layout (location = 4) uniform float desaturationAmount = 1.0;
 layout (location = 5) uniform vec3 light_pos;
 layout (location = 6) uniform mat4 shadow_matrix;
 layout (location = 7) uniform vec3 light_color = vec3(1.0, 1.0, 1.0);
-layout (location = 8) uniform float light_radius = 30.0;
+layout (location = 8) uniform mat4 light_details;
 layout (location = 9) uniform vec3 eye_pos = vec3(0.0, 0.0, 0.0);
 
 layout (location = 0) in vec4 f_color;
@@ -42,6 +38,13 @@ void main()
         discard;
     }
 	color = tcolor * f_color; // TODO: Clamp f_color.xyz, match fbo_vox
+	float light_radius = light_details[0][0];
+	vec3 diffuse_albedo = vec3(light_details[0][1], light_details[0][2], light_details[0][3]);
+	vec3 specular_albedo = vec3(light_details[1][0], light_details[1][1], light_details[1][2]);
+	float light_type = light_details[1][3];
+	float should_sqrt = light_details[2][0];
+	float tex_size = light_details[2][1];
+	float depth_jump = light_details[2][2];
 	vec4 f_spos = shadow_matrix * vec4(f_position, 1.0);
 	vec3 N = normalize(-f_normal);
 	vec3 light_path = light_pos - f_position;

@@ -4,12 +4,13 @@ layout (binding = 0) uniform sampler2D s;
 
 layout (location = 0) in vec4 f_pos;
 layout (location = 1) in vec2 f_texcoord;
+layout (location = 2) in vec4 f_color;
 
 out float color;
 
 void main()
 {
-	vec4 col = texture(s, vec2(f_texcoord[0], f_texcoord[1]));
+	vec4 col = texture(s, vec2(f_texcoord[0], f_texcoord[1])) * f_color;
 	if (col.w < 0.9)
 	{
 		discard;

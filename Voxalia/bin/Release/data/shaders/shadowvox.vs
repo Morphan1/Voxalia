@@ -11,6 +11,7 @@ layout (location = 3) uniform float should_sqrt = 0.0;
 
 layout (location = 0) out vec4 f_pos;
 layout (location = 1) out vec3 f_texcoord;
+layout (location = 2) out vec4 f_color;
 
 void main()
 {
@@ -22,4 +23,5 @@ void main()
 		f_pos.y = sign(f_pos.y) * sqrt(abs(f_pos.y));
 	}
 	gl_Position = f_pos;
+	f_color = color;
 }
