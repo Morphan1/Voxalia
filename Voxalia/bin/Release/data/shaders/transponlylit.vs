@@ -26,6 +26,7 @@ layout (location = 3) out vec3 f_position;
 void main()
 {
 	vec4 pos1;
+	vec4 nor1;
 	float rem = 1.0 - (Weights[0] + Weights[1] + Weights[2] + Weights[3] + Weights2[0] + Weights2[1] + Weights2[2] + Weights2[3]);
 	mat4 BT = mat4(1.0);
 	if (rem < 0.99)
@@ -40,12 +41,15 @@ void main()
 		BT += boneTrans[int(BoneID2[3])] * Weights2[3];
 		BT += mat4(1.0) * rem;
 		pos1 = vec4(position, 1.0) * BT;
+		nor1 = vec4(normal, 1.0) * BT;
 	}
 	else
 	{
 		pos1 = vec4(position, 1.0);
+		nor1 = vec4(normal, 1.0);
 	}
 	pos1 *= simplebone_matrix;
+	nor1 *= simplebone_matrix;
 	f_color = color;
     if (f_color == vec4(0.0, 0.0, 0.0, 1.0))
     {
@@ -53,8 +57,13 @@ void main()
     }
     f_color = f_color * v_color;
 	f_texcoord = texcoord;
-	f_normal = normal;
 	vec4 tpos = model_matrix * vec4(pos1.xyz, 1.0);
 	f_position = tpos.xyz / tpos.w;
 	gl_Position = projection * tpos;
+	mat4 mv_mat_simple = model_matrix;
+	mv_mat_simple[3][0] = 0.0;
+	mv_mat_simple[3][1] = 0.0;
+	mv_mat_simple[3][2] = 0.0;
+	vec4 nnormal = (BT * mv_mat_simple) * vec4(nor1.xyz, 1.0); // TODO: Should BT be here?
+	f_normal = nnormal.xyz / nnormal.w; // TODO: Normalize?]
 }

@@ -20,7 +20,6 @@ vec4 regularize(in vec4 input_r) // TODO: Is this working the best it can?
 void main()
 {
 	vec4 tc = texture(transptex, f_texcoord);
-	//float lc = 1.0;// / lcount;
-	//color = regularize(vec4(tc.x * lc, tc.y * lc, tc.z * lc, tc.w * lc));
-	color = regularize(tc);
+	float lc = 1.0 / lcount;
+	color = regularize(vec4(tc.x, tc.y, tc.z, tc.w * lc));
 }
