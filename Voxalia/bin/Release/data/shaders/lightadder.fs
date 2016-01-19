@@ -81,7 +81,7 @@ void main()
 	vec3 R = reflect(L, N);
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(R, V), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
-	color = vec4((prelight_color + (vec4(1.0) *
+	color = vec4((prelight_color + (vec4(depth, depth, depth, 1.0) *
 		atten * (diffuse * vec4(light_color, 1.0)) * diffuset) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, diffuset.w);
 }

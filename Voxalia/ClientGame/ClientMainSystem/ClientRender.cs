@@ -764,7 +764,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BlitFramebuffer(0, 0, Window.Width, Window.Height, 0, 0, Window.Width, Window.Height, ClearBufferMask.DepthBufferBit, BlitFramebufferFilter.Nearest);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0f, 0f, 0f, 0f });
-                int lightc = 1;
+                int lightc = 0;
                 if (CVars.r_transplighting.ValueB)
                 {
                     for (int i = 0; i < Lights.Count; i++)
@@ -773,10 +773,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         {
                             for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                             {
+                                s_transponlyvoxlit.Bind();
                                 Matrix4 lmat = Lights[i].InternalLights[x].GetMatrix();
                                 GL.UniformMatrix4(6, false, ref lmat);
                                 GL.Uniform3(7, Lights[i].InternalLights[x].color);
-                                GL.Uniform1(8, Lights[i].InternalLights[x].maxrange);
+                                GL.Uniform1(8, (Lights[i].InternalLights[x] is LightOrtho) ? 0f : Lights[i].InternalLights[x].maxrange);
+                                s_transponlylit.Bind();
+                                GL.UniformMatrix4(6, false, ref lmat);
+                                GL.Uniform3(7, Lights[i].InternalLights[x].color);
+                                GL.Uniform1(8, (Lights[i].InternalLights[x] is LightOrtho) ? 0f : Lights[i].InternalLights[x].maxrange);
                                 Render3D(false);
                                 lightc++;
                             }
@@ -786,6 +791,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 else
                 {
                     Render3D(false);
+                }
+                if (lightc == 0)
+                {
+                    lightc = 1;
                 }
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 GL.DrawBuffer(DrawBufferMode.Back);
@@ -813,7 +822,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     s_transpadder.Bind();
                     GL.UniformMatrix4(1, false, ref mat);
                     GL.UniformMatrix4(2, false, ref matident);
-                    GL.Uniform1(3, lightc);
+                    GL.Uniform1(3, (float)lightc);
                     Rendering.RenderRectangle(-1, -1, 1, 1);
                 }
                 GL.UseProgram(0);
