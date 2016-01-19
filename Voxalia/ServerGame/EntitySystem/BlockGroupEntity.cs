@@ -80,8 +80,9 @@ namespace Voxalia.ServerGame.EntitySystem
                     for (int z = 0; z < ZWidth; z++)
                     {
                         BlockInternal c = GetBlockAt(x, y, z);
-                        if (((Material)c.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
-                        {
+                        // TODO: Figure out how to handle solidity here
+                        //if (((Material)c.BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
+                        //{
                             BlockInternal def = new BlockInternal(0, 0, 0, 0);
                             BlockInternal zp = z + 1 < ZWidth ? GetBlockAt(x, y, z + 1) : def;
                             BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : def;
@@ -98,7 +99,7 @@ namespace Voxalia.ServerGame.EntitySystem
                             Vector3 pos = new Vector3(x, y, z);
                             List<Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                             Vertices.AddRange(vecsi);
-                        }
+                        //}
                     }
                 }
             }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using Voxalia.Shared.BlockShapes;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.CollisionShapes;
@@ -133,6 +135,10 @@ namespace Voxalia.Shared
             }
             List<Vector3> vecs = GetVertices(new Vector3(0, 0, 0), false, false, false, false, false, false);
             Vector3 offs;
+            if (vecs.Count == 0)
+            {
+                throw new Exception("No vertics for shape " + this);
+            }
             ConvexHullShape shape = new ConvexHullShape(vecs, out offs) { CollisionMargin = 0 };
             offset = new Location(offs);
             OffsetCache = offset;

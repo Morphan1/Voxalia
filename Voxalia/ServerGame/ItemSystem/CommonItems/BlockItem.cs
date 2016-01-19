@@ -51,9 +51,9 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                             block + new Location(0.5, 0.5, 0.501), player.TheRegion.Collision.ShouldCollide);
                         if (!hit.Hit)
                         {
-                            Material matx = (Material)item.Datum;
-                            player.TheRegion.PhysicsSetBlock(block, matx);
-                            player.Network.SendPacket(new DefaultSoundPacketOut(block, DefaultSound.PLACE, (byte)matx.Sound()));
+                            BlockInternal bi = BlockInternal.FromItemDatum(item.Datum);
+                            player.TheRegion.PhysicsSetBlock(block, (Material)bi.BlockMaterial, bi.BlockData, bi.BlockPaint);
+                            player.Network.SendPacket(new DefaultSoundPacketOut(block, DefaultSound.PLACE, (byte)((Material)bi.BlockMaterial).Sound()));
                             item.Count = item.Count - 1;
                             if (item.Count <= 0)
                             {

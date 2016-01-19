@@ -41,9 +41,9 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        public void PhysicsSetBlock(Location block, Material mat, byte dat = 0)
+        public void PhysicsSetBlock(Location block, Material mat, byte dat = 0, byte paint = 0)
         {
-            SetBlockMaterial(block, mat, dat);
+            SetBlockMaterial(block, mat, dat, paint);
             TheServer.Schedule.ScheduleSyncTask(() => { SurroundBlockPhysics(block); }, 0.1);
         }
 
