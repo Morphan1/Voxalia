@@ -18,7 +18,7 @@ layout (location = 2) uniform mat4 mv_matrix = mat4(1.0);
 
 void main(void)
 {
-    f_color = vec4(color.xyz, 1.0);
+    f_color = color;
 	f_texcoord = texcoords;
 	f_position = mv_matrix * vec4(position, 1.0);
     f_position /= f_position.w;

@@ -15,7 +15,7 @@ layout (location = 1) out vec3 f_texcoord;
 
 void main()
 {
-	f_color = vec4(color.xyz, 1.0);
+	f_color = color;
     if (f_color == vec4(0.0, 0.0, 0.0, 1.0))
     {
         f_color = vec4(1.0);

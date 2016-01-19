@@ -72,12 +72,12 @@ namespace Voxalia.ClientGame.WorldSystem
                         for (int z = CSize - 1; z >= 0; z--)
                         {
                             BlocksInternal[BlockIndex(x, y, z)].BlockLocalData = (byte)(light * 255);
-                            Material mat = (Material)GetBlockAt(x, y, z).BlockMaterial;
-                            if (mat.IsOpaque())
+                            BlockInternal bi = GetBlockAt(x, y, z);
+                            if (bi.IsOpaque())
                             {
                                 light = 0;
                             }
-                            if (mat.RendersAtAll())
+                            if (((Material)bi.BlockMaterial).RendersAtAll())
                             {
                                 light /= 1.8f;
                             }

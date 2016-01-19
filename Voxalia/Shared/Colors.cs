@@ -35,6 +35,11 @@ namespace Voxalia.Shared
         public static Color BROWN = Color.FromArgb(128, 64, 0);
         public static Color PURPLE = Color.FromArgb(128, 0, 255);
         public static Color PINK = Color.FromArgb(255, 128, 255);
+        public static Color LIME = Color.FromArgb(128, 255, 0);
+        public static Color SKY_BLUE = Color.FromArgb(0, 128, 255);
+        public static Color TRANSPARENT = Color.FromArgb(180, 255, 255, 255);
+        public static Color VERY_TRANSPARENT = Color.FromArgb(90, 255, 255, 255);
+        public static Color PLACEHOLDER = Color.FromArgb(255, 255, 255);
 
         public static Dictionary<string, Color> KnownColorNames = new Dictionary<string, Color>();
 
@@ -56,11 +61,15 @@ namespace Voxalia.Shared
 
         static int inc = 0;
 
-        static void Register(string name, Color col)
+        public static int TRANS1;
+        public static int TRANS2;
+
+        static int Register(string name, Color col)
         {
             KnownColorNames.Add(name, col);
             KnownColorNamesArray[inc] = name;
-            KnownColorsArray[inc++] = col;
+            KnownColorsArray[inc] = col;
+            return inc++;
         }
 
         static Colors()
@@ -79,18 +88,24 @@ namespace Voxalia.Shared
             Register("LIGHT_GREEN", LIGHT_GREEN);
             Register("LIGHT_BLUE", LIGHT_BLUE);
             Register("LIGHT_RED", LIGHT_RED);
+            Register("GRAY", GRAY);
             Register("LIGHT_GRAY", LIGHT_GRAY);
             Register("DARK_GRAY", DARK_GRAY);
-            Register("LIGHT_MAGENTA", LIGHT_MAGENTA);
-            Register("LIGHT_YELLOW", LIGHT_YELLOW);
-            Register("LIGHT_CYAN", LIGHT_CYAN);
             Register("DARK_MAGENTA", DARK_MAGENTA);
             Register("DARK_YELLOW", DARK_YELLOW);
             Register("DARK_CYAN", DARK_CYAN);
+            Register("LIGHT_MAGENTA", LIGHT_MAGENTA);
+            Register("LIGHT_YELLOW", LIGHT_YELLOW);
+            Register("LIGHT_CYAN", LIGHT_CYAN);
             Register("ORANGE", ORANGE);
             Register("BROWN", BROWN);
             Register("PURPLE", PURPLE);
             Register("PINK", PINK);
+            Register("LIME", LIME);
+            Register("SKY_BLUE", SKY_BLUE);
+            TRANS1 = Register("TRANSPARENT", TRANSPARENT);
+            TRANS2 = Register("VERY_TRANSPARENT", VERY_TRANSPARENT);
+            Register("PLACEHOLDER", PLACEHOLDER);
         }
     }
 }

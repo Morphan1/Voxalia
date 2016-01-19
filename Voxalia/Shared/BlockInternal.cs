@@ -31,6 +31,11 @@ namespace Voxalia.Shared
             BlockLocalData = loc;
         }
 
+        public bool IsOpaque()
+        {
+            return ((Material)BlockMaterial).IsOpaque() && BlockPaint != Colors.TRANS1 && BlockPaint != Colors.TRANS2;
+        }
+
         public int GetItemDatum()
         {
             return BitConverter.ToInt32(BitConverter.GetBytes(GetItemDatumU()), 0); // TODO: Less stupid conversion
