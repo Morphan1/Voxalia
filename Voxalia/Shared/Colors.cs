@@ -39,7 +39,7 @@ namespace Voxalia.Shared
         public static Color SKY_BLUE = Color.FromArgb(0, 128, 255);
         public static Color TRANSPARENT = Color.FromArgb(180, 255, 255, 255);
         public static Color VERY_TRANSPARENT = Color.FromArgb(90, 255, 255, 255);
-        public static Color PLACEHOLDER = Color.FromArgb(255, 255, 255);
+        public static Color MAGIC = Color.FromArgb(0, 255, 255, 255);
 
         public static Dictionary<string, Color> KnownColorNames = new Dictionary<string, Color>();
 
@@ -105,7 +105,7 @@ namespace Voxalia.Shared
             Register("SKY_BLUE", SKY_BLUE);
             TRANS1 = Register("TRANSPARENT", TRANSPARENT);
             TRANS2 = Register("VERY_TRANSPARENT", VERY_TRANSPARENT);
-            Register("PLACEHOLDER", PLACEHOLDER);
+            Register("MAGIC", MAGIC);
         }
     }
 }

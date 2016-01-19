@@ -47,8 +47,17 @@ namespace Voxalia.ClientGame.EntitySystem
             vbo.TexCoords = new List<OpenTK.Vector3>();
             vbo.Indices = new List<uint>();
             vbo.Colors = new List<Vector4>();
-            System.Drawing.Color col = Colors.ForByte(Paint);
-            Vector4 vcol = new Vector4(col.R / 255f, col.G / 255f, col.B / 255f, col.A / 255f);
+            System.Drawing.Color tcol = Voxalia.Shared.Colors.ForByte(Paint);
+            Vector4 vcol;
+            if (tcol.A == 0)
+            {
+                Random urand = new Random(1594124); // TODO: Track where the block came from?
+                vcol = new OpenTK.Vector4((float)urand.NextDouble(), (float)urand.NextDouble(), (float)urand.NextDouble(), 1f);
+            }
+            else
+            {
+                vcol = new OpenTK.Vector4((tcol.R / 255f), (tcol.G / 255f), (tcol.B / 255f), 1f * (tcol.A / 255f));
+            }
             for (int i = 0; i < vecs.Count; i++)
             {
                 vbo.Vertices.Add(new OpenTK.Vector3(vecs[i].X, vecs[i].Y, vecs[i].Z));

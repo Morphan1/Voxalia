@@ -242,7 +242,15 @@ namespace Voxalia.ClientGame.EntitySystem
                             for (int i = 0; i < vecsi.Count; i++)
                             {
                                 System.Drawing.Color tcol = Voxalia.Shared.Colors.ForByte(c.BlockPaint);
-                                Colors.Add(new OpenTK.Vector4((tcol.R / 255f), (tcol.G / 255f), (tcol.B / 255f), 1f * (tcol.A / 255f)));
+                                if (tcol.A == 0)
+                                {
+                                    Random urand = new Random((int)(vecsi[i].X + vecsi[i].Y + vecsi[i].Z));
+                                    Colors.Add(new OpenTK.Vector4((float)urand.NextDouble(), (float)urand.NextDouble(), (float)urand.NextDouble(), 1f));
+                                }
+                                else
+                                {
+                                    Colors.Add(new OpenTK.Vector4((tcol.R / 255f), (tcol.G / 255f), (tcol.B / 255f), 1f * (tcol.A / 255f)));
+                                }
                             }
                             if (!((Material)c.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
                             {

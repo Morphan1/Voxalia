@@ -124,7 +124,15 @@ namespace Voxalia.ClientGame.WorldSystem
                                     }
                                     float cCol = tp / tc;
                                     System.Drawing.Color tcol = Colors.ForByte(c.BlockPaint);
-                                    Cols.Add(new Vector4(cCol * (tcol.R / 255f), cCol * (tcol.G / 255f), cCol * (tcol.B / 255f), 1f * (tcol.A / 255f)));
+                                    if (tcol.A == 0)
+                                    {
+                                        Random urand = new Random((int)(vecsi[i].X + vecsi[i].Y + vecsi[i].Z + ppos.X + ppos.Y + ppos.Z));
+                                        Cols.Add(new Vector4((float)urand.NextDouble(), (float)urand.NextDouble(), (float)urand.NextDouble(), 1f));
+                                    }
+                                    else
+                                    {
+                                        Cols.Add(new Vector4(cCol * (tcol.R / 255f), cCol * (tcol.G / 255f), cCol * (tcol.B / 255f), 1f * (tcol.A / 255f)));
+                                    }
                                 }
                                 if (!c.IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
                                 {
