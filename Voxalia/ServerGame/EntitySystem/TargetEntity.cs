@@ -14,6 +14,9 @@ namespace Voxalia.ServerGame.EntitySystem
         public TargetEntity(Region tregion) :
             base (tregion)
         {
+            model = "players/human_male_004";
+            mod_zrot = 270;
+            mod_scale = 1.5f;
             SetMaxHealth(100);
             SetHealth(100);
             SetMass(70);

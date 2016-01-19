@@ -28,6 +28,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public float mod_xrot = 0;
         public float mod_yrot = 0;
         public float mod_zrot = 0;
+        public float mod_scale = 1;
 
         public System.Drawing.Color mod_color = System.Drawing.Color.White;
 

@@ -132,6 +132,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             model = "players/human_male_004";
             mod_zrot = 270;
+            mod_scale = 1.5f;
             base.SetMaxHealth(100);
             base.SetHealth(100);
             Network = conn;

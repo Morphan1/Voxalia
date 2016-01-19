@@ -46,6 +46,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             dr.WriteFloat(ent.mod_xrot);
             dr.WriteFloat(ent.mod_yrot);
             dr.WriteFloat(ent.mod_zrot);
+            dr.WriteFloat(ent.mod_scale);
             dr.WriteInt(ent.mod_color.ToArgb());
             byte dtx = 0;
             if (ent.Visible)
