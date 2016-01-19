@@ -2,6 +2,8 @@
 
 layout (binding = 0) uniform sampler2D transptex;
 
+layout (location = 3) uniform float lcount;
+
 layout (location = 0) in vec2 f_texcoord;
 
 out vec4 color;
@@ -17,5 +19,5 @@ vec4 regularize(in vec4 input_r) // TODO: Is this working the best it can?
 
 void main()
 {
-	color = regularize(texture(transptex, f_texcoord));
+	color = regularize(texture(transptex, f_texcoord)); // TODO: divided by lcount?
 }

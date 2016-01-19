@@ -61,6 +61,19 @@ void main()
             return;
         }
 	}
+	vec4 fs = f_spos / f_spos.w / 2.0 + vec4(0.5, 0.5, 0.5, 0.0);
+	fs.w = 1.0;
+	float depth;
+	if (fs.x < 0.0 || fs.x > 1.0
+		|| fs.y < 0.0 || fs.y > 1.0
+		|| fs.z < 0.0 || fs.z > 1.0)
+	{
+		depth = 0.0;
+	}
+	else
+	{
+		depth = 1.0;
+	}
 	vec3 L = light_path / light_length;
 	vec3 V_Base = position - eye_pos;
 	float V_Len = length(V_Base);
@@ -70,5 +83,5 @@ void main()
 	vec3 specular = vec3(pow(max(dot(R, V), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
 	color = vec4((prelight_color + (vec4(1.0) *
 		atten * (diffuse * vec4(light_color, 1.0)) * diffuset) +
-		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten)).xyz, diffuset.w);
+		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, diffuset.w);
 }
