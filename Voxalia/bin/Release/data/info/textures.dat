@@ -23,6 +23,7 @@ COPPER_ORE=blocks/solid/ore/copper_ore
 COPPER_ORE_SPARSE=blocks/solid/ore/copper_ore_sparse
 COAL_ORE=blocks/solid/ore/coal_ore
 COAL_ORE_SPARSE=blocks/solid/ore/coal_ore_sparse
+COLOR=blocks/solid/made/color
 m8=blocks/solid/natural/grass_plains
 m7=blocks/solid/natural/wood_top
 m6=blocks/solid/special/db_ym,blocks/solid/special/db_exc%1.0&1
