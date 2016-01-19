@@ -24,7 +24,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        Object GetLocker()
+        public Object GetLocker()
         {
             return Lockers[Math.Abs(WorldPosition.GetHashCode()) % 20];
         }

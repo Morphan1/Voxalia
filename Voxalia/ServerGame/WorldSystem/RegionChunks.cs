@@ -324,7 +324,12 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (allowFile && Program.Files.Exists(chunk.GetFileName()))
                 {
-                    chunk.LoadFromSaveData(Program.Files.ReadBytes(chunk.GetFileName()));
+                    byte[] dat;
+                    lock (chunk.GetLocker())
+                    {
+                        dat = Program.Files.ReadBytes(chunk.GetFileName());
+                    }
+                    chunk.LoadFromSaveData(dat);
                     TheServer.Schedule.ScheduleSyncTask(() =>
                     {
                         chunk.AddToWorld();
