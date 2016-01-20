@@ -46,6 +46,8 @@ void main()
 	float should_sqrt = light_details[2][0];
 	float tex_size = light_details[2][1];
 	float depth_jump = light_details[2][2];
+	float lightc = light_details[2][3];
+	vec4 bambient = vec4(light_details[3][0], light_details[3][1], light_details[3][2], 1.0) / lightc;
 	vec4 f_spos = shadow_matrix * vec4(f_position, 1.0);
 	vec3 N = normalize(-f_normal);
 	vec3 light_path = light_pos - f_position;
@@ -128,7 +130,7 @@ void main()
 	vec3 R = reflect(L, N);
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(R, V), 0.0), /* renderhint.y * 1000.0 */ 128.0) * specular_albedo * /* renderhint.x */ 0.0);
-	color = vec4(((vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
+	color = vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, color.w);
 #ifdef MCM_GOOD_GRAPHICS
     color = vec4(desaturate(color.xyz), color.w); // TODO: Make available to all, not just good graphics only! Or a separate CVar!

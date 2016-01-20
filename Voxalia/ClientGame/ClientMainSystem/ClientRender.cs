@@ -756,6 +756,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         {
                             for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                             {
+                                lightc++;
+                            }
+                        }
+                    }
+                    for (int i = 0; i < Lights.Count; i++)
+                    {
+                        if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                        {
+                            for (int x = 0; x < Lights[i].InternalLights.Count; x++)
+                            {
                                 if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                                 {
                                     s_transponlyvoxlitsh.Bind();
@@ -783,6 +793,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 matxyz[2, 0] = (Lights[i].InternalLights[x] is LightOrtho) ? 1f : 0f;
                                 matxyz[2, 1] = 1f / Lights[i].InternalLights[x].texsize;
                                 matxyz[2, 2] = 0.5f;
+                                matxyz[2, 3] = (float)lightc;
+                                matxyz[3, 0] = (float)ambient.X;
+                                matxyz[3, 1] = (float)ambient.Y;
+                                matxyz[3, 2] = (float)ambient.Z;
                                 GL.UniformMatrix4(8, false, ref matxyz);
                                 if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                                 {
@@ -796,7 +810,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 GL.Uniform3(7, Lights[i].InternalLights[x].color);
                                 GL.UniformMatrix4(8, false, ref matxyz);
                                 Render3D(false);
-                                lightc++;
                             }
                         }
                     }
