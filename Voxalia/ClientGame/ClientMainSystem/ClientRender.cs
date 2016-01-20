@@ -35,11 +35,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
         }
         
-        public void GodrayBlend()
-        {
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
-        }
-
         void InitRendering()
         {
             GL.Viewport(0, 0, Window.Width, Window.Height);
@@ -154,20 +149,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             RS4P.Destroy();
             GL.DeleteFramebuffer(fbo_main);
-            GL.DeleteFramebuffer(fbo2_main);
             GL.DeleteTexture(fbo_texture);
-            GL.DeleteTexture(fbo2_texture);
             RS4P = null;
             fbo_main = 0;
-            fbo2_main = 0;
             fbo_texture = 0;
-            fbo2_texture = 0;
         }
 
         int fbo_texture;
         int fbo_main;
-        int fbo2_texture;
-        int fbo2_main;
 
         int fbo_godray_main;
         int fbo_godray_texture;
@@ -187,17 +176,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, fbo_texture, 0);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-            fbo2_texture = GL.GenTexture();
-            fbo2_main = GL.GenFramebuffer();
-            GL.BindTexture(TextureTarget.Texture2D, fbo2_texture);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba32f, Window.Width, Window.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
-            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, fbo2_texture, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             fbo_godray_texture = GL.GenTexture();
             fbo_godray_texture2 = GL.GenTexture();
@@ -503,11 +481,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 timer.Reset();
                 timer.Start();
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
+                GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
-                GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 Shader s_point;
                 Shader s_other;
                 if (CVars.r_shadows.ValueB)
@@ -543,14 +518,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.UniformMatrix4(1, false, ref mat);
                 GL.UniformMatrix4(2, false, ref matident);
                 GL.Uniform3(10, ClientUtilities.Convert(CameraPos));
-                bool first = true;
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo2_main);
-                GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 1 });
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
-                GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 1 });
-                GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
                 GL.Disable(EnableCap.CullFace);
                 GL.Disable(EnableCap.DepthTest);
+                TranspBlend();
                 if (CVars.r_lighting.ValueB)
                 {
                     for (int i = 0; i < Lights.Count; i++)
@@ -578,9 +548,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     {
                                         continue;
                                     }
-                                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
-                                    GL.ActiveTexture(TextureUnit.Texture0);
-                                    GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
                                     if (CVars.r_shadows.ValueB)
                                     {
                                         GL.ActiveTexture(TextureUnit.Texture4);
@@ -631,9 +598,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                         {
                                             continue;
                                         }
-                                        GL.BindFramebuffer(FramebufferTarget.Framebuffer, first ? fbo_main : fbo2_main);
-                                        GL.ActiveTexture(TextureUnit.Texture0);
-                                        GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
                                         if (CVars.r_shadows.ValueB)
                                         {
                                             GL.ActiveTexture(TextureUnit.Texture4);
@@ -700,7 +664,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture6);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.bwtexture);
                 GL.ActiveTexture(TextureUnit.Texture4);
-                GL.BindTexture(TextureTarget.Texture2D, first ? fbo2_texture : fbo_texture);
+                GL.BindTexture(TextureTarget.Texture2D, fbo_texture);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.DiffuseTexture);
                 GL.UniformMatrix4(1, false, ref mat);
@@ -862,7 +826,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     s_godray.Bind();
                     GL.UniformMatrix4(1, false, ref mat);
                     GL.UniformMatrix4(2, false, ref matident);
-                    GodrayBlend();
+                    TranspBlend();
                     Rendering.RenderRectangle(-1, -1, 1, 1);
                     StandardBlend();
                 }

@@ -1,6 +1,5 @@
 #version 430 core
 
-layout (binding = 0) uniform sampler2D pre_lighttex;
 layout (binding = 1) uniform sampler2D positiontex;
 layout (binding = 2) uniform sampler2D normaltex;
 layout (binding = 3) uniform sampler2D depthtex;
@@ -33,7 +32,6 @@ void main()
 		f_spos = vec4(999999999.0, 999999999.0, -999999999.0, 1.0);
 		position = vec3(999999999.0, 999999999.0, -999999999.0);
 	}
-	vec4 prelight_color = texture(pre_lighttex, f_texcoord);
 	vec3 N = normalize(-normal);
 	vec3 light_path = light_pos - position;
 	float light_length = length(light_path);
@@ -57,7 +55,7 @@ void main()
 		atten *= 1 - (fst.x * fst.x + fst.y * fst.y);
         if (atten < 0)
         {
-            color = prelight_color;
+            color = vec4(0.0);
             return;
         }
 	}
@@ -81,7 +79,7 @@ void main()
 	vec3 R = reflect(L, N);
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(R, V), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
-	color = vec4((prelight_color + (vec4(depth, depth, depth, 1.0) *
+	color = vec4(((vec4(depth, depth, depth, 1.0) *
 		atten * (diffuse * vec4(light_color, 1.0)) * diffuset) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, diffuset.w);
 }
