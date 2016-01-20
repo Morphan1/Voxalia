@@ -83,7 +83,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric, "What factor to use for shadow blurring. Smaller = blurrier.");
             r_shadowquality_sun = Register("r_shadowquality_sun", "2048", CVarFlag.Numeric | CVarFlag.Delayed, "What texture size to use for the sun."); // TODO: Callback to auto-set
             r_shadowpace = Register("r_shadowpace", "1", CVarFlag.Numeric, "How rapidly to rerender shadows, in frames.");
-            r_shadows = Register("r_shadows", "true", CVarFlag.Boolean, "Whether to render shadows at all.");
+            r_shadows = Register("r_shadows", "false", CVarFlag.Boolean, "Whether to render shadows at all.");
             r_good_graphics = Register("r_good_graphics", "true", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use 'good' graphics."); // TODO: Callback to auto-set
             r_skybox = Register("r_skybox", "default", CVarFlag.ServerControl | CVarFlag.Textual, "What skybox to use.");
             r_lensflare = Register("r_lensflare", "true", CVarFlag.Boolean, "Whether to render a lens flare from the sun.");
@@ -97,7 +97,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_godray_color = Register("r_godray_color", "1,1,1", CVarFlag.Textual, "What color to use for GodRays.");
             r_toonify = Register("r_toonify", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use a 'toonify' post-processing effect."); // TODO: callback to auto-set
             r_transplighting = Register("r_transplighting", "true", CVarFlag.Boolean, "Whether transparent objects should be lit properly (otherwise, fullbright).");
-            r_transpshadows = Register("r_transpshadows", "true", CVarFlag.Boolean, "Whether transparent objects should be lit using HD shadows (Requires r_shadows true).");
+            r_transpshadows = Register("r_transpshadows", "false", CVarFlag.Boolean, "Whether transparent objects should be lit using HD shadows (Requires r_shadows true).");
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric, "What volume the music should be.");
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");
