@@ -514,5 +514,54 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             return false;
         }
+
+        public Location GetSkyLight(Location pos, Location norm)
+        {
+            // TODO: Make this usable!
+            double XP = Math.Floor(pos.X / Chunk.CHUNK_SIZE);
+            double YP = Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
+            double ZP = Math.Floor(pos.Z / Chunk.CHUNK_SIZE);
+            double x = pos.X - (XP * Chunk.CHUNK_SIZE);
+            double y = pos.Y - (YP * Chunk.CHUNK_SIZE);
+            double z = pos.Z - (ZP * Chunk.CHUNK_SIZE);
+            while (true)
+            {
+                Chunk ch = GetChunk(new Location(XP, YP, ZP));
+                if (ch == null)
+                {
+                    return new Location(1, 1, 1);
+                }
+                while (z < Chunk.CHUNK_SIZE)
+                {
+                    if (ch.GetBlockAt((int)x, (int)y, (int)z).IsOpaque())
+                    {
+                        return new Location(0, 0, 0);
+                    }
+                    z++;
+                }
+                z = 0;
+            }
+        }
+
+        public Location GetAmbient(Location pos)
+        {
+            return TheClient.BaseAmbient;
+        }
+
+        public Location Regularize(Location col)
+        {
+            if (col.X < 1.0 && col.Y < 1.0 && col.Z < 1.0)
+            {
+                return col;
+            }
+            return col / Math.Max(col.X, Math.Max(col.Y, col.Z));
+        }
+
+        public Location GetLightAmount(Location pos, Location norm)
+        {
+            Location amb = GetAmbient(pos);
+            Location sky = GetSkyLight(pos, norm);
+            return Regularize(amb + sky);
+        }
     }
 }
