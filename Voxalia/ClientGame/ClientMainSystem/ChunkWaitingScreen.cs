@@ -1,4 +1,6 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using System;
+using System.Text;
+using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.UISystem;
 using Voxalia.ClientGame.UISystem.MenuSystem;
@@ -23,7 +25,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 UIConsole.WriteLine("Cancel!"); // TODO
             }, 10, 300, 350, 70, TheClient.FontSets.SlightlyBigger));
         }
-
+        
         public override void Tick()
         {
             Menus.TickAll();

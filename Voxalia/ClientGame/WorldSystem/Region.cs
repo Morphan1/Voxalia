@@ -275,9 +275,9 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public Location ChunkLocFor(Location pos)
         {
-            pos.X = Math.Floor(pos.X / 30.0);
-            pos.Y = Math.Floor(pos.Y / 30.0);
-            pos.Z = Math.Floor(pos.Z / 30.0);
+            pos.X = Math.Floor(pos.X / Chunk.CHUNK_SIZE);
+            pos.Y = Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
+            pos.Z = Math.Floor(pos.Z / Chunk.CHUNK_SIZE);
             return pos;
         }
 
@@ -515,9 +515,9 @@ namespace Voxalia.ClientGame.WorldSystem
             return false;
         }
 
-        public Location GetSkyLight(Location pos, Location norm)
+        public Location GetSkyLight(Location pos, Location norm, Chunk chk)
         {
-            // TODO: Make this usable!
+            pos.Z = pos.Z + 1;
             double XP = Math.Floor(pos.X / Chunk.CHUNK_SIZE);
             double YP = Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
             double ZP = Math.Floor(pos.Z / Chunk.CHUNK_SIZE);
@@ -539,6 +539,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                     z++;
                 }
+                ZP++;
                 z = 0;
             }
         }
@@ -556,11 +557,11 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             return col / Math.Max(col.X, Math.Max(col.Y, col.Z));
         }
-
-        public Location GetLightAmount(Location pos, Location norm)
+        
+        public Location GetLightAmount(Location pos, Location norm, Chunk ch)
         {
             Location amb = GetAmbient(pos);
-            Location sky = GetSkyLight(pos, norm);
+            Location sky = GetSkyLight(pos, norm, ch);
             return Regularize(amb + sky);
         }
     }

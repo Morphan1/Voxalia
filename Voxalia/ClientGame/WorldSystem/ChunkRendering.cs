@@ -123,15 +123,17 @@ namespace Voxalia.ClientGame.WorldSystem
                                         }
                                     }
                                     float cCol = tp / tc;
+                                    Location lcol = new Location(cCol, cCol, cCol);
+                                    lcol = OwningRegion.GetLightAmount(new Location(vecsi[i]), new Location(normsi[i]), this);
                                     System.Drawing.Color tcol = Colors.ForByte(c.BlockPaint);
                                     if (tcol.A == 0)
                                     {
                                         Random urand = new Random((int)(vecsi[i].X + vecsi[i].Y + vecsi[i].Z + ppos.X + ppos.Y + ppos.Z));
-                                        Cols.Add(new Vector4((float)urand.NextDouble(), (float)urand.NextDouble(), (float)urand.NextDouble(), 1f));
+                                        Cols.Add(new Vector4((float)lcol.X * (float)urand.NextDouble(), (float)lcol.Y * (float)urand.NextDouble(), (float)lcol.Z * (float)urand.NextDouble(), 1f));
                                     }
                                     else
                                     {
-                                        Cols.Add(new Vector4(cCol * (tcol.R / 255f), cCol * (tcol.G / 255f), cCol * (tcol.B / 255f), 1f * (tcol.A / 255f)));
+                                        Cols.Add(new Vector4((float)lcol.X * (tcol.R / 255f), (float)lcol.Y * (tcol.G / 255f), (float)lcol.Z * (tcol.B / 255f), (tcol.A / 255f)));
                                     }
                                 }
                                 if (!c.IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
@@ -254,7 +256,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 SysConsole.Output(OutputType.ERROR, "Generating ChunkVBO...: " + ex.ToString());
             }
         }
-
+        
         public BlockInternal SpecialGetBlockAt(int x, int y, int z)
         {
             if (x >= 0 && y >= 0 && z >= 0 && x < CSize && y < CSize && z < CSize)
