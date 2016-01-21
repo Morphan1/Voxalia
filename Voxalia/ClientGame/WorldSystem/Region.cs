@@ -521,9 +521,9 @@ namespace Voxalia.ClientGame.WorldSystem
             double XP = Math.Floor(pos.X / Chunk.CHUNK_SIZE);
             double YP = Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
             double ZP = Math.Floor(pos.Z / Chunk.CHUNK_SIZE);
-            double x = pos.X - (XP * Chunk.CHUNK_SIZE);
-            double y = pos.Y - (YP * Chunk.CHUNK_SIZE);
-            double z = pos.Z - (ZP * Chunk.CHUNK_SIZE);
+            int x = (int)(Math.Floor(pos.X) - (XP * Chunk.CHUNK_SIZE));
+            int y = (int)(Math.Floor(pos.Y) - (YP * Chunk.CHUNK_SIZE));
+            int z = (int)(Math.Floor(pos.Z) - (ZP * Chunk.CHUNK_SIZE));
             while (true)
             {
                 Chunk ch = GetChunk(new Location(XP, YP, ZP));

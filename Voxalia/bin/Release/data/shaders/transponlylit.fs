@@ -5,11 +5,11 @@
 layout (binding = 0) uniform sampler2D tex;
 
 layout (location = 4) uniform float desaturationAmount = 1.0;
-layout (location = 5) uniform vec3 light_pos;
+layout (location = 5) uniform float minimum_light;
 layout (location = 6) uniform mat4 shadow_matrix;
 layout (location = 7) uniform vec3 light_color = vec3(1.0, 1.0, 1.0);
 layout (location = 8) uniform mat4 light_details;
-layout (location = 9) uniform vec3 eye_pos = vec3(0.0, 0.0, 0.0);
+layout (location = 9) uniform mat4 light_details2;
 
 layout (location = 0) in vec4 f_color;
 layout (location = 1) in vec2 f_texcoord;
@@ -45,7 +45,10 @@ void main()
 	float tex_size = light_details[2][1];
 	float depth_jump = light_details[2][2];
 	float lightc = light_details[2][3];
-	vec4 bambient = vec4(light_details[3][0], light_details[3][1], light_details[3][2], 1.0) / lightc;
+	vec4 bambient = (vec4(light_details[3][0], light_details[3][1], light_details[3][2], 1.0)
+		+ vec4(minimum_light, minimum_light, minimum_light, 0.0)) / lightc;
+	vec3 eye_pos = vec3(light_details2[0][0], light_details2[0][1], light_details2[0][2]);
+	vec3 light_pos = vec3(light_details2[1][0], light_details2[1][1], light_details2[1][2]);
 	vec4 f_spos = shadow_matrix * vec4(f_position, 1.0);
 	vec3 N = normalize(-f_normal);
 	vec3 light_path = light_pos - f_position;

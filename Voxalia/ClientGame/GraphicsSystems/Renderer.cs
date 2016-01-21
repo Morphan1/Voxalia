@@ -344,7 +344,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public void SetSpecular(float spec)
         {
-            if (Client.Central.RenderLights) // TODO: Pass client reference!
+            if (Client.Central.RenderLights && Client.Central.RenderSpecular) // TODO: Pass client reference!
             {
                 Specular = spec;
                 GL.Uniform1(6, spec);

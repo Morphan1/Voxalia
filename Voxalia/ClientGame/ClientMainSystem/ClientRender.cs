@@ -464,12 +464,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture0);
                 RS4P.Bind();
                 RenderLights = true;
+                RenderSpecular = true;
                 Rendering.SetColor(Color4.White);
                 VBO.BonesIdentity();
                 Rendering.SetReflectionAmt(0f);
                 // TODO: Render settings
                 Render3D(false);
                 RenderLights = false;
+                RenderSpecular = false;
                 RS4P.Unbind();
                 FBOid = 0;
                 timer.Stop();
@@ -707,7 +709,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     {
                         s_transponlyvoxlit.Bind();
                     }
-                    GL.Uniform3(9, ClientUtilities.Convert(CameraPos));
                 }
                 else
                 {
@@ -728,7 +729,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         s_transponlylit.Bind();
                         FBOid = 7;
                     }
-                    GL.Uniform3(9, ClientUtilities.Convert(CameraPos));
                 }
                 else
                 {
@@ -750,6 +750,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 int lightc = 0;
                 if (CVars.r_transplighting.ValueB)
                 {
+                    RenderLights = true;
                     for (int i = 0; i < Lights.Count; i++)
                     {
                         if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
@@ -778,7 +779,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     s_transponlyvoxlit.Bind();
                                 }
                                 Matrix4 lmat = Lights[i].InternalLights[x].GetMatrix();
-                                GL.Uniform3(5, Lights[i].InternalLights[x].eye);
                                 GL.UniformMatrix4(6, false, ref lmat);
                                 GL.Uniform3(7, Lights[i].InternalLights[x].color);
                                 float maxrange = (Lights[i].InternalLights[x] is LightOrtho) ? 0f : Lights[i].InternalLights[x].maxrange;
@@ -799,6 +799,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 matxyz[3, 1] = (float)ambient.Y;
                                 matxyz[3, 2] = (float)ambient.Z;
                                 GL.UniformMatrix4(8, false, ref matxyz);
+                                Matrix4 matabc = new Matrix4(Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero);
+                                matabc[0, 0] = (float)CameraPos.X;
+                                matabc[0, 1] = (float)CameraPos.Y;
+                                matabc[0, 2] = (float)CameraPos.Z;
+                                matabc[1, 0] = (float)Lights[i].EyePos.X;
+                                matabc[1, 1] = (float)Lights[i].EyePos.Y;
+                                matabc[1, 2] = (float)Lights[i].EyePos.Z;
+                                GL.UniformMatrix4(9, false, ref matabc);
                                 if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                                 {
                                     s_transponlylitsh.Bind();
@@ -811,6 +819,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 GL.UniformMatrix4(6, false, ref lmat);
                                 GL.Uniform3(7, Lights[i].InternalLights[x].color);
                                 GL.UniformMatrix4(8, false, ref matxyz);
+                                GL.UniformMatrix4(9, false, ref matabc);
                                 Render3D(false);
                             }
                         }
@@ -818,6 +827,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     GL.ActiveTexture(TextureUnit.Texture2);
                     GL.BindTexture(TextureTarget.Texture2D, 0);
                     GL.ActiveTexture(TextureUnit.Texture0);
+                    RenderLights = false;
                 }
                 else
                 {
@@ -895,6 +905,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         float dist2 = 380; // TODO: View rad
         float dist = 340;
 
+        public bool RenderSpecular = false;
+
         public Vector3 GetSunLocation()
         {
             return ClientUtilities.Convert(CameraPos + TheSun.Direction * -(dist * 0.96f));
@@ -967,7 +979,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Matrix4 ident = Matrix4.Identity;
             GL.UniformMatrix4(2, false, ref ident);
             Rendering.SetColor(Color4.White);
-            if (FBOid == 3)
+            if (FBOid == 3 || FBOid == 7 || FBOid == 8)
             {
                 TheRegion.RenderClouds();
             }
