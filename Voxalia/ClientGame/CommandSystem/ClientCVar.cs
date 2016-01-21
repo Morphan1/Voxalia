@@ -87,7 +87,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_good_graphics = Register("r_good_graphics", "true", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use 'good' graphics."); // TODO: Callback to auto-set
             r_skybox = Register("r_skybox", "default", CVarFlag.ServerControl | CVarFlag.Textual, "What skybox to use.");
             r_lensflare = Register("r_lensflare", "true", CVarFlag.Boolean, "Whether to render a lens flare from the sun.");
-            r_blocktexturelinear = Register("r_blocktexturelinear", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether block textures are to use a linear blur or nearest-pixel mode.");
+            r_blocktexturelinear = Register("r_blocktexturelinear", "true", CVarFlag.Boolean | CVarFlag.Delayed, "Whether block textures are to use a linear blur or nearest-pixel mode.");
             r_blocktexturewidth = Register("r_blocktexturewidth", "128", CVarFlag.Numeric | CVarFlag.Delayed, "What texture width (pixels) block textures should use.");
             r_godrays = Register("r_godrays", "true", CVarFlag.Boolean, "Whether to render GodRays (rays of light from the sun."); // TODO: Validate?
             r_godray_samples = Register("r_godray_samples", "75", CVarFlag.Numeric, "How many samples to use when generating GodRays."); // TODO: Validate?

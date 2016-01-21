@@ -778,6 +778,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     s_transponlyvoxlit.Bind();
                                 }
                                 Matrix4 lmat = Lights[i].InternalLights[x].GetMatrix();
+                                GL.Uniform3(5, Lights[i].InternalLights[x].eye);
                                 GL.UniformMatrix4(6, false, ref lmat);
                                 GL.Uniform3(7, Lights[i].InternalLights[x].color);
                                 float maxrange = (Lights[i].InternalLights[x] is LightOrtho) ? 0f : Lights[i].InternalLights[x].maxrange;
@@ -806,6 +807,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 {
                                     s_transponlylit.Bind();
                                 }
+                                GL.Uniform3(5, Lights[i].InternalLights[x].eye);
                                 GL.UniformMatrix4(6, false, ref lmat);
                                 GL.Uniform3(7, Lights[i].InternalLights[x].color);
                                 GL.UniformMatrix4(8, false, ref matxyz);

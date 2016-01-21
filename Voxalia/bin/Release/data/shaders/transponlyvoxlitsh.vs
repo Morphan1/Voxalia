@@ -24,8 +24,12 @@ void main()
     }
     f_color = f_color * v_color;
 	f_texcoord = texcoord;
-	f_normal = normal;
 	vec4 tpos = model_matrix * vec4(position, 1.0);
 	f_position = tpos.xyz / tpos.w;
 	gl_Position = projection * tpos;
+	mat4 mv_mat_simple = model_matrix;
+	mv_mat_simple[3][0] = 0.0;
+	mv_mat_simple[3][1] = 0.0;
+	mv_mat_simple[3][2] = 0.0;
+	f_normal = (mv_mat_simple * vec4(normal, 1.0)).xyz;
 }

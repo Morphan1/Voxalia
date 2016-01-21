@@ -47,7 +47,7 @@ void main()
 	float tex_size = light_details[2][1];
 	float depth_jump = light_details[2][2];
 	float lightc = light_details[2][3];
-	vec4 bambient = vec4(light_details[3][0], light_details[3][1], light_details[3][2], 1.0);// / lightc;
+	vec4 bambient = vec4(light_details[3][0], light_details[3][1], light_details[3][2], 1.0) / lightc;
 	vec4 f_spos = shadow_matrix * vec4(f_position, 1.0);
 	vec3 N = normalize(-f_normal);
 	vec3 light_path = light_pos - f_position;
