@@ -94,41 +94,12 @@ namespace Voxalia.ClientGame.WorldSystem
                                 }
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
-                                    float tp = c.BlockLocalData / 255f;
-                                    float tc = 1;
-                                    Vector3i me = new Vector3i(vecsi[i].X - x < 0.1 ? -1 : (vecsi[i].X - x > 0.9 ? 1 : 0),
-                                        vecsi[i].Y - y < 0.1 ? -1 : (vecsi[i].Y - y > 0.9 ? 1 : 0),
-                                        vecsi[i].Z - z < 0.1 ? -1 : (vecsi[i].Z - z > 0.9 ? 1 : 0));
-                                    for (int f = 0; f < dirs.Length; f++)
-                                    {
-                                        Vector3i rel = dirs[f];
-                                        if ((me.X == rel.X || rel.X == 0) && (me.Y == rel.Y || rel.Y == 0) && (me.Z == rel.Z || rel.Z == 0))
-                                        {
-                                            // TODO: No special get!
-                                            tp += SpecialGetBlockAt(x + rel.X, y + rel.Y, z + rel.Z).BlockLocalData / 255f;
-                                            tc += 1;
-                                        }
-                                    }
-                                    for (int f = 0; f < dirs.Length; f++)
-                                    {
-                                        Vector3i rel = dirs[f];
-                                        rel.X = -rel.X;
-                                        rel.Y = -rel.Y;
-                                        rel.Z = -rel.Z;
-                                        if ((me.X == rel.X || rel.X == 0) && (me.Y == rel.Y || rel.Y == 0) && (me.Z == rel.Z || rel.Z == 0))
-                                        {
-                                            // TODO: No special get!
-                                            tp += SpecialGetBlockAt(x + rel.X, y + rel.Y, z + rel.Z).BlockLocalData / 255f;
-                                            tc += 1;
-                                        }
-                                    }
-                                    float cCol = tp / tc;
-                                    Location lcol = new Location(cCol, cCol, cCol);
-                                    lcol = OwningRegion.GetLightAmount(new Location(vecsi[i]), new Location(normsi[i]), this);
+                                    Location vt = new Location(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z);
+                                    Location lcol = OwningRegion.GetLightAmount(vt, new Location(normsi[i]), this);
                                     System.Drawing.Color tcol = Colors.ForByte(c.BlockPaint);
                                     if (tcol.A == 0)
                                     {
-                                        Random urand = new Random((int)(vecsi[i].X + vecsi[i].Y + vecsi[i].Z + ppos.X + ppos.Y + ppos.Z));
+                                        Random urand = new Random((int)(vt.X + vt.Y + vt.Z + ppos.X + ppos.Y + ppos.Z));
                                         Cols.Add(new Vector4((float)lcol.X * (float)urand.NextDouble(), (float)lcol.Y * (float)urand.NextDouble(), (float)lcol.Z * (float)urand.NextDouble(), 1f));
                                     }
                                     else

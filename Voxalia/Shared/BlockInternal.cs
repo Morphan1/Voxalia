@@ -45,5 +45,10 @@ namespace Voxalia.Shared
         {
             return (uint)BlockMaterial | ((uint)BlockData * 256u * 256u) | ((uint)BlockPaint * 256u * 256u * 256u);
         }
+
+        public override string ToString()
+        {
+            return ((Material)BlockMaterial) + ":" + BlockData + ":" + BlockPaint + ":" + BlockLocalData;
+        }
     }
 }

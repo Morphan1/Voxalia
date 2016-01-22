@@ -57,6 +57,7 @@ namespace Voxalia.ClientGame.CommandSystem
             CommandSystem.RegisterCommand(new WalkCommand(TheClient));
 
             // Common Commands
+            CommandSystem.RegisterCommand(new CdevelCommand(TheClient));
             CommandSystem.RegisterCommand(new ItemnextCommand(TheClient));
             CommandSystem.RegisterCommand(new ItemprevCommand(TheClient));
             CommandSystem.RegisterCommand(new ItemselCommand(TheClient));
