@@ -7,6 +7,7 @@ using FreneticScript;
 using FreneticScript.CommandSystem;
 using Voxalia.Shared;
 using Voxalia.ClientGame.WorldSystem;
+using FreneticScript.TagHandlers;
 
 namespace Voxalia.ClientGame.CommandSystem.CommonCommands
 {
@@ -31,6 +32,19 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             }
             switch (entry.GetArgument(0))
             {
+                case "userName":
+                    {
+                        if (entry.Arguments.Count > 1)
+                        {
+                            TheClient.Username = entry.GetArgument(1);
+                            entry.Good("Set.");
+                        }
+                        else
+                        {
+                            entry.Info("Your username is: " + TagParser.Escape(TheClient.Username));
+                        }
+                        break;
+                    }
                 case "lightDebug":
                     {
                         Location pos = TheClient.Player.GetPosition();
