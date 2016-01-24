@@ -91,9 +91,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INFO, "[Shutdown] Starting to close server...");
             foreach (Region region in LoadedRegions)
             {
-                while (region.Players.Count > 0)
+                foreach (PlayerEntity player in region.Players)
                 {
-                    region.Players[0].Kick("Server shutting down.");
+                    player.Kick("Server shutting down.");
                 }
                 SysConsole.Output(OutputType.INFO, "[Shutdown] Unloading world: " + region.Name);
                 region.UnloadFully();

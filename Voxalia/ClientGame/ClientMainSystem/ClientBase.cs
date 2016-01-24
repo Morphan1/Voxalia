@@ -123,6 +123,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            if (LocalServer != null)
+            {
+                LocalServer.ShutDown();
+            }
             // TODO: Cleanup!
         }
 

@@ -21,6 +21,40 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public GameMode Mode = GameMode.SURVIVOR;
 
+        public void LoadFromYAML(YAMLConfiguration config)
+        {
+            if (!Enum.TryParse(config.ReadString("gamemode", "SURVIVOR"), out Mode))
+            {
+                SysConsole.Output(OutputType.WARNING, "Invalid gamemode for " + Name + ", reverting to SURVIVOR!");
+                Mode = GameMode.SURVIVOR;
+            }
+            SetMaxHealth(config.ReadFloat("maxhealth", 100));
+            SetHealth(config.ReadFloat("health", 100));
+            if (config.ReadString("flying", "false").ToLower() == "true") // TODO: ReadBoolean?
+            {
+                Fly();
+            }
+            else
+            {
+                Unfly();
+            }
+            SetVelocity(Location.FromString(config.ReadString("velocity", "0,0,0")));
+            Teleport(Location.FromString(config.ReadString("position", "0,0,50")));
+        }
+
+        public void SaveToYAML(YAMLConfiguration config)
+        {
+            config.Set("gamemode", Mode.ToString());
+            config.Set("maxhealth", GetMaxHealth());
+            config.Set("health", GetHealth());
+            config.Set("flying", IsFlying ? "true": "false");
+            config.Set("velocity", GetVelocity().ToString());
+            config.Set("position", GetPosition().ToString());
+            // TODO: CBody settings? Mass? ...?
+            // TODO: Inventory
+            // TODO: Region name
+        }
+
         public override EntityType GetEntityType()
         {
             return EntityType.PLAYER;
@@ -28,7 +62,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override byte[] GetSaveBytes()
         {
-            // Does not save!
+            // Does not save through entity system!
             return null;
         }
 
@@ -117,6 +151,10 @@ namespace Voxalia.ServerGame.EntitySystem
                 HookItem.RemoveHook(this);
                 RemoveMe();
             }
+            YAMLConfiguration config = new YAMLConfiguration("");
+            SaveToYAML(config);
+            string nl = Name.ToLower();
+            Program.Files.WriteText("server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr", config.SaveToString());
         }
 
         /// <summary>
@@ -126,10 +164,11 @@ namespace Voxalia.ServerGame.EntitySystem
 
         // TODO: Dictionary<breadcrumb id: int, List<Location>> ?
         public List<Location> Breadcrumbs = new List<Location>();
-        
-        public PlayerEntity(WorldSystem.Region tregion, Connection conn)
+
+        public PlayerEntity(WorldSystem.Region tregion, Connection conn, string name)
             : base(tregion)
         {
+            Name = name;
             model = "players/human_male_004";
             mod_zrot = 270;
             mod_scale = 1.5f;
@@ -168,8 +207,18 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("smokegrenade", TheServer, 10, "items/weapons/smokegrenade_ico", "Smoke Grenade", "Not safe around those with asthma!", Color.FromArgb(255, 128, 128), "items/weapons/smokegrenade", false));
             Items.GiveItem(new ItemStack("smokegrenade", TheServer, 10, "items/weapons/smokesignal_ico", "Smoke Signal", "Avoid when hiding from aircraft!", Color.FromArgb(255, 128, 128), "items/weapons/smokesignal", false, "big_smoke", "1"));
             Items.GiveItem(new ItemStack("smokemachine", TheServer, 10, "items/common/smokemachine_ico", "Smoke Machine", "Do not inhale!", Color.White, "items/common/smokemachine", false));
-            SetHealth(Health);
             CGroup = CollisionUtil.Player;
+            string nl = Name.ToLower();
+            string fn = "server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr";
+            if (Program.Files.Exists(fn))
+            {
+                string dat = Program.Files.ReadText(fn);
+                if (dat != null)
+                {
+                    YAMLConfiguration config = new YAMLConfiguration(dat);
+                    LoadFromYAML(config);
+                }
+            }
         }
 
         public void SetAnimation(string anim, byte mode)
