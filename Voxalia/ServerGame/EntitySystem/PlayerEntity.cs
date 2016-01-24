@@ -21,6 +21,8 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public GameMode Mode = GameMode.SURVIVOR;
 
+        public bool IsFirstJoin = true;
+
         public void LoadFromYAML(YAMLConfiguration config)
         {
             if (!Enum.TryParse(config.ReadString("gamemode", "SURVIVOR"), out Mode))
@@ -40,6 +42,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             SetVelocity(Location.FromString(config.ReadString("velocity", "0,0,0")));
             Teleport(Location.FromString(config.ReadString("position", "0,0,50")));
+            IsFirstJoin = false;
         }
 
         public void SaveToYAML(YAMLConfiguration config)
@@ -177,7 +180,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Network = conn;
             SetMass(tmass);
             CanRotate = false;
-            SetPosition(new Location(0, 0, 50));
+            SetPosition(TheRegion.SpawnPoint);
             Items = new PlayerInventory(this);
             // TODO: Better way to gather item details!
             Items.GiveItem(new ItemStack("open_hand", TheServer, 1, "items/common/open_hand_ico", "Open Hand", "Grab things!", Color.White, "items/common/hand", true));

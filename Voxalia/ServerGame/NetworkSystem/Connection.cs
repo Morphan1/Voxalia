@@ -259,7 +259,6 @@ namespace Voxalia.ServerGame.NetworkSystem
                             PrimarySocket.SendBufferSize *= 10;
                             SendPacket(new PingPacketOut(0));
                             player.Network.SendPacket(new PingPacketOut(0));
-                            player.Die();
                             GotBase = true;
                             PE = player;
                             recdsofar = 0;
