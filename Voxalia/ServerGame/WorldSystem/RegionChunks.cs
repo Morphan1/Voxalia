@@ -39,6 +39,10 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 return;
             }
+            if (TheServer.ShuttingDown)
+            {
+                return;
+            }
             PhysicsWorld.Remove(mesh);
         }
 

@@ -84,11 +84,18 @@ namespace Voxalia.ServerGame.ServerMainSystem
         bool TickMe = true;
 
         /// <summary>
+        /// Never run unneeded code when in shutdown mode!
+        /// </summary>
+        public bool ShuttingDown = false;
+
+        /// <summary>
         /// Shuts down the server, saving any necessary data.
         /// </summary>
         public void ShutDown()
         {
+            ShuttingDown = true;
             SysConsole.Output(OutputType.INFO, "[Shutdown] Starting to close server...");
+            Schedule.Tasks.Clear();
             foreach (Region region in LoadedRegions)
             {
                 foreach (PlayerEntity player in region.Players)

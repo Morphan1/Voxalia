@@ -561,6 +561,6 @@ namespace Voxalia.Shared
 
     public class IntHolder
     {
-        public int Value = 0;
+        public volatile int Value = 0;
     }
 }

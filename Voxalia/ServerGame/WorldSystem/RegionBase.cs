@@ -241,7 +241,6 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void Tick(double delta)
         {
-            CheckThreadValidity();
             Delta = delta;
             GlobalTickTime += Delta;
             if (Delta <= 0)
@@ -302,18 +301,45 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public void UnloadFully()
         {
-            CheckThreadValidity();
             // TODO: Transfer all players to another world.
             IntHolder counter = new IntHolder(); // TODO: is IntHolder needed here?
             IntHolder total = new IntHolder(); // TODO: is IntHolder needed here?
-            foreach (Chunk chunk in LoadedChunks.Values)
+            List<Chunk> chunks = new List<Chunk>(LoadedChunks.Values);
+            foreach (Chunk chunk in chunks)
             {
                 total.Value++;
-                chunk.UnloadSafely(() => { counter.Value++; });
+                chunk.UnloadSafely(() => { lock (counter) { counter.Value++; } });
             }
-            while (counter.Value < total.Value)
+            double z = 0;
+            int pval = 0;
+            int pvtime = 0;
+            while (true)
             {
+                z += 0.016;
+                if (z > 1.0)
+                {
+                    lock (counter)
+                    {
+                        SysConsole.Output(OutputType.INFO, "Got: " + counter.Value + "/" + total.Value + " so far...");
+                        if (counter.Value >= total.Value)
+                        {
+                            break;
+                        }
+                        if (counter.Value == pval)
+                        {
+                            pvtime++;
+                            if (pvtime > 5)
+                            {
+                                SysConsole.Output(OutputType.INFO, "Giving up.");
+                                return;
+                            }
+                        }
+                        pval = counter.Value;
+                    }
+                    z = 0;
+                }
                 Thread.Sleep(16);
+                TheServer.Schedule.RunAllSyncTasks(0.016);
             }
             OncePerSecondActions();
         }

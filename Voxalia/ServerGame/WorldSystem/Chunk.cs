@@ -189,6 +189,10 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             if (FCO == null)
             {
+                if (callback != null)
+                {
+                    callback.Invoke();
+                }
                 return;
             }
             LastEdited = -1;
