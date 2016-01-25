@@ -597,16 +597,21 @@ namespace Voxalia.ServerGame.EntitySystem
             return Name;
         }
 
+        public void SendStatus()
+        {
+            Network.SendPacket(new YourStatusPacketOut(GetHealth(), GetMaxHealth(), Flags));
+        }
+
         public override void SetHealth(float health)
         {
             base.SetHealth(health);
-            Network.SendPacket(new YourStatusPacketOut(GetHealth(), GetMaxHealth(), Flags));
+            SendStatus();
         }
 
         public override void SetMaxHealth(float maxhealth)
         {
             base.SetMaxHealth(maxhealth);
-            Network.SendPacket(new YourStatusPacketOut(GetHealth(), GetMaxHealth(), Flags));
+            SendStatus();
         }
 
         public override void Die()

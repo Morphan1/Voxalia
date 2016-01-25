@@ -208,6 +208,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 CameraImpactNormal = h ? new Location(rcr.HitData.Normal).Normalize() : Location.Zero;
                 CameraDistance = h ? rcr.HitData.T: 100;
             }
+            double cping = Math.Max(LastPingValue, GlobalTickTimeLocal - LastPingTime);
+            AveragePings.Push(new KeyValuePair<double, double>(GlobalTickTimeLocal, cping));
+            while ((GlobalTickTimeLocal - AveragePings.Peek().Key) > 1)
+            {
+                AveragePings.Pop();
+            }
+            APing = 0;
+            for (int i = 0; i < AveragePings.Length; i++)
+            {
+                APing += AveragePings[i].Value;
+            }
+            APing /= (double)AveragePings.Length;
         }
 
         public Location PlayerEyePosition;
@@ -234,5 +246,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
             QuickBarPos = 0;
             BuildWorld();
         }
+
+        public double LastPingTime = 0;
+
+        public double LastPingValue = 0;
+
+        public ListQueue<KeyValuePair<double, double>> AveragePings = new ListQueue<KeyValuePair<double, double>>();
+
+        public double APing = 0;
     }
 }

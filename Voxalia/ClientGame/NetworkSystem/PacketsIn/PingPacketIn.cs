@@ -18,6 +18,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             else
             {
                 TheClient.Network.SendPacket(new PingPacketOut(bit));
+                TheClient.LastPingValue = TheClient.GlobalTickTimeLocal - TheClient.LastPingTime;
+                TheClient.LastPingTime = TheClient.GlobalTickTimeLocal;
             }
             return true;
         }
