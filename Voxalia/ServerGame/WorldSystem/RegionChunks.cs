@@ -347,7 +347,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             catch (Exception ex)
             {
-                SysConsole.Output(OutputType.ERROR, "Loading a chunk: " + ex.ToString());
+                SysConsole.Output(OutputType.ERROR, "Loading chunk" + chunk.WorldPosition.ToString() + ": " + ex.ToString());
                 return;
             }
             if (fileOnly)

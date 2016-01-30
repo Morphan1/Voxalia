@@ -233,7 +233,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             catch (Exception ex)
             {
-                SysConsole.Output(OutputType.ERROR, "Saving chunk to file: " + ex.ToString());
+                SysConsole.Output(OutputType.ERROR, "Saving chunk " + WorldPosition.ToString() + " to file: " + ex.ToString());
             }
         }
 
