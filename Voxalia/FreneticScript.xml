@@ -82,6 +82,11 @@
             The parts that build up the argument.
             </summary>
         </member>
+        <member name="F:FreneticScript.CommandSystem.Arguments.Argument.WasQuoted">
+            <summary>
+            Whether the argument was input with "quotes" around it.
+            </summary>
+        </member>
         <member name="M:FreneticScript.CommandSystem.Arguments.Argument.Parse(System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String})">
             <summary>
             Parse the argument, reading any tags or other special data.
@@ -128,6 +133,11 @@
             The pieces that make up the tag.
             </summary>
         </member>
+        <member name="F:FreneticScript.CommandSystem.Arguments.TagArgumentBit.Fallback">
+            <summary>
+            The tag to fall back on if this tag fails.
+            </summary>
+        </member>
         <member name="M:FreneticScript.CommandSystem.Arguments.TagArgumentBit.Parse(System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String})">
             <summary>
             Parse the argument part, reading any tags.
@@ -149,13 +159,14 @@
             An argument part containing only plain text.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.Arguments.TextArgumentBit.#ctor(System.String)">
+        <member name="M:FreneticScript.CommandSystem.Arguments.TextArgumentBit.#ctor(System.String,System.Boolean)">
             <summary>
             Constructs the argument with input text.
             </summary>
             <param name="_text">The input text.</param>
+            <param name="wasquoted">Whether the argument was quoted at input time.</param>
         </member>
-        <member name="F:FreneticScript.CommandSystem.Arguments.TextArgumentBit.Text">
+        <member name="F:FreneticScript.CommandSystem.Arguments.TextArgumentBit.InputValue">
             <summary>
             The input text.
             </summary>
@@ -1030,6 +1041,12 @@
             <param name="entry">Entry to be executed.</param>
         </member>
         <member name="M:FreneticScript.CommandSystem.QueueCmds.GotoCommand.Execute(FreneticScript.CommandSystem.CommandEntry)">
+            <summary>
+            Executes the command.
+            </summary>
+            <param name="entry">Entry to be executed.</param>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.QueueCmds.ErrorCommand.Execute(FreneticScript.CommandSystem.CommandEntry)">
             <summary>
             Executes the command.
             </summary>
@@ -1967,6 +1984,42 @@
             </summary>
             <returns>A string representation of the number.</returns>
         </member>
+        <member name="T:FreneticScript.TagHandlers.Objects.NullTag">
+            <summary>
+            Represents a null value as a usable tag.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.NullTag.For(System.String)">
+            <summary>
+            Get a null tag if the input is null, or an internal null value if the input is not a null tag.
+            </summary>
+            <param name="input">The input to create or get a null tag from.</param>
+            <returns>The null tag, or internal null.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.NullTag.For(FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Get a null tag if the input is null, or an internal null value if the input is not a null tag.
+            </summary>
+            <param name="input">The input to create or get a null tag from.</param>
+            <returns>The null tag, or internal null.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.NullTag.#ctor">
+            <summary>
+            Constructs a null tag.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.NullTag.Handle(FreneticScript.TagHandlers.TagData)">
+            <summary>
+            Parse any direct tag input values.
+            </summary>
+            <param name="data">The input tag data.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.NullTag.ToString">
+            <summary>
+            Returns "&amp;{NULL}".
+            </summary>
+            <returns>"&amp;{NULL}".</returns>
+        </member>
         <member name="T:FreneticScript.TagHandlers.Objects.NumberTag">
             <summary>
             Represents a number as a usable tag.
@@ -2051,7 +2104,7 @@
             <summary>
             Constructs a list tag from text input.
             </summary>
-            <param name="list">The text input.</param>
+            <param name="list">The list input.</param>
             <returns>A valid list.</returns>
         </member>
         <member name="M:FreneticScript.TagHandlers.Objects.ListTag.Handle(FreneticScript.TagHandlers.TagData)">
@@ -2243,6 +2296,16 @@
             All 'modifier' data (EG, input[modifier].input[modifer]).
             </summary>
         </member>
+        <member name="F:FreneticScript.TagHandlers.TagData.Fallback">
+            <summary>
+            What to be returned if the tag fills null.
+            </summary>
+        </member>
+        <member name="P:FreneticScript.TagHandlers.TagData.HasFallback">
+            <summary>
+            Whether this tag has an alternate response if it fills null.
+            </summary>
+        </member>
         <member name="F:FreneticScript.TagHandlers.TagData.Variables">
             <summary>
             All variables waiting in this tag's context.
@@ -2260,10 +2323,10 @@
         </member>
         <member name="F:FreneticScript.TagHandlers.TagData.Error">
             <summary>
-            What to invoke if there is an error.
+            What to invoke if there is an error. Given string contains valid tags - any user input should be escaped!
             </summary>
         </member>
-        <member name="M:FreneticScript.TagHandlers.TagData.#ctor(FreneticScript.TagHandlers.TagParser,System.Collections.Generic.List{FreneticScript.TagHandlers.TagBit},System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String})">
+        <member name="M:FreneticScript.TagHandlers.TagData.#ctor(FreneticScript.TagHandlers.TagParser,System.Collections.Generic.List{FreneticScript.TagHandlers.TagBit},System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String},FreneticScript.CommandSystem.Arguments.Argument)">
             <summary>
             Constructs the tag information container.
             </summary>
@@ -2273,8 +2336,9 @@
             <param name="_vars">Any variables involved in the queue.</param>
             <param name="_mode">What debug mode to use.</param>
             <param name="_error">What to invoke if there is an error.</param>
+            <param name="fallback">What to fall back to if the tag returns null.</param>
         </member>
-        <member name="M:FreneticScript.TagHandlers.TagData.#ctor(FreneticScript.TagHandlers.TagParser,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String})">
+        <member name="M:FreneticScript.TagHandlers.TagData.#ctor(FreneticScript.TagHandlers.TagParser,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String},System.Boolean,FreneticScript.CommandSystem.Arguments.Argument)">
             <summary>
             Constructs the tag information container.
             </summary>
@@ -2283,7 +2347,9 @@
             <param name="_basecolor">The default color to use for output.</param>
             <param name="_vars">Any variables involved in the queue.</param>
             <param name="_mode">What debug mode to use.</param>
+            <param name="wasquoted">Whether the input was quoted.</param>
             <param name="_error">What to invoke if there is an error.</param>
+            <param name="fallback">What to fall back to if the tag returns null.</param>
         </member>
         <member name="M:FreneticScript.TagHandlers.TagData.Shrink">
             <summary>
@@ -2338,18 +2404,19 @@
             <summary>
             Registers a handler object for later usage by tags.
             </summary>
-            <param name="handler">The handler object to register..</param>
+            <param name="handler">The handler object to register.</param>
         </member>
         <member name="M:FreneticScript.TagHandlers.TagParser.Init(FreneticScript.CommandSystem.Commands)">
             <summary>
             Prepares the tag system.
             </summary>
         </member>
-        <member name="M:FreneticScript.TagHandlers.TagParser.SplitToArgument(System.String)">
+        <member name="M:FreneticScript.TagHandlers.TagParser.SplitToArgument(System.String,System.Boolean)">
             <summary>
             Splits text into an Argument, for preparsing.
             </summary>
             <param name="input">The original text.</param>
+            <param name="wasquoted">Whether the argument was input with "quotes".</param>
             <returns>The parsed Argument.</returns>
         </member>
         <member name="M:FreneticScript.TagHandlers.TagParser.ParseTags(FreneticScript.CommandSystem.Arguments.TagArgumentBit,System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String})">
@@ -2363,7 +2430,7 @@
             <param name="error">What to invoke if there's an error.</param>
             <returns>The string with tags parsed.</returns>
         </member>
-        <member name="M:FreneticScript.TagHandlers.TagParser.ParseTagsFromText(System.String,System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String})">
+        <member name="M:FreneticScript.TagHandlers.TagParser.ParseTagsFromText(System.String,System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String},System.Boolean)">
             <summary>
             Reads and parses all tags inside a string.
             </summary>
@@ -2372,6 +2439,7 @@
             <param name="input">The tagged string.</param>
             <param name="mode">What debugmode to use.</param>
             <param name="error">What to invoke if there's an error.</param>
+            <param name="wasquoted">Whether the input had "quotes".</param>
             <returns>The string with tags parsed.</returns>
         </member>
         <member name="T:FreneticScript.TagHandlers.TemplateObject">

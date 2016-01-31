@@ -25,13 +25,13 @@ namespace Voxalia.ClientGame.CommandSystem
 
         public override void Good(string tagged_text, DebugMode mode)
         {
-            string text = TheClient.Commands.CommandSystem.TagSystem.ParseTagsFromText(tagged_text, TextStyle.Color_Outgood, null, mode, (o) => { throw new Exception("Tag exception: " + o); });
+            string text = TheClient.Commands.CommandSystem.TagSystem.ParseTagsFromText(tagged_text, TextStyle.Color_Outgood, null, mode, (o) => { throw new Exception("Tag exception: " + o); }, true);
             UIConsole.WriteLine(TextStyle.Color_Outgood + text);
         }
 
         public override void Bad(string tagged_text, DebugMode mode)
         {
-            string text = TheClient.Commands.CommandSystem.TagSystem.ParseTagsFromText(tagged_text, TextStyle.Color_Outbad, null, mode, (o) => { throw new Exception("Tag exception: " + o); });
+            string text = TheClient.Commands.CommandSystem.TagSystem.ParseTagsFromText(tagged_text, TextStyle.Color_Outbad, null, mode, (o) => { throw new Exception("Tag exception: " + o); }, true);
             UIConsole.WriteLine(TextStyle.Color_Outbad + text);
         }
 
@@ -44,7 +44,7 @@ namespace Voxalia.ClientGame.CommandSystem
                 for (int i = 0; i < arguments.Length; i++)
                 {
                     sb.Append("\n").Append(queue.ParseTags ? TheClient.Commands.CommandSystem.TagSystem.ParseTagsFromText(arguments[i],
-                        TextStyle.Color_Simple, null, DebugMode.MINIMAL, (o) => { throw new Exception("Tag exception: " + o); }) : arguments[i]);
+                        TextStyle.Color_Simple, null, DebugMode.MINIMAL, (o) => { throw new Exception("Tag exception: " + o); }, true) : arguments[i]);
                 }
                 CommandPacketOut packet = new CommandPacketOut(sb.ToString());
                 TheClient.Network.SendPacket(packet);
