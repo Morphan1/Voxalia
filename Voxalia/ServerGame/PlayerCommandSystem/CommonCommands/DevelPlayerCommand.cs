@@ -121,6 +121,10 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                     entry.Player.Mode = mode;
                 }
             }
+            else if (arg0 == "teleport" && entry.InputArguments.Count > 1)
+            {
+                entry.Player.Teleport(Location.FromString(entry.InputArguments[1]));
+            }
             else
             {
                 entry.Player.Network.SendMessage("/devel <subcommand> [ values ... ]");
