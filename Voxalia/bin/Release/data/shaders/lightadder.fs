@@ -28,18 +28,13 @@ void main()
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
 	vec4 diffuset = texture(diffusetex, f_texcoord);
 	vec4 f_spos = shadow_matrix * vec4(position, 1.0);
-	if (position == vec3(0.0) && normal == vec3(0.0)) // TODO: is this still needed?
-	{
-		f_spos = vec4(999999999.0, 999999999.0, -999999999.0, 1.0);
-		position = vec3(999999999.0, 999999999.0, -999999999.0);
-	}
 	vec3 N = normalize(-normal);
 	vec3 light_path = light_pos - position;
 	float light_length = length(light_path);
 	float atten;
 	if (light_length == 0.0)
 	{
-		light_length = 0.00001;
+		light_length = 1.0;
 	}
 	if (light_radius == 0.0)
 	{

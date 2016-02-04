@@ -57,7 +57,7 @@ void main()
 	float atten;
 	if (light_length == 0.0)
 	{
-		light_length = 0.00001;
+		light_length = 1.0;
 	}
 	if (light_radius == 0.0)
 	{
