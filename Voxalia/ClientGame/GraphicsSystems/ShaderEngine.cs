@@ -240,6 +240,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             if (Original_Program > -1 && GL.IsProgram(Original_Program))
             {
                 GL.DeleteProgram(Original_Program);
+                Original_Program = -1;
             }
         }
 
@@ -266,6 +267,15 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     RemappedTo.CheckValid();
                     Internal_Program = RemappedTo.Original_Program;
                 }
+                else
+                {
+                    RemappedTo = temp;
+                }
+            }
+            else if (RemappedTo != null)
+            {
+                RemappedTo.CheckValid();
+                Internal_Program = RemappedTo.Original_Program;
             }
         }
 
