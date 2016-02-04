@@ -37,11 +37,11 @@ void main()
 	{
 		vec4 fst = f_spos / f_spos.w;
 		atten *= 1 - (fst.x * fst.x + fst.y * fst.y);
-        if (atten < 0)
-        {
-            color = vec4(0.0);
-            return;
-        }
+		if (atten < 0)
+		{
+			color = vec4(0.0);
+			return;
+		}
 	}
 	vec4 fs = f_spos / f_spos.w / 2.0 + vec4(0.5, 0.5, 0.5, 0.0);
 	fs.w = 1.0;

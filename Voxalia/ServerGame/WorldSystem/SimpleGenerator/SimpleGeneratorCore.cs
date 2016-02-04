@@ -158,6 +158,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     Material surf = biome.SurfaceBlock();
                     Material seco = biome.SecondLayerBlock();
                     Material basb = biome.BaseBlock();
+                    Material water = biome.WaterMaterial();
                     int hheightint = (int)Math.Round(hheight);
                     float topf = hheight - (float)(chunk.WorldPosition.Z * Chunk.CHUNK_SIZE);
                     int top = (int)Math.Round(topf);
@@ -263,7 +264,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         }
                         for (int z = Math.Max(top + 1, 0); z <= Math.Min(level, Chunk.CHUNK_SIZE - 1); z++)
                         {
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.WATER, 0, 0, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)water, 0, 0, 0);
                         }
                     }
                     else

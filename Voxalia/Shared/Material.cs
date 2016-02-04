@@ -30,7 +30,8 @@ namespace Voxalia.Shared
         COAL_ORE = 22,
         COAL_ORE_SPARSE = 23,
         COLOR = 24,
-        NUM_DEFAULT = 25,
+        DIRTY_WATER = 25,
+        NUM_DEFAULT = 26,
         MAX = ushort.MaxValue
     }
 
@@ -68,6 +69,7 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.COAL_ORE) { Sound = MaterialSound.STONE, Hardness = 15, BreakTime = 3 },
                 new MaterialInfo((int)Material.COAL_ORE_SPARSE) { Sound = MaterialSound.STONE, Hardness = 15, BreakTime = 3 },
                 new MaterialInfo((int)Material.COLOR) { Sound = MaterialSound.STONE, Hardness = 5, BreakTime = 1 }, // TODO: Clay sound?
+                new MaterialInfo((int)Material.DIRTY_WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.35f },
             };
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.TOP] = MAX_TEXTURES - 1; // grass (top)
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.BOTTOM] = 3; // dirt

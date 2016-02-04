@@ -34,10 +34,10 @@ void main()
 	{
 		discard;
 	}
-    if (tcolor.w * f_color.w < 0.01)
-    {
-        discard;
-    }
+	if (tcolor.w * f_color.w < 0.01)
+	{
+		discard;
+	}
 	color = tcolor * f_color; // TODO: Clamp f_color.xyz, match fbo_vox
 	float light_radius = light_details[0][0];
 	vec3 diffuse_albedo = vec3(light_details[0][1], light_details[0][2], light_details[0][3]);
@@ -61,8 +61,8 @@ void main()
 	{
 		vec4 fst = f_spos / f_spos.w;
 		atten *= 1 - (fst.x * fst.x + fst.y * fst.y);
-        if (atten < 0)
-        {
+		if (atten < 0)
+		{
 			atten = 0;
 		}
 	}
@@ -85,6 +85,6 @@ void main()
 	color = vec4((bambient * color + (vec4(1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten)).xyz, color.w);
 #ifdef MCM_GOOD_GRAPHICS
-    color = vec4(desaturate(color.xyz), color.w); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
+	color = vec4(desaturate(color.xyz), color.w); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
 #endif
 }

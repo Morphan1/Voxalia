@@ -1,0 +1,8 @@
+type: block
+icon: blocks/liquid/dirty_water
+display: Dirty Water
+description: Dirty water, gross!
+color: 1,1,1
+model: block
+bound: false
+datum: 25
