@@ -1,4 +1,5 @@
 #version 430 core
+// transponlyvoxlit.fs
 
 #INCLUDE_STATEMENTS_HERE
 
@@ -79,16 +80,12 @@ void main()
 	}
 	vec4 fs = f_spos / f_spos.w / 2.0 + vec4(0.5, 0.5, 0.5, 0.0);
 	fs.w = 1.0;
-	float depth;
 	if (fs.x < 0.0 || fs.x > 1.0
 		|| fs.y < 0.0 || fs.y > 1.0
 		|| fs.z < 0.0 || fs.z > 1.0)
 	{
-		depth = 0.0;
-	}
-	else
-	{
-		depth = 1.0;
+		color = vec4(0.0, 0.0, 0.0, color.w);
+		return;
 	}
 	vec3 L = light_path / light_length;
 	vec3 V_Base = f_position - eye_pos;
@@ -97,8 +94,8 @@ void main()
 	vec3 R = reflect(L, N);
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(R, V), 0.0), /* renderhint.y * 1000.0 */ 128.0) * specular_albedo * /* renderhint.x */ 0.0);
-	color = vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
-		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, color.w);
+	color = vec4((bambient * color + (vec4(1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
+		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten)).xyz, color.w);
 #ifdef MCM_GOOD_GRAPHICS
     color = vec4(desaturate(color.xyz), color.w); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
 #endif

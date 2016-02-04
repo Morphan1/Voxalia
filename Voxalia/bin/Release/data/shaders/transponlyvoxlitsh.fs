@@ -1,4 +1,5 @@
 #version 430 core
+// transponlyvoxlitsh.fs
 
 #INCLUDE_STATEMENTS_HERE
 
@@ -34,10 +35,10 @@ void main()
 	{
 		discard;
 	}
-    if (tcolor.w * f_color.w < 0.01)
-    {
-        discard;
-    }
+	if (tcolor.w * f_color.w < 0.01)
+	{
+		discard;
+	}
 	color = tcolor * f_color; // TODO: Clamp f_color.xyz, match fbo_vox
 	float light_radius = light_details[0][0];
 	vec3 diffuse_albedo = vec3(light_details[0][1], light_details[0][2], light_details[0][3]);
@@ -73,8 +74,8 @@ void main()
 	{
 		vec4 fst = f_spos / f_spos.w;
 		atten *= 1 - (fst.x * fst.x + fst.y * fst.y);
-        if (atten < 0)
-        {
+		if (atten < 0)
+		{
 			atten = 0;
 		}
 	}
@@ -85,47 +86,44 @@ void main()
 	}
 	vec4 fs = f_spos / f_spos.w / 2.0 + vec4(0.5, 0.5, 0.5, 0.0);
 	fs.w = 1.0;
-	float depth;
 	if (fs.x < 0.0 || fs.x > 1.0
 		|| fs.y < 0.0 || fs.y > 1.0
 		|| fs.z < 0.0 || fs.z > 1.0)
 	{
-		depth = 0.0;
+		color = vec4(0.0, 0.0, 0.0, color.w);
+		return;
 	}
-	else
-	{
 #ifdef MCM_GOOD_GRAPHICS
-		vec2 dz_duv;
-		vec3 duvdist_dx = dFdx(fs.xyz);
-		vec3 duvdist_dy = dFdy(fs.xyz);
-		dz_duv.x = duvdist_dy.y * duvdist_dx.z - duvdist_dx.y * duvdist_dy.z;
-		dz_duv.y = duvdist_dx.x * duvdist_dy.z - duvdist_dy.x * duvdist_dx.z;
-		float tlen = (duvdist_dx.x * duvdist_dy.y) - (duvdist_dx.y * duvdist_dy.x);
-		dz_duv /= tlen;
-		float oneoverdj = 1.0 / depth_jump;
-		float jump = tex_size * depth_jump;
-		depth = 0;
-		float depth_count = 0;
-		// TODO: Make me more efficient
-		for (float x = -oneoverdj * 2; x < oneoverdj * 2 + 1; x++)
+	vec2 dz_duv;
+	vec3 duvdist_dx = dFdx(fs.xyz);
+	vec3 duvdist_dy = dFdy(fs.xyz);
+	dz_duv.x = duvdist_dy.y * duvdist_dx.z - duvdist_dx.y * duvdist_dy.z;
+	dz_duv.y = duvdist_dx.x * duvdist_dy.z - duvdist_dy.x * duvdist_dx.z;
+	float tlen = (duvdist_dx.x * duvdist_dy.y) - (duvdist_dx.y * duvdist_dy.x);
+	dz_duv /= tlen;
+	float oneoverdj = 1.0 / depth_jump;
+	float jump = tex_size * depth_jump;
+	float depth = 0.0;
+	float depth_count = 0.0;
+	// TODO: Make me more efficient
+	for (float x = -oneoverdj * 2; x < oneoverdj * 2 + 1; x++)
+	{
+		for (float y = -oneoverdj * 2; y < oneoverdj * 2 + 1; y++)
 		{
-			for (float y = -oneoverdj * 2; y < oneoverdj * 2 + 1; y++)
+			float offz = dot(dz_duv, vec2(x * jump, y * jump)) * 1000.0;
+			if (offz > -0.000001)
 			{
-				float offz = dot(dz_duv, vec2(x * jump, y * jump)) * 1000.0;
-				if (offz > -0.000001)
-				{
-					offz = -0.000001;
-				}
-				offz -= 0.001;
-				depth += textureProj(shadowtex, fs + vec4(x * jump, y * jump, offz, 0.0));
-				depth_count++;
+				offz = -0.000001;
 			}
+			offz -= 0.001;
+			depth += textureProj(shadowtex, fs + vec4(x * jump, y * jump, offz, 0.0));
+			depth_count++;
 		}
-		depth = depth / depth_count;
-#else
-        depth = textureProj(shadowtex, fs - vec4(0.0, 0.0, 0.0001, 0.0));
-#endif
 	}
+	depth = depth / depth_count;
+#else
+	float depth = textureProj(shadowtex, fs - vec4(0.0, 0.0, 0.0001, 0.0));
+#endif
 	vec3 L = light_path / light_length;
 	vec3 V_Base = f_position - eye_pos;
 	float V_Len = length(V_Base);
@@ -136,6 +134,6 @@ void main()
 	color = vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, color.w);
 #ifdef MCM_GOOD_GRAPHICS
-    color = vec4(desaturate(color.xyz), color.w); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
+	color = vec4(desaturate(color.xyz), color.w); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
 #endif
 }

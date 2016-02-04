@@ -1,4 +1,6 @@
 #version 430 core
+// shadowadder.fs
+
 #INCLUDE_STATEMENTS_HERE
 
 layout (binding = 1) uniform sampler2D positiontex;
@@ -58,11 +60,11 @@ void main()
 	{
 		vec4 fst = f_spos / f_spos.w;
 		atten *= 1 - (fst.x * fst.x + fst.y * fst.y);
-        if (atten < 0)
-        {
-            color = vec4(0.0);
-            return;
-        }
+		if (atten < 0)
+		{
+			color = vec4(0.0);
+			return;
+		}
 	}
 	vec3 L = light_path / light_length;
 	vec3 V_Base = position - eye_pos;
@@ -78,47 +80,43 @@ void main()
 	}
 	vec4 fs = f_spos / f_spos.w / 2.0 + vec4(0.5, 0.5, 0.5, 0.0);
 	fs.w = 1.0;
-	float depth;
 	if (fs.x < 0.0 || fs.x > 1.0
 		|| fs.y < 0.0 || fs.y > 1.0
 		|| fs.z < 0.0 || fs.z > 1.0)
 	{
-		depth = 0.0;
+		discard;
 	}
-	else
-	{
 #ifdef MCM_GOOD_GRAPHICS
-		vec2 dz_duv;
-		vec3 duvdist_dx = dFdx(fs.xyz);
-		vec3 duvdist_dy = dFdy(fs.xyz);
-		dz_duv.x = duvdist_dy.y * duvdist_dx.z - duvdist_dx.y * duvdist_dy.z;
-		dz_duv.y = duvdist_dx.x * duvdist_dy.z - duvdist_dy.x * duvdist_dx.z;
-		float tlen = (duvdist_dx.x * duvdist_dy.y) - (duvdist_dx.y * duvdist_dy.x);
-		dz_duv /= tlen;
-		float oneoverdj = 1.0 / depth_jump;
-		float jump = tex_size * depth_jump;
-		depth = 0;
-		float depth_count = 0;
-		// TODO: Make me more efficient
-		for (float x = -oneoverdj * 2; x < oneoverdj * 2 + 1; x++)
+	vec2 dz_duv;
+	vec3 duvdist_dx = dFdx(fs.xyz);
+	vec3 duvdist_dy = dFdy(fs.xyz);
+	dz_duv.x = duvdist_dy.y * duvdist_dx.z - duvdist_dx.y * duvdist_dy.z;
+	dz_duv.y = duvdist_dx.x * duvdist_dy.z - duvdist_dy.x * duvdist_dx.z;
+	float tlen = (duvdist_dx.x * duvdist_dy.y) - (duvdist_dx.y * duvdist_dy.x);
+	dz_duv /= tlen;
+	float oneoverdj = 1.0 / depth_jump;
+	float jump = tex_size * depth_jump;
+	float depth = 0;
+	float depth_count = 0;
+	// TODO: Make me more efficient
+	for (float x = -oneoverdj * 2; x < oneoverdj * 2 + 1; x++)
+	{
+		for (float y = -oneoverdj * 2; y < oneoverdj * 2 + 1; y++)
 		{
-			for (float y = -oneoverdj * 2; y < oneoverdj * 2 + 1; y++)
+			float offz = dot(dz_duv, vec2(x * jump, y * jump)) * 1000.0;
+			if (offz > -0.000001)
 			{
-				float offz = dot(dz_duv, vec2(x * jump, y * jump)) * 1000.0;
-				if (offz > -0.000001)
-				{
-					offz = -0.000001;
-				}
-				offz -= 0.001;
-				depth += textureProj(tex, fs + vec4(x * jump, y * jump, offz, 0.0));
-				depth_count++;
+				offz = -0.000001;
 			}
+			offz -= 0.001;
+			depth += textureProj(tex, fs + vec4(x * jump, y * jump, offz, 0.0));
+			depth_count++;
 		}
-		depth = depth / depth_count;
-#else
-        depth = textureProj(tex, fs - vec4(0.0, 0.0, 0.0001, 0.0));
-#endif
 	}
+	depth = depth / depth_count;
+#else
+	float depth = textureProj(tex, fs - vec4(0.0, 0.0, 0.0001, 0.0));
+#endif
 	color = vec4(((vec4(depth, depth, depth, 1.0) *
 		atten * (diffuse * vec4(light_color, 1.0)) * diffuset) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, diffuset.w);
