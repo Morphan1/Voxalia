@@ -50,7 +50,12 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     return;
                 }
                 bool breakIt = false;
-                Location block = new Location(rcr.HitData.Location) - new Location(rcr.HitData.Normal).Normalize() * 0.01;
+                Location block = (new Location(rcr.HitData.Location) - new Location(rcr.HitData.Normal).Normalize() * 0.01).GetBlockLocation();
+                if (block != player.BlockBreakTarget)
+                {
+                    player.BlockBreakStarted = 0;
+                    player.BlockBreakTarget = block;
+                }
                 if (player.Mode.GetDetails().FastBreak)
                 {
                     breakIt = player.TheRegion.GlobalTickTime - player.LastBlockBreak >= 0.2;
@@ -86,6 +91,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             PlayerEntity player = (PlayerEntity)entity;
             player.LastBlockBreak = 0;
+            player.BlockBreakStarted = 0;
         }
 
         public override void ReleaseAltClick(Entity player, ItemStack item)
