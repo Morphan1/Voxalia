@@ -43,17 +43,17 @@ namespace Voxalia.Shared
         static MaterialHelpers()
         {
             MaterialInfo[] mats = new MaterialInfo[] {
-                new MaterialInfo((int)Material.AIR) { Solidity = MaterialSolidity.NONSOLID, Opaque = false, RendersAtAll = false, FogAlpha = 0, BreakTime = float.PositiveInfinity },
+                new MaterialInfo((int)Material.AIR) { Solidity = MaterialSolidity.NONSOLID, Opaque = false, RendersAtAll = false, FogAlpha = 0, BreakTime = float.PositiveInfinity, LightDamage = 0f },
                 new MaterialInfo((int)Material.STONE) { SpeedMod = 1.1f, Sound = MaterialSound.STONE, Hardness = 20, BreakTime = 2 },
                 new MaterialInfo((int)Material.GRASS_FOREST) { Sound = MaterialSound.GRASS, BreakTime = 1 },
                 new MaterialInfo((int)Material.DIRT) { Sound = MaterialSound.DIRT, BreakTime = 1 },
-                new MaterialInfo((int)Material.WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1), Hardness = 5, BreakTime = 0.2f, Spreads = true },
+                new MaterialInfo((int)Material.WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.28f },
                 new MaterialInfo((int)Material.DEBUG) { Sound = MaterialSound.METAL, Hardness = 100, BreakTime = 2f },
                 new MaterialInfo((int)Material.LEAVES1) { Opaque = false, SpeedMod = 0.7f, FogAlpha = 0, CanRenderAgainstSelf = true, Sound = MaterialSound.LEAVES, BreakTime = 0.5f },
                 new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f, Sound = MaterialSound.STONE, Hardness = 25, BreakTime = 3f },
                 new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f, FogColor = new Location(0, 1, 0), Hardness = 5, BreakTime = 1 },
                 new MaterialInfo((int)Material.SNOW) { SpeedMod = 0.8f, Sound = MaterialSound.SNOW, BreakTime = 0.5f },
-                new MaterialInfo((int)Material.SMOKE) { Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.8), BreakTime = 0.2f },
+                new MaterialInfo((int)Material.SMOKE) { Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.8), BreakTime = 0.2f, LightDamage = 0.1f },
                 new MaterialInfo((int)Material.LOG_OAK) { SpeedMod = 1.1f, Sound = MaterialSound.WOOD, BreakTime = 1.5f },
                 new MaterialInfo((int)Material.TALLGRASS) { Solidity = MaterialSolidity.SPECIAL, Opaque = false, Hardness = 1, BreakTime = 0.2f },
                 new MaterialInfo((int)Material.SAND) { Sound = MaterialSound.SAND, BreakTime = 0.5f },
@@ -158,6 +158,11 @@ namespace Voxalia.Shared
             return ALL_MATS[(int)mat].BreakTime;
         }
 
+        public static float GetLightDamage(this Material mat)
+        {
+            return ALL_MATS[(int)mat].LightDamage;
+        }
+
         public static Type MaterialType = typeof(Material);
 
         public static Material FromNameOrNumber(string input)
@@ -240,6 +245,8 @@ namespace Voxalia.Shared
         public float Hardness = 10;
 
         public float BreakTime = 1f;
+
+        public float LightDamage = 1f;
 
         public MaterialSound Sound = MaterialSound.NONE;
 

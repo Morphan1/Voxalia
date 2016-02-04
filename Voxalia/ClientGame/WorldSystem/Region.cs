@@ -524,19 +524,22 @@ namespace Voxalia.ClientGame.WorldSystem
             int x = (int)(Math.Floor(pos.X) - (XP * Chunk.CHUNK_SIZE));
             int y = (int)(Math.Floor(pos.Y) - (YP * Chunk.CHUNK_SIZE));
             int z = (int)(Math.Floor(pos.Z) - (ZP * Chunk.CHUNK_SIZE));
+            float light = 1f;
             while (true)
             {
                 Chunk ch = GetChunk(new Location(XP, YP, ZP));
                 if (ch == null)
                 {
-                    return new Location(1, 1, 1);
+                    return new Location(light, light, light);
                 }
                 while (z < Chunk.CHUNK_SIZE)
                 {
-                    if (ch.GetBlockAt((int)x, (int)y, (int)z).IsOpaque())
+                    BlockInternal bi = ch.GetBlockAt((int)x, (int)y, (int)z);
+                    if (bi.IsOpaque())
                     {
                         return new Location(0, 0, 0);
                     }
+                    light -= ((Material)bi.BlockMaterial).GetLightDamage();
                     z++;
                 }
                 ZP++;
