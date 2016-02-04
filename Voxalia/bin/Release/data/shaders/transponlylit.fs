@@ -54,20 +54,8 @@ void main()
 	vec3 N = normalize(-f_normal);
 	vec3 light_path = light_pos - f_position;
 	float light_length = length(light_path);
-	float atten;
-	if (light_length == 0.0)
-	{
-		light_length = 1.0;
-	}
-	if (light_radius == 0.0)
-	{
-		atten = 1.0;
-	}
-	else
-	{
-		float d = light_length / light_radius;
-		atten = clamp(1.0 - (d * d), 0.0, 1.0);
-	}
+	float d = light_length / light_radius;
+	float atten = clamp(1.0 - (d * d), 0.0, 1.0);
 	if (light_type == 1.0)
 	{
 		vec4 fst = f_spos / f_spos.w;

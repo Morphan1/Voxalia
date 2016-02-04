@@ -323,6 +323,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         
         public double mapLastRendered = 0;
 
+        public const float LightMaximum = 1E10f;
+
         public void renderGame()
         {
             Stopwatch timer = new Stopwatch();
@@ -394,7 +396,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     {
                         if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                         {
-                            // TODO: If movement_near_light
                             if (Lights[i] is SkyLight || (Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
                             {
                                 LightsC++;
@@ -418,7 +419,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     }
                                     else
                                     {
-                                        GL.Uniform1(3,0.0f);
+                                        GL.Uniform1(3, 0.0f);
                                     }
                                     FBOid = 4;
                                     s_shadow.Bind();
@@ -558,7 +559,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     GL.Uniform3(4, ref Lights[i].InternalLights[0].eye);
                                     Vector3 col = Lights[i].InternalLights[0].color * (float)maxrangemult;
                                     GL.Uniform3(8, ref col);
-                                    GL.Uniform1(9, Lights[i].InternalLights[0].maxrange);
+                                    float range = Lights[i].InternalLights[0].maxrange;
+                                    GL.Uniform1(9, range <= 0 ? LightMaximum: range);
                                     if (CVars.r_shadows.ValueB)
                                     {
                                         for (int ttx = 0; ttx < 6; ttx++)
@@ -612,12 +614,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                         GL.Uniform3(8, ref col);
                                         if (Lights[i].InternalLights[x] is LightOrtho)
                                         {
-                                            GL.Uniform1(9, 0f);
+                                            GL.Uniform1(9, LightMaximum);
                                             GL.Uniform1(7, 1.0f);
                                         }
                                         else
                                         {
-                                            GL.Uniform1(9, Lights[i].InternalLights[x].maxrange);
+                                            float range = Lights[i].InternalLights[0].maxrange;
+                                            GL.Uniform1(9, range <= 0 ? LightMaximum : range);
                                             GL.Uniform1(7, 0.0f);
                                         }
                                         if (CVars.r_shadows.ValueB)
@@ -781,9 +784,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 Matrix4 lmat = Lights[i].InternalLights[x].GetMatrix();
                                 GL.UniformMatrix4(6, false, ref lmat);
                                 GL.Uniform3(7, Lights[i].InternalLights[x].color);
-                                float maxrange = (Lights[i].InternalLights[x] is LightOrtho) ? 0f : Lights[i].InternalLights[x].maxrange;
+                                float maxrange = (Lights[i].InternalLights[x] is LightOrtho) ? LightMaximum : Lights[i].InternalLights[x].maxrange;
                                 Matrix4 matxyz = new Matrix4(Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero);
-                                matxyz[0, 0] = maxrange;
+                                matxyz[0, 0] = maxrange <= 0 ? LightMaximum : maxrange;
                                 // TODO: Diffuse Albedo
                                 matxyz[0, 1] = 0.7f;
                                 matxyz[0, 2] = 0.7f;
