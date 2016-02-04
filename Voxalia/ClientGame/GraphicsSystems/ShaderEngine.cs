@@ -205,6 +205,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
     /// </summary>
     public class Shader
     {
+        public Shader()
+        {
+            NewVersion = this;
+        }
+
         public ShaderEngine Engine;
 
         /// <summary>
@@ -255,6 +260,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         
         public double LastBindTime = 0;
 
+        private Shader NewVersion = null;
+
         public void CheckValid()
         {
             if (Internal_Program == -1)
@@ -262,15 +269,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 Shader temp = Engine.GetShader(Name);
                 Original_Program = temp.Original_Program;
                 Internal_Program = Original_Program;
-                if (RemappedTo != null)
-                {
-                    RemappedTo.CheckValid();
-                    Internal_Program = RemappedTo.Original_Program;
-                }
-                else
-                {
-                    RemappedTo = temp;
-                }
+                RemappedTo = temp;
+                NewVersion = temp;
             }
             else if (RemappedTo != null)
             {
@@ -282,11 +282,16 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Binds this shader to OpenGL.
         /// </summary>
-        public void Bind()
+        public Shader Bind()
         {
+            if (NewVersion != this)
+            {
+                return NewVersion.Bind();
+            }
             LastBindTime = Engine.cTime;
             CheckValid();
             GL.UseProgram(Internal_Program);
+            return NewVersion;
         }
     }
 }
