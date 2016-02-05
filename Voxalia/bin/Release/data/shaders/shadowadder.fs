@@ -50,12 +50,8 @@ void main()
 		}
 	}
 	vec3 L = light_path / light_length;
-	vec3 V_Base = position - eye_pos;
-	float V_Len = length(V_Base);
-	vec3 V = V_Base / V_Len;
-	vec3 R = reflect(L, N);
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 specular = vec3(pow(max(dot(R, V), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
+	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
 	if (should_sqrt >= 1.0)
 	{
 		f_spos.x = sign(f_spos.x) * sqrt(abs(f_spos.x));

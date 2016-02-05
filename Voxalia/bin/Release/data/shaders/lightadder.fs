@@ -39,8 +39,7 @@ void main()
 		atten *= 1 - (fst.x * fst.x + fst.y * fst.y);
 		if (atten < 0)
 		{
-			color = vec4(0.0);
-			return;
+			discard;
 		}
 	}
 	vec4 fs = f_spos / f_spos.w / 2.0 + vec4(0.5, 0.5, 0.5, 0.0);
@@ -52,12 +51,8 @@ void main()
 		discard;
 	}
 	vec3 L = light_path / light_length;
-	vec3 V_Base = position - eye_pos;
-	float V_Len = length(V_Base);
-	vec3 V = V_Base / V_Len;
-	vec3 R = reflect(L, N);
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 specular = vec3(pow(max(dot(R, V), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
+	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
 	color = vec4(((vec4(1.0) *
 		atten * (diffuse * vec4(light_color, 1.0)) * diffuset) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten)).xyz, diffuset.w);

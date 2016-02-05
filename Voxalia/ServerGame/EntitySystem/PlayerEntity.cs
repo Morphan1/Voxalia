@@ -182,7 +182,7 @@ namespace Voxalia.ServerGame.EntitySystem
             CanRotate = false;
             SetPosition(TheRegion.SpawnPoint);
             Items = new PlayerInventory(this);
-            // TODO: Better way to gather item details!
+            // TODO: Convert all these to item files!
             Items.GiveItem(new ItemStack("open_hand", TheServer, 1, "items/common/open_hand_ico", "Open Hand", "Grab things!", Color.White, "items/common/hand", true));
             Items.GiveItem(new ItemStack("fist", TheServer, 1, "items/common/fist_ico", "Fist", "Hit things!", Color.White, "items/common/fist", true));
             Items.GiveItem(new ItemStack("hook", TheServer, 1, "items/common/hook_ico", "Grappling Hook", "Grab distant things!", Color.White, "items/common/hook", true));

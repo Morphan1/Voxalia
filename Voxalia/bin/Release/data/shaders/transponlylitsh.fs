@@ -112,12 +112,8 @@ void main()
 		float depth = textureProj(shadowtex, fs - vec4(0.0, 0.0, 0.0001, 0.0));
 #endif
 	vec3 L = light_path / light_length;
-	vec3 V_Base = f_position - eye_pos;
-	float V_Len = length(V_Base);
-	vec3 V = V_Base / V_Len;
-	vec3 R = reflect(L, N);
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 specular = vec3(pow(max(dot(R, V), 0.0), /* renderhint.y * 1000.0 */ 128.0) * specular_albedo * /* renderhint.x */ 0.0);
+	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f_position - eye_pos)), 0.0), /* renderhint.y * 1000.0 */ 128.0) * specular_albedo * /* renderhint.x */ 0.0);
 	color = vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, color.w);
 #ifdef MCM_GOOD_GRAPHICS
