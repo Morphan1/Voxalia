@@ -22,6 +22,7 @@ namespace Voxalia.ServerGame.OtherSystems
             temp = LoadModel(nl);
             if (temp != null)
             {
+                Models.Add(nl, temp);
                 return temp;
             }
             return LoadModel("cube");
