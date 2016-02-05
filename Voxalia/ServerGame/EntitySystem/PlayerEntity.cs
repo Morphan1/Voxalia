@@ -207,8 +207,12 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("bullet", "shotgun_ammo", TheServer, 100, "items/weapons/ammo/shotgun_shell_ico", "Shotgun Ammo", "Always travels in packs!", Color.White, "items/weapons/ammo/shotgun_shell", false));
             Items.GiveItem(new ItemStack("bullet", "rifle_ammo", TheServer, 1000, "items/weapons/ammo/rifle_round_ico", "Assault Rifle Ammo", "Very rapid!", Color.White, "items/weapons/ammo/rifle_round", false));
             Items.GiveItem(new ItemStack("glowstick", TheServer, 10, "items/common/glowstick_ico", "Glowstick", "Pretty colors!", Color.Cyan, "items/common/glowstick", false));
-            Items.GiveItem(new ItemStack("smokegrenade", TheServer, 10, "items/weapons/smokegrenade_ico", "Smoke Grenade", "Not safe around those with asthma!", Color.FromArgb(255, 128, 128), "items/weapons/smokegrenade", false));
-            Items.GiveItem(new ItemStack("smokegrenade", TheServer, 10, "items/weapons/smokesignal_ico", "Smoke Signal", "Avoid when hiding from aircraft!", Color.FromArgb(255, 128, 128), "items/weapons/smokesignal", false, "big_smoke", "1"));
+            ItemStack smokegrenade = TheServer.Items.GetItem("weapons/grenades/smoke");
+            smokegrenade.Count = 10;
+            Items.GiveItem(smokegrenade);
+            ItemStack smokesignal = TheServer.Items.GetItem("weapons/grenades/smokesignal");
+            smokesignal.Count = 10;
+            Items.GiveItem(smokesignal);
             Items.GiveItem(new ItemStack("smokemachine", TheServer, 10, "items/common/smokemachine_ico", "Smoke Machine", "Do not inhale!", Color.White, "items/common/smokemachine", false));
             CGroup = CollisionUtil.Player;
             string nl = Name.ToLower();

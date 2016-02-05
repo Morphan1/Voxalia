@@ -5,3 +5,4 @@ description: Avoid when hiding from aircraft!
 color: 1,1,1
 model: items/weapons/smokesignal
 bound: false
+attributes.big_smoke: 1

@@ -63,6 +63,8 @@ namespace Voxalia.ServerGame.ItemSystem
                 string res_bound = "";
                 string res_subtype = null;
                 string res_datum = "0";
+                List<KeyValuePair<string, string>> attrs = new List<KeyValuePair<string, string>>();
+                List<KeyValuePair<string, float>> shared = new List<KeyValuePair<string, float>>();
                 foreach (string line in split)
                 {
                     if (line.Trim().Length < 3)
@@ -102,14 +104,33 @@ namespace Voxalia.ServerGame.ItemSystem
                             res_datum = dat_val;
                             break;
                         default:
+                            if (dat_type.StartsWith("shared."))
+                            {
+                                string opt = dat_type.Substring("shared.".Length).ToLower();
+                                shared.Add(new KeyValuePair<string, float>(opt, Utilities.StringToFloat(dat_val)));
+                            }
+                            else if (dat_type.StartsWith("attributes."))
+                            {
+                                string opt = dat_type.Substring("attributes.".Length).ToLower();
+                                attrs.Add(new KeyValuePair<string, string>(opt, dat_val));
+                            }
                             break;
                     }
                 }
                 // TODO: Both types of params, somehow!
-                return new ItemStack(res_type, res_subtype, TheServer, 1, res_icon, res_display, res_description, ColorTag.For(res_color).Internal, res_model, res_bound.ToLower() == "true")
+                ItemStack it = new ItemStack(res_type, res_subtype, TheServer, 1, res_icon, res_display, res_description, ColorTag.For(res_color).Internal, res_model, res_bound.ToLower() == "true")
                 {
                     Datum = Utilities.StringToInt(res_datum)
                 };
+                foreach (KeyValuePair<string, float> key in shared)
+                {
+                    it.SharedAttributes[key.Key] = key.Value;
+                }
+                foreach (KeyValuePair<string, string> key in attrs)
+                {
+                    it.Attributes[key.Key] = key.Value;
+                }
+                return it;
             }
             catch (Exception ex)
             {
