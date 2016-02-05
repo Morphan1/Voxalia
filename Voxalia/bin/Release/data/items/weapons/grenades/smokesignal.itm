@@ -1,0 +1,7 @@
+type: smokegrenade
+icon: items/weapons/smokesignal_ico
+display: Smoke Signal
+description: Avoid when hiding from aircraft!
+color: 1,1,1
+model: items/weapons/smokesignal
+bound: false
