@@ -117,7 +117,6 @@ namespace Voxalia.ServerGame.ItemSystem
                             break;
                     }
                 }
-                // TODO: Both types of params, somehow!
                 ItemStack it = new ItemStack(res_type, res_subtype, TheServer, 1, res_icon, res_display, res_description, ColorTag.For(res_color).Internal, res_model, res_bound.ToLower() == "true")
                 {
                     Datum = Utilities.StringToInt(res_datum)

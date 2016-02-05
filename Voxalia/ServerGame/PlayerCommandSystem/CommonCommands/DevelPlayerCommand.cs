@@ -105,7 +105,31 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 double dist = Utilities.StringToDouble(entry.InputArguments[1]);
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
-                List<Location> locs = entry.Player.TheRegion.FindPath(entry.Player.GetPosition(), entry.Player.GetPosition() + new Location(dist, 0, 0), dist * 2, 2);
+                List<Location> locs = entry.Player.TheRegion.FindPath(entry.Player.GetPosition(), entry.Player.GetPosition() + new Location(dist, 0, 0), dist * 2, 1.5f);
+                sw.Stop();
+                if (locs != null)
+                {
+                    entry.Player.Network.SendPacket(new PathPacketOut(locs));
+                }
+                entry.Player.Network.SendMessage("Took " + sw.ElapsedMilliseconds + "ms, passed: " + (locs != null));
+            }
+            else if (arg0 == "findPath")
+            {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                Location eye = entry.Player.GetEyePosition();
+                Location forw = entry.Player.ForwardVector();
+                Location goal;
+                RayCastResult rcr;
+                if (entry.Player.TheRegion.SpecialCaseRayTrace(eye, forw, 50, MaterialSolidity.FULLSOLID, entry.Player.IgnorePlayers, out rcr))
+                {
+                    goal = new Location(rcr.HitData.Location);
+                }
+                else
+                {
+                    goal = eye + forw * 50;
+                }
+                List<Location> locs = entry.Player.TheRegion.FindPath(entry.Player.GetPosition(), goal, 50 * 2, 1.5f);
                 sw.Stop();
                 if (locs != null)
                 {
@@ -124,6 +148,10 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             else if (arg0 == "teleport" && entry.InputArguments.Count > 1)
             {
                 entry.Player.Teleport(Location.FromString(entry.InputArguments[1]));
+            }
+            else if (arg0 == "tickRate")
+            {
+                entry.Player.Network.SendMessage("Intended tick rate: " + entry.Player.TheServer.CVars.g_fps.ValueI + ", actual tick rate (last second): " + entry.Player.TheServer.TPS);
             }
             else
             {

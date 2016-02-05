@@ -46,14 +46,15 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         continue;
                     }
-                    // TODO: Better in-air check? Perhaps based on node.parent!
                     if (GetBlockMaterial(neighb + new Location(0, 0, -1)).GetSolidity() == MaterialSolidity.NONSOLID
-                        && GetBlockMaterial(neighb + new Location(0, 0, -2)).GetSolidity() == MaterialSolidity.NONSOLID)
+                        && GetBlockMaterial(neighb + new Location(0, 0, -2)).GetSolidity() == MaterialSolidity.NONSOLID
+                        && GetBlockMaterial(next.Internal + new Location(0, 0, -1)).GetSolidity() == MaterialSolidity.NONSOLID
+                        && GetBlockMaterial(next.Internal + new Location(0, 0, -2)).GetSolidity() == MaterialSolidity.NONSOLID)
                     {
                         continue;
                     }
                     PathFindNode node = new PathFindNode() { Internal = neighb };
-                    node.G = next.G + next.Distance(node);
+                    node.G = next.G + 1; // Note: Distance beween 'node' and 'next' is 1.
                     node.F = node.G + node.Distance(end);
                     node.Parent = next;
                     if (open.Contains(node))
