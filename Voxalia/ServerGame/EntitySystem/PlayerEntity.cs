@@ -201,8 +201,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("bow", TheServer, 1, "items/weapons/bow_ico", "Bow", "It shoots arrows!", Color.White, "items/weapons/bow", false));
             Items.GiveItem(new ItemStack("explodobow", TheServer, 1, "items/weapons/bow_ico", "ExplodoBow", "It shoots arrows that go boom!", Color.White, "items/weapons/bow", false));
             Items.GiveItem(TheServer.Items.GetItem("weapons/rifles/m4"));
-            Items.GiveItem(new ItemStack("rifle_gun", TheServer, 1, "items/weapons/minigun_ico", "Minigun", "It shoots ^bvery^B rapid-fire bullets!", Color.White, "items/weapons/minigun", false,
-                "firerate_mod", "0.1", "spread_mod", "5", "clipsize_mod", "10", "shots_mod", "3"));
+            Items.GiveItem(TheServer.Items.GetItem("weapons/rifles/minigun"));
             Items.GiveItem(new ItemStack("bullet", "9mm_ammo", TheServer, 100, "items/weapons/ammo/9mm_round_ico", "9mm Ammo", "Nine whole millimeters!", Color.White, "items/weapons/ammo/9mm_round", false));
             Items.GiveItem(new ItemStack("bullet", "shotgun_ammo", TheServer, 100, "items/weapons/ammo/shotgun_shell_ico", "Shotgun Ammo", "Always travels in packs!", Color.White, "items/weapons/ammo/shotgun_shell", false));
             Items.GiveItem(new ItemStack("bullet", "rifle_ammo", TheServer, 1000, "items/weapons/ammo/rifle_round_ico", "Assault Rifle Ammo", "Very rapid!", Color.White, "items/weapons/ammo/rifle_round", false));

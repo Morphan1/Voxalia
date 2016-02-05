@@ -1,0 +1,11 @@
+type: rifle_gun
+icon: items/weapons/minigun_ico
+display: Minigun
+description: It shoots ^bvery^B rapid-fire bullets!
+color: 1,1,1
+model: items/weapons/minigun
+bound: false
+attributes.firerate_mod: 0.1
+attributes.spread_mod: 5
+attributes.clipsize_mod: 10
+attributes.shots_mod: 3
