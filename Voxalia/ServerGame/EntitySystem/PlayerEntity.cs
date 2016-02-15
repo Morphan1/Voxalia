@@ -354,7 +354,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     TrySet(pos, 1, 0, 1, false);
                     TrySet(pos, ViewRadiusInChunks / 2, 0, 1, false);
                     TrySet(pos, ViewRadiusInChunks, 0, 1, false);
-                    TrySet(pos, ViewRadiusInChunks + 1, 0, 1, true);
+                    TrySet(pos, ViewRadiusInChunks + 1, 4, 1, true);
                     loadedInitially = true;
                     ChunkNetwork.SendPacket(new TeleportPacketOut(GetPosition()));
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 1));
@@ -365,7 +365,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     TrySet(pos, 1, 0, 1, false);
                     TrySet(pos, ViewRadiusInChunks / 2, 0, 1, false);
                     TrySet(pos, ViewRadiusInChunks, 0, 1, false);
-                    TrySet(pos, ViewRadiusInChunks + 1, 0, 1, true);
+                    TrySet(pos, ViewRadiusInChunks + 1, 4, 1, true);
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
                 }
                 List<Chunk> removes = new List<Chunk>();
@@ -523,7 +523,10 @@ namespace Voxalia.ServerGame.EntitySystem
                         if (bg)
                         {
                             Location chl = TheRegion.ChunkLocFor(pos + new Location(30 * x, 30 * y, 30 * z));
-                            TheRegion.LoadChunk_Background(chl);
+                            TheRegion.TheServer.Schedule.ScheduleSyncTask(() =>
+                            {
+                                TheRegion.LoadChunk_Background(chl);
+                            }, Utilities.UtilRandom.NextDouble() * atime);
                         }
                         else
                         {

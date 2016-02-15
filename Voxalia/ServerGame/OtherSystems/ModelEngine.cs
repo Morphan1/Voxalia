@@ -25,7 +25,10 @@ namespace Voxalia.ServerGame.OtherSystems
                 Models.Add(nl, temp);
                 return temp;
             }
-            return LoadModel("cube");
+            temp = LoadModel("cube");
+            temp.Name = nl;
+            Models.Add(nl, temp);
+            return temp;
         }
 
         Model LoadModel(string name)
