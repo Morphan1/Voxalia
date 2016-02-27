@@ -48,7 +48,6 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 pl.AddThread();
             }
-            // Minimize penetration
             CollisionDetectionSettings.AllowedPenetration = 0.01f;
             PhysicsWorld = new Space(pl);
             PhysicsWorld.TimeStepSettings.MaximumTimeStepsPerFrame = 10;

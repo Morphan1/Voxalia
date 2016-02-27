@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 using Voxalia.Shared;
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.NetworkSystem;
@@ -74,6 +75,16 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 Thread thread = new Thread(new ThreadStart(SaveCFG));
                 thread.Start();
             }
+            SysConsole.Output(OutputType.INFO, "Tick: " + (TickTimeC / TickTimes) + ", Schedule: " + (ScheduleTimeC / ScheduleTimes)
+                + ", Physics: " + (PhysicsTimeC / PhysicsTimes) + ", Entity: " + (EntityTimeC / EntityTimes) + " Ticked: " + TickTimes);
+            TickTimes = 0;
+            TickTimeC = 0;
+            ScheduleTimes = 0;
+            ScheduleTimeC = 0;
+            PhysicsTimes = 0;
+            PhysicsTimeC = 0;
+            EntityTimes = 0;
+            EntityTimeC = 0;
         }
 
         public void SaveCFG()
@@ -92,6 +103,18 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         public double Delta;
 
+        public double TickTimeC;
+        public double TickTimes;
+
+        public double ScheduleTimeC;
+        public double ScheduleTimes;
+
+        public double PhysicsTimeC;
+        public double PhysicsTimes;
+
+        public double EntityTimeC;
+        public double EntityTimes;
+
         /// <summary>
         /// The server's primary tick function.
         /// </summary>
@@ -101,6 +124,8 @@ namespace Voxalia.ServerGame.ServerMainSystem
             Delta = delta * CVars.g_timescale.ValueD;
             try
             {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
                 opsat += Delta;
                 if (opsat >= 1.0)
                 {
@@ -119,7 +144,15 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 ConsoleHandler.CheckInput(); // TODO: Asynchronize command ticking
                 Commands.Tick(Delta); // TODO: Asynchronize command ticking
                 TickWorlds(Delta); // TODO: Asynchronize world ticking
+                Stopwatch schedw = new Stopwatch();
+                schedw.Start();
                 Schedule.RunAllSyncTasks(Delta);
+                schedw.Stop();
+                ScheduleTimeC += schedw.Elapsed.TotalMilliseconds;
+                ScheduleTimes++;
+                sw.Stop();
+                TickTimeC += sw.Elapsed.TotalMilliseconds;
+                TickTimes++;
             }
             catch (Exception ex)
             {

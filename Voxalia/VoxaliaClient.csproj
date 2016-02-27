@@ -249,7 +249,7 @@
     <Compile Include="ClientGame\WorldSystem\Chunk.cs" />
     <Compile Include="ClientGame\WorldSystem\ChunkRendering.cs" />
     <Compile Include="ClientGame\WorldSystem\Cloud.cs" />
-    <Compile Include="ClientGame\WorldSystem\LiquidForceField.cs" />
+    <Compile Include="ClientGame\WorldSystem\LiquidVolume.cs" />
     <Compile Include="ClientGame\WorldSystem\LoadAllChunksSystem.cs" />
     <Compile Include="ClientGame\WorldSystem\Region.cs" />
     <Compile Include="ClientGame\WorldSystem\RegionWeather.cs" />

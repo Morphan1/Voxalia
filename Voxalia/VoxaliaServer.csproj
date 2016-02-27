@@ -265,7 +265,7 @@
     <Compile Include="ServerGame\WorldSystem\Chunk.cs" />
     <Compile Include="ServerGame\WorldSystem\ChunkFlags.cs" />
     <Compile Include="ServerGame\WorldSystem\Cloud.cs" />
-    <Compile Include="ServerGame\WorldSystem\LiquidForceField.cs" />
+    <Compile Include="ServerGame\WorldSystem\LiquidVolume.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionBlockPhysics.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionChunks.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionPathfinder.cs" />

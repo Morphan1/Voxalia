@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
 using BEPUphysics;
@@ -253,8 +254,15 @@ namespace Voxalia.ServerGame.WorldSystem
                 opsat -= 1.0;
                 OncePerSecondActions();
             }
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             PhysicsWorld.Update((float)delta); // TODO: More specific settings?
+            sw.Stop();
+            TheServer.PhysicsTimeC += sw.Elapsed.TotalMilliseconds;
+            TheServer.PhysicsTimes++;
+            sw.Reset();
             // TODO: Async tick
+            sw.Start();
             for (int i = 0; i < Tickers.Count; i++)
             {
                 if (!Tickers[i].Removed && Tickers[i] is PhysicsEntity)
@@ -288,6 +296,9 @@ namespace Voxalia.ServerGame.WorldSystem
                     ((BaseFJoint)Joints[i]).Solve();
                 }
             }
+            sw.Stop();
+            TheServer.EntityTimeC += sw.Elapsed.TotalMilliseconds;
+            TheServer.EntityTimes++;
         }
 
         public string Name = null;
