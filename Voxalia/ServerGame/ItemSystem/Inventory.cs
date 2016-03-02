@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Voxalia.ServerGame.WorldSystem;
 using System.Drawing;
+using FreneticScript.TagHandlers;
 
 namespace Voxalia.ServerGame.ItemSystem
 {
@@ -66,15 +67,15 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public bool ItemAttrsMatch(ItemStack i1, ItemStack i2)
         {
-            Dictionary<string, string>.KeyCollection keys1 = i1.Attributes.Keys;
-            Dictionary<string, string>.KeyCollection keys2 = i2.Attributes.Keys;
+            Dictionary<string, TemplateObject>.KeyCollection keys1 = i1.Attributes.Keys;
+            Dictionary<string, TemplateObject>.KeyCollection keys2 = i2.Attributes.Keys;
             if (keys1.Count != keys2.Count)
             {
                 return false;
             }
             foreach (string str in keys1)
             {
-                if (i1.Attributes[str] != i2.Attributes[str])
+                if (i1.Attributes[str].ToString() != i2.Attributes[str].ToString()) // TODO: Proper tag equality checks?
                 {
                     return false;
                 }

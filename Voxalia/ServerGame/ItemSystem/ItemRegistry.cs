@@ -5,7 +5,10 @@ using System.Text;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared;
 using Voxalia.Shared.Files;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Common;
 using FreneticScript.TagHandlers.Objects;
+using Voxalia.ServerGame.TagSystem.TagBases;
 using Voxalia.ServerGame.TagSystem.TagObjects;
 
 namespace Voxalia.ServerGame.ItemSystem
@@ -127,7 +130,11 @@ namespace Voxalia.ServerGame.ItemSystem
                 }
                 foreach (KeyValuePair<string, string> key in attrs)
                 {
-                    it.Attributes[key.Key] = key.Value;
+                    string dat = UnescapeTagBase.Unescape(key.Value);
+                    string type = dat.Substring(0, 4);
+                    string content = dat.Substring(5);
+                    TemplateObject togive = ItemStack.TOFor(TheServer, type, content);
+                    it.Attributes[key.Key] = togive;
                 }
                 return it;
             }

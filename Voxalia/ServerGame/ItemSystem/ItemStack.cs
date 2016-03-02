@@ -3,9 +3,11 @@ using System.Text;
 using System.Collections.Generic;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
+using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Common;
 using Voxalia.ServerGame.TagSystem.TagObjects;
+using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ServerGame.ItemSystem
 {
@@ -16,21 +18,23 @@ namespace Voxalia.ServerGame.ItemSystem
     {
         public Server TheServer;
 
-        public ItemStack(string name, string secondary_name, Server tserver, int count, string tex, string display, string descrip, System.Drawing.Color color, string model, bool bound, params string[] attrs)
+        public ItemStack(string name, string secondary_name, Server tserver, int count, string tex, string display, string descrip,
+            System.Drawing.Color color, string model, bool bound, params KeyValuePair<string, TemplateObject>[] attrs)
         {
             TheServer = tserver;
             Load(name, secondary_name, count, tex, display, descrip, color, model);
             IsBound = bound;
             if (attrs != null)
             {
-                for (int i = 0; i < attrs.Length; i += 2)
+                foreach (KeyValuePair<string, TemplateObject> attr in attrs)
                 {
-                    Attributes.Add(attrs[i], attrs[i + 1]);
+                    Attributes.Add(attr.Key, attr.Value);
                 }
             }
         }
 
-        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, System.Drawing.Color color, string model, bool bound, params string[] attrs)
+        public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, System.Drawing.Color color,
+            string model, bool bound, params KeyValuePair<string, TemplateObject>[] attrs)
             : this(name, null, tserver, count, tex, display, descrip, color, model, bound, attrs)
         {
         }
@@ -41,29 +45,31 @@ namespace Voxalia.ServerGame.ItemSystem
             Load(data);
         }
 
+        public static TagData TDPlaceHolder = new TagData(null, null, "", null, DebugMode.NONE, (o) => { }, null);
+
         public float GetAttributeF(string attr, float def)
         {
-            string outp;
+            TemplateObject outp;
             if (Attributes.TryGetValue(attr, out outp))
             {
-                return Utilities.StringToFloat(outp);
+                return (float)NumberTag.For(TDPlaceHolder, outp).Internal;
             }
             return def;
         }
 
         public int GetAttributeI(string attr, int def)
         {
-            string outp;
+            TemplateObject outp;
             if (Attributes.TryGetValue(attr, out outp))
             {
-                return Utilities.StringToInt(outp);
+                return (int)IntegerTag.For(TDPlaceHolder, outp).Internal;
             }
             return def;
         }
 
         public BaseItemInfo Info = null;
 
-        public Dictionary<string, string> Attributes = new Dictionary<string, string>();
+        public Dictionary<string, TemplateObject> Attributes = new Dictionary<string, TemplateObject>();
 
         public bool IsBound = false;
 
@@ -121,9 +127,30 @@ namespace Voxalia.ServerGame.ItemSystem
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("{");
-            foreach (KeyValuePair<string, string> val in Attributes)
+            foreach (KeyValuePair<string, TemplateObject> val in Attributes)
             {
-                sb.Append(EscapeTagBase.Escape(val.Key) + "=" + EscapeTagBase.Escape(val.Value) + ";");
+                string type;
+                if (val.Value is NumberTag)
+                {
+                    type = "numb";
+                }
+                else if (val.Value is IntegerTag)
+                {
+                    type = "inte";
+                }
+                else if (val.Value is BooleanTag)
+                {
+                    type = "bool";
+                }
+                else if (val.Value is ItemTag)
+                {
+                    type = "item";
+                }
+                else
+                {
+                    type = "text";
+                }
+                sb.Append(EscapeTagBase.Escape(val.Key) + "=" + type + "/" + EscapeTagBase.Escape(val.Value.ToString()) + ";");
             }
             sb.Append("}");
             return sb.ToString();
@@ -238,9 +265,32 @@ namespace Voxalia.ServerGame.ItemSystem
             pairs = SplitUpPairs(local.Substring(1, local.Length - 2));
             foreach (KeyValuePair<string, string> pair in pairs)
             {
-                item.Attributes.Add(UnescapeTagBase.Unescape(pair.Key), UnescapeTagBase.Unescape(pair.Value));
+                string dat = UnescapeTagBase.Unescape(pair.Value);
+                string type = dat.Substring(0, 4);
+                string content = dat.Substring(5);
+                TemplateObject togive = TOFor(tserver, type, content);
+                item.Attributes.Add(UnescapeTagBase.Unescape(pair.Key), togive);
             }
             return item;
+        }
+
+        public static TemplateObject TOFor(Server tserver, string type, string content)
+    {
+            switch (type)
+            {
+                case "text":
+                    return new TextTag(content);
+                case "item":
+                    return ItemTag.For(tserver, content);
+                case "numb":
+                    return NumberTag.For(TDPlaceHolder, content);
+                case "inte":
+                    return IntegerTag.For(TDPlaceHolder, content);
+                case "bool":
+                    return BooleanTag.For(TDPlaceHolder, content);
+                default:
+                    return new TextTag(content); // Disregard errors and just make it text anyway. Probably just bad user input.
+            }
         }
     }
 }

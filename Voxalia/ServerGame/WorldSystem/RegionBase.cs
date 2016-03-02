@@ -256,7 +256,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            PhysicsWorld.Update((float)delta); // TODO: More specific settings?
+            PhysicsWorld.Update((float)delta);
             sw.Stop();
             TheServer.PhysicsTimeC += sw.Elapsed.TotalMilliseconds;
             TheServer.PhysicsTimes++;

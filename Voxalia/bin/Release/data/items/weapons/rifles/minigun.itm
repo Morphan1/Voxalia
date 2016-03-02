@@ -5,7 +5,7 @@ description: It shoots ^bvery^B rapid-fire bullets!
 color: 1,1,1
 model: items/weapons/minigun
 bound: false
-attributes.firerate_mod: 0.1
-attributes.spread_mod: 5
-attributes.clipsize_mod: 10
-attributes.shots_mod: 3
+attributes.firerate_mod: numb/0.1
+attributes.spread_mod: numb/5
+attributes.clipsize_mod: numb/10
+attributes.shots_mod: numb/3

@@ -7,6 +7,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
+using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -78,10 +79,10 @@ namespace Voxalia.ServerGame.EntitySystem
                 else
                 {
                     item = TheServer.Items.GetItem("weapons/grenades/smokesignal");
-                    item.Attributes["big_smoke"] = "1"; // TODO: Insert into the smokesignal item itself!
+                    item.Attributes["big_smoke"] = new IntegerTag(1); // TODO: Insert into the smokesignal item itself! Or, at least, a boolean?
                 }
                 item.DrawColor = col;
-                item.Attributes["max_smoke"] = SmokeLeft.ToString();
+                item.Attributes["max_smoke"] = new IntegerTag(SmokeLeft);
                 ((HumanoidEntity)e).Items.GiveItem(item);
                 RemoveMe();
             }

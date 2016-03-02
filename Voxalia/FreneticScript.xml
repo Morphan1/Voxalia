@@ -1938,6 +1938,52 @@
             </summary>
             <param name="data">The input tag data.</param>
         </member>
+        <member name="T:FreneticScript.TagHandlers.Objects.BinaryTag">
+            <summary>
+            Represents binary data.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.TagHandlers.Objects.BinaryTag.Internal">
+            <summary>
+            The binary data this tag represents.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.BinaryTag.For(FreneticScript.TagHandlers.TagData,System.String)">
+            <summary>
+            Get a boolean tag relevant to the specified input, erroring on the command system if invalid input is given (Returns false in that case).
+            Never null!
+            </summary>
+            <param name="dat">The TagData used to construct this BooleanTag.</param>
+            <param name="input">The input text to create a boolean from.</param>
+            <returns>The boolean tag.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.BinaryTag.For(FreneticScript.TagHandlers.TagData,FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Get a binary tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case).
+            </summary>
+            <param name="dat">The TagData used to construct this BooleanTag.</param>
+            <param name="input">The input to create or get a boolean from.</param>
+            <returns>The boolean tag.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.BinaryTag.#ctor(System.Byte[])">
+            <summary>
+            Constructs a binary tag.
+            </summary>
+            <param name="_val">The internal binary data to use.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.BinaryTag.Handle(FreneticScript.TagHandlers.TagData)">
+            <summary>
+            Parse any direct tag input values.
+            </summary>
+            <param name="data">The input tag data.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.BinaryTag.ToString">
+            <summary>
+            Returns the a string representation of the binary data internally stored by this boolean tag.
+            This returns in hexadecimal format.
+            </summary>
+            <returns>A string representation of the binary data.</returns>
+        </member>
         <member name="T:FreneticScript.TagHandlers.Objects.IntegerTag">
             <summary>
             Represents a number as a usable tag.
@@ -2180,7 +2226,7 @@
         </member>
         <member name="F:FreneticScript.TagHandlers.Objects.BooleanTag.Internal">
             <summary>
-            The text this TextTag represents.
+            The boolean this tag represents.
             </summary>
         </member>
         <member name="M:FreneticScript.TagHandlers.Objects.BooleanTag.For(FreneticScript.TagHandlers.TagData,System.String)">

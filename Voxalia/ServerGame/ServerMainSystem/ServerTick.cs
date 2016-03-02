@@ -75,8 +75,8 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 Thread thread = new Thread(new ThreadStart(SaveCFG));
                 thread.Start();
             }
-            SysConsole.Output(OutputType.INFO, "Tick: " + (TickTimeC / TickTimes) + ", Schedule: " + (ScheduleTimeC / ScheduleTimes)
-                + ", Physics: " + (PhysicsTimeC / PhysicsTimes) + ", Entity: " + (EntityTimeC / EntityTimes) + " Ticked: " + TickTimes);
+         //   SysConsole.Output(OutputType.INFO, "Tick: " + (TickTimeC / TickTimes) + ", Schedule: " + (ScheduleTimeC / ScheduleTimes)
+         //       + ", Physics: " + (PhysicsTimeC / PhysicsTimes) + ", Entity: " + (EntityTimeC / EntityTimes) + " Ticked: " + TickTimes);
             TickTimes = 0;
             TickTimeC = 0;
             ScheduleTimes = 0;
