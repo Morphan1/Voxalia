@@ -127,7 +127,7 @@ namespace Voxalia.ServerGame.WorldSystem
             EntityConstructors.Add(EntityType.BLOCK_ITEM, new BlockItemEntityConstructor());
             EntityConstructors.Add(EntityType.GLOWSTICK, new GlowstickEntityConstructor());
             EntityConstructors.Add(EntityType.MODEL, new ModelEntityConstructor());
-            EntityConstructors.Add(EntityType.SMOKE_GRENADE, new SmokegrenadeEntityConstructor());
+            EntityConstructors.Add(EntityType.SMOKE_GRENADE, new SmokeGrenadeEntityConstructor());
             //LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30), true);
             //TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-region scheduler // Also don't freeze the entire server/region just because we're waiting on chunks >.>
             SysConsole.Output(OutputType.INIT, "Finished building chunks! Now have " + LoadedChunks.Count + " chunks!");

@@ -11,13 +11,13 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    public class SmokegrenadeEntity : GrenadeEntity, EntityUseable
+    public class SmokeGrenadeEntity : GrenadeEntity, EntityUseable
     {
         // TODO: Possibly construct off of and save an itemstack rather than reconstructing it.
         System.Drawing.Color col;
         ParticleEffectNetType SmokeType;
 
-        public SmokegrenadeEntity(System.Drawing.Color _col, Region tregion, ParticleEffectNetType smokeType) :
+        public SmokeGrenadeEntity(System.Drawing.Color _col, Region tregion, ParticleEffectNetType smokeType) :
             base(tregion)
         {
             col = _col;
@@ -94,7 +94,7 @@ namespace Voxalia.ServerGame.EntitySystem
         }
     }
 
-    public class SmokegrenadeEntityConstructor : EntityConstructor
+    public class SmokeGrenadeEntityConstructor : EntityConstructor
     {
         public override Entity Create(Region tregion, byte[] input)
         {
@@ -102,7 +102,7 @@ namespace Voxalia.ServerGame.EntitySystem
             int colo = Utilities.BytesToInt(Utilities.BytesPartial(input, plen, 4));
             byte effecttype = input[plen + 4];
             int smokeleft = Utilities.BytesToInt(Utilities.BytesPartial(input, plen + 4 + 1, 4));
-            SmokegrenadeEntity grenade = new SmokegrenadeEntity(System.Drawing.Color.FromArgb(colo), tregion, (ParticleEffectNetType)effecttype);
+            SmokeGrenadeEntity grenade = new SmokeGrenadeEntity(System.Drawing.Color.FromArgb(colo), tregion, (ParticleEffectNetType)effecttype);
             grenade.SmokeLeft = smokeleft;
             grenade.ApplyBytes(input);
             return grenade;

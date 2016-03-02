@@ -192,9 +192,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("breadcrumb", TheServer, 1, "items/common/breadcrumbs", "Bread Crumbs", "Finds the way back, even over the river and through the woods!", Color.White, "items/common/breadcrumbs", false));
             for (int i = 1; i < (int)Material.NUM_DEFAULT; i++)
             {
-                ItemStack its = TheServer.Items.GetItem("blocks/" + ((Material)i).ToString());
-                its.Count = 100;
-                Items.GiveItem(its);
+                Items.GiveItem(TheServer.Items.GetItem("blocks/" + ((Material)i).ToString(), 100));
             }
             Items.GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol_ico", "9mm Pistol", "It shoots bullets!", Color.White, "items/weapons/silenced_pistol", false));
             Items.GiveItem(new ItemStack("shotgun_gun", TheServer, 1, "items/weapons/shotgun_ico", "Shotgun", "It shoots many bullets!", Color.White, "items/weapons/shotgun", false));
@@ -206,12 +204,9 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("bullet", "shotgun_ammo", TheServer, 100, "items/weapons/ammo/shotgun_shell_ico", "Shotgun Ammo", "Always travels in packs!", Color.White, "items/weapons/ammo/shotgun_shell", false));
             Items.GiveItem(new ItemStack("bullet", "rifle_ammo", TheServer, 1000, "items/weapons/ammo/rifle_round_ico", "Assault Rifle Ammo", "Very rapid!", Color.White, "items/weapons/ammo/rifle_round", false));
             Items.GiveItem(new ItemStack("glowstick", TheServer, 10, "items/common/glowstick_ico", "Glowstick", "Pretty colors!", Color.Cyan, "items/common/glowstick", false));
-            ItemStack smokegrenade = TheServer.Items.GetItem("weapons/grenades/smoke");
-            smokegrenade.Count = 10;
-            Items.GiveItem(smokegrenade);
-            ItemStack smokesignal = TheServer.Items.GetItem("weapons/grenades/smokesignal");
-            smokesignal.Count = 10;
-            Items.GiveItem(smokesignal);
+            Items.GiveItem(TheServer.Items.GetItem("weapons/grenades/smoke", 10));
+            Items.GiveItem(TheServer.Items.GetItem("weapons/grenades/smokesignal", 10));
+            Items.GiveItem(TheServer.Items.GetItem("weapons/grenades/explosivegrenade", 10));
             Items.GiveItem(new ItemStack("smokemachine", TheServer, 10, "items/common/smokemachine_ico", "Smoke Machine", "Do not inhale!", Color.White, "items/common/smokemachine", false));
             CGroup = CollisionUtil.Player;
             string nl = Name.ToLower();

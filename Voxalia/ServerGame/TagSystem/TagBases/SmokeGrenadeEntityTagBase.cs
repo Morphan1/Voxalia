@@ -38,9 +38,9 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 {
                     foreach (Entity e in r.Entities)
                     {
-                        if (e.EID == eid && e is SmokegrenadeEntity)
+                        if (e.EID == eid && e is SmokeGrenadeEntity)
                         {
-                            return new SmokeGrenadeEntityTag((SmokegrenadeEntity)e).Handle(data.Shrink());
+                            return new SmokeGrenadeEntityTag((SmokeGrenadeEntity)e).Handle(data.Shrink());
                         }
                     }
                 }

@@ -17,9 +17,9 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
         // @Group Entities
         // @Description Represents any SmokeGrenadeEntity.
         // -->
-        SmokegrenadeEntity Internal;
+        SmokeGrenadeEntity Internal;
 
-        public SmokeGrenadeEntityTag(SmokegrenadeEntity ent)
+        public SmokeGrenadeEntityTag(SmokeGrenadeEntity ent)
         {
             Internal = ent;
         }

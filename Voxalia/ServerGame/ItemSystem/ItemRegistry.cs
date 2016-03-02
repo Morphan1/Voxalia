@@ -28,7 +28,7 @@ namespace Voxalia.ServerGame.ItemSystem
             BaseItems.Add("air", Air);
         }
 
-        public ItemStack GetItem(string name)
+        public ItemStack GetItem(string name, int count = 1)
         {
             string low = name.ToLowerInvariant();
             ItemStack ist;
@@ -42,7 +42,9 @@ namespace Voxalia.ServerGame.ItemSystem
                 return Air;
             }
             BaseItems.Add(low, ist);
-            return ist.Duplicate();
+            ist = ist.Duplicate();
+            ist.Count = count;
+            return ist;
         }
 
         private ItemStack Load(string name)

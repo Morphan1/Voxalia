@@ -216,10 +216,14 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             if (item.Info is SmokegrenadeItem)
             {
-                return new SmokegrenadeEntity(item.DrawColor, this, item.GetAttributeI("big_smoke", 0) == 0 ? ParticleEffectNetType.SMOKE : ParticleEffectNetType.BIG_SMOKE)
+                return new SmokeGrenadeEntity(item.DrawColor, this, item.GetAttributeI("big_smoke", 0) == 0 ? ParticleEffectNetType.SMOKE : ParticleEffectNetType.BIG_SMOKE)
                 {
                     SmokeLeft = item.GetAttributeI("max_smoke", 300)
                 };
+            }
+            if (item.Info is ExplosivegrenadeItem)
+            {
+                return new ExplosiveGrenadeEntity(this);
             }
             return new ItemEntity(item, this);
         }
