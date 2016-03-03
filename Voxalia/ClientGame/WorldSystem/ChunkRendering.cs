@@ -96,6 +96,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                 {
                                     Location vt = new Location(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z);
                                     Location lcol = OwningRegion.GetLightAmount(vt, new Location(normsi[i]), this);
+                                    lcol = new Location(Math.Min(Math.Max(lcol.X - 0.1, 0) + 0.1, 1), Math.Min(Math.Max(lcol.Y - 0.1, 0) + 0.1, 1), Math.Min(Math.Max(lcol.Z - 0.1, 0) + 0.1, 1));
                                     System.Drawing.Color tcol = Colors.ForByte(c.BlockPaint);
                                     if (tcol.A == 0)
                                     {
