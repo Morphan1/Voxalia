@@ -6,20 +6,22 @@ namespace Voxalia.ClientGame.GraphicsSystems
 {
     /// <summary>
     /// Represents a 3D Frustum.
+    /// Can be used to represent the area a camera can see.
+    /// Can be used for high-speed culling of visible objects.
     /// </summary>
     public class Frustum
     {
-        Plane Near;
+        public Plane Near;
 
-        Plane Far;
+        public Plane Far;
 
-        Plane Left;
+        public Plane Left;
 
-        Plane Right;
+        public Plane Right;
 
-        Plane Top;
+        public Plane Top;
 
-        Plane Bottom;
+        public Plane Bottom;
 
         public Frustum(Matrix4 matrix)
         {
@@ -108,6 +110,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
             return ContainsBox(point - new Location(radius), point + new Location(radius));
         }
 
+        /// <summary>
+        /// Gets the plane associated with an index.
+        /// </summary>
         public Plane GetFor(int i)
         {
             switch (i)
@@ -122,10 +127,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     return Bottom;
                 case 4:
                     return Left;
-                case 5:
+                default: // NOTE: No error for invalid input to accelerate processing. NEED speed here!
                     return Right;
-                default:
-                    return null;
             }
         }
 
@@ -136,18 +139,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>Whether it's contained.</returns>
         public bool Contains(Location point)
         {
-            double rel = TryPoint(point, Far);
-            if (rel > 0) { return false; }
-            rel = TryPoint(point, Near);
-            if (rel > 0) { return false; }
-            rel = TryPoint(point, Top);
-            if (rel > 0) { return false; }
-            rel = TryPoint(point, Bottom);
-            if (rel > 0) { return false; }
-            rel = TryPoint(point, Left);
-            if (rel > 0) { return false; }
-            rel = TryPoint(point, Right);
-            if (rel > 0) { return false; }
+            if (TryPoint(point, Far) > 0) { return false; }
+            if (TryPoint(point, Near) > 0) { return false; }
+            if (TryPoint(point, Top) > 0) { return false; }
+            if (TryPoint(point, Bottom) > 0) { return false; }
+            if (TryPoint(point, Left) > 0) { return false; }
+            if (TryPoint(point, Right) > 0) { return false; }
             return true;
         }
 
