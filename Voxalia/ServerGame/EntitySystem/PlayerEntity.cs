@@ -363,7 +363,6 @@ namespace Voxalia.ServerGame.EntitySystem
                     TrySet(pos, ViewRadiusInChunks + 1, 4, 1, true);
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
                 }
-                List<Chunk> removes = new List<Chunk>();
                 foreach (ChunkAwarenessInfo ch in ChunksAwareOf.Values)
                 {
                     if (!ShouldSeeChunk(ch.ChunkPos))
@@ -375,6 +374,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     ForgetChunk(loc, loc.WorldPosition);
                 }
+                removes.Clear();
                 pChunkLoc = cpos;
             }
             if (Breadcrumbs.Count > 0)
@@ -423,6 +423,8 @@ namespace Voxalia.ServerGame.EntitySystem
                 UsedNow = null;
             }
         }
+
+        List<Chunk> removes = new List<Chunk>();
 
         public Location losPos = Location.NaN;
 

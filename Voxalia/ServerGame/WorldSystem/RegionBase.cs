@@ -203,25 +203,30 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             TickClouds();
             List<Location> DelMe = new List<Location>();
-            foreach (Chunk o in LoadedChunks.Values)
+            foreach (Chunk chk in LoadedChunks.Values)
             {
-                if (o.LastEdited >= 0)
+                if (chk.LastEdited >= 0)
                 {
-                    o.SaveToFile(null);
+                    chk.SaveToFile(null);
                 }
                 bool seen = false;
                 foreach (PlayerEntity player in Players)
                 {
-                    if (player.ShouldLoadChunk(o.WorldPosition))
+                    if (player.ShouldLoadChunk(chk.WorldPosition))
                     {
                         seen = true;
+                        chk.UnloadTimer = 0;
                         break;
                     }
                 }
                 if (!seen)
                 {
-                    o.UnloadSafely();
-                    DelMe.Add(o.WorldPosition);
+                    chk.UnloadTimer += Delta;
+                    if (chk.UnloadTimer > UnloadLimit)
+                    {
+                        chk.UnloadSafely();
+                        DelMe.Add(chk.WorldPosition);
+                    }
                 }
             }
             foreach (Location loc in DelMe)
@@ -237,6 +242,8 @@ namespace Voxalia.ServerGame.WorldSystem
                 });
             }
         }
+
+        public double UnloadLimit = 10;
 
         double opsat;
 

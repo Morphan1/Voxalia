@@ -181,6 +181,8 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             OwningRegion.RemoveCloudsFrom(this);
         }
+
+        public double UnloadTimer = 0;
         
         /// <summary>
         /// Sync only.

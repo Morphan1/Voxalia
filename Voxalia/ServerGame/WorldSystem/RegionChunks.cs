@@ -198,6 +198,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     throw new Exception("Non-custom chunk was still loading when grabbed?!");
                 }
+                chunk.UnloadTimer = 0;
                 return chunk;
             }
             chunk = new Chunk();
