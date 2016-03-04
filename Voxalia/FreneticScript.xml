@@ -336,6 +336,12 @@
             </summary>
             <param name="text">The text to output, with tags included.</param>
         </member>
+        <member name="M:FreneticScript.CommandSystem.CommandEntry.ShouldShowGood">
+            <summary>
+            Returns whether commands should output 'good' results.
+            </summary>
+            <returns>Whether commands should output 'good' results.</returns>
+        </member>
         <member name="M:FreneticScript.CommandSystem.CommandEntry.Bad(System.String)">
             <summary>
             Used to output a failure message. This is considered a 'warning' and will not induce an error.
