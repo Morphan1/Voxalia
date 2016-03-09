@@ -576,7 +576,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                         GL.Uniform1(12, 1f / Lights[i].InternalLights[0].texsize);
                                     }
                                     Rendering.RenderRectangle(-1, -1, 1, 1);
-                                    first = !first;
                                     GL.ActiveTexture(TextureUnit.Texture0);
                                     GL.BindTexture(TextureTarget.Texture2D, 0);
                                 }
@@ -633,7 +632,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                             GL.Uniform1(12, 1f / Lights[i].InternalLights[x].texsize);
                                         }
                                         Rendering.RenderRectangle(-1, -1, 1, 1);
-                                        first = !first;
                                         GL.ActiveTexture(TextureUnit.Texture0);
                                         GL.BindTexture(TextureTarget.Texture2D, 0);
                                     }
