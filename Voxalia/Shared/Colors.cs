@@ -6,6 +6,9 @@ using System.Drawing;
 
 namespace Voxalia.Shared
 {
+    /// <summary>
+    /// Contains the list of all block paint colors. Colors can be reused for other things.
+    /// </summary>
     public static class Colors
     {
         public static Color WHITE = Color.FromArgb(255, 255, 255);

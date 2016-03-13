@@ -2,6 +2,10 @@
 
 namespace Voxalia.Shared
 {
+    /// <summary>
+    /// Represents a 3D location, using 3 double-precision floating-point coordinates.
+    /// </summary>
+    // TODO: StructLayout for precision?
     public struct Location : IEquatable<Location>
     {
         /// <summary>

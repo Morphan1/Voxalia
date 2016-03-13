@@ -10,7 +10,7 @@ namespace Voxalia.Shared
     public struct BlockInternal
     {
         /// <summary>
-        /// A sample black, a plain unmodified air block.
+        /// A sample block, a plain unmodified air block.
         /// </summary>
         public static BlockInternal AIR = new BlockInternal(0, 0, 0, 0);
 

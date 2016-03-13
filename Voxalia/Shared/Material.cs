@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Voxalia.Shared
 {
+    /// <summary>
+    /// All available block materials.
+    /// </summary>
     public enum Material: ushort
     {
         AIR = 0,
@@ -31,10 +34,19 @@ namespace Voxalia.Shared
         COAL_ORE_SPARSE = 23,
         COLOR = 24,
         DIRTY_WATER = 25,
+        /// <summary>
+        /// How many materials there are by default. Only for use with internal pre-generation, or direct handling of this enumeration (shouldn't happen often.)
+        /// </summary>
         NUM_DEFAULT = 26,
+        /// <summary>
+        /// How many materials there theoretically can be.
+        /// </summary>
         MAX = ushort.MaxValue
     }
 
+    /// <summary>
+    /// Helps with material datas. Offers methods to material enumeration entries.
+    /// </summary>
     public static class MaterialHelpers
     {
         public static int MAX_TEXTURES = 64; // Warning: Do not set this too high, this is used for texture block generation!
@@ -174,6 +186,7 @@ namespace Voxalia.Shared
             {
                 return (Material)t;
             }
+            // TODO: handle unofficial material additions (added via plugin/similar)?
             return (Material)Enum.Parse(MaterialType, input.ToUpperInvariant());
         }
     }

@@ -8,8 +8,14 @@ using BEPUutilities;
 
 namespace Voxalia.Shared
 {
+    /// <summary>
+    /// Handles the block 'shapes' engine, the engine that powers all the potential 3D shapes a block can be in.
+    /// </summary>
     public class BlockShapeRegistry
     {
+        /// <summary>
+        /// The internal array of block shape details.
+        /// </summary>
         public static BlockShapeDetails[] BSD = new BlockShapeDetails[256];
 
         static BlockShapeRegistry()
@@ -86,6 +92,9 @@ namespace Voxalia.Shared
         }
     }
 
+    /// <summary>
+    /// Represents the details of a single block shape option.
+    /// </summary>
     public abstract class BlockShapeDetails
     {
         public abstract List<Vector3> GetVertices(Vector3 blockPos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM);
@@ -137,7 +146,7 @@ namespace Voxalia.Shared
             Vector3 offs;
             if (vecs.Count == 0)
             {
-                throw new Exception("No vertics for shape " + this);
+                throw new Exception("No vertices for shape " + this);
             }
             ConvexHullShape shape = new ConvexHullShape(vecs, out offs) { CollisionMargin = 0 };
             offset = new Location(offs);
