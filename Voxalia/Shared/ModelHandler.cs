@@ -7,8 +7,14 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace Voxalia.Shared
 {
+    /// <summary>
+    /// Handles abstract 3D models. Can be purposed for both collision systems and rendering.
+    /// </summary>
     public class ModelHandler
     {
+        /// <summary>
+        /// Loads a model from .VMD (Voxalia Model Data) input.
+        /// </summary>
         public Model3D LoadModel(byte[] data)
         {
             if (data.Length < 3 || data[0] != 'V' || data[1] != 'M' || data[2] != 'D')

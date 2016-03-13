@@ -42,7 +42,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             TextureID = GL.GenTexture();
             TWidth = cvars.r_blocktexturewidth.ValueI;
             GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
-            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.MAX_TEXTURES);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.MAX_THEORETICAL_MATERIALS);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)(cvars.r_blocktexturelinear.ValueB ? TextureMinFilter.Linear: TextureMinFilter.Nearest));
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)(cvars.r_blocktexturelinear.ValueB ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -59,7 +59,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 string[] dets = datums[i].Split('=');
                 if (dets[0].StartsWith("m"))
                 {
-                    tex.Mat = (Material)(MaterialHelpers.MAX_TEXTURES - Utilities.StringToInt(dets[0].Substring(1)));
+                    tex.Mat = (Material)(MaterialHelpers.MAX_THEORETICAL_MATERIALS - Utilities.StringToInt(dets[0].Substring(1)));
                 }
                 else
                 {
@@ -91,7 +91,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BindTexture(TextureTarget.Texture2DArray, 0);
             HelpTextureID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2DArray, HelpTextureID);
-            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.R8, 2, 2, MaterialHelpers.MAX_TEXTURES);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.R8, 2, 2, MaterialHelpers.MAX_THEORETICAL_MATERIALS);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);

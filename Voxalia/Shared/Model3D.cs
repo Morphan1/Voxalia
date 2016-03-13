@@ -3,6 +3,9 @@ using BEPUutilities;
 
 namespace Voxalia.Shared
 {
+    /// <summary>
+    /// Represents an abstract 3D model.
+    /// </summary>
     public class Model3D
     {
         public List<Model3DMesh> Meshes;
@@ -10,6 +13,9 @@ namespace Voxalia.Shared
         public Matrix MatrixA;
     }
 
+    /// <summary>
+    /// Represents a single mesh of an abstract 3D model.
+    /// </summary>
     public class Model3DMesh
     {
         public List<Vector3> Vertices;
@@ -20,6 +26,9 @@ namespace Voxalia.Shared
         public string Name;
     }
 
+    /// <summary>
+    /// Represents a single bone in an abstract 3D model mesh.
+    /// </summary>
     public class Model3DBone
     {
         public string Name;
@@ -28,6 +37,9 @@ namespace Voxalia.Shared
         public Matrix MatrixA;
     }
 
+    /// <summary>
+    /// Represents a single node in an abstract 3D model mesh.
+    /// </summary>
     public class Model3DNode
     {
         public string Name;

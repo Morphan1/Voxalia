@@ -5,6 +5,9 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace Voxalia.Shared.BlockShapes
 {
+    /// <summary>
+    /// The default cubic block.
+    /// </summary>
     public class BSD0: BlockShapeDetails
     {
         public BSD0()
