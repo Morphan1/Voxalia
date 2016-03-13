@@ -34,10 +34,11 @@ namespace Voxalia.Shared
         COAL_ORE_SPARSE = 23,
         COLOR = 24,
         DIRTY_WATER = 25,
+        PLANKS_OAK = 26,
         /// <summary>
         /// How many materials there are by default. Only for use with internal pre-generation, or direct handling of this enumeration (shouldn't happen often.)
         /// </summary>
-        NUM_DEFAULT = 26,
+        NUM_DEFAULT = 27,
         /// <summary>
         /// How many materials there theoretically can be.
         /// </summary>
@@ -90,6 +91,7 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.COAL_ORE_SPARSE) { Sound = MaterialSound.STONE, Hardness = 15, BreakTime = 3 },
                 new MaterialInfo((int)Material.COLOR) { Sound = MaterialSound.STONE, Hardness = 5, BreakTime = 1 }, // TODO: Clay sound?
                 new MaterialInfo((int)Material.DIRTY_WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.35f },
+                new MaterialInfo((int)Material.PLANKS_OAK) { SpeedMod = 1.15f, Sound = MaterialSound.WOOD, BreakTime = 1f },
             };
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.TOP] = MAX_THEORETICAL_MATERIALS - 1; // grass (top)
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.BOTTOM] = 3; // dirt

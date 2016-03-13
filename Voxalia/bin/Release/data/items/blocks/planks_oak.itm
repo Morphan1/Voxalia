@@ -1,0 +1,8 @@
+type: block
+icon: blocks/solid/natural/wood_planks
+display: Oak Wood Planks
+description: Handcrafted!
+color: 1,1,1
+model: block
+bound: false
+datum: 26
