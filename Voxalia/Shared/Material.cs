@@ -186,8 +186,16 @@ namespace Voxalia.Shared
             {
                 return (Material)t;
             }
-            // TODO: handle unofficial material additions (added via plugin/similar)?
-            return (Material)Enum.Parse(MaterialType, input.ToUpperInvariant());
+            string inp = input.ToUpperInvariant();
+            int hash = inp.GetHashCode();
+            for (t = 0; t < ALL_MATS.Count; t++)
+            {
+                if (ALL_MATS[t].NameHash == hash && ALL_MATS[t].Name == inp)
+                {
+                    return (Material)t;
+                }
+            }
+            throw new Exception("Unknown material name or ID: " + input);
         }
     }
 
@@ -237,9 +245,18 @@ namespace Voxalia.Shared
             {
                 TID[i] = ID;
             }
+            SetName(((Material)ID).ToString());
+        }
+
+        public void SetName(string name)
+        {
+            Name = name.ToUpperInvariant();
+            NameHash = Name.GetHashCode();
         }
 
         public string Name = null;
+
+        public int NameHash = 0;
         
         public int ID = 0;
 
