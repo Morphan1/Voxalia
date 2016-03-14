@@ -12,6 +12,7 @@ using Voxalia.Shared.Collision;
 using BEPUphysics;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.ServerGame.NetworkSystem;
+using System.Threading;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -267,7 +268,18 @@ namespace Voxalia.ServerGame.EntitySystem
                 if (Joints[i] is BaseJoint)
                 {
                     BaseJoint joint = (BaseJoint)Joints[i];
-                    TheRegion.PhysicsWorld.Remove(joint.CurrentJoint);
+                    try
+                    {
+                        TheRegion.PhysicsWorld.Remove(joint.CurrentJoint);
+                    }
+                    catch (Exception e)
+                    {
+                        // We don't actually care if this errors.
+                        if (e is ThreadAbortException)
+                        {
+                            throw e;
+                        }
+                    }
                 }
             }
             TheRegion.PhysicsWorld.Remove(Body);

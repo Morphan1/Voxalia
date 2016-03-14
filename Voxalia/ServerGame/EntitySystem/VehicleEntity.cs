@@ -90,7 +90,7 @@ namespace Voxalia.ServerGame.EntitySystem
                             tnode = tnode.Parent;
                         }
                         Location pos = GetPosition() + new Location(mat.M14, mat.M34, mat.M24) + offset; // NOTE: wtf happened to this matrix?
-                        VehiclePartEntity wheel = new VehiclePartEntity(TheRegion, "vehicles/" + vehName + "_wheel");
+                        VehiclePartEntity wheel = new VehiclePartEntity(TheRegion, "vehicles/" + vehName + "_wheel", true);
                         wheel.SetPosition(pos);
                         wheel.SetOrientation(Quaternion.Identity);
                         wheel.Gravity = Gravity;

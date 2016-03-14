@@ -69,7 +69,18 @@ namespace Voxalia.ServerGame.WorldSystem
                 BaseJoint pjoint = (BaseJoint)joint;
                 if (pjoint.CurrentJoint != null)
                 {
-                    PhysicsWorld.Remove(pjoint.CurrentJoint);
+                    try
+                    {
+                        PhysicsWorld.Remove(pjoint.CurrentJoint);
+                    }
+                    catch (Exception e)
+                    {
+                        // We don't actually care if this errors.
+                        if (e is ThreadAbortException)
+                        {
+                            throw e;
+                        }
+                    }
                 }
             }
             SendToAll(new DestroyJointPacketOut(joint));
@@ -136,11 +147,11 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             if (e is PhysicsEntity)
             {
-                ((PhysicsEntity)e).DestroyBody();
                 for (int i = 0; i < ((PhysicsEntity)e).Joints.Count; i++)
                 {
                     DestroyJoint(((PhysicsEntity)e).Joints[i]);
                 }
+                ((PhysicsEntity)e).DestroyBody();
             }
             else if (e is PrimitiveEntity)
             {
