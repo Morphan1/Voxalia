@@ -205,6 +205,19 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 TheClient.TheRegion.AddJoint(jlal);
                 return true;
             }
+            else if (type == 11)
+            {
+                if (data.Length != len + 4)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
+                    return false;
+                }
+                float height = Utilities.BytesToFloat(Utilities.BytesPartial(data, len, 4));
+                ConstWheelStepUp cwsu = new ConstWheelStepUp((PhysicsEntity)pe1, height);
+                cwsu.JID = JID;
+                TheClient.TheRegion.AddJoint(cwsu);
+                return true;
+            }
             else
             {
                 SysConsole.Output(OutputType.WARNING, "Unknown joint type " + type);

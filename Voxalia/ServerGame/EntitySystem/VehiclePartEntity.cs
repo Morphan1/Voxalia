@@ -5,6 +5,7 @@ using System.Text;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
 using Voxalia.Shared.Collision;
+using Voxalia.ServerGame.JointSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -35,7 +36,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public override void SpawnBody()
         {
             base.SpawnBody();
-            Body.Space.Add(new WheelStepUpConstraint(Body, TheRegion.Collision, StepHeight)); // TODO: Proper server constraint wrapper
+            TheRegion.AddJoint(new ConstWheelStepUp(this, StepHeight));
         }
 
         public void TryToStepUp()

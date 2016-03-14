@@ -85,6 +85,12 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 ((JointSwivelHinge)joint).WorldHinge.ToBytes().CopyTo(Data, len);
                 ((JointSwivelHinge)joint).WorldTwist.ToBytes().CopyTo(Data, len + 12);
             }
+            else if (joint is ConstWheelStepUp)
+            {
+                Data = new byte[len + 4];
+                Data[0] = 11;
+                Utilities.FloatToBytes(((ConstWheelStepUp)joint).Height).CopyTo(Data, len);
+            }
             Utilities.LongToBytes(joint.One.EID).CopyTo(Data, 1);
             Utilities.LongToBytes(joint.Two.EID).CopyTo(Data, 1 + 8);
             Utilities.LongToBytes(joint.JID).CopyTo(Data, 1 + 8 + 8);

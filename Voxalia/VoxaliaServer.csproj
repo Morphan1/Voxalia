@@ -142,6 +142,7 @@
     <Compile Include="ServerGame\ItemSystem\PlayerInventory.cs" />
     <Compile Include="ServerGame\JointSystem\BaseFJoint.cs" />
     <Compile Include="ServerGame\JointSystem\BaseJoint.cs" />
+    <Compile Include="ServerGame\JointSystem\ConstWheelStepUp.cs" />
     <Compile Include="ServerGame\JointSystem\InternalBaseJoint.cs" />
     <Compile Include="ServerGame\JointSystem\JointBallSocket.cs" />
     <Compile Include="ServerGame\JointSystem\JointDistance.cs" />

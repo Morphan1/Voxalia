@@ -174,6 +174,7 @@
     <Compile Include="ClientGame\GraphicsSystems\VBO.cs" />
     <Compile Include="ClientGame\JointSystem\BaseFJoint.cs" />
     <Compile Include="ClientGame\JointSystem\BaseJoint.cs" />
+    <Compile Include="ClientGame\JointSystem\ConstWheelStepUp.cs" />
     <Compile Include="ClientGame\JointSystem\JointLAxisLimit.cs" />
     <Compile Include="ClientGame\JointSystem\JointSwivelHinge.cs" />
     <Compile Include="ClientGame\JointSystem\JointVehicleMotor.cs" />
