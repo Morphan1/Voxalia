@@ -21,6 +21,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public CharacterEntity(Region tregion, float maxhealth)
             : base(tregion, maxhealth)
         {
+            MinZ = CBHHeight;
         }
 
         public string model = "cube";
@@ -127,6 +128,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void SpawnBody()
         {
+            MinZ = CBHHeight;
             if (CBody != null)
             {
                 DestroyBody();
@@ -292,6 +294,10 @@ namespace Voxalia.ServerGame.EntitySystem
                 CurrentSeat.HandleInput(this);
             }
             base.Tick();
+            RigidTransform transf = new RigidTransform(Vector3.Zero, Body.Orientation);
+            BoundingBox box;
+            Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
+            MinZ = box.Min.Z;
         }
 
         public float CBHHeight = 1.3f;
@@ -379,31 +385,16 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public abstract Location GetEyePosition();
 
+        public float MinZ = 0;
+
         public override Location GetPosition()
         {
-            if (Body != null)
-            {
-                RigidTransform transf = new RigidTransform(Vector3.Zero, Body.Orientation);
-                BoundingBox box;
-                Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
-                return base.GetPosition() + new Location(0, 0, box.Min.Z);
-            }
-            return base.GetPosition() - new Location(0, 0, CBHHeight);
+            return base.GetPosition() + new Location(0, 0, MinZ);
         }
 
         public override void SetPosition(Location pos)
         {
-            if (Body != null)
-            {
-                RigidTransform transf = new RigidTransform(Vector3.Zero, Body.Orientation);
-                BoundingBox box;
-                Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
-                base.SetPosition(pos + new Location(0, 0, -box.Min.Z));
-            }
-            else
-            {
-                base.SetPosition(pos + new Location(0, 0, CBHHeight));
-            }
+            base.SetPosition(pos + new Location(0, 0, -MinZ));
         }
 
         public Location GetCenter()
