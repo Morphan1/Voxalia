@@ -43,6 +43,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 List<Vector3> TCoords = new List<Vector3>(CSize * CSize * CSize * 6);
                 List<Vector3> Norms = new List<Vector3>(CSize * CSize * CSize * 6);
                 List<Vector4> Cols = new List<Vector4>(CSize * CSize * CSize * 6);
+                List<Vector4> TCols = new List<Vector4>(CSize * CSize * CSize * 6);
                 Vector3 ppos = ClientUtilities.Convert(WorldPosition * 30);
                 bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Location(0, 0, 1));
@@ -96,16 +97,17 @@ namespace Voxalia.ClientGame.WorldSystem
                                 {
                                     Location vt = new Location(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z);
                                     Location lcol = OwningRegion.GetLightAmount(vt, new Location(normsi[i]), this);
-                                    lcol = new Location(Math.Min(Math.Max(lcol.X - 0.1, 0) + 0.1, 1), Math.Min(Math.Max(lcol.Y - 0.1, 0) + 0.1, 1), Math.Min(Math.Max(lcol.Z - 0.1, 0) + 0.1, 1));
+                                    //lcol = new Location(Math.Min(Math.Max(lcol.X - 0.1, 0) + 0.1, 1), Math.Min(Math.Max(lcol.Y - 0.1, 0) + 0.1, 1), Math.Min(Math.Max(lcol.Z - 0.1, 0) + 0.1, 1));
+                                    Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
                                     System.Drawing.Color tcol = Colors.ForByte(c.BlockPaint);
                                     if (tcol.A == 0)
                                     {
-                                        Random urand = new Random((int)(vt.X + vt.Y + vt.Z + ppos.X + ppos.Y + ppos.Z));
-                                        Cols.Add(new Vector4((float)lcol.X * (float)urand.NextDouble(), (float)lcol.Y * (float)urand.NextDouble(), (float)lcol.Z * (float)urand.NextDouble(), 1f));
+                                        Random urand = new Random((int)(vt.X + vt.Y + vt.Z + ppos.X + ppos.Y + ppos.Z)); // TODO: Better picker thingy
+                                        TCols.Add(new Vector4((float)urand.NextDouble(), (float)urand.NextDouble(), (float)urand.NextDouble(), 1f));
                                     }
                                     else
                                     {
-                                        Cols.Add(new Vector4((float)lcol.X * (tcol.R / 255f), (float)lcol.Y * (tcol.G / 255f), (float)lcol.Z * (tcol.B / 255f), (tcol.A / 255f)));
+                                        TCols.Add(new Vector4(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f, tcol.A / 255f));
                                     }
                                 }
                                 if (!c.IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
@@ -126,6 +128,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     for (int i = vecsi.Count - 1; i >= 0; i--)
                                     {
                                         Cols.Add(Cols[txc - i]);
+                                        TCols.Add(Cols[txc - i]);
                                     }
                                 }
                             }
@@ -187,6 +190,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 tVBO.Normals = Norms;
                 tVBO.TexCoords = TCoords;
                 tVBO.Colors = Cols;
+                tVBO.TCOLs = TCols;
                 tVBO.BoneWeights = null;
                 tVBO.BoneIDs = null;
                 tVBO.BoneWeights2 = null;

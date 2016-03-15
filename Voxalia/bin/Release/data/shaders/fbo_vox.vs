@@ -4,11 +4,13 @@ layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 layout (location = 2) in vec3 texcoords;
 layout (location = 3) in vec4 color;
+layout (location = 4) in vec4 tcol;
 
 layout (location = 0) out vec4 f_position;
 layout (location = 1) out vec3 f_normal;
 layout (location = 2) out vec3 f_texcoord;
 layout (location = 3) out vec4 f_color;
+layout (location = 4) out vec4 f_tcol;
 
 layout (location = 1) uniform mat4 proj_matrix = mat4(1.0);
 layout (location = 2) uniform mat4 mv_matrix = mat4(1.0);
@@ -19,6 +21,7 @@ layout (location = 2) uniform mat4 mv_matrix = mat4(1.0);
 void main(void)
 {
     f_color = color;
+    f_tcol = tcol;
 	f_texcoord = texcoords;
 	f_position = mv_matrix * vec4(position, 1.0);
     f_position /= f_position.w;

@@ -14,6 +14,7 @@ layout (location = 0) in vec4 f_position;
 layout (location = 1) in vec3 f_normal;
 layout (location = 2) in vec3 f_texcoord;
 layout (location = 3) in vec4 f_color;
+layout (location = 4) in vec4 f_tcol;
 
 layout (location = 0) out vec4 color;
 layout (location = 1) out vec4 position;
@@ -23,7 +24,7 @@ layout (location = 4) out vec4 bw;
 
 void main()
 {
-	vec4 col = texture(s, f_texcoord) * vec4(clamp(f_color.xyz, vec3(light_clamp.x), vec3(light_clamp.y)), f_color.w);
+	vec4 col = texture(s, f_texcoord) * vec4(clamp(f_color.xyz, vec3(light_clamp.x), vec3(light_clamp.y)), f_color.w) * f_tcol;
 	if (col.w * v_color.w < 0.99)
 	{
 		discard;

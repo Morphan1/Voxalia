@@ -18,6 +18,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         uint _BoneWeightVBO;
         uint _BoneID2VBO;
         uint _BoneWeight2VBO;
+        uint _TCOLVBO;
         public uint _VAO;
 
         public Texture Tex;
@@ -31,6 +32,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public List<Vector4> BoneWeights;
         public List<Vector4> BoneIDs2;
         public List<Vector4> BoneWeights2;
+        public List<Vector4> TCOLs;
 
         public void CleanLists()
         {
@@ -47,6 +49,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             indices = null;
             normals = null;
             texts = null;
+            TCOLs = null;
         }
 
         int vC;
@@ -206,11 +209,25 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.DeleteBuffer(_IndexVBO);
                 GL.DeleteBuffer(_NormalVBO);
                 GL.DeleteBuffer(_TexCoordVBO);
-                GL.DeleteBuffer(_ColorVBO);
-                GL.DeleteBuffer(_BoneIDVBO);
-                GL.DeleteBuffer(_BoneWeightVBO);
-                GL.DeleteBuffer(_BoneID2VBO);
-                GL.DeleteBuffer(_BoneWeight2VBO);
+                if (colors)
+                {
+                    GL.DeleteBuffer(_ColorVBO);
+                    colors = false;
+                }
+                if (tcols)
+                {
+                    GL.DeleteBuffer(_TCOLVBO);
+                    tcols = false;
+                }
+                if (bones)
+                {
+                    GL.DeleteBuffer(_BoneIDVBO);
+                    GL.DeleteBuffer(_BoneWeightVBO);
+                    GL.DeleteBuffer(_BoneID2VBO);
+                    GL.DeleteBuffer(_BoneWeight2VBO);
+                    bones = false;
+                }
+                generated = false;
             }
         }
 
@@ -220,6 +237,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             normals = Normals.ToArray();
             texts = TexCoords.ToArray();
         }
+
+        bool colors;
+        bool tcols;
+        bool bones;
 
         Vector3[] verts = null;
         public uint[] indices = null;
@@ -232,12 +253,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
             uint[] inds = indices == null ? Indices.ToArray() : indices;
             Vector3[] norms = normals == null ? Normals.ToArray() : normals;
             Vector3[] texs = texts == null ? TexCoords.ToArray() : texts;
-            Vector4[] cols = null;
+            Vector4[] cols = Colors != null ? Colors.ToArray() : null;
+            Vector4[] tcols = TCOLs != null ? TCOLs.ToArray() : null;
             vC = vecs.Length;
-            if (Colors != null)
-            {
-                cols = Colors.ToArray();
-            }
             // Vertex buffer
             GL.BindBuffer(BufferTarget.ArrayBuffer, _VertexVBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vecs.Length * Vector3.SizeInBytes), vecs, BufferMode);
@@ -251,8 +269,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
             if (cols != null)
             {
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _ColorVBO);
-                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(cols.Length * Vector4.SizeInBytes),
-                        cols, BufferMode);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(cols.Length * Vector4.SizeInBytes), cols, BufferMode);
+            }
+            // TCOL buffer
+            if (tcols != null)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _TCOLVBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(tcols.Length * Vector4.SizeInBytes), tcols, BufferMode);
             }
             // Index buffer
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IndexVBO);
@@ -289,16 +312,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
             uint[] inds = indices == null ? Indices.ToArray() : indices;
             Vector3[] norms = normals == null ? Normals.ToArray() : normals;
             Vector3[] texs = texts == null ? TexCoords.ToArray() : texts;
-            Vector4[] cols = null;
+            Vector4[] cols = Colors != null ? Colors.ToArray() : null;
+            Vector4[] tcols = TCOLs != null ? TCOLs.ToArray() : null;
             vC = inds.Length;
-            if (Colors != null)
-            {
-                cols = Colors.ToArray();
-            }
             Vector4[] ids = null;
             if (BoneIDs != null)
             {
                 ids = BoneIDs.ToArray();
+                bones = true;
             }
             Vector4[] weights = null;
             if (BoneWeights != null)
@@ -330,9 +351,18 @@ namespace Voxalia.ClientGame.GraphicsSystems
             // Color buffer
             if (cols != null)
             {
+                colors = true;
                 GL.GenBuffers(1, out _ColorVBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _ColorVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(cols.Length * Vector4.SizeInBytes), cols, BufferMode);
+            }
+            // TCOL buffer
+            if (tcols != null)
+            {
+                this.tcols = true;
+                GL.GenBuffers(1, out _TCOLVBO);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _TCOLVBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(tcols.Length * Vector4.SizeInBytes), tcols, BufferMode);
             }
             // Weight buffer
             if (weights != null)
@@ -382,6 +412,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _ColorVBO);
                 GL.VertexAttribPointer(3, 4, VertexAttribPointerType.Float, false, 0, 0);
             }
+            if (tcols != null)
+            {
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _TCOLVBO);
+                GL.VertexAttribPointer(4, 4, VertexAttribPointerType.Float, false, 0, 0);
+            }
             if (weights != null)
             {
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeightVBO);
@@ -408,6 +443,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             if (cols != null)
             {
                 GL.EnableVertexAttribArray(3);
+            }
+            if (tcols != null)
+            {
+                GL.EnableVertexAttribArray(4);
             }
             if (weights != null)
             {
