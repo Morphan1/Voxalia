@@ -34,7 +34,9 @@ namespace Voxalia.ServerGame.ItemSystem
             ItemStack ist;
             if (BaseItems.TryGetValue(low, out ist))
             {
-                return ist.Duplicate();
+                ist = ist.Duplicate();
+                ist.Count = count;
+                return ist;
             }
             ist = Load(low);
             if (ist == null)

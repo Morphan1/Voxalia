@@ -2,6 +2,7 @@
 using Voxalia.ServerGame.WorldSystem;
 using System.Drawing;
 using FreneticScript.TagHandlers;
+using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.ItemSystem
 {
@@ -63,18 +64,21 @@ namespace Voxalia.ServerGame.ItemSystem
                     ItemAttrsMatch(item2, item) &&
                     ItemSharedAttrsMatch(item2, item) &&
                     item2.IsBound == item.IsBound;
+            // NOTE: Intentionally don't check the count here.
         }
 
         public bool ItemAttrsMatch(ItemStack i1, ItemStack i2)
         {
-            Dictionary<string, TemplateObject>.KeyCollection keys1 = i1.Attributes.Keys;
-            Dictionary<string, TemplateObject>.KeyCollection keys2 = i2.Attributes.Keys;
-            if (keys1.Count != keys2.Count)
+            if (i1.Attributes.Count != i2.Attributes.Count)
             {
                 return false;
             }
-            foreach (string str in keys1)
+            foreach (string str in i1.Attributes.Keys)
             {
+                if (!i2.Attributes.ContainsKey(str))
+                {
+                    return false;
+                }
                 if (i1.Attributes[str].ToString() != i2.Attributes[str].ToString()) // TODO: Proper tag equality checks?
                 {
                     return false;
@@ -86,15 +90,17 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public bool ItemSharedAttrsMatch(ItemStack i1, ItemStack i2)
         {
-            Dictionary<string, float>.KeyCollection keys1 = i1.SharedAttributes.Keys;
-            Dictionary<string, float>.KeyCollection keys2 = i2.SharedAttributes.Keys;
-            if (keys1.Count != keys2.Count)
+            if (i1.SharedAttributes.Count != i2.SharedAttributes.Count)
             {
                 return false;
             }
-            foreach (string str in keys1)
+            foreach (string str in i1.SharedAttributes.Keys)
             {
-                if (i1.Attributes[str] != i2.Attributes[str])
+                if (!i2.SharedAttributes.ContainsKey(str))
+                {
+                    return false;
+                }
+                if (i1.SharedAttributes[str] != i2.SharedAttributes[str])
                 {
                     return false;
                 }

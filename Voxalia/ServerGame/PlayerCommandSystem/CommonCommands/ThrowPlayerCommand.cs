@@ -18,7 +18,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             ItemStack stack = entry.Player.Items.GetItemForSlot(entry.Player.Items.cItem);
             if (stack.IsBound)
             {
-                if (stack.Info == entry.Player.TheServer.ItemInfos.GetInfoFor("open_hand")) // TODO: Better handling of special cases
+                if (stack.Info.Name == "open_hand") // TODO: Better handling of special cases -> Info.Throw() ?
                 {
                     if (entry.Player.GrabJoint != null)
                     {
@@ -39,7 +39,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             PhysicsEntity ie = entry.Player.TheRegion.ItemToEntity(item);
             // TODO: Animate player
             Location fvel = entry.Player.ForwardVector();
-            ie.SetPosition(entry.Player.GetEyePosition() + fvel);
+            ie.SetPosition(entry.Player.GetEyePosition() + fvel * 2);
             ie.SetOrientation(entry.Player.GetOrientation());
             ie.SetVelocity(fvel * 25 * ie.GetMass());
             entry.Player.TheRegion.SpawnEntity(ie);

@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.ItemSystem
         public override ItemStack GiveItem(ItemStack item)
         {
             ItemStack it = base.GiveItem(item);
-            if (it == item)
+            if (ReferenceEquals(it, item))
             {
                 ((PlayerEntity)Owner).Network.SendPacket(new SpawnItemPacketOut(Items.Count - 1, it));
             }
