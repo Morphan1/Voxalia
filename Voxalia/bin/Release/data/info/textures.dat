@@ -26,6 +26,7 @@ COAL_ORE_SPARSE=blocks/solid/ore/coal_ore_sparse
 COLOR=blocks/solid/made/color
 DIRTY_WATER=blocks/liquid/dirty_water
 PLANKS_OAK=blocks/solid/natural/wood_planks
+GLASS_WINDOW=blocks/transparent/glass_window
 m8=blocks/solid/natural/grass_plains
 m7=blocks/solid/natural/wood_top
 m6=blocks/solid/special/db_ym,blocks/solid/special/db_exc%1.0&1

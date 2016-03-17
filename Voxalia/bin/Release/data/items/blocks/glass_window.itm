@@ -1,0 +1,8 @@
+type: block
+icon: blocks/transparent/glass_window
+display: Glass Window
+description: See-through!
+color: 1,1,1
+model: block
+bound: false
+datum: 27

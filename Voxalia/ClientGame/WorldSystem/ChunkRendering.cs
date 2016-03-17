@@ -70,12 +70,13 @@ namespace Voxalia.ClientGame.WorldSystem
                                 BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : (c_xp == null ? t_air : c_xp.GetBlockAt(x + 1 - CSize, y, z));
                                 BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : (c_xm == null ? t_air : c_xm.GetBlockAt(x - 1 + CSize, y, z));
                                 bool rAS = !((Material)c.BlockMaterial).GetCanRenderAgainstSelf();
-                                bool zps = (zp.IsOpaque() || (rAS && (zp.BlockMaterial == c.BlockMaterial && zp.BlockPaint == c.BlockPaint))) && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
-                                bool zms = (zm.IsOpaque() || (rAS && (zm.BlockMaterial == c.BlockMaterial && zm.BlockPaint == c.BlockPaint))) && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
-                                bool xps = (xp.IsOpaque() || (rAS && (xp.BlockMaterial == c.BlockMaterial && xp.BlockPaint == c.BlockPaint))) && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
-                                bool xms = (xm.IsOpaque() || (rAS && (xm.BlockMaterial == c.BlockMaterial && xm.BlockPaint == c.BlockPaint))) && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
-                                bool yps = (yp.IsOpaque() || (rAS && (yp.BlockMaterial == c.BlockMaterial && yp.BlockPaint == c.BlockPaint))) && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
-                                bool yms = (ym.IsOpaque() || (rAS && (ym.BlockMaterial == c.BlockMaterial && ym.BlockPaint == c.BlockPaint))) && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
+                                bool pMatters = !c.IsOpaque();
+                                bool zps = (zp.IsOpaque() || (rAS && (zp.BlockMaterial == c.BlockMaterial && (pMatters || zp.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
+                                bool zms = (zm.IsOpaque() || (rAS && (zm.BlockMaterial == c.BlockMaterial && (pMatters || zm.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
+                                bool xps = (xp.IsOpaque() || (rAS && (xp.BlockMaterial == c.BlockMaterial && (pMatters || xp.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
+                                bool xms = (xm.IsOpaque() || (rAS && (xm.BlockMaterial == c.BlockMaterial && (pMatters || xm.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
+                                bool yps = (yp.IsOpaque() || (rAS && (yp.BlockMaterial == c.BlockMaterial && (pMatters || yp.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
+                                bool yms = (ym.IsOpaque() || (rAS && (ym.BlockMaterial == c.BlockMaterial && (pMatters || ym.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
                                 BEPUutilities.Vector3 pos = new BEPUutilities.Vector3(x, y, z);
                                 List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                                 List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[c.BlockData].GetNormals(pos, xps, xms, yps, yms, zps, zms);
@@ -93,9 +94,10 @@ namespace Voxalia.ClientGame.WorldSystem
                                     System.Drawing.Color tcol = Colors.ForByte(c.BlockPaint);
                                     if (tcol.A == 0)
                                     {
-                                        // TODO: Better picker thingy... 3d noise?
-                                        Random urand = new Random((int)(vt.X + vt.Y + vt.Z + ppos.X + ppos.Y + ppos.Z));
-                                        TCols.Add(new Vector4((float)urand.NextDouble(), (float)urand.NextDouble(), (float)urand.NextDouble(), 1f));
+                                        float r = SimplexNoise.Generate(vt.X / 10f, vt.Y / 10f, vt.Z / 10f);
+                                        float g = SimplexNoise.Generate((vt.X + 50f) / 10f, (vt.Y + 127f) / 10f, (vt.Z + 10f) / 10f);
+                                        float b = SimplexNoise.Generate((vt.X - 150f) / 10f, (vt.Y - 65f) / 10f, (vt.Z + 73f) / 10f);
+                                        TCols.Add(new Vector4(r, g, b, 1f));
                                     }
                                     else
                                     {
