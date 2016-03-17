@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
-    public class ExplosivegrenadeItem : GenericItem
+    public class PaintbombItem : GenericItem
     {
-        public ExplosivegrenadeItem()
+        public PaintbombItem()
         {
-            Name = "explosivegrenade";
+            Name = "paintbomb";
         }
     }
 }

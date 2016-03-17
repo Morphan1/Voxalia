@@ -21,6 +21,6 @@ namespace Voxalia.Shared
         TARGET_ENTITY = 12,
         SLIME = 13,
         EXPLOSIVE_GRENADE = 14,
-        LEGACY_SPAWNPOINT = 100
+        PAINT_BOMB = 15
     }
 }

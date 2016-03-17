@@ -362,6 +362,23 @@ namespace Voxalia.ServerGame.WorldSystem
             OncePerSecondActions();
         }
 
+        public void PaintBomb(Location pos, byte bcol, float rad = 5f)
+        {
+            foreach (Location loc in GetBlocksInRadius(pos, 5))
+            {
+                // TODO: Ray-trace the block?
+                BlockInternal bi = GetBlockInternal(loc);
+                SetBlockMaterial(loc, (Material)bi.BlockMaterial, bi.BlockData, bcol, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED));
+            }
+            System.Drawing.Color ccol = Colors.ForByte(bcol);
+            ParticleEffectPacketOut pepo = new ParticleEffectPacketOut(ParticleEffectNetType.PAINT_BOMB, rad + 15, pos, new Location(ccol.R / 255f, ccol.G / 255f, ccol.B / 255f));
+            foreach (PlayerEntity pe in GetPlayersInRadius(pos, rad + 30)) // TODO: Better particle view dist
+            {
+                pe.Network.SendPacket(pepo);
+            }
+            // TODO: Sound effect?
+        }
+
         public void Explode(Location pos, float rad = 5f, bool effect = true, bool breakblock = true, bool applyforce = true, bool doDamage = true)
         {
             float expDamage = 5 * rad;
@@ -388,7 +405,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             if (effect)
             {
-                ParticleEffectPacketOut pepo = new ParticleEffectPacketOut(ParticleEffectNetType.EXPLOSION, rad + 30, pos);
+                ParticleEffectPacketOut pepo = new ParticleEffectPacketOut(ParticleEffectNetType.EXPLOSION, rad + 15, pos);
                 foreach (PlayerEntity pe in GetPlayersInRadius(pos, rad + 30)) // TODO: Better particle view dist
                 {
                     pe.Network.SendPacket(pepo);

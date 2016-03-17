@@ -1,0 +1,7 @@
+type: paintbomb
+icon: items/weapons/paintbomb_ico
+display: Paint Bomb
+description: Wow! Pretty colors! Everywhere!
+color: 1,1,1
+model: items/weapons/paintbomb
+bound: false

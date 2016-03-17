@@ -42,7 +42,7 @@ namespace Voxalia.Shared
         public static Color SKY_BLUE = Color.FromArgb(0, 128, 255);
         public static Color TRANSPARENT = Color.FromArgb(180, 255, 255, 255);
         public static Color VERY_TRANSPARENT = Color.FromArgb(90, 255, 255, 255);
-        public static Color MAGIC = Color.FromArgb(0, 255, 255, 255);
+        public static Color MAGIC = Color.FromArgb(0, 255, 0, 255);
 
         public static Dictionary<string, byte> KnownColorNames = new Dictionary<string, byte>();
 

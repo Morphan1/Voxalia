@@ -45,7 +45,8 @@ namespace Voxalia.Shared
     {
         EXPLOSION = 0,
         SMOKE = 1,
-        BIG_SMOKE = 2
+        BIG_SMOKE = 2,
+        PAINT_BOMB = 3
     }
 
     public enum ModelCollisionMode : byte

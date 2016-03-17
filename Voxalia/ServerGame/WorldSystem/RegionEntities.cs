@@ -236,6 +236,15 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 return new ExplosiveGrenadeEntity(this);
             }
+            if (item.Info is PaintbombItem)
+            {
+                float dat;
+                if (!item.SharedAttributes.TryGetValue("color", out dat))
+                {
+                    dat = 0;
+                }
+                return new PaintBombEntity((byte)dat, this);
+            }
             return new ItemEntity(item, this);
         }
 

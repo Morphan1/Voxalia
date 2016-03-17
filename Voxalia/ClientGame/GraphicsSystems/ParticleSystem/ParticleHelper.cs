@@ -39,6 +39,20 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public ParticleEngine Engine;
 
+        public void PaintBomb(Location pos, float size, Location color, int dens = 50)
+        {
+            for (int i = 0; i < dens; i++)
+            {
+                Texture tex = Explosion[0];
+                Location forward = Utilities.ForwardVector_Deg(Utilities.UtilRandom.NextDouble() * 360, Utilities.UtilRandom.NextDouble() * 360 - 180);
+                double ssize = Utilities.UtilRandom.NextDouble() * 1.5 + 0.8;
+                float ttl = (float)Utilities.UtilRandom.NextDouble() * 8f + 4f;
+                double speed = Utilities.UtilRandom.NextDouble();
+                Location loc = new Location(ssize);
+                Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + (forward * size * speed) * (1.0 - o.TTL / o.O_TTL), (o) => loc, (o) => 0, ttl, color, color, true, tex);
+            }
+        }
+
         public void Explode(Location pos, float size, int dens = 50)
         {
             Location c1 = new Location(1, 0.7, 0);
@@ -48,7 +62,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                 Texture tex = Explosion[Utilities.UtilRandom.Next(Explosion.Length)];
                 Location forward = Utilities.ForwardVector_Deg(Utilities.UtilRandom.NextDouble() * 360, Utilities.UtilRandom.NextDouble() * 360 - 180);
                 double ssize = Utilities.UtilRandom.NextDouble() * 0.25 + 0.25;
-                float ttl = (float)Utilities.UtilRandom.NextDouble() * 5f + 2f;
+                float ttl = (float)Utilities.UtilRandom.NextDouble() * 5f + 3f;
                 double speed = Utilities.UtilRandom.NextDouble();
                 Location loc = new Location(ssize);
                 Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + (forward * size * speed) * o.TTL / o.O_TTL, (o) => loc, (o) => 0, ttl, c1, c2, true, tex);

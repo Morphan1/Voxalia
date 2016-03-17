@@ -161,6 +161,14 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 its.DrawColor = Colors.ForByte(col);
                 entry.Player.Items.GiveItem(its);
             }
+            else if (arg0 == "paintBomb" && entry.InputArguments.Count > 1)
+            {
+                ItemStack its = entry.Player.TheServer.Items.GetItem("weapons/grenades/paintbomb", 10);
+                byte col = Colors.ForName(entry.InputArguments[1]);
+                its.SharedAttributes["color"] = col;
+                its.DrawColor = Colors.ForByte(col);
+                entry.Player.Items.GiveItem(its);
+            }
             else
             {
                 entry.Player.Network.SendMessage("/devel <subcommand> [ values ... ]");

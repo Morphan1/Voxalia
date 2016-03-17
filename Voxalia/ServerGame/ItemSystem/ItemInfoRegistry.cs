@@ -35,6 +35,7 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new SmokegrenadeItem());
             Register(new ExplosivegrenadeItem());
             Register(new PaintbrushItem());
+            Register(new PaintbombItem());
             Register(Generic = new GenericItem());
         }
 

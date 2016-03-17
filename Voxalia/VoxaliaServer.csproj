@@ -101,6 +101,7 @@
     <Compile Include="ServerGame\EntitySystem\GlowstickEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\ItemEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\ModelEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\PaintBombEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PrimitiveEntity.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\FistItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BreadcrumbItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\Explosivegrenadeitem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\PaintbombItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\PaintbrushItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\SmokegrenadeItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\GlowstickItem.cs" />
