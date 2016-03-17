@@ -66,7 +66,13 @@ namespace Voxalia.ServerGame.WorldSystem
             return ch.GetBlockAt(x, y, z);
         }
 
-        public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, byte paint = 0, byte locdat = (byte)BlockFlags.EDITED, bool broadcast = true, bool regen = true, bool override_protection = false)
+        public void SetBlockMaterial(Location pos, BlockInternal bi, bool broadcast = true, bool regen = true, bool override_protection = false)
+        {
+            SetBlockMaterial(pos, bi.Material, bi.BlockData, bi.BlockPaint, bi.BlockLocalData, bi.Damage, broadcast, regen, override_protection);
+        }
+
+        public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, byte paint = 0, byte locdat = (byte)BlockFlags.EDITED, BlockDamage damage = BlockDamage.NONE,
+            bool broadcast = true, bool regen = true, bool override_protection = false)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos));
             lock (ch.EditSessionLock)
@@ -78,12 +84,13 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     return;
                 }
-                ch.SetBlockAt(x, y, z, new BlockInternal((ushort)mat, dat, paint, locdat));
+                BlockInternal bi = new BlockInternal((ushort)mat, dat, paint, locdat) { Damage = damage };
+                ch.SetBlockAt(x, y, z, bi);
                 ch.LastEdited = GlobalTickTime;
                 if (broadcast)
                 {
                     // TODO: Send per-person based on chunk awareness details
-                    ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { mat }, new byte[] { dat }, new byte[] { paint }), ch.WorldPosition);
+                    ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new ushort[] { bi._BlockMaterialInternal }, new byte[] { dat }, new byte[] { paint }), ch.WorldPosition);
                 }
             }
         }
@@ -126,7 +133,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     SurroundBlockPhysics(pos);
                     if (regentrans)
                     {
-                        ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new Material[] { Material.AIR }, new byte[] { 0 }, new byte[] { 0 }), ch.WorldPosition);
+                        ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new ushort[] { 0 }, new byte[] { 0 }, new byte[] { 0 }), ch.WorldPosition);
                     }
                     BlockItemEntity bie = new BlockItemEntity(this, new BlockInternal((ushort)mat, bi.BlockData, bi.BlockPaint, 0), pos);
                     SpawnEntity(bie);

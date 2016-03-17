@@ -16,14 +16,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             DataReader dr = new DataReader(datums);
             int len = dr.ReadInt();
             List<Location> locs = new List<Location>();
-            List<Material> mats = new List<Material>();
+            List<ushort> mats = new List<ushort>();
             for (int i = 0; i < len; i++)
             {
                 locs.Add(Location.FromBytes(dr.ReadBytes(12), 0));
             }
             for (int i = 0; i < len; i++)
             {
-                mats.Add((Material)Utilities.BytesToUshort(dr.ReadBytes(2)));
+                mats.Add(Utilities.BytesToUshort(dr.ReadBytes(2)));
             }
             byte[] dats = dr.ReadBytes(len);
             byte[] paints = dr.ReadBytes(len);

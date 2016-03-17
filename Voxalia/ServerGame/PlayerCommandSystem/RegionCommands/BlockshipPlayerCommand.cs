@@ -49,7 +49,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
             BlockInternal[] blocksin = new BlockInternal[xwidth * ywidth * zwidth];
             foreach (KeyValuePair<Location, BlockInternal> block in blocks)
             {
-                entry.Player.TheRegion.SetBlockMaterial(block.Key, Material.AIR, 0, 0, 1, true, true, true);
+                entry.Player.TheRegion.SetBlockMaterial(block.Key, Material.AIR, 0, 0, 1, 0, true, true, true);
                 blocksin[(int)(block.Key.Z - zsub) * ywidth * xwidth + (int)(block.Key.Y - ysub) * xwidth + (int)(block.Key.X - xsub)] = block.Value;
             }
             BlockGroupEntity bge = new BlockGroupEntity(extent.Min, tm, entry.Player.TheRegion, blocksin, xwidth, ywidth, zwidth);
@@ -85,7 +85,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                     continue;
                 }
                 blocks.Add(new KeyValuePair<Location, BlockInternal>(c, bi));
-                tregion.SetBlockMaterial(c, (Material)bi.BlockMaterial, bi.BlockData, bi.BlockPaint, (byte)(bi.BlockLocalData | (byte)BlockFlags.PROTECTED), false, false);
+                tregion.SetBlockMaterial(c, (Material)bi.BlockMaterial, bi.BlockData, bi.BlockPaint, (byte)(bi.BlockLocalData | (byte)BlockFlags.PROTECTED), bi.Damage, false, false);
                 extent.Include(c);
                 foreach (Location dir in FloodDirs)
                 {

@@ -35,10 +35,71 @@ namespace Voxalia.Shared
         }
 
         /// <summary>
-        /// The material represented by this block.
-        /// Currently a directly read field, may be replaced with a getter that shortens the bit count.
+        /// The internal material and damage data of this block.
         /// </summary>
-        public ushort BlockMaterial;
+        public ushort _BlockMaterialInternal;
+
+        /// <summary>
+        /// The material represented by this block.
+        /// This is a custom getter, that returns a small portion of the potential space.
+        /// </summary>
+        public ushort BlockMaterial
+        {
+            get
+            {
+                return (ushort)(_BlockMaterialInternal & (16384 - 1));
+            }
+            set
+            {
+                _BlockMaterialInternal = (ushort)(value | (DamageData * 16384));
+            }
+        }
+
+        /// <summary>
+        /// The material represented by this block.
+        /// This is a custom getter, that returns a small portion of the potential space.
+        /// </summary>
+        public Material Material
+        {
+            get
+            {
+                return (Material)BlockMaterial;
+            }
+            set
+            {
+                BlockMaterial = (ushort)value;
+            }
+        }
+
+        /// <summary>
+        /// The damage data (0/1/2/3) of this block.
+        /// </summary>
+        public byte DamageData
+        {
+            get
+            {
+                return (byte)((_BlockMaterialInternal & (16384 | (16384 * 2))) / (16384));
+            }
+            set
+            {
+                _BlockMaterialInternal = (ushort)(BlockMaterial | (value * 16384));
+            }
+        }
+
+        /// <summary>
+        /// The damage data (NONE/SOME/MUCH/FULL) of this block.
+        /// </summary>
+        public BlockDamage Damage
+        {
+            get
+            {
+                return (BlockDamage)DamageData;
+            }
+            set
+            {
+                DamageData = (byte)value;
+            }
+        }
 
         /// <summary>
         /// The data represented by this block.
@@ -62,13 +123,13 @@ namespace Voxalia.Shared
         /// <summary>
         /// Quickly constructs a basic BlockInternal from exact internal data input.
         /// </summary>
-        /// <param name="mat">The material.</param>
+        /// <param name="mat">The material + damage data.</param>
         /// <param name="dat">The block data.</param>
         /// <param name="paint">The block paint.</param>
         /// <param name="loc">The block local data.</param>
         public BlockInternal(ushort mat, byte dat, byte paint, byte loc)
         {
-            BlockMaterial = mat;
+            _BlockMaterialInternal = mat;
             BlockData = dat;
             BlockPaint = paint;
             BlockLocalData = loc;
@@ -96,7 +157,7 @@ namespace Voxalia.Shared
         /// </summary>
         public uint GetItemDatumU()
         {
-            return (uint)BlockMaterial | ((uint)BlockData * 256u * 256u) | ((uint)BlockPaint * 256u * 256u * 256u);
+            return (uint)_BlockMaterialInternal | ((uint)BlockData * 256u * 256u) | ((uint)BlockPaint * 256u * 256u * 256u);
         }
 
         /// <summary>

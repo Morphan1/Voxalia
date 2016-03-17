@@ -43,7 +43,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// How many materials there theoretically can be.
         /// </summary>
-        MAX = ushort.MaxValue
+        MAX = 16384
     }
 
     /// <summary>

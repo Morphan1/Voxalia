@@ -49,7 +49,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 BlockInternal[] bi = new BlockInternal[xwidth * ywidth * zwidth];
                 for (int i = 0; i < bi.Length; i++)
                 {
-                    bi[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(data, start + i * 2, 2));
+                    bi[i]._BlockMaterialInternal = Utilities.BytesToUshort(Utilities.BytesPartial(data, start + i * 2, 2));
                     bi[i].BlockData = data[start + bi.Length * 2 + i];
                     bi[i].BlockPaint = data[start + bi.Length * 3 + i];
                 }

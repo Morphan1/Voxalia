@@ -260,7 +260,7 @@ namespace Voxalia.ServerGame.WorldSystem
             Flags = (ChunkFlags)flags & ~(ChunkFlags.POPULATING);
             for (int i = 0; i < BlocksInternal.Length; i++)
             {
-                BlocksInternal[i].BlockMaterial = Utilities.BytesToUshort(Utilities.BytesPartial(bytes, 4 + 4 + 4 + i * 2, 2));
+                BlocksInternal[i]._BlockMaterialInternal = Utilities.BytesToUshort(Utilities.BytesPartial(bytes, 4 + 4 + 4 + i * 2, 2));
                 BlocksInternal[i].BlockData = bytes[4 + 4 + 4 + BlocksInternal.Length * 2 + i];
                 BlocksInternal[i].BlockLocalData = bytes[4 + 4 + 4 + BlocksInternal.Length * 3 + i];
                 BlocksInternal[i].BlockPaint = bytes[4 + 4 + 4 + BlocksInternal.Length * 4 + i];

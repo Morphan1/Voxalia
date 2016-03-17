@@ -16,6 +16,14 @@ namespace Voxalia.Shared
         ONETWENTYEIGHT = 128
     }
 
+    public enum BlockDamage : byte
+    {
+        NONE = 0,
+        SOME = 1,
+        MUCH = 2,
+        FULL = 3
+    }
+
     public enum StatusOperation : byte
     {
         NONE = 0,

@@ -123,7 +123,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         if ((Material)bi.BlockMaterial != Material.AIR)
                         {
                             bi.BlockLocalData = (byte)(bi.BlockLocalData | ((int)BlockFlags.EDITED));
-                            tregion.SetBlockMaterial(corner + new Location(x, y, z), (Material)bi.BlockMaterial, bi.BlockData, bi.BlockPaint, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED));
+                            tregion.SetBlockMaterial(corner + new Location(x, y, z), (Material)bi.BlockMaterial, bi.BlockData, bi.BlockPaint, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED), bi.Damage);
                         }
                     }
                 }

@@ -60,7 +60,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 float h = entry.Player.TheRegion.Generator.GetHeight(entry.Player.TheRegion.Seed, entry.Player.TheRegion.Seed2, entry.Player.TheRegion.Seed3,
                     entry.Player.TheRegion.Seed4, entry.Player.TheRegion.Seed5, (float)posBlock.X, (float)posBlock.Y, (float)posBlock.Z, out biome);
                 BlockInternal bi = entry.Player.TheRegion.GetBlockInternal_NoLoad((entry.Player.GetPosition() + new Location(0, 0, -0.05f)).GetBlockLocation());
-                entry.Player.Network.SendMessage("Mat: " + ((Material)bi.BlockMaterial) + ", data: " + ((int)bi.BlockData) + ", locDat: " + ((int)bi.BlockLocalData)
+                entry.Player.Network.SendMessage("Mat: " + bi.Material + ", data: " + ((int)bi.BlockData) + ", locDat: " + ((int)bi.BlockLocalData) + ", Damage: " + bi.Damage
                     + ", xp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXP() + ", xm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXM()
                     + ", yp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYP() + ", ym: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYM()
                     + ", zp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesTOP() + ", zm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesBOTTOM());
@@ -168,6 +168,21 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 its.SharedAttributes["color"] = col;
                 its.DrawColor = Colors.ForByte(col);
                 entry.Player.Items.GiveItem(its);
+            }
+            else if (arg0 == "blockDamage" && entry.InputArguments.Count > 1)
+            {
+                BlockDamage damage;
+                if (Enum.TryParse(entry.InputArguments[1], out damage))
+                {
+                    Location posBlock = (entry.Player.GetPosition() + new Location(0, 0, -0.05f)).GetBlockLocation();
+                    BlockInternal bi = entry.Player.TheRegion.GetBlockInternal(posBlock);
+                    bi.Damage = damage;
+                    entry.Player.TheRegion.SetBlockMaterial(posBlock, bi);
+                }
+                else
+                {
+                    entry.Player.Network.SendMessage("/devel <subcommand> [ values ... ]");
+                }
             }
             else
             {

@@ -368,7 +368,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 // TODO: Ray-trace the block?
                 BlockInternal bi = GetBlockInternal(loc);
-                SetBlockMaterial(loc, (Material)bi.BlockMaterial, bi.BlockData, bcol, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED));
+                SetBlockMaterial(loc, (Material)bi.BlockMaterial, bi.BlockData, bcol, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED), bi.Damage);
             }
             System.Drawing.Color ccol = Colors.ForByte(bcol);
             ParticleEffectPacketOut pepo = new ParticleEffectPacketOut(ParticleEffectNetType.PAINT_BOMB, rad + 15, pos, new Location(ccol.R / 255f, ccol.G / 255f, ccol.B / 255f));
