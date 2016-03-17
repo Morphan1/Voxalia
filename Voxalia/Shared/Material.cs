@@ -36,10 +36,11 @@ namespace Voxalia.Shared
         DIRTY_WATER = 25,
         PLANKS_OAK = 26,
         GLASS_WINDOW = 27,
+        OIL = 28,
         /// <summary>
         /// How many materials there are by default. Only for use with internal pre-generation, or direct handling of this enumeration (shouldn't happen often.)
         /// </summary>
-        NUM_DEFAULT = 28,
+        NUM_DEFAULT = 29,
         /// <summary>
         /// How many materials there theoretically can be.
         /// </summary>
@@ -56,7 +57,7 @@ namespace Voxalia.Shared
         /// Warning: Do not set this too high, this is used for texture block generation, and this * texture_size^2 will be taken in the vRAM!
         /// For the same reason, do not set it too low!
         /// </summary>
-        public static int MAX_THEORETICAL_MATERIALS = 64;
+        public static int MAX_THEORETICAL_MATERIALS = 128;
 
         /// <summary>
         /// All material data known to this engine.
@@ -94,6 +95,7 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.DIRTY_WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.35f },
                 new MaterialInfo((int)Material.PLANKS_OAK) { SpeedMod = 1.15f, Sound = MaterialSound.WOOD, BreakTime = 1f },
                 new MaterialInfo((int)Material.GLASS_WINDOW) { SpeedMod = 1.1f, Sound = MaterialSound.METAL, Hardness = 5, BreakTime = 1, Opaque = false, LightDamage = 0.05f },
+                new MaterialInfo((int)Material.OIL) { Solidity = MaterialSolidity.LIQUID, FogColor = new Location(0, 0, 0), Hardness = 5, BreakTime = 0.2f, Spreads = true },
             };
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.TOP] = MAX_THEORETICAL_MATERIALS - 1; // grass (top)
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
