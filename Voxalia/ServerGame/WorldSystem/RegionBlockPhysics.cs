@@ -43,7 +43,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void PhysicsSetBlock(Location block, Material mat, byte dat = 0, byte paint = 0, BlockDamage damage = 0)
         {
-            SetBlockMaterial(block, mat, dat, paint, 1, damage);
+            SetBlockMaterial(block, mat, dat, paint, (byte)(BlockFlags.EDITED | BlockFlags.NEEDS_RECALC), damage);
             TheServer.Schedule.ScheduleSyncTask(() => { SurroundBlockPhysics(block); }, 0.1);
         }
 
@@ -70,9 +70,13 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void RunBlockPhysics(Location block)
         {
-            // TODO: Avoid re-physicsing a block twice in one tick?
             block = block.GetBlockLocation();
             BlockInternal c = GetBlockInternal(block);
+            if (((BlockFlags)c.BlockLocalData).HasFlag(BlockFlags.NEEDS_RECALC))
+            {
+                c.BlockLocalData = (byte)(c.BlockLocalData & ~((byte)BlockFlags.NEEDS_RECALC));
+                SetBlockMaterial(block, c, false, false, true);
+            }
             Material cmat = (Material)c.BlockMaterial;
             if (cmat.ShouldSpread())
             {
@@ -105,101 +109,101 @@ namespace Voxalia.ServerGame.WorldSystem
                     }
                     else if (mzm == cmat && zm.BlockData != 0)
                     {
-                        CombineWater(remainingperc, cmat, remPercFor(zm.BlockData), block, lzm);
+                        CombineWater(remainingperc, cmat, remPercFor(zm.BlockData), block, lzm, c.BlockPaint);
                     }
                     else if (mxp == Material.AIR && myp == Material.AIR && mxm == Material.AIR && mym == Material.AIR)
                     {
                         if (remainingperc == 100)
                         {
-                            PhysicsSetBlock(lxp, cmat, 5);
-                            PhysicsSetBlock(lxm, cmat, 5);
-                            PhysicsSetBlock(lyp, cmat, 5);
-                            PhysicsSetBlock(lym, cmat, 5);
-                            PhysicsSetBlock(block, cmat, 4);
+                            PhysicsSetBlock(lxp, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(lxm, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(lyp, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(lym, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(block, cmat, 4, c.BlockPaint);
                         }
                         else if (remainingperc == 84)
                         {
-                            PhysicsSetBlock(lxp, cmat, 5);
-                            PhysicsSetBlock(lxm, cmat, 5);
-                            PhysicsSetBlock(lyp, cmat, 5);
-                            PhysicsSetBlock(lym, cmat, 5);
-                            PhysicsSetBlock(block, cmat, 5);
+                            PhysicsSetBlock(lxp, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(lxm, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(lyp, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(lym, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(block, cmat, 5, c.BlockPaint);
                         }
                         else if (remainingperc == 68)
                         {
-                            PhysicsSetBlock(lxp, cmat, 5);
-                            PhysicsSetBlock(lxm, cmat, 5);
-                            PhysicsSetBlock(lyp, cmat, 5);
-                            PhysicsSetBlock(block, cmat, 5);
+                            PhysicsSetBlock(lxp, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(lxm, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(lyp, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(block, cmat, 5, c.BlockPaint);
                         }
                         else if (remainingperc == 50)
                         {
-                            PhysicsSetBlock(lxp, cmat, 5);
-                            PhysicsSetBlock(lxm, cmat, 5);
-                            PhysicsSetBlock(block, cmat, 5);
+                            PhysicsSetBlock(lxp, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(lxm, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(block, cmat, 5, c.BlockPaint);
                         }
                         else if (remainingperc == 34)
                         {
-                            PhysicsSetBlock(lxp, cmat, 5);
-                            PhysicsSetBlock(block, cmat, 5);
+                            PhysicsSetBlock(lxp, cmat, 5, c.BlockPaint);
+                            PhysicsSetBlock(block, cmat, 5, c.BlockPaint);
                         }
                         // 13 doesn't move!
                     }
                     else if (mxp == Material.AIR && myp == Material.AIR && mxm == Material.AIR)
                     {
-                        LiquidSpread3(block, cmat, lxp, lyp, lxm, remainingperc);
+                        LiquidSpread3(block, cmat, lxp, lyp, lxm, remainingperc, c.BlockPaint);
                     }
                     else if (mxp == Material.AIR && myp == Material.AIR && mym == Material.AIR)
                     {
-                        LiquidSpread3(block, cmat, lxp, lyp, lym, remainingperc);
+                        LiquidSpread3(block, cmat, lxp, lyp, lym, remainingperc, c.BlockPaint);
                     }
                     else if (mxp == Material.AIR && mym == Material.AIR && mxm == Material.AIR)
                     {
-                        LiquidSpread3(block, cmat, lxp, lym, lxm, remainingperc);
+                        LiquidSpread3(block, cmat, lxp, lym, lxm, remainingperc, c.BlockPaint);
                     }
                     else if (mym == Material.AIR && myp == Material.AIR && mxm == Material.AIR)
                     {
-                        LiquidSpread3(block, cmat, lym, lyp, lxm, remainingperc);
+                        LiquidSpread3(block, cmat, lym, lyp, lxm, remainingperc, c.BlockPaint);
                     }
                     else if (mym == Material.AIR && myp == Material.AIR)
                     {
-                        LiquidSpread2(block, cmat, lym, lyp, remainingperc);
+                        LiquidSpread2(block, cmat, lym, lyp, remainingperc, c.BlockPaint);
                     }
                     else if (mym == Material.AIR && mxp == Material.AIR)
                     {
-                        LiquidSpread2(block, cmat, lym, lxp, remainingperc);
+                        LiquidSpread2(block, cmat, lym, lxp, remainingperc, c.BlockPaint);
                     }
                     else if (mym == Material.AIR && mxm == Material.AIR)
                     {
-                        LiquidSpread2(block, cmat, lym, lxm, remainingperc);
+                        LiquidSpread2(block, cmat, lym, lxm, remainingperc, c.BlockPaint);
                     }
                     else if (myp == Material.AIR && mxm == Material.AIR)
                     {
-                        LiquidSpread2(block, cmat, lyp, lxm, remainingperc);
+                        LiquidSpread2(block, cmat, lyp, lxm, remainingperc, c.BlockPaint);
                     }
                     else if (myp == Material.AIR && mxp == Material.AIR)
                     {
-                        LiquidSpread2(block, cmat, lyp, lxp, remainingperc);
+                        LiquidSpread2(block, cmat, lyp, lxp, remainingperc, c.BlockPaint);
                     }
                     else if (mxp == Material.AIR && mxm == Material.AIR)
                     {
-                        LiquidSpread2(block, cmat, lxp, lxm, remainingperc);
+                        LiquidSpread2(block, cmat, lxp, lxm, remainingperc, c.BlockPaint);
                     }
                     else if (mxp == Material.AIR)
                     {
-                        LiquidSpread1(block, cmat, lxp, remainingperc);
+                        LiquidSpread1(block, cmat, lxp, remainingperc, c.BlockPaint);
                     }
                     else if (mxm == Material.AIR)
                     {
-                        LiquidSpread1(block, cmat, lxm, remainingperc);
+                        LiquidSpread1(block, cmat, lxm, remainingperc, c.BlockPaint);
                     }
                     else if (myp == Material.AIR)
                     {
-                        LiquidSpread1(block, cmat, lyp, remainingperc);
+                        LiquidSpread1(block, cmat, lyp, remainingperc, c.BlockPaint);
                     }
                     else if (mym == Material.AIR)
                     {
-                        LiquidSpread1(block, cmat, lym, remainingperc);
+                        LiquidSpread1(block, cmat, lym, remainingperc, c.BlockPaint);
                     }
                     else
                     {
@@ -209,49 +213,49 @@ namespace Voxalia.ServerGame.WorldSystem
                         int rym = remPercFor(ym.BlockData);
                         if (mxp == cmat && rxp < remainingperc)
                         {
-                            CombineWater(remainingperc, cmat, rxp, block, lxp);
+                            CombineWater(remainingperc, cmat, rxp, block, lxp, c.BlockPaint);
                         }
                         else if (mxm == cmat && rxm < remainingperc)
                         {
-                            CombineWater(remainingperc, cmat, rxm, block, lxm);
+                            CombineWater(remainingperc, cmat, rxm, block, lxm, c.BlockPaint);
                         }
                         else if (myp == cmat && ryp < remainingperc)
                         {
-                            CombineWater(remainingperc, cmat, ryp, block, lyp);
+                            CombineWater(remainingperc, cmat, ryp, block, lyp, c.BlockPaint);
                         }
                         else if (mym == cmat && rym < remainingperc)
                         {
-                            CombineWater(remainingperc, cmat, rym, block, lym);
+                            CombineWater(remainingperc, cmat, rym, block, lym, c.BlockPaint);
                         }
                     }
                 }
             }
         }
 
-        void CombineWater(int rempart, Material cmat, int remperc, Location block, Location one)
+        void CombineWater(int rempart, Material cmat, int remperc, Location block, Location one, byte paint)
         {
             // TODO: Simplify!
             if (remperc == 84)
             {
                 if (rempart == 100)
                 {
-                    PhysicsSetBlock(block, cmat, 1);
+                    PhysicsSetBlock(block, cmat, 1, paint);
                 }
                 else if (rempart == 84)
                 {
-                    PhysicsSetBlock(block, cmat, 2);
+                    PhysicsSetBlock(block, cmat, 2, paint);
                 }
                 else if (rempart == 68)
                 {
-                    PhysicsSetBlock(block, cmat, 3);
+                    PhysicsSetBlock(block, cmat, 3, paint);
                 }
                 else if (rempart == 50)
                 {
-                    PhysicsSetBlock(block, cmat, 4);
+                    PhysicsSetBlock(block, cmat, 4, paint);
                 }
                 else if (rempart == 34)
                 {
-                    PhysicsSetBlock(block, cmat, 5);
+                    PhysicsSetBlock(block, cmat, 5, paint);
                 }
                 else if (rempart == 13)
                 {
@@ -263,157 +267,191 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (rempart == 100)
                 {
-                    PhysicsSetBlock(block, cmat, 2);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(block, cmat, 2, paint);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 84)
                 {
-                    PhysicsSetBlock(block, cmat, 3);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(block, cmat, 3, paint);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 68)
                 {
-                    PhysicsSetBlock(block, cmat, 4);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(block, cmat, 4, paint);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 50)
                 {
-                    PhysicsSetBlock(block, cmat, 5);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(block, cmat, 5, paint);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 34)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 13)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 1);
+                    PhysicsSetBlock(one, cmat, 1, paint);
                 }
             }
             else if (remperc == 50)
             {
                 if (rempart == 100)
                 {
-                    PhysicsSetBlock(block, cmat, 3);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(block, cmat, 3, paint);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 84)
                 {
-                    PhysicsSetBlock(block, cmat, 4);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(block, cmat, 4, paint);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 68)
                 {
-                    PhysicsSetBlock(block, cmat, 5);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(block, cmat, 5, paint);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 50)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 34)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 1);
+                    PhysicsSetBlock(one, cmat, 1, paint);
                 }
                 else if (rempart == 13)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 2);
+                    PhysicsSetBlock(one, cmat, 2, paint);
                 }
             }
             else if (remperc == 34)
             {
                 if (rempart == 100)
                 {
-                    PhysicsSetBlock(block, cmat, 4);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(block, cmat, 4, paint);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 84)
                 {
-                    PhysicsSetBlock(block, cmat, 5);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(block, cmat, 5, paint);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 68)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 50)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 1);
+                    PhysicsSetBlock(one, cmat, 1, paint);
                 }
                 else if (rempart == 34)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 2);
+                    PhysicsSetBlock(one, cmat, 2, paint);
                 }
                 else if (rempart == 13)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 3);
+                    PhysicsSetBlock(one, cmat, 3, paint);
                 }
             }
             else if (remperc == 13)
             {
                 if (rempart == 100)
                 {
-                    PhysicsSetBlock(block, cmat, 5);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(block, cmat, 5, paint);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 84)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 0);
+                    PhysicsSetBlock(one, cmat, 0, paint);
                 }
                 else if (rempart == 68)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 1);
+                    PhysicsSetBlock(one, cmat, 1, paint);
                 }
                 else if (rempart == 50)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 2);
+                    PhysicsSetBlock(one, cmat, 2, paint);
                 }
                 else if (rempart == 34)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 3);
+                    PhysicsSetBlock(one, cmat, 3, paint);
                 }
                 else if (rempart == 13)
                 {
                     PhysicsSetBlock(block, Material.AIR);
-                    PhysicsSetBlock(one, cmat, 4);
+                    PhysicsSetBlock(one, cmat, 4, paint);
                 }
             }
         }
 
-        void LiquidSpread1(Location block, Material cmat, Location one, float remainingperc)
+        void LiquidSpread1(Location block, Material cmat, Location one, float remainingperc, byte paint)
         {
             if (remainingperc == 100)
             {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(block, cmat, 1);
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 1, paint);
             }
             else if (remainingperc == 84)
             {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(block, cmat, 2);
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 2, paint);
             }
             else if (remainingperc == 68)
             {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(block, cmat, 3);
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 3, paint);
             }
             else if (remainingperc == 50)
             {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(block, cmat, 4);
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 4, paint);
+            }
+            else if (remainingperc == 34)
+            {
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 5, paint);
+            }
+            // 13 doesn't move!
+        }
+
+        void LiquidSpread2(Location block, Material cmat, Location one, Location two, float remainingperc, byte paint)
+        {
+            if (remainingperc == 100)
+            {
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(two, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 2, paint);
+            }
+            else if (remainingperc == 84)
+            {
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(two, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 3, paint);
+            }
+            else if (remainingperc == 68)
+            {
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(two, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 4, paint);
+            }
+            else if (remainingperc == 50)
+            {
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(two, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 5, paint);
             }
             else if (remainingperc == 34)
             {
@@ -423,73 +461,39 @@ namespace Voxalia.ServerGame.WorldSystem
             // 13 doesn't move!
         }
 
-        void LiquidSpread2(Location block, Material cmat, Location one, Location two, float remainingperc)
+        void LiquidSpread3(Location block, Material cmat, Location one, Location two, Location three, float remainingperc, byte paint)
         {
             if (remainingperc == 100)
             {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(two, cmat, 5);
-                PhysicsSetBlock(block, cmat, 2);
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(two, cmat, 5, paint);
+                PhysicsSetBlock(three, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 3, paint);
             }
             else if (remainingperc == 84)
             {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(two, cmat, 5);
-                PhysicsSetBlock(block, cmat, 3);
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(two, cmat, 5, paint);
+                PhysicsSetBlock(three, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 4, paint);
             }
             else if (remainingperc == 68)
             {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(two, cmat, 5);
-                PhysicsSetBlock(block, cmat, 4);
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(two, cmat, 5, paint);
+                PhysicsSetBlock(three, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 5, paint);
             }
             else if (remainingperc == 50)
             {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(two, cmat, 5);
-                PhysicsSetBlock(block, cmat, 5);
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(two, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 5, paint);
             }
             else if (remainingperc == 34)
             {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(block, cmat, 5);
-            }
-            // 13 doesn't move!
-        }
-
-        void LiquidSpread3(Location block, Material cmat, Location one, Location two, Location three, float remainingperc)
-        {
-            if (remainingperc == 100)
-            {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(two, cmat, 5);
-                PhysicsSetBlock(three, cmat, 5);
-                PhysicsSetBlock(block, cmat, 3);
-            }
-            else if (remainingperc == 84)
-            {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(two, cmat, 5);
-                PhysicsSetBlock(three, cmat, 5);
-                PhysicsSetBlock(block, cmat, 4);
-            }
-            else if (remainingperc == 68)
-            {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(two, cmat, 5);
-                PhysicsSetBlock(three, cmat, 5);
-                PhysicsSetBlock(block, cmat, 5);
-            }
-            else if (remainingperc == 50)
-            {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(two, cmat, 5);
-                PhysicsSetBlock(block, cmat, 5);
-            }
-            else if (remainingperc == 34)
-            {
-                PhysicsSetBlock(one, cmat, 5);
-                PhysicsSetBlock(block, cmat, 5);
+                PhysicsSetBlock(one, cmat, 5, paint);
+                PhysicsSetBlock(block, cmat, 5, paint);
             }
             // 13 doesn't move!
         }
