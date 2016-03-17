@@ -31,10 +31,13 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         FILLED3 = 16,
         /// <summary>
+        /// The block has some form of filling.
+        /// </summary>
+        FILLED4 = 32,
+        /// <summary>
         /// The block needs to be recalculated (physics, liquid movement, etc. could be relevant.)
         /// </summary>
-        NEEDS_RECALC = 32,
-        SIXTYFOUR = 64,
+        NEEDS_RECALC = 64,
         /// <summary>
         /// The block cannot be edited by users.
         /// </summary>
@@ -47,7 +50,8 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             return ((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.FILLED)
                 || ((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.FILLED2)
-                || ((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.FILLED3);
+                || ((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.FILLED3)
+                || ((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.FILLED4);
         }
 
         public static bool WasEdited(this BlockInternal bi)
@@ -65,53 +69,110 @@ namespace Voxalia.ServerGame.WorldSystem
             bool f1 = ((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.FILLED);
             bool f2 = ((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.FILLED2);
             bool f3 = ((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.FILLED3);
-            if (f1)
+            bool f4 = ((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.FILLED4);
+            if (f4)
             {
-                if (f2)
+                if (f1)
                 {
-                    if (f3)
+                    if (f2)
                     {
-                        return FillType.WATER;
+                        if (f3)
+                        {
+                            return FillType.MUD;
+                        }
+                        else
+                        {
+                            return FillType.STEAM;
+                        }
                     }
                     else
                     {
-                        return FillType.BAD_WATER;
+                        if (f3)
+                        {
+                            return FillType.HEAVY_GAS;
+                        }
+                        else
+                        {
+                            return FillType.POISON_GAS;
+                        }
                     }
                 }
                 else
                 {
-                    if (f3)
+                    if (f2)
                     {
-                        return FillType.OIL;
+                        if (f3)
+                        {
+                            return FillType.FRESH_WATER;
+                        }
+                        else
+                        {
+                            return FillType.HELIUM_GAS;
+                        }
                     }
                     else
                     {
-                        return FillType.LAVA;
+                        if (f3)
+                        {
+                            return FillType.LIQUID_NITROGEN;
+                        }
+                        else
+                        {
+                            return FillType.BOILING_WATER;
+                        }
                     }
                 }
             }
             else
             {
-                if (f2)
+                if (f1)
                 {
-                    if (f3)
+                    if (f2)
                     {
-                        return FillType.POISON;
+                        if (f3)
+                        {
+                            return FillType.WATER;
+                        }
+                        else
+                        {
+                            return FillType.BAD_WATER;
+                        }
                     }
                     else
                     {
-                        return FillType.BLOOD;
+                        if (f3)
+                        {
+                            return FillType.OIL;
+                        }
+                        else
+                        {
+                            return FillType.LAVA;
+                        }
                     }
                 }
                 else
                 {
-                    if (f3)
+                    if (f2)
                     {
-                        return FillType.MUD;
+                        if (f3)
+                        {
+                            return FillType.POISON;
+                        }
+                        else
+                        {
+                            return FillType.BLOOD;
+                        }
                     }
                     else
                     {
-                        return FillType.NONE;
+                        if (f3)
+                        {
+                            return FillType.HONEY;
+                        }
+                        else
+                        {
+                            return FillType.NONE;
+                        }
                     }
                 }
             }
@@ -127,6 +188,14 @@ namespace Voxalia.ServerGame.WorldSystem
         LAVA = 4,
         POISON = 5,
         BLOOD = 6,
-        MUD = 7
+        HONEY = 7,
+        MUD = 8,
+        STEAM = 9,
+        HEAVY_GAS = 10,
+        POISON_GAS = 11,
+        FRESH_WATER = 12,
+        HELIUM_GAS = 13,
+        LIQUID_NITROGEN = 14,
+        BOILING_WATER = 15
     }
 }
