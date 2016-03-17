@@ -291,6 +291,44 @@ namespace Voxalia.ServerGame.EntitySystem
             TheRegion.SendToAll(new FlagEntityPacketOut(this, EntityFlag.MASS, PreFlyMass));
         }
 
+        public bool IsAFK;
+        public int TimeAFK;
+
+        public void MarkAFK()
+        {
+            IsAFK = true;
+            TheServer.SendToAll(new MessagePacketOut("^r^7#" + Name + "^r^7 is now AFK!")); // TODO: Message configurable, localized...
+        }
+
+        public void UnmarkAFK()
+        {
+            IsAFK = false;
+            TheServer.SendToAll(new MessagePacketOut("^r^7#" + Name + "^r^7 is no longer AFK!")); // TODO: Message configurable, localized...
+        }
+
+        /// <summary>
+        /// Called to indicate that the player is actively doing something (IE, not AFK!)
+        /// </summary>
+        public void NoteDidAction()
+        {
+            TimeAFK = 0;
+            if (IsAFK)
+            {
+                UnmarkAFK();
+            }
+        }
+
+        public void OncePerSecondTick()
+        {
+            TimeAFK++;
+            if (!IsAFK && TimeAFK >= 60) // TODO: Configurable timeout!
+            {
+                MarkAFK();
+            }
+        }
+
+        double opstt = 0;
+
         public override void Tick()
         {
             if (!IsSpawned)
@@ -302,6 +340,12 @@ namespace Voxalia.ServerGame.EntitySystem
                 return;
             }
             base.Tick();
+            opstt += TheRegion.Delta;
+            while (opstt > 1.0)
+            {
+                opstt -= 1.0;
+                OncePerSecondTick();
+            }
             ItemStack cit = Items.GetItemForSlot(Items.cItem);
             if (GetVelocity().LengthSquared() > 1) // TODO: Move animation to CharacterEntity
             {

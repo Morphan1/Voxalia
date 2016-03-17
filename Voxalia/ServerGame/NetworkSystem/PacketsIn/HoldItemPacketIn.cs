@@ -17,6 +17,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
                 Player.Network.SendPacket(new SetHeldItemPacketOut(Player.Items.cItem));
                 return true; // Permit but ignore
             }
+            Player.NoteDidAction();
             int dat = Utilities.BytesToInt(data);
             dat = dat % (Player.Items.Items.Count + 1);
             while (dat < 0)

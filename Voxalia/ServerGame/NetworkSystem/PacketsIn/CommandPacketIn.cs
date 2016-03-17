@@ -8,6 +8,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
+            Player.NoteDidAction();
             string[] datums = FileHandler.encoding.GetString(data).Split('\n');
             List<string> args =  datums.ToList();
             string cmd = args[0];

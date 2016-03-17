@@ -51,7 +51,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 entry.Player.Network.SendMessage("YOU: " + entry.Player.Name + ", tractionForce: " + entry.Player.CBody.TractionForce
                      + ", mass: " + entry.Player.CBody.Body.Mass + ", radius: " + entry.Player.CBody.BodyRadius + ", hasSupport: " + entry.Player.CBody.SupportFinder.HasSupport
-                     + ", hasTraction: " + entry.Player.CBody.SupportFinder.HasTraction);
+                     + ", hasTraction: " + entry.Player.CBody.SupportFinder.HasTraction + ", isAFK: " + entry.Player.IsAFK + ", timeAFK: " + entry.Player.TimeAFK);
             }
             else if (arg0 == "chunkDebug")
             {

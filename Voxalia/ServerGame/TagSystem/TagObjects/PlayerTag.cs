@@ -51,6 +51,25 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 case "health":
                     return new NumberTag(Internal.Health).Handle(data.Shrink());
                 // <--[tag]
+                // @Name PlayerTag.is_afk
+                // @Group Status
+                // @ReturnType BooleanTag
+                // @Returns whether the player is AFK (Away From Keyboard) currently.
+                // @Other this is detected as "no input whatsoever" from the player. Any number of things could potentially knock a player out of "AFK" status.
+                // -->
+                case "is_afk":
+                    return new BooleanTag(Internal.IsAFK).Handle(data.Shrink());
+                // <--[tag]
+                // @Name PlayerTag.afk_time
+                // @Group Status
+                // @ReturnType IntegerTag
+                // @Returns the amount of time the player has been AFK (Away From Keyboard) currently. This is a number in seconds.
+                // @Other this is detected as "no input whatsoever" from the player. Any number of things could potentially knock a player out of "AFK" status.
+                // @Example "mcmonkey" .afk_time could return "5".
+                // -->
+                case "afk_time":
+                    return new IntegerTag(Internal.TimeAFK).Handle(data.Shrink());
+                // <--[tag]
                 // @Name PlayerTag.held_item
                 // @Group Status
                 // @ReturnType ItemTag
