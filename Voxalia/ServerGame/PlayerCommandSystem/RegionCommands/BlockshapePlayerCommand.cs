@@ -14,7 +14,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
         {
             if (entry.InputArguments.Count < 1)
             {
-                entry.Player.Network.SendMessage("/blockshape <data> [color]");
+                entry.Player.Network.SendMessage("/blockshape <data> [color]"); // TODO: Color as separate command!
                 return;
             }
             byte dat = (byte)Utilities.StringToInt(entry.InputArguments[0]);

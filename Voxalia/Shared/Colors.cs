@@ -44,7 +44,7 @@ namespace Voxalia.Shared
         public static Color VERY_TRANSPARENT = Color.FromArgb(90, 255, 255, 255);
         public static Color MAGIC = Color.FromArgb(0, 255, 255, 255);
 
-        public static Dictionary<string, Color> KnownColorNames = new Dictionary<string, Color>();
+        public static Dictionary<string, byte> KnownColorNames = new Dictionary<string, byte>();
 
         public static Color[] KnownColorsArray = new Color[32];
 
@@ -61,6 +61,21 @@ namespace Voxalia.Shared
             int baseinp = input & (1 | 2 | 4 | 8 | 16);
             return KnownColorNamesArray[baseinp];
         }
+        
+        public static byte ForName(string name)
+        {
+            byte val;
+            if (byte.TryParse(name, out val))
+            {
+                return val;
+            }
+            name = name.ToUpperInvariant();
+            if (KnownColorNames.TryGetValue(name, out val))
+            {
+                return val;
+            }
+            return 0;
+        }
 
         static int inc = 0;
 
@@ -69,7 +84,7 @@ namespace Voxalia.Shared
 
         static int Register(string name, Color col)
         {
-            KnownColorNames.Add(name, col);
+            KnownColorNames.Add(name, (byte)inc);
             KnownColorNamesArray[inc] = name;
             KnownColorsArray[inc] = col;
             return inc++;

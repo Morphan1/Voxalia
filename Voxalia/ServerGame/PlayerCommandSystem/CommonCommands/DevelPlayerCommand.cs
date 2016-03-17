@@ -153,6 +153,14 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 entry.Player.Network.SendMessage("Intended tick rate: " + entry.Player.TheServer.CVars.g_fps.ValueI + ", actual tick rate (last second): " + entry.Player.TheServer.TPS);
             }
+            else if (arg0 == "paintBrush" && entry.InputArguments.Count > 1)
+            {
+                ItemStack its = entry.Player.TheServer.Items.GetItem("tools/paintbrush");
+                byte col = Colors.ForName(entry.InputArguments[1]);
+                its.SharedAttributes["color"] = col;
+                its.DrawColor = Colors.ForByte(col);
+                entry.Player.Items.GiveItem(its);
+            }
             else
             {
                 entry.Player.Network.SendMessage("/devel <subcommand> [ values ... ]");

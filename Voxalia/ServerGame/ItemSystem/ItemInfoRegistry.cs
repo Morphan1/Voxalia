@@ -13,6 +13,7 @@ namespace Voxalia.ServerGame.ItemSystem
         public ItemInfoRegistry()
         {
             Infos = new Dictionary<string, BaseItemInfo>();
+            // TODO: Organize - alphabetical?
             Register(new ExplodobowItem());
             Register(new BowItem());
             Register(new FlashLightItem());
@@ -33,6 +34,7 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new SmokemachineItem());
             Register(new SmokegrenadeItem());
             Register(new ExplosivegrenadeItem());
+            Register(new PaintbrushItem());
             Register(Generic = new GenericItem());
         }
 
