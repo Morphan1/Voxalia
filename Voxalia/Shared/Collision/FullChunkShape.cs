@@ -27,7 +27,8 @@ namespace Voxalia.Shared.Collision
         public ConvexShape ShapeAt(int x, int y, int z, out Vector3 offs)
         {
             Location loffs;
-            ConvexShape shape = (ConvexShape)BlockShapeRegistry.BSD[Blocks[BlockIndex(x, y, z)].BlockData].GetShape(out loffs);
+            BlockInternal bi = Blocks[BlockIndex(x, y, z)];
+            ConvexShape shape = (ConvexShape)BlockShapeRegistry.BSD[bi.BlockData].GetShape(bi.Damage, out loffs);
             offs = loffs.ToBVector();
             return shape;
         }
@@ -70,7 +71,7 @@ namespace Voxalia.Shared.Collision
                             if (solidness.HasFlag(((Material)bi.BlockMaterial).GetSolidity()))
                             {
                                 Location offs;
-                                EntityShape es = BlockShapeRegistry.BSD[bi.BlockData].GetShape(out offs);
+                                EntityShape es = BlockShapeRegistry.BSD[bi.BlockData].GetShape(bi.Damage, out offs);
                                 if (es == null)
                                 {
                                     continue;

@@ -18,7 +18,7 @@ namespace Voxalia.ServerGame.EntitySystem
             CGroup = CollisionUtil.Item;
             Original = orig;
             Location offset;
-            Shape = BlockShapeRegistry.BSD[orig.BlockData].GetShape(out offset);
+            Shape = BlockShapeRegistry.BSD[orig.BlockData].GetShape(orig.Damage, out offset);
             SetPosition(pos.GetBlockLocation() + offset);
         }
 

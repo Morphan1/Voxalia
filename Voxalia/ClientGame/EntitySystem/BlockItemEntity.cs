@@ -22,13 +22,13 @@ namespace Voxalia.ClientGame.EntitySystem
         public byte Paint;
         public double soundmaxrate = 0.2;
 
-        public BlockItemEntity(Region tregion, Material tmat, byte dat, byte tpaint)
+        public BlockItemEntity(Region tregion, Material tmat, byte dat, byte tpaint, BlockDamage damage)
             : base(tregion, false, true)
         {
             Mat = tmat;
             Dat = dat;
             Paint = tpaint;
-            Shape = BlockShapeRegistry.BSD[dat].GetShape(out Offset);
+            Shape = BlockShapeRegistry.BSD[dat].GetShape(damage, out Offset);
             SetMass(5);
         }
 

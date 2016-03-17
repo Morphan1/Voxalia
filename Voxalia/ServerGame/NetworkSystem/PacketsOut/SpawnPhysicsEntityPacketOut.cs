@@ -18,7 +18,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             }
             // TODO: LOL PLS CLEAN
             Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + 
-                (e is GlowstickEntity ? 4: (e is BlockGroupEntity ? bge.Blocks.Length * 4 + 1 :(e is BlockItemEntity ? 4: (e is ModelEntity ? 4 + 1: (e is GrenadeEntity ? 0: 0))))) + 4 + 1];
+                (e is GlowstickEntity ? 4: (e is BlockGroupEntity ? bge.Blocks.Length * 4 + 1 :(e is BlockItemEntity ? 5: (e is ModelEntity ? 4 + 1: (e is GrenadeEntity ? 0: 0))))) + 4 + 1];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
@@ -47,13 +47,13 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 new Location(1, 1, 1).ToBytes().CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             }
             // TODO: LOL PLS CLEAN
-            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is GlowstickEntity ? 5:
+            Data[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12] = (byte)(e is GlowstickEntity ? 5 :
                 (e is GrenadeEntity ? 6 :
                 (e is SlimeEntity ? 7 :
-                (e is BlockGroupEntity ? 4:
+                (e is BlockGroupEntity ? 4 :
                 (e is CharacterEntity ? 1 :
-                (e is BlockItemEntity ? 4:
-                (e is ModelEntity ? 2: 0)))))));
+                (e is BlockItemEntity ? 3 :
+                (e is ModelEntity ? 2 : 0)))))));
             int start = 4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1;
             if (e is BlockItemEntity)
             {
@@ -61,6 +61,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 Utilities.UshortToBytes(bie.Original.BlockMaterial).CopyTo(Data, start);
                 Data[start + 2] = bie.Original.BlockData;
                 Data[start + 3] = bie.Original.BlockPaint;
+                Data[start + 4] = bie.Original.DamageData;
             }
             else if (e is ModelEntity)
             {

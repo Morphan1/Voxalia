@@ -135,7 +135,7 @@ namespace Voxalia.Shared
 
         public Location OffsetCache;
 
-        public virtual EntityShape GetShape(out Location offset)
+        public virtual EntityShape GetShape(BlockDamage damage, out Location offset)
         {
             if (BlockShapeCache != null)
             {

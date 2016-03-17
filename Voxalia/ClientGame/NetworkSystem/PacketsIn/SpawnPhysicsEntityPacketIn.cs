@@ -38,7 +38,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 Material mat = (Material)Utilities.BytesToUshort(Utilities.BytesPartial(data, start, 2));
                 byte dat = data[start + 2];
                 byte tpa = data[start + 3];
-                BlockItemEntity bie = new BlockItemEntity(TheClient.TheRegion, mat, dat, tpa);
+                byte damage = data[start + 4];
+                BlockItemEntity bie = new BlockItemEntity(TheClient.TheRegion, mat, dat, tpa, (BlockDamage)damage);
                 ce = bie;
             }
             else if (type == 4)
