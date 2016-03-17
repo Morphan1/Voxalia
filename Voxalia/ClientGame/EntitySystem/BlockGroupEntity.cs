@@ -228,7 +228,8 @@ namespace Voxalia.ClientGame.EntitySystem
             List<OpenTK.Vector3> Vertices = new List<OpenTK.Vector3>(XWidth * YWidth * ZWidth);
             List<OpenTK.Vector3> Normals = new List<OpenTK.Vector3>(XWidth * YWidth * ZWidth);
             List<OpenTK.Vector3> TexCoords = new List<OpenTK.Vector3>(XWidth * YWidth * ZWidth);
-            List<OpenTK.Vector4> Colors = new List<OpenTK.Vector4>(XWidth * YWidth * ZWidth);
+            List<OpenTK.Vector4> Colrs = new List<OpenTK.Vector4>(XWidth * YWidth * ZWidth);
+            List<OpenTK.Vector4> TCOLs = new List<OpenTK.Vector4>(XWidth * YWidth * ZWidth);
             for (int x = 0; x < XWidth; x++)
             {
                 for (int y = 0; y < YWidth; y++)
@@ -253,58 +254,42 @@ namespace Voxalia.ClientGame.EntitySystem
                             bool yps = (yp.IsOpaque() || (rAS && (yp.BlockMaterial == c.BlockMaterial))) && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
                             bool yms = (ym.IsOpaque() || (rAS && (ym.BlockMaterial == c.BlockMaterial))) && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
                             Vector3 pos = new Vector3(x, y, z);
-                            List<Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
+                            List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
+                            List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[c.BlockData].GetNormals(pos, xps, xms, yps, yms, zps, zms);
+                            List<BEPUutilities.Vector3> tci = BlockShapeRegistry.BSD[c.BlockData].GetTCoords(pos, (Material)c.BlockMaterial, xps, xms, yps, yms, zps, zms);
                             for (int i = 0; i < vecsi.Count; i++)
                             {
-                                Vertices.Add(new OpenTK.Vector3(vecsi[i].X, vecsi[i].Y, vecsi[i].Z));
-                            }
-                            List<Vector3> normsi = BlockShapeRegistry.BSD[c.BlockData].GetNormals(pos, xps, xms, yps, yms, zps, zms);
-                            for (int i = 0; i < normsi.Count; i++)
-                            {
-                                Normals.Add(new OpenTK.Vector3(normsi[i].X, normsi[i].Y, normsi[i].Z));
-                            }
-                            List<Vector3> tci = BlockShapeRegistry.BSD[c.BlockData].GetTCoords(pos, (Material)c.BlockMaterial, xps, xms, yps, yms, zps, zms);
-                            for (int i = 0; i < tci.Count; i++)
-                            {
+                                // TODO: is PosMultiplier used correctly here?
+                                OpenTK.Vector3 vt = new OpenTK.Vector3(vecsi[i].X, vecsi[i].Y, vecsi[i].Z);
+                                Vertices.Add(vt);
+                                OpenTK.Vector3 nt = new OpenTK.Vector3(normsi[i].X, normsi[i].Y, normsi[i].Z);
+                                Normals.Add(nt);
                                 TexCoords.Add(new OpenTK.Vector3(tci[i].X, tci[i].Y, tci[i].Z));
-                            }
-                            if (vecsi.Count != normsi.Count || normsi.Count != tci.Count)
-                            {
-                                SysConsole.Output(OutputType.WARNING, "PROBLEM RENDERING BLOCKGROUP: v:" + vecsi.Count + ",n:" + normsi.Count + ",tci:" + tci.Count);
-                            }
-                            for (int i = 0; i < vecsi.Count; i++)
-                            {
-                                System.Drawing.Color tcol = Voxalia.Shared.Colors.ForByte(c.BlockPaint);
+                                Colrs.Add(new OpenTK.Vector4(1, 1, 1, 1));
+                                System.Drawing.Color tcol = Colors.ForByte(c.BlockPaint);
                                 if (tcol.A == 0)
                                 {
-                                    Random urand = new Random((int)(vecsi[i].X + vecsi[i].Y + vecsi[i].Z));
-                                    Colors.Add(new OpenTK.Vector4((float)urand.NextDouble(), (float)urand.NextDouble(), (float)urand.NextDouble(), 1f));
+                                    float r = SimplexNoise.Generate(vt.X / 10f, vt.Y / 10f, vt.Z / 10f);
+                                    float g = SimplexNoise.Generate((vt.X + 50f) / 10f, (vt.Y + 127f) / 10f, (vt.Z + 10f) / 10f);
+                                    float b = SimplexNoise.Generate((vt.X - 150f) / 10f, (vt.Y - 65f) / 10f, (vt.Z + 73f) / 10f);
+                                    TCOLs.Add(new OpenTK.Vector4(r, g, b, 1f));
                                 }
                                 else
                                 {
-                                    Colors.Add(new OpenTK.Vector4((tcol.R / 255f), (tcol.G / 255f), (tcol.B / 255f), 1f * (tcol.A / 255f)));
+                                    TCOLs.Add(new OpenTK.Vector4(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f, tcol.A / 255f));
                                 }
                             }
-                            if (!((Material)c.BlockMaterial).IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
+                            if (!c.IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
                             {
+                                int tf = Colrs.Count - vecsi.Count;
                                 for (int i = vecsi.Count - 1; i >= 0; i--)
                                 {
                                     Vertices.Add(new OpenTK.Vector3(vecsi[i].X, vecsi[i].Y, vecsi[i].Z));
-                                }
-                                for (int i = normsi.Count - 1; i >= 0; i--)
-                                {
-                                    Normals.Add(new OpenTK.Vector3(normsi[i].X, normsi[i].Y, normsi[i].Z));
-                                }
-                                for (int i = tci.Count - 1; i >= 0; i--)
-                                {
+                                    int tx = tf + i;
+                                    Colrs.Add(Colrs[tx]);
+                                    TCOLs.Add(TCOLs[tx]);
+                                    Normals.Add(new OpenTK.Vector3(-normsi[i].X, -normsi[i].Y, -normsi[i].Z));
                                     TexCoords.Add(new OpenTK.Vector3(tci[i].X, tci[i].Y, tci[i].Z));
-                                }
-                                // NOTE: Lights!
-                                {
-                                    for (int i = vecsi.Count - 1; i >= 0; i--)
-                                    {
-                                        Colors.Add(new OpenTK.Vector4(1f));
-                                    }
                                 }
                             }
                         }
@@ -329,7 +314,8 @@ namespace Voxalia.ClientGame.EntitySystem
             vbo.Vertices = Vertices;
             vbo.Normals = Normals;
             vbo.TexCoords = TexCoords;
-            vbo.Colors = Colors;
+            vbo.Colors = Colrs;
+            vbo.TCOLs = TCOLs;
             vbo.Indices = Indices;
             vbo.GenerateVBO();
         }

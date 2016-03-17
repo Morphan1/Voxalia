@@ -47,6 +47,7 @@ namespace Voxalia.ClientGame.EntitySystem
             vbo.TexCoords = new List<OpenTK.Vector3>();
             vbo.Indices = new List<uint>();
             vbo.Colors = new List<Vector4>();
+            vbo.TCOLs = new List<Vector4>();
             System.Drawing.Color tcol = Voxalia.Shared.Colors.ForByte(Paint);
             Vector4 vcol;
             if (tcol.A == 0)
@@ -64,7 +65,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 vbo.Normals.Add(new OpenTK.Vector3(norms[i].X, norms[i].Y, norms[i].Z));
                 vbo.TexCoords.Add(new OpenTK.Vector3(tcoord[i].X, tcoord[i].Y, tcoord[i].Z));
                 vbo.Indices.Add((uint)i);
-                vbo.Colors.Add(vcol);
+                vbo.Colors.Add(new Vector4(1, 1, 1, 1));
+                vbo.TCOLs.Add(vcol);
             }
             vbo.GenerateVBO();
             base.SpawnBody();
