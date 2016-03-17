@@ -70,39 +70,31 @@ namespace Voxalia.ClientGame.WorldSystem
                                 BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : (c_xp == null ? t_air : c_xp.GetBlockAt(x + 1 - CSize, y, z));
                                 BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : (c_xm == null ? t_air : c_xm.GetBlockAt(x - 1 + CSize, y, z));
                                 bool rAS = !((Material)c.BlockMaterial).GetCanRenderAgainstSelf();
-                                bool zps = (zp.IsOpaque() || (rAS && (zp.BlockMaterial == c.BlockMaterial))) && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
-                                bool zms = (zm.IsOpaque() || (rAS && (zm.BlockMaterial == c.BlockMaterial))) && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
-                                bool xps = (xp.IsOpaque() || (rAS && (xp.BlockMaterial == c.BlockMaterial))) && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
-                                bool xms = (xm.IsOpaque() || (rAS && (xm.BlockMaterial == c.BlockMaterial))) && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
-                                bool yps = (yp.IsOpaque() || (rAS && (yp.BlockMaterial == c.BlockMaterial))) && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
-                                bool yms = (ym.IsOpaque() || (rAS && (ym.BlockMaterial == c.BlockMaterial))) && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
+                                bool zps = (zp.IsOpaque() || (rAS && (zp.BlockMaterial == c.BlockMaterial && zp.BlockPaint == c.BlockPaint))) && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();
+                                bool zms = (zm.IsOpaque() || (rAS && (zm.BlockMaterial == c.BlockMaterial && zm.BlockPaint == c.BlockPaint))) && BlockShapeRegistry.BSD[zm.BlockData].OccupiesTOP();
+                                bool xps = (xp.IsOpaque() || (rAS && (xp.BlockMaterial == c.BlockMaterial && xp.BlockPaint == c.BlockPaint))) && BlockShapeRegistry.BSD[xp.BlockData].OccupiesXM();
+                                bool xms = (xm.IsOpaque() || (rAS && (xm.BlockMaterial == c.BlockMaterial && xm.BlockPaint == c.BlockPaint))) && BlockShapeRegistry.BSD[xm.BlockData].OccupiesXP();
+                                bool yps = (yp.IsOpaque() || (rAS && (yp.BlockMaterial == c.BlockMaterial && yp.BlockPaint == c.BlockPaint))) && BlockShapeRegistry.BSD[yp.BlockData].OccupiesYM();
+                                bool yms = (ym.IsOpaque() || (rAS && (ym.BlockMaterial == c.BlockMaterial && ym.BlockPaint == c.BlockPaint))) && BlockShapeRegistry.BSD[ym.BlockData].OccupiesYP();
                                 BEPUutilities.Vector3 pos = new BEPUutilities.Vector3(x, y, z);
                                 List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
+                                List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[c.BlockData].GetNormals(pos, xps, xms, yps, yms, zps, zms);
+                                List<BEPUutilities.Vector3> tci = BlockShapeRegistry.BSD[c.BlockData].GetTCoords(pos, (Material)c.BlockMaterial, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
                                     // TODO: is PosMultiplier used correctly here?
-                                    Vertices.Add(new Vector3(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z));
-                                }
-                                List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[c.BlockData].GetNormals(pos, xps, xms, yps, yms, zps, zms);
-                                for (int i = 0; i < normsi.Count; i++)
-                                {
-                                    Norms.Add(new Vector3(normsi[i].X, normsi[i].Y, normsi[i].Z));
-                                }
-                                List<BEPUutilities.Vector3> tci = BlockShapeRegistry.BSD[c.BlockData].GetTCoords(pos, (Material)c.BlockMaterial, xps, xms, yps, yms, zps, zms);
-                                for (int i = 0; i < tci.Count; i++)
-                                {
+                                    Vector3 vt = new Vector3(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z);
+                                    Vertices.Add(vt);
+                                    Vector3 nt = new Vector3(normsi[i].X, normsi[i].Y, normsi[i].Z);
+                                    Norms.Add(nt);
                                     TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
-                                }
-                                for (int i = 0; i < vecsi.Count; i++)
-                                {
-                                    Location vt = new Location(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z);
-                                    Location lcol = OwningRegion.GetLightAmount(vt, new Location(normsi[i]), this);
-                                    //lcol = new Location(Math.Min(Math.Max(lcol.X - 0.1, 0) + 0.1, 1), Math.Min(Math.Max(lcol.Y - 0.1, 0) + 0.1, 1), Math.Min(Math.Max(lcol.Z - 0.1, 0) + 0.1, 1));
+                                    Location lcol = OwningRegion.GetLightAmount(ClientUtilities.Convert(vt), ClientUtilities.Convert(nt), this);
                                     Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
                                     System.Drawing.Color tcol = Colors.ForByte(c.BlockPaint);
                                     if (tcol.A == 0)
                                     {
-                                        Random urand = new Random((int)(vt.X + vt.Y + vt.Z + ppos.X + ppos.Y + ppos.Z)); // TODO: Better picker thingy
+                                        // TODO: Better picker thingy... 3d noise?
+                                        Random urand = new Random((int)(vt.X + vt.Y + vt.Z + ppos.X + ppos.Y + ppos.Z));
                                         TCols.Add(new Vector4((float)urand.NextDouble(), (float)urand.NextDouble(), (float)urand.NextDouble(), 1f));
                                     }
                                     else
@@ -112,23 +104,15 @@ namespace Voxalia.ClientGame.WorldSystem
                                 }
                                 if (!c.IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
                                 {
+                                    int tf = Cols.Count - vecsi.Count;
                                     for (int i = vecsi.Count - 1; i >= 0; i--)
                                     {
                                         Vertices.Add(new Vector3(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z));
-                                    }
-                                    for (int i = normsi.Count - 1; i >= 0; i--)
-                                    {
+                                        int tx = tf + i;
+                                        Cols.Add(Cols[tx]);
+                                        TCols.Add(TCols[tx]);
                                         Norms.Add(new Vector3(-normsi[i].X, -normsi[i].Y, -normsi[i].Z));
-                                    }
-                                    for (int i = tci.Count - 1; i >= 0; i--)
-                                    {
                                         TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
-                                    }
-                                    int txc = Cols.Count;
-                                    for (int i = vecsi.Count - 1; i >= 0; i--)
-                                    {
-                                        Cols.Add(Cols[txc - i]);
-                                        TCols.Add(Cols[txc - i]);
                                     }
                                 }
                             }

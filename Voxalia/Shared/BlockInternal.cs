@@ -75,7 +75,7 @@ namespace Voxalia.Shared
         }
 
         /// <summary>
-        /// Returns whether this block is opaque, check both material and paint.
+        /// Returns whether this block is opaque, checks both material and paint.
         /// </summary>
         /// <returns>Whether the block is opaque.</returns>
         public bool IsOpaque()

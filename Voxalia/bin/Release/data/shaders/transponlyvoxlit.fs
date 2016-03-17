@@ -17,6 +17,7 @@ layout (location = 0) in vec4 f_color;
 layout (location = 1) in vec3 f_texcoord;
 layout (location = 2) in vec3 f_normal;
 layout (location = 3) in vec3 f_position;
+layout (location = 4) in vec4 f_tcol;
 
 out vec4 color;
 
@@ -29,7 +30,7 @@ vec3 desaturate(vec3 c)
 
 void main()
 {
-	vec4 tcolor = texture(tex, f_texcoord);
+	vec4 tcolor = texture(tex, f_texcoord) * f_tcol;
 	if (tcolor.w * f_color.w >= 0.99)
 	{
 		discard;

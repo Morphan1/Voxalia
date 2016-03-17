@@ -7,6 +7,7 @@ layout (binding = 1) uniform sampler2DArray htex;
 
 layout (location = 0) in vec4 f_color;
 layout (location = 1) in vec3 f_texcoord;
+layout (location = 2) in vec4 f_tcol;
 
 layout (location = 4) uniform float desaturationAmount = 1.0;
 
@@ -21,7 +22,7 @@ vec3 desaturate(vec3 c)
 
 void main()
 {
-	vec4 tcolor = texture(tex, f_texcoord);
+	vec4 tcolor = texture(tex, f_texcoord) * f_tcol;
 	if (tcolor.w * f_color.w >= 0.99)
 	{
 		discard;
