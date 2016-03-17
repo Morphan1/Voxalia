@@ -135,6 +135,9 @@ namespace Voxalia.ServerGame.NetworkSystem
                             case 4:
                                 packet = new DisconnectPacketIn();
                                 break;
+                            case 5:
+                                packet = new SetStatusPacketIn();
+                                break;
                             default:
                                 throw new Exception("Invalid packet ID: " + packetID);
                         }

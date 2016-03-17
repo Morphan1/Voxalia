@@ -312,7 +312,11 @@ namespace Voxalia.ClientGame.NetworkSystem
                         break;
                     case 38:
                         packet = new SpawnCharacterPacketIn();
-                        usage = NetUsageType.ENTITIES;
+                        usage = NetUsageType.PLAYERS;
+                        break;
+                    case 39:
+                        packet = new SetStatusPacketIn();
+                        usage = NetUsageType.PLAYERS;
                         break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);

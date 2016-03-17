@@ -165,6 +165,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\HoldItemPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\KeysPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsIn\SetStatusPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddCloudPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddJointPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddToCloudPacketOut.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\RemoveItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetHeldItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetItemPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetStatusPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnBulletPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnCharacterPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnItemPacketOut.cs" />

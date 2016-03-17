@@ -34,6 +34,8 @@ namespace Voxalia.ClientGame.EntitySystem
             : base(tregion, true, true)
         {
         }
+
+        public bool IsTyping = false;
         
         public bool Upward = false;
         public bool Click = false;

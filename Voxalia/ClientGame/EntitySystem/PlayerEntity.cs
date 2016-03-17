@@ -548,7 +548,23 @@ namespace Voxalia.ClientGame.EntitySystem
                     aLTime = 0;
                 }
             }
+            // TODO: Triggered by console opening/closing directly, rather than monitoring it on the tick?
+            if (TheClient.Network.IsAlive)
+            {
+                if (UIConsole.Open && !ConsoleWasOpen)
+                {
+                    TheClient.Network.SendPacket(new SetStatusPacketOut(ClientStatus.TYPING, 1));
+                    ConsoleWasOpen = true;
+                }
+                else if (!UIConsole.Open && ConsoleWasOpen)
+                {
+                    TheClient.Network.SendPacket(new SetStatusPacketOut(ClientStatus.TYPING, 0));
+                    ConsoleWasOpen = false;
+                }
+            }
         }
+
+        public bool ConsoleWasOpen = false;
 
         public void PostTick()
         {
@@ -603,6 +619,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
+            // TODO: Merge with base.Render() as much as possible!
             if (TheClient.CVars.n_debugmovement.ValueB)
             {
                 TheClient.Rendering.RenderLine(ServerLocation, GetPosition());
@@ -656,6 +673,11 @@ namespace Voxalia.ClientGame.EntitySystem
                 {
                     TheClient.Rendering.SetReflectionAmt(0f);
                 }
+            }
+            if (IsTyping)
+            {
+                TheClient.Textures.GetTexture("ui/game/typing").Bind(); // TODO: store!
+                TheClient.Rendering.RenderBillboard(GetPosition() + new Location(0, 0, 4), new Location(2), TheClient.CameraPos);
             }
         }
     }

@@ -56,4 +56,10 @@ namespace Voxalia.Shared
         CONVEXHULL = 4
         // TODO: ConvexHull!
     }
+
+    public enum ClientStatus : byte
+    {
+        TYPING = 0,
+        AFK = 1
+    }
 }

@@ -218,6 +218,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\RemoveItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetHeldItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetItemPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetStatusPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnBulletPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnCharacterPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnItemPacketIn.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\HoldItemPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\KeysPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsOut\SetStatusPacketOut.cs" />
     <Compile Include="ClientGame\OtherSystems\ClientUtilities.cs" />
     <Compile Include="ClientGame\OtherSystems\ItemStack.cs" />
     <Compile Include="ClientGame\UISystem\GamePadHandler.cs" />

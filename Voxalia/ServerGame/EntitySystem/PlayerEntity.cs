@@ -291,19 +291,43 @@ namespace Voxalia.ServerGame.EntitySystem
             TheRegion.SendToAll(new FlagEntityPacketOut(this, EntityFlag.MASS, PreFlyMass));
         }
 
-        public bool IsAFK;
-        public int TimeAFK;
+        public void SetTypingStatus(bool isTyping)
+        {
+            IsTyping = isTyping;
+            // TODO: Generic find-all-players-that-can-see-me method
+            Location ch = TheRegion.ChunkLocFor(GetPosition());
+            SetStatusPacketOut pack = new SetStatusPacketOut(this, ClientStatus.TYPING, (byte)(IsTyping ? 1 : 0));
+            foreach (PlayerEntity player in TheRegion.Players)
+            {
+                if (player.CanSeeChunk(ch))
+                {
+                    player.Network.SendPacket(pack);
+                }
+            }
+        }
+
+        public void GainAwarenesOf(Entity ent)
+        {
+            throw new NotImplementedException(); // TODO: Handle awareness-gain of entities: Set EG Status packets, etc.
+        }
+
+        public bool IsTyping = false;
+
+        public bool IsAFK = false;
+        public int TimeAFK = 0;
 
         public void MarkAFK()
         {
             IsAFK = true;
             TheServer.SendToAll(new MessagePacketOut("^r^7#" + Name + "^r^7 is now AFK!")); // TODO: Message configurable, localized...
+            // TODO: SetStatus to all visible!
         }
 
         public void UnmarkAFK()
         {
             IsAFK = false;
             TheServer.SendToAll(new MessagePacketOut("^r^7#" + Name + "^r^7 is no longer AFK!")); // TODO: Message configurable, localized...
+            // TODO: SetStatus to all visible!
         }
 
         /// <summary>
