@@ -90,6 +90,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public abstract byte[] GetSaveBytes();
 
+        public abstract void PotentialActivate();
+
         public bool Removed = false;
 
         public void RemoveMe()

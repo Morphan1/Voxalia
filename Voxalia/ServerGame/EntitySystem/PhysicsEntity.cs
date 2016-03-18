@@ -119,6 +119,14 @@ namespace Voxalia.ServerGame.EntitySystem
         {
         }
 
+        public override void PotentialActivate()
+        {
+            if (Body != null)
+            {
+                Body.ActivityInformation.Activate();
+            }
+        }
+
         void NetworkTick()
         {
             if (NetworkMe)

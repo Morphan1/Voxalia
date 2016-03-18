@@ -202,9 +202,9 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public List<Entity> GetEntitiesInRadius(Location pos, float rad)
         {
-            CheckThreadValidity();
             List<Entity> es = new List<Entity>();
-            // TODO: Efficiency
+            // TODO: Efficiency!
+            // TODO: Accuracy!
             foreach (Entity e in Entities)
             {
                 if ((e.GetPosition() - pos).LengthSquared() <= rad * rad)

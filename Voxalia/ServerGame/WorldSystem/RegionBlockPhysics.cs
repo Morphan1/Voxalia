@@ -26,9 +26,6 @@ namespace Voxalia.ServerGame.WorldSystem
     {
         public void SurroundBlockPhysics(Location start)
         {
-            // TODO: Activate nearby physents!
-            // also activate prim ents using a generic ent method
-            // Prim ents (EG arrow) would use it for a quick needs-update check (EG if the arrow's hit block is gone and it needs to fall more!)
             for (int x = -1; x <= 1; x++)
             {
                 for (int y = -1; y <= 1; y++)
@@ -38,6 +35,10 @@ namespace Voxalia.ServerGame.WorldSystem
                         RunBlockPhysics(start + new Location(x, y, z));
                     }
                 }
+            }
+            foreach (Entity e in GetEntitiesInRadius(start + new Location(0.5), 3f))
+            {
+                e.PotentialActivate();
             }
         }
 

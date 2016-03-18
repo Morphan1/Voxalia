@@ -29,6 +29,10 @@ namespace Voxalia.ServerGame.EntitySystem
         {
         }
 
+        public override void PotentialActivate()
+        {
+        }
+
         public bool network = true;
 
         public bool FilterHandle(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)
@@ -41,11 +45,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     return false;
                 }
             }
-            if (entry.CollisionRules.Group == CollisionUtil.NonSolid)
-            {
-                return false;
-            }
-            return true;
+            return TheRegion.Collision.ShouldCollide(entry);
         }
         
         public double netdeltat = 0;
