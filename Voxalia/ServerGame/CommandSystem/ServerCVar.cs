@@ -19,7 +19,7 @@ namespace Voxalia.ServerGame.CommandSystem
         public CVar s_filepath;
 
         // Game CVars
-        public CVar g_timescale, g_fps;
+        public CVar g_timescale, g_fps, g_maxheight, g_minheight, g_maxdist;
 
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
@@ -33,6 +33,9 @@ namespace Voxalia.ServerGame.CommandSystem
             // Game CVars
             g_timescale = Register("g_timescale", "1", CVarFlag.Numeric, "The current game time scaling value.");
             g_fps = Register("g_fps", "30", CVarFlag.Numeric, "What framerate to use.");
+            g_maxheight = Register("g_maxheight", "5000", CVarFlag.Numeric, "What the highest possible Z coordinate should be (for building).");
+            g_minheight = Register("g_minheight", "-5000", CVarFlag.Numeric, "What the lowest possible Z coordinate should be (for building).");
+            g_maxdist = Register("g_maxdist", "50000", CVarFlag.Numeric, "How far on the X or Y axis a player may travel from the origin.");
         }
 
         CVar Register(string name, string value, CVarFlag flags, string desc)

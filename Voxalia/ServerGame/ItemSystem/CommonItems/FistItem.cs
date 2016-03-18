@@ -71,7 +71,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 if (breakIt)
                 {
                     Material mat = player.TheRegion.GetBlockMaterial(block);
-                    if (mat != Material.AIR) // TODO: IsBreakable?
+                    if (player.TheRegion.IsAllowedToBreak(player, block, mat))
                     {
                         player.TheRegion.BreakNaturally(block);
                         player.Network.SendPacket(new DefaultSoundPacketOut(block, DefaultSound.BREAK, (byte)mat.Sound()));

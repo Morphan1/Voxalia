@@ -48,6 +48,24 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Dictionary<Location, Chunk> LoadedChunks = new Dictionary<Location, Chunk>();
 
+        public bool IsAllowedToBreak(CharacterEntity ent, Location block, Material mat)
+        {
+            if (block.Z > TheServer.CVars.g_maxheight.ValueI || block.Z < TheServer.CVars.g_minheight.ValueI)
+            {
+                return false;
+            }
+            return mat != Material.AIR;
+        }
+
+        public bool IsAllowedToPlaceIn(CharacterEntity ent, Location block, Material mat)
+        {
+            if (block.Z > TheServer.CVars.g_maxheight.ValueI || block.Z < TheServer.CVars.g_minheight.ValueI)
+            {
+                return false;
+            }
+            return mat == Material.AIR;
+        }
+
         public Material GetBlockMaterial(Location pos)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos));

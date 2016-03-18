@@ -490,6 +490,35 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 UsedNow = null;
             }
+            if (!CanReach(GetPosition()))
+            {
+                Teleport(posClamp(GetPosition()));
+            }
+        }
+
+        public Location posClamp(Location pos)
+        {
+            int maxdist = Math.Abs(TheServer.CVars.g_maxdist.ValueI);
+            pos.X = Clamp(pos.X, -maxdist, maxdist);
+            pos.Y = Clamp(pos.Y, -maxdist, maxdist);
+            pos.Z = Clamp(pos.Z, -maxdist, maxdist);
+            return pos;
+        }
+
+        public double Clamp(double num, double min, double max)
+        {
+            if (num < min)
+            {
+                return min;
+            }
+            else if (num > max)
+            {
+                return max;
+            }
+            else
+            {
+                return num;
+            }
         }
 
         List<Chunk> removes = new List<Chunk>();
@@ -656,11 +685,22 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             return false;
         }
-        
+
+        public bool CanReach(Location pos)
+        {
+            int maxdist = Math.Abs(TheServer.CVars.g_maxdist.ValueI);
+            return Math.Abs(pos.X) < maxdist && Math.Abs(pos.Y) < maxdist && Math.Abs(pos.Z) < maxdist;
+        }
+
+        public override void SetPosition(Location pos)
+        {
+            base.SetPosition(posClamp(pos));
+        }
+
         public void Teleport(Location pos)
         {
             SetPosition(pos);
-            Network.SendPacket(new TeleportPacketOut(pos));
+            Network.SendPacket(new TeleportPacketOut(GetPosition()));
         }
 
         public override string ToString()
