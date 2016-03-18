@@ -351,7 +351,7 @@
         <member name="M:FreneticScript.CommandSystem.CommandEntry.Error(System.String)">
             <summary>
             Used to indicate an error has occured, and have the system react accordingly.
-            It is recommended you "return;" immediately after invoking this.
+            It is recommended you "return;" immediately after invoking this - this is not needed, as an exception is thrown, but instead used to keep code clear that the method stops there.
             </summary>
             <param name="EMsg">The error message.</param>
         </member>
@@ -1905,6 +1905,22 @@
             </summary>
             <param name="data">The data to be handled.</param>
         </member>
+        <member name="T:FreneticScript.TagHandlers.Common.BooleanTagBase">
+            <summary>
+            Gets a boolean tag.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Common.BooleanTagBase.#ctor">
+            <summary>
+            Constructs the BooleanTagBase - for internal use only.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Common.BooleanTagBase.Handle(FreneticScript.TagHandlers.TagData)">
+            <summary>
+            Handles the 'boolean' tag.
+            </summary>
+            <param name="data">The data to be handled.</param>
+        </member>
         <member name="T:FreneticScript.TagHandlers.Common.UnescapeTagBase">
             <summary>
             Unescapes questionable text input.
@@ -1919,7 +1935,7 @@
         </member>
         <member name="M:FreneticScript.TagHandlers.Common.UnescapeTagBase.#ctor">
             <summary>
-            Construct the UnescapeTags - for internal use only.
+            Construct the UnescapeTagBase - for internal use only.
             </summary>
         </member>
         <member name="M:FreneticScript.TagHandlers.Common.UnescapeTagBase.Handle(FreneticScript.TagHandlers.TagData)">
@@ -2035,6 +2051,56 @@
             Returns the a string representation of the number internally stored by this boolean tag. EG, could return "0", or "1", or "-1.005".
             </summary>
             <returns>A string representation of the number.</returns>
+        </member>
+        <member name="T:FreneticScript.TagHandlers.Objects.MapTag">
+            <summary>
+            Represents a relationship between textual names and object data.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.TagHandlers.Objects.MapTag.Internal">
+            <summary>
+            The internal dictionary that this MapTag represents.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.MapTag.#ctor(System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject})">
+            <summary>
+            Constructs a MapTag from existing data.
+            NOTE: This expects all keys to be lowercase!
+            </summary>
+            <param name="toUse">The data to use.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.MapTag.#ctor">
+            <summary>
+            Constructs a MapTag without existing data.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.MapTag.For(System.String)">
+            <summary>
+            Converts text to a map tag.
+            Never null. Will ignore invalid entries.
+            </summary>
+            <param name="input">The input text.</param>
+            <returns>The map represented by the input text.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.MapTag.For(FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Converts a generic object to a map tag.
+            Never null. Will ignore invalid entries.
+            </summary>
+            <param name="input">The input object.</param>
+            <returns>The map represented by the input object.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.MapTag.Handle(FreneticScript.TagHandlers.TagData)">
+            <summary>
+            Parse any direct tag input values.
+            </summary>
+            <param name="data">The input tag data.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.MapTag.ToString">
+            <summary>
+            Gets a string representation of this map.
+            </summary>
+            <returns>The string representation.</returns>
         </member>
         <member name="T:FreneticScript.TagHandlers.Objects.NullTag">
             <summary>
@@ -2252,6 +2318,20 @@
             <param name="dat">The TagData used to construct this BooleanTag.</param>
             <param name="input">The input to create or get a boolean from.</param>
             <returns>The boolean tag.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.BooleanTag.TryFor(System.String)">
+            <summary>
+            Tries to return a valid boolean, or null.
+            </summary>
+            <param name="input">The input that is potentially a boolean.</param>
+            <returns>A boolean, or null.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.BooleanTag.TryFor(FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Tries to return a valid boolean, or null.
+            </summary>
+            <param name="input">The input that is potentially a boolean.</param>
+            <returns>A boolean, or null.</returns>
         </member>
         <member name="M:FreneticScript.TagHandlers.Objects.BooleanTag.#ctor(System.Boolean)">
             <summary>
