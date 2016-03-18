@@ -41,7 +41,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        public void PhysicsSetBlock(Location block, Material mat, byte dat = 0, byte paint = 0, BlockDamage damage = 0)
+        public void PhysicsSetBlock(Location block, Material mat, byte dat = 0, byte paint = 0, BlockDamage damage = BlockDamage.NONE)
         {
             SetBlockMaterial(block, mat, dat, paint, (byte)(BlockFlags.EDITED | BlockFlags.NEEDS_RECALC), damage);
             TheServer.Schedule.ScheduleSyncTask(() => { SurroundBlockPhysics(block); }, 0.1);
@@ -213,21 +213,87 @@ namespace Voxalia.ServerGame.WorldSystem
                         int rym = remPercFor(ym.BlockData);
                         if (mxp == cmat && rxp < remainingperc)
                         {
-                            CombineWater(remainingperc, cmat, rxp, block, lxp, c.BlockPaint);
+                            CombineWaterSide(remainingperc, cmat, rxp, block, lxp, c.BlockPaint);
                         }
                         else if (mxm == cmat && rxm < remainingperc)
                         {
-                            CombineWater(remainingperc, cmat, rxm, block, lxm, c.BlockPaint);
+                            CombineWaterSide(remainingperc, cmat, rxm, block, lxm, c.BlockPaint);
                         }
                         else if (myp == cmat && ryp < remainingperc)
                         {
-                            CombineWater(remainingperc, cmat, ryp, block, lyp, c.BlockPaint);
+                            CombineWaterSide(remainingperc, cmat, ryp, block, lyp, c.BlockPaint);
                         }
                         else if (mym == cmat && rym < remainingperc)
                         {
-                            CombineWater(remainingperc, cmat, rym, block, lym, c.BlockPaint);
+                            CombineWaterSide(remainingperc, cmat, rym, block, lym, c.BlockPaint);
                         }
                     }
+                }
+            }
+        }
+
+        void CombineWaterSide(int rempart, Material cmat, int remperc, Location block, Location one, byte paint)
+        {
+            if (remperc == 68)
+            {
+                if (rempart == 100)
+                {
+                    PhysicsSetBlock(block, cmat, 1, paint);
+                    PhysicsSetBlock(one, cmat, 1, paint);
+                }
+            }
+            else if (remperc == 50)
+            {
+                if (rempart == 100)
+                {
+                    PhysicsSetBlock(block, cmat, 1, paint);
+                    PhysicsSetBlock(one, cmat, 2, paint);
+                }
+                else if (rempart == 84)
+                {
+                    PhysicsSetBlock(block, cmat, 2, paint);
+                    PhysicsSetBlock(one, cmat, 2, paint);
+                }
+            }
+            else if (remperc == 34)
+            {
+                if (rempart == 100)
+                {
+                    PhysicsSetBlock(block, cmat, 2, paint);
+                    PhysicsSetBlock(one, cmat, 2, paint);
+                }
+                else if (rempart == 84)
+                {
+                    PhysicsSetBlock(block, cmat, 2, paint);
+                    PhysicsSetBlock(one, cmat, 3, paint);
+                }
+                else if (rempart == 68)
+                {
+                    PhysicsSetBlock(block, cmat, 3, paint);
+                    PhysicsSetBlock(one, cmat, 3, paint);
+                }
+            }
+            else if (remperc == 13)
+            {
+                if (rempart == 100)
+                {
+                    PhysicsSetBlock(block, cmat, 2, paint);
+                    PhysicsSetBlock(one, cmat, 3, paint);
+                }
+                else if (rempart == 84)
+                {
+                    PhysicsSetBlock(block, cmat, 3, paint);
+                    PhysicsSetBlock(one, cmat, 3, paint);
+                }
+                else if (rempart == 68)
+                {
+                    PhysicsSetBlock(block, cmat, 3, paint);
+                    PhysicsSetBlock(one, cmat, 4, paint);
+                }
+                else if (rempart == 50)
+                {
+                    PhysicsSetBlock(block, cmat, 4, paint);
+                    PhysicsSetBlock(one, cmat, 4, paint);
                 }
             }
         }
