@@ -9,7 +9,7 @@ using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
-    class RegionTag : TemplateObject
+    public class RegionTag : TemplateObject
     {
         // <--[object]
         // @Type RegionTag
@@ -19,9 +19,9 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
         // -->
         Region Internal;
 
-        public RegionTag(Region r)
+        public RegionTag(Region reg)
         {
-            Internal = r;
+            Internal = reg;
         }
 
         public override TemplateObject Handle(TagData data)

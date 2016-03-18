@@ -18,6 +18,13 @@ namespace Voxalia.ServerGame.EntitySystem
             Scale = new Location(0.05f, 0.05f, 0.05f);
         }
 
+        public override void PotentialActivate()
+        {
+            Vector3 grav = TheRegion.PhysicsWorld.ForceUpdater.Gravity;
+            Gravity = new Location(grav);
+            base.PotentialActivate();
+        }
+
         public override EntityType GetEntityType()
         {
             return EntityType.ARROW;

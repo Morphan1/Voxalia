@@ -205,9 +205,10 @@ namespace Voxalia.ServerGame.WorldSystem
             List<Entity> es = new List<Entity>();
             // TODO: Efficiency!
             // TODO: Accuracy!
+            float rx = rad * rad;
             foreach (Entity e in Entities)
             {
-                if ((e.GetPosition() - pos).LengthSquared() <= rad * rad)
+                if ((e.GetPosition() - pos).LengthSquared() <= rx)
                 {
                     es.Add(e);
                 }
