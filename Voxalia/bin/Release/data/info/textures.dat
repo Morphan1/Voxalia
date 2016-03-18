@@ -29,6 +29,7 @@ PLANKS_OAK=blocks/solid/natural/wood_planks
 GLASS_WINDOW=blocks/transparent/glass_window
 OIL=blocks/liquid/oil&1*0.1
 ICE=blocks/solid/natural/ice
+HEAVY_GAS=blocks/liquid/heavy_gas
 m8=blocks/solid/natural/grass_plains
 m7=blocks/solid/natural/wood_top
 m6=blocks/solid/special/db_ym,blocks/solid/special/db_exc%1.0&1

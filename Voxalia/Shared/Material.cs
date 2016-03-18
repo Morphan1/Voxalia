@@ -38,10 +38,11 @@ namespace Voxalia.Shared
         GLASS_WINDOW = 27,
         OIL = 28,
         ICE = 29,
+        HEAVY_GAS = 30,
         /// <summary>
         /// How many materials there are by default. Only for use with internal pre-generation, or direct handling of this enumeration (shouldn't happen often.)
         /// </summary>
-        NUM_DEFAULT = 30,
+        NUM_DEFAULT = 31,
         /// <summary>
         /// How many materials there theoretically can be.
         /// </summary>
@@ -98,6 +99,7 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.GLASS_WINDOW) { SpeedMod = 1.1f, Sound = MaterialSound.METAL, Hardness = 5, BreakTime = 1, Opaque = false, LightDamage = 0.05f },
                 new MaterialInfo((int)Material.OIL) { Solidity = MaterialSolidity.LIQUID, FogColor = new Location(0, 0, 0), Hardness = 5, BreakTime = 0.2f, Spreads = true },
                 new MaterialInfo((int)Material.ICE) { Opaque = true, SpeedMod = 1.2f, FrictionMod = 0.1f, Hardness = 10, BreakTime = 1.5f },
+                new MaterialInfo((int)Material.HEAVY_GAS) { Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.25, 0.25, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.1f },
             };
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.TOP] = MAX_THEORETICAL_MATERIALS - 1; // grass (top)
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
