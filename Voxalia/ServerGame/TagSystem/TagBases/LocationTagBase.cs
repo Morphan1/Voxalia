@@ -28,7 +28,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             if (ltag == null)
             {
                 data.Error("Invalid location '" + TagParser.Escape(lname) + "'!");
-                return new TextTag("&{NULL}");
+                return new NullTag();
             }
             return ltag.Handle(data.Shrink());
         }

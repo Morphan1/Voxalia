@@ -9,31 +9,31 @@ using Voxalia.ServerGame.ServerMainSystem;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
-    class ItemTagBase : TemplateTagBase
+    class RecipeTagBase : TemplateTagBase
     {
         public Server TheServer;
 
         // <--[tagbase]
-        // @Base item[<ItemTag>]
-        // @ReturnType ItemTag
-        // @Returns the item described by the given input.
+        // @Base recipe[<RecipeTag>]
+        // @ReturnType RecipeTag
+        // @Returns the recipe described by the given input.
         // -->
-        public ItemTagBase(Server tserver)
+        public RecipeTagBase(Server tserver)
         {
             TheServer = tserver;
-            Name = "item";
+            Name = "recipe";
         }
 
         public override TemplateObject Handle(TagData data)
         {
-            TemplateObject iname = data.GetModifierObject(0);
-            ItemTag itag = ItemTag.For(TheServer, iname);
-            if (itag == null)
+            TemplateObject rdata = data.GetModifierObject(0);
+            RecipeTag rtag = RecipeTag.For(TheServer, rdata);
+            if (rtag == null)
             {
-                data.Error("Invalid item '" + TagParser.Escape(iname.ToString()) + "'!");
+                data.Error("Invalid recipe '" + TagParser.Escape(rdata.ToString()) + "'!");
                 return new NullTag();
             }
-            return itag.Handle(data.Shrink());
+            return rtag.Handle(data.Shrink());
         }
     }
 }

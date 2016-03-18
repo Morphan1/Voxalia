@@ -3,6 +3,7 @@ using FreneticScript.CommandSystem;
 using Voxalia.ServerGame.CommandSystem.CommonCommands;
 using Voxalia.ServerGame.CommandSystem.PlayerCommands;
 using Voxalia.ServerGame.CommandSystem.FileCommands;
+using Voxalia.ServerGame.CommandSystem.ItemCommands;
 using Voxalia.ServerGame.TagSystem.TagBases;
 
 namespace Voxalia.ServerGame.CommandSystem
@@ -48,6 +49,9 @@ namespace Voxalia.ServerGame.CommandSystem
 
             // World Commands
             // ...
+
+            // Item Commands
+            CommandSystem.RegisterCommand(new AddrecipeCommand(TheServer));
             
             // Player Management Commands
             CommandSystem.RegisterCommand(new KickCommand(TheServer));
@@ -70,6 +74,7 @@ namespace Voxalia.ServerGame.CommandSystem
             CommandSystem.TagSystem.Register(new PhysicsEntityTagBase(TheServer));
             CommandSystem.TagSystem.Register(new PlayerTagBase(TheServer));
             CommandSystem.TagSystem.Register(new PrimitiveEntityTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new RecipeTagBase(TheServer));
             CommandSystem.TagSystem.Register(new RegionTagBase(TheServer));
             CommandSystem.TagSystem.Register(new ServerTagBase(TheServer));
             CommandSystem.TagSystem.Register(new SmokeGrenadeEntityTagBase(TheServer));

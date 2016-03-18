@@ -8,6 +8,7 @@ using Voxalia.ServerGame.TagSystem.TagObjects;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.WorldSystem;
+using Voxalia.ServerGame.ItemSystem;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
@@ -39,47 +40,93 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 // <--[tagbase]
                 // @Name ServerTag.online_players
                 // @Group General Information
-                // @ReturnType ListTag<PlayerTag>
+                // @ReturnType ListTag
                 // @Returns a list of all online players.
                 // @Example .online_players could return "Fortifier|mcmonkey".
                 // -->
                 case "online_players":
-                    ListTag players = new ListTag();
-                    foreach (PlayerEntity p in TheServer.Players)
                     {
-                        players.ListEntries.Add(new PlayerTag(p));
+                        ListTag players = new ListTag();
+                        foreach (PlayerEntity p in TheServer.Players)
+                        {
+                            players.ListEntries.Add(new PlayerTag(p));
+                        }
+                        return players.Handle(data.Shrink());
                     }
-                    return players.Handle(data.Shrink());
                 // <--[tagbase]
                 // @Name ServerTag.loaded_regions
                 // @Group General Information
-                // @ReturnType ListTag<RegionTag>
+                // @ReturnType ListTag
                 // @Returns a list of all loaded regions.
                 // @Example .loaded_regions could return "default|bob".
                 // -->
                 case "loaded_regions":
-                    ListTag regions = new ListTag();
-                    foreach (Region r in TheServer.LoadedRegions)
                     {
-                        regions.ListEntries.Add(new RegionTag(r));
+                        ListTag regions = new ListTag();
+                        foreach (Region r in TheServer.LoadedRegions)
+                        {
+                            regions.ListEntries.Add(new RegionTag(r));
+                        }
+                        return regions.Handle(data.Shrink());
                     }
-                    return regions.Handle(data.Shrink());
+                // <--[tagbase]
+                // @Name ServerTag.loaded_recipes
+                // @Group General Information
+                // @ReturnType ListTag
+                // @Returns a list of all loaded recipes.
+                // @Example .loaded_recipes could return "blocks/grass&pipeblocks/dirt|".
+                // -->
+                case "loaded_recipes":
+                    {
+                        ListTag recipes = new ListTag();
+                        foreach (ItemRecipe r in TheServer.Recipes.Recipes)
+                        {
+                            recipes.ListEntries.Add(new RecipeTag(r));
+                        }
+                        return recipes.Handle(data.Shrink());
+                    }
+                // <--[tagbase]
+                // @Name ServerTag.can_craft_from[<ListTag>]
+                // @Group General Information
+                // @ReturnType ListTag
+                // @Returns a list of all loaded recipes that can be crafted from the given input.
+                // @Example .can_craft_from[blocks/dirt|] could return "blocks/grass&pipeblocks/dirt|".
+                // -->
+                case "can_craft_from":
+                    {
+                        // TODO: Handle errors neatly!
+                        List<ItemStack> items = new List<ItemStack>();
+                        ListTag list = ListTag.For(data.GetModifierObject(0));
+                        foreach (TemplateObject obj in list.ListEntries)
+                        {
+                            items.Add(ItemTag.For(TheServer, obj).Internal);
+                        }
+                        ListTag recipes = new ListTag();
+                        foreach (ItemRecipe r in TheServer.Recipes.CanCraftFrom(items.ToArray()))
+                        {
+                            recipes.ListEntries.Add(new RecipeTag(r));
+                        }
+                        return recipes.Handle(data.Shrink());
+                    }
                 // <--[tagbase]
                 // @Name ServerTag.match_player[<TextTag>]
                 // @Group General Information
                 // @ReturnType PlayerTag
-                // @Returns the player who's name best matches the input.
+                // @Returns the player whose name best matches the input.
                 // @Example .match_player[Fort] out of a group of "Fortifier", "Fort", and "Forty" would return "Fort".
+                // @Example .match_player[monk] out of a group of "mcmonkey", "morph", and "Fort" would return "mcmonkey".
                 // -->
                 case "match_player":
-                    string pname = data.GetModifier(0);
-                    PlayerEntity player = TheServer.GetPlayerFor(pname);
-                    if (player == null)
                     {
-                        data.Error("Invalid player '" + TagParser.Escape(pname) + "'!");
-                        return new TextTag("&{NULL}");
+                        string pname = data.GetModifier(0);
+                        PlayerEntity player = TheServer.GetPlayerFor(pname);
+                        if (player == null)
+                        {
+                            data.Error("Invalid player '" + TagParser.Escape(pname) + "'!");
+                            return new NullTag();
+                        }
+                        return new PlayerTag(player).Handle(data.Shrink());
                     }
-                    return new PlayerTag(player).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

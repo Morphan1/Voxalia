@@ -52,7 +52,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 }
             }
             data.Error("Invalid player '" + TagParser.Escape(pname) + "'!");
-            return new TextTag("&{NULL}");
+            return new NullTag();
         }
     }
 }

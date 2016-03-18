@@ -32,7 +32,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             catch (Exception)
             {
                 data.Error("Invalid material '" + TagParser.Escape(input) + "'!");
-                return new TextTag("&{NULL}");
+                return new NullTag();
             }
         }
     }

@@ -26,8 +26,24 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
 
         public static ItemTag For(Server tserver, string input)
         {
-            // TODO: Able to construct from item descriptor files!
-            return new ItemTag(ItemStack.FromString(tserver, input));
+            if (input.Contains('['))
+            {
+                return new ItemTag(ItemStack.FromString(tserver, input));
+            }
+            else
+            {
+                ItemStack its = tserver.Items.GetItem(input);
+                if (its == null)
+                {
+                    return null;
+                }
+                return new ItemTag(its);
+            }
+        }
+
+        public static ItemTag For(Server tserver, TemplateObject input)
+        {
+            return input is ItemTag ? (ItemTag)input : For(tserver, input.ToString());
         }
 
         public override TemplateObject Handle(TagData data)
@@ -43,7 +59,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Group General Information
                 // @ReturnType TextTag
                 // @Returns the name of the type of this item.
-                // @Example "bullet" .type returns "bullet".
+                // @Example "bullet" .item_type returns "bullet".
                 // -->
                 case "item_type":
                     return new TextTag(Internal.Name).Handle(data.Shrink());

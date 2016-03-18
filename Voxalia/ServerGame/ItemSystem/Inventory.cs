@@ -52,7 +52,7 @@ namespace Voxalia.ServerGame.ItemSystem
             return -1;
         }
 
-        public bool ItemsMatch(ItemStack item, ItemStack item2)
+        public static bool ItemsMatch(ItemStack item, ItemStack item2)
         {
             return item2.Datum == item.Datum &&
                     item2.Name == item.Name &&
@@ -67,7 +67,7 @@ namespace Voxalia.ServerGame.ItemSystem
             // NOTE: Intentionally don't check the count here.
         }
 
-        public bool ItemAttrsMatch(ItemStack i1, ItemStack i2)
+        public static bool ItemAttrsMatch(ItemStack i1, ItemStack i2)
         {
             if (i1.Attributes.Count != i2.Attributes.Count)
             {
@@ -88,7 +88,7 @@ namespace Voxalia.ServerGame.ItemSystem
         }
 
 
-        public bool ItemSharedAttrsMatch(ItemStack i1, ItemStack i2)
+        public static bool ItemSharedAttrsMatch(ItemStack i1, ItemStack i2)
         {
             if (i1.SharedAttributes.Count != i2.SharedAttributes.Count)
             {

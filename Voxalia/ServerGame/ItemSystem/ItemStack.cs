@@ -160,7 +160,12 @@ namespace Voxalia.ServerGame.ItemSystem
         {
             return TagParser.Escape(Name) + "[secondary=" + (SecondaryName == null ? "" : EscapeTagBase.Escape(SecondaryName)) + ";display=" + EscapeTagBase.Escape(DisplayName) + ";count=" + Count
                 + ";description=" + EscapeTagBase.Escape(Description) + ";texture=" + EscapeTagBase.Escape(GetTextureName()) + ";model=" + EscapeTagBase.Escape(GetModelName()) + ";bound=" + (IsBound ? "true": "false")
-                + ";drawcolor=" + new ColorTag(DrawColor) + ";datum=" + Datum + ";shared=" + EscapedSharedStr() + ";local=" + EscapedLocalStr() + "]";
+                + ";drawcolor=" + new ColorTag(DrawColor).ToString() + ";datum=" + Datum + ";shared=" + EscapedSharedStr() + ";local=" + EscapedLocalStr() + "]";
+        }
+
+        public override string ToString()
+        {
+            return ToEscapedString();
         }
 
         static List<KeyValuePair<string, string>> SplitUpPairs(string input)

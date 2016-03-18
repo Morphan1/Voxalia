@@ -46,7 +46,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 }
             }
             data.Error("Invalid primitive entity '" + TagParser.Escape(input) + "'!");
-            return new TextTag("&{NULL}");
+            return new NullTag();
         }
     }
 }

@@ -64,6 +64,11 @@ namespace Voxalia.ServerGame.ServerMainSystem
         public ItemRegistry Items;
 
         /// <summary>
+        /// The system that tracks all item recipes.
+        /// </summary>
+        public RecipeRegistry Recipes;
+
+        /// <summary>
         /// The system that tracks all 3D models, for collision tracing purposes.
         /// </summary>
         public ModelEngine Models;
@@ -157,6 +162,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Loading item registry...");
             ItemInfos = new ItemInfoRegistry();
             Items = new ItemRegistry(this);
+            Recipes = new RecipeRegistry() { TheServer = this };
             SysConsole.Output(OutputType.INIT, "Loading model handler...");
             Models = new ModelEngine();
             SysConsole.Output(OutputType.INIT, "Loading animation handler...");
@@ -248,7 +254,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
                     string cmd = System.IO.File.ReadAllText(file).Replace("\r", "").Replace("\0", "\\0");
                     if (cmd.StartsWith("/// AUTORUN\n"))
                     {
-                        CommandScript.SeparateCommands(file.Replace(Environment.CurrentDirectory, ""), cmd, Commands.CommandSystem).ToQueue(Commands.CommandSystem).Execute();
+                        CommandQueue q = CommandScript.SeparateCommands(file.Replace(Environment.CurrentDirectory, ""), cmd, Commands.CommandSystem).ToQueue(Commands.CommandSystem);
+                        q.Debug = DebugMode.MINIMAL;
+                        q.Execute();
                     }
                 }
                 catch (Exception ex)

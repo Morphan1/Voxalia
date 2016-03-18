@@ -83,6 +83,7 @@
     <Compile Include="ServerGame\CommandSystem\CommonCommands\QuitCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\CommonCommands\SayCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\FileCommands\AddpathCommand.cs" />
+    <Compile Include="ServerGame\CommandSystem\ItemCommands\AddrecipeCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\PlayerCommands\KickCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerCommands.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerCVar.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="ServerGame\ItemSystem\ItemInfoRegistry.cs" />
     <Compile Include="ServerGame\ItemSystem\ItemRegistry.cs" />
     <Compile Include="ServerGame\ItemSystem\PlayerInventory.cs" />
+    <Compile Include="ServerGame\ItemSystem\RecipeRegistry.cs" />
     <Compile Include="ServerGame\JointSystem\BaseFJoint.cs" />
     <Compile Include="ServerGame\JointSystem\BaseJoint.cs" />
     <Compile Include="ServerGame\JointSystem\ConstWheelStepUp.cs" />
@@ -232,6 +234,7 @@
     <Compile Include="ServerGame\TagSystem\TagBases\GrenadeEntityTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\ItemEntityTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\ColorTagBase.cs" />
+    <Compile Include="ServerGame\TagSystem\TagBases\RecipeTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\ItemTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\LivingEntityTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\LocationTagBase.cs" />
@@ -262,6 +265,7 @@
     <Compile Include="ServerGame\TagSystem\TagObjects\PhysicsEntityTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\PlayerTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\PrimitiveEntityTag.cs" />
+    <Compile Include="ServerGame\TagSystem\TagObjects\RecipeTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\RegionTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\SmokeGrenadeEntityTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\VehicleEntityTag.cs" />

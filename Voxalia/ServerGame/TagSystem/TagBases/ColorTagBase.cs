@@ -29,7 +29,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             if (ctag == null)
             {
                 data.Error("Invalid color '" + TagParser.Escape(cname) + "'!");
-                return new TextTag("&{NULL}");
+                return new NullTag();
             }
             return ctag.Handle(data.Shrink());
         }

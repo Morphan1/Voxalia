@@ -56,7 +56,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 }
             }
             data.Error("Invalid physics entity '" + TagParser.Escape(input) + "'!");
-            return new TextTag("&{NULL}");
+            return new NullTag();
         }
     }
 }

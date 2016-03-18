@@ -56,7 +56,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 }
             }
             data.Error("Invalid living entity '" + TagParser.Escape(input) + "'!");
-            return new TextTag("&{NULL}");
+            return new NullTag();
         }
     }
 }
