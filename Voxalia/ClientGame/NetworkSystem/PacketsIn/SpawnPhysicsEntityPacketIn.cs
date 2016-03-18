@@ -31,6 +31,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 ModelEntity me = new ModelEntity(strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4))), TheClient.TheRegion);
                 byte moder = data[start + 4];
                 me.mode = (ModelCollisionMode)moder;
+                me.scale = halfsize;
                 ce = me;
             }
             else if (type == 3)

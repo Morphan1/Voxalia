@@ -92,7 +92,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 double size = Math.Sqrt(distSq);
                 offset = Location.Zero;
-                Shape = new SphereShape((float)size * (float)scale.Length());
+                Shape = new SphereShape((float)size * (float)scale.X);
             }
             base.SpawnBody();
             if (mode == ModelCollisionMode.PRECISE)
