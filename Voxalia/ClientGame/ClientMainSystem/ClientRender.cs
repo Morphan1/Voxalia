@@ -1274,11 +1274,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (item.Count > 0)
             {
                 FontSets.SlightlyBigger.DrawColoredText("^!^e^7^S" + item.Count, new Location(pos.X + 5, pos.Y + size - FontSets.SlightlyBigger.font_default.Height / 2f - 5, 0));
-                if (size >= 64 && item.Datum != 0)
-                {
-                    string dat = "^!^e^7^S" + item.Datum;
-                    FontSets.SlightlyBigger.DrawColoredText(dat, new Location(pos.X + size - FontSets.SlightlyBigger.MeasureFancyText(dat), pos.Y + size - FontSets.SlightlyBigger.font_default.Height / 2f - 5, 0));
-                }
             }
         }
 

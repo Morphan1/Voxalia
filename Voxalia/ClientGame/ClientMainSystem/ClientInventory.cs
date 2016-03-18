@@ -25,7 +25,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         UITextLink InventoryExitButton()
         {
-            return new UITextLink("Exit", "^0^e^7Exit", "^7^e^0Exit", () =>
+            return new UITextLink(null, "Exit", "^0^e^7Exit", "^7^e^0Exit", () =>
             {
                 HideInventory();
             },
@@ -37,11 +37,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CInvMenu = null;
             InventoryMenu = new UIMenu(this);
             UILabel inv_inventory = new UILabel("^(Inventory", () => 20, () => 20, FontSets.SlightlyBigger);
-            UITextLink inv_equipment = new UITextLink("Equipment", "^0^e^7Equipment", "^7^e^0Equipment", () =>
+            UITextLink inv_equipment = new UITextLink(null, "Equipment", "^0^e^7Equipment", "^7^e^0Equipment", () =>
             {
                 CInvMenu = EquipmentMenu;
             }, () => inv_inventory.GetX() + inv_inventory.GetWidth() + 20, () => inv_inventory.GetY(), FontSets.SlightlyBigger);
-            UITextLink inv_builderitems = new UITextLink("Builder Items", "^0^e^&7uilder Items", "^7^e^0Builder Items", () =>
+            UITextLink inv_builderitems = new UITextLink(null, "Builder Items", "^0^e^&7uilder Items", "^7^e^0Builder Items", () =>
             {
                 CInvMenu = BuilderItemsMenu;
             }, () => inv_equipment.GetX() + inv_equipment.GetWidth() + 20, () => inv_equipment.GetY(), FontSets.SlightlyBigger);
@@ -58,12 +58,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GenerateItemDescriptors();
             UpdateInventoryMenu();
             EquipmentMenu = new UIMenu(this);
-            UITextLink equ_inventory = new UITextLink("Inventory", "^0^e^7Inventory", "^7^e^0Inventory", () =>
+            UITextLink equ_inventory = new UITextLink(null, "Inventory", "^0^e^7Inventory", "^7^e^0Inventory", () =>
             {
                 CInvMenu = InventoryMenu;
             }, () => 20, () => 20, FontSets.SlightlyBigger);
             UILabel equ_equipment = new UILabel("^(Equipment", () => equ_inventory.GetX() + equ_inventory.GetWidth() + 20, () => equ_inventory.GetY(), FontSets.SlightlyBigger);
-            UITextLink equ_builderitems = new UITextLink("Builder Items", "^0^e^7Builder Items", "^7^e^0Builder Items", () =>
+            UITextLink equ_builderitems = new UITextLink(null, "Builder Items", "^0^e^7Builder Items", "^7^e^0Builder Items", () =>
             {
                 CInvMenu = BuilderItemsMenu;
             }, () => equ_equipment.GetX() + equ_equipment.GetWidth() + 20, () => equ_equipment.GetY(), FontSets.SlightlyBigger);
@@ -72,11 +72,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             EquipmentMenu.Add(equ_builderitems);
             EquipmentMenu.Add(InventoryExitButton());
             BuilderItemsMenu = new UIMenu(this);
-            UITextLink bui_inventory = new UITextLink("Inventory", "^0^e^7Inventory", "^7^e^0Inventory", () =>
+            UITextLink bui_inventory = new UITextLink(null, "Inventory", "^0^e^7Inventory", "^7^e^0Inventory", () =>
             {
                 CInvMenu = InventoryMenu;
             }, () => 20, () => 20, FontSets.SlightlyBigger);
-            UITextLink bui_equipment = new UITextLink("Equipment", "^0^e^7Equipment", "^7^e^0Equipment", () =>
+            UITextLink bui_equipment = new UITextLink(null, "Equipment", "^0^e^7Equipment", "^7^e^0Equipment", () =>
             {
                 CInvMenu = EquipmentMenu;
             }, () => bui_inventory.GetX() + bui_inventory.GetWidth() + 20, () => bui_inventory.GetY(), FontSets.SlightlyBigger);
@@ -87,7 +87,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             BuilderItemsMenu.Add(InventoryExitButton());
         }
 
-        int ItemsListSize = 150;
+        int ItemsListSize = 250;
 
         UILabel UI_Inv_Displayname;
         UILabel UI_Inv_Description;
@@ -119,7 +119,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             UI_Inv_Items.Clear();
             string pref1 = "^0^e^7";
             string pref2 = "^7^e^0";
-            UITextLink prev = new UITextLink("Air", pref1 + "Air", pref2 + "Air", () =>
+            UITextLink prev = new UITextLink(Textures.Clear, "Air", pref1 + "Air", pref2 + "Air", () =>
             {
                 InventorySelectItem(0);
             }
@@ -133,7 +133,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     string name = Items[i].DisplayName;
                     UITextLink p = prev;
                     int x = i;
-                    UITextLink neo = new UITextLink(name, pref1 + name, pref2 + name, () =>
+                    UITextLink neo = new UITextLink(Items[i].Tex, name, pref1 + name, pref2 + name, () =>
                     {
                         InventorySelectItem(x + 1);
                     }

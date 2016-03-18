@@ -10,8 +10,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 return false;
             }
-            Location pos = Location.FromBytes(data, 0);
-            TheClient.Player.SetPosition(pos);
+            TheClient.Player.SetPosition(Location.FromBytes(data, 0));
             return true;
         }
     }

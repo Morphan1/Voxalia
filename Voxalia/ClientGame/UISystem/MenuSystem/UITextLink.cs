@@ -26,8 +26,11 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public FontSet TextFont;
 
-        public UITextLink(string btext, string btexthover, string btextclick, Action clicked, Func<float> xer, Func<float> yer, FontSet font)
+        public Texture Icon;
+
+        public UITextLink(Texture ico, string btext, string btexthover, string btextclick, Action clicked, Func<float> xer, Func<float> yer, FontSet font)
         {
+            Icon = ico;
             ClickedTask = clicked;
             Text = btext;
             TextHover = btexthover;
@@ -78,12 +81,23 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             {
                 tt = TextHover;
             }
-            TextFont.DrawColoredText(tt, new Location(GetX() + xoff, GetY() + yoff, 0), int.MaxValue, 1, false, BColor);
+            if (Icon != null)
+            {
+                float x = GetX() + xoff;
+                float y = GetY() + yoff;
+                Icon.Bind();
+                Menus.TheClient.Rendering.RenderRectangle(x, y, x + TextFont.font_default.Height, y + TextFont.font_default.Height);
+                TextFont.DrawColoredText(tt, new Location(x + TextFont.font_default.Height, y, 0), int.MaxValue, 1, false, BColor);
+            }
+            else
+            {
+                TextFont.DrawColoredText(tt, new Location(GetX() + xoff, GetY() + yoff, 0), int.MaxValue, 1, false, BColor);
+            }
         }
 
         public float GetWidth()
         {
-            return TextFont.MeasureFancyText(Text);
+            return TextFont.MeasureFancyText(Text, BColor) + (Icon == null ? 0 :  TextFont.font_default.Height);
         }
 
         public float GetHeight()
@@ -105,8 +119,8 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
             float tx = GetX();
             float ty = GetY();
-            return x > tx && x < tx + TextFont.MeasureFancyText(Text, BColor)
-                && y > ty && y < ty + TextFont.font_default.Height;
+            return x > tx && x < tx + GetWidth()
+                && y > ty && y < ty + GetHeight();
         }
     }
 }

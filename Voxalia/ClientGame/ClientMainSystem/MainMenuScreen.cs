@@ -16,17 +16,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             Menus = new UIMenu(TheClient);
             FontSet font = TheClient.FontSets.SlightlyBigger;
-            UITextLink quit = new UITextLink("^%Q^7uit", "^%Q^e^7uit", "^7^e^%Q^0uit", () => {
+            UITextLink quit = new UITextLink(null, "^%Q^7uit", "^%Q^e^7uit", "^7^e^%Q^0uit", () => {
                 TheClient.Window.Close();
             }, () => 600, () => 300, font);
             quit.XGet = () => TheClient.Window.Width - 100 - font.font_default.MeasureString("Singleplayer");
             quit.YGet = () => TheClient.Window.Height - 100 - quit.GetHeight();
             Menus.Add(quit);
-            UITextLink sp = new UITextLink("^%S^7ingleplayer", "^%S^e^7ingleplayer", "^7^e^%S^0ingleplayer", () => {
+            UITextLink sp = new UITextLink(null, "^%S^7ingleplayer", "^%S^e^7ingleplayer", "^7^e^%S^0ingleplayer", () => {
                 TheClient.ShowSingleplayer();
             }, () => quit.GetX(), () => quit.GetY() - quit.GetHeight(), font);
             Menus.Add(sp);
-            UITextLink mp = new UITextLink("^%M^7ultiplayer", "^%M^e^7ultiplayer", "^7^e^%M^0ultiplayer", () => {
+            UITextLink mp = new UITextLink(null, "^%M^7ultiplayer", "^%M^e^7ultiplayer", "^7^e^%M^0ultiplayer", () => {
                 UIConsole.WriteLine("Multiplayer menu coming soon!");
             }, () => quit.GetX(), () => sp.GetY() - sp.GetHeight(), font);
             Menus.Add(mp);
