@@ -258,9 +258,10 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     int level = 0 - (int)(chunk.WorldPosition.Z * Chunk.CHUNK_SIZE);
                     if (hheightint <= 0)
                     {
+                        ushort sandmat = (ushort)biome.SandMaterial();
                         for (int z = Math.Max(top, 0); z < Math.Min(top + 1, Chunk.CHUNK_SIZE); z++)
                         {
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)Material.SAND, 0, 0, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(sandmat, 0, 0, 0);
                         }
                         for (int z = Math.Max(top + 1, 0); z <= Math.Min(level, Chunk.CHUNK_SIZE - 1); z++)
                         {
@@ -273,7 +274,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         {
                             if (Math.Round(heightfxp) <= 0 || Math.Round(heightfxm) <= 0 || Math.Round(heightfyp) <= 0 || Math.Round(heightfym) <= 0)
                             {
-                                chunk.BlocksInternal[chunk.BlockIndex(x, y, level)] = new BlockInternal((ushort)Material.SAND, 0, 0, 0);
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, level)] = new BlockInternal((ushort)biome.SandMaterial(), 0, 0, 0);
                             }
                         }
                     }

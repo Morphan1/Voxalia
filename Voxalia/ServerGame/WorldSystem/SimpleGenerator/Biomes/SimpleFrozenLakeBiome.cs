@@ -18,5 +18,15 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator.Biomes
         {
             return Material.SNOW;
         }
+
+        public override Material SandMaterial()
+        {
+            return Material.SNOW;
+        }
+
+        public override Material WaterMaterial()
+        {
+            return Material.ICE;
+        }
     }
 }

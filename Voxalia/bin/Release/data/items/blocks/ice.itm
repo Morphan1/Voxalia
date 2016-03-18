@@ -1,0 +1,8 @@
+type: block
+icon: blocks/solid/natural/ice
+display: Ice
+description: Frozen water!
+color: 1,1,1
+model: block
+bound: false
+datum: 29
