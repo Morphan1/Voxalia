@@ -59,10 +59,49 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Group General Information
                 // @ReturnType TextTag
                 // @Returns the name of the type of this item.
-                // @Example "bullet" .item_type returns "bullet".
+                // @Example "blocks/dirt" .item_type returns "block".
                 // -->
                 case "item_type":
                     return new TextTag(Internal.Name).Handle(data.Shrink());
+                // <--[tag]
+                // @Name ItemTag.item_type_secondary
+                // @Group General Information
+                // @ReturnType TextTag
+                // @Returns the name of the secondary type of this item, or null if none.
+                // @Example "ammo/rifle" .item_type_secondary returns "rifle_gun".
+                // @Example "blocks/dirt" .item_type_secondary returns null.
+                // -->
+                case "item_type_secondary":
+                    return string.IsNullOrEmpty(Internal.SecondaryName) ? new NullTag() : new TextTag(Internal.SecondaryName).Handle(data.Shrink());
+                // <--[tag]
+                // @Name ItemTag.count
+                // @Group General Information
+                // @ReturnType IntegerTag
+                // @Returns the number of this item held in this stack.
+                // @Example "blocks/dirt" .count returns "1".
+                // @Example "blocks/dirt[count=5]" .count returns "5".
+                // -->
+                case "count":
+                    return new IntegerTag(Internal.Count).Handle(data.Shrink());
+                    // TODO: All other item properties!
+                // <--[tag]
+                // @Name ItemTag.with_count[<IntegerTag>]
+                // @Group Modification
+                // @ReturnType ItemTag
+                // @Returns a copy of this item with the specified count of items. An input of 0 or less will result in an air item being returned.
+                // @Example "blocks/dirt" .with_count[5] returns "blocks/dirt[count=5]".
+                // -->
+                case "with_count":
+                    {
+                        ItemStack items = Internal.Duplicate();
+                        items.Count = (int)IntegerTag.For(data, data.GetModifierObject(0)).Internal;
+                        if (items.Count <= 0)
+                        {
+                            items = Internal.TheServer.Items.Air;
+                        }
+                        return new ItemTag(items).Handle(data.Shrink());
+                    }
+                    // TODO: Modifiers for all other item properties!
                 default:
                     return new TextTag(ToString()).Handle(data);
             }
