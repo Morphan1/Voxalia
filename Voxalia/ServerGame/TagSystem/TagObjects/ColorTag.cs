@@ -59,7 +59,12 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                     return new ColorTag(System.Drawing.Color.FromArgb((int)(a * 255), (int)(r * 255), (int)(g * 255), (int)(b * 255)));
                 }
             }
-            return null;
+            return new ColorTag(Colors.ForByte(Colors.ForName(input.ToUpperInvariant())));
+        }
+
+        public static ColorTag For(TemplateObject obj)
+        {
+            return obj is ColorTag ? (ColorTag)obj : For(obj.ToString());
         }
 
         public override TemplateObject Handle(TagData data)

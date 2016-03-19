@@ -79,17 +79,27 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @ReturnType IntegerTag
                 // @Returns the number of this item held in this stack.
                 // @Example "blocks/dirt" .count returns "1".
-                // @Example "blocks/dirt[count=5]" .count returns "5".
+                // @Example "blocks/dirt" .with_count[5].count returns "5".
                 // -->
                 case "count":
                     return new IntegerTag(Internal.Count).Handle(data.Shrink());
-                    // TODO: All other item properties!
+                // <--[tag]
+                // @Name ItemTag.draw_color
+                // @Group General Information
+                // @ReturnType ColorTag
+                // @Returns the color that this item is to be drawn (rendered) with.
+                // @Example "blocks/dirt" .draw_color returns "white".
+                // @Example "blocks/dirt" .with_draw_color[red].draw_color returns "red".
+                // -->
+                case "draw_color":
+                    return new ColorTag(Internal.DrawColor).Handle(data.Shrink());
+                // TODO: All other item properties!
                 // <--[tag]
                 // @Name ItemTag.with_count[<IntegerTag>]
                 // @Group Modification
                 // @ReturnType ItemTag
                 // @Returns a copy of this item with the specified count of items. An input of 0 or less will result in an air item being returned.
-                // @Example "blocks/dirt" .with_count[5] returns "blocks/dirt[count=5]".
+                // @Example "blocks/dirt" .with_count[5] returns 5x "blocks/dirt".
                 // -->
                 case "with_count":
                     {
@@ -101,7 +111,20 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                         }
                         return new ItemTag(items).Handle(data.Shrink());
                     }
-                    // TODO: Modifiers for all other item properties!
+                // <--[tag]
+                // @Name ItemTag.with_draw_color[<IntegerTag>]
+                // @Group Modification
+                // @ReturnType ItemTag
+                // @Returns a copy of this item with the specified draw_color.
+                // @Example "blocks/dirt" .with_draw_color[red] returns "blocks/dirt" colored red.
+                // -->
+                case "with_draw_color":
+                    {
+                        ItemStack items = Internal.Duplicate();
+                        items.DrawColor = ColorTag.For(data.GetModifierObject(0)).Internal;
+                        return new ItemTag(items).Handle(data.Shrink());
+                    }
+                // TODO: Modifiers for all other item properties!
                 default:
                     return new TextTag(ToString()).Handle(data);
             }
