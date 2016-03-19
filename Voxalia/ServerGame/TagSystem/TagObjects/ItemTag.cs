@@ -112,7 +112,33 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                         return new ItemTag(items).Handle(data.Shrink());
                     }
                 // <--[tag]
-                // @Name ItemTag.with_draw_color[<IntegerTag>]
+                // @Name ItemTag.with_item_type[<TextTag>]
+                // @Group Modification
+                // @ReturnType ItemTag
+                // @Returns a copy of this item with the specified type name.
+                // @Example "blocks/dirt" .with_item_type[rifle_gun] returns a rifle that looks like a block of dirt.
+                // -->
+                case "with_item_type":
+                    {
+                        ItemStack items = Internal.Duplicate();
+                        items.SetName(data.GetModifier(0));
+                        return new ItemTag(items).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ItemTag.with_secondary_type[<TextTag>]
+                // @Group Modification
+                // @ReturnType ItemTag
+                // @Returns a copy of this item with the specified secondary type name.
+                // @Example "blocks/dirt" .with_item_type[bullet].with_secondary_type[rifle_gun] returns ammo for a rifle that looks like a block of dirt.
+                // -->
+                case "with_secondary_type":
+                    {
+                        ItemStack items = Internal.Duplicate();
+                        items.SecondaryName = data.GetModifier(0).ToLowerInvariant();
+                        return new ItemTag(items).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ItemTag.with_draw_color[<ColorTag>]
                 // @Group Modification
                 // @ReturnType ItemTag
                 // @Returns a copy of this item with the specified draw_color.

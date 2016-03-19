@@ -75,6 +75,7 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public override void SetName(string name)
         {
+            name = name.ToLowerInvariant();
             Info = TheServer.ItemInfos.GetInfoFor(name);
             base.SetName(name);
         }
