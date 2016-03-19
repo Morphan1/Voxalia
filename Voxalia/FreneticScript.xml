@@ -754,7 +754,7 @@
             A random number generator.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.Commands.ExecuteScript(FreneticScript.CommandSystem.CommandScript,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.CommandQueue@)">
+        <member name="M:FreneticScript.CommandSystem.Commands.ExecuteScript(FreneticScript.CommandSystem.CommandScript,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.CommandQueue@,FreneticScript.CommandSystem.DebugMode)">
             <summary>
             Executes a command script.
             Returns the determined value(s).
@@ -762,6 +762,7 @@
             <param name="script">The script to execute.</param>
             <param name="Variables">What variables to add to the commandqueue.</param>
             <param name="queue">Outputs the generated queue (already ran or running).</param>
+            <param name="mode">The debug mode to run it in.</param>
         </member>
         <member name="M:FreneticScript.CommandSystem.Commands.GetScript(System.String)">
             <summary>
