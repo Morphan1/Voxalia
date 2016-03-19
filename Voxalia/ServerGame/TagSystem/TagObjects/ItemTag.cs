@@ -138,6 +138,31 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // -->
                 case "model_name":
                     return new TextTag(Internal.GetModelName()).Handle(data.Shrink());
+                // <--[tag]
+                // @Name ItemTag.shared_attributes
+                // @Group General Information
+                // @ReturnType MapTag
+                // @Returns a full map of all this items shared attributes.
+                // @Example "blocks/dirt" .shared_attributes returns an empty map.
+                // -->
+                case "shared_attributes":
+                    {
+                        MapTag map = new MapTag();
+                        foreach (KeyValuePair<string, float> entry in Internal.SharedAttributes)
+                        {
+                            map.Internal[entry.Key] = new NumberTag(entry.Value);
+                        }
+                        return map.Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ItemTag.local_attributes
+                // @Group General Information
+                // @ReturnType MapTag
+                // @Returns a full map of all this items local attributes.
+                // @Example "blocks/dirt" .local_attributes returns an empty map.
+                // -->
+                case "local_attributes":
+                    return new MapTag(Internal.Attributes).Handle(data.Shrink());
                 // TODO: All other item properties!
                 // <--[tag]
                 // @Name ItemTag.with_count[<IntegerTag>]
@@ -258,6 +283,38 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                     {
                         ItemStack items = Internal.Duplicate();
                         items.DrawColor = ColorTag.For(data.GetModifierObject(0)).Internal;
+                        return new ItemTag(items).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ItemTag.with_shared_attributes[<MapTag>]
+                // @Group Modification
+                // @ReturnType ItemTag
+                // @Returns a copy of this item with the specified shared attributes map.
+                // -->
+                case "with_shared_attributes":
+                    {
+                        ItemStack items = Internal.Duplicate();
+                        items.SharedAttributes.Clear();
+                        foreach (KeyValuePair<string, TemplateObject> entry in MapTag.For(data.GetModifierObject(0)).Internal)
+                        {
+                            items.SharedAttributes[entry.Key] = (float)NumberTag.For(data, entry.Value).Internal;
+                        }
+                        return new ItemTag(items).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ItemTag.with_local_attributes[<MapTag>]
+                // @Group Modification
+                // @ReturnType ItemTag
+                // @Returns a copy of this item with the specified local attributes map.
+                // -->
+                case "with_local_attributes":
+                    {
+                        ItemStack items = Internal.Duplicate();
+                        items.Attributes.Clear();
+                        foreach (KeyValuePair<string, TemplateObject> entry in MapTag.For(data.GetModifierObject(0)).Internal)
+                        {
+                            items.Attributes[entry.Key] = entry.Value;
+                        }
                         return new ItemTag(items).Handle(data.Shrink());
                     }
                 // TODO: Modifiers for all other item properties!
