@@ -93,6 +93,24 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // -->
                 case "draw_color":
                     return new ColorTag(Internal.DrawColor).Handle(data.Shrink());
+                // <--[tag]
+                // @Name ItemTag.description
+                // @Group General Information
+                // @ReturnType TextTag
+                // @Returns the description of the item.
+                // @Example "blocks/dirt" .description returns "Dirty!".
+                // -->
+                case "description":
+                    return new TextTag(Internal.Description).Handle(data.Shrink());
+                // <--[tag]
+                // @Name ItemTag.display_name
+                // @Group General Information
+                // @ReturnType TextTag
+                // @Returns the display name of the item.
+                // @Example "blocks/dirt" .display_name returns "Dirt".
+                // -->
+                case "display_name":
+                    return new TextTag(Internal.DisplayName).Handle(data.Shrink());
                 // TODO: All other item properties!
                 // <--[tag]
                 // @Name ItemTag.with_count[<IntegerTag>]
@@ -135,6 +153,32 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                     {
                         ItemStack items = Internal.Duplicate();
                         items.SecondaryName = data.GetModifier(0).ToLowerInvariant();
+                        return new ItemTag(items).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ItemTag.with_description[<TextTag>]
+                // @Group Modification
+                // @ReturnType ItemTag
+                // @Returns a copy of this item with the specified description.
+                // @Example "blocks/dirt" .with_description[hello world] returns a rather friendly block of dirt.
+                // -->
+                case "with_description":
+                    {
+                        ItemStack items = Internal.Duplicate();
+                        items.Description = data.GetModifier(0);
+                        return new ItemTag(items).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ItemTag.with_display_name[<TextTag>]
+                // @Group Modification
+                // @ReturnType ItemTag
+                // @Returns a copy of this item with the specified display name.
+                // @Example "blocks/dirt" .with_display_name[hello world] returns a rather friendly block of dirt.
+                // -->
+                case "with_display_name":
+                    {
+                        ItemStack items = Internal.Duplicate();
+                        items.DisplayName = data.GetModifier(0);
                         return new ItemTag(items).Handle(data.Shrink());
                     }
                 // <--[tag]
