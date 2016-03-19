@@ -148,7 +148,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     }
                     ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0, 0, (byte)BlockFlags.EDITED));
                     ch.LastEdited = GlobalTickTime;
-                    SurroundBlockPhysics(pos);
+                    SurroundRunPhysics(pos);
                     if (regentrans)
                     {
                         ChunkSendToAll(new BlockEditPacketOut(new Location[] { pos }, new ushort[] { 0 }, new byte[] { 0 }, new byte[] { 0 }), ch.WorldPosition);

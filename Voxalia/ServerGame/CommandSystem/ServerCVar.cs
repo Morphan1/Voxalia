@@ -33,9 +33,9 @@ namespace Voxalia.ServerGame.CommandSystem
             // Game CVars
             g_timescale = Register("g_timescale", "1", CVarFlag.Numeric, "The current game time scaling value.");
             g_fps = Register("g_fps", "30", CVarFlag.Numeric, "What framerate to use.");
-            g_maxheight = Register("g_maxheight", "5000", CVarFlag.Numeric, "What the highest possible Z coordinate should be (for building)."); // TODO: Per-world?
-            g_minheight = Register("g_minheight", "-5000", CVarFlag.Numeric, "What the lowest possible Z coordinate should be (for building)."); // TODO: Per-world?
-            g_maxdist = Register("g_maxdist", "50000", CVarFlag.Numeric, "How far on the X or Y axis a player may travel from the origin."); // TODO: Per-world?
+            g_maxheight = Register("g_maxheight", "5000", CVarFlag.Numeric, "What the highest possible Z coordinate should be (for building)."); // TODO: Also per-world?
+            g_minheight = Register("g_minheight", "-5000", CVarFlag.Numeric, "What the lowest possible Z coordinate should be (for building)."); // TODO: Also per-world?
+            g_maxdist = Register("g_maxdist", "50000", CVarFlag.Numeric, "How far on the X or Y axis a player may travel from the origin."); // TODO: Also per-world?
         }
 
         CVar Register(string name, string value, CVarFlag flags, string desc)

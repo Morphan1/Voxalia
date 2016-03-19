@@ -24,8 +24,9 @@ namespace Voxalia.ServerGame.WorldSystem
 {
     public partial class Region
     {
-        public void SurroundBlockPhysics(Location start)
+        public void SurroundRunPhysics(Location start)
         {
+            start = start.GetBlockLocation();
             for (int x = -1; x <= 1; x++)
             {
                 for (int y = -1; y <= 1; y++)
@@ -45,7 +46,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public void PhysicsSetBlock(Location block, Material mat, byte dat = 0, byte paint = 0, BlockDamage damage = BlockDamage.NONE)
         {
             SetBlockMaterial(block, mat, dat, paint, (byte)(BlockFlags.EDITED | BlockFlags.NEEDS_RECALC), damage);
-            TheServer.Schedule.ScheduleSyncTask(() => { SurroundBlockPhysics(block); }, 0.1);
+            TheServer.Schedule.ScheduleSyncTask(() => { SurroundRunPhysics(block); }, 0.1);
         }
 
         int remPercFor(byte b)
