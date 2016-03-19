@@ -235,6 +235,7 @@
     <Compile Include="ServerGame\TagSystem\TagBases\GrenadeEntityTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\ItemEntityTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\ColorTagBase.cs" />
+    <Compile Include="ServerGame\TagSystem\TagBases\RecipeResultTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\RecipeTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\ItemTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\LivingEntityTagBase.cs" />
@@ -266,6 +267,7 @@
     <Compile Include="ServerGame\TagSystem\TagObjects\PhysicsEntityTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\PlayerTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\PrimitiveEntityTag.cs" />
+    <Compile Include="ServerGame\TagSystem\TagObjects\RecipeResultTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\RecipeTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\RegionTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\SmokeGrenadeEntityTag.cs" />

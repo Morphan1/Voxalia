@@ -84,6 +84,15 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 case "count":
                     return new IntegerTag(Internal.Count).Handle(data.Shrink());
                 // <--[tag]
+                // @Name ItemTag.is_bound
+                // @Group General Information
+                // @ReturnType BooleanTag
+                // @Returns whether the item is 'bound' to the player (Can't be moved or lost).
+                // @Example "blocks/dirt" .is_bound returns "false".
+                // -->
+                case "is_bound":
+                    return new BooleanTag(Internal.IsBound).Handle(data.Shrink());
+                // <--[tag]
                 // @Name ItemTag.datum
                 // @Group General Information
                 // @ReturnType IntegerTag
@@ -179,6 +188,19 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                         {
                             items = Internal.TheServer.Items.Air;
                         }
+                        return new ItemTag(items).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ItemTag.with_bound_status[<BooleanTag>]
+                // @Group Modification
+                // @ReturnType ItemTag
+                // @Returns a copy of this item with the specified 'bound' status.
+                // @Example "blocks/dirt" .with_bound_status[true] returns a dirt block that can't be moved.
+                // -->
+                case "with_bound_status":
+                    {
+                        ItemStack items = Internal.Duplicate();
+                        items.IsBound = BooleanTag.For(data, data.GetModifierObject(0)).Internal;
                         return new ItemTag(items).Handle(data.Shrink());
                     }
                 // <--[tag]

@@ -23,7 +23,7 @@ Can get fancy:
 ```
 addrecipe type|display <{item[stick].with_count[5]}>
 {
-	determine "<{var[INPUT].get[1].with_count[1].with_display_name[Modded Stick]}>";
+	determine "<{var[USED_INPUT].get[1].with_count[1].with_display_name[Modded Stick]}>";
 }
 ```
 
@@ -40,3 +40,4 @@ Valid options for the first argument:
 	- Description: The item description text
 	- Color: The item's draw color
 	- Datum: The item datum
+	- Bound: Whether the item is bound

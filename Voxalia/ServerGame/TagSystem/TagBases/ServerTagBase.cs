@@ -74,7 +74,6 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 // @Group General Information
                 // @ReturnType ListTag
                 // @Returns a list of all loaded recipes.
-                // @Example .loaded_recipes could return "blocks/grass&pipeblocks/dirt|".
                 // -->
                 case "loaded_recipes":
                     {
@@ -90,7 +89,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 // @Group General Information
                 // @ReturnType ListTag
                 // @Returns a list of all loaded recipes that can be crafted from the given input.
-                // @Example .can_craft_from[blocks/dirt|] could return "blocks/grass&pipeblocks/dirt|".
+                // @Example .can_craft_from[blocks/grass_forest] could return "1&pipeblocks/grass_forest|".
                 // -->
                 case "can_craft_from":
                     {
@@ -102,9 +101,9 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                             items.Add(ItemTag.For(TheServer, obj).Internal);
                         }
                         ListTag recipes = new ListTag();
-                        foreach (ItemRecipe r in TheServer.Recipes.CanCraftFrom(items.ToArray()))
+                        foreach (RecipeResult r in TheServer.Recipes.CanCraftFrom(items.ToArray()))
                         {
-                            recipes.ListEntries.Add(new RecipeTag(r));
+                            recipes.ListEntries.Add(new RecipeResultTag(r));
                         }
                         return recipes.Handle(data.Shrink());
                     }

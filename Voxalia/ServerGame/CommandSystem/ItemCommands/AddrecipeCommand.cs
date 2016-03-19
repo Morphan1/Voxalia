@@ -7,6 +7,7 @@ using FreneticScript.CommandSystem;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.TagSystem.TagObjects;
+using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ServerGame.CommandSystem.ItemCommands
 {
@@ -19,7 +20,7 @@ namespace Voxalia.ServerGame.CommandSystem.ItemCommands
             TheServer = tserver;
             Name = "addrecipe";
             Description = "Adds a recipe to be crafted.";
-            Arguments = "<result item> <required item> ...";
+            Arguments = "<mode> <input item> ...";
         }
 
         public override void Execute(CommandEntry entry)
@@ -28,13 +29,12 @@ namespace Voxalia.ServerGame.CommandSystem.ItemCommands
             {
                 ShowUsage(entry);
             }
-            ItemTag resulttag = ItemTag.For(TheServer, entry.GetArgumentObject(0));
-            if (resulttag == null)
+            if (entry.Block == null)
             {
-                entry.Error("Invalid result item!");
+                entry.Error("Invalid or missing command block!");
                 return;
             }
-            ItemStack result = resulttag.Internal;
+            ListTag mode = ListTag.For(entry.GetArgumentObject(0));
             List<ItemStack> items = new List<ItemStack>();
             for (int i = 1; i < entry.Arguments.Count; i++)
             {
@@ -46,7 +46,7 @@ namespace Voxalia.ServerGame.CommandSystem.ItemCommands
                 }
                 items.Add(required.Internal);
             }
-            TheServer.Recipes.AddRecipe(result, items.ToArray());
+            TheServer.Recipes.AddRecipe(RecipeRegistry.ModeFor(mode), entry.Block, items.ToArray());
             if (entry.ShouldShowGood())
             {
                 entry.Good("Added recipe!");
