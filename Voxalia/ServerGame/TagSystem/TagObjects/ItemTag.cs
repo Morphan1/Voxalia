@@ -84,6 +84,15 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 case "count":
                     return new IntegerTag(Internal.Count).Handle(data.Shrink());
                 // <--[tag]
+                // @Name ItemTag.datum
+                // @Group General Information
+                // @ReturnType IntegerTag
+                // @Returns the "datum" number for this item.
+                // @Example "blocks/dirt" .datum returns "3".
+                // -->
+                case "datum":
+                    return new IntegerTag(Internal.Datum).Handle(data.Shrink());
+                // <--[tag]
                 // @Name ItemTag.draw_color
                 // @Group General Information
                 // @ReturnType ColorTag
@@ -127,6 +136,19 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                         {
                             items = Internal.TheServer.Items.Air;
                         }
+                        return new ItemTag(items).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ItemTag.with_datum[<IntegerTag>]
+                // @Group Modification
+                // @ReturnType ItemTag
+                // @Returns a copy of this item with the specified item datum value.
+                // @Example "blocks/dirt" .with_datum[1] returns a dirt block that is secretly made of stone.
+                // -->
+                case "with_datum":
+                    {
+                        ItemStack items = Internal.Duplicate();
+                        items.Datum = (int)IntegerTag.For(data, data.GetModifierObject(0)).Internal;
                         return new ItemTag(items).Handle(data.Shrink());
                     }
                 // <--[tag]
