@@ -10,12 +10,12 @@ using Voxalia.ServerGame.OtherSystems;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
-    public class FistItem: BaseItemInfo
+    public class PickaxeItem: BaseItemInfo
     {
-        public FistItem()
+        public PickaxeItem()
             : base()
         {
-            Name = "fist";
+            Name = "pickaxe";
         }
 
         public override void PrepItem(Entity player, ItemStack item)
@@ -25,6 +25,8 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
         public override void AltClick(Entity player, ItemStack item)
         {
         }
+
+        // TODO: Genericize for all breaker item types
 
         public override void Click(Entity ent, ItemStack item)
         {
@@ -68,6 +70,22 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                         player.BlockBreakStarted = player.TheRegion.GlobalTickTime;
                     }
                     float bt = mat.GetBreakTime();
+                    if (mat.GetBreaker() == MaterialBreaker.PICKAXE)
+                    {
+                        bt *= 0.3f;
+                    }
+                    else if (mat.GetBreaker() == MaterialBreaker.AXE)
+                    {
+                        bt *= 0.7f;
+                    }
+                    else if (mat.GetBreaker() == MaterialBreaker.SHOVEL)
+                    {
+                        bt *= 1.2f;
+                    }
+                    else if (mat.GetBreaker() == MaterialBreaker.HAND)
+                    {
+                        bt *= 0.87f;
+                    }
                     breakIt = player.TheRegion.GlobalTickTime - player.BlockBreakStarted > bt;
                 }
                 if (breakIt)
