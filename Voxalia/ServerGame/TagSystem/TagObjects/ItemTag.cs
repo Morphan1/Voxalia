@@ -120,6 +120,24 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // -->
                 case "display_name":
                     return new TextTag(Internal.DisplayName).Handle(data.Shrink());
+                // <--[tag]
+                // @Name ItemTag.texture_name
+                // @Group General Information
+                // @ReturnType TextTag
+                // @Returns the name of the item's texture/icon.
+                // @Example "blocks/dirt" .texture_name returns "blocks/solid/natural/dirt".
+                // -->
+                case "texture_name":
+                    return new TextTag(Internal.GetTextureName()).Handle(data.Shrink());
+                // <--[tag]
+                // @Name ItemTag.model_name
+                // @Group General Information
+                // @ReturnType TextTag
+                // @Returns the name of the item's 3D model.
+                // @Example "blocks/dirt" .model_name returns "block".
+                // -->
+                case "model_name":
+                    return new TextTag(Internal.GetModelName()).Handle(data.Shrink());
                 // TODO: All other item properties!
                 // <--[tag]
                 // @Name ItemTag.with_count[<IntegerTag>]
@@ -201,6 +219,32 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                     {
                         ItemStack items = Internal.Duplicate();
                         items.DisplayName = data.GetModifier(0);
+                        return new ItemTag(items).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ItemTag.with_texture_name[<TextTag>]
+                // @Group Modification
+                // @ReturnType ItemTag
+                // @Returns a copy of this item with the specified texture name.
+                // @Example "blocks/dirt" .with_texture_name[clear] returns an invisible block of dirt.
+                // -->
+                case "with_texture_name":
+                    {
+                        ItemStack items = Internal.Duplicate();
+                        items.SetTextureName(data.GetModifier(0));
+                        return new ItemTag(items).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ItemTag.with_model_name[<TextTag>]
+                // @Group Modification
+                // @ReturnType ItemTag
+                // @Returns a copy of this item with the specified model name.
+                // @Example "blocks/dirt" .with_model_name[sphere] returns a rather round block of dirt.
+                // -->
+                case "with_model_name":
+                    {
+                        ItemStack items = Internal.Duplicate();
+                        items.SetModelName(data.GetModifier(0));
                         return new ItemTag(items).Handle(data.Shrink());
                     }
                 // <--[tag]
