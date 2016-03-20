@@ -48,6 +48,7 @@ namespace Voxalia.ClientGame.EntitySystem
             vbo.Indices = new List<uint>();
             vbo.Colors = new List<Vector4>();
             vbo.TCOLs = new List<Vector4>();
+            vbo.Tangents = new List<Vector3>();
             System.Drawing.Color tcol = Voxalia.Shared.Colors.ForByte(Paint);
             Vector4 vcol;
             if (tcol.A == 0)
@@ -67,6 +68,20 @@ namespace Voxalia.ClientGame.EntitySystem
                 vbo.Indices.Add((uint)i);
                 vbo.Colors.Add(new Vector4(1, 1, 1, 1));
                 vbo.TCOLs.Add(vcol);
+            }
+            for (int i = 0; i < vecs.Count; i += 3)
+            {
+                int basis = i;
+                OpenTK.Vector3 v1 = vbo.Vertices[basis];
+                OpenTK.Vector3 dv1 = vbo.Vertices[basis + 1] - v1;
+                OpenTK.Vector3 dv2 = vbo.Vertices[basis + 2] - v1;
+                OpenTK.Vector3 t1 = vbo.TexCoords[basis];
+                OpenTK.Vector3 dt1 = vbo.TexCoords[basis + 1] - t1;
+                OpenTK.Vector3 dt2 = vbo.TexCoords[basis + 2] - t1;
+                OpenTK.Vector3 tangent = (dv1 * dt2.Y - dv2 * dt1.Y) * 1f / (dt1.X * dt2.Y - dt1.Y * dt2.X);
+                vbo.Tangents.Add(tangent);
+                vbo.Tangents.Add(tangent);
+                vbo.Tangents.Add(tangent);
             }
             vbo.GenerateVBO();
             base.SpawnBody();
@@ -139,6 +154,8 @@ namespace Voxalia.ClientGame.EntitySystem
             { 
                 TheClient.s_fbov.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.NormalTextureID);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -147,6 +164,8 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 TheClient.s_transponlyvox.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.NormalTextureID);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -155,6 +174,8 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 TheClient.s_transponlyvoxlit.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.NormalTextureID);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -163,6 +184,8 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 TheClient.s_transponlyvoxlitsh.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.NormalTextureID);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -180,6 +203,8 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 TheClient.s_fbo.Bind();
@@ -187,6 +212,8 @@ namespace Voxalia.ClientGame.EntitySystem
             else if (TheClient.FBOid == 3)
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
@@ -196,6 +223,8 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 TheClient.s_transponlylit.Bind();
@@ -203,6 +232,8 @@ namespace Voxalia.ClientGame.EntitySystem
             else if (TheClient.FBOid == 8)
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);

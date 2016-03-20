@@ -20,6 +20,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public int HelpTextureID = -1;
 
+        public int NormalTextureID = -1;
+
         public int TWidth;
 
         public void Generate(Client tclient, ClientCVar cvars, TextureEngine eng)
@@ -47,6 +49,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)(cvars.r_blocktexturelinear.ValueB ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            NormalTextureID = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2DArray, NormalTextureID);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.MAX_THEORETICAL_MATERIALS);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
             string[] datums = Program.Files.ReadText("info/textures.dat").Split('\n');
             List<MaterialTextureInfo> texs = new List<MaterialTextureInfo>();
             for (int i = 0; i < datums.Length; i++)
@@ -65,7 +74,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     tex.Mat = MaterialHelpers.FromNameOrNumber(dets[0]);
                 }
-                string[] reflecornot = dets[1].Split('*');
+                string[] normalornot = dets[1].Split('$');
+                GL.BindTexture(TextureTarget.Texture2DArray, NormalTextureID);
+                if (normalornot.Length > 1)
+                {
+                    SetTexture((int)tex.Mat, normalornot[1]);
+                }
+                else
+                {
+                    SetTexture((int)tex.Mat, "normal_def");
+                }
+                string[] reflecornot = normalornot[0].Split('*');
                 if (reflecornot.Length > 1)
                 {
                     tex.Reflectivity = Utilities.StringToFloat(reflecornot[1]);
@@ -81,6 +100,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     tex.Rate = Utilities.StringToFloat(rateornot[1]);
                 }
                 tex.Textures = rateornot[0].Split(',');
+                GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
                 SetTexture((int)tex.Mat, tex.Textures[0]);
                 if (tex.Textures.Length > 1)
                 {
@@ -134,7 +154,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             anim.Current = 0;
             anim.FBO = GL.GenFramebuffer();
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, anim.FBO);
-            //GL.FramebufferTexture3D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2DArray, TextureID, 0, ID);
             GL.FramebufferTextureLayer(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureID, 0, ID);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             Anims.Add(anim);

@@ -44,6 +44,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 List<Vector3> Norms = new List<Vector3>(CSize * CSize * CSize * 6);
                 List<Vector4> Cols = new List<Vector4>(CSize * CSize * CSize * 6);
                 List<Vector4> TCols = new List<Vector4>(CSize * CSize * CSize * 6);
+                List<Vector3> Tangs = new List<Vector3>(CSize * CSize * CSize * 6);
                 Vector3 ppos = ClientUtilities.Convert(WorldPosition * 30);
                 bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Location(0, 0, 1));
@@ -81,6 +82,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                 List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                                 List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[c.BlockData].GetNormals(pos, xps, xms, yps, yms, zps, zms);
                                 List<BEPUutilities.Vector3> tci = BlockShapeRegistry.BSD[c.BlockData].GetTCoords(pos, (Material)c.BlockMaterial, xps, xms, yps, yms, zps, zms);
+                                int vertcount = Vertices.Count;
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
                                     // TODO: is PosMultiplier used correctly here?
@@ -103,6 +105,20 @@ namespace Voxalia.ClientGame.WorldSystem
                                     {
                                         TCols.Add(new Vector4(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f, tcol.A / 255f));
                                     }
+                                }
+                                for (int i = 0; i < vecsi.Count; i += 3)
+                                {
+                                    int basis = vertcount + i;
+                                    Vector3 v1 = Vertices[basis];
+                                    Vector3 dv1 = Vertices[basis + 1] - v1;
+                                    Vector3 dv2 = Vertices[basis + 2] - v1;
+                                    Vector3 t1 = TCoords[basis];
+                                    Vector3 dt1 = TCoords[basis + 1] - t1;
+                                    Vector3 dt2 = TCoords[basis + 2] - t1;
+                                    Vector3 tangent = (dv1 * dt2.Y - dv2 * dt1.Y) * 1f / (dt1.X * dt2.Y - dt1.Y * dt2.X);
+                                    Tangs.Add(tangent);
+                                    Tangs.Add(tangent);
+                                    Tangs.Add(tangent);
                                 }
                                 if (!c.IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
                                 {
@@ -177,6 +193,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 tVBO.TexCoords = TCoords;
                 tVBO.Colors = Cols;
                 tVBO.TCOLs = TCols;
+                tVBO.Tangents = Tangs;
                 tVBO.BoneWeights = null;
                 tVBO.BoneIDs = null;
                 tVBO.BoneWeights2 = null;

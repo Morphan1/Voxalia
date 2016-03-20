@@ -433,6 +433,8 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.NormalTextureID);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -443,6 +445,16 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     chunk.Render();
                 }
+            }
+            if (TheClient.RenderTextures)
+            {
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
             }
         }
 
