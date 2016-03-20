@@ -13,6 +13,10 @@ namespace Voxalia.ServerGame.WorldSystem
 {
     public class Chunk
     {
+        public const int CHUNK_SIZE = 30;
+
+        public const int RAM_USAGE = CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 5;
+
         public static List<Object> Lockers = new List<Object>();
 
         static Chunk()
@@ -28,8 +32,6 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             return Lockers[Math.Abs(WorldPosition.GetHashCode()) % 20];
         }
-
-        public const int CHUNK_SIZE = 30;
 
         public ChunkFlags Flags = ChunkFlags.NONE;
         

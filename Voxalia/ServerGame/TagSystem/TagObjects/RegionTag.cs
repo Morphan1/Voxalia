@@ -41,7 +41,15 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // -->
                 case "name":
                     return new TextTag(Internal.Name).Handle(data.Shrink());
-
+                // <--[tag]
+                // @Name RegionTag.ram_usage_chunks
+                // @Group Statistics
+                // @ReturnType TextTag
+                // @Returns how much RAM is used by the blocks in chunks in this region.
+                // @Example "default" .ram_usage_chunks might return "1000000".
+                // -->
+                case "ram_usage_chunks":
+                    return new IntegerTag(Chunk.RAM_USAGE * Internal.LoadedChunks.Count);
                 default:
                     return new TextTag(ToString()).Handle(data);
             }
