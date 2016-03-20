@@ -49,7 +49,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public bool Contains(Location loc)
         {
             return loc.X >= WorldPosition.X * CHUNK_SIZE && loc.Y >= WorldPosition.Y * CHUNK_SIZE && loc.Z >= WorldPosition.Z * CHUNK_SIZE
-                && loc.X <= WorldPosition.X * CHUNK_SIZE + CHUNK_SIZE && loc.Y <= WorldPosition.Y * CHUNK_SIZE + CHUNK_SIZE && loc.Z <= WorldPosition.Z * CHUNK_SIZE + CHUNK_SIZE;
+                && loc.X < WorldPosition.X * CHUNK_SIZE + CHUNK_SIZE && loc.Y < WorldPosition.Y * CHUNK_SIZE + CHUNK_SIZE && loc.Z < WorldPosition.Z * CHUNK_SIZE + CHUNK_SIZE;
         }
 
         public BlockInternal[] BlocksInternal;
@@ -153,6 +153,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         }
                     }
                 }
+                dw.Flush();
                 return FileHandler.GZip(ds.ToArray());
             }
         }
