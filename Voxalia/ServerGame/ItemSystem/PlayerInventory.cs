@@ -10,9 +10,9 @@ namespace Voxalia.ServerGame.ItemSystem
         {
         }
 
-        public override ItemStack GiveItem(ItemStack item)
+        protected override ItemStack GiveItemNoDup(ItemStack item)
         {
-            ItemStack it = base.GiveItem(item);
+            ItemStack it = base.GiveItemNoDup(item);
             if (ReferenceEquals(it, item))
             {
                 ((PlayerEntity)Owner).Network.SendPacket(new SpawnItemPacketOut(Items.Count - 1, it));

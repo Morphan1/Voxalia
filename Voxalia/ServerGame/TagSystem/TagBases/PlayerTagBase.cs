@@ -29,30 +29,14 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
 
         public override TemplateObject Handle(TagData data)
         {
-            string pname = data.GetModifier(0).ToLowerInvariant();
-            long pid;
-            if (long.TryParse(pname, out pid))
+            TemplateObject pname = data.GetModifierObject(0);
+            ItemTag ptag = ItemTag.For(TheServer, pname);
+            if (ptag == null)
             {
-                foreach (PlayerEntity player in TheServer.Players)
-                {
-                    if (player.EID == pid)
-                    {
-                        return new PlayerTag(player).Handle(data.Shrink());
-                    }
-                }
+                data.Error("Invalid player '" + TagParser.Escape(pname.ToString()) + "'!");
+                return new NullTag();
             }
-            else
-            {
-                foreach (PlayerEntity player in TheServer.Players)
-                {
-                    if (player.Name.ToLowerInvariant() == pname)
-                    {
-                        return new PlayerTag(player).Handle(data.Shrink());
-                    }
-                }
-            }
-            data.Error("Invalid player '" + TagParser.Escape(pname) + "'!");
-            return new NullTag();
+            return ptag.Handle(data.Shrink());
         }
     }
 }

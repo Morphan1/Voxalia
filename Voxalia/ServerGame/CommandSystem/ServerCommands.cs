@@ -53,6 +53,7 @@ namespace Voxalia.ServerGame.CommandSystem
 
             // Item Commands
             CommandSystem.RegisterCommand(new AddrecipeCommand(TheServer));
+            CommandSystem.RegisterCommand(new GiveCommand(TheServer));
             
             // Player Management Commands
             CommandSystem.RegisterCommand(new KickCommand(TheServer));

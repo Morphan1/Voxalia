@@ -108,7 +108,12 @@ namespace Voxalia.ServerGame.ItemSystem
             return true;
         }
 
-        public virtual ItemStack GiveItem(ItemStack item)
+        public void GiveItem(ItemStack item)
+        {
+            GiveItemNoDup(item.Duplicate());
+        }
+
+        protected virtual ItemStack GiveItemNoDup(ItemStack item)
         {
             for (int i = 0; i < Items.Count; i++)
             {

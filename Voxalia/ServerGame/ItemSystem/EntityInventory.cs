@@ -15,9 +15,9 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public Entity Owner;
 
-        public override ItemStack GiveItem(ItemStack item)
+        protected override ItemStack GiveItemNoDup(ItemStack item)
         {
-            ItemStack it = base.GiveItem(item);
+            ItemStack it = base.GiveItemNoDup(item);
             it.Info.PrepItem(Owner, it);
             return it;
         }

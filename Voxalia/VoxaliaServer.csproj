@@ -85,6 +85,7 @@
     <Compile Include="ServerGame\CommandSystem\CommonCommands\SayCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\FileCommands\AddpathCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\ItemCommands\AddrecipeCommand.cs" />
+    <Compile Include="ServerGame\CommandSystem\ItemCommands\GiveCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\PlayerCommands\KickCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerCommands.cs" />
     <Compile Include="ServerGame\CommandSystem\ServerCVar.cs" />

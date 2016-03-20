@@ -24,6 +24,38 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             Internal = p;
         }
 
+        public static PlayerTag For(Server tserver, string pname)
+        {
+            long pid;
+            if (long.TryParse(pname, out pid))
+            {
+                foreach (PlayerEntity player in tserver.Players)
+                {
+                    if (player.EID == pid)
+                    {
+                        return new PlayerTag(player);
+                    }
+                }
+            }
+            else
+            {
+                pname = pname.ToLowerInvariant();
+                foreach (PlayerEntity player in tserver.Players)
+                {
+                    if (player.Name.ToLowerInvariant() == pname)
+                    {
+                        return new PlayerTag(player);
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static PlayerTag For(Server tserver, TemplateObject obj)
+        {
+            return (obj is PlayerTag) ? (PlayerTag)obj : For(tserver, obj.ToString());
+        }
+
         public override TemplateObject Handle(TagData data)
         {
             if (data.Input.Count == 0)
