@@ -656,12 +656,13 @@ namespace Voxalia.ClientGame.EntitySystem
                 mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
                 GL.UniformMatrix4(2, false, ref mat);
                 Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
-                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 2f * Utilities.PI180)));
+                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, ((float)(Direction.Pitch / 2f * Utilities.PI180) % 360f)));
                 adjs["spine04"] = rotforw;
-                SingleAnimationNode hand = tAnim.GetNode("metacarpal2.l");
+                SingleAnimationNode hand = tAnim.GetNode("metacarpal2.r");
                 Matrix m4 = Matrix.CreateScale(1.5f, 1.5f, 1.5f)
-                    * (Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
-                    * hand.GetBoneTotalMatrix(aTTime, adjs));
+                    * (Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 90) * Utilities.PI180) % 360f))
+                    * hand.GetBoneTotalMatrix(aTTime, adjs))
+                    * Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-90) * Utilities.PI180) % 360f));
                 OpenTK.Matrix4 bonemat = new OpenTK.Matrix4(m4.M11, m4.M12, m4.M13, m4.M14, m4.M21, m4.M22, m4.M23, m4.M24,
                     m4.M31, m4.M32, m4.M33, m4.M34, m4.M41, m4.M42, m4.M43, m4.M44);
                 GL.UniformMatrix4(10, false, ref bonemat);

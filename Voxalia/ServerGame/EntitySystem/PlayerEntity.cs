@@ -75,7 +75,8 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return "torso_armed_rifle";
             }
-            return "idle01";
+            return "torso_armed_rifle";
+            //return "idle01";
         }
         
         /// <summary>

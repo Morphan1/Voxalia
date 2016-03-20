@@ -319,7 +319,7 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public void UnloadFully()
         {
-            // TODO: Transfer all players to another world.
+            // TODO: Transfer all players to another world. Or kick if no worlds available?
             IntHolder counter = new IntHolder(); // TODO: is IntHolder needed here?
             IntHolder total = new IntHolder(); // TODO: is IntHolder needed here?
             List<Chunk> chunks = new List<Chunk>(LoadedChunks.Values);
