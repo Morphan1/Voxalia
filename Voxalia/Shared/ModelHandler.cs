@@ -164,7 +164,7 @@ namespace Voxalia.Shared
             return vertices;
         }
 
-        public MobileMeshShape MeshToBepu(Model3D input)
+        public MobileMeshShape MeshToBepu(Model3D input, out int verts)
         {
             List<Vector3> vertices = GetCollisionVertices(input);
             List<int> indices = new List<int>(vertices.Count);
@@ -172,13 +172,15 @@ namespace Voxalia.Shared
             {
                 indices.Add(indices.Count);
             }
+            verts = vertices.Count;
             return new MobileMeshShape(vertices.ToArray(), indices.ToArray(), AffineTransform.Identity, MobileMeshSolidity.DoubleSided);
         }
 
-        public ConvexHullShape MeshToBepuConvex(Model3D input)
+        public ConvexHullShape MeshToBepuConvex(Model3D input, out int verts)
         {
             List<Vector3> vertices = GetCollisionVertices(input);
             ConvexHullHelper.RemoveRedundantPoints(vertices);
+            verts = vertices.Count;
             return new ConvexHullShape(vertices);
         }
     }

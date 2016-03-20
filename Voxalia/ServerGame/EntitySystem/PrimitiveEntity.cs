@@ -24,6 +24,11 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public List<long> NoCollide = new List<long>();
 
+        public override long GetRAMUsage()
+        {
+            return base.GetRAMUsage() + 50 + NoCollide.Capacity * 8;
+        }
+
         public PrimitiveEntity(Region tregion)
             : base(tregion, true)
         {

@@ -42,6 +42,13 @@ namespace Voxalia.ServerGame.EntitySystem
         
         public Location offset;
 
+        int modelVerts = 10;
+
+        public override long GetRAMUsage()
+        {
+            return base.GetRAMUsage() + modelVerts * 12;
+        }
+
         public override void SpawnBody()
         {
             Model smod = TheServer.Models.GetModel(model);
@@ -58,11 +65,11 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             if (mode == ModelCollisionMode.PRECISE)
             {
-                Shape = TheServer.Models.handler.MeshToBepu(smodel); // TODO: Scale!
+                Shape = TheServer.Models.handler.MeshToBepu(smodel, out modelVerts); // TODO: Scale!
             }
             if (mode == ModelCollisionMode.CONVEXHULL)
             {
-                Shape = TheServer.Models.handler.MeshToBepuConvex(smodel); // TODO: Scale!
+                Shape = TheServer.Models.handler.MeshToBepuConvex(smodel, out modelVerts); // TODO: Scale!
             }
             else if (mode == ModelCollisionMode.AABB)
             {

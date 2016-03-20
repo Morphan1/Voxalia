@@ -24,6 +24,11 @@ namespace Voxalia.ServerGame.EntitySystem
             MinZ = CBHHeight;
         }
 
+        public override long GetRAMUsage()
+        {
+            return base.GetRAMUsage() + 200 + (Path == null ? 0 : Path.Length * 30);
+        }
+
         public string model = "cube";
 
         public float mod_xrot = 0;

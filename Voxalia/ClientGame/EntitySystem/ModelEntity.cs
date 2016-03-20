@@ -54,13 +54,14 @@ namespace Voxalia.ClientGame.EntitySystem
                 return;
             }
             model.LoadSkin(TheClient.Textures);
+            int ignoreme;
             if (mode == ModelCollisionMode.PRECISE)
             {
-                Shape = TheClient.Models.Handler.MeshToBepu(model.Original);
+                Shape = TheClient.Models.Handler.MeshToBepu(model.Original, out ignoreme);
             }
             else if (mode == ModelCollisionMode.CONVEXHULL)
             {
-                Shape = TheClient.Models.Handler.MeshToBepuConvex(model.Original);
+                Shape = TheClient.Models.Handler.MeshToBepuConvex(model.Original, out ignoreme);
             }
             else if (mode == ModelCollisionMode.AABB)
             {

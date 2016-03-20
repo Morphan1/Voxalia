@@ -24,8 +24,13 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public BGETraceMode TraceMode = BGETraceMode.CONVEX;
 
-        public BlockInternal[] Blocks = null;
-        
+        public BlockInternal[] Blocks;
+
+        public override long GetRAMUsage()
+        {
+            return base.GetRAMUsage() + Blocks.Length * 10;
+        }
+
         public BlockGroupEntity(Location baseloc, BGETraceMode mode, Region tregion, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth) : base(tregion)
         {
             SetMass(blocks.Length);

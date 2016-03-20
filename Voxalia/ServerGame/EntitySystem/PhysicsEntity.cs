@@ -34,6 +34,11 @@ namespace Voxalia.ServerGame.EntitySystem
             Gravity = new Location(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
         }
 
+        public override long GetRAMUsage()
+        {
+            return base.GetRAMUsage() + 200;
+        }
+
         /// <summary>
         /// The widest this entity gets at its furthest corner. Can be used to generate a bounding sphere.
         /// </summary>

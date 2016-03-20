@@ -22,6 +22,11 @@ namespace Voxalia.ServerGame.EntitySystem
             Ticks = tickme;
         }
 
+        public virtual long GetRAMUsage()
+        {
+            return 8 + 8 + JointTargetID.Length * 2 + (Seats == null ? 8 : Seats.Count * 8) + 8;
+        }
+
         public bool NetworkMe = true; // TODO: Readonly? Toggler method?
 
         /// <summary>

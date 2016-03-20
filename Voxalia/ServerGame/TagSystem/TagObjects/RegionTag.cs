@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Voxalia.ServerGame.TagSystem.TagObjects;
 using Voxalia.ServerGame.WorldSystem;
+using Voxalia.ServerGame.EntitySystem;
 
 namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
@@ -49,7 +50,23 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "default" .ram_usage_chunks might return "1000000".
                 // -->
                 case "ram_usage_chunks":
-                    return new IntegerTag(Chunk.RAM_USAGE * Internal.LoadedChunks.Count);
+                    return new IntegerTag((long)Chunk.RAM_USAGE * (long)Internal.LoadedChunks.Count).Handle(data.Shrink());
+                // <--[tag]
+                // @Name RegionTag.ram_usage_entities
+                // @Group Statistics
+                // @ReturnType TextTag
+                // @Returns (badly) estimates how much RAM is used by the entities in this region.
+                // @Example "default" .ram_usage_entities might return "1000000".
+                // -->
+                case "ram_usage_entities":
+                    {
+                        long sum = 0;
+                        foreach (Entity ent in Internal.Entities)
+                        {
+                            sum += ent.GetRAMUsage();
+                        }
+                        return new IntegerTag(sum).Handle(data.Shrink());
+                    }
                 default:
                     return new TextTag(ToString()).Handle(data);
             }
