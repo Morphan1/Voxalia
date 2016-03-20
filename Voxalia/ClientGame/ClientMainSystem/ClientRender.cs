@@ -776,7 +776,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                                 {
                                     s_transponlyvoxlitsh = s_transponlyvoxlitsh.Bind();
-                                    GL.ActiveTexture(TextureUnit.Texture2);
+                                    GL.ActiveTexture(TextureUnit.Texture3);
                                     GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
                                     GL.ActiveTexture(TextureUnit.Texture0);
                                 }
@@ -830,7 +830,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                             }
                         }
                     }
-                    GL.ActiveTexture(TextureUnit.Texture2);
+                    GL.ActiveTexture(TextureUnit.Texture3);
                     GL.BindTexture(TextureTarget.Texture2D, 0);
                     GL.ActiveTexture(TextureUnit.Texture0);
                     RenderLights = false;

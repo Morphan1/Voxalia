@@ -4,7 +4,7 @@
 #INCLUDE_STATEMENTS_HERE
 
 layout (binding = 0) uniform sampler2D tex;
-layout (binding = 2) uniform sampler2DShadow shadowtex;
+layout (binding = 3) uniform sampler2DShadow shadowtex;
 
 layout (location = 4) uniform float desaturationAmount = 1.0;
 layout (location = 5) uniform float minimum_light;
@@ -19,8 +19,6 @@ layout (location = 2) in vec3 f_normal;
 layout (location = 3) in vec3 f_position;
 
 out vec4 color;
-
-// TOD: maybe apply ambient/diffuse/specular lighting?
 
 vec3 desaturate(vec3 c)
 {

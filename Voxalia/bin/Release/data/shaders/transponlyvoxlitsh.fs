@@ -5,7 +5,8 @@
 
 layout (binding = 0) uniform sampler2DArray tex;
 layout (binding = 1) uniform sampler2DArray htex;
-layout (binding = 2) uniform sampler2DShadow shadowtex;
+layout (binding = 2) uniform sampler2DArray normal_tex;
+layout (binding = 3) uniform sampler2DShadow shadowtex;
 
 layout (location = 4) uniform float desaturationAmount = 1.0;
 layout (location = 5) uniform float minimum_light;
@@ -16,13 +17,11 @@ layout (location = 9) uniform mat4 light_details2;
 
 layout (location = 0) in vec4 f_color;
 layout (location = 1) in vec3 f_texcoord;
-layout (location = 2) in vec3 f_normal;
-layout (location = 3) in vec3 f_position;
-layout (location = 4) in vec4 f_tcol;
+layout (location = 2) in vec3 f_position;
+layout (location = 3) in vec4 f_tcol;
+layout (location = 4) in mat3 f_tbn;
 
 out vec4 color;
-
-// TOD: maybe apply ambient/diffuse/specular lighting?
 
 vec3 desaturate(vec3 c)
 {
@@ -40,6 +39,8 @@ void main()
 	{
 		discard;
 	}
+	vec3 norms = texture(normal_tex, f_texcoord).xyz * 2.0 - 1.0;
+    float spec = texture(htex, vec3(0, 0, f_texcoord.z)).r;
 	color = tcolor * f_color; // TODO: Clamp f_color.xyz, match fbo_vox
 	float light_radius = light_details[0][0];
 	vec3 diffuse_albedo = vec3(light_details[0][1], light_details[0][2], light_details[0][3]);
@@ -54,7 +55,7 @@ void main()
 	vec3 eye_pos = vec3(light_details2[0][0], light_details2[0][1], light_details2[0][2]);
 	vec3 light_pos = vec3(light_details2[1][0], light_details2[1][1], light_details2[1][2]);
 	vec4 f_spos = shadow_matrix * vec4(f_position, 1.0);
-	vec3 N = normalize(-f_normal);
+	vec3 N = normalize(-(f_tbn * norms));
 	vec3 light_path = light_pos - f_position;
 	float light_length = length(light_path);
 	float d = light_length / light_radius;
@@ -115,7 +116,7 @@ void main()
 #endif
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f_position - eye_pos)), 0.0), /* renderhint.y * 1000.0 */ 128.0) * specular_albedo * /* renderhint.x */ 0.0);
+	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f_position - eye_pos)), 0.0), 128.0) * specular_albedo * spec);
 	color = vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, color.w);
 #ifdef MCM_GOOD_GRAPHICS

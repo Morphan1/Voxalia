@@ -33,6 +33,6 @@ void main(void)
 	vec3 tf_normal = (mv_mat_simple * vec4(normal, 0.0)).xyz;
 	vec3 tf_tangent = (mv_mat_simple * vec4(tangent, 0.0)).xyz;
 	vec3 tf_bitangent = (mv_mat_simple * vec4(cross(tangent, normal), 0.0)).xyz;
-	f_tbn = mat3(tf_tangent, tf_bitangent, tf_normal);
+	f_tbn = transpose(mat3(tf_tangent, tf_bitangent, tf_normal)); // TODO: Neccessity of transpose()?
 	gl_Position = proj_matrix * mv_matrix * vec4(position, 1.0);
 }

@@ -304,6 +304,8 @@ namespace Voxalia.ClientGame.EntitySystem
                                 OpenTK.Vector3 dt1 = TexCoords[basis + 1] - t1;
                                 OpenTK.Vector3 dt2 = TexCoords[basis + 2] - t1;
                                 OpenTK.Vector3 tangent = (dv1 * dt2.Y - dv2 * dt1.Y) * 1f / (dt1.X * dt2.Y - dt1.Y * dt2.X);
+                                OpenTK.Vector3 normal = Normals[basis];
+                                tangent = (tangent - normal * OpenTK.Vector3.Dot(normal, tangent)).Normalized();
                                 Tangs.Add(tangent);
                                 Tangs.Add(tangent);
                                 Tangs.Add(tangent);

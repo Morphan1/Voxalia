@@ -11,8 +11,6 @@ layout (location = 4) uniform float desaturationAmount = 1.0;
 
 out vec4 color;
 
-// TOD: maybe apply ambient/diffuse/specular lighting?
-
 vec3 desaturate(vec3 c)
 {
 	return mix(c, vec3(0.95, 0.77, 0.55) * dot(c, vec3(1.0)), desaturationAmount);
