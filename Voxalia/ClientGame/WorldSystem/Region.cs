@@ -427,8 +427,6 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             TheClient.Rendering.SetColor(Color4.White);
             TheClient.Rendering.SetMinimumLight(0f);
-            float spec = TheClient.Rendering.Specular;
-            TheClient.Rendering.SetSpecular(0f);
             Matrix4 mat = Matrix4.Identity;
             GL.UniformMatrix4(2, false, ref mat);
             if (TheClient.RenderTextures)
@@ -446,7 +444,6 @@ namespace Voxalia.ClientGame.WorldSystem
                     chunk.Render();
                 }
             }
-            TheClient.Rendering.SetSpecular(spec);
         }
 
         public List<InternalBaseJoint> Joints = new List<InternalBaseJoint>();

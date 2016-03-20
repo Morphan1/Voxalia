@@ -22,6 +22,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public uint _VAO;
 
         public Texture Tex;
+        public Texture Tex_Specular;
+        public Texture Tex_Reflectivity;
 
         public List<Vector3> Vertices;
         public List<uint> Indices;
@@ -490,7 +492,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.UniformMatrix4(11, bones, false, floats);
         }
 
-        public void Render(bool texture)
+        public void Render(bool texture, bool fixafter = true)
         {
             if (!generated)
             {
@@ -499,10 +501,38 @@ namespace Voxalia.ClientGame.GraphicsSystems
             if (texture && Tex != null)
             {
                 Tex.Bind();
+                GL.ActiveTexture(TextureUnit.Texture1);
+                if (Tex_Specular != null)
+                {
+                    Tex_Specular.Bind();
+                }
+                else
+                {
+                    Tex.Engine.Black.Bind();
+                }
+                GL.ActiveTexture(TextureUnit.Texture2);
+                if (Tex_Reflectivity != null)
+                {
+                    Tex_Reflectivity.Bind();
+                }
+                else
+                {
+                    Tex.Engine.Black.Bind();
+                }
+                GL.ActiveTexture(TextureUnit.Texture0);
             }
             GL.BindVertexArray(_VAO);
             GL.DrawElements(PrimitiveType.Triangles, vC, DrawElementsType.UnsignedInt, IntPtr.Zero);
             GL.BindVertexArray(0);
+            if (fixafter && texture && Tex != null)
+            {
+                Tex.Engine.White.Bind();
+                GL.ActiveTexture(TextureUnit.Texture1);
+                Tex.Engine.Black.Bind();
+                GL.ActiveTexture(TextureUnit.Texture2);
+                Tex.Engine.Black.Bind();
+                GL.ActiveTexture(TextureUnit.Texture0);
+            }
         }
     }
 

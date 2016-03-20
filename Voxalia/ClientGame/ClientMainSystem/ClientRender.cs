@@ -1016,15 +1016,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else
             {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                Textures.Black.Bind();
+                GL.ActiveTexture(TextureUnit.Texture2);
+                Textures.Black.Bind();
+                GL.ActiveTexture(TextureUnit.Texture0);
                 if (FBOid == 1)
                 {
-                    Rendering.SetSpecular(0);
                     Rendering.SetMinimumLight(1);
                 }
                 RenderSkybox();
                 if (FBOid == 1)
                 {
-                    Rendering.SetSpecular(1);
                     Rendering.SetMinimumLight(0);
                 }
                 for (int i = 0; i < TheRegion.Entities.Count; i++)
@@ -1034,8 +1037,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 if (FBOid == 1)
                 {
                     Rendering.SetMinimumLight(1f);
-                    Rendering.SetSpecular(0);
                 }
+                GL.ActiveTexture(TextureUnit.Texture1);
+                Textures.Black.Bind();
+                GL.ActiveTexture(TextureUnit.Texture2);
+                Textures.Black.Bind();
+                GL.ActiveTexture(TextureUnit.Texture0);
                 Particles.Engine.Render();
             }
             if (FBOid == 1)
@@ -1081,6 +1088,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 s_shadow = s_shadow.Bind();
             }
+            if (!shadows_only)
+            {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                Textures.Black.Bind();
+                GL.ActiveTexture(TextureUnit.Texture2);
+                Textures.Black.Bind();
+                GL.ActiveTexture(TextureUnit.Texture0);
+            }
             Textures.White.Bind();
             Location mov = (CameraFinalTarget - CameraPos) / CameraDistance;
             Location cpos = CameraFinalTarget - (CameraImpactNormal * 0.01f);
@@ -1120,6 +1135,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     //Rendering.RenderLine(Joints[i].Ent1.GetPosition(), Joints[i].Ent2.GetPosition());
                 }
+            }
+            if (!shadows_only)
+            {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
             }
         }
 

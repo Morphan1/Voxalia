@@ -484,11 +484,29 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         {
                             Texture tex = texs.GetTexture(datums[1]);
                             bool success = false;
+                            string typer;
+                            string datic = datums[0].BeforeAndAfter(":::", out typer);
+                            typer = typer.ToLowerInvariant();
                             for (int i = 0; i < Meshes.Count; i++)
                             {
-                                if (Meshes[i].Name == datums[0])
+                                if (Meshes[i].Name == datic)
                                 {
-                                    Meshes[i].vbo.Tex = tex;
+                                    if (typer == "specular")
+                                    {
+                                        Meshes[i].vbo.Tex_Specular = tex;
+                                    }
+                                    else if (typer == "reflectivity")
+                                    {
+                                        Meshes[i].vbo.Tex_Reflectivity = tex;
+                                    }
+                                    else if (typer == "")
+                                    {
+                                        Meshes[i].vbo.Tex = tex;
+                                    }
+                                    else
+                                    {
+                                        SysConsole.Output(OutputType.WARNING, "Unknown skin entry typer: '" + typer + "', expected reflectivity, specular, or simply no specification!");
+                                    }
                                     success = true;
                                 }
                             }
