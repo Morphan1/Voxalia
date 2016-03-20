@@ -216,6 +216,7 @@
     <Compile Include="ServerGame\NetworkSystem\WebPage.cs" />
     <Compile Include="ServerGame\OtherSystems\GameMode.cs" />
     <Compile Include="ServerGame\OtherSystems\ModelEngine.cs" />
+    <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\RemotePlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\RegionCommands\BlockfloodPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\RegionCommands\BlockshapePlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\DevelPlayerCommand.cs" />

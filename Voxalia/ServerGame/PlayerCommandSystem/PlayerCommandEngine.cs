@@ -16,6 +16,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem
             // Common
             Register(new DevelPlayerCommand());
             Register(new DropPlayerCommand());
+            Register(new RemotePlayerCommand());
             Register(new SayPlayerCommand());
             Register(new StancePlayerCommand());
             Register(new ThrowPlayerCommand());
