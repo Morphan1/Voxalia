@@ -122,7 +122,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// How far (in chunks) the player can see, as a cubic radius, excluding the chunk the player is in.
         /// </summary>
-        public int ViewRadiusInChunks = 4;
+        public int ViewRadiusInChunks = 3;
 
         /// <summary>
         /// Kicks the player from the server with a specified message.
