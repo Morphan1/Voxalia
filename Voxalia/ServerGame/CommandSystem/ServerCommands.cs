@@ -41,6 +41,7 @@ namespace Voxalia.ServerGame.CommandSystem
             CommandSystem.Init();
 
             // Common Commands
+            CommandSystem.RegisterCommand(new MeminfoCommand(TheServer));
             CommandSystem.RegisterCommand(new QuitCommand(TheServer));
             CommandSystem.RegisterCommand(new SayCommand(TheServer));
 

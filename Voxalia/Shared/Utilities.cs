@@ -557,6 +557,26 @@ namespace Voxalia.Shared
             }
             return res;
         }
+
+        public static string FormatNumber(long input)
+        {
+            string basinp = input.ToString();
+            string creation = "";
+            int c = 0;
+            for (int i = basinp.Length - 1; i >= 0; i--)
+            {
+                if ((c % 3) == 0 && c != 0)
+                {
+                    creation = basinp[i] + "," + creation;
+                }
+                else
+                {
+                    creation = basinp[i] + creation;
+                }
+                c++;
+            }
+            return creation;
+        }
     }
 
     public class IntHolder

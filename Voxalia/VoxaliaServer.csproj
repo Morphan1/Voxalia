@@ -80,6 +80,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ServerGame\CommandSystem\CommonCommands\MeminfoCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\CommonCommands\QuitCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\CommonCommands\SayCommand.cs" />
     <Compile Include="ServerGame\CommandSystem\FileCommands\AddpathCommand.cs" />
