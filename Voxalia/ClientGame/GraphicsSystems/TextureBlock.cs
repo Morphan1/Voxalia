@@ -78,7 +78,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.BindTexture(TextureTarget.Texture2DArray, NormalTextureID);
                 if (normalornot.Length > 1)
                 {
-                    SetTexture((int)tex.Mat, normalornot[1]);
+                    string[] rorn = normalornot[1].Split('%');
+                    if (rorn.Length > 1)
+                    {
+                        tex.NRate = Utilities.StringToFloat(rorn[1]);
+                    }
+                    tex.NormalTextures = rorn[0].Split(',');
+                    SetTexture((int)tex.Mat, tex.NormalTextures[0]);
+                    if (tex.NormalTextures.Length > 1)
+                    {
+                        SetAnimatedNormal((int)tex.Mat, tex.NRate, tex.NormalTextures);
+                    }
                 }
                 else
                 {
@@ -159,6 +169,31 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Anims.Add(anim);
         }
 
+        public void SetAnimatedNormal(int ID, double rate, string[] textures)
+        {
+            AnimatedTexture anim = new AnimatedTexture();
+            anim.Block = this;
+            anim.Level = ID;
+            anim.Time = 0;
+            anim.Rate = rate;
+            anim.Textures = new int[textures.Length];
+            anim.FBOs = new int[textures.Length];
+            for (int i = 0; i < textures.Length; i++)
+            {
+                anim.Textures[i] = TEngine.GetTexture(textures[i], TWidth).Original_InternalID;
+                anim.FBOs[i] = GL.GenFramebuffer();
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, anim.FBOs[i]);
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, anim.Textures[i], 0);
+            }
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            anim.Current = 0;
+            anim.FBO = GL.GenFramebuffer();
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, anim.FBO);
+            GL.FramebufferTextureLayer(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, NormalTextureID, 0, ID);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            Anims.Add(anim);
+        }
+
         public void Tick(double ttime)
         {
             for (int i = 0; i < Anims.Count; i++)
@@ -176,7 +211,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public string[] Textures;
 
+        public string[] NormalTextures;
+
         public double Rate = 1;
+
+        public double NRate = 1;
 
         public float Specular = 0;
 
@@ -186,7 +225,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
     public class AnimatedTexture
     {
         public TextureBlock Block;
-
+        
         public int Level;
 
         public double Rate;
