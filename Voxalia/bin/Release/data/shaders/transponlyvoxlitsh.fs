@@ -15,11 +15,14 @@ layout (location = 7) uniform vec3 light_color = vec3(1.0, 1.0, 1.0);
 layout (location = 8) uniform mat4 light_details;
 layout (location = 9) uniform mat4 light_details2;
 
-layout (location = 0) in vec4 f_color;
-layout (location = 1) in vec3 f_texcoord;
-layout (location = 2) in vec3 f_position;
-layout (location = 3) in vec4 f_tcol;
-layout (location = 4) in mat3 f_tbn;
+in struct vox_out
+{
+	vec3 position;
+	vec3 texcoord;
+	vec4 color;
+	vec4 tcol;
+	mat3 tbn;
+} f;
 
 out vec4 color;
 
@@ -30,18 +33,18 @@ vec3 desaturate(vec3 c)
 
 void main()
 {
-	vec4 tcolor = texture(tex, f_texcoord) * f_tcol;
-	if (tcolor.w * f_color.w >= 0.99)
+	vec4 tcolor = texture(tex, f.texcoord) * f.tcol;
+	if (tcolor.w * f.color.w >= 0.99)
 	{
 		discard;
 	}
-	if (tcolor.w * f_color.w < 0.01)
+	if (tcolor.w * f.color.w < 0.01)
 	{
 		discard;
 	}
-	vec3 norms = texture(normal_tex, f_texcoord).xyz * 2.0 - 1.0;
-    float spec = texture(htex, vec3(0, 0, f_texcoord.z)).r;
-	color = tcolor * f_color; // TODO: Clamp f_color.xyz, match fbo_vox
+	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - 1.0;
+    float spec = texture(htex, vec3(0, 0, f.texcoord.z)).r;
+	color = tcolor * f.color; // TODO: Clamp f.color.xyz, match fbo_vox
 	float light_radius = light_details[0][0];
 	vec3 diffuse_albedo = vec3(light_details[0][1], light_details[0][2], light_details[0][3]);
 	vec3 specular_albedo = vec3(light_details[1][0], light_details[1][1], light_details[1][2]);
@@ -54,15 +57,15 @@ void main()
 		+ vec4(minimum_light, minimum_light, minimum_light, 0.0)) / lightc;
 	vec3 eye_pos = vec3(light_details2[0][0], light_details2[0][1], light_details2[0][2]);
 	vec3 light_pos = vec3(light_details2[1][0], light_details2[1][1], light_details2[1][2]);
-	vec4 f_spos = shadow_matrix * vec4(f_position, 1.0);
-	vec3 N = normalize(-(f_tbn * norms));
-	vec3 light_path = light_pos - f_position;
+	vec4 x_spos = shadow_matrix * vec4(f.position, 1.0);
+	vec3 N = normalize(-(f.tbn * norms));
+	vec3 light_path = light_pos - f.position;
 	float light_length = length(light_path);
 	float d = light_length / light_radius;
 	float atten = clamp(1.0 - (d * d), 0.0, 1.0);
 	if (light_type == 1.0)
 	{
-		vec4 fst = f_spos / f_spos.w;
+		vec4 fst = x_spos / x_spos.w;
 		atten *= 1 - (fst.x * fst.x + fst.y * fst.y);
 		if (atten < 0)
 		{
@@ -71,10 +74,10 @@ void main()
 	}
 	if (should_sqrt >= 1.0)
 	{
-		f_spos.x = sign(f_spos.x) * sqrt(abs(f_spos.x));
-		f_spos.y = sign(f_spos.y) * sqrt(abs(f_spos.y));
+		x_spos.x = sign(x_spos.x) * sqrt(abs(x_spos.x));
+		x_spos.y = sign(x_spos.y) * sqrt(abs(x_spos.y));
 	}
-	vec4 fs = f_spos / f_spos.w / 2.0 + vec4(0.5, 0.5, 0.5, 0.0);
+	vec4 fs = x_spos / x_spos.w / 2.0 + vec4(0.5, 0.5, 0.5, 0.0);
 	fs.w = 1.0;
 	if (fs.x < 0.0 || fs.x > 1.0
 		|| fs.y < 0.0 || fs.y > 1.0
@@ -116,7 +119,7 @@ void main()
 #endif
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f_position - eye_pos)), 0.0), 128.0) * specular_albedo * spec);
+	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f.position - eye_pos)), 0.0), 128.0) * specular_albedo * spec);
 	color = vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, color.w);
 #ifdef MCM_GOOD_GRAPHICS
