@@ -239,10 +239,20 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public void Tick(double ttime)
         {
             Time += ttime;
-            if (Time > Rate)
+            bool changed = false;
+            while (Time > Rate)
+            {
+                Current++;
+                if (Current >= Textures.Length)
+                {
+                    Current = 0;
+                }
+                Time -= Rate;
+                changed = true;
+            }
+            if (changed)
             {
                 AnimateNext();
-                Time -= Rate;
             }
         }
 
@@ -250,13 +260,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public int Current = 0;
 
-        public void AnimateNext()
+        private void AnimateNext()
         {
-            Current++;
-            if (Current >= Textures.Length)
-            {
-                Current = 0;
-            }
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, FBO);
             GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, FBOs[Current]);
             GL.BlitFramebuffer(0, 0, Block.TWidth, Block.TWidth, 0, 0, Block.TWidth, Block.TWidth, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Nearest);
