@@ -7,11 +7,14 @@ layout (location = 3) in vec4 color;
 layout (location = 4) in vec4 tcol;
 layout (location = 5) in vec3 tangent;
 
-layout (location = 0) out vec4 f_position;
-layout (location = 1) out vec3 f_texcoord;
-layout (location = 2) out vec4 f_color;
-layout (location = 3) out vec4 f_tcol;
-layout (location = 4) out mat3 f_tbn;
+out struct vox_out
+{
+	vec4 position;
+	vec3 texcoord;
+	vec4 color;
+	vec4 tcol;
+	mat3 tbn;
+} f;
 
 layout (location = 1) uniform mat4 proj_matrix = mat4(1.0);
 layout (location = 2) uniform mat4 mv_matrix = mat4(1.0);
@@ -21,11 +24,11 @@ layout (location = 2) uniform mat4 mv_matrix = mat4(1.0);
 
 void main(void)
 {
-    f_color = color;
-    f_tcol = tcol;
-	f_texcoord = texcoords;
-	f_position = mv_matrix * vec4(position, 1.0);
-    f_position /= f_position.w;
+    f.color = color;
+    f.tcol = tcol;
+	f.texcoord = texcoords;
+	f.position = mv_matrix * vec4(position, 1.0);
+    f.position /= f.position.w;
 	mat4 mv_mat_simple = mv_matrix;
 	mv_mat_simple[3][0] = 0.0;
 	mv_mat_simple[3][1] = 0.0;
@@ -33,6 +36,6 @@ void main(void)
 	vec3 tf_normal = (mv_mat_simple * vec4(normal, 0.0)).xyz;
 	vec3 tf_tangent = (mv_mat_simple * vec4(tangent, 0.0)).xyz;
 	vec3 tf_bitangent = (mv_mat_simple * vec4(cross(tangent, normal), 0.0)).xyz;
-	f_tbn = transpose(mat3(tf_tangent, tf_bitangent, tf_normal)); // TODO: Neccessity of transpose()?
+	f.tbn = transpose(mat3(tf_tangent, tf_bitangent, tf_normal)); // TODO: Neccessity of transpose()?
 	gl_Position = proj_matrix * mv_matrix * vec4(position, 1.0);
 }
