@@ -57,9 +57,6 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 pe = (PhysicsEntity)cr.HitEnt.Tag;
             }
             BaseJoint jd;
-            jd = new JointDistance(player, pe, 0.01f, len + 0.1f, player.GetCenter(), cr.Position);
-            player.TheRegion.AddJoint(jd);
-            player.Hooks.Add(new HookInfo() { Joint = jd, Hit = pe, IsBar = false });
             PhysicsEntity cent = pe;
             for (float f = 0; f < len - 1f; f += 0.5f)
             {
@@ -72,12 +69,13 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 ce.SetPosition(cpos + step * 0.5);
                 ce.SetOrientation(quat);
                 player.TheRegion.SpawnEntity(ce);
-                jd = new JointBallSocket(ce, cent, cpos + step * 0.5f);
+                jd = new JointDistance(ce, cent, 0.01f, 0.5f, ce.GetPosition(), (ReferenceEquals(cent, pe) ? cr.Position: cent.GetPosition()));
+                CollisionRules.AddRule(player.Body, ce.Body, CollisionRule.NoBroadPhase);
                 player.TheRegion.AddJoint(jd);
                 player.Hooks.Add(new HookInfo() { Joint = jd, Hit = ce, IsBar = true });
                 cent = ce;
             }
-            jd = new JointBallSocket(cent, player, player.GetCenter());
+            jd = new JointDistance(cent, player, 0.01f, 1f, cent.GetPosition(), player.GetCenter());
             player.TheRegion.AddJoint(jd);
             player.Hooks.Add(new HookInfo() { Joint = jd, Hit = player, IsBar = false });
         }
