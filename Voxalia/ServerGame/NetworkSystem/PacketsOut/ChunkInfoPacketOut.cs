@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         {
             if (chunk.Flags.HasFlag(ChunkFlags.POPULATING))
             {
-                throw new Exception("Trying to transmit chunk while it's still loading! For chunk at " + chunk);
+                throw new Exception("Trying to transmit chunk while it's still loading! For chunk at " + chunk.WorldPosition);
             }
             ID = 24;
             byte[] data_orig;

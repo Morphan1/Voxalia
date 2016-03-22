@@ -32,6 +32,8 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public double GlobalTickTime = 0;
 
+        public ChunkDataManager ChunkManager;
+
         public void ChunkSendToAll(AbstractPacketOut packet, Location cpos)
         {
             if (cpos.IsNaN())
@@ -128,9 +130,11 @@ namespace Voxalia.ServerGame.WorldSystem
             EntityConstructors.Add(EntityType.GLOWSTICK, new GlowstickEntityConstructor());
             EntityConstructors.Add(EntityType.MODEL, new ModelEntityConstructor());
             EntityConstructors.Add(EntityType.SMOKE_GRENADE, new SmokeGrenadeEntityConstructor());
+            ChunkManager = new ChunkDataManager();
+            ChunkManager.Init(this);
             //LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30), true);
             //TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-region scheduler // Also don't freeze the entire server/region just because we're waiting on chunks >.>
-            SysConsole.Output(OutputType.INIT, "Finished building chunks! Now have " + LoadedChunks.Count + " chunks!");
+            //SysConsole.Output(OutputType.INIT, "Finished building chunks! Now have " + LoadedChunks.Count + " chunks!");
         }
 
         public Location SpawnPoint;
@@ -360,6 +364,12 @@ namespace Voxalia.ServerGame.WorldSystem
                 TheServer.Schedule.RunAllSyncTasks(0.016);
             }
             OncePerSecondActions();
+            FinalShutdown();
+        }
+
+        public void FinalShutdown()
+        {
+            ChunkManager.Shutdown();
         }
 
         public void PaintBomb(Location pos, byte bcol, float rad = 5f)

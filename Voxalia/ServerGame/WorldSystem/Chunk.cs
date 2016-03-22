@@ -121,18 +121,15 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             lock (EditSessionLock)
             {
-                byte[] bytes = new byte[12 + BlocksInternal.Length * 5];
-                Encoding.ASCII.GetBytes("VOX_").CopyTo(bytes, 0); // General Header
-                Utilities.IntToBytes(3).CopyTo(bytes, 4); // Saves Version
-                Utilities.IntToBytes((int)Flags).CopyTo(bytes, 8);
+                byte[] bytes = new byte[BlocksInternal.Length * 5];
                 for (int i = 0; i < BlocksInternal.Length; i++)
                 {
-                    Utilities.UshortToBytes(BlocksInternal[i].BlockMaterial).CopyTo(bytes, 12 + i * 2);
-                    bytes[12 + BlocksInternal.Length * 2 + i] = BlocksInternal[i].BlockData;
-                    bytes[12 + BlocksInternal.Length * 3 + i] = BlocksInternal[i].BlockLocalData;
-                    bytes[12 + BlocksInternal.Length * 4 + i] = BlocksInternal[i].BlockPaint;
+                    Utilities.UshortToBytes(BlocksInternal[i].BlockMaterial).CopyTo(bytes, i * 2);
+                    bytes[BlocksInternal.Length * 2 + i] = BlocksInternal[i].BlockData;
+                    bytes[BlocksInternal.Length * 3 + i] = BlocksInternal[i].BlockLocalData;
+                    bytes[BlocksInternal.Length * 4 + i] = BlocksInternal[i].BlockPaint;
                 }
-                return FileHandler.GZip(bytes);
+                return bytes;
             }
         }
 
@@ -154,7 +151,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     }
                 }
                 dw.Flush();
-                return FileHandler.GZip(ds.ToArray());
+                return ds.ToArray();
             }
         }
 
@@ -202,38 +199,32 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             LastEdited = -1;
             byte[] ents = GetEntitySaveData();
-            byte[] saves1 = GetChunkSaveData();
+            byte[] blks = GetChunkSaveData();
             OwningRegion.TheServer.Schedule.StartASyncTask(() =>
             {
-                SaveToFileI(saves1, ents);
+                SaveToFileI(blks, ents);
                 if (callback != null)
                 {
                     callback.Invoke();
                 }
             });
         }
-
-        /// <summary>
-        /// Asyncable (math).
-        /// </summary>
-        public string GetFileName()
-        {
-            return "saves/" + OwningRegion.Name.ToLowerInvariant() + "/chunks/" + WorldPosition.Z + "/" + WorldPosition.Y + "/" + WorldPosition.X + ".chk";
-        }
-
-        void SaveToFileI(byte[] saves1, byte[] saves2)
+        
+        void SaveToFileI(byte[] blks, byte[] ents)
         {
             try
             {
-                byte[] res = new byte[4 + saves1.Length + 4 + saves2.Length];
-                Utilities.IntToBytes(saves1.Length).CopyTo(res, 0);
-                saves1.CopyTo(res, 4);
-                Utilities.IntToBytes(saves2.Length).CopyTo(res, 4 + saves1.Length);
-                saves2.CopyTo(res, 4 + saves1.Length + 4);
+                ChunkDetails det = new ChunkDetails();
+                det.Version = 1;
+                det.X = (int)WorldPosition.X;
+                det.Y = (int)WorldPosition.Y;
+                det.Z = (int)WorldPosition.Z;
+                det.Flags = Flags;
+                det.Blocks = blks;
+                det.Entities = ents;
                 lock (GetLocker())
                 {
-                    Program.Files.WriteBytes(GetFileName(), res);
-                    Thread.Sleep(50);
+                    OwningRegion.ChunkManager.WriteChunkDetails(det);
                 }
             }
             catch (Exception ex)
@@ -244,36 +235,23 @@ namespace Voxalia.ServerGame.WorldSystem
 
         List<Entity> entsToSpawn = new List<Entity>();
         
-        public void LoadFromSaveData(byte[] data)
+        public void LoadFromSaveData(ChunkDetails det)
         {
-            int clen = Utilities.BytesToInt(Utilities.BytesPartial(data, 0, 4));
-            // Begin: blocks
-            byte[] bytes = FileHandler.UnGZip(Utilities.BytesPartial(data, 4, clen));
-            string engine = Encoding.ASCII.GetString(bytes, 0, 4);
-            if (engine != "VOX_")
+            if (det.Version != 1)
             {
-                throw new Exception("Invalid save data ENGINE format: " + engine + "!");
+                throw new Exception("invalid save data VERSION: " + det.Version + "!");
             }
-            int revision = Utilities.BytesToInt(Utilities.BytesPartial(bytes, 4, 4));
-            if (revision != 3)
-            {
-                throw new Exception("Invalid save data REVISION: " + revision + "!");
-            }
-            int flags = Utilities.BytesToInt(Utilities.BytesPartial(bytes, 4 + 4, 4));
-            Flags = (ChunkFlags)flags & ~(ChunkFlags.POPULATING);
+            Flags = det.Flags & ~(ChunkFlags.POPULATING);
             for (int i = 0; i < BlocksInternal.Length; i++)
             {
-                BlocksInternal[i]._BlockMaterialInternal = Utilities.BytesToUshort(Utilities.BytesPartial(bytes, 4 + 4 + 4 + i * 2, 2));
-                BlocksInternal[i].BlockData = bytes[4 + 4 + 4 + BlocksInternal.Length * 2 + i];
-                BlocksInternal[i].BlockLocalData = bytes[4 + 4 + 4 + BlocksInternal.Length * 3 + i];
-                BlocksInternal[i].BlockPaint = bytes[4 + 4 + 4 + BlocksInternal.Length * 4 + i];
+                BlocksInternal[i]._BlockMaterialInternal = Utilities.BytesToUshort(Utilities.BytesPartial(det.Blocks, i * 2, 2));
+                BlocksInternal[i].BlockData = det.Blocks[BlocksInternal.Length * 2 + i];
+                BlocksInternal[i].BlockLocalData = det.Blocks[BlocksInternal.Length * 3 + i];
+                BlocksInternal[i].BlockPaint = det.Blocks[BlocksInternal.Length * 4 + i];
             }
-            // Begin: entities
-            int elen = Utilities.BytesToInt(Utilities.BytesPartial(data, 4 + clen, 4));
-            byte[] ebytes = FileHandler.UnGZip(Utilities.BytesPartial(data, 4 + clen + 4, elen));
-            if (ebytes.Length > 0)
+            if (det.Entities.Length > 0)
             {
-                using (DataStream eds = new DataStream(ebytes))
+                using (DataStream eds = new DataStream(det.Entities))
                 {
                     DataReader edr = new DataReader(eds);
                     while (eds.Length - eds.Position > 0)

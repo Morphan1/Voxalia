@@ -175,8 +175,6 @@ namespace Voxalia.ServerGame.WorldSystem
         static Location[] slocs = new Location[] { new Location(1, 0, 0), new Location(-1, 0, 0), new Location(0, 1, 0),
             new Location(0, -1, 0), new Location(0, 0, 1), new Location(0, 0, -1) };
 
-        public List<Chunk> ChunksToDestroy = new List<Chunk>();
-
         public Chunk LoadChunkNoPopulate(Location cpos)
         {
             CheckThreadValidity();
@@ -190,14 +188,12 @@ namespace Voxalia.ServerGame.WorldSystem
             chunk.Flags = ChunkFlags.ISCUSTOM | ChunkFlags.POPULATING;
             chunk.OwningRegion = this;
             chunk.WorldPosition = cpos;
-            LoadedChunks.Add(cpos, chunk);
-            if (Program.Files.Exists(chunk.GetFileName()))
+            if (PopulateChunk(chunk, true, true))
             {
-                PopulateChunk(chunk, true, true);
+                LoadedChunks.Add(cpos, chunk);
                 chunk.Flags &= ~ChunkFlags.ISCUSTOM;
                 chunk.AddToWorld();
             }
-            ChunksToDestroy.Add(chunk);
             chunk.LastEdited = GlobalTickTime;
             return chunk;
         }
@@ -215,7 +211,6 @@ namespace Voxalia.ServerGame.WorldSystem
                 if (chunk.Flags.HasFlag(ChunkFlags.ISCUSTOM))
                 {
                     chunk.Flags &= ~ChunkFlags.ISCUSTOM;
-                    ChunksToDestroy.Remove(chunk);
                     PopulateChunk(chunk, false);
                     chunk.AddToWorld();
                 }
@@ -247,7 +242,6 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             else
             {
-                ChunksToDestroy.Remove(ch);
                 ch.AddToWorld();
                 ch.LoadSchedule = schedule.AddASyncTask(() =>
                 {
@@ -348,41 +342,45 @@ namespace Voxalia.ServerGame.WorldSystem
         public BlockPopulator Generator = new SimpleGeneratorCore();
         public BiomeGenerator BiomeGen = new SimpleBiomeGenerator();
 
-        public void PopulateChunk(Chunk chunk, bool allowFile, bool fileOnly = false)
+        public bool PopulateChunk(Chunk chunk, bool allowFile, bool fileOnly = false)
         {
             try
             {
-                if (allowFile && Program.Files.Exists(chunk.GetFileName()))
+                if (allowFile)
                 {
-                    byte[] dat;
+                    ChunkDetails dat;
                     lock (chunk.GetLocker())
                     {
-                        dat = Program.Files.ReadBytes(chunk.GetFileName());
+                        dat = ChunkManager.GetChunkDetails((int)chunk.WorldPosition.X, (int)chunk.WorldPosition.Y, (int)chunk.WorldPosition.Z);
                     }
-                    chunk.LoadFromSaveData(dat);
-                    TheServer.Schedule.ScheduleSyncTask(() =>
+                    if (dat != null)
                     {
-                        chunk.AddToWorld();
-                    });
-                    if (!chunk.Flags.HasFlag(ChunkFlags.ISCUSTOM))
-                    {
-                        chunk.Flags &= ~ChunkFlags.POPULATING;
-                        return;
+                        chunk.LoadFromSaveData(dat);
+                        TheServer.Schedule.ScheduleSyncTask(() =>
+                        {
+                            chunk.AddToWorld();
+                        });
+                        if (!chunk.Flags.HasFlag(ChunkFlags.ISCUSTOM))
+                        {
+                            chunk.Flags &= ~ChunkFlags.POPULATING;
+                            return true;
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
                 SysConsole.Output(OutputType.ERROR, "Loading chunk" + chunk.WorldPosition.ToString() + ": " + ex.ToString());
-                return;
+                return false;
             }
             if (fileOnly)
             {
-                return;
+                return false;
             }
             Generator.Populate(Seed, Seed2, Seed3, Seed4, Seed5, chunk);
             chunk.LastEdited = GlobalTickTime;
             chunk.Flags &= ~(ChunkFlags.POPULATING | ChunkFlags.ISCUSTOM);
+            return true;
         }
 
         public List<Location> GetBlocksInRadius(Location pos, float rad)

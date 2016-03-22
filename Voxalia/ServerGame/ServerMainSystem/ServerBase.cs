@@ -110,6 +110,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 SysConsole.Output(OutputType.INFO, "[Shutdown] Unloading world: " + region.Name);
                 region.UnloadFully();
             }
+            LoadedRegions.Clear();
             SysConsole.Output(OutputType.INFO, "[Shutdown] Closing server...");
             ShutDownQuickly();
         }
@@ -119,6 +120,10 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// </summary>
         public void ShutDownQuickly()
         {
+            foreach (Region reg in LoadedRegions)
+            {
+                reg.FinalShutdown();
+            }
             TickMe = false;
             ConsoleHandler.Close();
         }

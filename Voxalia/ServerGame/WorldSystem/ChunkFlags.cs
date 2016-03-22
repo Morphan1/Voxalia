@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
+    [Flags]
     public enum ChunkFlags: int
     {
         NONE = 0,

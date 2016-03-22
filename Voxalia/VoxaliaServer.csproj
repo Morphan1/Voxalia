@@ -66,6 +66,9 @@
     <Reference Include="FreneticScript">
       <HintPath>.\FreneticScript.dll</HintPath>
     </Reference>
+    <Reference Include="LiteDB">
+      <HintPath>.\LiteDB.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -281,6 +284,8 @@
     <Compile Include="ServerGame\WorldSystem\BiomeGenerator.cs" />
     <Compile Include="ServerGame\WorldSystem\BlockPopulator.cs" />
     <Compile Include="ServerGame\WorldSystem\Chunk.cs" />
+    <Compile Include="ServerGame\WorldSystem\ChunkDataManager.cs" />
+    <Compile Include="ServerGame\WorldSystem\ChunkDetails.cs" />
     <Compile Include="ServerGame\WorldSystem\ChunkFlags.cs" />
     <Compile Include="ServerGame\WorldSystem\Cloud.cs" />
     <Compile Include="ServerGame\WorldSystem\LiquidVolume.cs" />
