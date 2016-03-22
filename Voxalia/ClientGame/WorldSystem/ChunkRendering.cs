@@ -95,14 +95,14 @@ namespace Voxalia.ClientGame.WorldSystem
                                     System.Drawing.Color tcol = Colors.ForByte(c.BlockPaint);
                                     if (tcol.A == 0)
                                     {
-                                        if (tcol.R == 255 && tcol.G == 0 && tcol.B == 255)
+                                        if (tcol.R == 127 && tcol.G == 0 && tcol.B == 127)
                                         {
                                             float r = SimplexNoise.Generate(vt.X / 10f, vt.Y / 10f, vt.Z / 10f);
                                             float g = SimplexNoise.Generate((vt.X + 50f) / 10f, (vt.Y + 127f) / 10f, (vt.Z + 10f) / 10f);
                                             float b = SimplexNoise.Generate((vt.X - 150f) / 10f, (vt.Y - 65f) / 10f, (vt.Z + 73f) / 10f);
                                             TCols.Add(new Vector4(r, g, b, 1f));
                                         }
-                                        else if (tcol.R == 0 && tcol.G == 0 && tcol.B == 0)
+                                        else if (tcol.R == 127 && tcol.G == 0 && tcol.B == 0)
                                         {
                                             Random random = new Random((int)(vt.X + vt.Y + vt.Z));
                                             TCols.Add(new Vector4((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble(), 1f));

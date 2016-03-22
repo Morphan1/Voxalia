@@ -59,12 +59,12 @@ namespace Voxalia.ClientGame.EntitySystem
                 vbo.Colors.Add(new Vector4(1, 1, 1, 1));
                 if (tcol.A == 0)
                 {
-                    if (tcol.R == 255 && tcol.G == 0 && tcol.B == 255)
+                    if (tcol.R == 127 && tcol.G == 0 && tcol.B == 127)
                     {
                         Random urand = new Random(1594124); // TODO: Track where the block came from?
                         vbo.TCOLs.Add(new OpenTK.Vector4((float)urand.NextDouble(), (float)urand.NextDouble(), (float)urand.NextDouble(), 1f));
                     }
-                    else if (tcol.R == 0 && tcol.G == 0 && tcol.B == 0)
+                    else if (tcol.R == 127 && tcol.G == 0 && tcol.B == 0)
                     {
                         Random random = new Random((int)(vecs[i].X + vecs[i].Y + vecs[i].Z));
                         vbo.TCOLs.Add(new Vector4((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble(), 1f));

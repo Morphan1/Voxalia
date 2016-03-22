@@ -42,17 +42,37 @@ void main()
 	gl_Position = proj_matrix * mv_matrix * vec4(position, 1.0);
 }
 
+const float min_cstrobe = 3.0 / 255.0;
+
 vec4 color_for(in vec4 pos)
 {
 	if (tcol.w == 0.0)
 	{
-		if (tcol.x == 1.0 && tcol.y == 1.0 && tcol.z == 1.0)
+		if (tcol.x == 0.0 && tcol.y == 0.0 && tcol.z == 0.0)
 		{
 			float r = snoise2(vec3((pos.x + time) / 10.0, (pos.y + time) / 10.0, (pos.z + time) / 10.0));
 			float g = snoise2(vec3((pos.x + 50.0 + time * 2) / 10.0, (pos.y + 127.0 + time * 1.7) / 10.0, (pos.z + 10.0 + time * 2.3) / 10.0));
 			float b = snoise2(vec3((pos.x - 50.0 - time) / 10.0, (pos.y - 65.0 - time * 1.56) / 10.0, (pos.z + 73.0 - time * 1.3) / 10.0));
 			return vec4(r, g, b, 1.0);
 		}
+		else
+		{
+			float adjust = abs(mod(time * 0.2, 2.0));
+			if (adjust > 1.0)
+			{
+				adjust = 2.0 - adjust;
+			}
+			return vec4(tcol.x * adjust, tcol.y * adjust, tcol.z * adjust, 1.0);
+		}
+	}
+	else if (tcol.w <= min_cstrobe)
+	{
+			float adjust = abs(mod(time * 0.2, 2.0));
+			if (adjust > 1.0)
+			{
+				adjust = 2.0 - adjust;
+			}
+			return vec4(1.0 - tcol.x * adjust, 1.0 - tcol.y * adjust, 1.0 - tcol.z * adjust, 1.0);
 	}
 	return tcol;
 }
