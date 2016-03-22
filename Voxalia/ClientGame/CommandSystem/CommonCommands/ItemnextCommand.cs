@@ -26,7 +26,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             {
                 return;
             }
-            TheClient.QuickBarPos++;
+            TheClient.QuickBarPos = (TheClient.QuickBarPos + 1) % (TheClient.Items.Count + 1);
             TheClient.Network.SendPacket(new HoldItemPacketOut(TheClient.QuickBarPos));
             TheClient.RenderExtraItems = 3;
         }

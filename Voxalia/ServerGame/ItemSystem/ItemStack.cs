@@ -109,7 +109,10 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public ItemStack Duplicate()
         {
-            return (ItemStack)MemberwiseClone();
+            ItemStack its = (ItemStack)MemberwiseClone();
+            its.Attributes = new Dictionary<string, TemplateObject>(its.Attributes);
+            its.SharedAttributes = new Dictionary<string, float>(its.SharedAttributes);
+            return its;
         }
 
         public string EscapedSharedStr()

@@ -10,8 +10,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 return false;
             }
-            int dat = Utilities.BytesToInt(data);
-            TheClient.QuickBarPos = dat;
+            TheClient.QuickBarPos = Utilities.BytesToInt(data);
             return true;
         }
     }

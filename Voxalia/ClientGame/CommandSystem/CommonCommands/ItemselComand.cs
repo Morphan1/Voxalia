@@ -1,4 +1,5 @@
-﻿using FreneticScript.CommandSystem;
+﻿using System;
+using FreneticScript.CommandSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared;
@@ -31,12 +32,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             {
                 return;
             }
-            TheClient.QuickBarPos = Utilities.StringToInt(entry.GetArgument(0));
-            TheClient.QuickBarPos = TheClient.QuickBarPos % (TheClient.Items.Count + 1);
-            while (TheClient.QuickBarPos < 0)
-            {
-                TheClient.QuickBarPos += TheClient.Items.Count + 1;
-            }
+            TheClient.QuickBarPos = Math.Abs(Utilities.StringToInt(entry.GetArgument(0))) % (TheClient.Items.Count + 1);
             TheClient.Network.SendPacket(new HoldItemPacketOut(TheClient.QuickBarPos));
             TheClient.RenderExtraItems = 3;
         }
