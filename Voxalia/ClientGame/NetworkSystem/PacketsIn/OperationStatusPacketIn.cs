@@ -38,10 +38,16 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                             {
                                 TheClient.Schedule.ScheduleSyncTask(() =>
                                 {
-                                    TheClient.TheChunkWaitingScreen.ChunksStillWaiting = ChunksStillLoading();
+                                    lock (TheClient.TheChunkWaitingScreen.WaitLock)
+                                    {
+                                        TheClient.TheChunkWaitingScreen.ChunksStillWaiting = ChunksStillLoading();
+                                    }
                                 });
                                 Thread.Sleep(16);
-                                c = TheClient.TheChunkWaitingScreen.ChunksStillWaiting;
+                                lock (TheClient.TheChunkWaitingScreen.WaitLock)
+                                {
+                                    c = TheClient.TheChunkWaitingScreen.ChunksStillWaiting;
+                                }
                             }
                             TheClient.Schedule.ScheduleSyncTask(() =>
                             {

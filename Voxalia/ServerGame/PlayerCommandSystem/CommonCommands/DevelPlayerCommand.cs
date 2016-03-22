@@ -60,7 +60,8 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 float h = entry.Player.TheRegion.Generator.GetHeight(entry.Player.TheRegion.Seed, entry.Player.TheRegion.Seed2, entry.Player.TheRegion.Seed3,
                     entry.Player.TheRegion.Seed4, entry.Player.TheRegion.Seed5, (float)posBlock.X, (float)posBlock.Y, (float)posBlock.Z, out biome);
                 BlockInternal bi = entry.Player.TheRegion.GetBlockInternal_NoLoad((entry.Player.GetPosition() + new Location(0, 0, -0.05f)).GetBlockLocation());
-                entry.Player.Network.SendMessage("Mat: " + bi.Material + ", data: " + ((int)bi.BlockData) + ", locDat: " + ((int)bi.BlockLocalData) + ", Damage: " + bi.Damage
+                entry.Player.Network.SendMessage("Mat: " + bi.Material + ", data: " + ((int)bi.BlockData) + ", locDat: " + ((int)bi.BlockLocalData)
+                    + ", Damage: " + bi.Damage + ", Paint: " + bi.BlockPaint
                     + ", xp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXP() + ", xm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXM()
                     + ", yp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYP() + ", ym: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYM()
                     + ", zp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesTOP() + ", zm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesBOTTOM());

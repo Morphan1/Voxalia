@@ -15,6 +15,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         
         public LoadAllChunksSystem LACS = null;
 
+        public Object WaitLock = new Object();
+
         public int ChunksStillWaiting = 0;
 
         public override void Init()

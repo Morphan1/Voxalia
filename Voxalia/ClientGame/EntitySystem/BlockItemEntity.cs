@@ -50,16 +50,6 @@ namespace Voxalia.ClientGame.EntitySystem
             vbo.TCOLs = new List<Vector4>();
             vbo.Tangents = new List<Vector3>();
             System.Drawing.Color tcol = Voxalia.Shared.Colors.ForByte(Paint);
-            Vector4 vcol;
-            if (tcol.A == 0)
-            {
-                Random urand = new Random(1594124); // TODO: Track where the block came from?
-                vcol = new OpenTK.Vector4((float)urand.NextDouble(), (float)urand.NextDouble(), (float)urand.NextDouble(), 1f);
-            }
-            else
-            {
-                vcol = new OpenTK.Vector4((tcol.R / 255f), (tcol.G / 255f), (tcol.B / 255f), 1f * (tcol.A / 255f));
-            }
             for (int i = 0; i < vecs.Count; i++)
             {
                 vbo.Vertices.Add(new OpenTK.Vector3(vecs[i].X, vecs[i].Y, vecs[i].Z));
@@ -67,7 +57,27 @@ namespace Voxalia.ClientGame.EntitySystem
                 vbo.TexCoords.Add(new OpenTK.Vector3(tcoord[i].X, tcoord[i].Y, tcoord[i].Z));
                 vbo.Indices.Add((uint)i);
                 vbo.Colors.Add(new Vector4(1, 1, 1, 1));
-                vbo.TCOLs.Add(vcol);
+                if (tcol.A == 0)
+                {
+                    if (tcol.R == 255 && tcol.G == 0 && tcol.B == 255)
+                    {
+                        Random urand = new Random(1594124); // TODO: Track where the block came from?
+                        vbo.TCOLs.Add(new OpenTK.Vector4((float)urand.NextDouble(), (float)urand.NextDouble(), (float)urand.NextDouble(), 1f));
+                    }
+                    else if (tcol.R == 0 && tcol.G == 0 && tcol.B == 0)
+                    {
+                        Random random = new Random((int)(vecs[i].X + vecs[i].Y + vecs[i].Z));
+                        vbo.TCOLs.Add(new Vector4((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble(), 1f));
+                    }
+                    else
+                    {
+                        vbo.TCOLs.Add(new Vector4(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f, 0f));
+                    }
+                }
+                else
+                {
+                    vbo.TCOLs.Add(new OpenTK.Vector4((tcol.R / 255f), (tcol.G / 255f), (tcol.B / 255f), 1f * (tcol.A / 255f)));
+                }
             }
             for (int i = 0; i < vecs.Count; i += 3)
             {
