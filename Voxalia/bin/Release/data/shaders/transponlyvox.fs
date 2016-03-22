@@ -5,9 +5,14 @@
 layout (binding = 0) uniform sampler2DArray tex;
 layout (binding = 1) uniform sampler2DArray htex;
 
-layout (location = 0) in vec4 f_color;
-layout (location = 1) in vec3 f_texcoord;
-layout (location = 2) in vec4 f_tcol;
+in struct vox_out
+{
+	vec4 position;
+	vec3 texcoord;
+	vec4 color;
+	vec4 tcol;
+	mat3 tbn;
+} f;
 
 layout (location = 4) uniform float desaturationAmount = 1.0;
 
@@ -20,16 +25,16 @@ vec3 desaturate(vec3 c)
 
 void main()
 {
-	vec4 tcolor = texture(tex, f_texcoord) * f_tcol;
-	if (tcolor.w * f_color.w >= 0.99)
+	vec4 tcolor = texture(tex, f.texcoord) * f.tcol;
+	if (tcolor.w * f.color.w >= 0.99)
 	{
 		discard;
 	}
-    if (tcolor.w * f_color.w < 0.01)
+    if (tcolor.w * f.color.w < 0.01)
     {
         discard;
     }
-	color = tcolor * f_color; // TODO: Clamp f_color.xyz, match fbo_vox
+	color = tcolor * f.color; // TODO: Clamp f.color.xyz, match fbo_vox
 #ifdef MCM_GOOD_GRAPHICS
     color = vec4(desaturate(color.xyz), color.w); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
 #endif

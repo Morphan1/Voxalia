@@ -17,7 +17,7 @@ layout (location = 9) uniform mat4 light_details2;
 
 in struct vox_out
 {
-	vec3 position;
+	vec4 position;
 	vec3 texcoord;
 	vec4 color;
 	vec4 tcol;
@@ -57,9 +57,9 @@ void main()
 		+ vec4(minimum_light, minimum_light, minimum_light, 0.0)) / lightc;
 	vec3 eye_pos = vec3(light_details2[0][0], light_details2[0][1], light_details2[0][2]);
 	vec3 light_pos = vec3(light_details2[1][0], light_details2[1][1], light_details2[1][2]);
-	vec4 x_spos = shadow_matrix * vec4(f.position, 1.0);
+	vec4 x_spos = shadow_matrix * f.position;
 	vec3 N = normalize(-(f.tbn * norms));
-	vec3 light_path = light_pos - f.position;
+	vec3 light_path = light_pos - f.position.xyz;
 	float light_length = length(light_path);
 	float d = light_length / light_radius;
 	float atten = clamp(1.0 - (d * d), 0.0, 1.0);
@@ -119,7 +119,7 @@ void main()
 #endif
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f.position - eye_pos)), 0.0), 128.0) * specular_albedo * spec);
+	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f.position.xyz - eye_pos)), 0.0), 128.0) * specular_albedo * spec);
 	color = vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, color.w);
 #ifdef MCM_GOOD_GRAPHICS
