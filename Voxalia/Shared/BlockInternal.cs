@@ -141,7 +141,7 @@ namespace Voxalia.Shared
         /// <returns>Whether the block is opaque.</returns>
         public bool IsOpaque()
         {
-            return ((Material)BlockMaterial).IsOpaque() && BlockPaint != Colors.TRANS1 && BlockPaint != Colors.TRANS2;
+            return ((Material)BlockMaterial).IsOpaque() && (BlockPaint < Colors.TRANS1 || BlockPaint > Colors.TRANS2);
         }
 
         /// <summary>

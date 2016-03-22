@@ -40,25 +40,28 @@ namespace Voxalia.Shared
         public static Color PINK = Color.FromArgb(255, 128, 255);
         public static Color LIME = Color.FromArgb(128, 255, 0);
         public static Color SKY_BLUE = Color.FromArgb(0, 128, 255);
-        public static Color TRANSPARENT = Color.FromArgb(180, 255, 255, 255);
-        public static Color VERY_TRANSPARENT = Color.FromArgb(90, 255, 255, 255);
-        public static Color MAGIC = Color.FromArgb(0, 255, 0, 255);
+        public static Color VERY_DARK_GRAY = Color.FromArgb(32, 32, 32);
+        public static Color OLD_MAGIC = Color.FromArgb(0, 0, 0, 0);
+        public static Color RAINBOW = Color.FromArgb(0, 255, 0, 255);
+        public static Color SLIGHTLY_TRANSPARENT = Color.FromArgb(191, 255, 255, 255);
+        public static Color TRANSPARENT = Color.FromArgb(127, 255, 255, 255);
+        public static Color VERY_TRANSPARENT = Color.FromArgb(63, 255, 255, 255);
 
         public static Dictionary<string, byte> KnownColorNames = new Dictionary<string, byte>();
 
-        public static Color[] KnownColorsArray = new Color[32];
+        public static Color[] KnownColorsArray = new Color[64];
 
-        public static string[] KnownColorNamesArray = new string[32];
+        public static string[] KnownColorNamesArray = new string[64];
 
         public static Color ForByte(byte input)
         {
-            int baseinp = input & (1 | 2 | 4 | 8 | 16);
+            int baseinp = input;
             return KnownColorsArray[baseinp];
         }
 
         public static string NameForByte(byte input)
         {
-            int baseinp = input & (1 | 2 | 4 | 8 | 16);
+            int baseinp = input;
             return KnownColorNamesArray[baseinp];
         }
         
@@ -121,9 +124,41 @@ namespace Voxalia.Shared
             Register("PINK", PINK);
             Register("LIME", LIME);
             Register("SKY_BLUE", SKY_BLUE);
-            TRANS1 = Register("TRANSPARENT", TRANSPARENT);
+            Register("VERY_DARK_GRAY", VERY_DARK_GRAY);
+            Register("PLACEHOLDER_29", WHITE);
+            Register("PLACEHOLDER_28", WHITE);
+            Register("PLACEHOLDER_27", WHITE);
+            Register("PLACEHOLDER_26", WHITE);
+            Register("PLACEHOLDER_25", WHITE);
+            Register("PLACEHOLDER_24", WHITE);
+            Register("PLACEHOLDER_23", WHITE);
+            Register("PLACEHOLDER_22", WHITE);
+            Register("PLACEHOLDER_21", WHITE);
+            Register("PLACEHOLDER_20", WHITE);
+            Register("PLACEHOLDER_19", WHITE);
+            Register("PLACEHOLDER_18", WHITE);
+            Register("PLACEHOLDER_17", WHITE);
+            Register("PLACEHOLDER_16", WHITE);
+            Register("PLACEHOLDER_15", WHITE);
+            Register("PLACEHOLDER_14", WHITE);
+            Register("PLACEHOLDER_13", WHITE);
+            Register("PLACEHOLDER_12", WHITE);
+            Register("PLACEHOLDER_11", WHITE);
+            Register("PLACEHOLDER_10", WHITE);
+            Register("PLACEHOLDER_9", WHITE);
+            Register("PLACEHOLDER_8", WHITE);
+            Register("PLACEHOLDER_7", WHITE);
+            Register("PLACEHOLDER_6", WHITE);
+            Register("PLACEHOLDER_5", WHITE);
+            Register("PLACEHOLDER_4", WHITE);
+            Register("PLACEHOLDER_3", WHITE);
+            Register("PLACEHOLDER_2", WHITE);
+            Register("PLACEHOLDER_1", WHITE);
+            TRANS1 = Register("SLIGHTLY_TRANSPARENT", SLIGHTLY_TRANSPARENT);
+            Register("TRANSPARENT", TRANSPARENT);
             TRANS2 = Register("VERY_TRANSPARENT", VERY_TRANSPARENT);
-            Register("MAGIC", MAGIC);
+            Register("OLD_MAGIC", OLD_MAGIC);
+            Register("RAINBOW", RAINBOW);
         }
     }
 }
