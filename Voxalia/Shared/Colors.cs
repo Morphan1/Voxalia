@@ -41,11 +41,12 @@ namespace Voxalia.Shared
         public static Color LIME = Color.FromArgb(128, 255, 0);
         public static Color SKY_BLUE = Color.FromArgb(0, 128, 255);
         public static Color VERY_DARK_GRAY = Color.FromArgb(32, 32, 32);
-        public static Color OLD_MAGIC = Color.FromArgb(0, 0, 0, 0);
-        public static Color RAINBOW = Color.FromArgb(0, 255, 0, 255);
         public static Color SLIGHTLY_TRANSPARENT = Color.FromArgb(191, 255, 255, 255);
         public static Color TRANSPARENT = Color.FromArgb(127, 255, 255, 255);
         public static Color VERY_TRANSPARENT = Color.FromArgb(63, 255, 255, 255);
+        public static Color MAGIC = Color.FromArgb(0, 255, 255, 255);
+        public static Color OLD_MAGIC = Color.FromArgb(0, 0, 0, 0);
+        public static Color RAINBOW = Color.FromArgb(0, 255, 0, 255);
 
         public static Dictionary<string, byte> KnownColorNames = new Dictionary<string, byte>();
 
@@ -125,7 +126,6 @@ namespace Voxalia.Shared
             Register("LIME", LIME);
             Register("SKY_BLUE", SKY_BLUE);
             Register("VERY_DARK_GRAY", VERY_DARK_GRAY);
-            Register("PLACEHOLDER_29", WHITE);
             Register("PLACEHOLDER_28", WHITE);
             Register("PLACEHOLDER_27", WHITE);
             Register("PLACEHOLDER_26", WHITE);
@@ -157,6 +157,7 @@ namespace Voxalia.Shared
             TRANS1 = Register("SLIGHTLY_TRANSPARENT", SLIGHTLY_TRANSPARENT);
             Register("TRANSPARENT", TRANSPARENT);
             TRANS2 = Register("VERY_TRANSPARENT", VERY_TRANSPARENT);
+            Register("MAGIC", MAGIC);
             Register("OLD_MAGIC", OLD_MAGIC);
             Register("RAINBOW", RAINBOW);
         }

@@ -457,6 +457,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 timer.Start();
                 SetViewport();
                 s_fbov = s_fbov.Bind();
+                GL.Uniform1(6, (float)GlobalTickTimeLocal);
                 GL.UniformMatrix4(1, false, ref combined);
                 Matrix4 matident = Matrix4.Identity;
                 GL.UniformMatrix4(2, false, ref matident);

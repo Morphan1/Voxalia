@@ -23,7 +23,7 @@ layout (location = 3) uniform vec4 v_color = vec4(1.0);
 layout (location = 10) uniform mat4 simplebone_matrix = mat4(1.0);
 layout (location = 11) uniform mat4 boneTrans[MAX_BONES];
 
-void main(void)
+void main()
 {
 	vec4 pos1;
 	vec4 norm1;
