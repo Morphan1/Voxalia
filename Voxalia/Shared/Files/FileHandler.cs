@@ -266,6 +266,15 @@ namespace Voxalia.Shared.Files
             return folds;
         }
 
+        public void CreateDirectory(string path)
+        {
+            string fname = BaseDirectory + CleanFileName(path);
+            if (!Directory.Exists(fname))
+            {
+                Directory.CreateDirectory(fname);
+            }
+        }
+
         /// <summary>
         /// Writes bytes to a file.
         /// </summary>
