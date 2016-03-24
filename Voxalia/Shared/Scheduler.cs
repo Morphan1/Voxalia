@@ -6,7 +6,7 @@ namespace Voxalia.Shared
 {
     public class Scheduler
     {
-        public List<SyncScheduleItem> Tasks = new List<SyncScheduleItem>();
+        public LinkedList<SyncScheduleItem> Tasks = new LinkedList<SyncScheduleItem>();
 
         Object Locker = new Object();
 
@@ -28,7 +28,7 @@ namespace Voxalia.Shared
             SyncScheduleItem item = new SyncScheduleItem() { MyAction = act, Time = delay, OwningEngine = this };
             lock (Locker)
             {
-                Tasks.Add(item);
+                Tasks.AddLast(item);
             }
             return item;
         }
@@ -37,15 +37,19 @@ namespace Voxalia.Shared
         {
             lock (Locker)
             {
-                for (int i = 0; i < Tasks.Count; i++) // NOTE: *MUST* calculate in this order!
+                LinkedListNode<SyncScheduleItem> node = Tasks.First;
+                while (node != null)
                 {
-                    Tasks[i].Time -= time;
-                    if (Tasks[i].Time > 0)
+                    node.Value.Time -= time;
+                    if (node.Value.Time > 0)
                     {
+                        node = node.Next;
                         continue;
                     }
-                    Tasks[i].MyAction.Invoke();
-                    Tasks.RemoveAt(i--);
+                    node.Value.MyAction.Invoke();
+                    LinkedListNode<SyncScheduleItem> torem = node;
+                    node = node.Next;
+                    Tasks.Remove(torem);
                 }
             }
         }
