@@ -19,6 +19,8 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.ItemSystem.CommonItems;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -239,12 +241,17 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             if (item.Info is PaintbombItem)
             {
-                float dat;
-                if (!item.SharedAttributes.TryGetValue("color", out dat))
+                int paint = 0;
+                TemplateObject pinteger;
+                if (!item.SharedAttributes.TryGetValue("color", out pinteger))
                 {
-                    dat = 0;
+                    IntegerTag nt = IntegerTag.TryFor(pinteger);
+                    if (nt != null)
+                    {
+                        paint = (int)nt.Internal;
+                    }
                 }
-                return new PaintBombEntity((byte)dat, this);
+                return new PaintBombEntity((byte)paint, this);
             }
             return new ItemEntity(item, this);
         }

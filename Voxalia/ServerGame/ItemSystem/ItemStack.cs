@@ -111,22 +111,10 @@ namespace Voxalia.ServerGame.ItemSystem
         {
             ItemStack its = (ItemStack)MemberwiseClone();
             its.Attributes = new Dictionary<string, TemplateObject>(its.Attributes);
-            its.SharedAttributes = new Dictionary<string, float>(its.SharedAttributes);
+            its.SharedAttributes = new Dictionary<string, TemplateObject>(its.SharedAttributes);
             return its;
         }
-
-        public string EscapedSharedStr()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("{");
-            foreach (KeyValuePair<string, float> val in SharedAttributes)
-            {
-                sb.Append(EscapeTagBase.Escape(val.Key) + "=" + val.Value + ";");
-            }
-            sb.Append("}");
-            return sb.ToString();
-        }
-
+        
         public string EscapedLocalStr()
         {
             StringBuilder sb = new StringBuilder();
@@ -164,7 +152,7 @@ namespace Voxalia.ServerGame.ItemSystem
         {
             return TagParser.Escape(Name) + "[secondary=" + (SecondaryName == null ? "" : EscapeTagBase.Escape(SecondaryName)) + ";display=" + EscapeTagBase.Escape(DisplayName) + ";count=" + Count
                 + ";description=" + EscapeTagBase.Escape(Description) + ";texture=" + EscapeTagBase.Escape(GetTextureName()) + ";model=" + EscapeTagBase.Escape(GetModelName()) + ";bound=" + (IsBound ? "true": "false")
-                + ";drawcolor=" + new ColorTag(DrawColor).ToString() + ";datum=" + Datum + ";shared=" + EscapedSharedStr() + ";local=" + EscapedLocalStr() + "]";
+                + ";drawcolor=" + new ColorTag(DrawColor).ToString() + ";datum=" + Datum + ";shared=" + SharedStr() + ";local=" + EscapedLocalStr() + "]";
         }
 
         public override string ToString()
@@ -269,7 +257,11 @@ namespace Voxalia.ServerGame.ItemSystem
             pairs = SplitUpPairs(shared.Substring(1, shared.Length - 2));
             foreach (KeyValuePair<string, string> pair in pairs)
             {
-                item.SharedAttributes.Add(UnescapeTagBase.Unescape(pair.Key), Utilities.StringToFloat(pair.Value));
+                string dat = UnescapeTagBase.Unescape(pair.Value);
+                string type = dat.Substring(0, 4);
+                string content = dat.Substring(5);
+                TemplateObject togive = TOFor(tserver, type, content);
+                item.SharedAttributes.Add(UnescapeTagBase.Unescape(pair.Key), togive);
             }
             pairs = SplitUpPairs(local.Substring(1, local.Length - 2));
             foreach (KeyValuePair<string, string> pair in pairs)

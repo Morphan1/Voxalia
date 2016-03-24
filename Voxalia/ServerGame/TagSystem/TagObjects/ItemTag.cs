@@ -157,9 +157,9 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 case "shared_attributes":
                     {
                         MapTag map = new MapTag();
-                        foreach (KeyValuePair<string, float> entry in Internal.SharedAttributes)
+                        foreach (KeyValuePair<string, TemplateObject> entry in Internal.SharedAttributes)
                         {
-                            map.Internal[entry.Key] = new NumberTag(entry.Value);
+                            map.Internal[entry.Key] = entry.Value;
                         }
                         return map.Handle(data.Shrink());
                     }
@@ -319,7 +319,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                         items.SharedAttributes.Clear();
                         foreach (KeyValuePair<string, TemplateObject> entry in MapTag.For(data.GetModifierObject(0)).Internal)
                         {
-                            items.SharedAttributes[entry.Key] = (float)NumberTag.For(data, entry.Value).Internal;
+                            items.SharedAttributes[entry.Key] = entry.Value;
                         }
                         return new ItemTag(items).Handle(data.Shrink());
                     }

@@ -71,7 +71,7 @@ namespace Voxalia.ServerGame.ItemSystem
                 string res_subtype = null;
                 string res_datum = "0";
                 List<KeyValuePair<string, string>> attrs = new List<KeyValuePair<string, string>>();
-                List<KeyValuePair<string, float>> shared = new List<KeyValuePair<string, float>>();
+                List<KeyValuePair<string, string>> shared = new List<KeyValuePair<string, string>>();
                 foreach (string line in split)
                 {
                     if (line.Trim().Length < 3)
@@ -114,7 +114,7 @@ namespace Voxalia.ServerGame.ItemSystem
                             if (dat_type.StartsWith("shared."))
                             {
                                 string opt = dat_type.Substring("shared.".Length).ToLower();
-                                shared.Add(new KeyValuePair<string, float>(opt, Utilities.StringToFloat(dat_val)));
+                                shared.Add(new KeyValuePair<string, string>(opt, dat_val));
                             }
                             else if (dat_type.StartsWith("attributes."))
                             {
@@ -128,9 +128,13 @@ namespace Voxalia.ServerGame.ItemSystem
                 {
                     Datum = Utilities.StringToInt(res_datum)
                 };
-                foreach (KeyValuePair<string, float> key in shared)
+                foreach (KeyValuePair<string, string> key in shared)
                 {
-                    it.SharedAttributes[key.Key] = key.Value;
+                    string dat = UnescapeTagBase.Unescape(key.Value);
+                    string type = dat.Substring(0, 4);
+                    string content = dat.Substring(5);
+                    TemplateObject togive = ItemStack.TOFor(TheServer, type, content);
+                    it.SharedAttributes[key.Key] = togive;
                 }
                 foreach (KeyValuePair<string, string> key in attrs)
                 {

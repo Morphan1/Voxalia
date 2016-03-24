@@ -9,6 +9,11 @@ namespace Voxalia.Shared.Files
         {
         }
 
+        public void WriteByte(byte x)
+        {
+            base.Write(x);
+        }
+
         public void WriteInt(int x)
         {
             base.Write(Utilities.IntToBytes(x), 0, 4);
@@ -17,6 +22,11 @@ namespace Voxalia.Shared.Files
         public void WriteFloat(float x)
         {
             base.Write(Utilities.FloatToBytes(x), 0, 4);
+        }
+
+        public void WriteDouble(double x)
+        {
+            base.Write(Utilities.DoubleToBytes(x), 0, 8);
         }
 
         public void WriteLong(long x)

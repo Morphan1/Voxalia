@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using Voxalia.Shared.Files;
 using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.Shared
 {
@@ -39,7 +40,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// Any attributes shared between all users of the item.
         /// </summary>
-        public Dictionary<string, float> SharedAttributes = new Dictionary<string, float>();
+        public Dictionary<string, TemplateObject> SharedAttributes = new Dictionary<string, TemplateObject>();
 
         /// <summary>
         /// How many of this item there are.
@@ -73,10 +74,30 @@ namespace Voxalia.Shared
             dw.WriteFullString(GetTextureName());
             dw.WriteFullString(GetModelName());
             dw.WriteInt(SharedAttributes.Count);
-            foreach (string key in SharedAttributes.Keys)
+            foreach (KeyValuePair<string, TemplateObject> entry in SharedAttributes)
             {
-                dw.WriteFullString(key);
-                dw.WriteFloat(SharedAttributes[key]);
+                dw.WriteFullString(entry.Key);
+                if (entry.Value is IntegerTag)
+                {
+                    dw.WriteByte(0);
+                    dw.WriteLong(((IntegerTag)entry.Value).Internal);
+                }
+                else if (entry.Value is NumberTag)
+                {
+                    dw.WriteByte(1);
+                    dw.WriteDouble(((NumberTag)entry.Value).Internal);
+                }
+                else if (entry.Value is BooleanTag)
+                {
+                    dw.WriteByte(2);
+                    dw.WriteByte((byte)(((BooleanTag)entry.Value).Internal ? 1 : 0));
+                }
+                // TODO: shared BaseItemTag?
+                else
+                {
+                    dw.WriteByte(3);
+                    dw.WriteFullString(entry.Value.ToString());
+                }
             }
             return ds.ToArray();
         }
@@ -117,8 +138,23 @@ namespace Voxalia.Shared
             for (int i = 0; i < attribs; i++)
             {
                 string cattrib = dr.ReadFullString();
-                float cvalue = dr.ReadFloat();
-                SharedAttributes.Add(cattrib, cvalue);
+                byte b = dr.ReadByte();
+                if (b == 0)
+                {
+                    SharedAttributes.Add(cattrib, new IntegerTag(dr.ReadInt64()));
+                }
+                else if (b == 1)
+                {
+                    SharedAttributes.Add(cattrib, new NumberTag(dr.ReadDouble()));
+                }
+                else if (b == 2)
+                {
+                    SharedAttributes.Add(cattrib, new BooleanTag(dr.ReadByte() == 1));
+                }
+                else
+                {
+                    SharedAttributes.Add(cattrib, new TextTag(dr.ReadFullString()));
+                }
             }
         }
         
@@ -126,9 +162,22 @@ namespace Voxalia.Shared
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("{");
-            foreach (KeyValuePair<string, float> val in SharedAttributes)
+            foreach (KeyValuePair<string, TemplateObject> val in SharedAttributes)
             {
-                sb.Append(val.Key + "=" + val.Value + ";");
+                string type = "text";
+                if (val.Value is IntegerTag)
+                {
+                    type = "inte";
+                }
+                else if (val.Value is NumberTag)
+                {
+                    type = "numb";
+                }
+                else if (val.Value is BooleanTag)
+                {
+                    type = "bool";
+                }
+                sb.Append(TagParser.Escape(val.Key) + "=" + type + "/" + TagParser.Escape(val.Value.ToString()) + ";");
             }
             sb.Append("}");
             return sb.ToString();
@@ -138,7 +187,8 @@ namespace Voxalia.Shared
         {
             return Name + "[secondary=" + (SecondaryName == null ? "{NULL}" : SecondaryName) + ";display=" + DisplayName + ";count=" + Count
                 + ";description=" + Description + ";texture=" + GetTextureName() + ";model=" + GetModelName()
-                + ";drawcolor=" + DrawColor + ";datum=" + Datum + ";shared=" + SharedStr() + "]";
+                + ";drawcolor=" + DrawColor.R / 255f + "," + DrawColor.G / 255f + "," + DrawColor.B / 255f + "," + DrawColor.A / 255f + ";datum=" + Datum + ";shared=" + SharedStr() + "]";
+            // TODO: Shared color tag?
         }
     }
 }

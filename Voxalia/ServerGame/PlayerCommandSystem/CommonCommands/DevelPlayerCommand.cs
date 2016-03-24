@@ -9,6 +9,7 @@ using BEPUphysics;
 using BEPUutilities;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.ServerGame.OtherSystems;
+using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
@@ -158,7 +159,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 ItemStack its = entry.Player.TheServer.Items.GetItem("tools/paintbrush");
                 byte col = Colors.ForName(entry.InputArguments[1]);
-                its.SharedAttributes["color"] = col;
+                its.SharedAttributes["color"] = new IntegerTag(col);
                 its.DrawColor = Colors.ForByte(col);
                 entry.Player.Items.GiveItem(its);
             }
@@ -166,7 +167,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 ItemStack its = entry.Player.TheServer.Items.GetItem("weapons/grenades/paintbomb", 10);
                 byte col = Colors.ForName(entry.InputArguments[1]);
-                its.SharedAttributes["color"] = col;
+                its.SharedAttributes["color"] = new IntegerTag(col);
                 its.DrawColor = Colors.ForByte(col);
                 entry.Player.Items.GiveItem(its);
             }

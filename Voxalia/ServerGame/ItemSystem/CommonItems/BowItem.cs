@@ -1,7 +1,9 @@
 ﻿using System;
 using Voxalia.Shared;
 using Voxalia.ServerGame.EntitySystem;
+using FreneticScript.TagHandlers.Objects;
 using BEPUutilities;
+using FreneticScript.TagHandlers;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
@@ -20,12 +22,14 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public override void PrepItem(Entity entity, ItemStack item)
         {
-            if (!item.SharedAttributes.ContainsKey("charge") || item.SharedAttributes["charge"] != 1f)
+            bool has = item.SharedAttributes.ContainsKey("charge");
+            BooleanTag bt = has ? BooleanTag.TryFor(item.SharedAttributes["charge"]): null;
+            if (!has || bt == null || !bt.Internal)
             {
-                item.SharedAttributes.Add("charge", 1f);
-                item.SharedAttributes.Add("drawrate", DrawRate);
-                item.SharedAttributes.Add("drawmin", DrawMinimum);
-                item.SharedAttributes.Add("cspeedm", 0.5f);
+                item.SharedAttributes.Add("charge", new BooleanTag(true));
+                item.SharedAttributes.Add("drawrate", new NumberTag(DrawRate));
+                item.SharedAttributes.Add("drawmin", new NumberTag(DrawMinimum));
+                item.SharedAttributes.Add("cspeedm", new NumberTag(0.5f));
             }
         }
 
@@ -72,16 +76,24 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             float drawRate = DrawRate;
-            float dw2 = 1;
+            TemplateObject dw2;
             if (item.SharedAttributes.TryGetValue("drawrate", out dw2))
             {
-                drawRate = dw2;
+                NumberTag nt = NumberTag.TryFor(dw2);
+                if (nt != null)
+                {
+                    drawRate = (float)nt.Internal;
+                }
             }
             float drawMin = DrawMinimum;
-            float dm2 = 1;
+            TemplateObject dm2;
             if (item.SharedAttributes.TryGetValue("drawmin", out dm2))
             {
-                drawMin = dm2;
+                NumberTag nt = NumberTag.TryFor(dm2);
+                if (nt != null)
+                {
+                    drawMin = (float)nt.Internal;
+                }
             }
             double timeStretched = Math.Min((player.TheRegion.GlobalTickTime - player.ItemStartClickTime) * drawRate, 3) + drawMin;
             player.ItemStartClickTime = -1;
@@ -135,7 +147,16 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             PlayerEntity player = (PlayerEntity)entity;
-            player.ItemSpeedMod = item.SharedAttributes.ContainsKey("cspeedm") ? item.SharedAttributes["cspeedm"] : 1f;
+            float speedm = 1f;
+            if (item.SharedAttributes.ContainsKey("cspeedm"))
+            {
+                NumberTag nt = NumberTag.TryFor(item.SharedAttributes["cspeedm"]);
+                if (nt != null)
+                {
+                    speedm = (float)nt.Internal;
+                }
+            }
+            player.ItemSpeedMod = speedm;
             player.ItemDoSpeedMod = false;
         }
     }

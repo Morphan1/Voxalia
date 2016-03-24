@@ -2065,6 +2065,20 @@
             <param name="input">The input text to create a integer from.</param>
             <returns>The integer tag.</returns>
         </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.IntegerTag.TryFor(System.String)">
+            <summary>
+            Tries to return a valid integer, or null.
+            </summary>
+            <param name="input">The input that is potentially an integer.</param>
+            <returns>An integer, or null.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.IntegerTag.TryFor(FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Tries to return a valid integer, or null.
+            </summary>
+            <param name="input">The input that is potentially an integer.</param>
+            <returns>An integer, or null.</returns>
+        </member>
         <member name="M:FreneticScript.TagHandlers.Objects.IntegerTag.#ctor(System.Int64)">
             <summary>
             Constructs an integer tag.
@@ -2196,6 +2210,20 @@
             <param name="dat">The TagData used to construct this NumberTag.</param>
             <param name="input">The input text to create a number from.</param>
             <returns>The number tag.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.NumberTag.TryFor(System.String)">
+            <summary>
+            Tries to return a valid number, or null.
+            </summary>
+            <param name="input">The input that is potentially a number.</param>
+            <returns>A number, or null.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.NumberTag.TryFor(FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Tries to return a valid number, or null.
+            </summary>
+            <param name="input">The input that is potentially a number.</param>
+            <returns>A number, or null.</returns>
         </member>
         <member name="M:FreneticScript.TagHandlers.Objects.NumberTag.#ctor(System.Double)">
             <summary>

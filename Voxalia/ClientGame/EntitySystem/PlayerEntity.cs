@@ -24,6 +24,8 @@ using OpenTK.Graphics.OpenGL4;
 using FreneticScript;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.JointSystem;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -326,9 +328,15 @@ namespace Voxalia.ClientGame.EntitySystem
             if (Click)
             {
                 ItemStack item = TheClient.GetItemForSlot(TheClient.QuickBarPos);
-                if (item.SharedAttributes.ContainsKey("charge") && item.SharedAttributes["charge"] == 1f)
+                bool has = item.SharedAttributes.ContainsKey("charge");
+                BooleanTag bt = has ? BooleanTag.TryFor(item.SharedAttributes["charge"]) : null;
+                if (bt != null && bt.Internal && item.SharedAttributes.ContainsKey("cspeedm"))
                 {
-                    speedmod *= item.SharedAttributes["cspeedm"];
+                    NumberTag nt = NumberTag.TryFor(item.SharedAttributes["cspeedm"]);
+                    if (nt != null)
+                    {
+                        speedmod *= (float)nt.Internal;
+                    }
                 }
             }
             RigidTransform transf = new RigidTransform(Vector3.Zero, Body.Orientation);

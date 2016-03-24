@@ -12,6 +12,8 @@ using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using Voxalia.ServerGame.OtherSystems;
 using Voxalia.ServerGame.WorldSystem;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
@@ -48,10 +50,15 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     Material mat = (Material)blockdat.BlockMaterial;
                     if (mat != Material.AIR)
                     {
-                        float paint;
-                        if (!item.SharedAttributes.TryGetValue("color", out paint))
+                        int paint = 0;
+                        TemplateObject pinteger;
+                        if (!item.SharedAttributes.TryGetValue("color", out pinteger))
                         {
-                            paint = 0;
+                            IntegerTag nt = IntegerTag.TryFor(pinteger);
+                            if (nt != null)
+                            {
+                                paint = (int)nt.Internal;
+                            }
                         }
                         player.TheRegion.SetBlockMaterial(block, mat, blockdat.BlockData, (byte)paint, (byte)(blockdat.BlockLocalData | (byte)BlockFlags.EDITED));
                     }
