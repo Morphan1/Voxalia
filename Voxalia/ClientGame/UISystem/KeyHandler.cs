@@ -14,6 +14,7 @@ namespace Voxalia.ClientGame.UISystem
     public class KeyHandler
     {
         public static Dictionary<Key, CommandScript> Binds;
+        public static Dictionary<Key, CommandScript> InverseBinds;
 
         public static Dictionary<string, Key> namestokeys;
         public static Dictionary<Key, string> keystonames;
@@ -29,6 +30,7 @@ namespace Voxalia.ClientGame.UISystem
             KeyPressList = new List<Key>();
             KeyUps = new Queue<Key>();
             Binds = new Dictionary<Key, CommandScript>();
+            InverseBinds = new Dictionary<Key, CommandScript>();
             BindKey(Key.W, "+forward");
             BindKey(Key.S, "+backward");
             BindKey(Key.A, "+leftward");
@@ -416,8 +418,9 @@ namespace Voxalia.ClientGame.UISystem
                     CommandScript script;
                     if (Binds.TryGetValue(key, out script))
                     {
-                        CommandQueue queue;
-                        Client.Central.Commands.CommandSystem.ExecuteScript(script, null, out queue);
+                        CommandQueue queue = script.ToQueue(Client.Central.Commands.CommandSystem);
+                        queue.Debug = DebugMode.MINIMAL;
+                        queue.Execute();
                     }
                     KeyPressList.Add(key);
                 }
@@ -425,14 +428,11 @@ namespace Voxalia.ClientGame.UISystem
                 {
                     Key key = KeyUps.Dequeue();
                     CommandScript script;
-                    if (Binds.TryGetValue(key, out script))
+                    if (InverseBinds.TryGetValue(key, out script))
                     {
-                        if (script.Commands.Count == 1 && script.Commands[0].Marker == 1)
-                        {
-                            CommandEntry entry = script.Commands[0].Duplicate();
-                            entry.Marker = 2;
-                            Client.Central.Commands.CommandSystem.ExecuteCommand(entry, Client.Central.Commands.CommandSystem.PlaceholderQueue);
-                        }
+                        CommandQueue queue = script.ToQueue(Client.Central.Commands.CommandSystem);
+                        queue.Debug = DebugMode.MINIMAL;
+                        queue.Execute();
                     }
                 }
             }
@@ -456,11 +456,19 @@ namespace Voxalia.ClientGame.UISystem
         public static void BindKey(Key key, string bind)
         {
             Binds.Remove(key);
+            InverseBinds.Remove(key);
             if (bind != null)
             {
                 CommandScript script = CommandScript.SeparateCommands("bind_" + key, bind, Client.Central.Commands.CommandSystem);
                 script.Debug = DebugMode.MINIMAL;
-                Binds.Add(key, script);
+                Binds[key] = script;
+                if (script.Commands.Count == 1 && script.Commands[0].Marker == 1)
+                {
+                    CommandEntry fixedentry = script.Commands[0].Duplicate();
+                    fixedentry.Marker = 2;
+                    CommandScript nscript = new CommandScript("inverse_bind_" + key, new List<CommandEntry>() { fixedentry }) { Debug = DebugMode.MINIMAL };
+                    InverseBinds[key] = nscript;
+                }
             }
             Modified = true;
         }
@@ -473,11 +481,19 @@ namespace Voxalia.ClientGame.UISystem
         public static void BindKey(Key key, List<CommandEntry> bind, int adj)
         {
             Binds.Remove(key);
+            InverseBinds.Remove(key);
             if (bind != null)
             {
                 CommandScript script = new CommandScript("_bind_for_" + keystonames[key], bind, adj);
                 script.Debug = DebugMode.MINIMAL;
-                Binds.Add(key, script);
+                Binds[key] = script;
+                if (script.Commands.Count == 1 && script.Commands[0].Marker == 1)
+                {
+                    CommandEntry fixedentry = script.Commands[0].Duplicate();
+                    fixedentry.Marker = 2;
+                    CommandScript nscript = new CommandScript("inverse_bind_" + key, new List<CommandEntry>() { fixedentry }) { Debug = DebugMode.MINIMAL };
+                    InverseBinds[key] = nscript;
+                }
             }
             Modified = true;
         }

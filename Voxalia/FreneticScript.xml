@@ -820,13 +820,6 @@
             <param name="commands">The command string to parse.</param>
             <param name="outputter">The output function to call, or null if none.</param>
         </member>
-        <member name="M:FreneticScript.CommandSystem.Commands.ExecuteCommand(FreneticScript.CommandSystem.CommandEntry,FreneticScript.CommandSystem.CommandQueue)">
-            <summary>
-            Executes a single command.
-            </summary>
-            <param name="entry">The command entry to execute.</param>
-            <param name="queue">The queue that is executing it.</param>
-        </member>
         <member name="M:FreneticScript.CommandSystem.Commands.RegisterCommand(FreneticScript.CommandSystem.AbstractCommand)">
             <summary>
             Adds a command to the registered command list.
