@@ -15,9 +15,9 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public List<ItemRecipe> Recipes = new List<ItemRecipe>();
 
-        public void AddRecipe(RecipeMode mode, List<CommandEntry> determiner, params ItemStack[] input)
+        public void AddRecipe(RecipeMode mode, List<CommandEntry> determiner, int adj, params ItemStack[] input)
         {
-            Recipes.Add(new ItemRecipe() { Mode = mode, Determinant = determiner, Input = input, TheServer = TheServer, Index = Recipes.Count });
+            Recipes.Add(new ItemRecipe() { Mode = mode, Determinant = new CommandScript("recipe_" + Recipes.Count, determiner, adj), Input = input, TheServer = TheServer, Index = Recipes.Count });
         }
 
         public List<RecipeResult> CanCraftFrom(params ItemStack[] input)
@@ -152,7 +152,7 @@ namespace Voxalia.ServerGame.ItemSystem
     public class ItemRecipe
     {
         public RecipeMode Mode;
-        public List<CommandEntry> Determinant;
+        public CommandScript Determinant;
         public ItemStack[] Input;
         public Server TheServer;
         public int Index;

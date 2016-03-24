@@ -19,15 +19,12 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
             Name = "bind";
             Description = "Binds a script to a key.";
             Arguments = "<key> [binding]";
+            MinimumArguments = 1;
+            MaximumArguments = 2;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
-            {
-                ShowUsage(entry);
-                return;
-            }
             string key = entry.GetArgument(0);
             Key k = KeyHandler.GetKeyForName(key);
             if (entry.Arguments.Count == 1)
@@ -45,7 +42,7 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
             else if (entry.Arguments.Count >= 2)
             {
                 KeyHandler.BindKey(k, entry.GetArgument(1));
-                entry.Good("Keybind updated.");
+                entry.Good("Keybind updated for " + k + ".");
             }
         }
     }

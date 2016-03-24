@@ -19,19 +19,16 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
             Name = "unbind";
             Description = "Removes any script bound to a key.";
             Arguments = "<key>";
+            MinimumArguments = 1;
+            MaximumArguments = 2;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
-            {
-                ShowUsage(entry);
-                return;
-            }
             string key = entry.GetArgument(0);
             Key k = KeyHandler.GetKeyForName(key);
             KeyHandler.BindKey(k, (string)null);
-            entry.Good("Keybind removed.");
+            entry.Good("Keybind removed for " + k + ".");
         }
     }
 }

@@ -34,6 +34,11 @@
             Whether the command is for debugging purposes.
             </summary>
         </member>
+        <member name="F:FreneticScript.CommandSystem.AbstractCommand.IsBreakable">
+            <summary>
+            Whether the 'break' command can be used on this command.
+            </summary>
+        </member>
         <member name="F:FreneticScript.CommandSystem.AbstractCommand.IsFlow">
             <summary>
             Whether the command is part of a script's flow rather than for normal client use.
@@ -50,6 +55,30 @@
             NOTE: These mostly have yet to be confirmed! They are purely theoretical!
             </summary>
         </member>
+        <member name="F:FreneticScript.CommandSystem.AbstractCommand.MinimumArguments">
+            <summary>
+            How many arguments the command can have minimum.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.AbstractCommand.MaximumArguments">
+            <summary>
+            How many arguments the command can have maximum.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.AbstractCommand.TestForValidity(FreneticScript.CommandSystem.CommandEntry)">
+            <summary>
+            Tests if the CommandEntry is valid for this command at pre-process time.
+            </summary>
+            <param name="entry">The entry to test</param>
+            <returns>An error message (with tags), or null for none.</returns>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.AbstractCommand.AdaptBlockFollowers(FreneticScript.CommandSystem.CommandEntry,System.Collections.Generic.List{FreneticScript.CommandSystem.CommandEntry})">
+            <summary>
+            Adjust list of commands that formed by an inner block.
+            </summary>
+            <param name="entry">The producing entry.</param>
+            <param name="input">The block of commands.</param>
+        </member>
         <member name="M:FreneticScript.CommandSystem.AbstractCommand.Execute(FreneticScript.CommandSystem.CommandEntry)">
             <summary>
             Executes the command.
@@ -65,11 +94,6 @@
         <member name="T:FreneticScript.CommandSystem.AbstractCommandEntryData">
             <summary>
             The data held by a command.
-            </summary>
-        </member>
-        <member name="M:FreneticScript.CommandSystem.AbstractCommandEntryData.Duplicate">
-            <summary>
-            Perfectly clone the entrydata object.
             </summary>
         </member>
         <member name="T:FreneticScript.CommandSystem.Arguments.Argument">
@@ -192,19 +216,23 @@
             All the information for a command being currently run.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandEntry.FromInput(System.String,System.Collections.Generic.List{FreneticScript.CommandSystem.CommandEntry},FreneticScript.CommandSystem.CommandEntry,FreneticScript.CommandSystem.Commands,System.String,System.Int32)">
+        <member name="M:FreneticScript.CommandSystem.CommandEntry.FromInput(System.String,FreneticScript.CommandSystem.Commands,System.String,System.Int32,System.String)">
             <summary>
             Creates a CommandEntry from the given input and queue information.
             </summary>
             <param name="command">The command line text itself.</param>
-            <param name="_block">The command block that held this entry.</param>
-            <param name="_owner">The command entry that owns the block that held this entry.</param>
             <param name="system">The command system to work from.</param>
             <param name="script">The name of the creating script.</param>
             <param name="line">The line in the creating script.</param>
+            <param name="tabs">What tabulation to use when outputting this entry.</param>
             <returns>The command system.</returns>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandEntry.CreateInvalidOutput(System.String,System.Collections.Generic.List{FreneticScript.CommandSystem.CommandEntry},System.Collections.Generic.List{FreneticScript.CommandSystem.Arguments.Argument},FreneticScript.CommandSystem.CommandEntry,FreneticScript.CommandSystem.Commands,System.String,System.Int32,System.Boolean,System.String,System.Int32)">
+        <member name="M:FreneticScript.CommandSystem.CommandEntry.CreateErrorOutput(System.String,FreneticScript.CommandSystem.Commands,System.String,System.String)">
+            <summary>
+            Create an entry that represents an error message.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.CommandEntry.CreateInvalidOutput(System.String,System.Collections.Generic.List{FreneticScript.CommandSystem.Arguments.Argument},FreneticScript.CommandSystem.Commands,System.String,System.Int32,System.Boolean,System.String,System.Int32,System.String)">
             <summary>
             Create an entry that represents invalid output.
             </summary>
@@ -214,14 +242,19 @@
             The original command input.
             </summary>
         </member>
-        <member name="F:FreneticScript.CommandSystem.CommandEntry.Block">
+        <member name="F:FreneticScript.CommandSystem.CommandEntry.InnerCommandBlock">
             <summary>
-            If the command has a block of { braced } commands, this will contain that block.
+            A list of all commands that were inside this command originally.
             </summary>
         </member>
-        <member name="F:FreneticScript.CommandSystem.CommandEntry.BlockOwner">
+        <member name="F:FreneticScript.CommandSystem.CommandEntry.BlockStart">
             <summary>
-            What command entry object owns this entry, if any.
+            The start of this command's braced block.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.CommandEntry.BlockEnd">
+            <summary>
+            The end of this command's braced block.
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandEntry.Finished">
@@ -244,7 +277,7 @@
             The line number in the creating script.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandEntry.#ctor(System.String,System.Collections.Generic.List{FreneticScript.CommandSystem.CommandEntry},FreneticScript.CommandSystem.CommandEntry,FreneticScript.CommandSystem.AbstractCommand,System.Collections.Generic.List{FreneticScript.CommandSystem.Arguments.Argument},System.String,System.Int32,System.String,System.Int32)">
+        <member name="M:FreneticScript.CommandSystem.CommandEntry.#ctor(System.String,System.Int32,System.Int32,FreneticScript.CommandSystem.AbstractCommand,System.Collections.Generic.List{FreneticScript.CommandSystem.Arguments.Argument},System.String,System.Int32,System.String,System.Int32,System.String)">
             <summary>
             Full constructor, recommended.
             </summary>
@@ -254,12 +287,16 @@
             Use at own risk.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandEntry.FullString(System.String)">
+        <member name="M:FreneticScript.CommandSystem.CommandEntry.FullString">
             <summary>
             Gets the full command string that represents this command.
             </summary>
-            <param name="tabulation">How much space to include in front of the commands.</param>
             <returns>The full command string.</returns>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.CommandEntry.FairTabulation">
+            <summary>
+            Space to include in front of this tab when outputting it as text.
+            </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandEntry.Name">
             <summary>
@@ -355,11 +392,10 @@
             </summary>
             <param name="EMsg">The error message.</param>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandEntry.Duplicate(FreneticScript.CommandSystem.CommandEntry)">
+        <member name="M:FreneticScript.CommandSystem.CommandEntry.Duplicate">
             <summary>
             Returns a duplicate of this command entry.
             </summary>
-            <param name="NewOwner">The new owner of the command entry.</param>
             <returns>The duplicate entry.</returns>
         </member>
         <member name="T:FreneticScript.CommandSystem.CommandEvents.ScriptRanPreScriptEvent">
@@ -516,8 +552,13 @@
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandQueue.CommandList">
             <summary>
-            All commands in this queue, as strings.
-            TODO: Replace list with more efficient handler (Linked list, perhaps?)
+            All commands in this queue.
+            TODO: Rewrite to be a static array that we roll through, not a rapidly modified queue :(
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.CommandQueue.CommandIndex">
+            <summary>
+            What command we are currently running.
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandQueue.Variables">
@@ -539,11 +580,6 @@
         <member name="F:FreneticScript.CommandSystem.CommandQueue.Running">
             <summary>
             Whether the queue is running.
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CommandSystem.CommandQueue.LastCommand">
-            <summary>
-            The last command to be run.
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandQueue.CommandSystem">
@@ -569,6 +605,7 @@
         <member name="F:FreneticScript.CommandSystem.CommandQueue.Determinations">
             <summary>
             What was returned by the determine command for this queue.
+            TODO: Template object!
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandQueue.Outputsystem">
@@ -598,6 +635,11 @@
             <param name="Delta">The time passed this tick.</param>
             </summary>
         </member>
+        <member name="F:FreneticScript.CommandSystem.CommandQueue.WaitingOn">
+            <summary>
+            Whether this Queue is waiting on the last command.
+            </summary>
+        </member>
         <member name="M:FreneticScript.CommandSystem.CommandQueue.HandleError(FreneticScript.CommandSystem.CommandEntry,System.String)">
             <summary>
             Handles an error as appropriate to the situation, in the current queue, from the current command.
@@ -612,21 +654,9 @@
             <param name="index">The index of the command.</param>
             <returns>The specified command.</returns>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandQueue.RemoveCommand(System.Int32)">
-            <summary>
-            Removes the command at the specified index.
-            </summary>
-            <param name="index">The index of the command.</param>
-        </member>
-        <member name="M:FreneticScript.CommandSystem.CommandQueue.AddCommandsNow(System.Collections.Generic.List{FreneticScript.CommandSystem.CommandEntry})">
-            <summary>
-            Adds a list of entries to be executed next in line.
-            </summary>
-            <param name="entries">Commands to be run.</param>
-        </member>
         <member name="M:FreneticScript.CommandSystem.CommandQueue.Stop">
             <summary>
-            Immediately stops the Command Queue.
+            Immediately stops the Command Queue by jumping to the end.
             </summary>
         </member>
         <member name="M:FreneticScript.CommandSystem.CommandQueue.SetVariable(System.String,FreneticScript.TagHandlers.TemplateObject)">
@@ -847,7 +877,7 @@
             <param name="system">The command system to create the script within.</param>
             <returns>A list of command strings.</returns>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandScript.CreateBlock(System.String,System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{System.String},FreneticScript.CommandSystem.CommandEntry,FreneticScript.CommandSystem.Commands)">
+        <member name="M:FreneticScript.CommandSystem.CommandScript.CreateBlock(System.String,System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{System.String},FreneticScript.CommandSystem.CommandEntry,FreneticScript.CommandSystem.Commands,System.String,System.Int32,System.Boolean@)">
             <summary>
             Converts a list of command strings to a CommandEntry list, handling any { braced } blocks inside.
             </summary>
@@ -856,24 +886,18 @@
             <param name="from">The command strings.</param>
             <param name="entry">The entry that owns this block.</param>
             <param name="system">The command system to create this block inside.</param>
+            <param name="tabs">How far out tabulation should go.</param>
+            <param name="had_error">Whether there was a compile error.</param>
+            <param name="istart">The starting index.</param>
             <returns>A list of entries with blocks separated.</returns>
         </member>
         <member name="M:FreneticScript.CommandSystem.CommandScript.GetByFileName(System.String,FreneticScript.CommandSystem.Commands)">
             <summary>
             Creates a script by file name.
-            File is /scripts/filename.cfg
             </summary>
             <param name="filename">The name of the file to execute.</param>
             <param name="system">The command system to get the script for.</param>
             <returns>A command script, or null of the file does not exist.</returns>
-        </member>
-        <member name="M:FreneticScript.CommandSystem.CommandScript.DisOwn(System.Collections.Generic.List{FreneticScript.CommandSystem.CommandEntry},FreneticScript.CommandSystem.CommandEntry)">
-            <summary>
-            Removes an entry's ownership over the list of entries, and returns them in a new list of duplicates.
-            </summary>
-            <param name="entries">The list of entries.</param>
-            <param name="baseentry">The entry that is no longer an owner.</param>
-            <returns>The new entry list.</returns>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandScript.Name">
             <summary>
@@ -890,12 +914,13 @@
             All commands in the script.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandScript.#ctor(System.String,System.Collections.Generic.List{FreneticScript.CommandSystem.CommandEntry})">
+        <member name="M:FreneticScript.CommandSystem.CommandScript.#ctor(System.String,System.Collections.Generic.List{FreneticScript.CommandSystem.CommandEntry},System.Int32)">
             <summary>
             Constructs a new command script.
             </summary>
             <param name="_name">The name of the script.</param>
             <param name="_commands">All commands in the script.</param>
+            <param name="adj">How far to negatively adjust the entries' block positions, if any.</param>
         </member>
         <member name="M:FreneticScript.CommandSystem.CommandScript.GetEntries">
             <summary>
@@ -1664,6 +1689,11 @@
             <param name="x">The first entry.</param>
             <param name="y">The second entry.</param>
             <returns>Whether they are NOT equal.</returns>
+        </member>
+        <member name="T:FreneticScript.FreneticScriptUtilities">
+            <summary>
+            Utilities for FreneticScript.
+            </summary>
         </member>
         <member name="M:FreneticScript.FreneticScriptUtilities.StringToLong(System.String)">
             <summary>

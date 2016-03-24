@@ -8,6 +8,7 @@ using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.TagSystem.TagObjects;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.TagHandlers;
 
 namespace Voxalia.ServerGame.CommandSystem.ItemCommands
 {
@@ -21,20 +22,23 @@ namespace Voxalia.ServerGame.CommandSystem.ItemCommands
             Name = "addrecipe";
             Description = "Adds a recipe to be crafted.";
             Arguments = "<mode> <input item> ...";
+            MinimumArguments = 1;
+            MaximumArguments = -1;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 2)
+            TemplateObject cb = entry.GetArgumentObject(0);
+            if (cb.ToString() == "\0CALLBACK")
             {
-                ShowUsage(entry);
+                return;
             }
-            if (entry.Block == null)
+            if (entry.InnerCommandBlock == null)
             {
                 entry.Error("Invalid or missing command block!");
                 return;
             }
-            ListTag mode = ListTag.For(entry.GetArgumentObject(0));
+            ListTag mode = ListTag.For(cb);
             List<ItemStack> items = new List<ItemStack>();
             for (int i = 1; i < entry.Arguments.Count; i++)
             {
@@ -46,7 +50,8 @@ namespace Voxalia.ServerGame.CommandSystem.ItemCommands
                 }
                 items.Add(required.Internal);
             }
-            TheServer.Recipes.AddRecipe(RecipeRegistry.ModeFor(mode), entry.Block, items.ToArray());
+            TheServer.Recipes.AddRecipe(RecipeRegistry.ModeFor(mode), entry.InnerCommandBlock, entry.BlockStart, items.ToArray());
+            entry.Queue.CommandIndex = entry.BlockEnd + 2;
             if (entry.ShouldShowGood())
             {
                 entry.Good("Added recipe!");

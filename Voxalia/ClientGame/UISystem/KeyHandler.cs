@@ -458,7 +458,7 @@ namespace Voxalia.ClientGame.UISystem
             Binds.Remove(key);
             if (bind != null)
             {
-                CommandScript script = CommandScript.SeparateCommands("BIND:" + key, bind, Client.Central.Commands.CommandSystem);
+                CommandScript script = CommandScript.SeparateCommands("bind_" + key, bind, Client.Central.Commands.CommandSystem);
                 script.Debug = DebugMode.MINIMAL;
                 Binds.Add(key, script);
             }
@@ -470,12 +470,12 @@ namespace Voxalia.ClientGame.UISystem
         /// </summary>
         /// <param name="key">The key to bind.</param>
         /// <param name="bind">The command to bind to it (null to unbind).</param>
-        public static void BindKey(Key key, List<CommandEntry> bind)
+        public static void BindKey(Key key, List<CommandEntry> bind, int adj)
         {
             Binds.Remove(key);
             if (bind != null)
             {
-                CommandScript script = new CommandScript("_bind_for_" + keystonames[key], bind);
+                CommandScript script = new CommandScript("_bind_for_" + keystonames[key], bind, adj);
                 script.Debug = DebugMode.MINIMAL;
                 Binds.Add(key, script);
             }

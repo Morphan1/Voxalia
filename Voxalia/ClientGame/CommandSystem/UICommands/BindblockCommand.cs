@@ -28,15 +28,19 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
                 ShowUsage(entry);
                 return;
             }
-            if (entry.Block == null)
+            string key = entry.GetArgument(0);
+            if (key == "\0CALLBACK")
             {
-                entry.Bad("Must have a block of commands!");
                 return;
             }
-            string key = entry.GetArgument(0);
+            if (entry.InnerCommandBlock == null)
+            {
+                entry.Error("Must have a block of commands!");
+                return;
+            }
             Key k = KeyHandler.GetKeyForName(key);
-            KeyHandler.BindKey(k, entry.Block);
-            entry.Good("Keybind updated.");
+            KeyHandler.BindKey(k, entry.InnerCommandBlock, entry.BlockStart);
+            entry.Queue.CommandIndex = entry.BlockEnd + 2;
         }
     }
 }
