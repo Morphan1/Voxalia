@@ -760,11 +760,6 @@
             The AbstractCommand for the invalid command-command.
             </summary>
         </member>
-        <member name="F:FreneticScript.CommandSystem.Commands.Scripts">
-            <summary>
-            All scripts this command system has loaded.
-            </summary>
-        </member>
         <member name="F:FreneticScript.CommandSystem.Commands.Functions">
             <summary>
             All functions this command system has loaded.
@@ -803,6 +798,18 @@
             </summary>
             <param name="script">The name of the script.</param>
             <returns>A script, or null if there's no match.</returns>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.Commands.PrecalcScript(System.String,System.String)">
+            <summary>
+            Precalculates a script file to potentially be run.
+            </summary>
+            <param name="name">The name of the script.</param>
+            <param name="script">The script to run.</param>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.Commands.RunPrecalculated">
+            <summary>
+            Runs any precalculated scripts.
+            </summary>
         </member>
         <member name="T:FreneticScript.CommandSystem.Commands.OutputFunction">
             <summary>

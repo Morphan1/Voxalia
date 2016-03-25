@@ -255,21 +255,10 @@ namespace Voxalia.ServerGame.ServerMainSystem
             string[] files = System.IO.Directory.GetFiles(Environment.CurrentDirectory + "/data/scripts/server/", "*.cfg", System.IO.SearchOption.AllDirectories);
             foreach (string file in files)
             {
-                try
-                {
-                    string cmd = System.IO.File.ReadAllText(file).Replace("\r", "").Replace("\0", "\\0");
-                    if (cmd.StartsWith("/// AUTORUN\n"))
-                    {
-                        CommandQueue q = CommandScript.SeparateCommands(file.Replace(Environment.CurrentDirectory, ""), cmd, Commands.CommandSystem).ToQueue(Commands.CommandSystem);
-                        q.Debug = DebugMode.MINIMAL;
-                        q.Execute();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    SysConsole.Output("Handling autorun script '" + file.Replace(Environment.CurrentDirectory, "") + "'", ex);
-                }
+                string cmd = System.IO.File.ReadAllText(file).Replace("\r", "").Replace("\0", "\\0");
+                Commands.CommandSystem.PrecalcScript(file.Replace(Environment.CurrentDirectory, ""), cmd);
             }
+            Commands.CommandSystem.RunPrecalculated();
         }
 
         /// <summary>
