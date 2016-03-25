@@ -1,4 +1,6 @@
-﻿using FreneticScript.CommandSystem;
+﻿using System;
+using System.Collections.Generic;
+using FreneticScript.CommandSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.UISystem;
 using OpenTK.Input;
@@ -11,6 +13,13 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
     /// </summary>
     class BindblockCommand : AbstractCommand
     {
+        public override void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
+        {
+            entry.BlockEnd -= input.Count;
+            input.Clear();
+            base.AdaptBlockFollowers(entry, input, fblock);
+        }
+
         public Client TheClient;
 
         public BindblockCommand(Client tclient)

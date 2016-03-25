@@ -243,7 +243,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 int paint = 0;
                 TemplateObject pinteger;
-                if (!item.SharedAttributes.TryGetValue("color", out pinteger))
+                if (item.SharedAttributes.TryGetValue("color", out pinteger))
                 {
                     IntegerTag nt = IntegerTag.TryFor(pinteger);
                     if (nt != null)

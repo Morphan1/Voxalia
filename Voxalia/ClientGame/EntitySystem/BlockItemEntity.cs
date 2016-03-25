@@ -57,27 +57,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 vbo.TexCoords.Add(new OpenTK.Vector3(tcoord[i].X, tcoord[i].Y, tcoord[i].Z));
                 vbo.Indices.Add((uint)i);
                 vbo.Colors.Add(new Vector4(1, 1, 1, 1));
-                if (tcol.A == 0)
-                {
-                    if (tcol.R == 127 && tcol.G == 0 && tcol.B == 127)
-                    {
-                        Random urand = new Random(1594124); // TODO: Track where the block came from?
-                        vbo.TCOLs.Add(new OpenTK.Vector4((float)urand.NextDouble(), (float)urand.NextDouble(), (float)urand.NextDouble(), 1f));
-                    }
-                    else if (tcol.R == 127 && tcol.G == 0 && tcol.B == 0)
-                    {
-                        Random random = new Random((int)(vecs[i].X + vecs[i].Y + vecs[i].Z));
-                        vbo.TCOLs.Add(new Vector4((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble(), 1f));
-                    }
-                    else
-                    {
-                        vbo.TCOLs.Add(new Vector4(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f, 0f));
-                    }
-                }
-                else
-                {
-                    vbo.TCOLs.Add(new OpenTK.Vector4((tcol.R / 255f), (tcol.G / 255f), (tcol.B / 255f), 1f * (tcol.A / 255f)));
-                }
+                vbo.TCOLs.Add(TheClient.Rendering.AdaptColor(vbo.Vertices[i], tcol));
             }
             for (int i = 0; i < vecs.Count; i += 3)
             {

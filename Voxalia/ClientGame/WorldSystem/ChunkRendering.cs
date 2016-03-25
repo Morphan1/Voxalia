@@ -92,30 +92,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
                                     Location lcol = OwningRegion.GetLightAmount(ClientUtilities.Convert(vt), ClientUtilities.Convert(nt), this);
                                     Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
-                                    System.Drawing.Color tcol = Colors.ForByte(c.BlockPaint);
-                                    if (tcol.A == 0)
-                                    {
-                                        if (tcol.R == 127 && tcol.G == 0 && tcol.B == 127)
-                                        {
-                                            float r = SimplexNoise.Generate(vt.X / 10f, vt.Y / 10f, vt.Z / 10f);
-                                            float g = SimplexNoise.Generate((vt.X + 50f) / 10f, (vt.Y + 127f) / 10f, (vt.Z + 10f) / 10f);
-                                            float b = SimplexNoise.Generate((vt.X - 150f) / 10f, (vt.Y - 65f) / 10f, (vt.Z + 73f) / 10f);
-                                            TCols.Add(new Vector4(r, g, b, 1f));
-                                        }
-                                        else if (tcol.R == 127 && tcol.G == 0 && tcol.B == 0)
-                                        {
-                                            Random random = new Random((int)(vt.X + vt.Y + vt.Z));
-                                            TCols.Add(new Vector4((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble(), 1f));
-                                        }
-                                        else
-                                        {
-                                            TCols.Add(new Vector4(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f, 0f));
-                                        }
-                                    }
-                                    else
-                                    {
-                                        TCols.Add(new Vector4(tcol.R / 255f, tcol.G / 255f, tcol.B / 255f, tcol.A / 255f));
-                                    }
+                                    TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(vt, Colors.ForByte(c.BlockPaint)));
                                 }
                                 if (!c.IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
                                 {

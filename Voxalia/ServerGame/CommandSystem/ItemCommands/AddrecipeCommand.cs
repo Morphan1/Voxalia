@@ -14,6 +14,14 @@ namespace Voxalia.ServerGame.CommandSystem.ItemCommands
 {
     public class AddrecipeCommand : AbstractCommand
     {
+        public override void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
+        {
+            entry.BlockEnd -= input.Count;
+            input.Clear();
+            base.AdaptBlockFollowers(entry, input, fblock);
+            fblock.Add(GetFollower(entry));
+        }
+
         public Server TheServer;
 
         public AddrecipeCommand(Server tserver)

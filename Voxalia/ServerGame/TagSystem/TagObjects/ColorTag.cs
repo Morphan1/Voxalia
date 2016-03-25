@@ -41,11 +41,17 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
         public static ColorTag For(string input)
         {
             string[] split = input.Split(',');
-            float r;
-            float g;
-            float b;
-            if (split.Length == 3)
+            if (split.Length == 1)
             {
+                byte b;
+                if (byte.TryParse(input, out b))
+                {
+                    return new ColorTag(Colors.ForByte(b));
+                }
+            }
+            else if (split.Length == 3)
+            {
+                float r, g, b;
                 if (TryParseComponent(split[0], out r) && TryParseComponent(split[1], out g) && TryParseComponent(split[2], out b))
                 {
                     return new ColorTag(System.Drawing.Color.FromArgb((int)(r * 255), (int)(g * 255), (int)(b * 255)));
@@ -53,7 +59,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             else if (split.Length == 4)
             {
-                float a;
+                float r, g, b, a;
                 if (TryParseComponent(split[0], out r) && TryParseComponent(split[1], out g) && TryParseComponent(split[2], out b) && TryParseComponent(split[3], out a))
                 {
                     return new ColorTag(System.Drawing.Color.FromArgb((int)(a * 255), (int)(r * 255), (int)(g * 255), (int)(b * 255)));
