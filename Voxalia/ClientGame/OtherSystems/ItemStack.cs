@@ -3,6 +3,7 @@ using Voxalia.Shared;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.GraphicsSystems;
 using OpenTK.Graphics;
+using FreneticScript;
 
 namespace Voxalia.ClientGame.OtherSystems
 {
@@ -65,7 +66,7 @@ namespace Voxalia.ClientGame.OtherSystems
             {
                 if (Name == "block")
                 {
-                    Tex = TheClient.Textures.GetTexture("blocks/icons/" + SecondaryName.ToLowerInvariant());
+                    Tex = TheClient.Textures.GetTexture("blocks/icons/" + SecondaryName.ToLowerFast());
                 }
                 else
                 {

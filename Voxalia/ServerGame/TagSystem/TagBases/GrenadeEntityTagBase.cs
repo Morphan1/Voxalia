@@ -9,6 +9,7 @@ using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
@@ -31,7 +32,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
         public override TemplateObject Handle(TagData data)
         {
             long eid;
-            string input = data.GetModifier(0).ToLowerInvariant();
+            string input = data.GetModifier(0).ToLowerFast();
             if (long.TryParse(input, out eid))
             {
                 foreach (Region r in TheServer.LoadedRegions)

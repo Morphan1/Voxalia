@@ -6,6 +6,7 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.EntitySystem;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
 {
@@ -26,7 +27,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                 return;
             }
             BGETraceMode tm = BGETraceMode.CONVEX;
-            if (entry.InputArguments[0].ToLowerInvariant() == "perfect")
+            if (entry.InputArguments[0].ToLowerFast() == "perfect")
             {
                 tm = BGETraceMode.PERFECT;
             }

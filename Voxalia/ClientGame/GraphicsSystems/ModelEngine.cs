@@ -137,7 +137,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             model.Root = convert(scene.MatrixA);
             foreach (Model3DMesh mesh in scene.Meshes)
             {
-                if (mesh.Name.ToLowerInvariant().Contains("collision") || mesh.Name.ToLowerInvariant().Contains("norender"))
+                if (mesh.Name.ToLowerFast().Contains("collision") || mesh.Name.ToLowerFast().Contains("norender"))
                 {
                     continue;
                 }
@@ -218,7 +218,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 model.Meshes.Add(modmesh);
                 modmesh.GenerateVBO();
             }
-            model.RootNode = new ModelNode() { Parent = null, Name = scene.RootNode.Name.ToLowerInvariant() };
+            model.RootNode = new ModelNode() { Parent = null, Name = scene.RootNode.Name.ToLowerFast() };
             List<ModelNode> allNodes = new List<ModelNode>();
             PopulateChildren(model.RootNode, scene.RootNode, model, engine, allNodes);
             for (int i = 0; i < model.Meshes.Count; i++)
@@ -226,7 +226,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 for (int x = 0; x < scene.Meshes[i].Bones.Count; x++)
                 {
                     ModelNode nodet = null;
-                    string nl = scene.Meshes[i].Bones[x].Name.ToLowerInvariant();
+                    string nl = scene.Meshes[i].Bones[x].Name.ToLowerFast();
                     for (int n = 0; n < allNodes.Count; n++)
                     {
                         if (allNodes[n].Name == nl)
@@ -266,7 +266,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             for (int i = 0; i < orin.Children.Count; i++)
             {
-                ModelNode child = new ModelNode() { Parent = node, Name = orin.Children[i].Name.ToLowerInvariant() };
+                ModelNode child = new ModelNode() { Parent = node, Name = orin.Children[i].Name.ToLowerFast() };
                 PopulateChildren(child, orin.Children[i], model, engine, allNodes);
                 node.Children.Add(child);
             }
@@ -310,7 +310,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public ModelMesh MeshFor(string name)
         {
-            name = name.ToLowerInvariant();
+            name = name.ToLowerFast();
             for (int i = 0; i < Meshes.Count; i++)
             {
                 if (Meshes[i].Name.StartsWith(name))
@@ -486,7 +486,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             bool success = false;
                             string typer;
                             string datic = datums[0].BeforeAndAfter(":::", out typer);
-                            typer = typer.ToLowerInvariant();
+                            typer = typer.ToLowerFast();
                             for (int i = 0; i < Meshes.Count; i++)
                             {
                                 if (Meshes[i].Name == datic)
@@ -557,7 +557,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public ModelMesh(string _name)
         {
-            Name = _name.ToLowerInvariant();
+            Name = _name.ToLowerFast();
             if (Name.EndsWith(".001"))
             {
                 Name = Name.Substring(0, Name.Length - ".001".Length);

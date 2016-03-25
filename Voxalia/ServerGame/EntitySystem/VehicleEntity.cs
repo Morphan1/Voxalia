@@ -7,6 +7,7 @@ using BEPUutilities;
 using BEPUphysics.Constraints.TwoEntity.JointLimits;
 using BEPUphysics.Constraints.TwoEntity.Motors;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -79,7 +80,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 List<VehiclePartEntity> frontwheels = new List<VehiclePartEntity>();
                 for (int i = 0; i < nodes.Count; i++)
                 {
-                    string name = nodes[i].Name.ToLowerInvariant();
+                    string name = nodes[i].Name.ToLowerFast();
                     if (name.Contains("wheel"))
                     {
                         Matrix mat = nodes[i].MatrixA;

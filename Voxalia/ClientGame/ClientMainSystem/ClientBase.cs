@@ -16,6 +16,7 @@ using Voxalia.ClientGame.WorldSystem;
 using Voxalia.ServerGame.ServerMainSystem;
 using System.Threading;
 using System.Drawing;
+using FreneticScript;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -221,7 +222,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CVars.s_glversion.Value = GLVersion;
             GLRenderer = GL.GetString(StringName.Renderer);
             CVars.s_glrenderer.Value = GLRenderer;
-            if (GLVendor.ToLowerInvariant().Contains("intel"))
+            if (GLVendor.ToLowerFast().Contains("intel"))
             {
                 SysConsole.Output(OutputType.INIT, "Disabling good graphics (Appears to be Intel: '" + GLVendor + "')");
                 Shaders.MCM_GOOD_GRAPHICS = false;

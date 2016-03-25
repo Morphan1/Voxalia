@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL4;
 using System.Drawing;
 using Voxalia.Shared;
 using Voxalia.ClientGame.ClientMainSystem;
+using FreneticScript;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -50,7 +51,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>The specified font.</returns>
         public FontSet GetFont(string fontname, int fontsize)
         {
-            string namelow = fontname.ToLowerInvariant();
+            string namelow = fontname.ToLowerFast();
             for (int i = 0; i < Fonts.Count; i++)
             {
                 if (Fonts[i].font_default.Size == fontsize && Fonts[i].Name == namelow)
@@ -86,7 +87,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public FontSet(string _name, FontSetEngine engine)
         {
-            Name = _name.ToLowerInvariant();
+            Name = _name.ToLowerFast();
             Engine = engine;
             VBO = new TextVBO(Engine.GLFonts);
         }

@@ -6,6 +6,7 @@ using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using Voxalia.ServerGame.ServerMainSystem;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.ItemSystem
 {
@@ -53,7 +54,7 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public static RecipeMode ModeFor(ListTag modeinput)
         {
-            if (modeinput.ListEntries.Count == 1 && modeinput.ListEntries[0].ToString().ToLowerInvariant() == "strict")
+            if (modeinput.ListEntries.Count == 1 && modeinput.ListEntries[0].ToString().ToLowerFast() == "strict")
             {
                 return RecipeMode.BOUND | RecipeMode.COLOR | RecipeMode.DATUM | RecipeMode.DESCRIPTION | RecipeMode.DISPLAY | RecipeMode.LOCAL
                     | RecipeMode.MODEL | RecipeMode.SECONDARY | RecipeMode.SHARED | RecipeMode.TEXTURE | RecipeMode.TYPE;

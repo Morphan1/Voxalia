@@ -5,6 +5,7 @@ using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using Voxalia.ServerGame.TagSystem.TagObjects;
+using FreneticScript;
 using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
@@ -23,7 +24,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
 
         public override TemplateObject Handle(TagData data)
         {
-            string input = data.GetModifier(0).ToLowerInvariant();
+            string input = data.GetModifier(0).ToLowerFast();
             try
             {
                 Material mat = MaterialHelpers.FromNameOrNumber(input);

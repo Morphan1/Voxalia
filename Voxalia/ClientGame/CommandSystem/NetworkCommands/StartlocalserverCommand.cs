@@ -40,11 +40,19 @@ namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
             entry.Good("Generating new server...");
             TheClient.LocalServer = new Server();
             Server.Central = TheClient.LocalServer;
+            Action callback = null;
+            if (entry.WaitFor && entry.Queue.WaitingOn == entry)
+            {
+                callback = () =>
+                {
+                    entry.Queue.WaitingOn = null;
+                };
+            }
             Task.Factory.StartNew(() =>
             {
                 try
                 {
-                    TheClient.LocalServer.StartUp(() => { entry.Finished = true; });
+                    TheClient.LocalServer.StartUp(callback);
                 }
                 catch (Exception ex)
                 {

@@ -8,6 +8,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Common;
 using Voxalia.ServerGame.TagSystem.TagObjects;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.ItemSystem
 {
@@ -44,15 +45,13 @@ namespace Voxalia.ServerGame.ItemSystem
             TheServer = tserver;
             Load(data);
         }
-
-        public static TagData TDPlaceHolder = new TagData(null, null, "", null, DebugMode.NONE, (o) => { }, null);
-
+        
         public float GetAttributeF(string attr, float def)
         {
             TemplateObject outp;
             if (Attributes.TryGetValue(attr, out outp))
             {
-                return (float)NumberTag.For(TDPlaceHolder, outp).Internal;
+                return (float)NumberTag.TryFor(outp).Internal;
             }
             return def;
         }
@@ -62,7 +61,7 @@ namespace Voxalia.ServerGame.ItemSystem
             TemplateObject outp;
             if (Attributes.TryGetValue(attr, out outp))
             {
-                return (int)IntegerTag.For(TDPlaceHolder, outp).Internal;
+                return (int)IntegerTag.TryFor(outp).Internal;
             }
             return def;
         }
@@ -75,7 +74,7 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public override void SetName(string name)
         {
-            name = name.ToLowerInvariant();
+            name = name.ToLowerFast();
             Info = TheServer.ItemInfos.GetInfoFor(name);
             base.SetName(name);
         }
@@ -284,11 +283,11 @@ namespace Voxalia.ServerGame.ItemSystem
                 case "item":
                     return ItemTag.For(tserver, content);
                 case "numb":
-                    return NumberTag.For(TDPlaceHolder, content);
+                    return NumberTag.TryFor(content);
                 case "inte":
-                    return IntegerTag.For(TDPlaceHolder, content);
+                    return IntegerTag.TryFor(content);
                 case "bool":
-                    return BooleanTag.For(TDPlaceHolder, content);
+                    return BooleanTag.TryFor(content);
                 default:
                     return new TextTag(content); // Disregard errors and just make it text anyway. Probably just bad user input.
             }

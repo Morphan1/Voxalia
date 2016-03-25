@@ -10,6 +10,7 @@ using FreneticScript.TagHandlers.Common;
 using FreneticScript.TagHandlers.Objects;
 using Voxalia.ServerGame.TagSystem.TagBases;
 using Voxalia.ServerGame.TagSystem.TagObjects;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.ItemSystem
 {
@@ -30,7 +31,7 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public ItemStack GetItem(string name, int count = 1)
         {
-            string low = name.ToLowerInvariant();
+            string low = name.ToLowerFast();
             ItemStack ist;
             if (BaseItems.TryGetValue(low, out ist))
             {
@@ -79,7 +80,7 @@ namespace Voxalia.ServerGame.ItemSystem
                         continue;
                     }
                     string[] dat = line.Split(new char[] { ':' }, 2);
-                    string dat_type = dat[0].Trim().ToLowerInvariant();
+                    string dat_type = dat[0].Trim().ToLowerFast();
                     string dat_val = dat[1].Trim();
                     switch (dat_type)
                     {

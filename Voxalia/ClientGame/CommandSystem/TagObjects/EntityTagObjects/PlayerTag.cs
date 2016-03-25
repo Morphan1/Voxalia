@@ -19,11 +19,11 @@ namespace Voxalia.ClientGame.CommandSystem.TagObjects.EntityTagObjects
         /// <param name="data">The input tag data.</param>
         public override TemplateObject Handle(TagData data)
         {
-            if (data.Input.Count == 0)
+            if (data.Remaining == 0)
             {
                 return this;
             }
-            switch (data.Input[0])
+            switch (data[0])
             {
                 // <--[tag]
                 // @Name PlayerTag.held_item_slot

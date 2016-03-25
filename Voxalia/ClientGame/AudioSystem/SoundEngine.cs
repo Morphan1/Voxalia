@@ -9,6 +9,7 @@ using Voxalia.ClientGame.CommandSystem;
 using Voxalia.Shared.Files;
 using Voxalia.ClientGame.OtherSystems;
 using Voxalia.ClientGame.ClientMainSystem;
+using FreneticScript;
 
 namespace Voxalia.ClientGame.AudioSystem
 {
@@ -149,7 +150,7 @@ namespace Voxalia.ClientGame.AudioSystem
 
         public SoundEffect GetSound(string name)
         {
-            string namelow = name.ToLowerInvariant();
+            string namelow = name.ToLowerFast();
             SoundEffect sfx;
             if (Effects.TryGetValue(namelow, out sfx))
             {

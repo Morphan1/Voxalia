@@ -11,6 +11,7 @@ using Voxalia.ServerGame.OtherSystems;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.PluginSystem;
 using FreneticScript.CommandSystem;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.ServerMainSystem
 {
@@ -183,7 +184,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Building initial world(s)...");
             foreach (string str in Config.ReadStringList("server.regions"))
             {
-                LoadRegion(str.ToLowerInvariant());
+                LoadRegion(str.ToLowerFast());
             }
             if (loaded != null)
             {
@@ -276,24 +277,24 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// </summary>
         public PlayerEntity GetPlayerFor(string name)
         {
-            string namelow = name.ToLowerInvariant();
+            string namelow = name.ToLowerFast();
             for (int i = 0; i < Players.Count; i++)
             {
-                if (Players[i].Name.ToLowerInvariant() == namelow)
+                if (Players[i].Name.ToLowerFast() == namelow)
                 {
                     return Players[i];
                 }
             }
             for (int i = 0; i < Players.Count; i++)
             {
-                if (Players[i].Name.ToLowerInvariant().StartsWith(namelow))
+                if (Players[i].Name.ToLowerFast().StartsWith(namelow))
                 {
                     return Players[i];
                 }
             }
             for (int i = 0; i < Players.Count; i++)
             {
-                if (Players[i].Name.ToLowerInvariant().Contains(namelow))
+                if (Players[i].Name.ToLowerFast().Contains(namelow))
                 {
                     return Players[i];
                 }

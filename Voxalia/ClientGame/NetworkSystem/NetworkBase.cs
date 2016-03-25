@@ -8,6 +8,7 @@ using Voxalia.ClientGame.NetworkSystem.PacketsIn;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared.Files;
 using System.Threading.Tasks;
+using FreneticScript;
 
 namespace Voxalia.ClientGame.NetworkSystem
 {
@@ -466,7 +467,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                     {
                         throw new Exception("Empty address list for DNS server at '" + LastIP + "'");
                     }
-                    if (TheClient.CVars.n_first.Value.ToLowerInvariant() == "ipv4")
+                    if (TheClient.CVars.n_first.Value.ToLowerFast() == "ipv4")
                     {
                         foreach (IPAddress saddress in entry.AddressList)
                         {
@@ -477,7 +478,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                             }
                         }
                     }
-                    else if (TheClient.CVars.n_first.Value.ToLowerInvariant() == "ipv6")
+                    else if (TheClient.CVars.n_first.Value.ToLowerFast() == "ipv6")
                     {
                         foreach (IPAddress saddress in entry.AddressList)
                         {

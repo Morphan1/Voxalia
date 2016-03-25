@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Voxalia.ServerGame.ItemSystem.CommonItems;
 using Voxalia.Shared;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.ItemSystem
 {
@@ -42,13 +43,13 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public void Register(BaseItemInfo info)
         {
-            Infos.Add(info.Name.ToLowerInvariant(), info);
+            Infos.Add(info.Name.ToLowerFast(), info);
         }
 
         public BaseItemInfo GetInfoFor(string name)
         {
             BaseItemInfo bii;
-            if (Infos.TryGetValue(name.ToLowerInvariant(), out bii))
+            if (Infos.TryGetValue(name.ToLowerFast(), out bii))
             {
                 return bii;
             }

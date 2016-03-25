@@ -34,7 +34,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         public Region LoadRegion(string name)
         {
-            string nl = name.ToLowerInvariant();
+            string nl = name.ToLowerFast();
             for (int i = 0; i < LoadedRegions.Count; i++)
             {
                 if (LoadedRegions[i].Name == nl)

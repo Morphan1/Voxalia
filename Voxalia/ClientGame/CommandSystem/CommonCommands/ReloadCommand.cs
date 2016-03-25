@@ -2,6 +2,7 @@
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using OpenTK;
+using FreneticScript;
 
 namespace Voxalia.ClientGame.CommandSystem.CommonCommands
 {
@@ -24,7 +25,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                 ShowUsage(entry);
                 return;
             }
-            string arg = entry.GetArgument(0).ToLowerInvariant();
+            string arg = entry.GetArgument(0).ToLowerFast();
             bool success = false;
             bool is_all = arg == "all";
             if (arg == "chunks" || is_all)

@@ -7,6 +7,7 @@ using Voxalia.ClientGame.UISystem.MenuSystem;
 using Voxalia.ClientGame.GraphicsSystems;
 using OpenTK;
 using OpenTK.Graphics;
+using FreneticScript;
 using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.ClientMainSystem
@@ -128,7 +129,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             string filter = UI_Inv_Filter.Text;
             for (int i = 0; i < Items.Count; i++)
             {
-                if (filter.Length == 0 || Items[i].ToString().ToLowerInvariant().Contains(filter.ToLowerInvariant()))
+                if (filter.Length == 0 || Items[i].ToString().ToLowerFast().Contains(filter.ToLowerFast()))
                 {
                     string name = Items[i].DisplayName;
                     UITextLink p = prev;

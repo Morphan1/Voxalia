@@ -4,6 +4,7 @@ using System;
 using BEPUphysics.CollisionShapes;
 using Voxalia.Shared.Files;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using FreneticScript;
 
 namespace Voxalia.Shared
 {
@@ -145,7 +146,7 @@ namespace Voxalia.Shared
             bool colOnly = false;
             foreach (Model3DMesh mesh in input.Meshes)
             {
-                if (mesh.Name.ToLowerInvariant().Contains("collision"))
+                if (mesh.Name.ToLowerFast().Contains("collision"))
                 {
                     colOnly = true;
                     break;
@@ -153,7 +154,7 @@ namespace Voxalia.Shared
             }
             foreach (Model3DMesh mesh in input.Meshes)
             {
-                if ((!colOnly || mesh.Name.ToLowerInvariant().Contains("collision")) && !mesh.Name.ToLowerInvariant().Contains("nocollide"))
+                if ((!colOnly || mesh.Name.ToLowerFast().Contains("collision")) && !mesh.Name.ToLowerFast().Contains("nocollide"))
                 {
                     for (int i = 0; i < mesh.Indices.Count; i ++)
                     {

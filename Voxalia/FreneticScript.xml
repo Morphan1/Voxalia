@@ -65,6 +65,11 @@
             How many arguments the command can have maximum.
             </summary>
         </member>
+        <member name="F:FreneticScript.CommandSystem.AbstractCommand.ObjectTypes">
+            <summary>
+            The expected object type getters for a command.
+            </summary>
+        </member>
         <member name="M:FreneticScript.CommandSystem.AbstractCommand.TestForValidity(FreneticScript.CommandSystem.CommandEntry)">
             <summary>
             Tests if the CommandEntry is valid for this command at pre-process time.
@@ -72,12 +77,19 @@
             <param name="entry">The entry to test</param>
             <returns>An error message (with tags), or null for none.</returns>
         </member>
-        <member name="M:FreneticScript.CommandSystem.AbstractCommand.AdaptBlockFollowers(FreneticScript.CommandSystem.CommandEntry,System.Collections.Generic.List{FreneticScript.CommandSystem.CommandEntry})">
+        <member name="M:FreneticScript.CommandSystem.AbstractCommand.GetFollower(FreneticScript.CommandSystem.CommandEntry)">
+            <summary>
+            Gets the follower (callback) entry for an entry.
+            </summary>
+            <param name="entry">The entry.</param>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.AbstractCommand.AdaptBlockFollowers(FreneticScript.CommandSystem.CommandEntry,System.Collections.Generic.List{FreneticScript.CommandSystem.CommandEntry},System.Collections.Generic.List{FreneticScript.CommandSystem.CommandEntry})">
             <summary>
             Adjust list of commands that formed by an inner block.
             </summary>
             <param name="entry">The producing entry.</param>
             <param name="input">The block of commands.</param>
+            <param name="fblock">The final block to add to the entry.</param>
         </member>
         <member name="M:FreneticScript.CommandSystem.AbstractCommand.Execute(FreneticScript.CommandSystem.CommandEntry)">
             <summary>
@@ -85,11 +97,12 @@
             </summary>
             <param name="entry">Entry to be executed.</param>
         </member>
-        <member name="M:FreneticScript.CommandSystem.AbstractCommand.ShowUsage(FreneticScript.CommandSystem.CommandEntry)">
+        <member name="M:FreneticScript.CommandSystem.AbstractCommand.ShowUsage(FreneticScript.CommandSystem.CommandEntry,System.Boolean)">
             <summary>
             Displays the usage information on a command to the console.
             </summary>
-            <param name="entry">The CommandEntry data to get usage help from..</param>
+            <param name="entry">The CommandEntry data to show usage help to.</param>
+            <param name="doError">Whether to end with an error.</param>
         </member>
         <member name="T:FreneticScript.CommandSystem.AbstractCommandEntryData">
             <summary>
@@ -157,9 +170,21 @@
             The pieces that make up the tag.
             </summary>
         </member>
+        <member name="M:FreneticScript.CommandSystem.Arguments.TagArgumentBit.#ctor(FreneticScript.CommandSystem.Commands,FreneticScript.TagHandlers.TagBit[])">
+            <summary>
+            Constructs a TagArgumentBit.
+            </summary>
+            <param name="system">The relevant command system.</param>
+            <param name="bits">The tag bits.</param>
+        </member>
         <member name="F:FreneticScript.CommandSystem.Arguments.TagArgumentBit.Fallback">
             <summary>
             The tag to fall back on if this tag fails.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.Arguments.TagArgumentBit.Start">
+            <summary>
+            The starting point for this tag.
             </summary>
         </member>
         <member name="M:FreneticScript.CommandSystem.Arguments.TagArgumentBit.Parse(System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String})">
@@ -255,11 +280,6 @@
         <member name="F:FreneticScript.CommandSystem.CommandEntry.BlockEnd">
             <summary>
             The end of this command's braced block.
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CommandSystem.CommandEntry.Finished">
-            <summary>
-            Whether the &amp;waitable command entry is finished.
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandEntry.WaitFor">
@@ -439,12 +459,11 @@
             Get all variables according the script event's current values.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandEvents.ScriptRanPreScriptEvent.ApplyDetermination(System.String,System.String,FreneticScript.CommandSystem.DebugMode)">
+        <member name="M:FreneticScript.CommandSystem.CommandEvents.ScriptRanPreScriptEvent.ApplyDetermination(FreneticScript.TagHandlers.TemplateObject,FreneticScript.CommandSystem.DebugMode)">
             <summary>
-            Applies a determination string to the event.
+            Applies a determination object to the event.
             </summary>
             <param name="determ">What was determined.</param>
-            <param name="determLow">A lowercase copy of the determination.</param>
             <param name="mode">What debugmode to use.</param>
         </member>
         <member name="T:FreneticScript.CommandSystem.CommandEvents.ScriptRanPostScriptEvent">
@@ -488,12 +507,11 @@
             Get all variables according the script event's current values.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandEvents.ScriptRanPostScriptEvent.ApplyDetermination(System.String,System.String,FreneticScript.CommandSystem.DebugMode)">
+        <member name="M:FreneticScript.CommandSystem.CommandEvents.ScriptRanPostScriptEvent.ApplyDetermination(FreneticScript.TagHandlers.TemplateObject,FreneticScript.CommandSystem.DebugMode)">
             <summary>
-            Applies a determination string to the event.
+            Applies a determination object to the event.
             </summary>
             <param name="determ">What was determined.</param>
-            <param name="determLow">A lowercase copy of the determination.</param>
             <param name="mode">What debugmode to use.</param>
         </member>
         <member name="T:FreneticScript.CommandSystem.CommandEvents.ScriptRanScriptEvent">
@@ -537,12 +555,11 @@
             Get all variables according the script event's current values.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandEvents.ScriptRanScriptEvent.ApplyDetermination(System.String,System.String,FreneticScript.CommandSystem.DebugMode)">
+        <member name="M:FreneticScript.CommandSystem.CommandEvents.ScriptRanScriptEvent.ApplyDetermination(FreneticScript.TagHandlers.TemplateObject,FreneticScript.CommandSystem.DebugMode)">
             <summary>
-            Applies a determination string to the event.
+            Applies a determination object to the event.
             </summary>
             <param name="determ">What was determined.</param>
-            <param name="determLow">A lowercase copy of the determination.</param>
             <param name="mode">What debugmode to use.</param>
         </member>
         <member name="T:FreneticScript.CommandSystem.CommandQueue">
@@ -605,7 +622,6 @@
         <member name="F:FreneticScript.CommandSystem.CommandQueue.Determinations">
             <summary>
             What was returned by the determine command for this queue.
-            TODO: Template object!
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandQueue.Outputsystem">
@@ -693,21 +709,6 @@
             Debug nothing.
             </summary>
         </member>
-        <member name="T:FreneticScript.CommandSystem.EntryFinisher">
-            <summary>
-            A mini-class used for the callback for &amp;waitable commands.
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CommandSystem.EntryFinisher.Entry">
-            <summary>
-            The entry being waited on.
-            </summary>
-        </member>
-        <member name="M:FreneticScript.CommandSystem.EntryFinisher.Complete(System.Object,FreneticScript.CommandSystem.CommandQueueEventArgs)">
-            <summary>
-            Add this function as a callback to complete entry.
-            </summary>
-        </member>
         <member name="T:FreneticScript.CommandSystem.CommandQueueEventArgs">
             <summary>
             Represents a command queue when used in an event.
@@ -772,11 +773,6 @@
         <member name="F:FreneticScript.CommandSystem.Commands.Events">
             <summary>
             All script events this command system is aware of.
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CommandSystem.Commands.PlaceholderQueue">
-            <summary>
-            A placeholder queue, to represent an existent queue object.
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.Commands.random">
@@ -1125,6 +1121,21 @@
             </summary>
             <param name="entry">The command details to be ran.</param>
         </member>
+        <member name="T:FreneticScript.CommandSystem.QueueCmds.EntryFinisher">
+            <summary>
+            A mini-class used for the callback for &amp;waitable commands.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.QueueCmds.EntryFinisher.Entry">
+            <summary>
+            The entry being waited on.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.QueueCmds.EntryFinisher.Complete(System.Object,FreneticScript.CommandSystem.CommandQueueEventArgs)">
+            <summary>
+            Add this function as a callback to complete entry.
+            </summary>
+        </member>
         <member name="T:FreneticScript.CommandSystem.QueueCmds.ScriptRanPreEventArgs">
             <summary>
             Fires when a a script is going to be ran, cancellable.
@@ -1266,12 +1277,11 @@
             Calls the event.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.ScriptEvent.ApplyDetermination(System.String,System.String,FreneticScript.CommandSystem.DebugMode)">
+        <member name="M:FreneticScript.CommandSystem.ScriptEvent.ApplyDetermination(FreneticScript.TagHandlers.TemplateObject,FreneticScript.CommandSystem.DebugMode)">
             <summary>
-            Applies a determination string to the event.
+            Applies a determination object to the event.
             </summary>
             <param name="determ">What was determined.</param>
-            <param name="determLow">A lowercase copy of the determination.</param>
             <param name="mode">What debugmode to use.</param>
         </member>
         <member name="M:FreneticScript.CommandSystem.ScriptEvent.GetVariables">
@@ -1683,6 +1693,18 @@
             <param name="y">The second entry.</param>
             <returns>Whether they are NOT equal.</returns>
         </member>
+        <member name="T:FreneticScript.StringExtensions">
+            <summary>
+            Adds some extensions to strings.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.StringExtensions.ToLowerFast(System.String)">
+            <summary>
+            Rapidly converts a string to a lowercase representation.
+            </summary>
+            <param name="input">The original string.</param>
+            <returns>A lowercase version.</returns>
+        </member>
         <member name="T:FreneticScript.FreneticScriptUtilities">
             <summary>
             Utilities for FreneticScript.
@@ -2086,9 +2108,9 @@
         </member>
         <member name="M:FreneticScript.TagHandlers.Objects.IntegerTag.ToString">
             <summary>
-            Returns the a string representation of the number internally stored by this boolean tag. EG, could return "0", or "1", or "-1.005".
+            Returns the a string representation of the integer internally stored by this integer tag. EG, could return "0", or "1", or...
             </summary>
-            <returns>A string representation of the number.</returns>
+            <returns>A string representation of the integer.</returns>
         </member>
         <member name="T:FreneticScript.TagHandlers.Objects.MapTag">
             <summary>
@@ -2232,7 +2254,7 @@
         </member>
         <member name="M:FreneticScript.TagHandlers.Objects.NumberTag.ToString">
             <summary>
-            Returns the a string representation of the number internally stored by this boolean tag. EG, could return "0", or "1", or "-1.005".
+            Returns the a string representation of the number internally stored by this number tag. EG, could return "0", or "1", or "-1.005", or...
             </summary>
             <returns>A string representation of the number.</returns>
         </member>
@@ -2470,14 +2492,14 @@
             What debug mode to use while filling tags.
             </summary>
         </member>
-        <member name="F:FreneticScript.TagHandlers.TagData.Input">
+        <member name="F:FreneticScript.TagHandlers.TagData.cInd">
             <summary>
-            The tags current simplified input data.
+            The current index in this tag.
             </summary>
         </member>
-        <member name="F:FreneticScript.TagHandlers.TagData.Modifiers">
+        <member name="F:FreneticScript.TagHandlers.TagData.InputKeys">
             <summary>
-            All 'modifier' data (EG, input[modifier].input[modifer]).
+            The tag's current simplified input data.
             </summary>
         </member>
         <member name="F:FreneticScript.TagHandlers.TagData.Fallback">
@@ -2510,7 +2532,7 @@
             What to invoke if there is an error. Given string contains valid tags - any user input should be escaped!
             </summary>
         </member>
-        <member name="M:FreneticScript.TagHandlers.TagData.#ctor(FreneticScript.TagHandlers.TagParser,System.Collections.Generic.List{FreneticScript.TagHandlers.TagBit},System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String},FreneticScript.CommandSystem.Arguments.Argument)">
+        <member name="M:FreneticScript.TagHandlers.TagData.#ctor(FreneticScript.TagHandlers.TagParser,FreneticScript.TagHandlers.TagBit[],System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String},FreneticScript.CommandSystem.Arguments.Argument)">
             <summary>
             Constructs the tag information container.
             </summary>
@@ -2535,11 +2557,23 @@
             <param name="_error">What to invoke if there is an error.</param>
             <param name="fallback">What to fall back to if the tag returns null.</param>
         </member>
+        <member name="P:FreneticScript.TagHandlers.TagData.Item(System.Int32)">
+            <summary>
+            Gets the key at a specified index.
+            </summary>
+            <param name="ind">The index.</param>
+            <returns>The key.</returns>
+        </member>
         <member name="M:FreneticScript.TagHandlers.TagData.Shrink">
             <summary>
             Shrinks the data amount by one at the start, and returns itself.
             </summary>
             <returns>This object.</returns>
+        </member>
+        <member name="F:FreneticScript.TagHandlers.TagData.Remaining">
+            <summary>
+            How many tag positions are left.
+            </summary>
         </member>
         <member name="M:FreneticScript.TagHandlers.TagData.GetModifier(System.Int32)">
             <summary>
@@ -2603,7 +2637,7 @@
             <param name="wasquoted">Whether the argument was input with "quotes".</param>
             <returns>The parsed Argument.</returns>
         </member>
-        <member name="M:FreneticScript.TagHandlers.TagParser.ParseTags(FreneticScript.CommandSystem.Arguments.TagArgumentBit,System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String})">
+        <member name="M:FreneticScript.TagHandlers.TagParser.ParseTags(FreneticScript.CommandSystem.Arguments.TagArgumentBit,System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String},FreneticScript.TagHandlers.TemplateTagBase)">
             <summary>
             Reads and parses all tags inside a list of tag bits.
             </summary>
@@ -2612,6 +2646,7 @@
             <param name="bits">The tag data.</param>
             <param name="mode">What debugmode to use.</param>
             <param name="error">What to invoke if there's an error.</param>
+            <param name="starter">A preparsed start location.</param>
             <returns>The string with tags parsed.</returns>
         </member>
         <member name="M:FreneticScript.TagHandlers.TagParser.ParseTagsFromText(System.String,System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.DebugMode,System.Action{System.String},System.Boolean)">

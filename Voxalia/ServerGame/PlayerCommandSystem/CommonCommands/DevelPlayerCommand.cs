@@ -10,6 +10,7 @@ using BEPUutilities;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.ServerGame.OtherSystems;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
@@ -84,11 +85,11 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             }
             else if (arg0 == "spawnSmallPlant" && entry.InputArguments.Count > 1)
             {
-                entry.Player.TheRegion.SpawnSmallPlant(entry.InputArguments[1].ToLowerInvariant(), entry.Player.GetPosition());
+                entry.Player.TheRegion.SpawnSmallPlant(entry.InputArguments[1].ToLowerFast(), entry.Player.GetPosition());
             }
             else if (arg0 == "spawnTree" && entry.InputArguments.Count > 1)
             {
-                entry.Player.TheRegion.SpawnTree(entry.InputArguments[1].ToLowerInvariant(), entry.Player.GetPosition());
+                entry.Player.TheRegion.SpawnTree(entry.InputArguments[1].ToLowerFast(), entry.Player.GetPosition());
             }
             else if (arg0 == "spawnTarget")
             {

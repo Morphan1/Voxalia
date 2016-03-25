@@ -4,6 +4,7 @@ using Voxalia.ServerGame.EntitySystem;
 using Voxalia.Shared;
 using Voxalia.ServerGame.PlayerCommandSystem.CommonCommands;
 using Voxalia.ServerGame.PlayerCommandSystem.RegionCommands;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem
 {
@@ -63,7 +64,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem
         public AbstractPlayerCommand GetCommand(string name)
         {
             AbstractPlayerCommand apc;
-            Commands.TryGetValue(name.ToLowerInvariant(), out apc);
+            Commands.TryGetValue(name.ToLowerFast(), out apc);
             return apc;
         }
     }

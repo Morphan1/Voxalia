@@ -7,6 +7,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
@@ -48,11 +49,11 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
 
         public override TemplateObject Handle(TagData data)
         {
-            if (data.Input.Count == 0)
+            if (data.Remaining == 0)
             {
                 return this;
             }
-            switch (data.Input[0])
+            switch (data[0])
             {
                 // <--[tag]
                 // @Name ItemTag.item_type
@@ -239,7 +240,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 case "with_secondary_type":
                     {
                         ItemStack items = Internal.Duplicate();
-                        items.SecondaryName = data.GetModifier(0).ToLowerInvariant();
+                        items.SecondaryName = data.GetModifier(0).ToLowerFast();
                         return new ItemTag(items).Handle(data.Shrink());
                     }
                 // <--[tag]

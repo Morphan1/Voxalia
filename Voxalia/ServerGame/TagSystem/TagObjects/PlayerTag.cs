@@ -6,6 +6,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.ServerMainSystem;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
@@ -39,10 +40,10 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             else
             {
-                pname = pname.ToLowerInvariant();
+                pname = pname.ToLowerFast();
                 foreach (PlayerEntity player in tserver.Players)
                 {
-                    if (player.Name.ToLowerInvariant() == pname)
+                    if (player.Name.ToLowerFast() == pname)
                     {
                         return new PlayerTag(player);
                     }
@@ -58,11 +59,11 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
 
         public override TemplateObject Handle(TagData data)
         {
-            if (data.Input.Count == 0)
+            if (data.Remaining == 0)
             {
                 return this;
             }
-            switch (data.Input[0])
+            switch (data[0])
             {
                 // <--[tag]
                 // @Name PlayerTag.name

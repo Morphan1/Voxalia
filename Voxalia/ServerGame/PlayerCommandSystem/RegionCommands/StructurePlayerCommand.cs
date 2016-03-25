@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
 {
@@ -22,7 +23,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                 entry.Player.Network.SendMessage("^1/structure paste <name>");
                 return;
             }
-            string cmd = entry.InputArguments[0].ToLowerInvariant();
+            string cmd = entry.InputArguments[0].ToLowerFast();
             if (cmd == "create")
             {
                 if (entry.InputArguments.Count < 2)
@@ -30,7 +31,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                     entry.Player.Network.SendMessage("^1/structure create <name>");
                     return;
                 }
-                string name = entry.InputArguments[1].ToLowerInvariant();
+                string name = entry.InputArguments[1].ToLowerFast();
                 Structure created = null;
                 try
                 {
@@ -52,7 +53,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                     entry.Player.Network.SendMessage("^1/structure create <name>");
                     return;
                 }
-                string name = entry.InputArguments[1].ToLowerInvariant();
+                string name = entry.InputArguments[1].ToLowerFast();
                 string fn = "structures/" + name + ".str";
                 if (!Program.Files.Exists(fn))
                 {

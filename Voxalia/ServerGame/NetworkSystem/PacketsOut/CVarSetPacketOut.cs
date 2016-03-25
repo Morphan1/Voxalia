@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             ID = 22;
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);
-            dw.WriteInt(tserver.Networking.Strings.IndexForString(var.Name.ToLowerInvariant()));
+            dw.WriteInt(tserver.Networking.Strings.IndexForString(var.Name.ToLowerFast()));
             dw.WriteFullString(var.Value);
             Data = ds.ToArray();
         }

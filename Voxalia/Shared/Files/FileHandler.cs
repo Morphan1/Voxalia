@@ -4,6 +4,7 @@ using System.Text;
 using System.Linq;
 using System.IO;
 using System.IO.Compression;
+using FreneticScript;
 
 namespace Voxalia.Shared.Files
 {
@@ -32,7 +33,7 @@ namespace Voxalia.Shared.Files
         {
             dir = dir.Replace('\\', '/');
             dir = dir.Replace("..", "__error__");
-            string fdir = Environment.CurrentDirectory.Replace('\\', '/') + "/" + dir.ToLowerInvariant() + "/";
+            string fdir = Environment.CurrentDirectory.Replace('\\', '/') + "/" + dir.ToLowerFast() + "/";
             if (SubDirectories.Contains(fdir))
             {
                 SysConsole.Output(OutputType.WARNING, "Ignoring attempt to add same directory twice.");
@@ -68,11 +69,11 @@ namespace Voxalia.Shared.Files
                 }
                 if (file.EndsWith(".pak"))
                 {
-                    Paks.Add(new PakFile(file.Replace(pth, "").ToLowerInvariant(), file));
+                    Paks.Add(new PakFile(file.Replace(pth, "").ToLowerFast(), file));
                 }
                 else
                 {
-                    Files.Add(new PakkedFile(file.Replace(pth, "").ToLowerInvariant(), file));
+                    Files.Add(new PakkedFile(file.Replace(pth, "").ToLowerFast(), file));
                 }
             }
             int id = 0;
@@ -82,7 +83,7 @@ namespace Voxalia.Shared.Files
                 pak.FileListIndex = Files.Count;
                 foreach (ZipStorer.ZipFileEntry zent in zents)
                 {
-                    string name = zent.FilenameInZip.Replace('\\', '/').Replace("..", ".").Replace(":", "").ToLowerInvariant();
+                    string name = zent.FilenameInZip.Replace('\\', '/').Replace("..", ".").Replace(":", "").ToLowerFast();
                     if (name.Length == 0 || name[name.Length - 1] == '/')
                     {
                         continue;

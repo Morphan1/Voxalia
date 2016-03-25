@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.PluginSystem
 {
@@ -42,7 +43,7 @@ namespace Voxalia.ServerGame.PluginSystem
                     string[] depends = pl.Dependencies;
                     foreach (string depend in depends)
                     {
-                        string dep = depend.ToLowerInvariant();
+                        string dep = depend.ToLowerFast();
                         bool has = false;
                         foreach (string possib in poss)
                         {

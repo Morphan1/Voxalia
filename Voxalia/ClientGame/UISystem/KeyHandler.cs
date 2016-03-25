@@ -4,6 +4,7 @@ using FreneticScript.CommandSystem;
 using OpenTK;
 using OpenTK.Input;
 using Voxalia.ClientGame.ClientMainSystem;
+using FreneticScript;
 
 namespace Voxalia.ClientGame.UISystem
 {
@@ -441,7 +442,7 @@ namespace Voxalia.ClientGame.UISystem
         public static Key GetKeyForName(string name)
         {
             Key key;
-            if (namestokeys.TryGetValue(name.ToLowerInvariant(), out key))
+            if (namestokeys.TryGetValue(name.ToLowerFast(), out key))
             {
                 return key;
             }

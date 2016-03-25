@@ -6,6 +6,7 @@ using FreneticScript.CommandSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.GraphicsSystems.ParticleSystem;
 using Voxalia.Shared;
+using FreneticScript;
 
 namespace Voxalia.ClientGame.CommandSystem.GameCommands
 {
@@ -31,7 +32,7 @@ namespace Voxalia.ClientGame.CommandSystem.GameCommands
             Location start = TheClient.Player.GetEyePosition();
             Location forward = TheClient.Player.ForwardVector();
             Location end = start + forward * 5;
-            switch (entry.GetArgument(0).ToLowerInvariant())
+            switch (entry.GetArgument(0).ToLowerFast())
             {
                 case "cylinder":
                     TheClient.Particles.Engine.AddEffect(ParticleEffectType.CYLINDER, (o) => start, (o) => end, (o) => 0.01f, 5f, Location.One, Location.One, true, TheClient.Textures.GetTexture("common/smoke"));

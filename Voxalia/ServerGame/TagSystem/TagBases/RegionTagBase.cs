@@ -9,6 +9,7 @@ using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.TagSystem.TagObjects;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
@@ -30,10 +31,10 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
 
         public override TemplateObject Handle(TagData data)
         {
-            string rname = data.GetModifier(0).ToLowerInvariant();
+            string rname = data.GetModifier(0).ToLowerFast();
             foreach (Region r in TheServer.LoadedRegions)
             {
-                if (r.Name.ToLowerInvariant() == rname)
+                if (r.Name.ToLowerFast() == rname)
                 {
                     return new RegionTag(r).Handle(data.Shrink());
                 }
