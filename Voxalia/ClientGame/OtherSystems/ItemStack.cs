@@ -25,10 +25,9 @@ namespace Voxalia.ClientGame.OtherSystems
 
         public Texture Tex;
 
-        public Color4 GetColor()
+        public System.Drawing.Color GetColor()
         {
-            Color col = DrawColor;
-            return new Color4(col.R, col.G, col.B, col.A);
+            return DrawColor;
         }
 
         public override void SetTextureName(string name)
@@ -74,7 +73,7 @@ namespace Voxalia.ClientGame.OtherSystems
                 }
             }
             Tex.Bind();
-            TheClient.Rendering.SetColor(GetColor());
+            TheClient.Rendering.SetColor(TheClient.Rendering.AdaptColor(ClientUtilities.Convert(TheClient.Player.GetPosition()), GetColor()));
             TheClient.Rendering.RenderRectangle((int)pos.X, (int)pos.Y, (int)(pos.X + size.X), (int)(pos.Y + size.Y));
         }
     }

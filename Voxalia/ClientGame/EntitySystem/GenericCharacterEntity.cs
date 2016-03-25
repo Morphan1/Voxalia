@@ -16,7 +16,7 @@ namespace Voxalia.ClientGame.EntitySystem
     {
         public Model model;
 
-        public Color4 color;
+        public System.Drawing.Color color;
 
         public GenericCharacterEntity(Region tregion)
             : base(tregion)
@@ -33,7 +33,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
-            TheClient.Rendering.SetColor(color);
+            TheClient.Rendering.SetColor(TheClient.Rendering.AdaptColor(ClientUtilities.Convert(GetPosition()), color));
             TheClient.Rendering.SetMinimumLight(0.0f);
             // TODO: Prevent model flipping (Possibly related to animation?)
             Matrix4 mat = PreRot * Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180)) * Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));

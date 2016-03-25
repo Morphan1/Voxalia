@@ -11,6 +11,7 @@ using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.ServerGame.OtherSystems;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript;
+using Voxalia.ServerGame.TagSystem.TagObjects;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
@@ -97,9 +98,10 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 te.SetPosition(entry.Player.GetPosition() + entry.Player.ForwardVector() * 5);
                 te.TheRegion.SpawnEntity(te);
             }
-            else if (arg0 == "spawnSlime")
+            else if (arg0 == "spawnSlime" && entry.InputArguments.Count > 1)
             {
                 SlimeEntity se = new SlimeEntity(entry.Player.TheRegion);
+                se.mod_color = ColorTag.For(entry.InputArguments[1]).Internal;
                 se.SetPosition(entry.Player.GetPosition() + entry.Player.ForwardVector() * 5);
                 se.TheRegion.SpawnEntity(se);
             }
