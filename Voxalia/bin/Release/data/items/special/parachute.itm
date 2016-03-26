@@ -1,0 +1,8 @@
+type: parachute
+icon: items/special/parachute_ico
+display: Parachute
+description: For when you forgot to be careful!
+color: 1,1,1
+model: items/special/parachute
+bound: false
+shared.parachute_mod: numb/1.0

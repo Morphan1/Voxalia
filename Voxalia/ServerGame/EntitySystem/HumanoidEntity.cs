@@ -147,6 +147,11 @@ namespace Voxalia.ServerGame.EntitySystem
             return Items.GetItemForSlot(Items.cItem).Name == "jetpack";
         }
 
+        public bool HasChute()
+        {
+            return Items.GetItemForSlot(Items.cItem).Name == "parachute";
+        }
+
         public double JetpackBoostRate(out float max)
         {
             const double baseBoost = 1500.0;
@@ -192,6 +197,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
             public override void ExclusiveUpdate()
             {
+                if (Human.HasChute())
+                {
+                    entity.ModifyLinearDamping(0.8f);
+                }
                 if (Human.HasJetpack())
                 {
                     // TODO: Apply leaning

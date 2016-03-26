@@ -293,6 +293,11 @@ namespace Voxalia.ClientGame.EntitySystem
             return new ItemStack(TheClient, "air");
         }
 
+        public bool HasChute()
+        {
+            return GetHeldItem().Name == "parachute";
+        }
+
         public bool HasJetpack()
         {
             return GetHeldItem().Name == "jetpack";
@@ -343,6 +348,10 @@ namespace Voxalia.ClientGame.EntitySystem
 
             public override void ExclusiveUpdate()
             {
+                if (Character.HasChute())
+                {
+                    entity.ModifyLinearDamping(0.8f);
+                }
                 if (Character.HasJetpack())
                 {
                     // TODO: Apply leaning
