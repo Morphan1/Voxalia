@@ -642,10 +642,6 @@ namespace Voxalia.ClientGame.EntitySystem
                 TheClient.Rendering.RenderLine(ServerLocation, GetPosition());
                 TheClient.Rendering.RenderLineBox(ServerLocation + new Location(-0.2), ServerLocation + new Location(0.2));
             }
-            if (!TheClient.RenderingShadows)
-            {
-                TheClient.Rendering.SetReflectionAmt(0.7f);
-            }
             OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(1.5f)
                 * OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
                 * PlayerAngleMat
@@ -663,12 +659,9 @@ namespace Voxalia.ClientGame.EntitySystem
                 model.CustomAnimationAdjustments["neck01"] = OpenTK.Matrix4.Identity;
             }
             model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
-            if (!TheClient.RenderingShadows)
-            {
-                TheClient.Rendering.SetReflectionAmt(0f);
-            }
             Model mod = TheClient.GetItemForSlot(TheClient.QuickBarPos).Mod;
-            if (tAnim != null && mod != null)
+            bool hasjp = HasJetpack();
+            if (!hasjp && tAnim != null && mod != null)
             {
                 mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
                 GL.UniformMatrix4(2, false, ref mat);
@@ -687,10 +680,28 @@ namespace Voxalia.ClientGame.EntitySystem
                 mod.Draw();
                 bonemat = OpenTK.Matrix4.Identity;
                 GL.UniformMatrix4(10, false, ref bonemat);
-                if (!TheClient.RenderingShadows)
-                {
-                    TheClient.Rendering.SetReflectionAmt(0f);
-                }
+            }
+            if (hasjp)
+            {
+                // TODO: Abstractify!
+                Model jetp = GetHeldItem().Mod;
+                mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
+                GL.UniformMatrix4(2, false, ref mat);
+                Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
+                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, ((float)(Direction.Pitch / 2f * Utilities.PI180) % 360f)));
+                adjs["spine04"] = rotforw;
+                SingleAnimationNode spine = tAnim.GetNode("spine04");
+                Matrix m4 = Matrix.CreateScale(1.5f, 1.5f, 1.5f)
+                    * (Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 90) * Utilities.PI180) % 360f))
+                    * spine.GetBoneTotalMatrix(aTTime, adjs))
+                     * Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)((90) * Utilities.PI180) % 360f));
+                OpenTK.Matrix4 bonemat = new OpenTK.Matrix4(m4.M11, m4.M12, m4.M13, m4.M14, m4.M21, m4.M22, m4.M23, m4.M24,
+                    m4.M31, m4.M32, m4.M33, m4.M34, m4.M41, m4.M42, m4.M43, m4.M44);
+                GL.UniformMatrix4(10, false, ref bonemat);
+                jetp.LoadSkin(TheClient.Textures);
+                jetp.Draw();
+                bonemat = OpenTK.Matrix4.Identity;
+                GL.UniformMatrix4(10, false, ref bonemat);
             }
             if (IsTyping)
             {

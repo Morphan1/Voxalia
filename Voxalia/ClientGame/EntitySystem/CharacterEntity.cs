@@ -337,6 +337,18 @@ namespace Voxalia.ClientGame.EntitySystem
             return baseHover;
         }
 
+        void DoJetpackEffect(int count)
+        {
+            Location forw = ForwardVector();
+            forw = new Location(-forw.X, -forw.Y, 0).Normalize() * 0.333;
+            forw.Z = 1;
+            Location pos = GetPosition() + forw;
+            for (int i = 0; i < count; i++)
+            {
+                TheClient.Particles.JetpackEffect(pos, GetVelocity());
+            }
+        }
+
         public class JetpackMotionConstraint : SingleEntityConstraint
         {
             public CharacterEntity Character;
@@ -368,6 +380,7 @@ namespace Voxalia.ClientGame.EntitySystem
                             vel.Normalize();
                             Entity.LinearVelocity = vel * max;
                         }
+                        Character.DoJetpackEffect(10);
                     }
                     else if (Character.JPHover)
                     {
@@ -375,6 +388,7 @@ namespace Voxalia.ClientGame.EntitySystem
                         Vector3 vec = -(Character.Gravity.ToBVector() * (float)hover) * Delta;
                         Entity.ApplyLinearImpulse(ref vec);
                         entity.ModifyLinearDamping(0.6f);
+                        Character.DoJetpackEffect(3);
                     }
                 }
             }

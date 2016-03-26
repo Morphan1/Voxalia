@@ -353,12 +353,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             SetColor(new Vector4(c.R, c.G, c.B, c.A));
         }
-
-        public void SetReflectionAmt(float val)
-        {
-            GL.Uniform1(8, val);
-        }
-
+        
         public void SetMinimumLight(float min)
         {
             if (Client.Central.RenderLights) // TODO: Pass client reference!

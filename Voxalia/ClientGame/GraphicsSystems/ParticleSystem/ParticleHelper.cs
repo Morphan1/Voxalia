@@ -69,17 +69,30 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             }
         }
 
-        public void Smoke(Location pos, float spread, Location color)
+        public void JetpackEffect(Location pos, Location vel)
+        {
+            vel += TheClient.TheRegion.GravityNormal * 10;
+            SmokeyParticle(pos, 1, Location.One, SmokeT, vel);
+            SmokeyParticle(pos, 1, new Location(1, 0.2, 0), Explosion[Utilities.UtilRandom.Next(Explosion.Length)], vel);
+        }
+        
+        public void Smoke(Location pos, float spread, Location color, Location vel = default(Location))
+        {
+            SmokeyParticle(pos, spread, color, SmokeT, vel);
+        }
+
+        public void SmokeyParticle(Location pos, float spread, Location color, Texture tex, Location vel = default(Location))
         {
             double xoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
             double yoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
             double zoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+            // TODO: Gravity directionalism fix.
             Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + new Location(xoff, yoff, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.33f + zoff) * (1 - o.TTL / o.O_TTL)
-                + new Location(xoff, yoff, 0) * Math.Sqrt(1 - o.TTL / o.O_TTL),
-                (o) => new Location(1f), (o) => 0, 10, color, color, true, SmokeT);
+                + new Location(xoff, yoff, 0) * Math.Sqrt(1 - o.TTL / o.O_TTL) + vel * (1 - o.TTL / o.O_TTL),
+                (o) => new Location(1f), (o) => 0, 10, color, color, true, tex);
         }
 
-        public void BigSmoke(Location pos, float spread, Location color)
+        public void BigSmoke(Location pos, float spread, Location color) // TODO: Take a vel?
         {
             double xoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
             double yoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;

@@ -474,7 +474,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 RenderSpecular = true;
                 Rendering.SetColor(Color4.White);
                 VBO.BonesIdentity();
-                Rendering.SetReflectionAmt(0f);
                 // TODO: Render settings
                 Render3D(false);
                 RenderLights = false;
