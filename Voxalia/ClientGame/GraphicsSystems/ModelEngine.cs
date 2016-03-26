@@ -499,6 +499,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                     {
                                         Meshes[i].vbo.Tex_Reflectivity = tex;
                                     }
+                                    else if (typer == "normal")
+                                    {
+                                        Meshes[i].vbo.Tex_Normal = tex;
+                                    }
                                     else if (typer == "")
                                     {
                                         Meshes[i].vbo.Tex = tex;

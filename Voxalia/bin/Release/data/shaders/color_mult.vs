@@ -2,12 +2,13 @@
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
-layout (location = 2) in vec3 texcoord;
-layout (location = 3) in vec4 color;
-layout (location = 4) in vec4 Weights;
-layout (location = 5) in vec4 BoneID;
-layout (location = 6) in vec4 Weights2;
-layout (location = 7) in vec4 BoneID2;
+layout (location = 2) in vec2 texcoords;
+layout (location = 3) in vec3 tangent;
+layout (location = 4) in vec4 color;
+layout (location = 5) in vec4 Weights;
+layout (location = 6) in vec4 BoneID;
+layout (location = 7) in vec4 Weights2;
+layout (location = 8) in vec4 BoneID2;
 
 const int MAX_BONES = 200;
 
@@ -19,7 +20,7 @@ layout (location = 10) uniform mat4 simplebone_matrix = mat4(1.0);
 layout (location = 11) uniform mat4 boneTrans[MAX_BONES];
 
 layout (location = 0) out vec4 f_color;
-layout (location = 1) out vec3 f_texcoord;
+layout (location = 1) out vec2 f_texcoord;
 
 void main()
 {
@@ -51,6 +52,6 @@ void main()
         f_color = vec4(1.0);
     }
     f_color = f_color * v_color;
-	f_texcoord = texcoord;
+	f_texcoord = texcoords;
 	gl_Position = projection * model_matrix * vec4(pos1.xyz, 1.0);
 }

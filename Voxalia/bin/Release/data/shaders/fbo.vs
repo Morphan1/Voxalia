@@ -3,16 +3,20 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 layout (location = 2) in vec2 texcoords;
-layout (location = 3) in vec4 color;
-layout (location = 4) in vec4 Weights;
-layout (location = 5) in vec4 BoneID;
-layout (location = 6) in vec4 Weights2;
-layout (location = 7) in vec4 BoneID2;
+layout (location = 3) in vec3 tangent;
+layout (location = 4) in vec4 color;
+layout (location = 5) in vec4 Weights;
+layout (location = 6) in vec4 BoneID;
+layout (location = 7) in vec4 Weights2;
+layout (location = 8) in vec4 BoneID2;
 
-layout (location = 0) out vec4 f_position;
-layout (location = 1) out vec3 f_normal;
-layout (location = 2) out vec2 f_texcoord;
-layout (location = 3) out vec4 f_color;
+out struct vox_out
+{
+	vec4 position;
+	vec2 texcoord;
+	vec4 color;
+	mat3 tbn;
+} f;
 
 const int MAX_BONES = 200;
 
@@ -52,21 +56,23 @@ void main()
 	norm1 *= simplebone_matrix;
 	//pos1 = simplebone_matrix * pos1;
 	//norm1 = simplebone_matrix * norm1;
-	f_texcoord = texcoords;
-	f_position = mv_matrix * vec4(pos1.xyz, 1.0);
-	f_position /= f_position.w;
+	f.texcoord = texcoords;
+	f.position = mv_matrix * vec4(pos1.xyz, 1.0);
+	f.position /= f.position.w;
 	//vec4 norm1 = boneTransform * vec4(normal, 1.0);
-	f_color = color;
-    if (f_color == vec4(0.0, 0.0, 0.0, 1.0))
+	f.color = color;
+    if (f.color == vec4(0.0, 0.0, 0.0, 1.0))
     {
-        f_color = vec4(1.0);
+        f.color = vec4(1.0);
     }
-    f_color = f_color * v_color;
+    f.color = f.color * v_color;
 	gl_Position = proj_matrix * mv_matrix * vec4(pos1.xyz, 1.0);
 	mat4 mv_mat_simple = mv_matrix;
 	mv_mat_simple[3][0] = 0.0;
 	mv_mat_simple[3][1] = 0.0;
 	mv_mat_simple[3][2] = 0.0;
-	vec4 nnormal = (BT * mv_mat_simple) * vec4(norm1.xyz, 1.0); // TODO: Should BT be here?
-	f_normal = nnormal.xyz / nnormal.w; // TODO: Normalize?
+	vec3 tf_normal = (mv_mat_simple * vec4(norm1.xyz, 0.0)).xyz; // TODO: Should BT be here?
+	vec3 tf_tangent = (mv_mat_simple * vec4(tangent, 0.0)).xyz; // TODO: Should BT be here?
+	vec3 tf_bitangent = (mv_mat_simple * vec4(cross(tangent, norm1.xyz), 0.0)).xyz; // TODO: Should BT be here?
+	f.tbn = transpose(mat3(tf_tangent, tf_bitangent, tf_normal)); // TODO: Neccessity of transpose()?
 }

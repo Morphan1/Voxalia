@@ -3,8 +3,9 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 layout (location = 2) in vec3 texcoords;
-layout (location = 3) in vec4 color;
-layout (location = 4) in vec4 tcol;
+layout (location = 3) in vec3 tangent;
+layout (location = 4) in vec4 color;
+layout (location = 5) in vec4 tcol;
 
 vec4 color_for(in vec4 pos);
 float snoise2(in vec3 v);

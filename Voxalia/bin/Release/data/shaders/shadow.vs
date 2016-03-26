@@ -3,11 +3,12 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 layout (location = 2) in vec2 texcoords;
-layout (location = 3) in vec4 color;
-layout (location = 4) in vec4 Weights;
-layout (location = 5) in vec4 BoneID;
-layout (location = 6) in vec4 Weights2;
-layout (location = 7) in vec4 BoneID2;
+layout (location = 3) in vec3 tangent;
+layout (location = 4) in vec4 color;
+layout (location = 5) in vec4 Weights;
+layout (location = 6) in vec4 BoneID;
+layout (location = 7) in vec4 Weights2;
+layout (location = 8) in vec4 BoneID2;
 
 const int MAX_BONES = 200;
 

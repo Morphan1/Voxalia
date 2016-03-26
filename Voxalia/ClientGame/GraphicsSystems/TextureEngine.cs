@@ -39,6 +39,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public Texture Black = null;
 
         /// <summary>
+        /// A default normal plane texture.
+        /// </summary>
+        public Texture NormalDef = null;
+
+        /// <summary>
         /// An empty bitmap, for regular use.
         /// </summary>
         public Bitmap EmptyBitmap = null;
@@ -65,6 +70,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             LoadedTextures.Add(Black);
             Clear = GenerateForColor(Color.Transparent, "clear");
             LoadedTextures.Add(Clear);
+            NormalDef = GetTexture("normal_def");
         }
 
         public void Empty()

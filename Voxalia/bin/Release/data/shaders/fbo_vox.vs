@@ -3,9 +3,9 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 layout (location = 2) in vec3 texcoords;
-layout (location = 3) in vec4 color;
-layout (location = 4) in vec4 tcol;
-layout (location = 5) in vec3 tangent;
+layout (location = 3) in vec3 tangent;
+layout (location = 4) in vec4 color;
+layout (location = 5) in vec4 tcol;
 
 out struct vox_out
 {
@@ -31,6 +31,7 @@ void main()
 	f.position = mv_matrix * vec4(position, 1.0);
 	f.tcol = color_for(f.position);
 	f.position /= f.position.w;
+	gl_Position = proj_matrix * mv_matrix * vec4(position, 1.0);
 	mat4 mv_mat_simple = mv_matrix;
 	mv_mat_simple[3][0] = 0.0;
 	mv_mat_simple[3][1] = 0.0;
@@ -39,7 +40,6 @@ void main()
 	vec3 tf_tangent = (mv_mat_simple * vec4(tangent, 0.0)).xyz;
 	vec3 tf_bitangent = (mv_mat_simple * vec4(cross(tangent, normal), 0.0)).xyz;
 	f.tbn = transpose(mat3(tf_tangent, tf_bitangent, tf_normal)); // TODO: Neccessity of transpose()?
-	gl_Position = proj_matrix * mv_matrix * vec4(position, 1.0);
 }
 
 const float min_cstrobe = 3.0 / 255.0;
