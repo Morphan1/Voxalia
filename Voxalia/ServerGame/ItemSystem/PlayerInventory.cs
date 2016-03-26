@@ -24,6 +24,12 @@ namespace Voxalia.ServerGame.ItemSystem
             return it;
         }
 
+        public override void SetSlot(int slot, ItemStack item)
+        {
+            base.SetSlot(slot, item);
+            ((PlayerEntity)Owner).Network.SendPacket(new SetItemPacketOut(slot, item));
+        }
+
         public override void RemoveItem(int item)
         {
             base.RemoveItem(item);

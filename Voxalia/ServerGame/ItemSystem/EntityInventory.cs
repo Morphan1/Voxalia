@@ -24,13 +24,10 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public override void RemoveItem(int item)
         {
-            while (item < 0)
+            item = item % (Items.Count + 1);
+            if (item < 0)
             {
                 item += Items.Count + 1;
-            }
-            while (item > Items.Count)
-            {
-                item -= Items.Count + 1;
             }
             ItemStack its = GetItemForSlot(item);
             if (item == cItem) // TODO: ensure cItem is wrapped // TODO: should we expect a wrapped cItem from the client and block non-wrapped? Would minimize risks a bit.

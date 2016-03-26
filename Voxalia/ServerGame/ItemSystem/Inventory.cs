@@ -127,17 +127,44 @@ namespace Voxalia.ServerGame.ItemSystem
             return item;
         }
 
+        public virtual void SetSlot(int slot, ItemStack item)
+        {
+            Items[slot] = item;
+        }
+
+        public bool RemoveItem(ItemStack item, int count)
+        {
+            for (int i = 0; i < Items.Count; i++)
+            {
+                if (ItemsMatch(item, Items[i]))
+                {
+                    if (item.Count > count)
+                    {
+                        item.Count -= count;
+                        SetSlot(i, item);
+                        return true;
+                    }
+                    else
+                    {
+                        count -= item.Count;
+                        RemoveItem(i + 1);
+                        if (count == 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         public virtual void RemoveItem(int item)
         {
-            while (item < 0)
+            item = item % (Items.Count + 1);
+            if (item < 0)
             {
                 item += Items.Count + 1;
             }
-            while (item > Items.Count)
-            {
-                item -= Items.Count + 1;
-            }
-            ItemStack its = GetItemForSlot(item);
             Items.RemoveAt(item - 1);
         }
 

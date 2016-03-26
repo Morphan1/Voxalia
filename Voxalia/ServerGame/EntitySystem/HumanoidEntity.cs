@@ -170,6 +170,33 @@ namespace Voxalia.ServerGame.EntitySystem
             return baseBoost;
         }
 
+        double fuelCom = 0;
+
+        public bool ConsumeFuel(double amt)
+        {
+            // TODO: Gamemode check!
+            ItemStack stackf = null;
+            foreach (ItemStack item in Items.Items)
+            {
+                if (item.Name == "fuel")
+                {
+                    stackf = item;
+                    break;
+                }
+            }
+            if (stackf == null)
+            {
+                return false;
+            }
+            fuelCom += amt;
+            if (fuelCom > 1)
+            {
+                fuelCom -= 1;
+                Items.RemoveItem(stackf, 1);
+            }
+            return true;
+        }
+
         public double JetpackHoverStrength()
         {
             double baseHover = GetMass();
@@ -206,6 +233,10 @@ namespace Voxalia.ServerGame.EntitySystem
                     // TODO: Apply leaning
                     if (Human.JPBoost)
                     {
+                        if (!Human.ConsumeFuel(Delta * 3.5)) // TODO: Custom fuel consumption per-item!
+                        {
+                            return;
+                        }
                         float max;
                         double boost = Human.JetpackBoostRate(out max);
                         Vector3 vec = -(Human.TheRegion.GravityNormal.ToBVector() * (float)boost) * Delta;
@@ -220,6 +251,10 @@ namespace Voxalia.ServerGame.EntitySystem
                     }
                     else if (Human.JPHover)
                     {
+                        if (!Human.ConsumeFuel(Delta)) // TODO: Custom fuel consumption per-item!
+                        {
+                            return;
+                        }
                         double hover = Human.JetpackHoverStrength();
                         Vector3 vec = -(Human.GetGravity().ToBVector() * (float)hover) * Delta;
                         Entity.ApplyLinearImpulse(ref vec);
