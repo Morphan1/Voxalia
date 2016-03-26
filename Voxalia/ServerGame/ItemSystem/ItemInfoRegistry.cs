@@ -38,6 +38,8 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new PaintbrushItem());
             Register(new PaintbombItem());
             Register(new PickaxeItem());
+            Register(new JetpackItem());
+            Register(new FuelItem());
             Register(Generic = new GenericItem());
         }
 

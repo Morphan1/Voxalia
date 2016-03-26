@@ -78,6 +78,11 @@ namespace Voxalia.ClientGame.EntitySystem
             SetPosition(new Location(0, 0, 1000));
         }
 
+        public override ItemStack GetHeldItem()
+        {
+            return TheClient.GetItemForSlot(TheClient.QuickBarPos);
+        }
+
         public bool IgnorePlayers(BroadPhaseEntry entry)
         {
             if (entry.CollisionRules.Group == CollisionUtil.Player)
@@ -379,6 +384,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
+            Body.ActivityInformation.Activate();
             Direction.Yaw += MouseHandler.MouseDelta.X;
             Direction.Pitch += MouseHandler.MouseDelta.Y;
             Direction.Yaw += GamePadHandler.TotalDirectionX * 90f * TheRegion.Delta;
@@ -556,6 +562,9 @@ namespace Voxalia.ClientGame.EntitySystem
                     aLTime = 0;
                 }
             }
+            bool hasjp = HasJetpack();
+            JPBoost = hasjp && Click;
+            JPHover = hasjp && AltClick;
             // TODO: Triggered by console opening/closing directly, rather than monitoring it on the tick?
             if (TheClient.Network.IsAlive)
             {

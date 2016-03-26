@@ -125,6 +125,8 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\BulletItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BlockItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\ExplodobowItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\FuelItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\JetpackItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\PickaxeItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\FistItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BreadcrumbItem.cs" />

@@ -210,6 +210,8 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(TheServer.Items.GetItem("weapons/grenades/smokesignal", 10));
             Items.GiveItem(TheServer.Items.GetItem("weapons/grenades/explosivegrenade", 10));
             Items.GiveItem(new ItemStack("smokemachine", TheServer, 10, "items/common/smokemachine_ico", "Smoke Machine", "Do not inhale!", Color.White, "items/common/smokemachine", false));
+            Items.GiveItem(TheServer.Items.GetItem("special/jetpack", 1));
+            Items.GiveItem(TheServer.Items.GetItem("useful/fuel", 100));
             CGroup = CollisionUtil.Player;
             string nl = Name.ToLower();
             string fn = "server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr";

@@ -1,0 +1,9 @@
+type: jetpack
+icon: items/special/jetpack_ico
+display: Jetpack
+description: Be careful with this!
+color: 1,1,1
+model: items/special/jetpack
+bound: false
+shared.jetpack_boostmod: numb/1.0
+shared.jetpack_hovermod: numb/1.0

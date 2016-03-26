@@ -16,6 +16,8 @@ using BEPUphysics.UpdateableSystems;
 using BEPUphysics.NarrowPhaseSystems.Pairs;
 using BEPUphysics.PositionUpdating;
 using BEPUphysics.NarrowPhaseSystems;
+using BEPUphysics.Constraints;
+using BEPUphysics.Constraints.SingleEntity;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 using Voxalia.ClientGame.WorldSystem;
@@ -25,6 +27,8 @@ using BEPUphysics.Character;
 using FreneticScript;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.JointSystem;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -152,6 +156,8 @@ namespace Voxalia.ClientGame.EntitySystem
             Shape = CBody.Body.CollisionInformation.Shape;
             ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
             TheRegion.PhysicsWorld.Add(CBody);
+            Jetpack = new JetpackMotionConstraint(this);
+            TheRegion.PhysicsWorld.Add(Jetpack);
         }
 
         public float CBHHeight = 1.3f;
@@ -195,6 +201,11 @@ namespace Voxalia.ClientGame.EntitySystem
             if (CBody == null)
             {
                 return;
+            }
+            if (Jetpack != null)
+            {
+                TheRegion.PhysicsWorld.Remove(Jetpack);
+                Jetpack = null;
             }
             TheRegion.PhysicsWorld.Remove(CBody);
             CBody = null;
@@ -272,6 +283,107 @@ namespace Voxalia.ClientGame.EntitySystem
                 base.SetPosition(pos + new Location(0, 0, CBHHeight));
             }
         }
+
+        public bool JPBoost = false;
+        public bool JPHover = false;
+
+        public virtual ItemStack GetHeldItem()
+        {
+            // TODO: Real return
+            return new ItemStack(TheClient, "air");
+        }
+
+        public bool HasJetpack()
+        {
+            return GetHeldItem().Name == "jetpack";
+        }
+
+        public double JetpackBoostRate(out float max)
+        {
+            const double baseBoost = 1500.0;
+            const float baseMax = 2000.0f;
+            max = baseMax; // TODO: Own mod
+            ItemStack its = GetHeldItem();
+            TemplateObject mod;
+            if (its.SharedAttributes.TryGetValue("jetpack_boostmod", out mod))
+            {
+                NumberTag nt = NumberTag.TryFor(mod);
+                if (nt != null)
+                {
+                    return baseBoost * nt.Internal;
+                }
+            }
+            return baseBoost;
+        }
+
+        public double JetpackHoverStrength()
+        {
+            double baseHover = GetMass();
+            ItemStack its = GetHeldItem();
+            TemplateObject mod;
+            if (its.SharedAttributes.TryGetValue("jetpack_hovermod", out mod))
+            {
+                NumberTag nt = NumberTag.TryFor(mod);
+                if (nt != null)
+                {
+                    return baseHover * nt.Internal;
+                }
+            }
+            return baseHover;
+        }
+
+        public class JetpackMotionConstraint : SingleEntityConstraint
+        {
+            public CharacterEntity Character;
+            public JetpackMotionConstraint(CharacterEntity character)
+            {
+                Character = character;
+                Entity = character.Body;
+            }
+
+            public override void ExclusiveUpdate()
+            {
+                if (Character.HasJetpack())
+                {
+                    // TODO: Apply leaning
+                    if (Character.JPBoost)
+                    {
+                        float max;
+                        double boost = Character.JetpackBoostRate(out max);
+                        Vector3 vec = -(Character.TheRegion.GravityNormal.ToBVector() * (float)boost) * Delta;
+                        Character.CBody.Jump();
+                        Entity.ApplyLinearImpulse(ref vec);
+                        if (Entity.LinearVelocity.LengthSquared() > max * max)
+                        {
+                            Vector3 vel = entity.LinearVelocity;
+                            vel.Normalize();
+                            Entity.LinearVelocity = vel * max;
+                        }
+                    }
+                    else if (Character.JPHover)
+                    {
+                        double hover = Character.JetpackHoverStrength();
+                        Vector3 vec = -(Character.Gravity.ToBVector() * (float)hover) * Delta;
+                        Entity.ApplyLinearImpulse(ref vec);
+                        entity.ModifyLinearDamping(0.6f);
+                    }
+                }
+            }
+
+            float Delta;
+
+            public override float SolveIteration()
+            {
+                return 0; // Do nothing
+            }
+
+            public override void Update(float dt)
+            {
+                Delta = dt;
+            }
+        }
+
+        public JetpackMotionConstraint Jetpack = null;
 
     }
 }

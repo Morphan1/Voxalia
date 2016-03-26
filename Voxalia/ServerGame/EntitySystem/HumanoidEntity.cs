@@ -10,6 +10,10 @@ using Voxalia.ServerGame.ItemSystem.CommonItems;
 using BEPUphysics.Character;
 using BEPUutilities;
 using Voxalia.ServerGame.ItemSystem;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
+using BEPUphysics.Constraints;
+using BEPUphysics.Constraints.SingleEntity;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -66,6 +70,8 @@ namespace Voxalia.ServerGame.EntitySystem
                 CursorMarker.CanSave = false;
                 TheRegion.SpawnEntity(CursorMarker);
             }
+            Jetpack = new JetpackMotionConstraint(this);
+            TheRegion.PhysicsWorld.Add(Jetpack);
         }
 
         public override void DestroyBody()
@@ -73,6 +79,11 @@ namespace Voxalia.ServerGame.EntitySystem
             if (CBody == null)
             {
                 return;
+            }
+            if (Jetpack != null)
+            {
+                TheRegion.PhysicsWorld.Remove(Jetpack);
+                Jetpack = null;
             }
             base.DestroyBody();
             if (CursorMarker.IsSpawned && !CursorMarker.Removed)
@@ -85,6 +96,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public override void Tick()
         {
             base.Tick();
+            Body.ActivityInformation.Activate();
             CursorMarker.SetPosition(GetEyePosition() + ForwardVector() * 0.9f);
             CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(Direction.Pitch * Utilities.PI180)) *
                 Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(Direction.Yaw * Utilities.PI180)));
@@ -127,5 +139,99 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        public bool JPBoost = false;
+        public bool JPHover = false;
+
+        public bool HasJetpack()
+        {
+            return Items.GetItemForSlot(Items.cItem).Name == "jetpack";
+        }
+
+        public double JetpackBoostRate(out float max)
+        {
+            const double baseBoost = 1500.0;
+            const float baseMax = 2000.0f;
+            max = baseMax; // TODO: Own mod
+            ItemStack its = Items.GetItemForSlot(Items.cItem);
+            TemplateObject mod;
+            if (its.SharedAttributes.TryGetValue("jetpack_boostmod", out mod))
+            {
+                NumberTag nt = NumberTag.TryFor(mod);
+                if (nt != null)
+                {
+                    return baseBoost * nt.Internal;
+                }
+            }
+            return baseBoost;
+        }
+
+        public double JetpackHoverStrength()
+        {
+            double baseHover = GetMass();
+            ItemStack its = Items.GetItemForSlot(Items.cItem);
+            TemplateObject mod;
+            if (its.SharedAttributes.TryGetValue("jetpack_hovermod", out mod))
+            {
+                NumberTag nt = NumberTag.TryFor(mod);
+                if (nt != null)
+                {
+                    return baseHover * nt.Internal;
+                }
+            }
+            return baseHover;
+        }
+
+        public class JetpackMotionConstraint : SingleEntityConstraint
+        {
+            public HumanoidEntity Human;
+            public JetpackMotionConstraint(HumanoidEntity human)
+            {
+                Human = human;
+                Entity = Human.Body;
+            }
+
+            public override void ExclusiveUpdate()
+            {
+                if (Human.HasJetpack())
+                {
+                    // TODO: Apply leaning
+                    if (Human.JPBoost)
+                    {
+                        float max;
+                        double boost = Human.JetpackBoostRate(out max);
+                        Vector3 vec = -(Human.TheRegion.GravityNormal.ToBVector() * (float)boost) * Delta;
+                        Human.CBody.Jump();
+                        Entity.ApplyLinearImpulse(ref vec);
+                        if (Entity.LinearVelocity.LengthSquared() > max * max)
+                        {
+                            Vector3 vel = entity.LinearVelocity;
+                            vel.Normalize();
+                            Entity.LinearVelocity = vel * max;
+                        }
+                    }
+                    else if (Human.JPHover)
+                    {
+                        double hover = Human.JetpackHoverStrength();
+                        Vector3 vec = -(Human.GetGravity().ToBVector() * (float)hover) * Delta;
+                        Entity.ApplyLinearImpulse(ref vec);
+                        entity.ModifyLinearDamping(0.6f);
+                    }
+                }
+            }
+
+            public override float SolveIteration()
+            {
+                return 0; // Do nothing
+            }
+
+            float Delta;
+
+            public override void Update(float dt)
+            {
+                Delta = dt;
+            }
+        }
+
+        public JetpackMotionConstraint Jetpack = null;
     }
 }
