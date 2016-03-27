@@ -5,6 +5,7 @@ using Voxalia.Shared.BlockShapes;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.CollisionShapes;
 using BEPUutilities;
+using FreneticScript;
 
 namespace Voxalia.Shared
 {
@@ -18,13 +19,18 @@ namespace Voxalia.Shared
         /// </summary>
         public static BlockShapeDetails[] BSD = new BlockShapeDetails[256];
 
+        /// <summary>
+        /// All names of all BSDs.
+        /// </summary>
+        public static Dictionary<string, int> BSD_Names = new Dictionary<string, int>();
+
         static BlockShapeRegistry()
         {
             for (int i = 0; i < 256; i++)
             {
                 BSD[i] = new BSD0();
             }
-            BSD[0] = new BSD0();
+            Register(0, new BSD0(), "default", "block", "standard", "cube", "plain");
             BSD[1] = new BSD01_5(0.84f);
             BSD[2] = new BSD01_5(0.68f);
             BSD[3] = new BSD01_5(0.50f);
@@ -89,6 +95,30 @@ namespace Voxalia.Shared
             // ...
             BSD[127] = new BSD52a127(0f, 1f, 1f);
             // ...
+        }
+
+        public static int GetBSDFor(string name)
+        {
+            byte ret;
+            if (byte.TryParse(name, out ret))
+            {
+                return ret;
+            }
+            int iret;
+            if (BSD_Names.TryGetValue(name.ToLowerFast(), out iret))
+            {
+                return iret;
+            }
+            return 0;
+        }
+
+        static void Register(int ID, BlockShapeDetails bsd, params string[] names)
+        {
+            BSD[ID] = bsd;
+            foreach (string str in names)
+            {
+                BSD_Names.Add(str, ID);
+            }
         }
     }
 

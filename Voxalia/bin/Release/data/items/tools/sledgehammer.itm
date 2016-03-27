@@ -1,0 +1,8 @@
+type: sledgehammer
+icon: items/tools/sledgehammer_ico
+display: Sledgehammer
+description: Smashing!
+color: 1,1,1
+model: items/weapons/sledgehammer
+bound: false
+datum: 0

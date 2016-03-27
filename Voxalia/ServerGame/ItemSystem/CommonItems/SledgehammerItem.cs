@@ -2,28 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Voxalia.Shared;
 using Voxalia.ServerGame.EntitySystem;
-using Voxalia.Shared.Collision;
-using Voxalia.ServerGame.NetworkSystem.PacketsOut;
-using BEPUphysics;
-using BEPUutilities;
+using Voxalia.Shared;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using BEPUphysics;
+using BEPUutilities;
 using Voxalia.ServerGame.OtherSystems;
 using Voxalia.ServerGame.WorldSystem;
-using FreneticScript.TagHandlers;
-using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
-    public class PaintbrushItem: GenericItem
+    public class SledgehammerItem: GenericItem
     {
-        public PaintbrushItem()
+        public SledgehammerItem()
         {
-            Name = "paintbrush";
+            Name = "sledgehammer";
         }
-
+        
         public override void Click(Entity entity, ItemStack item)
         {
             if (!(entity is PlayerEntity))
@@ -50,8 +46,8 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     Material mat = (Material)blockdat.BlockMaterial;
                     if (mat != Material.AIR)
                     {
-                        int paint = item.Datum;
-                        player.TheRegion.SetBlockMaterial(block, mat, blockdat.BlockData, (byte)paint, (byte)(blockdat.BlockLocalData | (byte)BlockFlags.EDITED), blockdat.Damage);
+                        int shape = item.Datum;
+                        player.TheRegion.SetBlockMaterial(block, mat, (byte)shape, blockdat.BlockPaint, (byte)(blockdat.BlockLocalData | (byte)BlockFlags.EDITED), blockdat.Damage);
                     }
                 }
             }

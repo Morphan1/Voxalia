@@ -174,6 +174,13 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 its.DrawColor = Colors.ForByte(col);
                 entry.Player.Items.GiveItem(its);
             }
+            else if (arg0 == "sledgeHammer" && entry.InputArguments.Count > 1)
+            {
+                ItemStack its = entry.Player.TheServer.Items.GetItem("tools/sledgehammer");
+                int bsd = BlockShapeRegistry.GetBSDFor(entry.InputArguments[1]);
+                its.Datum = bsd;
+                entry.Player.Items.GiveItem(its);
+            }
             else if (arg0 == "blockDamage" && entry.InputArguments.Count > 1)
             {
                 BlockDamage damage;

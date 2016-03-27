@@ -134,6 +134,7 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\Explosivegrenadeitem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\PaintbombItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\PaintbrushItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\SledgehammerItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\SmokegrenadeItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\GlowstickItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\SmokemachineItem.cs" />
