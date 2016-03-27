@@ -2,6 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using Voxalia.Shared;
+using Voxalia.Shared.Files;
 using Voxalia.ServerGame.ServerMainSystem;
 using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
@@ -43,7 +44,31 @@ namespace Voxalia.ServerGame.ItemSystem
         public ItemStack(byte[] data, Server tserver)
         {
             TheServer = tserver;
-            Load(data);
+            DataStream ds = new DataStream(data);
+            DataReader dr = new DataReader(ds);
+            int attribs = dr.ReadInt();
+            for (int i = 0; i < attribs; i++)
+            {
+                string cattrib = dr.ReadFullString();
+                byte b = dr.ReadByte();
+                if (b == 0)
+                {
+                    Attributes.Add(cattrib, new IntegerTag(dr.ReadInt64()));
+                }
+                else if (b == 1)
+                {
+                    Attributes.Add(cattrib, new NumberTag(dr.ReadDouble()));
+                }
+                else if (b == 2)
+                {
+                    Attributes.Add(cattrib, new BooleanTag(dr.ReadByte() == 1));
+                }
+                else
+                {
+                    Attributes.Add(cattrib, new TextTag(dr.ReadFullString()));
+                }
+            }
+            Load(dr);
         }
         
         public float GetAttributeF(string attr, float def)
@@ -66,10 +91,45 @@ namespace Voxalia.ServerGame.ItemSystem
             return def;
         }
 
+        public byte[] ServerBytes()
+        {
+            DataStream data = new DataStream(1000);
+            DataWriter dw = new DataWriter(data);
+            dw.WriteInt(Attributes.Count);
+            foreach (KeyValuePair<string, TemplateObject> entry in Attributes)
+            {
+                dw.WriteFullString(entry.Key);
+                if (entry.Value is IntegerTag)
+                {
+                    dw.WriteByte(0);
+                    dw.WriteLong(((IntegerTag)entry.Value).Internal);
+                }
+                else if (entry.Value is NumberTag)
+                {
+                    dw.WriteByte(1);
+                    dw.WriteDouble(((NumberTag)entry.Value).Internal);
+                }
+                else if (entry.Value is BooleanTag)
+                {
+                    dw.WriteByte(2);
+                    dw.WriteByte((byte)(((BooleanTag)entry.Value).Internal ? 1 : 0));
+                }
+                // TODO: shared BaseItemTag?
+                else
+                {
+                    dw.WriteByte(3);
+                    dw.WriteFullString(entry.Value.ToString());
+                }
+            }
+            dw.WriteBytes(ToBytes());
+            dw.Flush();
+            return data.ToArray();
+        }
+
         public BaseItemInfo Info = null;
 
         public Dictionary<string, TemplateObject> Attributes = new Dictionary<string, TemplateObject>();
-
+        
         public bool IsBound = false;
 
         public override void SetName(string name)
@@ -150,6 +210,7 @@ namespace Voxalia.ServerGame.ItemSystem
         public string ToEscapedString()
         {
             return TagParser.Escape(Name) + "[secondary=" + (SecondaryName == null ? "" : EscapeTagBase.Escape(SecondaryName)) + ";display=" + EscapeTagBase.Escape(DisplayName) + ";count=" + Count
+                + ";weight=" + Weight + ";volume=" + Volume
                 + ";description=" + EscapeTagBase.Escape(Description) + ";texture=" + EscapeTagBase.Escape(GetTextureName()) + ";model=" + EscapeTagBase.Escape(GetModelName()) + ";bound=" + (IsBound ? "true": "false")
                 + ";drawcolor=" + new ColorTag(DrawColor).ToString() + ";datum=" + Datum + ";shared=" + SharedStr() + ";local=" + EscapedLocalStr() + "]";
         }
@@ -206,6 +267,8 @@ namespace Voxalia.ServerGame.ItemSystem
             bool bound = false;
             string shared = "";
             string local = "";
+            float weight = 1;
+            float volume = 1;
             int datum = 0;
             System.Drawing.Color color = System.Drawing.Color.White;
             foreach (KeyValuePair<string, string> pair in pairs)
@@ -237,9 +300,15 @@ namespace Voxalia.ServerGame.ItemSystem
                         break;
                     case "drawcolor":
                         color = (ColorTag.For(tval) ?? new ColorTag(color)).Internal;
-                        break; // TODO
+                        break;
                     case "datum":
                         datum = Utilities.StringToInt(tval);
+                        break;
+                    case "weight":
+                        weight = Utilities.StringToFloat(tval);
+                        break;
+                    case "volume":
+                        volume = Utilities.StringToFloat(tval);
                         break;
                     case "shared":
                         shared = tval;
@@ -248,10 +317,12 @@ namespace Voxalia.ServerGame.ItemSystem
                         local = tval;
                         break;
                     default:
-                        throw new Exception("Invalid item key: " + tkey);
+                        break; // Ignore errors as much as possible here.
                 }
             }
             ItemStack item = new ItemStack(name, secname, tserver, count, tex, display, descrip, color, model, bound);
+            item.Weight = weight;
+            item.Volume = volume;
             item.Datum = datum;
             pairs = SplitUpPairs(shared.Substring(1, shared.Length - 2));
             foreach (KeyValuePair<string, string> pair in pairs)

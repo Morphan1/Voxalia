@@ -71,6 +71,8 @@ namespace Voxalia.ServerGame.ItemSystem
                 string res_bound = "";
                 string res_subtype = null;
                 string res_datum = "0";
+                string res_weight = "1";
+                string res_volume = "1";
                 List<KeyValuePair<string, string>> attrs = new List<KeyValuePair<string, string>>();
                 List<KeyValuePair<string, string>> shared = new List<KeyValuePair<string, string>>();
                 foreach (string line in split)
@@ -111,6 +113,12 @@ namespace Voxalia.ServerGame.ItemSystem
                         case "datum":
                             res_datum = dat_val;
                             break;
+                        case "weight":
+                            res_weight = dat_val;
+                            break;
+                        case "volume":
+                            res_volume = dat_val;
+                            break;
                         default:
                             if (dat_type.StartsWith("shared."))
                             {
@@ -127,7 +135,9 @@ namespace Voxalia.ServerGame.ItemSystem
                 }
                 ItemStack it = new ItemStack(res_type, res_subtype, TheServer, 1, res_icon, res_display, res_description, ColorTag.For(res_color).Internal, res_model, res_bound.ToLower() == "true")
                 {
-                    Datum = Utilities.StringToInt(res_datum)
+                    Datum = Utilities.StringToInt(res_datum),
+                    Weight = Utilities.StringToFloat(res_weight),
+                    Volume = Utilities.StringToFloat(res_volume)
                 };
                 foreach (KeyValuePair<string, string> key in shared)
                 {

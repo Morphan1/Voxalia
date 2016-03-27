@@ -6,3 +6,5 @@ color: 1,1,1
 model: block
 bound: false
 datum: 22
+weight: 3
+volume: 1

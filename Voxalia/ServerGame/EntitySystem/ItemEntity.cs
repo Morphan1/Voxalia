@@ -1,4 +1,5 @@
-﻿using Voxalia.Shared;
+﻿using System;
+using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
@@ -13,7 +14,7 @@ namespace Voxalia.ServerGame.EntitySystem
             : base(stack.Model, tregion)
         {
             Stack = stack;
-            SetMass(5 * stack.Count); // TODO: Weight property for items!
+            SetMass(Math.Max(1f, stack.Weight) * stack.Count);
             CGroup = CollisionUtil.Item;
         }
 
@@ -25,7 +26,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public override byte[] GetSaveBytes()
         {
             byte[] bbytes = GetPhysicsBytes();
-            byte[] item = Stack.ToBytes(); // TODO: Serverside byte constructor, for server-only data.
+            byte[] item = Stack.ServerBytes();
             byte[] res = new byte[bbytes.Length + 4 + item.Length];
             bbytes.CopyTo(res, 0);
             Utilities.IntToBytes(item.Length).CopyTo(res, bbytes.Length);

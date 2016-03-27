@@ -38,7 +38,7 @@ namespace Voxalia.ServerGame.EntitySystem
             return res;
         }
 
-        // TODO: If settled (deactivated) for too long (minutes?), or loaded in via chunkload, revert to a block
+        // TODO: If settled (deactivated) for too long (minutes?), or loaded in via chunkload, revert to a block form, or destroy if that's not possible
 
         /// <summary>
         /// Gets the itemstack this block represents.

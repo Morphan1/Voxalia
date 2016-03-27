@@ -5,3 +5,5 @@ description: Not safe around squishy living creatures!
 color: 1,1,1
 model: items/weapons/explosivegrenade
 bound: false
+weight: 1
+volume: 1

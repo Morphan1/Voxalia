@@ -6,3 +6,5 @@ color: 1,1,1
 model: items/weapons/paintbrush
 bound: false
 datum: 0
+weight: 2
+volume: 2

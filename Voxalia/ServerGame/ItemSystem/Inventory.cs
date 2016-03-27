@@ -100,7 +100,7 @@ namespace Voxalia.ServerGame.ItemSystem
                 {
                     return false;
                 }
-                if (i1.SharedAttributes[str] != i2.SharedAttributes[str])
+                if (i1.SharedAttributes[str].ToString() != i2.SharedAttributes[str].ToString())
                 {
                     return false;
                 }

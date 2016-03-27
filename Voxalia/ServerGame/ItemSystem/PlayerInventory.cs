@@ -12,6 +12,7 @@ namespace Voxalia.ServerGame.ItemSystem
 
         protected override ItemStack GiveItemNoDup(ItemStack item)
         {
+            // TODO: Better handling method here.
             ItemStack it = base.GiveItemNoDup(item);
             if (ReferenceEquals(it, item))
             {

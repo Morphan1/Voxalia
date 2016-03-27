@@ -7,3 +7,5 @@ model: items/special/jetpack
 bound: false
 shared.jetpack_boostmod: numb/1.0
 shared.jetpack_hovermod: numb/1.0
+weight: 15
+volume: 15

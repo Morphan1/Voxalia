@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Voxalia.Shared;
+using Voxalia.Shared.Files;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.GraphicsSystems;
 using OpenTK.Graphics;
@@ -14,7 +15,9 @@ namespace Voxalia.ClientGame.OtherSystems
         public ItemStack(Client tclient, byte[] data)
         {
             TheClient = tclient;
-            Load(data);
+            DataStream ds = new DataStream(data);
+            DataReader dr = new DataReader(ds);
+            Load(dr);
         }
 
         public ItemStack(Client tclient, string name)

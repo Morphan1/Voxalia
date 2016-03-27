@@ -50,7 +50,17 @@ namespace Voxalia.Shared
         /// <summary>
         /// What color to draw this item as.
         /// </summary>
-        public System.Drawing.Color DrawColor = Color.White;
+        public Color DrawColor = Color.White;
+
+        /// <summary>
+        /// How much volume this item takes up.
+        /// </summary>
+        public float Volume = 1;
+
+        /// <summary>
+        /// How much weight this item takes up.
+        /// </summary>
+        public float Weight = 1;
 
         public abstract string GetTextureName();
 
@@ -66,6 +76,8 @@ namespace Voxalia.Shared
             DataWriter dw = new DataWriter(ds);
             dw.WriteInt(Count);
             dw.WriteInt(Datum);
+            dw.WriteFloat(Weight);
+            dw.WriteFloat(Volume);
             dw.WriteInt(DrawColor.ToArgb());
             dw.WriteFullString(Name);
             dw.WriteFullString(SecondaryName == null ? "" : SecondaryName);
@@ -99,6 +111,7 @@ namespace Voxalia.Shared
                     dw.WriteFullString(entry.Value.ToString());
                 }
             }
+            dw.Flush();
             return ds.ToArray();
         }
 
@@ -120,12 +133,12 @@ namespace Voxalia.Shared
             DrawColor = color;
         }
 
-        public void Load(byte[] data)
+        public void Load(DataReader dr)
         {
-            DataStream ds = new DataStream(data);
-            DataReader dr = new DataReader(ds);
             Count = dr.ReadInt();
             Datum = dr.ReadInt();
+            Weight = dr.ReadFloat();
+            Volume = dr.ReadFloat();
             DrawColor = System.Drawing.Color.FromArgb(dr.ReadInt());
             SetName(dr.ReadFullString());
             string secondary_name = dr.ReadFullString();
@@ -186,7 +199,7 @@ namespace Voxalia.Shared
         public override string ToString()
         {
             return Name + "[secondary=" + (SecondaryName == null ? "{NULL}" : SecondaryName) + ";display=" + DisplayName + ";count=" + Count
-                + ";description=" + Description + ";texture=" + GetTextureName() + ";model=" + GetModelName()
+                + ";description=" + Description + ";texture=" + GetTextureName() + ";model=" + GetModelName() + ";weight=" + Weight + ";volume=" + Volume
                 + ";drawcolor=" + DrawColor.R / 255f + "," + DrawColor.G / 255f + "," + DrawColor.B / 255f + "," + DrawColor.A / 255f + ";datum=" + Datum + ";shared=" + SharedStr() + "]";
             // TODO: Shared color tag?
         }

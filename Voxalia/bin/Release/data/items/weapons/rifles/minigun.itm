@@ -9,3 +9,5 @@ attributes.firerate_mod: numb/0.1
 attributes.spread_mod: numb/5
 attributes.clipsize_mod: numb/10
 attributes.shots_mod: numb/3
+weight: 20
+volume: 20

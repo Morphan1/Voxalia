@@ -41,7 +41,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             Location fvel = entry.Player.ForwardVector();
             ie.SetPosition(entry.Player.GetEyePosition() + fvel * 2);
             ie.SetOrientation(entry.Player.GetOrientation());
-            ie.SetVelocity(fvel * 25 * ie.GetMass());
+            ie.SetVelocity(fvel * 15);
             entry.Player.TheRegion.SpawnEntity(ie);
             if (stack.Count > 1)
             {

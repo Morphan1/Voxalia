@@ -5,3 +5,5 @@ description: It shoots rapid-fire bullets!
 color: 1,1,1
 model: items/weapons/m4a1
 bound: false
+weight: 7
+volume: 5
