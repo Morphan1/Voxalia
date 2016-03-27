@@ -50,16 +50,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     Material mat = (Material)blockdat.BlockMaterial;
                     if (mat != Material.AIR)
                     {
-                        int paint = 0;
-                        TemplateObject pinteger;
-                        if (item.SharedAttributes.TryGetValue("color", out pinteger))
-                        {
-                            IntegerTag nt = IntegerTag.TryFor(pinteger);
-                            if (nt != null)
-                            {
-                                paint = (int)nt.Internal;
-                            }
-                        }
+                        int paint = item.Datum;
                         player.TheRegion.SetBlockMaterial(block, mat, blockdat.BlockData, (byte)paint, (byte)(blockdat.BlockLocalData | (byte)BlockFlags.EDITED));
                     }
                 }

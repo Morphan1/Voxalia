@@ -5,4 +5,4 @@ description: Colorful!
 color: 1,1,1
 model: items/weapons/paintbrush
 bound: false
-shared.color: 0
+datum: 0

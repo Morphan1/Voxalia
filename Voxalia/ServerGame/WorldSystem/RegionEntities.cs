@@ -241,16 +241,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             if (item.Info is PaintbombItem)
             {
-                int paint = 0;
-                TemplateObject pinteger;
-                if (item.SharedAttributes.TryGetValue("color", out pinteger))
-                {
-                    IntegerTag nt = IntegerTag.TryFor(pinteger);
-                    if (nt != null)
-                    {
-                        paint = (int)nt.Internal;
-                    }
-                }
+                int paint = item.Datum;
                 return new PaintBombEntity((byte)paint, this);
             }
             return new ItemEntity(item, this);

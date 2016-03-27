@@ -110,6 +110,10 @@ namespace Voxalia.ServerGame.ItemSystem
 
         public void GiveItem(ItemStack item)
         {
+            if (item.Name == "air")
+            {
+                return;
+            }
             GiveItemNoDup(item.Duplicate());
         }
 
