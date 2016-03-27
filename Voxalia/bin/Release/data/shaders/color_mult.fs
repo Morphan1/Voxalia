@@ -9,8 +9,7 @@ out vec4 color;
 
 void main()
 {
-	vec4 tcolor = texture(tex, f_texcoord);
-	color = tcolor * f_color;
+	color = texture(tex, f_texcoord) * f_color;
     if (color.w < 0.01)
     {
         discard;

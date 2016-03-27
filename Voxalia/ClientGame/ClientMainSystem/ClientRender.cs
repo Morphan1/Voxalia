@@ -277,6 +277,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 gTicks++;
                 try
                 {
+                    Shaders.ColorMultShader.Bind();
+                    GL.Uniform1(6, (float)GlobalTickTimeLocal);
                     CScreen.Render();
                     UIConsole.Draw();
                 }
@@ -463,6 +465,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.UniformMatrix4(2, false, ref matident);
                 GL.Uniform2(8, new Vector2(sl_min, sl_max));
                 s_fbo = s_fbo.Bind();
+                GL.Uniform1(6, (float)GlobalTickTimeLocal);
                 FBOid = 1;
                 RenderingShadows = false;
                 CFrust = camFrust;

@@ -28,6 +28,8 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public Texture Icon;
 
+        public System.Drawing.Color IconColor = System.Drawing.Color.White;
+
         public UITextLink(Texture ico, string btext, string btexthover, string btextclick, Action clicked, Func<float> xer, Func<float> yer, FontSet font)
         {
             Icon = ico;
@@ -86,8 +88,10 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                 float x = GetX() + xoff;
                 float y = GetY() + yoff;
                 Icon.Bind();
+                Menus.TheClient.Rendering.SetColor(IconColor);
                 Menus.TheClient.Rendering.RenderRectangle(x, y, x + TextFont.font_default.Height, y + TextFont.font_default.Height);
                 TextFont.DrawColoredText(tt, new Location(x + TextFont.font_default.Height, y, 0), int.MaxValue, 1, false, BColor);
+                Menus.TheClient.Rendering.SetColor(OpenTK.Vector4.One);
             }
             else
             {

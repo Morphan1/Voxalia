@@ -265,7 +265,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     float nwidth = (float)Math.Ceiling(gfx.MeasureString(chr, font, new PointF(0, 0), sf).Width);
                     if (font.Italic)
                     {
-                        nwidth += 1;
+                        nwidth += 2;
                     }
                     if (X + nwidth >= Engine.bwidth)
                     {

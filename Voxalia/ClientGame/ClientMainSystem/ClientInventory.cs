@@ -139,6 +139,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         InventorySelectItem(x + 1);
                     }
                     , () => p.GetX(), () => p.GetY() + p.GetHeight(), FontSets.Standard);
+                    neo.IconColor = Items[i].DrawColor;
                     UI_Inv_Items.Add(neo);
                     prev = neo;
                 }
