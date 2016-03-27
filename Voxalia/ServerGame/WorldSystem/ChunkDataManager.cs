@@ -32,12 +32,11 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public BsonValue GetIDFor(int x, int y, int z)
         {
-            /*byte[] array = new byte[12];
+            byte[] array = new byte[12];
             Utilities.IntToBytes(x).CopyTo(array, 0);
             Utilities.IntToBytes(y).CopyTo(array, 4);
             Utilities.IntToBytes(z).CopyTo(array, 8);
-            return new BsonValue(array);*/
-            return new BsonValue(x + "," + y + "," + z);
+            return new BsonValue(array);
         }
 
         public ChunkDetails GetChunkDetails(int x, int y, int z)
