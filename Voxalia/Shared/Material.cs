@@ -96,9 +96,9 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.COLOR) { Sound = MaterialSound.STONE, Hardness = 5, BreakTime = 1, Breaker = MaterialBreaker.SHOVEL }, // TODO: Clay sound?
                 new MaterialInfo((int)Material.DIRTY_WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.35f },
                 new MaterialInfo((int)Material.PLANKS_OAK) { SpeedMod = 1.15f, Sound = MaterialSound.WOOD, BreakTime = 1f, Breaker = MaterialBreaker.AXE },
-                new MaterialInfo((int)Material.GLASS_WINDOW) { SpeedMod = 1.1f, Sound = MaterialSound.METAL /* TODO: GLASS */, Hardness = 5, BreakTime = 1, Opaque = false, LightDamage = 0.05f },
+                new MaterialInfo((int)Material.GLASS_WINDOW) { SpeedMod = 1.1f, Sound = MaterialSound.GLASS, Hardness = 5, BreakTime = 1, Opaque = false, LightDamage = 0.05f },
                 new MaterialInfo((int)Material.OIL) { Solidity = MaterialSolidity.LIQUID, FogColor = new Location(0, 0, 0), Hardness = 5, BreakTime = 0.2f, Spreads = true },
-                new MaterialInfo((int)Material.ICE) { Opaque = true, Sound = MaterialSound.METAL /* TODO: GLASS or CLAY? */, SpeedMod = 1.2f, FrictionMod = 0.1f, Hardness = 10, BreakTime = 1.5f, Breaker = MaterialBreaker.PICKAXE },
+                new MaterialInfo((int)Material.ICE) { Opaque = true, Sound = MaterialSound.GLASS /* TODO: CLAY? */, SpeedMod = 1.2f, FrictionMod = 0.1f, Hardness = 10, BreakTime = 1.5f, Breaker = MaterialBreaker.PICKAXE },
                 new MaterialInfo((int)Material.HEAVY_GAS) { Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.25, 0.25, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.1f },
             };
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.TOP] = MAX_THEORETICAL_MATERIALS - 1; // grass (top)
@@ -250,12 +250,12 @@ namespace Voxalia.Shared
         SNOW = 6,
         DIRT = 7,
         WOOD = 8,
+        GLASS = 9,
         // TODO: Clay?
-        // TODO: Glass?
         /// <summary>
         /// How many total material-generated sound types there are.
         /// </summary>
-        COUNT = 9
+        COUNT = 10
     }
 
     public enum MaterialBreaker
