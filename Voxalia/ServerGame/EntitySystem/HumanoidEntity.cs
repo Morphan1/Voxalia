@@ -222,6 +222,15 @@ namespace Voxalia.ServerGame.EntitySystem
                 Entity = Human.Body;
             }
 
+            public Vector3 GetMoveVector(out double glen)
+            {
+                Location gravity = Human.GetGravity();
+                glen = gravity.Length();
+                gravity /= glen;
+                gravity += Utilities.RotateVector(new Location(Human.YMove, -Human.XMove, 0), Human.Direction.Yaw * Utilities.PI180);
+                return gravity.ToBVector(); // TODO: Maybe normalize this?
+            }
+
             public override void ExclusiveUpdate()
             {
                 if (Human.HasChute())
@@ -239,7 +248,9 @@ namespace Voxalia.ServerGame.EntitySystem
                         }
                         float max;
                         double boost = Human.JetpackBoostRate(out max);
-                        Vector3 vec = -(Human.TheRegion.GravityNormal.ToBVector() * (float)boost) * Delta;
+                        double glen;
+                        Vector3 move = GetMoveVector(out glen);
+                        Vector3 vec = -(move * (float)boost) * Delta;
                         Human.CBody.Jump();
                         Entity.ApplyLinearImpulse(ref vec);
                         if (Entity.LinearVelocity.LengthSquared() > max * max)
@@ -256,7 +267,9 @@ namespace Voxalia.ServerGame.EntitySystem
                             return;
                         }
                         double hover = Human.JetpackHoverStrength();
-                        Vector3 vec = -(Human.GetGravity().ToBVector() * (float)hover) * Delta;
+                        double glen;
+                        Vector3 move = GetMoveVector(out glen);
+                        Vector3 vec = -(move * (float)glen * (float)hover) * Delta;
                         Entity.ApplyLinearImpulse(ref vec);
                         entity.ModifyLinearDamping(0.6f);
                     }

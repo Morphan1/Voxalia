@@ -358,6 +358,15 @@ namespace Voxalia.ClientGame.EntitySystem
                 Entity = character.Body;
             }
 
+            public Vector3 GetMoveVector(out double glen)
+            {
+                Location gravity = Character.GetGravity();
+                glen = gravity.Length();
+                gravity /= glen;
+                gravity += Utilities.RotateVector(new Location(Character.YMove, -Character.XMove, 0), Character.Direction.Yaw * Utilities.PI180);
+                return gravity.ToBVector(); // TODO: Maybe normalize this?
+            }
+
             public override void ExclusiveUpdate()
             {
                 if (Character.HasChute())
@@ -371,7 +380,9 @@ namespace Voxalia.ClientGame.EntitySystem
                     {
                         float max;
                         double boost = Character.JetpackBoostRate(out max);
-                        Vector3 vec = -(Character.TheRegion.GravityNormal.ToBVector() * (float)boost) * Delta;
+                        double glen;
+                        Vector3 move = GetMoveVector(out glen);
+                        Vector3 vec = -(move * (float)boost) * Delta;
                         Character.CBody.Jump();
                         Entity.ApplyLinearImpulse(ref vec);
                         if (Entity.LinearVelocity.LengthSquared() > max * max)
@@ -385,7 +396,9 @@ namespace Voxalia.ClientGame.EntitySystem
                     else if (Character.JPHover)
                     {
                         double hover = Character.JetpackHoverStrength();
-                        Vector3 vec = -(Character.Gravity.ToBVector() * (float)hover) * Delta;
+                        double glen;
+                        Vector3 move = GetMoveVector(out glen);
+                        Vector3 vec = -(move * (float)glen * (float)hover) * Delta;
                         Entity.ApplyLinearImpulse(ref vec);
                         entity.ModifyLinearDamping(0.6f);
                         Character.DoJetpackEffect(3);

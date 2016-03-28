@@ -160,6 +160,20 @@ namespace Voxalia.ClientGame.EntitySystem
         }
 
         /// <summary>
+        /// Returns the gravity value for this physics entity, if it has one.
+        /// Otherwise, returns the body's default gravity.
+        /// </summary>
+        /// <returns>The gravity value.</returns>
+        public Location GetGravity()
+        {
+            if (Body != null && Body.Gravity.HasValue)
+            {
+                return new Location(Body.Gravity.Value);
+            }
+            return Gravity;
+        }
+
+        /// <summary>
         /// Returns the friction level of this entity.
         /// </summary>
         public virtual float GetFriction()
