@@ -97,13 +97,39 @@ namespace Voxalia.ServerGame.NetworkSystem
                         {
                             int x = Utilities.StringToInt(dat[1]);
                             int y = Utilities.StringToInt(dat[2]);
-                            int z = Utilities.StringToInt(dat[3].Before(".png"));
+                            int z = Utilities.StringToInt(dat[3].Before("."));
                             byte[] data = TheServer.LoadedRegions[i].ChunkManager.GetImage(x, y, z);
                             if (data != null)
                             {
                                 http_response_contenttype = "image/png";
                                 http_response_content = data;
                                 return;
+                            }
+                        }
+                        else if (dat[0] == "full_img" && dat.Length >= 3)
+                        {
+                            int x = Utilities.StringToInt(dat[1]);
+                            int y = Utilities.StringToInt(dat[2].Before("."));
+                            KeyValuePair<int, int> maxes = TheServer.LoadedRegions[i].ChunkManager.GetMaxes(x, y);
+                            List<byte[]> datums = new List<byte[]>();
+                            for (int z = maxes.Key; z <= maxes.Value; z++)
+                            {
+                                byte[] dt = TheServer.LoadedRegions[i].ChunkManager.GetImage(x, y, z);
+                                if (dt != null)
+                                {
+                                    datums.Add(dt);
+                                }
+                            }
+                            if (datums.Count > 1)
+                            {
+                                http_response_contenttype = "image/png";
+                                http_response_content = TheServer.BlockImages.Combine(datums);
+                                return;
+                            }
+                            else if (datums.Count == 1)
+                            {
+                                http_response_contenttype = "image/png";
+                                http_response_content = datums[0];
                             }
                         }
                         else if (dat[0] == "maxes" && dat.Length >= 3)
@@ -125,13 +151,8 @@ namespace Voxalia.ServerGame.NetworkSystem
                             {
                                 for (int y = -4; y <= 4; y++)
                                 {
-                                    KeyValuePair<int, int> maxes = TheServer.LoadedRegions[i].ChunkManager.GetMaxes(x, y);
-                                    for (int z = maxes.Key; z <= maxes.Value; z++)
-                                    {
-                                        content.Append("<img style=\"position:absolute;top:" + (y + 4) * sz + "px;left:" + (x + 4) * sz + "px;"
-                                            //+ "transform:rotate(90deg);"
-                                            + "\" src=\"/map/region/" + region + "/img/" + (bx + x) + "/" + (by + y) + "/" + z + ".png\" />");
-                                    }
+                                    content.Append("<img style=\"position:absolute;top:" + (y + 4) * sz + "px;left:" + (x + 4) * sz + "px;\" src=\"/map/region/"
+                                        + region + "/full_img/" + (bx + x) + "/" + (by + y) + ".png\" />");
                                 }
                             }
                             content.Append("\n</body>\n</html>\n");

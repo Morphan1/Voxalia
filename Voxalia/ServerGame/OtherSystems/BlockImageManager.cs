@@ -28,6 +28,25 @@ namespace Voxalia.ServerGame.OtherSystems
             }
         }
 
+        public byte[] Combine(List<byte[]> originals)
+        {
+            Bitmap bmp = new Bitmap(Chunk.CHUNK_SIZE * TexWidth, Chunk.CHUNK_SIZE * TexWidth, PixelFormat.Format32bppArgb);
+            using (Graphics graphics = Graphics.FromImage(bmp))
+            {
+                graphics.Clear(Transp);
+                for (int i = 0; i < originals.Count; i++)
+                {
+                    DataStream ds = new DataStream(originals[i]);
+                    Bitmap tbmp = new Bitmap(ds);
+                    graphics.DrawImage(tbmp, 0, 0);
+                    tbmp.Dispose();
+                }
+            }
+            DataStream temp = new DataStream();
+            bmp.Save(temp, ImageFormat.Png);
+            return temp.ToArray();
+        }
+
         void RenderChunkInternal(WorldSystem.Region tregion, Location chunkCoords, Chunk chunk)
         {
             Bitmap bmp = new Bitmap(Chunk.CHUNK_SIZE * TexWidth, Chunk.CHUNK_SIZE * TexWidth, PixelFormat.Format32bppArgb);
