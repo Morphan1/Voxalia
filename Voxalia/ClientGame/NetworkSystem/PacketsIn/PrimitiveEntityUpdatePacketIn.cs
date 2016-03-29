@@ -1,5 +1,6 @@
 ﻿using Voxalia.Shared;
 using Voxalia.ClientGame.EntitySystem;
+using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
@@ -31,8 +32,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     }
                 }
             }
-            SysConsole.Output(OutputType.WARNING, "Unknown EID " + eID);
-            return false;
+            TheClient.Network.SendPacket(new PleaseRedefinePacketOut(eID));
+            return true;
         }
     }
 }

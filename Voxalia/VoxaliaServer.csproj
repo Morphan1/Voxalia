@@ -180,6 +180,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\HoldItemPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\KeysPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsIn\PleaseRedefinePacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\SetStatusPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddCloudPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\AddJointPacketOut.cs" />

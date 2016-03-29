@@ -1,5 +1,6 @@
 ﻿using Voxalia.Shared;
 using Voxalia.ClientGame.EntitySystem;
+using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
@@ -44,8 +45,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     }
                 }
             }
-            SysConsole.Output(OutputType.WARNING, "Invalid physentupdtpacket: invalid EID: " + eID);
-            return false;
+            TheClient.Network.SendPacket(new PleaseRedefinePacketOut(eID));
+            return true;
         }
     }
 }
