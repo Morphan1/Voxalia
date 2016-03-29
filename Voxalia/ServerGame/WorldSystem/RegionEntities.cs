@@ -188,6 +188,18 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
+        public void SendToVisible(Location pos, AbstractPacketOut packet)
+        {
+            Location cpos = ChunkLocFor(pos);
+            foreach (PlayerEntity pe in Players)
+            {
+                if (pe.CanSeeChunk(cpos))
+                {
+                    pe.Network.SendPacket(packet);
+                }
+            }
+        }
+
         public List<PlayerEntity> GetPlayersInRadius(Location pos, float rad)
         {
             CheckThreadValidity();

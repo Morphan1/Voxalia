@@ -14,6 +14,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using BEPUphysics.Constraints;
 using BEPUphysics.Constraints.SingleEntity;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -193,6 +194,11 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 fuelCom -= 1;
                 Items.RemoveItem(stackf, 1);
+                TheRegion.SendToVisible(GetPosition(), new FlagEntityPacketOut(this, EntityFlag.HAS_FUEL, ConsumeFuel(0) ? 1f: 0f));
+            }
+            else
+            {
+                TheRegion.SendToVisible(GetPosition(), new FlagEntityPacketOut(this, EntityFlag.HAS_FUEL, 1f));
             }
             return true;
         }
@@ -239,7 +245,6 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 if (Human.HasJetpack())
                 {
-                    // TODO: Apply leaning
                     if (Human.JPBoost)
                     {
                         if (!Human.ConsumeFuel(Delta * 3.5)) // TODO: Custom fuel consumption per-item!

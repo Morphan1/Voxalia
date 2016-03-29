@@ -57,6 +57,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public bool IsFlying = false;
         public float PreFlyMass = 0;
+        public bool HasFuel = false;
 
         public Stance DesiredStance = Stance.Standing;
 
@@ -373,9 +374,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 {
                     entity.ModifyLinearDamping(0.8f);
                 }
-                if (Character.HasJetpack())
+                if (Character.HasJetpack() && Character.HasFuel)
                 {
-                    // TODO: Apply leaning
                     if (Character.JPBoost)
                     {
                         float max;

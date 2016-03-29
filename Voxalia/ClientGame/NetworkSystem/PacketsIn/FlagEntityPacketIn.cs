@@ -19,8 +19,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Entity e = TheClient.TheRegion.GetEntity(eid);
             if (e == null)
             {
-                SysConsole.Output(OutputType.WARNING, "Flagged unknown entity!");
-                return true; // Don't die, could be a minor flaw.
+                return true; // Don't disconnect, could be a minor flaw.
             }
             EntityFlag flag = (EntityFlag)data[8];
             float value = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 1, 4));
@@ -65,6 +64,16 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     else
                     {
                         throw new Exception("Flagged non-physics entity with a specific mass!");
+                    }
+                    break;
+                case EntityFlag.HAS_FUEL:
+                    if (e is CharacterEntity)
+                    {
+                        ((CharacterEntity)e).HasFuel = value >= 0.5f;
+                    }
+                    else
+                    {
+                        throw new Exception("Flagged non-charcter entity with a specific mass!");
                     }
                     break;
                 default:

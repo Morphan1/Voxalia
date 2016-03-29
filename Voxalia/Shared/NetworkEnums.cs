@@ -39,7 +39,8 @@ namespace Voxalia.Shared
     public enum EntityFlag : byte
     {
         FLYING = 0,
-        MASS = 1
+        MASS = 1,
+        HAS_FUEL = 2
     }
 
     public enum DefaultSound : byte
