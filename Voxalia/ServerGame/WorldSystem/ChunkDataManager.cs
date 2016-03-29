@@ -16,13 +16,48 @@ namespace Voxalia.ServerGame.WorldSystem
 
         LiteCollection<BsonDocument> DBChunks;
 
+        LiteDatabase ImageDatabase;
+
+        LiteCollection<BsonDocument> DBImages;
+
         public Object FSLock = new Object();
+
+        public Object IMGLock = new Object();
 
         public void Init(Region tregion)
         {
             TheRegion = tregion;
             Database = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/chunks.ldb");
             DBChunks = Database.GetCollection<BsonDocument>("chunks");
+            ImageDatabase = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/images.ldb");
+            DBImages = ImageDatabase.GetCollection<BsonDocument>("images");
+        }
+
+        public byte[] GetImage(int x, int y, int z)
+        {
+            BsonDocument doc;
+            lock (IMGLock)
+            {
+                doc = DBImages.FindById(GetIDFor(x, y, z));
+            }
+            if (doc == null)
+            {
+                return null;
+            }
+            return doc["image"].AsBinary;
+        }
+
+        public void WriteImage(int x, int y, int z, byte[] data)
+        {
+            BsonValue id = GetIDFor(x, y, z);
+            BsonDocument newdoc = new BsonDocument();
+            newdoc["_id"] = id;
+            newdoc["image"] = new BsonValue(data);
+            lock (IMGLock)
+            {
+                DBImages.Delete(id);
+                DBImages.Insert(newdoc);
+            }
         }
 
         public void Shutdown()

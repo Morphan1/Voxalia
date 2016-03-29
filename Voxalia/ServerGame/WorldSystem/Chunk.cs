@@ -226,6 +226,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     OwningRegion.ChunkManager.WriteChunkDetails(det);
                 }
+                OwningRegion.TheServer.BlockImages.RenderChunk(OwningRegion, WorldPosition, this);
             }
             catch (Exception ex)
             {

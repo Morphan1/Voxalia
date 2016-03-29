@@ -221,6 +221,7 @@
     <Compile Include="ServerGame\ItemSystem\ItemStack.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourStatusPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\WebPage.cs" />
+    <Compile Include="ServerGame\OtherSystems\BlockImageManager.cs" />
     <Compile Include="ServerGame\OtherSystems\GameMode.cs" />
     <Compile Include="ServerGame\OtherSystems\ModelEngine.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\RemotePlayerCommand.cs" />

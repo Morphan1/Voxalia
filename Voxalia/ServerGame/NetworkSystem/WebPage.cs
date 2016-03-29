@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared.Files;
+using FreneticScript;
+using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.NetworkSystem
 {
@@ -59,6 +61,58 @@ namespace Voxalia.ServerGame.NetworkSystem
             {
                 GZip = encAllowed.Contains("gzip");
             }
+            try
+            {
+                GetPage();
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output("Handling webpage", ex); // TODO: DebugWebError cvar?
+                http_response_id = 500;
+                http_response_itname = "Internal Server Error";
+                http_response_contenttype = "text/plain; charset=UTF-8";
+                http_response_content = FileHandler.encoding.GetBytes("500 Internal Server Error\n");
+            }
+            if (GZip)
+            {
+                http_response_content = FileHandler.GZip(http_response_content);
+            }
+        }
+
+        public void GetPage()
+        {
+            string pageLow = http_request_page.ToLowerFast();
+            if (pageLow.StartsWith("/map/region/"))
+            {
+                string after;
+                string region = pageLow.Substring("/map/region/".Length).BeforeAndAfter("/", out after);
+                for (int i = 0; i < TheServer.LoadedRegions.Count; i++)
+                {
+                    if (TheServer.LoadedRegions[i].Name == region)
+                    {
+                        string[] dat = after.Split('/');
+                        if (dat[0] == "img" && dat.Length >= 4)
+                        {
+                            int x = Utilities.StringToInt(dat[1]);
+                            int y = Utilities.StringToInt(dat[2]);
+                            int z = Utilities.StringToInt(dat[3].Before(".png"));
+                            byte[] data = TheServer.LoadedRegions[i].ChunkManager.GetImage(x, y, z);
+                            if (data != null)
+                            {
+                                http_response_contenttype = "image/png";
+                                http_response_content = data;
+                                return;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            Do404();
+        }
+
+        public void Do404()
+        {
             // Placeholder
             string respcont = "<!doctype HTML>\n<html>";
             respcont += "<head><title>Voxalia Server</title></head>\n";
@@ -67,10 +121,6 @@ namespace Voxalia.ServerGame.NetworkSystem
             respcont += "</body>\n";
             respcont += "</html>\n";
             http_response_content = FileHandler.encoding.GetBytes(respcont);
-            if (GZip)
-            {
-                http_response_content = FileHandler.GZip(http_response_content);
-            }
         }
 
         public bool GZip = false;

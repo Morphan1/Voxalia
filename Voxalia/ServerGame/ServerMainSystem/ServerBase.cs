@@ -85,6 +85,11 @@ namespace Voxalia.ServerGame.ServerMainSystem
         public Scheduler Schedule = new Scheduler();
 
         /// <summary>
+        /// The system that handles rendering images of blocks.
+        /// </summary>
+        public BlockImageManager BlockImages;
+
+        /// <summary>
         /// Whether the server needs to keep ticking - setting this false will end the server central tick process soon.
         /// </summary>
         bool TickMe = true;
@@ -190,6 +195,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
             {
                 loaded.Invoke();
             }
+            SysConsole.Output(OutputType.INIT, "Preparing block image system...");
+            BlockImages = new BlockImageManager();
+            BlockImages.Init();
             SysConsole.Output(OutputType.INIT, "Ticking...");
             // Tick
             double TARGETFPS = 40d;
