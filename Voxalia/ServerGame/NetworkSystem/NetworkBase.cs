@@ -61,6 +61,11 @@ namespace Voxalia.ServerGame.NetworkSystem
         {
             for (int i = 0; i < Connections.Count; i++)
             {
+                if (Connections[i] == null)
+                {
+                    Connections.RemoveAt(i);
+                    i--;
+                }
                 if (Connections[i].Alive)
                 {
                     Connections[i].Tick(delta);

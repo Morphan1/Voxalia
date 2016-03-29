@@ -6,6 +6,8 @@ using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.Shared.Files;
 using FreneticScript;
 using Voxalia.Shared;
+using Voxalia.ServerGame.WorldSystem;
+using Voxalia.ServerGame.OtherSystems;
 
 namespace Voxalia.ServerGame.NetworkSystem
 {
@@ -104,6 +106,38 @@ namespace Voxalia.ServerGame.NetworkSystem
                                 return;
                             }
                         }
+                        else if (dat[0] == "maxes" && dat.Length >= 3)
+                        {
+                            int x = Utilities.StringToInt(dat[1]);
+                            int y = Utilities.StringToInt(dat[2]);
+                            KeyValuePair<int, int> maxes = TheServer.LoadedRegions[i].ChunkManager.GetMaxes(x, y);
+                            http_response_content = FileHandler.encoding.GetBytes(maxes.Key + "," + maxes.Value);
+                            return;
+                        }
+                        else if (dat[0] == "expquick" && dat.Length >= 3)
+                        {
+                            int bx = Utilities.StringToInt(dat[1]);
+                            int by = Utilities.StringToInt(dat[2]);
+                            int sz = Chunk.CHUNK_SIZE * BlockImageManager.TexWidth;
+                            StringBuilder content = new StringBuilder();
+                            content.Append("<!doctype html>\n<html>\n<head>\n<title>Voxalia EXP-QUICK</title>\n</head>\n<body>\n");
+                            for (int x = -4; x <= 4; x++)
+                            {
+                                for (int y = -4; y <= 4; y++)
+                                {
+                                    KeyValuePair<int, int> maxes = TheServer.LoadedRegions[i].ChunkManager.GetMaxes(x, y);
+                                    for (int z = maxes.Key; z <= maxes.Value; z++)
+                                    {
+                                        content.Append("<img style=\"position:absolute;top:" + (y + 4) * sz + "px;left:" + (x + 4) * sz + "px;"
+                                            //+ "transform:rotate(90deg);"
+                                            + "\" src=\"/map/region/" + region + "/img/" + (bx + x) + "/" + (by + y) + "/" + z + ".png\" />");
+                                    }
+                                }
+                            }
+                            content.Append("\n</body>\n</html>\n");
+                            http_response_content = FileHandler.encoding.GetBytes(content.ToString());
+                            return;
+                        }
                         break;
                     }
                 }
@@ -115,11 +149,12 @@ namespace Voxalia.ServerGame.NetworkSystem
         {
             // Placeholder
             string respcont = "<!doctype HTML>\n<html>";
-            respcont += "<head><title>Voxalia Server</title></head>\n";
-            respcont += "<body><h1>Hello, this is a test page!</h1>\n<br>";
-            respcont += "Online players: " + TheServer.Players.Count + "\n<br>";
+            respcont += "<head><title>Voxalia Server 404</title></head>\n";
+            respcont += "<body><h1>404: File Not Found</h1>\n<br>";
             respcont += "</body>\n";
             respcont += "</html>\n";
+            http_response_id = 404;
+            http_response_itname = "File Not Found";
             http_response_content = FileHandler.encoding.GetBytes(respcont);
         }
 

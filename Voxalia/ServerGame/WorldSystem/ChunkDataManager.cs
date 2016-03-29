@@ -20,6 +20,8 @@ namespace Voxalia.ServerGame.WorldSystem
 
         LiteCollection<BsonDocument> DBImages;
 
+        LiteCollection<BsonDocument> DBMaxes;
+
         public Object FSLock = new Object();
 
         public Object IMGLock = new Object();
@@ -31,6 +33,35 @@ namespace Voxalia.ServerGame.WorldSystem
             DBChunks = Database.GetCollection<BsonDocument>("chunks");
             ImageDatabase = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/images.ldb");
             DBImages = ImageDatabase.GetCollection<BsonDocument>("images");
+            DBMaxes = ImageDatabase.GetCollection<BsonDocument>("maxes");
+        }
+
+        public KeyValuePair<int, int> GetMaxes(int x, int y)
+        {
+            BsonDocument doc;
+            lock (IMGLock)
+            {
+                doc = DBMaxes.FindById(GetIDFor(x, y, 0));
+            }
+            if (doc == null)
+            {
+                return new KeyValuePair<int, int>(0, 0);
+            }
+            return new KeyValuePair<int, int>(doc["min"].AsInt32, doc["max"].AsInt32);
+        }
+
+        public void SetMaxes(int x, int y, int min, int max)
+        {
+            BsonValue id = GetIDFor(x, y, 0);
+            BsonDocument newdoc = new BsonDocument();
+            newdoc["_id"] = id;
+            newdoc["min"] = new BsonValue(min);
+            newdoc["max"] = new BsonValue(max);
+            lock (IMGLock)
+            {
+                DBMaxes.Delete(id);
+                DBMaxes.Insert(newdoc);
+            }
         }
 
         public byte[] GetImage(int x, int y, int z)
