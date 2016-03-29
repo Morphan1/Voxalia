@@ -41,6 +41,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public static Client Central = null;
 
         /// <summary>
+        /// How far away the client will render chunks.
+        /// TODO: Use/transmit this value!
+        /// </summary>
+        public int ViewRadius = 3;
+
+        /// <summary>
         /// Starts up a new server.
         /// </summary>
         public static void Init(string args)

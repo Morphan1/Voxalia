@@ -57,61 +57,69 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
-            bool sme = false;
-            SetVelocity(GetVelocity() * 0.99f + Gravity * TheRegion.Delta);
-            if (GetVelocity().LengthSquared() > 0)
+            if (TheRegion.IsVisible(GetPosition()))
             {
-                CollisionResult cr = TheRegion.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + GetVelocity() * TheRegion.Delta, FilterHandle);
-                Location vel = GetVelocity();
-                if (cr.Hit && Collide != null)
+                bool sme = false;
+                SetVelocity(GetVelocity() * 0.99f + Gravity * TheRegion.Delta);
+                if (GetVelocity().LengthSquared() > 0)
                 {
-                    Collide(this, new CollisionEventArgs(cr));
+                    CollisionResult cr = TheRegion.Collision.CuboidLineTrace(Scale, GetPosition(), GetPosition() + GetVelocity() * TheRegion.Delta, FilterHandle);
+                    Location vel = GetVelocity();
+                    if (cr.Hit && Collide != null)
+                    {
+                        Collide(this, new CollisionEventArgs(cr));
+                    }
+                    if (!IsSpawned || Removed)
+                    {
+                        return;
+                    }
+                    if (vel == GetVelocity())
+                    {
+                        SetVelocity((cr.Position - GetPosition()) / TheRegion.Delta);
+                    }
+                    SetPosition(cr.Position);
+                    // TODO: Timer
+                    if (network)
+                    {
+                        sme = true;
+                    }
+                    netdeltat = 2;
                 }
-                if (!IsSpawned || Removed)
+                else
                 {
-                    return;
+                    netdeltat += TheRegion.Delta;
+                    if (netdeltat > 2.0)
+                    {
+                        netdeltat -= 2.0;
+                        sme = true;
+                    }
                 }
-                if (vel == GetVelocity())
+                Location pos = GetPosition();
+                PrimitiveEntityUpdatePacketOut primupd = sme ? new PrimitiveEntityUpdatePacketOut(this) : null;
+                foreach (PlayerEntity player in TheRegion.Players)
                 {
-                    SetVelocity((cr.Position - GetPosition()) / TheRegion.Delta);
+                    bool shouldseec = player.ShouldSeePosition(pos);
+                    bool shouldseel = player.ShouldSeePositionPreviously(lPos);
+                    if (shouldseec && !shouldseel)
+                    {
+                        player.Network.SendPacket(GetSpawnPacket());
+                    }
+                    if (shouldseel && !shouldseec)
+                    {
+                        player.Network.SendPacket(new DespawnEntityPacketOut(EID));
+                    }
+                    if (sme && shouldseec)
+                    {
+                        player.Network.SendPacket(primupd);
+                    }
                 }
-                SetPosition(cr.Position);
-                // TODO: Timer
-                if (network)
-                {
-                    sme = true;
-                }
-                netdeltat = 2;
             }
-            else
+            lPos = GetPosition();
+            Location cpos = TheRegion.ChunkLocFor(lPos);
+            if (CanSave && !TheRegion.LoadedChunks.ContainsKey(cpos))
             {
-                netdeltat += TheRegion.Delta;
-                if (netdeltat > 2.0)
-                {
-                    netdeltat -= 2.0;
-                    sme = true;
-                }
+                TheRegion.LoadChunk(cpos);
             }
-            Location pos = GetPosition();
-            PrimitiveEntityUpdatePacketOut primupd = sme ? new PrimitiveEntityUpdatePacketOut(this) : null;
-            foreach (PlayerEntity player in TheRegion.Players)
-            {
-                bool shouldseec = player.ShouldSeePosition(pos);
-                bool shouldseel = player.ShouldSeePositionPreviously(lPos);
-                if (shouldseec && !shouldseel)
-                {
-                    player.Network.SendPacket(GetSpawnPacket());
-                }
-                if (shouldseel && !shouldseec)
-                {
-                    player.Network.SendPacket(new DespawnEntityPacketOut(EID));
-                }
-                if (sme && shouldseec)
-                {
-                    player.Network.SendPacket(primupd);
-                }
-            }
-            lPos = pos;
         }
 
         public override AbstractPacketOut GetSpawnPacket()

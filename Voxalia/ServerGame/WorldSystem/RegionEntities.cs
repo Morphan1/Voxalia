@@ -188,6 +188,19 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
+        public bool IsVisible(Location pos)
+        {
+            Location cpos = ChunkLocFor(pos);
+            foreach (PlayerEntity pe in Players)
+            {
+                if (pe.CanSeeChunk(cpos))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void SendToVisible(Location pos, AbstractPacketOut packet)
         {
             Location cpos = ChunkLocFor(pos);

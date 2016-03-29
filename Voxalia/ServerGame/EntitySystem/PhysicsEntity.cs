@@ -122,7 +122,31 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public override void Tick()
         {
+            if (!TheRegion.IsVisible(GetPosition()))
+            {
+                if (Body.ActivityInformation.IsActive)
+                {
+                    wasActive = true;
+                    // TODO: Is this needed?
+                    if (Body.ActivityInformation.SimulationIsland != null)
+                    {
+                        Body.ActivityInformation.SimulationIsland.IsActive = false;
+                    }
+                }
+            }
+            else if (wasActive)
+            {
+                wasActive = false;
+                Body.ActivityInformation.Activate();
+            }
+            Location cpos = TheRegion.ChunkLocFor(GetPosition());
+            if (CanSave && !TheRegion.LoadedChunks.ContainsKey(cpos))
+            {
+                TheRegion.LoadChunk(cpos);
+            }
         }
+
+        bool wasActive = false;
 
         public override void PotentialActivate()
         {
