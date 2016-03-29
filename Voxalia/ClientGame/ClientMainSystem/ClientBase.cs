@@ -355,6 +355,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// </summary>
         byte pMode = 0;
 
+        Object chtlock = new Object();
+
         /// <summary>
         /// Loads all unloaded but waiting chunks.
         /// ASync.
@@ -365,15 +367,21 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 return;
             }
-            pMode = 1; // TODO: lock something before doing this?
+            lock (chtlock)
+            {
+                pMode = 1; // TODO: lock something before doing this?
+            }
             Schedule.StartASyncTask(() =>
             {
                 while (true)
                 {
                     Thread.Sleep(16);
-                    if (pMode == 2)
+                    lock (chtlock)
                     {
-                        break;
+                        if (pMode == 2)
+                        {
+                            break;
+                        }
                     }
                     Schedule.ScheduleSyncTask(() =>
                     {
@@ -388,7 +396,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         }
                         if (ready)
                         {
-                            pMode = 2;
+                            lock (chtlock)
+                            {
+                                pMode = 2;
+                            }
                         }
                     });
                 }
@@ -407,7 +418,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                             chunk.PROCESSED = true;
                         }
                     }
-                    pMode = 0;
+                    lock (chtlock)
+                    {
+                        pMode = 0;
+                    }
                 });
             });
         }

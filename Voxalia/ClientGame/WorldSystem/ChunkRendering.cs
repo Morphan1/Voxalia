@@ -45,7 +45,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 List<Vector4> Cols = new List<Vector4>(CSize * CSize * CSize * 6);
                 List<Vector4> TCols = new List<Vector4>(CSize * CSize * CSize * 6);
                 List<Vector3> Tangs = new List<Vector3>(CSize * CSize * CSize * 6);
-                Vector3 ppos = ClientUtilities.Convert(WorldPosition * 30);
+                Vector3 ppos = ClientUtilities.Convert(WorldPosition * CHUNK_SIZE);
                 bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Location(0, 0, 1));
                 Chunk c_zm = OwningRegion.GetChunk(WorldPosition + new Location(0, 0, -1));
@@ -147,6 +147,7 @@ namespace Voxalia.ClientGame.WorldSystem
                             }
                         }
                     });
+                    IsAir = true;
                     _VBO = null;
                     if (DENIED)
                     {
@@ -224,16 +225,9 @@ namespace Voxalia.ClientGame.WorldSystem
                 SysConsole.Output(OutputType.ERROR, "Generating ChunkVBO...: " + ex.ToString());
             }
         }
-        
-        public BlockInternal SpecialGetBlockAt(int x, int y, int z)
-        {
-            if (x >= 0 && y >= 0 && z >= 0 && x < CSize && y < CSize && z < CSize)
-            {
-                return GetBlockAt(x, y, z);
-            }
-            return OwningRegion.GetBlockInternal(WorldPosition * 30.0 + new Location(x, y, z));
-        }
 
+        public bool IsAir = false;
+        
         public void Render()
         {
             if (_VBO != null && _VBO.generated)

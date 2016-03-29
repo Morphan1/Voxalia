@@ -1133,6 +1133,20 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 Rendering.SetMinimumLight(0f);
             }
+            if (CVars.n_debugmovement.ValueB)
+            {
+                Rendering.SetColor(Color4.Red);
+                GL.LineWidth(5);
+                foreach (Chunk chunk in TheRegion.LoadedChunks.Values)
+                {
+                    if (chunk._VBO == null && !chunk.IsAir)
+                    {
+                        Rendering.RenderLineBox(chunk.WorldPosition * Chunk.CHUNK_SIZE, (chunk.WorldPosition + Location.One) * Chunk.CHUNK_SIZE);
+                    }
+                }
+                GL.LineWidth(1);
+                Rendering.SetColor(Color4.White);
+            }
             for (int i = 0; i < TheRegion.Joints.Count; i++)
             {
                 // TODO: Only render if set to
