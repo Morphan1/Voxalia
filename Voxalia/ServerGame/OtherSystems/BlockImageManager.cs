@@ -22,7 +22,7 @@ namespace Voxalia.ServerGame.OtherSystems
 
         public void RenderChunk(WorldSystem.Region tregion, Location chunkCoords, Chunk chunk)
         {
-            lock (OneAtATimePlease) // TODO: Less need for this!
+            lock (OneAtATimePlease) // TODO: Less need for this?!
             {
                 RenderChunkInternal(tregion, chunkCoords, chunk);
             }
@@ -47,49 +47,89 @@ namespace Voxalia.ServerGame.OtherSystems
             return temp.ToArray();
         }
 
+        Color Blend(Color one, Color two)
+        {
+            float a1 = one.A / 255f;
+            float a2 = 1f - a1;
+            float r = ((one.R / 255f) * a1) + (two.R / 255f) * a2;
+            float g = ((one.G / 255f) * a1) + (two.G / 255f) * a2;
+            float b = ((one.B / 255f) * a1) + (two.B / 255f) * a2;
+            return Color.FromArgb((byte)Math.Min(one.A + (int)two.A, 255), (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
+        }
+
+        Color Multiply(Color one, Color two)
+        {
+            return Color.FromArgb((byte)(((one.A / 255f) * (two.A / 255f)) * 255),
+                (byte)(((one.R / 255f) * (two.R / 255f)) * 255),
+                (byte)(((one.G / 255f) * (two.G / 255f)) * 255),
+                (byte)(((one.B / 255f) * (two.B / 255f)) * 255));
+        }
+
+        void DrawImage(Bitmap bmp, Bitmap bmpnew, int xmin, int ymin, Color col)
+        {
+            for (int x = 0; x < TexWidth; x++)
+            {
+                for (int y = 0; y < TexWidth; y++)
+                {
+                    Color basepx = bmp.GetPixel(xmin + x, ymin + y);
+                    bmp.SetPixel(xmin + x, ymin + y, Blend(Multiply(bmpnew.GetPixel(x, y), col), basepx));
+                }
+            }
+        }
+
         void RenderChunkInternal(WorldSystem.Region tregion, Location chunkCoords, Chunk chunk)
         {
             Bitmap bmp = new Bitmap(Chunk.CHUNK_SIZE * TexWidth, Chunk.CHUNK_SIZE * TexWidth, PixelFormat.Format32bppArgb);
-            using (Graphics graphics = Graphics.FromImage(bmp))
+            for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
             {
-                graphics.Clear(Transp);
-                for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
+                for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
                 {
-                    for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
+                    // TODO: async chunk read locker?
+                    BlockInternal topOpaque = BlockInternal.AIR;
+                    int topZ = 0;
+                    for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
                     {
-                        // TODO: async chunk read locker?
-                        BlockInternal topOpaque = BlockInternal.AIR;
-                        int topZ = 0;
-                        for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
+                        BlockInternal bi = chunk.GetBlockAt(x, y, z);
+                        if (bi.IsOpaque())
                         {
-                            BlockInternal bi = chunk.GetBlockAt(x, y, z);
-                            if (bi.IsOpaque())
-                            {
-                                topOpaque = bi;
-                                topZ = z;
-                            }
+                            topOpaque = bi;
+                            topZ = z;
                         }
-                        if (topOpaque.Material != Material.AIR)
+                    }
+                    if (topOpaque.Material != Material.AIR)
+                    {
+                        Bitmap matbmp = MaterialImages[topOpaque.Material.TextureID(MaterialSide.TOP)];
+                        if (matbmp == null)
                         {
-                            Bitmap matbmp = MaterialImages[topOpaque.Material.TextureID(MaterialSide.TOP)];
-                            if (matbmp == null)
+                            continue;
+                        }
+                        Color color = Colors.ForByte(topOpaque.BlockPaint);
+                        if (color.A == 0)
+                        {
+                            color = Color.White;
+                        }
+                        DrawImage(bmp, matbmp, x * TexWidth, y * TexWidth, color);
+                    }
+                    else
+                    {
+                        DrawImage(bmp, MaterialImages[0], x * TexWidth, y * TexWidth, Color.Transparent);
+                    }
+                    for (int z = topZ; z < Chunk.CHUNK_SIZE; z++)
+                    {
+                        BlockInternal bi = chunk.GetBlockAt(x, y, z);
+                        if (bi.Material != Material.AIR)
+                        {
+                            Bitmap zmatbmp = MaterialImages[bi.Material.TextureID(MaterialSide.TOP)];
+                            if (zmatbmp == null)
                             {
                                 continue;
                             }
-                            graphics.DrawImage(matbmp, x * TexWidth, y * TexWidth);
-                            for (int z = topZ; z < Chunk.CHUNK_SIZE; z++)
+                            Color zcolor = Colors.ForByte(bi.BlockPaint);
+                            if (zcolor.A == 0)
                             {
-                                BlockInternal bi = chunk.GetBlockAt(x, y, z);
-                                if (bi.Material != Material.AIR)
-                                {
-                                    Bitmap zmatbmp = MaterialImages[bi.Material.TextureID(MaterialSide.TOP)];
-                                    if (zmatbmp == null)
-                                    {
-                                        continue;
-                                    }
-                                    graphics.DrawImage(zmatbmp, x * TexWidth, y * TexWidth);
-                                }
+                                zcolor = Color.White;
                             }
+                            DrawImage(bmp, zmatbmp, x * TexWidth, y * TexWidth, zcolor);
                         }
                     }
                 }
