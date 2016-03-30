@@ -10,11 +10,16 @@ using Voxalia.ServerGame.WorldSystem;
 
 namespace Voxalia.ServerGame.OtherSystems
 {
+    public class MaterialImage
+    {
+        public Color[,] Colors;
+    }
+
     public class BlockImageManager
     {
         public const int TexWidth = 4;
 
-        public Bitmap[] MaterialImages;
+        public MaterialImage[] MaterialImages;
 
         public Object OneAtATimePlease = new Object();
 
@@ -22,10 +27,7 @@ namespace Voxalia.ServerGame.OtherSystems
 
         public void RenderChunk(WorldSystem.Region tregion, Location chunkCoords, Chunk chunk)
         {
-            lock (OneAtATimePlease) // TODO: Less need for this?!
-            {
-                RenderChunkInternal(tregion, chunkCoords, chunk);
-            }
+            RenderChunkInternal(tregion, chunkCoords, chunk);
         }
 
         public byte[] Combine(List<byte[]> originals)
@@ -65,14 +67,14 @@ namespace Voxalia.ServerGame.OtherSystems
                 (byte)(((one.B / 255f) * (two.B / 255f)) * 255));
         }
 
-        void DrawImage(Bitmap bmp, Bitmap bmpnew, int xmin, int ymin, Color col)
+        void DrawImage(Bitmap bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
         {
             for (int x = 0; x < TexWidth; x++)
             {
                 for (int y = 0; y < TexWidth; y++)
                 {
                     Color basepx = bmp.GetPixel(xmin + x, ymin + y);
-                    bmp.SetPixel(xmin + x, ymin + y, Blend(Multiply(bmpnew.GetPixel(x, y), col), basepx));
+                    bmp.SetPixel(xmin + x, ymin + y, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
                 }
             }
         }
@@ -98,7 +100,7 @@ namespace Voxalia.ServerGame.OtherSystems
                     }
                     if (topOpaque.Material != Material.AIR)
                     {
-                        Bitmap matbmp = MaterialImages[topOpaque.Material.TextureID(MaterialSide.TOP)];
+                        MaterialImage matbmp = MaterialImages[topOpaque.Material.TextureID(MaterialSide.TOP)];
                         if (matbmp == null)
                         {
                             continue;
@@ -119,7 +121,7 @@ namespace Voxalia.ServerGame.OtherSystems
                         BlockInternal bi = chunk.GetBlockAt(x, y, z);
                         if (bi.Material != Material.AIR)
                         {
-                            Bitmap zmatbmp = MaterialImages[bi.Material.TextureID(MaterialSide.TOP)];
+                            MaterialImage zmatbmp = MaterialImages[bi.Material.TextureID(MaterialSide.TOP)];
                             if (zmatbmp == null)
                             {
                                 continue;
@@ -136,14 +138,17 @@ namespace Voxalia.ServerGame.OtherSystems
             }
             DataStream ds = new DataStream();
             bmp.Save(ds, ImageFormat.Png);
-            KeyValuePair<int, int> maxes = tregion.ChunkManager.GetMaxes((int)chunkCoords.X, (int)chunkCoords.Y);
-            tregion.ChunkManager.SetMaxes((int)chunkCoords.X, (int)chunkCoords.Y, Math.Min(maxes.Key, (int)chunkCoords.Z), Math.Max(maxes.Value, (int)chunkCoords.Z));
+            lock (OneAtATimePlease) // NOTE: We can make this grab off an array of locks to reduce load a little.
+            {
+                KeyValuePair<int, int> maxes = tregion.ChunkManager.GetMaxes((int)chunkCoords.X, (int)chunkCoords.Y);
+                tregion.ChunkManager.SetMaxes((int)chunkCoords.X, (int)chunkCoords.Y, Math.Min(maxes.Key, (int)chunkCoords.Z), Math.Max(maxes.Value, (int)chunkCoords.Z));
+            }
             tregion.ChunkManager.WriteImage((int)chunkCoords.X, (int)chunkCoords.Y, (int)chunkCoords.Z, ds.ToArray());
         }
 
         public void Init()
         {
-            MaterialImages = new Bitmap[MaterialHelpers.MAX_THEORETICAL_MATERIALS];
+            MaterialImages = new MaterialImage[MaterialHelpers.MAX_THEORETICAL_MATERIALS];
             string[] texs = Program.Files.ReadText("info/textures.dat").Split('\n');
             for (int i = 0; i < texs.Length; i++)
             {
@@ -167,7 +172,17 @@ namespace Voxalia.ServerGame.OtherSystems
                     Bitmap bmp1 = new Bitmap(Program.Files.ReadToStream(actualtexture));
                     Bitmap bmp2 = new Bitmap(bmp1, new Size(TexWidth, TexWidth));
                     bmp1.Dispose();
-                    MaterialImages[(int)mat] = bmp2;
+                    MaterialImage img = new MaterialImage();
+                    img.Colors = new Color[TexWidth, TexWidth];
+                    for (int x = 0; x < TexWidth; x++)
+                    {
+                        for (int y = 0; y < TexWidth; y++)
+                        {
+                            img.Colors[x, y] = bmp2.GetPixel(x, y);
+                        }
+                    }
+                    MaterialImages[(int)mat] = img;
+                    bmp2.Dispose();
                 }
                 catch (Exception ex)
                 {
