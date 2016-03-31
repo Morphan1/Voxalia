@@ -43,7 +43,7 @@ namespace Voxalia.ClientGame.CommandSystem
                 sb.Append(basecommand);
                 for (int i = 0; i < arguments.Length; i++)
                 {
-                    sb.Append("\n").Append(queue.ParseTags ? TheClient.Commands.CommandSystem.TagSystem.ParseTagsFromText(arguments[i],
+                    sb.Append("\n").Append(queue.ParseTags != TagParseMode.OFF ? TheClient.Commands.CommandSystem.TagSystem.ParseTagsFromText(arguments[i],
                         TextStyle.Color_Simple, null, DebugMode.MINIMAL, (o) => { throw new Exception("Tag exception: " + o); }, true) : arguments[i]);
                 }
                 CommandPacketOut packet = new CommandPacketOut(sb.ToString());

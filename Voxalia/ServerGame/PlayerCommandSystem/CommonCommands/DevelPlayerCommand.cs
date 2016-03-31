@@ -98,9 +98,9 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 te.SetPosition(entry.Player.GetPosition() + entry.Player.ForwardVector() * 5);
                 te.TheRegion.SpawnEntity(te);
             }
-            else if (arg0 == "spawnSlime" && entry.InputArguments.Count > 1)
+            else if (arg0 == "spawnSlime" && entry.InputArguments.Count > 2)
             {
-                SlimeEntity se = new SlimeEntity(entry.Player.TheRegion);
+                SlimeEntity se = new SlimeEntity(entry.Player.TheRegion, Utilities.StringToFloat(entry.InputArguments[2]));
                 se.mod_color = ColorTag.For(entry.InputArguments[1]).Internal;
                 se.SetPosition(entry.Player.GetPosition() + entry.Player.ForwardVector() * 5);
                 se.TheRegion.SpawnEntity(se);

@@ -139,8 +139,8 @@ namespace Voxalia.ServerGame.EntitySystem
                 DestroyBody();
             }
             // TODO: Better variable control! (Server should command every detail!)
-            CBody = new CharacterController(WorldTransform.Translation, CBHHeight * 2f, CBHHeight * 1.1f,
-                CBHHeight * 1f, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
+            CBody = new CharacterController(WorldTransform.Translation, CBHHeight * 2f * mod_scale, CBHHeight * 1.1f * mod_scale,
+                CBHHeight * 1f * mod_scale, CBRadius * mod_scale, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
                 CBTractionForce * Mass, CBSlideSpeed, CBSlideForce * Mass, CBAirSpeed, CBAirForce * Mass, CBJumpSpeed, CBSlideJumpSpeed, CBGlueForce * Mass);
             CBody.StanceManager.DesiredStance = Stance.Standing;
             CBody.ViewDirection = new Vector3(1f, 0f, 0f);
@@ -155,6 +155,10 @@ namespace Voxalia.ServerGame.EntitySystem
             CBody.StepManager.MaximumStepHeight = CBStepHeight;
             CBody.StepManager.MinimumDownStepHeight = CBDownStepHeight;
             TheRegion.PhysicsWorld.Add(CBody);
+            RigidTransform transf = new RigidTransform(Vector3.Zero, Body.Orientation);
+            BoundingBox box;
+            Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
+            MinZ = box.Min.Z;
         }
 
         public override AbstractPacketOut GetUpdatePacket()

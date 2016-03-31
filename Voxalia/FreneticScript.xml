@@ -257,7 +257,7 @@
             Create an entry that represents an error message.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandEntry.CreateInvalidOutput(System.String,System.Collections.Generic.List{FreneticScript.CommandSystem.Arguments.Argument},FreneticScript.CommandSystem.Commands,System.String,System.Int32,System.Boolean,System.String,System.Int32,System.String)">
+        <member name="M:FreneticScript.CommandSystem.CommandEntry.CreateInvalidOutput(System.String,System.Collections.Generic.List{FreneticScript.CommandSystem.Arguments.Argument},FreneticScript.CommandSystem.Commands,System.String,System.Int32,System.Boolean,System.String,System.Int32,System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.CommandSystem.Arguments.Argument})">
             <summary>
             Create an entry that represents invalid output.
             </summary>
@@ -270,6 +270,11 @@
         <member name="F:FreneticScript.CommandSystem.CommandEntry.InnerCommandBlock">
             <summary>
             A list of all commands that were inside this command originally.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.CommandEntry.NamedArguments">
+            <summary>
+            All 'named' arguments on this command entry.
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandEntry.BlockStart">
@@ -298,6 +303,11 @@
             </summary>
         </member>
         <member name="M:FreneticScript.CommandSystem.CommandEntry.#ctor(System.String,System.Int32,System.Int32,FreneticScript.CommandSystem.AbstractCommand,System.Collections.Generic.List{FreneticScript.CommandSystem.Arguments.Argument},System.String,System.Int32,System.String,System.Int32,System.String)">
+            <summary>
+            Full constructor, recommended.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.CommandEntry.#ctor(System.String,System.Int32,System.Int32,FreneticScript.CommandSystem.AbstractCommand,System.Collections.Generic.List{FreneticScript.CommandSystem.Arguments.Argument},System.String,System.Int32,System.String,System.Int32,System.String,System.Collections.Generic.Dictionary{System.String,FreneticScript.CommandSystem.Arguments.Argument})">
             <summary>
             Full constructor, recommended.
             </summary>
@@ -352,6 +362,13 @@
             <summary>
             What marker was used. 0 = none, 1 = +, 2 = -, 3 = !
             </summary>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.CommandEntry.GetNamedArgumentObject(System.String)">
+            <summary>
+            Gets a named argument with a specified name, handling any tags.
+            </summary>
+            <param name="name">The argument name.</param>
+            <returns>The parsed argument.</returns>
         </member>
         <member name="M:FreneticScript.CommandSystem.CommandEntry.GetArgumentObject(System.Int32)">
             <summary>
@@ -567,20 +584,9 @@
             Represents a set of commands to be run, and related information.
             </summary>
         </member>
-        <member name="F:FreneticScript.CommandSystem.CommandQueue.CommandList">
+        <member name="F:FreneticScript.CommandSystem.CommandQueue.CommandStack">
             <summary>
-            All commands in this queue.
-            TODO: Rewrite to be a static array that we roll through, not a rapidly modified queue :(
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CommandSystem.CommandQueue.CommandIndex">
-            <summary>
-            What command we are currently running.
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CommandSystem.CommandQueue.Variables">
-            <summary>
-            A list of all variables saved in this queue.
+            The current stack of all command execution data.
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandQueue.Delayable">
@@ -609,19 +615,9 @@
             The script that was used to build this queue.
             </summary>
         </member>
-        <member name="F:FreneticScript.CommandSystem.CommandQueue.Debug">
-            <summary>
-            How much debug information this queue should show.
-            </summary>
-        </member>
         <member name="F:FreneticScript.CommandSystem.CommandQueue.ParseTags">
             <summary>
             Whether commands in the queue will parse tags.
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CommandSystem.CommandQueue.Determinations">
-            <summary>
-            What was returned by the determine command for this queue.
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandQueue.Outputsystem">
@@ -634,6 +630,14 @@
             Constructs a new CommandQueue - generally kept to the FreneticScript internals.
             TODO: IList _commands -> ListQueue?
             </summary>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.CommandQueue.PushToStack(System.Collections.Generic.IList{FreneticScript.CommandSystem.CommandEntry},FreneticScript.CommandSystem.DebugMode,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject})">
+            <summary>
+            Pushes a list of already-calculated commands to the command stack.
+            </summary>
+            <param name="_commands">The commands to push.</param>
+            <param name="mode">What debug mode to use.</param>
+            <param name="vars">What variables to use.</param>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandQueue.Complete">
             <summary>
@@ -649,6 +653,11 @@
             <summary>
             Recalculates and advances the command queue.
             <param name="Delta">The time passed this tick.</param>
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.CommandQueue.LastDeterminations">
+            <summary>
+            The determinations ran on the lowest level of this queue.
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandQueue.WaitingOn">
@@ -709,6 +718,21 @@
             Debug nothing.
             </summary>
         </member>
+        <member name="T:FreneticScript.CommandSystem.TagParseMode">
+            <summary>
+            What mode of parsing a Queue uses.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.TagParseMode.OFF">
+            <summary>
+            Parsing entirely disabled.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.TagParseMode.ON">
+            <summary>
+            Parsing enabled in standard tag-syntax mode.
+            </summary>
+        </member>
         <member name="T:FreneticScript.CommandSystem.CommandQueueEventArgs">
             <summary>
             Represents a command queue when used in an event.
@@ -758,6 +782,11 @@
         <member name="F:FreneticScript.CommandSystem.Commands.DebugInvalidCommand">
             <summary>
             The AbstractCommand for the invalid command-command.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.Commands.DebugVarSetCommand">
+            <summary>
+            The AbstractCommand for the var-set command.
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.Commands.Functions">
@@ -943,6 +972,36 @@
             <param name="tabulation">How much space to include in front of the commands.</param>
             <returns>The full command string.</returns>
         </member>
+        <member name="T:FreneticScript.CommandSystem.CommandStackEntry">
+            <summary>
+            Represents a single entry in a command stack.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.CommandStackEntry.Index">
+            <summary>
+            The index of the currently running command.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.CommandStackEntry.Entries">
+            <summary>
+            All available commands.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.CommandStackEntry.Variables">
+            <summary>
+            All variables available in this portion of the stack.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.CommandStackEntry.Debug">
+            <summary>
+            How much debug information this portion of the stack should show.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.CommandStackEntry.Determinations">
+            <summary>
+            What was returned by the determine command for this portion of the stack.
+            </summary>
+        </member>
         <member name="T:FreneticScript.CommandSystem.CommonCmds.CleanmemCommand">
             <summary>
             A command to interact with the system garbage collector.
@@ -1005,62 +1064,21 @@
             </summary>
             <param name="entry">Entry to be executed.</param>
         </member>
-        <member name="T:FreneticScript.CommandSystem.ErrorInducedException">
+        <member name="T:FreneticScript.CommandSystem.QueueCmds.DebugVarSetCommand">
             <summary>
-            Represents an exception induced by a script error. Should be ignored/re-thrown to let the error propogate up to the script level.
+            Sets a var, debuggishly!
             </summary>
         </member>
-        <member name="T:FreneticScript.CommandSystem.Outputter">
+        <member name="M:FreneticScript.CommandSystem.QueueCmds.DebugVarSetCommand.#ctor">
             <summary>
-            An abstract class, implementations should provide methods that output to a console or equivalent.
+            Constructs the command.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.Outputter.WriteLine(System.String)">
+        <member name="M:FreneticScript.CommandSystem.QueueCmds.DebugVarSetCommand.Execute(FreneticScript.CommandSystem.CommandEntry)">
             <summary>
-            Writes a line of text to the console.
+            Executs the command.
             </summary>
-            <param name="text">The line of text.</param>
-        </member>
-        <member name="M:FreneticScript.CommandSystem.Outputter.Bad(System.String,FreneticScript.CommandSystem.DebugMode)">
-            <summary>
-            Used to output a failure message.
-            </summary>
-            <param name="tagged_text">The text to output, with tags included.</param>
-            <param name="mode">What debug mode is currently in use.</param>
-        </member>
-        <member name="M:FreneticScript.CommandSystem.Outputter.Good(System.String,FreneticScript.CommandSystem.DebugMode)">
-            <summary>
-            Used to output a success message.
-            </summary>
-            <param name="tagged_text">The text to output, with tags included.</param>
-            <param name="mode">What debug mode is currently in use.</param>
-        </member>
-        <member name="M:FreneticScript.CommandSystem.Outputter.UnknownCommand(FreneticScript.CommandSystem.CommandQueue,System.String,System.String[])">
-            <summary>
-            Used to properly handle an unknown command.
-            </summary>
-            <param name="queue">The queue firing this unknown command.</param>
-            <param name="basecommand">The command that wasn't recognized.</param>
-            <param name="arguments">The commands arguments.</param>
-        </member>
-        <member name="F:FreneticScript.CommandSystem.Outputter.CVarSys">
-            <summary>
-            The CVar System used by this command engine.
-            </summary>
-        </member>
-        <member name="M:FreneticScript.CommandSystem.Outputter.ReadTextFile(System.String)">
-            <summary>
-            Used to read a text file, generally a script.
-            File format is along the lines of "mymap/myscript.cfg".
-            Throw a System.IO.FileNotFoundException if file does not exist.
-            </summary>
-            <param name="name">The filename to read.</param>
-            <returns>The read text file.</returns>
-        </member>
-        <member name="F:FreneticScript.CommandSystem.Outputter.Initializing">
-            <summary>
-            Whether the game is still setting up currently.
-            </summary>
+            <param name="entry">The entry to execute with.</param>
         </member>
         <member name="M:FreneticScript.CommandSystem.QueueCmds.CatchCommand.Execute(FreneticScript.CommandSystem.CommandEntry)">
             <summary>
@@ -1189,6 +1207,63 @@
             <summary>
             All determines of the script run.
             Do not edit.
+            </summary>
+        </member>
+        <member name="T:FreneticScript.CommandSystem.ErrorInducedException">
+            <summary>
+            Represents an exception induced by a script error. Should be ignored/re-thrown to let the error propogate up to the script level.
+            </summary>
+        </member>
+        <member name="T:FreneticScript.CommandSystem.Outputter">
+            <summary>
+            An abstract class, implementations should provide methods that output to a console or equivalent.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.Outputter.WriteLine(System.String)">
+            <summary>
+            Writes a line of text to the console.
+            </summary>
+            <param name="text">The line of text.</param>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.Outputter.Bad(System.String,FreneticScript.CommandSystem.DebugMode)">
+            <summary>
+            Used to output a failure message.
+            </summary>
+            <param name="tagged_text">The text to output, with tags included.</param>
+            <param name="mode">What debug mode is currently in use.</param>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.Outputter.Good(System.String,FreneticScript.CommandSystem.DebugMode)">
+            <summary>
+            Used to output a success message.
+            </summary>
+            <param name="tagged_text">The text to output, with tags included.</param>
+            <param name="mode">What debug mode is currently in use.</param>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.Outputter.UnknownCommand(FreneticScript.CommandSystem.CommandQueue,System.String,System.String[])">
+            <summary>
+            Used to properly handle an unknown command.
+            </summary>
+            <param name="queue">The queue firing this unknown command.</param>
+            <param name="basecommand">The command that wasn't recognized.</param>
+            <param name="arguments">The commands arguments.</param>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.Outputter.CVarSys">
+            <summary>
+            The CVar System used by this command engine.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.Outputter.ReadTextFile(System.String)">
+            <summary>
+            Used to read a text file, generally a script.
+            File format is along the lines of "mymap/myscript.cfg".
+            Throw a System.IO.FileNotFoundException if file does not exist.
+            </summary>
+            <param name="name">The filename to read.</param>
+            <returns>The read text file.</returns>
+        </member>
+        <member name="F:FreneticScript.CommandSystem.Outputter.Initializing">
+            <summary>
+            Whether the game is still setting up currently.
             </summary>
         </member>
         <member name="T:FreneticScript.CommandSystem.ScriptEvent">
@@ -1749,7 +1824,14 @@
             <param name="input">The string to get the value from.</param>
             <returns>a float value.</returns>
         </member>
-        <member name="M:FreneticScript.FreneticScriptUtilities.DateTimeToString(System.DateTime,System.Boolean)">
+        <member name="M:FreneticScript.FreneticScriptUtilities.StringToDateTime(System.String)">
+            <summary>
+            Converts a string to a date-time.
+            </summary>
+            <param name="input">The input string.</param>
+            <returns>The date-time.</returns>
+        </member>
+        <member name="M:FreneticScript.FreneticScriptUtilities.DateTimeToString(System.DateTimeOffset,System.Boolean)">
             <summary>
             Returns a string representation of the specified time.
             </summary>
@@ -1886,6 +1968,22 @@
             <summary>
             Informational output type, 3.
             </summary>
+        </member>
+        <member name="T:FreneticScript.TagHandlers.Common.TimeTagBase">
+            <summary>
+            Gets a time tag.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Common.TimeTagBase.#ctor">
+            <summary>
+            Constructs the TimeTagBase - for internal use only.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Common.TimeTagBase.Handle(FreneticScript.TagHandlers.TagData)">
+            <summary>
+            Handles the 'time' tag.
+            </summary>
+            <param name="data">The data to be handled.</param>
         </member>
         <member name="T:FreneticScript.TagHandlers.Common.TextColorTags">
             <summary>
@@ -2119,6 +2217,41 @@
             </summary>
             <returns>A string representation of the integer.</returns>
         </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.IntegerTag.Set(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Sets a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to set it to.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.IntegerTag.Add(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Adds a value to a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to add.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.IntegerTag.Subtract(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Subtracts a value from a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to subtract.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.IntegerTag.Multiply(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Multiplies a value by a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to multiply.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.IntegerTag.Divide(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Divides a value from a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to divide.</param>
+        </member>
         <member name="T:FreneticScript.TagHandlers.Objects.MapTag">
             <summary>
             Represents a relationship between textual names and object data.
@@ -2168,6 +2301,41 @@
             Gets a string representation of this map.
             </summary>
             <returns>The string representation.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.MapTag.Set(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Sets a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to set it to.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.MapTag.Add(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Adds a value to a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to add.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.MapTag.Subtract(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Subtracts a value from a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to subtract.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.MapTag.Multiply(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Multiplies a value by a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to multiply.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.MapTag.Divide(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Divides a value from a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to divide.</param>
         </member>
         <member name="T:FreneticScript.TagHandlers.Objects.NullTag">
             <summary>
@@ -2264,6 +2432,41 @@
             Returns the a string representation of the number internally stored by this number tag. EG, could return "0", or "1", or "-1.005", or...
             </summary>
             <returns>A string representation of the number.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.NumberTag.Set(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Sets a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to set it to.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.NumberTag.Add(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Adds a value to a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to add.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.NumberTag.Subtract(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Subtracts a value from a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to subtract.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.NumberTag.Multiply(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Multiplies a value by a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to multiply.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.NumberTag.Divide(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Divides a value from a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to divide.</param>
         </member>
         <member name="T:FreneticScript.TagHandlers.Objects.ListTag">
             <summary>
@@ -2372,6 +2575,20 @@
             </summary>
             <returns>A string representation of this text tag.</returns>
         </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.TextTag.Set(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Sets a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to set it to.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.TextTag.Add(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Adds a value to a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to add.</param>
+        </member>
         <member name="T:FreneticScript.TagHandlers.Objects.BooleanTag">
             <summary>
             Represents a true or false as a usable tag.
@@ -2442,15 +2659,21 @@
             The DateTime this TimeTag represents.
             </summary>
         </member>
-        <member name="M:FreneticScript.TagHandlers.Objects.TimeTag.For(FreneticScript.TagHandlers.TagData,System.String)">
+        <member name="M:FreneticScript.TagHandlers.Objects.TimeTag.For(System.String)">
             <summary>
             Get a time tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case!)
             </summary>
-            <param name="dat">The TagData used to construct this TimeTag.</param>
             <param name="input">The input text to create a time from.</param>
             <returns>The time tag, or null.</returns>
         </member>
-        <member name="M:FreneticScript.TagHandlers.Objects.TimeTag.#ctor(System.DateTime)">
+        <member name="M:FreneticScript.TagHandlers.Objects.TimeTag.For(FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Get a time tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case!)
+            </summary>
+            <param name="input">The input to create a time from.</param>
+            <returns>The time tag, or null.</returns>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.TimeTag.#ctor(System.DateTimeOffset)">
             <summary>
             Constructs a time tag.
             </summary>
@@ -2678,6 +2901,41 @@
             Parse any direct tag input values.
             </summary>
             <param name="data">The input tag data.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.TemplateObject.Set(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Sets a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to set it to.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.TemplateObject.Add(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Adds a value to a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to add.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.TemplateObject.Subtract(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Subtracts a value from a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to subtract.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.TemplateObject.Multiply(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Multiplies a value by a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to multiply.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.TemplateObject.Divide(System.String[],FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Divides a value from a value on the object.
+            </summary>
+            <param name="names">The name of the value.</param>
+            <param name="val">The value to divide.</param>
         </member>
         <member name="T:FreneticScript.TagHandlers.TemplateTagBase">
             <summary>

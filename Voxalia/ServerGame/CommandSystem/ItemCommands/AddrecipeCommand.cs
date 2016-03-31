@@ -59,7 +59,8 @@ namespace Voxalia.ServerGame.CommandSystem.ItemCommands
                 items.Add(required.Internal);
             }
             TheServer.Recipes.AddRecipe(RecipeRegistry.ModeFor(mode), entry.InnerCommandBlock, entry.BlockStart, items.ToArray());
-            entry.Queue.CommandIndex = entry.BlockEnd + 2;
+            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+            cse.Index = entry.BlockEnd + 2;
             if (entry.ShouldShowGood())
             {
                 entry.Good("Added recipe!");

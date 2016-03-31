@@ -43,7 +43,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             ent.PreRot *= Matrix4.CreateRotationX(dr.ReadFloat() * (float)Utilities.PI180);
             ent.PreRot *= Matrix4.CreateRotationY(dr.ReadFloat() * (float)Utilities.PI180);
             ent.PreRot *= Matrix4.CreateRotationZ(dr.ReadFloat() * (float)Utilities.PI180);
-            ent.PreRot = Matrix4.CreateScale(dr.ReadFloat()) * ent.PreRot;
+            ent.mod_scale = dr.ReadFloat();
+            ent.PreRot = Matrix4.CreateScale(ent.mod_scale) * ent.PreRot;
             ent.color = System.Drawing.Color.FromArgb(dr.ReadInt());
             byte dtx = dr.ReadByte();
             ent.Visible = (dtx & 1) == 1;

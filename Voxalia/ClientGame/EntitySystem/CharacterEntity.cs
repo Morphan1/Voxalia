@@ -127,11 +127,13 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public CharacterController CBody;
 
+        public float mod_scale = 1;
+
         public CharacterController GenCharCon()
         {
             // TODO: Better variable control! (Server should command every detail!)
-            CharacterController cb = new CharacterController(GetPosition().ToBVector(), CBHHeight * 2f, CBHHeight * 1.1f,
-                CBHHeight * 1f, CBRadius, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
+            CharacterController cb = new CharacterController(GetPosition().ToBVector(), CBHHeight * 2f * mod_scale, CBHHeight * 1.1f * mod_scale,
+                CBHHeight * 1f * mod_scale, CBRadius * mod_scale, CBMargin, Mass, CBMaxTractionSlope, CBMaxSupportSlope, CBStandSpeed, CBCrouchSpeed, CBProneSpeed,
                 CBTractionForce * Mass, CBSlideSpeed, CBSlideForce * Mass, CBAirSpeed, CBAirForce * Mass, CBJumpSpeed, CBSlideJumpSpeed, CBGlueForce * Mass);
             cb.StanceManager.DesiredStance = Stance.Standing;
             cb.ViewDirection = new Vector3(1f, 0f, 0f);

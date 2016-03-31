@@ -46,10 +46,17 @@ namespace Voxalia.Shared
                         node = node.Next;
                         continue;
                     }
-                    node.Value.MyAction.Invoke();
-                    LinkedListNode<SyncScheduleItem> torem = node;
-                    node = node.Next;
-                    Tasks.Remove(torem);
+                    try
+                    {
+                        node.Value.MyAction.Invoke();
+                        LinkedListNode<SyncScheduleItem> torem = node;
+                        node = node.Next;
+                        Tasks.Remove(torem); // TODO: Why would this error around shutdown time?
+                    }
+                    catch (Exception ex)
+                    {
+                        SysConsole.Output("Handling sync task", ex);
+                    }
                 }
             }
         }

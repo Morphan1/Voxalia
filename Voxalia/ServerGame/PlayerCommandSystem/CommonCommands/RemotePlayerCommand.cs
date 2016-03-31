@@ -40,7 +40,8 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                         bcolor = "^r^3";
                         break;
                 }
-                entry.Player.Network.SendMessage(entry.Player.TheServer.Commands.CommandSystem.TagSystem.ParseTagsFromText(message, bcolor, queue.Variables, DebugMode.FULL, (o) => { /* DO NOTHING */ }, true));
+                entry.Player.Network.SendMessage(entry.Player.TheServer.Commands.CommandSystem.TagSystem.ParseTagsFromText(message, bcolor,
+                    queue.CommandStack.Peek().Variables, DebugMode.FULL, (o) => { /* DO NOTHING */ }, true));
             };
             queue.Execute();
         }

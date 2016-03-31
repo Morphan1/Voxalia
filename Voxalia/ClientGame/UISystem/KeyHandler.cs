@@ -93,10 +93,10 @@ namespace Voxalia.ClientGame.UISystem
             RegKey("insert", Key.Insert); RegKey("delete", Key.Delete); RegKey("pause", Key.Pause);
             RegKey("lshift", Key.ShiftLeft); RegKey("rshift", Key.ShiftRight); RegKey("tab", Key.Tab);
             RegKey("caps", Key.CapsLock); RegKey("lctrl", Key.ControlLeft); RegKey("rctrl", Key.ControlRight);
-            RegKey(",", Key.Comma); RegKey(".", Key.Period); RegKey("/", Key.Slash);
-            RegKey("backslash", Key.BackSlash); RegKey("-", Key.Minus); RegKey("=", Key.Plus);
-            RegKey("backspace", Key.BackSpace); RegKey("semicolon", Key.Semicolon); RegKey("'", Key.Quote);
-            RegKey("[", Key.BracketLeft); RegKey("]", Key.BracketRight); RegKey("kp1", Key.Keypad1);
+            RegKey("comma", Key.Comma); RegKey("dot", Key.Period); RegKey("slash", Key.Slash);
+            RegKey("backslash", Key.BackSlash); RegKey("dash", Key.Minus); RegKey("equals", Key.Plus);
+            RegKey("backspace", Key.BackSpace); RegKey("semicolon", Key.Semicolon); RegKey("quote", Key.Quote);
+            RegKey("lbracket", Key.BracketLeft); RegKey("rbracket", Key.BracketRight); RegKey("kp1", Key.Keypad1);
             RegKey("kp2", Key.Keypad2); RegKey("kp3", Key.Keypad3); RegKey("kp4", Key.Keypad4);
             RegKey("kp5", Key.Keypad5); RegKey("kp6", Key.Keypad6); RegKey("kp7", Key.Keypad7);
             RegKey("kp8", Key.Keypad8); RegKey("kp9", Key.Keypad9); RegKey("kp0", Key.Keypad0);
@@ -420,7 +420,7 @@ namespace Voxalia.ClientGame.UISystem
                     if (Binds.TryGetValue(key, out script))
                     {
                         CommandQueue queue = script.ToQueue(Client.Central.Commands.CommandSystem);
-                        queue.Debug = DebugMode.MINIMAL;
+                        queue.CommandStack.Peek().Debug = DebugMode.MINIMAL;
                         queue.Execute();
                     }
                     KeyPressList.Add(key);
@@ -432,7 +432,7 @@ namespace Voxalia.ClientGame.UISystem
                     if (InverseBinds.TryGetValue(key, out script))
                     {
                         CommandQueue queue = script.ToQueue(Client.Central.Commands.CommandSystem);
-                        queue.Debug = DebugMode.MINIMAL;
+                        queue.CommandStack.Peek().Debug = DebugMode.MINIMAL;
                         queue.Execute();
                     }
                 }

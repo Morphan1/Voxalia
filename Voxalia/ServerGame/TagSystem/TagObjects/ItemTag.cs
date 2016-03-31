@@ -156,14 +156,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "blocks/dirt" .shared_attributes returns an empty map.
                 // -->
                 case "shared_attributes":
-                    {
-                        MapTag map = new MapTag();
-                        foreach (KeyValuePair<string, TemplateObject> entry in Internal.SharedAttributes)
-                        {
-                            map.Internal[entry.Key] = entry.Value;
-                        }
-                        return map.Handle(data.Shrink());
-                    }
+                    return new MapTag(Internal.SharedAttributes).Handle(data.Shrink());
                 // <--[tag]
                 // @Name ItemTag.local_attributes
                 // @Group General Information

@@ -15,7 +15,7 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class SlimeEntity: CharacterEntity
     {
-        public SlimeEntity(Region tregion)
+        public SlimeEntity(Region tregion, float scale)
             : base(tregion, 20)
         {
             CBHHeight = 0.3f * 0.5f;
@@ -25,10 +25,11 @@ namespace Voxalia.ServerGame.EntitySystem
             CBStandSpeed = 3.0f;
             CBAirSpeed = 3.0f;
             CBAirForce = 100f;
+            mod_scale = Math.Max(scale, 0.1f);
             PathFindCloseEnough = 1f;
             SetMass(10);
             model = "mobs/slimes/slime";
-            mod_xrot = -90;
+            //mod_xrot = -90;
         }
 
         public override EntityType GetEntityType()
