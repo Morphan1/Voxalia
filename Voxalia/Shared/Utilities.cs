@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FreneticScript;
 
 namespace Voxalia.Shared
 {
@@ -388,7 +389,7 @@ namespace Voxalia.Shared
 
         public static BEPUutilities.Quaternion StringToQuat(string input)
         {
-            string[] data = input.Replace('(', ' ').Replace(')', ' ').Replace(" ", "").Split(',');
+            string[] data = input.Replace('(', ' ').Replace(')', ' ').Replace(" ", "").SplitFast(',');
             if (data.Length != 4)
             {
                 return BEPUutilities.Quaternion.Identity;

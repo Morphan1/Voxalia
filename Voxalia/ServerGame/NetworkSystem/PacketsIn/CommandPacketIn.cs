@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Voxalia.Shared.Files;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
 {
@@ -9,7 +10,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
         public override bool ParseBytesAndExecute(byte[] data)
         {
             Player.NoteDidAction();
-            string[] datums = FileHandler.encoding.GetString(data).Split('\n');
+            string[] datums = FileHandler.encoding.GetString(data).SplitFast('\n');
             List<string> args =  datums.ToList();
             string cmd = args[0];
             args.RemoveAt(0);

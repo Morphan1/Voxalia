@@ -4,6 +4,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared;
 using Voxalia.ClientGame.OtherSystems;
+using FreneticScript;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -619,7 +620,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public static TextureCoordinates FromString(string str)
         {
             TextureCoordinates tc = new TextureCoordinates();
-            string[] data = str.Split('/');
+            string[] data = str.SplitFast('/');
             tc.xscale = Utilities.StringToFloat(data[0]);
             tc.yscale = Utilities.StringToFloat(data[1]);
             tc.xshift = Utilities.StringToFloat(data[2]);

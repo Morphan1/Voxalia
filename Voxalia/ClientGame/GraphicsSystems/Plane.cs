@@ -1,5 +1,6 @@
 ﻿using System;
 using Voxalia.Shared;
+using FreneticScript;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -148,7 +149,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>A plane.</returns>
         public static Plane FromString(string input)
         {
-            string[] data = input.Replace("[", "").Replace("]", "").Replace(" ", "").Split('/');
+            string[] data = input.Replace("[", "").Replace("]", "").Replace(" ", "").SplitFast('/');
             if (data.Length < 3)
             {
                 return null;

@@ -61,7 +61,7 @@ namespace Voxalia.ServerGame.ItemSystem
             try
             {
                 string fdata = Program.Files.ReadText(fname);
-                string[] split = fdata.Replace('\r', '\n').Split('\n');
+                string[] split = fdata.Replace('\r', '\n').SplitFast('\n');
                 string res_type = "";
                 string res_icon = "";
                 string res_display = "";
@@ -81,7 +81,7 @@ namespace Voxalia.ServerGame.ItemSystem
                     {
                         continue;
                     }
-                    string[] dat = line.Split(new char[] { ':' }, 2);
+                    string[] dat = line.SplitFast(':', 2);
                     string dat_type = dat[0].Trim().ToLowerFast();
                     string dat_val = dat[1].Trim();
                     switch (dat_type)

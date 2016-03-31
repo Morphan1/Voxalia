@@ -35,9 +35,9 @@ namespace Voxalia.ServerGame.NetworkSystem
 
         public void Init(string request)
         {
-            string[] headbits = request.Replace("\r", "").Split('\n');
+            string[] headbits = request.Replace("\r", "").SplitFast('\n');
             http_request_original = headbits[0];
-            string[] oreq = http_request_original.Split(' ');
+            string[] oreq = http_request_original.SplitFast(' ');
             if (oreq.Length != 3)
             {
                 throw new ArgumentException("Invalid web request!");
@@ -51,7 +51,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                 {
                     continue;
                 }
-                string[] dat = headbits[i].Split(new char[] { ':' }, 2);
+                string[] dat = headbits[i].SplitFast(':', 2);
                 if (dat.Length != 2)
                 {
                     continue;
@@ -92,7 +92,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                 {
                     if (TheServer.LoadedRegions[i].Name == region)
                     {
-                        string[] dat = after.Split('/');
+                        string[] dat = after.SplitFast('/');
                         if (dat[0] == "img" && dat.Length >= 4)
                         {
                             int x = Utilities.StringToInt(dat[1]);

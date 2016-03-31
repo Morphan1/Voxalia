@@ -5,6 +5,7 @@ using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using Voxalia.Shared;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
@@ -40,7 +41,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
 
         public static ColorTag For(string input)
         {
-            string[] split = input.Split(',');
+            string[] split = input.SplitFast(',');
             if (split.Length == 1)
             {
                 byte b;

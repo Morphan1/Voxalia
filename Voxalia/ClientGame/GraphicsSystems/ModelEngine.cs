@@ -474,12 +474,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Skinned = true;
             if (Program.Files.Exists("models/" + Name + ".skin"))
             {
-                string[] data = Program.Files.ReadText("models/" + Name + ".skin").Split('\n');
+                string[] data = Program.Files.ReadText("models/" + Name + ".skin").SplitFast('\n');
                 foreach (string datum in data)
                 {
                     if (datum.Length > 0)
                     {
-                        string[] datums = datum.Split('=');
+                        string[] datums = datum.SplitFast('=');
                         if (datums.Length == 2)
                         {
                             Texture tex = texs.GetTexture(datums[1]);

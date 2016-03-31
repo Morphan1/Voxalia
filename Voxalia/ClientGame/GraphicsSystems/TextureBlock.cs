@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared;
 using Voxalia.ClientGame.CommandSystem;
 using Voxalia.ClientGame.ClientMainSystem;
+using FreneticScript;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -56,7 +57,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            string[] datums = Program.Files.ReadText("info/textures.dat").Split('\n');
+            string[] datums = Program.Files.ReadText("info/textures.dat").SplitFast('\n');
             List<MaterialTextureInfo> texs = new List<MaterialTextureInfo>();
             for (int i = 0; i < datums.Length; i++)
             {
@@ -65,7 +66,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     continue;
                 }
                 MaterialTextureInfo tex = new MaterialTextureInfo();
-                string[] dets = datums[i].Split('=');
+                string[] dets = datums[i].SplitFast('=');
                 if (dets[0].StartsWith("m"))
                 {
                     tex.Mat = (Material)(MaterialHelpers.MAX_THEORETICAL_MATERIALS - Utilities.StringToInt(dets[0].Substring(1)));
@@ -74,16 +75,16 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     tex.Mat = MaterialHelpers.FromNameOrNumber(dets[0]);
                 }
-                string[] normalornot = dets[1].Split('$');
+                string[] normalornot = dets[1].SplitFast('$');
                 GL.BindTexture(TextureTarget.Texture2DArray, NormalTextureID);
                 if (normalornot.Length > 1)
                 {
-                    string[] rorn = normalornot[1].Split('%');
+                    string[] rorn = normalornot[1].SplitFast('%');
                     if (rorn.Length > 1)
                     {
                         tex.NRate = Utilities.StringToFloat(rorn[1]);
                     }
-                    tex.NormalTextures = rorn[0].Split(',');
+                    tex.NormalTextures = rorn[0].SplitFast(',');
                     SetTexture((int)tex.Mat, tex.NormalTextures[0]);
                     if (tex.NormalTextures.Length > 1)
                     {
@@ -94,22 +95,22 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     SetTexture((int)tex.Mat, "normal_def");
                 }
-                string[] reflecornot = normalornot[0].Split('*');
+                string[] reflecornot = normalornot[0].SplitFast('*');
                 if (reflecornot.Length > 1)
                 {
                     tex.Reflectivity = Utilities.StringToFloat(reflecornot[1]);
                 }
-                string[] specornot = reflecornot[0].Split('&');
+                string[] specornot = reflecornot[0].SplitFast('&');
                 if (specornot.Length > 1)
                 {
                     tex.Specular = Utilities.StringToFloat(specornot[1]);
                 }
-                string[] rateornot = specornot[0].Split('%');
+                string[] rateornot = specornot[0].SplitFast('%');
                 if (rateornot.Length > 1)
                 {
                     tex.Rate = Utilities.StringToFloat(rateornot[1]);
                 }
-                tex.Textures = rateornot[0].Split(',');
+                tex.Textures = rateornot[0].SplitFast(',');
                 GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
                 SetTexture((int)tex.Mat, tex.Textures[0]);
                 if (tex.Textures.Length > 1)

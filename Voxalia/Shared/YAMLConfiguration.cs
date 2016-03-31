@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using YamlDotNet.Serialization;
+using FreneticScript;
 
 namespace Voxalia.Shared
 {
@@ -52,7 +53,7 @@ namespace Voxalia.Shared
 
         public List<object> ReadList(string path)
         {
-            string[] data = path.Split('.');
+            string[] data = path.SplitFast('.');
             int i = 0;
             dynamic obj = Data;
             while (i < data.Length - 1)
@@ -84,7 +85,7 @@ namespace Voxalia.Shared
 
         public double ReadDouble(string path, double def)
         {
-            string[] data = path.Split('.');
+            string[] data = path.SplitFast('.');
             int i = 0;
             object obj = Data;
             while (i < data.Length - 1)
@@ -134,7 +135,7 @@ namespace Voxalia.Shared
 
         public long ReadLong(string path, long def)
         {
-            string[] data = path.Split('.');
+            string[] data = path.SplitFast('.');
             int i = 0;
             object obj = Data;
             while (i < data.Length - 1)
@@ -189,7 +190,7 @@ namespace Voxalia.Shared
 
         public object Read(string path, object def)
         {
-            string[] data = path.Split('.');
+            string[] data = path.SplitFast('.');
             int i = 0;
             object obj = Data;
             while (i < data.Length - 1)
@@ -226,7 +227,7 @@ namespace Voxalia.Shared
                 }
                 return atemp;
             }
-            string[] data = path.Split('.');
+            string[] data = path.SplitFast('.');
             int i = 0;
             object obj = Data;
             while (i < data.Length - 1)
@@ -272,7 +273,7 @@ namespace Voxalia.Shared
             {
                 return new YAMLConfiguration(Data);
             }
-            string[] data = path.Split('.');
+            string[] data = path.SplitFast('.');
             int i = 0;
             object obj = Data;
             while (i < data.Length - 1)
@@ -300,7 +301,7 @@ namespace Voxalia.Shared
 
         public void Default(string path, object val)
         {
-            string[] data = path.Split('.');
+            string[] data = path.SplitFast('.');
             int i = 0;
             object obj = Data;
             while (i < data.Length - 1)
@@ -326,7 +327,7 @@ namespace Voxalia.Shared
 
         public void Set(string path, object val)
         {
-            string[] data = path.Split('.');
+            string[] data = path.SplitFast('.');
             int i = 0;
             object obj = Data;
             while (i < data.Length - 1)

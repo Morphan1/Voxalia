@@ -108,7 +108,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             string[] datas;
             if (Program.Files.Exists("info/characters.dat"))
             {
-                datas = Program.Files.ReadText("info/characters.dat").Replace("\r", "").Split('\n');
+                datas = Program.Files.ReadText("info/characters.dat").Replace("\r", "").SplitFast('\n');
             }
             else
             {

@@ -1577,41 +1577,6 @@
             This variable is so implementations can save CVars to file only when needed.
             </summary>
         </member>
-        <member name="F:FreneticScript.CVarSystem.s_osversion">
-            <summary>
-            System CVars.
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CVarSystem.s_user">
-            <summary>
-            System CVars.
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CVarSystem.s_dotnetversion">
-            <summary>
-            System CVars.
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CVarSystem.s_totalram">
-            <summary>
-            System CVars.
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CVarSystem.s_culture">
-            <summary>
-            System CVars.
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CVarSystem.s_processors">
-            <summary>
-            System CVars.
-            </summary>
-        </member>
-        <member name="F:FreneticScript.CVarSystem.s_machinename">
-            <summary>
-            System CVars.
-            </summary>
-        </member>
         <member name="M:FreneticScript.CVarSystem.#ctor(FreneticScript.CommandSystem.Outputter)">
             <summary>
             Constructs the CVar system.
@@ -1786,6 +1751,15 @@
             </summary>
             <param name="input">The original string.</param>
             <returns>A lowercase version.</returns>
+        </member>
+        <member name="M:FreneticScript.StringExtensions.SplitFast(System.String,System.Char,System.Int32)">
+            <summary>
+            Quickly split a string.
+            </summary>
+            <param name="input">The original string.</param>
+            <param name="splitter">What to split it by.</param>
+            <param name="count">The maximum number of times to split it.</param>
+            <returns>The split string pieces.</returns>
         </member>
         <member name="T:FreneticScript.FreneticScriptUtilities">
             <summary>
@@ -1968,6 +1942,22 @@
             <summary>
             Informational output type, 3.
             </summary>
+        </member>
+        <member name="T:FreneticScript.TagHandlers.Common.SystemTagBase">
+            <summary>
+            System tags.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Common.SystemTagBase.#ctor">
+            <summary>
+            Constructs the system tags.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Common.SystemTagBase.Handle(FreneticScript.TagHandlers.TagData)">
+            <summary>
+            Parse any direct tag input values.
+            </summary>
+            <param name="data">The input tag data.</param>
         </member>
         <member name="T:FreneticScript.TagHandlers.Common.TimeTagBase">
             <summary>

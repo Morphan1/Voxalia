@@ -30,6 +30,7 @@ namespace Voxalia
         static void Main(string[] args)
         {
             ConsoleHandle = Process.GetCurrentProcess().MainWindowHandle;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             SysConsole.Init();
             StringBuilder arger = new StringBuilder();
             for (int i = 0; i < args.Length; i++)

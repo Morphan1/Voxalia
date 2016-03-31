@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using Voxalia.Shared;
 using Voxalia.Shared.Files;
 using Voxalia.ServerGame.WorldSystem;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.OtherSystems
 {
@@ -149,14 +150,14 @@ namespace Voxalia.ServerGame.OtherSystems
         public void Init()
         {
             MaterialImages = new MaterialImage[MaterialHelpers.MAX_THEORETICAL_MATERIALS];
-            string[] texs = Program.Files.ReadText("info/textures.dat").Split('\n');
+            string[] texs = Program.Files.ReadText("info/textures.dat").SplitFast('\n');
             for (int i = 0; i < texs.Length; i++)
             {
                 if (texs[i].StartsWith("#") || texs[i].Length <= 1)
                 {
                     continue;
                 }
-                string[] dat = texs[i].Split('=');
+                string[] dat = texs[i].SplitFast('=');
                 Material mat;
                 if (dat[0].StartsWith("m"))
                 {

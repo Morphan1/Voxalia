@@ -181,7 +181,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public void DrawColoredText(string Text, Location Position, int MaxY = int.MaxValue, float transmod = 1, bool extrashadow = false, string bcolor = "^r^7")
         {
             Text = Text.Replace("^B", bcolor);
-            string[] lines = Text.Replace('\r', ' ').Replace(' ', (char)0x00A0).Replace("^q", "\"").Split('\n');
+            string[] lines = Text.Replace('\r', ' ').Replace(' ', (char)0x00A0).Replace("^q", "\"").SplitFast('\n');
             int color = DefaultColor;
             int trans = (int)(255 * transmod);
             bool bold = false;
@@ -487,7 +487,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public Location MeasureFancyLinesOfText(string text, string bcolor = "^r^7")
         {
-            string[] data = text.Split('\n');
+            string[] data = text.SplitFast('\n');
             float len = 0;
             for (int i = 0; i < data.Length; i++)
             {

@@ -6,6 +6,7 @@ using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsIn;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared.Files;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.NetworkSystem
 {
@@ -197,7 +198,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                         if (recd[recdsofar - 1] == '\n')
                         {
                             string data = FileHandler.encoding.GetString(recd, 6, recdsofar - 6);
-                            string[] datums = data.Split('\r');
+                            string[] datums = data.SplitFast('\r');
                             if (datums.Length != 4)
                             {
                                 throw new Exception("Invalid VOX__ connection details!");
@@ -228,7 +229,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                         if (recd[recdsofar - 1] == '\n')
                         {
                             string data = FileHandler.encoding.GetString(recd, 6, recdsofar - 6);
-                            string[] datums = data.Split('\r');
+                            string[] datums = data.SplitFast('\r');
                             if (datums.Length != 4)
                             {
                                 throw new Exception("Invalid VOXc_ connection details!");

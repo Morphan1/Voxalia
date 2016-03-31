@@ -68,7 +68,7 @@ namespace Voxalia.Shared
             {
                 SingleAnimation created = new SingleAnimation();
                 created.Name = name;
-                string[] data = Program.Files.ReadText("animations/" + name + ".anim").Split('\n');
+                string[] data = Program.Files.ReadText("animations/" + name + ".anim").SplitFast('\n');
                 int entr = 0;
                 for (int i = 0; i < data.Length; i++)
                 {
@@ -92,7 +92,7 @@ namespace Voxalia.Shared
                         {
                             break;
                         }
-                        string[] dat = data[i].Split(':');
+                        string[] dat = data[i].SplitFast(':');
                         if (dat.Length <= 1)
                         {
                             SysConsole.Output(OutputType.WARNING, "Invalid key dat: " + dat[0]);
@@ -128,12 +128,12 @@ namespace Voxalia.Shared
                         {
                             if (entry.Key == "positions")
                             {
-                                string[] poses = entry.Value.Split(' ');
+                                string[] poses = entry.Value.SplitFast(' ');
                                 for (int x = 0; x < poses.Length; x++)
                                 {
                                     if (poses[x].Length > 0)
                                     {
-                                        string[] posdata = poses[x].Split('=');
+                                        string[] posdata = poses[x].SplitFast('=');
                                         node.PosTimes.Add(Utilities.StringToDouble(posdata[0]));
                                         node.Positions.Add(new Location(Utilities.StringToFloat(posdata[1]),
                                             Utilities.StringToFloat(posdata[2]), Utilities.StringToFloat(posdata[3])));
@@ -142,12 +142,12 @@ namespace Voxalia.Shared
                             }
                             else if (entry.Key == "rotations")
                             {
-                                string[] rots = entry.Value.Split(' ');
+                                string[] rots = entry.Value.SplitFast(' ');
                                 for (int x = 0; x < rots.Length; x++)
                                 {
                                     if (rots[x].Length > 0)
                                     {
-                                        string[] posdata = rots[x].Split('=');
+                                        string[] posdata = rots[x].SplitFast('=');
                                         node.RotTimes.Add(Utilities.StringToDouble(posdata[0]));
                                         node.Rotations.Add(new Quaternion(Utilities.StringToFloat(posdata[1]), Utilities.StringToFloat(posdata[2]),
                                             Utilities.StringToFloat(posdata[3]), Utilities.StringToFloat(posdata[4])));
@@ -160,7 +160,7 @@ namespace Voxalia.Shared
                             }
                             else if (entry.Key == "offset")
                             {
-                                string[] posdata = entry.Value.Split('=');
+                                string[] posdata = entry.Value.SplitFast('=');
                                 node.Offset = new Location(Utilities.StringToFloat(posdata[0]),
                                     Utilities.StringToFloat(posdata[1]), Utilities.StringToFloat(posdata[2]));
                             }

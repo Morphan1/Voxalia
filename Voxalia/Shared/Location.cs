@@ -1,4 +1,5 @@
 ﻿using System;
+using FreneticScript;
 
 namespace Voxalia.Shared
 {
@@ -412,7 +413,7 @@ namespace Voxalia.Shared
         /// <returns>the location object.</returns>
         public static Location FromString(string input)
         {
-            string[] data = input.Replace('(', ' ').Replace(')', ' ').Replace(" ", "").Split(',');
+            string[] data = input.Replace('(', ' ').Replace(')', ' ').Replace(" ", "").SplitFast(',');
             if (data.Length != 3)
             {
                 return Location.NaN;
