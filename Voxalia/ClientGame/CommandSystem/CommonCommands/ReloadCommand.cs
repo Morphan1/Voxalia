@@ -18,14 +18,14 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             Arguments = "<chunks/screen/shaders/audio/textures/all>"; // TODO: List input?
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)
             {
-                ShowUsage(entry);
+                ShowUsage(queue, entry);
                 return;
             }
-            string arg = entry.GetArgument(0).ToLowerFast();
+            string arg = entry.GetArgument(queue, 0).ToLowerFast();
             bool success = false;
             bool is_all = arg == "all";
             if (arg == "chunks" || is_all)
@@ -62,11 +62,11 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             }
             if (!success)
             {
-                entry.Bad("Invalid argument.");
+                entry.Bad(queue, "Invalid argument.");
             }
             else
             {
-                entry.Good("Successfully reloaded specified values.");
+                entry.Good(queue, "Successfully reloaded specified values.");
             }
         }
     }

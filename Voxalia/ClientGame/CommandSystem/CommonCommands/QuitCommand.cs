@@ -18,7 +18,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             Arguments = "";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             TheClient.Window.Close();
         }

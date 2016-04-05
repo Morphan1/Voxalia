@@ -18,25 +18,25 @@ namespace Voxalia.ServerGame.CommandSystem.PlayerCommands
             Arguments = "<player list> [message]";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)
             {
-                ShowUsage(entry);
+                ShowUsage(queue, entry);
                 return;
             }
-            ListTag list = ListTag.For(entry.GetArgument(0));
+            ListTag list = ListTag.For(entry.GetArgument(queue, 0));
             string message = "Kicked by the server.";
             if (entry.Arguments.Count >= 2)
             {
-                message = "Kicked by the server: " + entry.GetArgument(1);
+                message = "Kicked by the server: " + entry.GetArgument(queue, 1);
             }
             for (int i = 0; i < list.ListEntries.Count; i++)
             {
                 PlayerEntity pl = TheServer.GetPlayerFor(list.ListEntries[i].ToString());
                 if (pl == null)
                 {
-                    entry.Bad("Unknown player " + TagParser.Escape(list.ListEntries[i].ToString()));
+                    entry.Bad(queue, "Unknown player " + TagParser.Escape(list.ListEntries[i].ToString()));
                 }
                 else
                 {

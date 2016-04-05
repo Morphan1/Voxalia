@@ -20,7 +20,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             Arguments = "";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (TheClient.Player.ServerFlags.HasFlag(YourStatusFlags.RELOADING))
             {

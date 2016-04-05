@@ -83,6 +83,8 @@ namespace Voxalia.ServerGame.CommandSystem
             CommandSystem.TagSystem.Register(new SmokeGrenadeEntityTagBase(TheServer));
             CommandSystem.TagSystem.Register(new VehicleEntityTagBase(TheServer));
             CommandSystem.TagSystem.Register(new VehiclePartEntityTagBase(TheServer));
+
+            CommandSystem.PostInit();
         }
 
         /// <summary>

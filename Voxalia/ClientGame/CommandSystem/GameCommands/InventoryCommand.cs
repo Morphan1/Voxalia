@@ -19,7 +19,7 @@ namespace Voxalia.ClientGame.CommandSystem.GameCommands
             Arguments = "";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             TheClient.ShowInventory();
         }

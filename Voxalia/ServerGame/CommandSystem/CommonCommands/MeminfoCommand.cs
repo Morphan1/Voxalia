@@ -25,12 +25,12 @@ namespace Voxalia.ServerGame.CommandSystem.CommonCommands
 
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             const string rn = "   Region Name Here   ";
             const string cr = "Chunk Exact RAM in MB";
             const string er = "Entity Est. RAM in MB";
-            entry.Info("[<{text_color.emphasis}>" + rn + "<{text_color.base}>] [<{text_color.emphasis}>" + cr + "<{text_color.base}>] [<{text_color.emphasis}>" + er + "<{text_color.base}>]");
+            entry.Info(queue, "[<{text_color.emphasis}>" + rn + "<{text_color.base}>] [<{text_color.emphasis}>" + cr + "<{text_color.base}>] [<{text_color.emphasis}>" + er + "<{text_color.base}>]");
             long cht = 0;
             long entt = 0;
             int n = 0;
@@ -46,11 +46,11 @@ namespace Voxalia.ServerGame.CommandSystem.CommonCommands
                     ent += e.GetRAMUsage();
                 }
                 string reg_er = Utilities.Pad(Utilities.FormatNumber(ent), ' ', er.Length, false);
-                entry.Info("[<{text_color.emphasis}>" + reg_rn + "<{text_color.base}>] [<{text_color.emphasis}>" + reg_cr + "<{text_color.base}>] [<{text_color.emphasis}>" + reg_er + "<{text_color.base}>]");
+                entry.Info(queue, "[<{text_color.emphasis}>" + reg_rn + "<{text_color.base}>] [<{text_color.emphasis}>" + reg_cr + "<{text_color.base}>] [<{text_color.emphasis}>" + reg_er + "<{text_color.base}>]");
                 cht += chunk;
                 entt += ent;
             }
-            entry.Info("Totals -> Chunks (Semi-accurate): <{text_color.emphasis}>" + Utilities.FormatNumber(cht) + "<{text_color.base}>, Entities (Estimated): <{text_color.emphasis}>" + Utilities.FormatNumber(entt)
+            entry.Info(queue, "Totals -> Chunks (Semi-accurate): <{text_color.emphasis}>" + Utilities.FormatNumber(cht) + "<{text_color.base}>, Entities (Estimated): <{text_color.emphasis}>" + Utilities.FormatNumber(entt)
                 + "<{text_color.base}>, actual usage: <{text_color.emphasis}>" + Utilities.FormatNumber(GC.GetTotalMemory(false)) + "<{text_color.base}>.");
         }
     }

@@ -20,15 +20,15 @@ namespace Voxalia.ServerGame.CommandSystem.FileCommands
             Arguments = "<path>";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)
             {
-                ShowUsage(entry);
+                ShowUsage(queue, entry);
                 return;
             }
-            Program.Files.LoadDir(entry.GetArgument(0));
-            entry.Good("Added path.");
+            Program.Files.LoadDir(entry.GetArgument(queue, 0));
+            entry.Good(queue, "Added path.");
         }
     }
 }

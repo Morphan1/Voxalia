@@ -30,26 +30,26 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
             Arguments = "<key>";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)
             {
-                ShowUsage(entry);
+                ShowUsage(queue, entry);
                 return;
             }
-            string key = entry.GetArgument(0);
+            string key = entry.GetArgument(queue, 0);
             if (key == "\0CALLBACK")
             {
                 return;
             }
             if (entry.InnerCommandBlock == null)
             {
-                entry.Error("Must have a block of commands!");
+                queue.HandleError(entry, "Must have a block of commands!");
                 return;
             }
             Key k = KeyHandler.GetKeyForName(key);
             KeyHandler.BindKey(k, entry.InnerCommandBlock, entry.BlockStart);
-            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+            CommandStackEntry cse = queue.CommandStack.Peek();
             cse.Index = entry.BlockEnd + 2;
         }
     }

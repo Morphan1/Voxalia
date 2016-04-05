@@ -18,11 +18,11 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
             Arguments = "";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Marker == 0)
             {
-                entry.Bad("Must use +, -, or !");
+                entry.Bad(queue, "Must use +, -, or !");
             }
             else if (entry.Marker == 1)
             {

@@ -23,25 +23,25 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             Arguments = "";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)
             {
-                ShowUsage(entry);
+                ShowUsage(queue, entry);
                 return;
             }
-            switch (entry.GetArgument(0))
+            switch (entry.GetArgument(queue, 0))
             {
                 case "userName":
                     {
                         if (entry.Arguments.Count > 1)
                         {
-                            TheClient.Username = entry.GetArgument(1);
-                            entry.Good("Set.");
+                            TheClient.Username = entry.GetArgument(queue, 1);
+                            entry.Good(queue, "Set.");
                         }
                         else
                         {
-                            entry.Info("Your username is: " + TagParser.Escape(TheClient.Username));
+                            entry.Info(queue, "Your username is: " + TagParser.Escape(TheClient.Username));
                         }
                         break;
                     }
@@ -60,14 +60,14 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                             Chunk ch = TheClient.TheRegion.GetChunk(new Location(XP, YP, ZP));
                             if (ch == null)
                             {
-                                entry.Good("Passed with flying light sources!");
+                                entry.Good(queue, "Passed with flying light sources!");
                                 goto end;
                             }
                             while (z < Chunk.CHUNK_SIZE)
                             {
                                 if (ch.GetBlockAt((int)x, (int)y, (int)z).IsOpaque())
                                 {
-                                    entry.Good("Died: " + x + ", " + y + ", " + z + " -- " + XP + ", " + YP + ", " + ZP);
+                                    entry.Good(queue, "Died: " + x + ", " + y + ", " + z + " -- " + XP + ", " + YP + ", " + ZP);
                                     goto end;
                                 }
                                 z++;
@@ -79,7 +79,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                         break;
                     }
                 default:
-                    ShowUsage(entry);
+                    ShowUsage(queue, entry);
                     break;
             }
         }

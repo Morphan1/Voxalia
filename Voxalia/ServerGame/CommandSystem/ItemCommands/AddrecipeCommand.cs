@@ -34,36 +34,35 @@ namespace Voxalia.ServerGame.CommandSystem.ItemCommands
             MaximumArguments = -1;
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            TemplateObject cb = entry.GetArgumentObject(0);
+            TemplateObject cb = entry.GetArgumentObject(queue, 0);
             if (cb.ToString() == "\0CALLBACK")
             {
                 return;
             }
             if (entry.InnerCommandBlock == null)
             {
-                entry.Error("Invalid or missing command block!");
+                queue.HandleError(entry, "Invalid or missing command block!");
                 return;
             }
             ListTag mode = ListTag.For(cb);
             List<ItemStack> items = new List<ItemStack>();
             for (int i = 1; i < entry.Arguments.Count; i++)
             {
-                ItemTag required = ItemTag.For(TheServer, entry.GetArgumentObject(i));
+                ItemTag required = ItemTag.For(TheServer, entry.GetArgumentObject(queue, i));
                 if (required == null)
                 {
-                    entry.Error("Invalid required item!");
+                    queue.HandleError(entry, "Invalid required item!");
                     return;
                 }
                 items.Add(required.Internal);
             }
             TheServer.Recipes.AddRecipe(RecipeRegistry.ModeFor(mode), entry.InnerCommandBlock, entry.BlockStart, items.ToArray());
-            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
-            cse.Index = entry.BlockEnd + 2;
-            if (entry.ShouldShowGood())
+            queue.CurrentEntry.Index = entry.BlockEnd + 2;
+            if (entry.ShouldShowGood(queue))
             {
-                entry.Good("Added recipe!");
+                entry.Good(queue, "Added recipe!");
             }
         }
     }

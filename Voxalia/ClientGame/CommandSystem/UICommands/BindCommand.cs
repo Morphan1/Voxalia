@@ -23,26 +23,26 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
             MaximumArguments = 2;
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string key = entry.GetArgument(0);
+            string key = entry.GetArgument(queue, 0);
             Key k = KeyHandler.GetKeyForName(key);
             if (entry.Arguments.Count == 1)
             {
                 CommandScript cs = KeyHandler.GetBind(k);
                 if (cs == null)
                 {
-                    entry.Bad("That key is not bound, or does not exist.");
+                    entry.Bad(queue, "That key is not bound, or does not exist.");
                 }
                 else
                 {
-                    entry.Info(TagParser.Escape(KeyHandler.keystonames[k] + ": {\n" + cs.FullString() + "}"));
+                    entry.Info(queue, TagParser.Escape(KeyHandler.keystonames[k] + ": {\n" + cs.FullString() + "}"));
                 }
             }
             else if (entry.Arguments.Count >= 2)
             {
-                KeyHandler.BindKey(k, entry.GetArgument(1));
-                entry.Good("Keybind updated for " + k + ".");
+                KeyHandler.BindKey(k, entry.GetArgument(queue, 1));
+                entry.Good(queue, "Keybind updated for " + k + ".");
             }
         }
     }

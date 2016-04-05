@@ -25,7 +25,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 return;
             }
             CommandQueue queue = CommandScript.SeparateCommands("command_line", entry.AllArguments(),
-                entry.Player.TheServer.Commands.CommandSystem).ToQueue(entry.Player.TheServer.Commands.CommandSystem);
+                entry.Player.TheServer.Commands.CommandSystem, false).ToQueue(entry.Player.TheServer.Commands.CommandSystem);
             queue.SetVariable("player", new PlayerTag(entry.Player));
             queue.Outputsystem = (message, messageType) =>
             {

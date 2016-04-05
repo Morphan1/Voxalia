@@ -23,12 +23,12 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
             MaximumArguments = 2;
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string key = entry.GetArgument(0);
+            string key = entry.GetArgument(queue, 0);
             Key k = KeyHandler.GetKeyForName(key);
             KeyHandler.BindKey(k, (string)null);
-            entry.Good("Keybind removed for " + k + ".");
+            entry.Good(queue, "Keybind removed for " + k + ".");
         }
     }
 }

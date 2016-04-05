@@ -21,18 +21,18 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             Arguments = "<slot number>";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)
             {
-                entry.Bad("Must specify a slot number!");
+                entry.Bad(queue, "Must specify a slot number!");
                 return;
             }
             if (TheClient.Player.ServerFlags.HasFlag(YourStatusFlags.RELOADING))
             {
                 return;
             }
-            TheClient.QuickBarPos = Math.Abs(Utilities.StringToInt(entry.GetArgument(0))) % (TheClient.Items.Count + 1);
+            TheClient.QuickBarPos = Math.Abs(Utilities.StringToInt(entry.GetArgument(queue, 0))) % (TheClient.Items.Count + 1);
             TheClient.Network.SendPacket(new HoldItemPacketOut(TheClient.QuickBarPos));
             TheClient.RenderExtraItems = 3;
         }

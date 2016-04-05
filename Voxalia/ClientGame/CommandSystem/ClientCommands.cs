@@ -77,6 +77,8 @@ namespace Voxalia.ClientGame.CommandSystem
 
             // Entity Tags
             CommandSystem.TagSystem.Register(new PlayerTags(TheClient));
+
+            CommandSystem.PostInit();
         }
 
         /// <summary>

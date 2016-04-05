@@ -15,14 +15,14 @@ namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
             Arguments = "<ip> <port>";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count < 2)
             {
-                ShowUsage(entry);
+                ShowUsage(queue, entry);
                 return;
             }
-            TheClient.Network.Connect(entry.GetArgument(0), entry.GetArgument(1));
+            TheClient.Network.Connect(entry.GetArgument(queue, 0), entry.GetArgument(queue, 1));
         }
     }
 }

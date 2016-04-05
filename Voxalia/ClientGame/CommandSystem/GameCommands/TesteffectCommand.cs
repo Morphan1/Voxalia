@@ -22,17 +22,17 @@ namespace Voxalia.ClientGame.CommandSystem.GameCommands
             Arguments = "effect";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)
             {
-                ShowUsage(entry);
+                ShowUsage(queue, entry);
                 return;
             }
             Location start = TheClient.Player.GetEyePosition();
             Location forward = TheClient.Player.ForwardVector();
             Location end = start + forward * 5;
-            switch (entry.GetArgument(0).ToLowerFast())
+            switch (entry.GetArgument(queue, 0).ToLowerFast())
             {
                 case "cylinder":
                     TheClient.Particles.Engine.AddEffect(ParticleEffectType.CYLINDER, (o) => start, (o) => end, (o) => 0.01f, 5f, Location.One, Location.One, true, TheClient.Textures.GetTexture("common/smoke"));
@@ -50,10 +50,10 @@ namespace Voxalia.ClientGame.CommandSystem.GameCommands
                     TheClient.Particles.PathMark(end, () => TheClient.Player.GetPosition());
                     break;
                 default:
-                    entry.Bad("Unknown effect name.");
+                    entry.Bad(queue, "Unknown effect name.");
                     return;
             }
-            entry.Good("Created effect.");
+            entry.Good(queue, "Created effect.");
         }
     }
 }

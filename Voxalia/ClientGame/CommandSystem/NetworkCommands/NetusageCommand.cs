@@ -21,10 +21,10 @@ namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
             Arguments = "";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            entry.Info("Network usage (last second): " + GetUsages(TheClient.Network.UsagesLastSecond));
-            entry.Info("Network usage (total): " + GetUsages(TheClient.Network.UsagesTotal));
+            entry.Info(queue, "Network usage (last second): " + GetUsages(TheClient.Network.UsagesLastSecond));
+            entry.Info(queue, "Network usage (total): " + GetUsages(TheClient.Network.UsagesTotal));
         }
 
         public string GetUsages(long[] usages)

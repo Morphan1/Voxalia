@@ -19,33 +19,33 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             Arguments = "<soundname> [pitch] [volume] [location] [seek time in seconds]";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)
             {
-                ShowUsage(entry);
+                ShowUsage(queue, entry);
                 return;
             }
-            string sfx = entry.GetArgument(0);
+            string sfx = entry.GetArgument(queue, 0);
             float pitch = 1f;
             float gain = 1f;
             Location loc = Location.NaN;
             if (entry.Arguments.Count > 1)
             {
-                pitch = Utilities.StringToFloat(entry.GetArgument(1));
+                pitch = Utilities.StringToFloat(entry.GetArgument(queue, 1));
             }
             if (entry.Arguments.Count > 2)
             {
-                gain = Utilities.StringToFloat(entry.GetArgument(2));
+                gain = Utilities.StringToFloat(entry.GetArgument(queue, 2));
             }
             if (entry.Arguments.Count > 3)
             {
-                loc = Location.FromString(entry.GetArgument(3));
+                loc = Location.FromString(entry.GetArgument(queue, 3));
             }
             float seek = 0;
             if (entry.Arguments.Count > 4)
             {
-                seek = Utilities.StringToFloat(entry.GetArgument(4));
+                seek = Utilities.StringToFloat(entry.GetArgument(queue, 4));
             }
             TheClient.Sounds.Play(TheClient.Sounds.GetSound(sfx), false, loc, pitch, gain, seek);
         }

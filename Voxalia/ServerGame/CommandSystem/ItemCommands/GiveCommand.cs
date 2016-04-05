@@ -24,22 +24,22 @@ namespace Voxalia.ServerGame.CommandSystem.ItemCommands
             Arguments = "<players> <items>";
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count < 2)
             {
-                ShowUsage(entry);
+                ShowUsage(queue, entry);
                 return;
             }
-            ListTag players = ListTag.For(entry.GetArgumentObject(0));
-            ListTag items = ListTag.For(entry.GetArgumentObject(1));
+            ListTag players = ListTag.For(entry.GetArgumentObject(queue, 0));
+            ListTag items = ListTag.For(entry.GetArgumentObject(queue, 1));
             List<ItemStack> itemlist = new List<ItemStack>();
             for (int i = 0; i < items.ListEntries.Count; i++)
             {
                 ItemTag item = ItemTag.For(TheServer, items.ListEntries[i]);
                 if (item == null)
                 {
-                    entry.Error("Invalid item!");
+                    queue.HandleError(entry, "Invalid item!");
                     return;
                 }
                 itemlist.Add(item.Internal);
@@ -50,7 +50,7 @@ namespace Voxalia.ServerGame.CommandSystem.ItemCommands
                 PlayerTag player = PlayerTag.For(TheServer, players.ListEntries[i]);
                 if (player == null)
                 {
-                    entry.Error("Invalid player: " + TagParser.Escape(items.ListEntries[i].ToString()));
+                    queue.HandleError(entry, "Invalid player: " + TagParser.Escape(items.ListEntries[i].ToString()));
                     return;
                 }
                 playerlist.Add(player.Internal);
@@ -62,9 +62,9 @@ namespace Voxalia.ServerGame.CommandSystem.ItemCommands
                     player.Items.GiveItem(item);
                 }
             }
-            if (entry.ShouldShowGood())
+            if (entry.ShouldShowGood(queue))
             {
-                entry.Good(itemlist.Count + " item(s) given to " + playerlist.Count + " player(s)!");
+                entry.Good(queue, itemlist.Count + " item(s) given to " + playerlist.Count + " player(s)!");
             }
         }
     }

@@ -460,12 +460,12 @@ namespace Voxalia.ClientGame.UISystem
             InverseBinds.Remove(key);
             if (bind != null)
             {
-                CommandScript script = CommandScript.SeparateCommands("bind_" + key, bind, Client.Central.Commands.CommandSystem);
+                CommandScript script = CommandScript.SeparateCommands("bind_" + key, bind, Client.Central.Commands.CommandSystem, false);
                 script.Debug = DebugMode.MINIMAL;
                 Binds[key] = script;
-                if (script.Commands.Count == 1 && script.Commands[0].Marker == 1)
+                if (script.Created.Entries.Length == 1 && script.Created.Entries[0].Marker == 1)
                 {
-                    CommandEntry fixedentry = script.Commands[0].Duplicate();
+                    CommandEntry fixedentry = script.Created.Entries[0].Duplicate();
                     fixedentry.Marker = 2;
                     CommandScript nscript = new CommandScript("inverse_bind_" + key, new List<CommandEntry>() { fixedentry }) { Debug = DebugMode.MINIMAL };
                     InverseBinds[key] = nscript;
@@ -488,9 +488,9 @@ namespace Voxalia.ClientGame.UISystem
                 CommandScript script = new CommandScript("_bind_for_" + keystonames[key], bind, adj);
                 script.Debug = DebugMode.MINIMAL;
                 Binds[key] = script;
-                if (script.Commands.Count == 1 && script.Commands[0].Marker == 1)
+                if (script.Created.Entries.Length == 1 && script.Created.Entries[0].Marker == 1)
                 {
-                    CommandEntry fixedentry = script.Commands[0].Duplicate();
+                    CommandEntry fixedentry = script.Created.Entries[0].Duplicate();
                     fixedentry.Marker = 2;
                     CommandScript nscript = new CommandScript("inverse_bind_" + key, new List<CommandEntry>() { fixedentry }) { Debug = DebugMode.MINIMAL };
                     InverseBinds[key] = nscript;
