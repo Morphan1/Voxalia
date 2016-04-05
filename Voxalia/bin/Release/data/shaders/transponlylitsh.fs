@@ -51,6 +51,11 @@ void main()
 	float tex_size = light_details[2][1];
 	float depth_jump = light_details[2][2];
 	float lightc = light_details[2][3];
+	if (minimum_light > 0.99)
+	{
+		color = vec4(color.xyz / lightc, color.w);
+		return;
+	}
 	vec4 bambient = (vec4(light_details[3][0], light_details[3][1], light_details[3][2], 1.0)
 		+ vec4(minimum_light, minimum_light, minimum_light, 0.0)) / lightc;
 	vec3 eye_pos = vec3(light_details2[0][0], light_details2[0][1], light_details2[0][2]);
