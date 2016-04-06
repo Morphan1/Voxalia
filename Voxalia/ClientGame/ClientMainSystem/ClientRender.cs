@@ -71,7 +71,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public void ShadersCheck()
         {
             string def = CVars.r_good_graphics.ValueB ? "#MCM_GOOD_GRAPHICS" : "";
-            def += CVars.r_toonify.ValueB ? ",MCM_TOONIFY" : "";
             s_shadow = Shaders.GetShader("shadow" + def);
             s_shadowvox = Shaders.GetShader("shadowvox" + def);
             s_fbo = Shaders.GetShader("fbo" + def);
@@ -91,6 +90,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_mapvox = Shaders.GetShader("map_vox" + def);
             s_transpadder = Shaders.GetShader("transpadder" + def);
             s_finalgodray = Shaders.GetShader("finalgodray" + def);
+            s_finalgodray_toonify = Shaders.GetShader("finalgodray" + def + ",MCM_TOONIFY");
         }
 
         int map_fbo_main;
@@ -209,6 +209,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Shader s_shadow;
         public Shader s_finalgodray;
+        public Shader s_finalgodray_toonify;
         public Shader s_fbo;
         public Shader s_fbov;
         public Shader s_fbot;
@@ -652,7 +653,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     }
                 }
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_godray_main);
-                s_finalgodray = s_finalgodray.Bind();
+                if (CVars.r_toonify.ValueB)
+                {
+                    s_finalgodray_toonify = s_finalgodray_toonify.Bind();
+                }
+                else
+                {
+                    s_finalgodray = s_finalgodray.Bind();
+                }
                 GL.DrawBuffers(2, new DrawBuffersEnum[] { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1 });
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0f, 0f, 0f, 0f });
                 GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 1f, 1f, 1f, 0f });

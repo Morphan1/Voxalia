@@ -95,7 +95,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_godray_decay = Register("r_godray_decay", "1", CVarFlag.Numeric, "What decay value to use when generating GodRays."); // TODO: Validate?
             r_godray_density = Register("r_godray_density", "0.84", CVarFlag.Numeric, "What density value to use when generating GodRays."); // TODO: Validate?
             r_godray_color = Register("r_godray_color", "1,1,1", CVarFlag.Textual, "What color to use for GodRays.");
-            r_toonify = Register("r_toonify", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use a 'toonify' post-processing effect."); // TODO: callback to auto-set
+            r_toonify = Register("r_toonify", "false", CVarFlag.Boolean, "Whether to use a 'toonify' post-processing effect."); // TODO: callback to auto-set
             r_transplighting = Register("r_transplighting", "true", CVarFlag.Boolean, "Whether transparent objects should be lit properly (otherwise, fullbright).");
             r_transpshadows = Register("r_transpshadows", "false", CVarFlag.Boolean, "Whether transparent objects should be lit using HD shadows (Requires r_shadows true).");
             // Audio CVars

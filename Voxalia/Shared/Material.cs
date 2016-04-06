@@ -20,7 +20,7 @@ namespace Voxalia.Shared
         SNOW = 9,
         SMOKE = 10,
         LOG_OAK = 11,
-        TALLGRASS = 12,
+        TALLGRASS = 12, // TODO: Remove me!
         SAND = 13,
         STEEL_SOLID = 14,
         STEEL_PLATE = 15,
