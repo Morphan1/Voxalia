@@ -94,7 +94,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     }
                     rel = 1f - (rel / 40f);
                     rel = Math.Max(Math.Min(rel, 1f), 0f);
-                    TheSun.InternalLights[0].color = new OpenTK.Vector3(TheSun.InternalLights[0].color.X, TheSun.InternalLights[0].color.Y * rel, TheSun.InternalLights[0].color.Z * rel);
+                    float rel2 = Math.Max(Math.Min(rel * 1.5f, 1f), 0f);
+                    TheSun.InternalLights[0].color = new OpenTK.Vector3(TheSun.InternalLights[0].color.X * rel2, TheSun.InternalLights[0].color.Y * rel, TheSun.InternalLights[0].color.Z * rel);
                     DesaturationAmount = (1f - rel) * 0.75f;
                     ambient = BaseAmbient * ((1f - rel) * 0.5f + 0.5f);
                     sl_min = 0.2f - (1f - rel) * (0.2f - 0.05f);
@@ -114,6 +115,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     sl_max = 0.8f;
                     DesaturationAmount = 0f;
                     ambient = BaseAmbient;
+                    TheSun.InternalLights[0].color = new OpenTK.Vector3(1, 1, 1);
                 }
                 rTicks = 0;
                 shouldRedrawShadows = true;
