@@ -75,6 +75,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_shadow = Shaders.GetShader("shadow" + def);
             s_shadowvox = Shaders.GetShader("shadowvox" + def);
             s_fbo = Shaders.GetShader("fbo" + def);
+            s_fbot = Shaders.GetShader("fbo" + def + ",MCM_TRANSP_ALLOWED");
             s_fbov = Shaders.GetShader("fbo_vox" + def);
             s_shadowadder = Shaders.GetShader("shadowadder" + def);
             s_lightadder = Shaders.GetShader("lightadder" + def);
@@ -210,6 +211,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_finalgodray;
         public Shader s_fbo;
         public Shader s_fbov;
+        public Shader s_fbot;
         public Shader s_shadowadder;
         public Shader s_lightadder;
         public Shader s_transponly;
@@ -460,19 +462,23 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 timer.Start();
                 SetViewport();
+                Matrix4 matident = Matrix4.Identity;
                 s_fbov = s_fbov.Bind();
                 GL.Uniform1(6, (float)GlobalTickTimeLocal);
                 GL.UniformMatrix4(1, false, ref combined);
-                Matrix4 matident = Matrix4.Identity;
                 GL.UniformMatrix4(2, false, ref matident);
                 GL.Uniform2(8, new Vector2(sl_min, sl_max));
+                s_fbot = s_fbot.Bind();
+                GL.Uniform1(6, (float)GlobalTickTimeLocal);
+                GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref matident);
                 s_fbo = s_fbo.Bind();
                 GL.Uniform1(6, (float)GlobalTickTimeLocal);
+                GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref matident);
                 FBOid = 1;
                 RenderingShadows = false;
                 CFrust = camFrust;
-                GL.UniformMatrix4(1, false, ref combined);
-                GL.UniformMatrix4(2, false, ref matident);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 RS4P.Bind();
                 RenderLights = true;
@@ -1030,12 +1036,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture0);
                 if (FBOid == 1)
                 {
-                    Rendering.SetMinimumLight(1);
-                }
-                RenderSkybox();
-                if (FBOid == 1)
-                {
-                    Rendering.SetMinimumLight(0);
+                    s_fbot.Bind();
+                    RenderSkybox();
+                    s_fbo.Bind();
                 }
                 for (int i = 0; i < TheRegion.Entities.Count; i++)
                 {

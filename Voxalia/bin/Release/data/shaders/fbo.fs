@@ -1,5 +1,7 @@
 #version 430 core
 
+#define MCM_TRANSP_ALLOWED 0
+
 layout (binding = 0) uniform sampler2D s;
 layout (binding = 1) uniform sampler2D spec;
 layout (binding = 2) uniform sampler2D refl;
@@ -28,10 +30,17 @@ layout (location = 4) out vec4 bw;
 void main()
 {
 	vec4 col = texture(s, f.texcoord);
+#if !MCM_TRANSP_ALLOWED
 	if (col.w * f.color.w < 0.99)
 	{
 		discard;
 	}
+#else
+	if (col.w * f.color.w < 0.01)
+	{
+		discard;
+	}
+#endif
 	float specular_strength = texture(spec, f.texcoord).r;
 	float reflection_amt = texture(refl, f.texcoord).r;
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - 1.0;

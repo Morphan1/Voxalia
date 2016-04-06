@@ -161,7 +161,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 if (vars[i].Length > 0)
                 {
-                    SysConsole.Output(OutputType.INFO, "Update for " + vars[i]);
                     VS = VS.Replace("#define " + vars[i] + " 0", "#define " + vars[i] + " 1");
                     FS = FS.Replace("#define " + vars[i] + " 0", "#define " + vars[i] + " 1");
                 }
