@@ -1,6 +1,6 @@
 #version 430 core
 
-#INCLUDE_STATEMENTS_HERE
+#define MCM_GOOD_GRAPHICS 0
 
 layout (binding = 0) uniform sampler2DArray tex;
 layout (binding = 1) uniform sampler2DArray htex;
@@ -35,7 +35,7 @@ void main()
         discard;
     }
 	color = tcolor * f.color; // TODO: Clamp f.color.xyz, match fbo_vox
-#ifdef MCM_GOOD_GRAPHICS
+#if MCM_GOOD_GRAPHICS
     color = vec4(desaturate(color.xyz), color.w); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
 #endif
 }

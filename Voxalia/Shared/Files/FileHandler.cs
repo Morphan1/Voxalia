@@ -129,7 +129,7 @@ namespace Voxalia.Shared.Files
                 // Remove non-ASCII symbols, ASCII control codes, and Windows control symbols
                 if (input[i] < 32 || input[i] > 126 || input[i] == '?' ||
                     input[i] == ':' || input[i] == '*' || input[i] == '|' ||
-                    input[i] == '"' || input[i] == '<' || input[i] == '>')
+                    input[i] == '"' || input[i] == '<' || input[i] == '>' || input[i] == '#')
                 {
                     output.Append('_');
                     continue;

@@ -1,7 +1,7 @@
 #version 430 core
 // transponlyvoxlit.fs
 
-#INCLUDE_STATEMENTS_HERE
+#define MCM_GOOD_GRAPHICS 0
 
 layout (binding = 0) uniform sampler2DArray tex;
 layout (binding = 1) uniform sampler2DArray htex;
@@ -85,7 +85,7 @@ void main()
 	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f.position.xyz - eye_pos)), 0.0), 128.0) * specular_albedo * spec);
 	color = vec4((bambient * color + (vec4(1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten)).xyz, color.w);
-#ifdef MCM_GOOD_GRAPHICS
+#if MCM_GOOD_GRAPHICS
 	color = vec4(desaturate(color.xyz), color.w); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
 #endif
 }

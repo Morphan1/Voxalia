@@ -70,24 +70,26 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void ShadersCheck()
         {
-            s_shadow = Shaders.GetShader("shadow");
-            s_shadowvox = Shaders.GetShader("shadowvox");
-            s_finalgodray = Shaders.GetShader("finalgodray");
-            s_fbo = Shaders.GetShader("fbo");
-            s_fbov = Shaders.GetShader("fbo_vox");
-            s_shadowadder = Shaders.GetShader("shadowadder");
-            s_lightadder = Shaders.GetShader("lightadder");
-            s_transponly = Shaders.GetShader("transponly");
-            s_transponlyvox = Shaders.GetShader("transponlyvox");
-            s_transponlylit = Shaders.GetShader("transponlylit");
-            s_transponlyvoxlit = Shaders.GetShader("transponlyvoxlit");
-            s_transponlylitsh = Shaders.GetShader("transponlylitsh");
-            s_transponlyvoxlitsh = Shaders.GetShader("transponlyvoxlitsh");
-            s_godray = Shaders.GetShader("godray");
-            s_pointlightadder = Shaders.GetShader("pointlightadder");
-            s_pointshadowadder = Shaders.GetShader("pointshadowadder");
-            s_mapvox = Shaders.GetShader("map_vox");
-            s_transpadder = Shaders.GetShader("transpadder");
+            string def = CVars.r_good_graphics.ValueB ? "#MCM_GOOD_GRAPHICS" : "";
+            def += CVars.r_toonify.ValueB ? ",MCM_TOONIFY" : "";
+            s_shadow = Shaders.GetShader("shadow" + def);
+            s_shadowvox = Shaders.GetShader("shadowvox" + def);
+            s_fbo = Shaders.GetShader("fbo" + def);
+            s_fbov = Shaders.GetShader("fbo_vox" + def);
+            s_shadowadder = Shaders.GetShader("shadowadder" + def);
+            s_lightadder = Shaders.GetShader("lightadder" + def);
+            s_transponly = Shaders.GetShader("transponly" + def);
+            s_transponlyvox = Shaders.GetShader("transponlyvox" + def);
+            s_transponlylit = Shaders.GetShader("transponlylit" + def);
+            s_transponlyvoxlit = Shaders.GetShader("transponlyvoxlit" + def);
+            s_transponlylitsh = Shaders.GetShader("transponlylitsh" + def);
+            s_transponlyvoxlitsh = Shaders.GetShader("transponlyvoxlitsh" + def);
+            s_godray = Shaders.GetShader("godray" + def);
+            s_pointlightadder = Shaders.GetShader("pointlightadder" + def);
+            s_pointshadowadder = Shaders.GetShader("pointshadowadder" + def);
+            s_mapvox = Shaders.GetShader("map_vox" + def);
+            s_transpadder = Shaders.GetShader("transpadder" + def);
+            s_finalgodray = Shaders.GetShader("finalgodray" + def);
         }
 
         int map_fbo_main;

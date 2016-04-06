@@ -64,7 +64,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>A valid shader object.</returns>
         public Shader GetShader(string shadername)
         {
-            shadername = FileHandler.CleanFileName(shadername);
             for (int i = 0; i < LoadedShaders.Count; i++)
             {
                 if (LoadedShaders[i].Name == shadername)
@@ -95,7 +94,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             try
             {
-                filename = FileHandler.CleanFileName(filename);
+                string[] dat1 = filename.SplitFast('#', 2);
+                string[] vars = new string[0];
+                if (dat1.Length == 2)
+                {
+                    vars = dat1[1].SplitFast(',');
+                }
+                filename = FileHandler.CleanFileName(dat1[0]);
                 if (!Program.Files.Exists("shaders/" + filename + ".vs"))
                 {
                     SysConsole.Output(OutputType.ERROR, "Cannot load shader, file '" +
@@ -112,7 +117,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 }
                 string VS = Program.Files.ReadText("shaders/" + filename + ".vs");
                 string FS = Program.Files.ReadText("shaders/" + filename + ".fs");
-                return CreateShader(VS, FS, filename);
+                return CreateShader(VS, FS, filename, vars);
             }
             catch (Exception ex)
             {
@@ -128,15 +133,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="VS">The input VertexShader code.</param>
         /// <param name="FS">The input FragmentShader code.</param>
         /// <param name="name">The name of the shader.</param>
+        /// <param name="vars">The variables to use.</param>
         /// <returns>A valid Shader object.</returns>
-        public Shader CreateShader(string VS, string FS, string name)
+        public Shader CreateShader(string VS, string FS, string name, string[] vars)
         {
-            int Program = CompileToProgram(VS, FS);
+            int Program = CompileToProgram(VS, FS, vars);
             Shader generic = new Shader();
             generic.Name = name;
             generic.LoadedProperly = true;
             generic.Internal_Program = Program;
             generic.Original_Program = Program;
+            generic.Vars = vars;
             generic.Engine = this;
             return generic;
         }
@@ -146,9 +153,19 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         /// <param name="VS">The input VertexShader code.</param>
         /// <param name="FS">The input FragmentShader code.</param>
+        /// <param name="vars">All variables to include.</param>
         /// <returns>The internal OpenGL program ID.</returns>
-        public int CompileToProgram(string VS, string FS)
+        public int CompileToProgram(string VS, string FS, string[] vars)
         {
+            for (int i = 0; i < vars.Length; i++)
+            {
+                if (vars[i].Length > 0)
+                {
+                    SysConsole.Output(OutputType.INFO, "Update for " + vars[i]);
+                    VS = VS.Replace("#define " + vars[i] + " 0", "#define " + vars[i] + " 1");
+                    FS = FS.Replace("#define " + vars[i] + " 0", "#define " + vars[i] + " 1");
+                }
+            }
             int VertexObject = GL.CreateShader(ShaderType.VertexShader);
             GL.ShaderSource(VertexObject, VS);
             GL.CompileShader(VertexObject);
@@ -160,22 +177,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 throw new Exception("Error creating VertexShader. Error status: " + VS_Status + ", info: " + VS_Info);
             }
             int FragmentObject = GL.CreateShader(ShaderType.FragmentShader);
-            if (MCM_GOOD_GRAPHICS && ClientMainSystem.Client.Central.CVars.r_good_graphics.ValueB) // TODO: CVars reference
-            {
-                FS = FS.Replace("#INCLUDE_STATEMENTS_HERE", "#define MCM_GOOD_GRAPHICS");
-            }
-            else
-            {
-                FS = FS.Replace("#INCLUDE_STATEMENTS_HERE", "");
-            }
-            if (ClientMainSystem.Client.Central.CVars.r_toonify.ValueB) // TODO: CVars reference
-            {
-                FS = FS.Replace("#INCLUDE_TOONIFY_HERE", "#define MCM_TOONIFY");
-            }
-            else
-            {
-                FS = FS.Replace("#INCLUDE_TOONIFY_HERE", "");
-            }
             GL.ShaderSource(FragmentObject, FS);
             GL.CompileShader(FragmentObject);
             string FS_Info = GL.GetShaderInfoLog(FragmentObject);
@@ -231,6 +232,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// The original OpenGL ID that formed this shader program.
         /// </summary>
         public int Original_Program;
+
+        /// <summary>
+        /// All variables on this shader.
+        /// </summary>
+        public string[] Vars;
 
         /// <summary>
         /// Whether the shader loaded properly.

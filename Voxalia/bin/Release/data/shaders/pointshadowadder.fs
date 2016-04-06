@@ -1,5 +1,5 @@
 #version 430 core
-#INCLUDE_STATEMENTS_HERE
+#define MCM_GOOD_GRAPHICS 0
 
 layout (binding = 1) uniform sampler2D positiontex;
 layout (binding = 2) uniform sampler2D normaltex;
@@ -135,7 +135,7 @@ void main()
 	}
 	else
 	{
-#ifdef MCM_GOOD_GRAPHICS
+#if MCM_GOOD_GRAPHICS
 		vec2 dz_duv;
 		vec3 duvdist_dx = dFdx(fs.xyz);
 		vec3 duvdist_dy = dFdy(fs.xyz);

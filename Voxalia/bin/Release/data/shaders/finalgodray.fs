@@ -1,7 +1,7 @@
 #version 430 core
 
-#INCLUDE_STATEMENTS_HERE
-#INCLUDE_TOONIFY_HERE
+#define MCM_GOOD_GRAPHICS 0
+#define MCM_TOONIFY 0
 
 layout (binding = 0) uniform sampler2D colortex;
 layout (binding = 1) uniform sampler2D positiontex;
@@ -300,7 +300,7 @@ float IsEdge(in vec2 coords)
 void main()
 {
 	vec4 light_color = getColor(f_texcoord);
-#ifdef MCM_TOONIFY
+#if MCM_TOONIFY
     vec3 vHSV = RGBtoHSV(light_color.r, light_color.g, light_color.b);
     vHSV.x = nearestLevel(vHSV.x, 0);
     vHSV.y = nearestLevel(vHSV.y, 1);
@@ -309,7 +309,7 @@ void main()
     vec3 vRGB = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : HSVtoRGB(vHSV.x, vHSV.y, vHSV.z);
     light_color = vec4(vRGB.x, vRGB.y, vRGB.z, 1.0);
 #endif
-#ifdef MCM_GOOD_GRAPHICS
+#if MCM_GOOD_GRAPHICS
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
 	float dist = texture(depthtex, f_texcoord).r;
 	godray = getGodRay() * vec4(grcolor, 1.0);
