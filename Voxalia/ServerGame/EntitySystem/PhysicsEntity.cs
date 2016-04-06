@@ -416,6 +416,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <param name="pos">The position to move the entity to.</param>
         public override void SetPosition(Location pos)
         {
+            needNetworking = true;
             if (Body != null)
             {
                 Body.Position = pos.ToBVector();

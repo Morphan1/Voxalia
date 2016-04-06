@@ -26,31 +26,45 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public BlockInternal[] Blocks;
 
+        public Location shapeOffs;
+
+        public System.Drawing.Color Color = System.Drawing.Color.White;
+
         public override long GetRAMUsage()
         {
             return base.GetRAMUsage() + Blocks.Length * 10;
         }
 
-        public BlockGroupEntity(Location baseloc, BGETraceMode mode, Region tregion, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth) : base(tregion)
+        public BlockGroupEntity(Location baseloc, BGETraceMode mode, Region tregion, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth, Location origin = default(Location)) : base(tregion)
         {
             SetMass(blocks.Length);
-            SetPosition(baseloc);
             XWidth = xwidth;
             YWidth = ywidth;
             ZWidth = zwidth;
             Blocks = blocks;
-            Location shapeOffs;
             TraceMode = mode;
             ConvexEntityShape = (ConvexShape)CalculateHullShape(BGETraceMode.CONVEX, out shapeOffs);
+            shapeOffs -= origin;
+            shapeOffs = shapeOffs.GetBlockLocation();
             if (TraceMode == BGETraceMode.PERFECT)
             {
-                Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks);
+                Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks); // TODO: Anything offset related needed here?
             }
             else
             {
                 Shape = ConvexEntityShape;
             }
-            SetPosition(GetPosition() + shapeOffs);
+            SetPosition(baseloc);
+        }
+
+        public override void SetPosition(Location pos)
+        {
+            base.SetPosition(pos + shapeOffs);
+        }
+
+        public override Location GetPosition()
+        {
+            return base.GetPosition() - shapeOffs;
         }
 
         public override EntityType GetEntityType()

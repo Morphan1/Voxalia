@@ -300,6 +300,7 @@ float IsEdge(in vec2 coords)
 void main()
 {
 	vec4 light_color = getColor(f_texcoord);
+	// TODO: Toonify option per-pixel?
 #if MCM_TOONIFY
     vec3 vHSV = RGBtoHSV(light_color.r, light_color.g, light_color.b);
     vHSV.x = nearestLevel(vHSV.x, 0);

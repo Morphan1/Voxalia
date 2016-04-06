@@ -56,7 +56,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     bi[i].BlockPaint = data[start + bi.Length * 3 + i];
                 }
                 BGETraceMode tm = (BGETraceMode)data[start + bi.Length * 4];
-                BlockGroupEntity bge = new BlockGroupEntity(TheClient.TheRegion, tm, bi, xwidth, ywidth, zwidth);
+                BlockGroupEntity bge = new BlockGroupEntity(TheClient.TheRegion, tm, bi, xwidth, ywidth, zwidth, Location.FromBytes(data, start + bi.Length * 4 + 1 + 4));
+                bge.Color = System.Drawing.Color.FromArgb(Utilities.BytesToInt(Utilities.BytesPartial(data, start + bi.Length * 4 + 1, 4)));
                 ce = bge;
             }
             else if (type == 5)

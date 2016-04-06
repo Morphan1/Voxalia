@@ -44,7 +44,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     {
                         try
                         {
-                            Structure structure = new Structure(player.TheRegion, block, 20); // TODO: 20 -> ???
+                            Structure structure = new Structure(player.TheRegion, block, 20); // TODO: 20 -> Item Attribute?
                             int c = 0;
                             while (Program.Files.Exists("structures/" + item.SecondaryName + c + ".str"))
                             {

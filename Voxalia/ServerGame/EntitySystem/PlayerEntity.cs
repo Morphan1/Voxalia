@@ -735,6 +735,8 @@ namespace Voxalia.ServerGame.EntitySystem
             SetHealth(MaxHealth);
             Teleport(TheRegion.SpawnPoint);
         }
+
+        public BlockGroupEntity Pasting = null;
     }
 
     public class ChunkAwarenessInfo

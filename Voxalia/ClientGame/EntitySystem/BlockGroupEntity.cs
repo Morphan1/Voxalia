@@ -30,7 +30,9 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Location shapeOffs;
 
-        public BlockGroupEntity(Region tregion, BGETraceMode mode, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth) : base(tregion, true, true)
+        public System.Drawing.Color Color = System.Drawing.Color.White;
+
+        public BlockGroupEntity(Region tregion, BGETraceMode mode, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth, Location sOffs) : base(tregion, true, true)
         {
             SetMass(blocks.Length);
             XWidth = xwidth;
@@ -39,6 +41,7 @@ namespace Voxalia.ClientGame.EntitySystem
             Blocks = blocks;
             TraceMode = mode;
             ConvexEntityShape = (ConvexShape)CalculateHullShape(BGETraceMode.CONVEX, out shapeOffs);
+            shapeOffs = sOffs;
             if (TraceMode == BGETraceMode.PERFECT)
             {
                 Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks);
@@ -47,7 +50,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 Shape = ConvexEntityShape;
             }
-            SetPosition(GetPosition() + shapeOffs);
+            SetPosition(GetPosition());
         }
 
         public override void SpawnBody()
@@ -130,6 +133,16 @@ namespace Voxalia.ClientGame.EntitySystem
             }
         }
 
+        public override void SetPosition(Location pos)
+        {
+            base.SetPosition(pos + shapeOffs);
+        }
+
+        public override Location GetPosition()
+        {
+            return base.GetPosition() - shapeOffs;
+        }
+
         public override void Render()
         {
             if (vbo == null)
@@ -182,9 +195,11 @@ namespace Voxalia.ClientGame.EntitySystem
                 TheClient.s_shadowvox.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
             }
-            OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateTranslation(-ClientUtilities.Convert(shapeOffs)) * GetTransformationMatrix();
+            OpenTK.Matrix4 mat = GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
+            TheClient.Rendering.SetColor(Color);
             vbo.Render(false);
+            TheClient.Rendering.SetColor(Color4.White);
             // TODO: Remove this block
             if (TheClient.FBOid == 1)
             {

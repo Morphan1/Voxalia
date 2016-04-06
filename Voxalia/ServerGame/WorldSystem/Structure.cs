@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Voxalia.Shared;
 using Voxalia.Shared.Collision;
+using Voxalia.ServerGame.EntitySystem;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -21,6 +22,15 @@ namespace Voxalia.ServerGame.WorldSystem
         }
 
         Location[] FloodDirs = new Location[] { Location.UnitX, Location.UnitY, -Location.UnitX, -Location.UnitY, Location.UnitZ, -Location.UnitZ };
+
+        public BlockGroupEntity ToBGE(Region tregion, Location pos)
+        {
+            BlockGroupEntity bge = new BlockGroupEntity(pos, BGETraceMode.CONVEX, tregion, Blocks, Size.X, Size.Y, Size.Z, new Location(Origin.X + 1, Origin.Y + 1, Origin.Z + 1));
+            bge.SetMass(0);
+            bge.CGroup = CollisionUtil.NonSolid;
+            bge.Color = System.Drawing.Color.FromArgb(160, 255, 255, 255);
+            return bge;
+        }
 
         // TODO: Optimize tracing!
         public Structure(Region tregion, Location startOfTrace, int maxrad)
@@ -124,31 +134,6 @@ namespace Voxalia.ServerGame.WorldSystem
                         {
                             bi.BlockLocalData = (byte)(bi.BlockLocalData | ((int)BlockFlags.EDITED));
                             tregion.SetBlockMaterial(corner + new Location(x, y, z), (Material)bi.BlockMaterial, bi.BlockData, bi.BlockPaint, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED), bi.Damage);
-                        }
-                    }
-                }
-            }
-        }
-
-        public void PasteCustom(Region tregion, Location corner)
-        {
-            corner.X -= Origin.X;
-            corner.Y -= Origin.Y;
-            corner.Z -= Origin.Z;
-            for (int x = 0; x < Size.X; x++)
-            {
-                for (int y = 0; y < Size.Y; y++)
-                {
-                    for (int z = 0; z < Size.Z; z++)
-                    {
-                        BlockInternal bi = Blocks[BlockIndex(x, y, z)];
-                        if ((Material)bi.BlockMaterial != Material.AIR)
-                        {
-                            bi.BlockLocalData = (byte)(bi.BlockLocalData & ~((int)BlockFlags.EDITED));
-                            Location forpos = new Location(corner.X + x, corner.Y + y, corner.Z + z);
-                            Location chunkpos = tregion.ChunkLocFor(forpos);
-                            Chunk ch = tregion.LoadChunkNoPopulate(chunkpos);
-                            ch.SetBlockAt((int)(forpos.X - chunkpos.X * Chunk.CHUNK_SIZE), (int)(forpos.Y - chunkpos.Y * Chunk.CHUNK_SIZE), (int)(forpos.Z - chunkpos.Z * Chunk.CHUNK_SIZE), bi);
                         }
                     }
                 }

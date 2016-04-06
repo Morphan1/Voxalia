@@ -6,22 +6,24 @@ namespace Voxalia.ServerGame.ItemSystem
     {
         public string Name;
 
-        public abstract void PrepItem(Entity player, ItemStack item);
+        // TODO: Entity -> LivingEntity? Or CharacterEntity?
 
-        public abstract void Click(Entity player, ItemStack item);
+        public abstract void PrepItem(Entity entity, ItemStack item);
 
-        public abstract void AltClick(Entity player, ItemStack item);
+        public abstract void Click(Entity entity, ItemStack item);
 
-        public abstract void ReleaseClick(Entity player, ItemStack item);
+        public abstract void AltClick(Entity entity, ItemStack item);
 
-        public abstract void ReleaseAltClick(Entity player, ItemStack item);
+        public abstract void ReleaseClick(Entity entity, ItemStack item);
 
-        public abstract void Use(Entity player, ItemStack item);
+        public abstract void ReleaseAltClick(Entity entity, ItemStack item);
 
-        public abstract void SwitchFrom(Entity player, ItemStack item);
+        public abstract void Use(Entity entity, ItemStack item);
 
-        public abstract void SwitchTo(Entity player, ItemStack item);
+        public abstract void SwitchFrom(Entity entity, ItemStack item);
 
-        public abstract void Tick(Entity player, ItemStack item);
+        public abstract void SwitchTo(Entity entity, ItemStack item);
+
+        public abstract void Tick(Entity entity, ItemStack item);
     }
 }
