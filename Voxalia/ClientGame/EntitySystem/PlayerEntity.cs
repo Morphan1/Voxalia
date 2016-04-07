@@ -260,7 +260,9 @@ namespace Voxalia.ClientGame.EntitySystem
             KeysPacketData kpd = (Upward ? KeysPacketData.UPWARD : 0)
                   | (Click ? KeysPacketData.CLICK : 0) | (AltClick ? KeysPacketData.ALTCLICK : 0)
                   | (Downward ? KeysPacketData.DOWNWARD : 0)
-                  | (Use ? KeysPacketData.USE : 0);
+                  | (Use ? KeysPacketData.USE : 0)
+                  | (ItemLeft ? KeysPacketData.ITEMLEFT : 0)
+                  | (ItemRight ? KeysPacketData.ITEMRIGHT : 0);
             TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction, lUIS.XMove, lUIS.YMove));
         }
 
@@ -366,6 +368,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool PGPDPadLeft;
         public bool PGPDPadRight;
         public bool PGPUse;
+        public bool PGPILeft;
+        public bool PGPIRight;
 
         public bool Forward;
         public bool Backward;
@@ -373,6 +377,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Rightward;
         public bool Sprint;
         public bool Walk;
+        public bool ItemLeft;
+        public bool ItemRight;
 
         public override void Tick()
         {
@@ -508,6 +514,26 @@ namespace Voxalia.ClientGame.EntitySystem
                 PGPUse = false;
                 Use = false;
             }
+            if (GamePadHandler.ItemLeft)
+            {
+                PGPILeft = true;
+                ItemLeft = true;
+            }
+            else if (PGPILeft)
+            {
+                PGPILeft = false;
+                ItemLeft = false;
+            }
+            if (GamePadHandler.ItemRight)
+            {
+                PGPIRight = true;
+                ItemRight = true;
+            }
+            else if (PGPIRight)
+            {
+                PGPIRight = false;
+                ItemRight = false;
+            }
             while (Direction.Yaw < 0)
             {
                 Direction.Yaw += 360;
@@ -563,8 +589,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 }
             }
             bool hasjp = HasJetpack();
-            JPBoost = hasjp && Click;
-            JPHover = hasjp && AltClick;
+            JPBoost = hasjp && ItemLeft;
+            JPHover = hasjp && ItemRight;
             // TODO: Triggered by console opening/closing directly, rather than monitoring it on the tick?
             if (TheClient.Network.IsAlive)
             {

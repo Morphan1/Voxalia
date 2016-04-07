@@ -50,6 +50,8 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.F35, "+attack");
             BindKey(Key.F34, "+secondary");
             BindKey(Key.F, "+use");
+            BindKey(Key.Q, "+itemleft");
+            BindKey(Key.E, "+itemright");
             BindKey(Key.B, "drop");
             BindKey(Key.G, "throw");
             BindKey(Key.R, "weaponreload");

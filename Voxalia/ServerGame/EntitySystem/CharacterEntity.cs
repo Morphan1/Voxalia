@@ -52,6 +52,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool Use = false;
 
+        public bool ItemLeft = false;
+
+        public bool ItemRight = false;
+
         /// <summary>
         /// The direction the character is currently facing, as Yaw/Pitch.
         /// </summary>

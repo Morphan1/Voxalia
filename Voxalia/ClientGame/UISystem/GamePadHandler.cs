@@ -34,6 +34,10 @@ namespace Voxalia.ClientGame.UISystem
 
         public static bool UseKey;
 
+        public static bool ItemLeft;
+
+        public static bool ItemRight;
+
         public static void Tick(double delta)
         {
             TotalDirectionX = 0;
@@ -43,6 +47,8 @@ namespace Voxalia.ClientGame.UISystem
             JumpKey = false;
             PrimaryKey = false;
             SecondaryKey = false;
+            ItemLeft = false;
+            ItemRight = false;
             DPadUp = false;
             DPadDown = false;
             DPadLeft = false;
@@ -77,6 +83,14 @@ namespace Voxalia.ClientGame.UISystem
                     if (cap.HasXButton && state.Buttons.X == ButtonState.Pressed)
                     {
                         UseKey = true;
+                    }
+                    if (cap.HasYButton && state.Buttons.Y == ButtonState.Pressed)
+                    {
+                        ItemLeft = true;
+                    }
+                    if (cap.HasBButton && state.Buttons.B == ButtonState.Pressed)
+                    {
+                        ItemRight = true;
                     }
                     if (cap.HasLeftShoulderButton && state.Buttons.LeftShoulder == ButtonState.Pressed)
                     {

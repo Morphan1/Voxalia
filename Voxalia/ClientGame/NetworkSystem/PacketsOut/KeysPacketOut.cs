@@ -23,6 +23,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsOut
         CLICK = 2,
         ALTCLICK = 4,
         DOWNWARD = 8,
-        USE = 16
+        USE = 16,
+        ITEMLEFT = 32,
+        ITEMRIGHT = 64
     }
 }

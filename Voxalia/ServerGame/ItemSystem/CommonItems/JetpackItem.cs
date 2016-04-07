@@ -15,29 +15,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Name = "jetpack";
         }
 
-        public override void Click(Entity entity, ItemStack item)
-        {
-            if (!(entity is PlayerEntity))
-            {
-                // TODO: Non-player support.
-                return;
-            }
-            PlayerEntity player = (PlayerEntity)entity;
-            player.JPBoost = true;
-        }
-
-        public override void AltClick(Entity entity, ItemStack item)
-        {
-            if (!(entity is PlayerEntity))
-            {
-                // TODO: Non-player support.
-                return;
-            }
-            PlayerEntity player = (PlayerEntity)entity;
-            player.JPHover = true;
-        }
-
-        public override void ReleaseClick(Entity entity, ItemStack item)
+        public override void Tick(Entity entity, ItemStack item)
         {
             if (!(entity is HumanoidEntity))
             {
@@ -45,20 +23,10 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             HumanoidEntity human = (HumanoidEntity)entity;
-            human.JPBoost = false;
+            human.JPBoost = human.ItemLeft;
+            human.JPHover = human.ItemRight;
         }
-
-        public override void ReleaseAltClick(Entity entity, ItemStack item)
-        {
-            if (!(entity is HumanoidEntity))
-            {
-                // TODO: Non-human support?
-                return;
-            }
-            HumanoidEntity human = (HumanoidEntity)entity;
-            human.JPHover = false;
-        }
-
+        
         public override void SwitchTo(Entity entity, ItemStack item)
         {
             if (!(entity is HumanoidEntity))
