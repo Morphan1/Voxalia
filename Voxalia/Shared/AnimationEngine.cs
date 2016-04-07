@@ -285,7 +285,7 @@ namespace Voxalia.Shared
 
         int findRotate(double time)
         {
-            for (int i = 0; i < Rotations.Count; i++)
+            for (int i = 0; i < Rotations.Count - 1; i++)
             {
                 if (time >= RotTimes[i] && time < RotTimes[i + 1])
                 {

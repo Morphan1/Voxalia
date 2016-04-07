@@ -88,6 +88,11 @@ namespace Voxalia.Shared
             dw.WriteInt(SharedAttributes.Count);
             foreach (KeyValuePair<string, TemplateObject> entry in SharedAttributes)
             {
+                if (entry.Key == null || entry.Value == null)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Null entry in SharedAttributes for " + Name);
+                    continue;
+                }
                 dw.WriteFullString(entry.Key);
                 if (entry.Value is IntegerTag)
                 {
