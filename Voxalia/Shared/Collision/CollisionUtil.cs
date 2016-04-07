@@ -41,7 +41,7 @@ namespace Voxalia.Shared.Collision
         public static CollisionGroup Water = new CollisionGroup();
 
         public static CollisionGroup WorldSolid = new CollisionGroup();
-
+        
         public bool ShouldCollide(BroadPhaseEntry entry)
         {
             if (entry.CollisionRules.Group == NonSolid || entry.CollisionRules.Group == Water)

@@ -120,5 +120,33 @@ namespace Voxalia.ServerGame.WorldSystem
         public CollisionUtil Collision;
 
         public Location GravityNormal = new Location(0, 0, -1);
+
+        public bool HassSolidEntity(Location min, Location max)
+        {
+            // TODO: Better alg!
+            BoundingBox bb = new BoundingBox(min.ToBVector(), max.ToBVector());
+            List<BroadPhaseEntry> entries = new List<BroadPhaseEntry>();
+            PhysicsWorld.BroadPhase.QueryAccelerator.GetEntries(bb, entries);
+            if (entries.Count == 0)
+            {
+                return false;
+            }
+            Location center = (max + min) * 0.5;
+            Location rel = max - min;
+            BoxShape box = new BoxShape((float)rel.X, (float)rel.Y, (float)rel.Z);
+            RigidTransform start = new RigidTransform(center.ToBVector(), Quaternion.Identity);
+            Vector3 sweep = new Vector3(0, 0, 0.01f);
+            RayHit rh;
+            foreach (BroadPhaseEntry entry in entries)
+            {
+                if (entry is EntityCollidable && Collision.ShouldCollide(entry) &&
+                    entry.CollisionRules.Group != CollisionUtil.Player &&
+                    entry.ConvexCast(box, ref start, ref sweep, out rh))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

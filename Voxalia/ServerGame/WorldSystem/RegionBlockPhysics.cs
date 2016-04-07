@@ -104,7 +104,12 @@ namespace Voxalia.ServerGame.WorldSystem
                     Location lzm = block + new Location(0, 0, -1);
                     BlockInternal zm = GetBlockInternal(lzm);
                     Material mzm = (Material)zm.BlockMaterial;
-                    if (mzm == Material.AIR)
+                    bool ezm = HassSolidEntity(lzm + new Location(0.1, 0.1, 0.1), lzm + new Location(0.9, 0.9, 0.9));
+                    bool exp = HassSolidEntity(lxp + new Location(0.1, 0.1, 0.1), lxp + new Location(0.9, 0.9, 0.9));
+                    bool exm = HassSolidEntity(lxm + new Location(0.1, 0.1, 0.1), lxm + new Location(0.9, 0.9, 0.9));
+                    bool eyp = HassSolidEntity(lyp + new Location(0.1, 0.1, 0.1), lyp + new Location(0.9, 0.9, 0.9));
+                    bool eym = HassSolidEntity(lym + new Location(0.1, 0.1, 0.1), lym + new Location(0.9, 0.9, 0.9));
+                    if (mzm == Material.AIR && !ezm)
                     {
                         PhysicsSetBlock(lzm, cmat);
                         PhysicsSetBlock(block, Material.AIR);
@@ -113,7 +118,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         CombineWater(remainingperc, cmat, remPercFor(zm.BlockData), block, lzm, c.BlockPaint);
                     }
-                    else if (mxp == Material.AIR && myp == Material.AIR && mxm == Material.AIR && mym == Material.AIR)
+                    else if (mxp == Material.AIR && !exp && myp == Material.AIR && !eyp && mxm == Material.AIR && !exm && mym == Material.AIR && !eym)
                     {
                         if (remainingperc == 100)
                         {
@@ -151,59 +156,59 @@ namespace Voxalia.ServerGame.WorldSystem
                         }
                         // 13 doesn't move!
                     }
-                    else if (mxp == Material.AIR && myp == Material.AIR && mxm == Material.AIR)
+                    else if (mxp == Material.AIR && !exp && myp == Material.AIR && !eyp && mxm == Material.AIR && !exm)
                     {
                         LiquidSpread3(block, cmat, lxp, lyp, lxm, remainingperc, c.BlockPaint);
                     }
-                    else if (mxp == Material.AIR && myp == Material.AIR && mym == Material.AIR)
+                    else if (mxp == Material.AIR && !exp && myp == Material.AIR && !eyp && mym == Material.AIR && !eym)
                     {
                         LiquidSpread3(block, cmat, lxp, lyp, lym, remainingperc, c.BlockPaint);
                     }
-                    else if (mxp == Material.AIR && mym == Material.AIR && mxm == Material.AIR)
+                    else if (mxp == Material.AIR && !exp && mym == Material.AIR && !eym && mxm == Material.AIR && !exm)
                     {
                         LiquidSpread3(block, cmat, lxp, lym, lxm, remainingperc, c.BlockPaint);
                     }
-                    else if (mym == Material.AIR && myp == Material.AIR && mxm == Material.AIR)
+                    else if (mym == Material.AIR && !eym && myp == Material.AIR && !eyp && mxm == Material.AIR && !exm)
                     {
                         LiquidSpread3(block, cmat, lym, lyp, lxm, remainingperc, c.BlockPaint);
                     }
-                    else if (mym == Material.AIR && myp == Material.AIR)
+                    else if (mym == Material.AIR && !eym && myp == Material.AIR && !eyp)
                     {
                         LiquidSpread2(block, cmat, lym, lyp, remainingperc, c.BlockPaint);
                     }
-                    else if (mym == Material.AIR && mxp == Material.AIR)
+                    else if (mym == Material.AIR && !eym && mxp == Material.AIR && !exp)
                     {
                         LiquidSpread2(block, cmat, lym, lxp, remainingperc, c.BlockPaint);
                     }
-                    else if (mym == Material.AIR && mxm == Material.AIR)
+                    else if (mym == Material.AIR && !eyp && mxm == Material.AIR && !exm)
                     {
                         LiquidSpread2(block, cmat, lym, lxm, remainingperc, c.BlockPaint);
                     }
-                    else if (myp == Material.AIR && mxm == Material.AIR)
+                    else if (myp == Material.AIR && !eyp && mxm == Material.AIR && !exm)
                     {
                         LiquidSpread2(block, cmat, lyp, lxm, remainingperc, c.BlockPaint);
                     }
-                    else if (myp == Material.AIR && mxp == Material.AIR)
+                    else if (myp == Material.AIR && !eyp && mxp == Material.AIR && !exp)
                     {
                         LiquidSpread2(block, cmat, lyp, lxp, remainingperc, c.BlockPaint);
                     }
-                    else if (mxp == Material.AIR && mxm == Material.AIR)
+                    else if (mxp == Material.AIR && !exp && mxm == Material.AIR && !exm)
                     {
                         LiquidSpread2(block, cmat, lxp, lxm, remainingperc, c.BlockPaint);
                     }
-                    else if (mxp == Material.AIR)
+                    else if (mxp == Material.AIR && !exp)
                     {
                         LiquidSpread1(block, cmat, lxp, remainingperc, c.BlockPaint);
                     }
-                    else if (mxm == Material.AIR)
+                    else if (mxm == Material.AIR && !exm)
                     {
                         LiquidSpread1(block, cmat, lxm, remainingperc, c.BlockPaint);
                     }
-                    else if (myp == Material.AIR)
+                    else if (myp == Material.AIR && !eyp)
                     {
                         LiquidSpread1(block, cmat, lyp, remainingperc, c.BlockPaint);
                     }
-                    else if (mym == Material.AIR)
+                    else if (mym == Material.AIR && !eym)
                     {
                         LiquidSpread1(block, cmat, lym, remainingperc, c.BlockPaint);
                     }
