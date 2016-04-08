@@ -117,6 +117,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool WasAltClicking = false;
 
+        public bool WasItemLefting = false;
+
+        public bool WasItemRighting = false;
+
         public Location BlockBreakTarget;
 
         public double BlockBreakStarted = 0;

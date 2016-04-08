@@ -52,6 +52,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         /// <summary>
         /// The position, rotation, etc. of this entity.
+        /// TODO: Position + rotation as variables, rather than a matrix.
         /// </summary>
         internal Matrix WorldTransform = Matrix.Identity;
 
@@ -142,8 +143,8 @@ namespace Voxalia.ClientGame.EntitySystem
         /// </summary>
         public virtual void DestroyBody()
         {
-            LVel = new Location(Body.LinearVelocity.X, Body.LinearVelocity.Y, Body.LinearVelocity.Z);
-            AVel = new Location(Body.AngularVelocity.X, Body.AngularVelocity.Y, Body.AngularVelocity.Z);
+            LVel = new Location(Body.LinearVelocity);
+            AVel = new Location(Body.AngularVelocity);
             Friction = GetFriction();
             // TODO: Gravity = new Location(Body.Gravity.X, Body.Gravity.Y, Body.Gravity.Z);
             WorldTransform = Body.WorldTransform;
@@ -254,10 +255,9 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             if (Body == null)
             {
-                return new Location(WorldTransform.Translation.X, WorldTransform.Translation.Y, WorldTransform.Translation.Z);
+                return new Location(WorldTransform.Translation);
             }
-            Vector3 pos = Body.Position;
-            return new Location(pos.X, pos.Y, pos.Z);
+            return new Location(Body.Position);
         }
 
         /// <summary>
@@ -283,8 +283,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             if (Body != null)
             {
-                Vector3 vel = Body.LinearVelocity;
-                return new Location(vel.X, vel.Y, vel.Z);
+                return new Location(Body.LinearVelocity);
             }
             else
             {
@@ -312,8 +311,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             if (Body != null)
             {
-                Vector3 vel = Body.AngularVelocity;
-                return new Location(vel.X, vel.Y, vel.Z);
+                return new Location(Body.AngularVelocity);
             }
             else
             {

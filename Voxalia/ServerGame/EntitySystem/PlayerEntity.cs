@@ -412,6 +412,8 @@ namespace Voxalia.ServerGame.EntitySystem
                 WasAltClicking = false;
             }
             cit.Info.Tick(this, cit);
+            WasItemLefting = ItemLeft;
+            WasItemRighting = ItemRight;
             Location pos = GetPosition();
             Location cpos = TheRegion.ChunkLocFor(pos);
             if (cpos != pChunkLoc)

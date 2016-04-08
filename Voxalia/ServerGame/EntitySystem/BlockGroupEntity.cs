@@ -28,6 +28,12 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Location shapeOffs;
 
+        public Location Origin;
+
+        public Location rotOffs = Location.Zero;
+
+        public int Angle = 0;
+
         public System.Drawing.Color Color = System.Drawing.Color.White;
 
         public override long GetRAMUsage()
@@ -35,7 +41,7 @@ namespace Voxalia.ServerGame.EntitySystem
             return base.GetRAMUsage() + Blocks.Length * 10;
         }
 
-        public BlockGroupEntity(Location baseloc, BGETraceMode mode, Region tregion, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth, Location origin = default(Location)) : base(tregion)
+        public BlockGroupEntity(Location baseloc, BGETraceMode mode, Region tregion, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth, Location torigin = default(Location)) : base(tregion)
         {
             SetMass(blocks.Length);
             XWidth = xwidth;
@@ -44,8 +50,8 @@ namespace Voxalia.ServerGame.EntitySystem
             Blocks = blocks;
             TraceMode = mode;
             ConvexEntityShape = (ConvexShape)CalculateHullShape(BGETraceMode.CONVEX, out shapeOffs);
-            shapeOffs -= origin;
-            shapeOffs = shapeOffs.GetBlockLocation();
+            shapeOffs = -shapeOffs;
+            Origin = torigin;
             if (TraceMode == BGETraceMode.PERFECT)
             {
                 Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks); // TODO: Anything offset related needed here?

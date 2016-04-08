@@ -25,7 +25,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public BlockGroupEntity ToBGE(Region tregion, Location pos)
         {
-            BlockGroupEntity bge = new BlockGroupEntity(pos, BGETraceMode.CONVEX, tregion, Blocks, Size.X, Size.Y, Size.Z, new Location(Origin.X + 1, Origin.Y + 1, Origin.Z + 1));
+            BlockGroupEntity bge = new BlockGroupEntity(pos, BGETraceMode.CONVEX, tregion, Blocks, Size.X, Size.Y, Size.Z, new Location(Origin.X, Origin.Y, Origin.Z));
             bge.SetMass(0);
             bge.CGroup = CollisionUtil.NonSolid;
             bge.Color = System.Drawing.Color.FromArgb(160, 255, 255, 255);
@@ -118,7 +118,7 @@ namespace Voxalia.ServerGame.WorldSystem
             return dat;
         }
 
-        public void Paste(Region tregion, Location corner)
+        public void Paste(Region tregion, Location corner, int angle)
         {
             corner.X -= Origin.X;
             corner.Y -= Origin.Y;
@@ -132,8 +132,25 @@ namespace Voxalia.ServerGame.WorldSystem
                         BlockInternal bi = Blocks[BlockIndex(x, y, z)];
                         if ((Material)bi.BlockMaterial != Material.AIR)
                         {
+                            int tx = x;
+                            int ty = y;
+                            if (angle == 90)
+                            {
+                                tx = -(y + 1);
+                                ty = x;
+                            }
+                            else if (angle == 180)
+                            {
+                                tx = -(x + 1);
+                                ty = -(y + 1);
+                            }
+                            else if (angle == 270)
+                            {
+                                tx = y;
+                                ty = -(x + 1);
+                            }
                             bi.BlockLocalData = (byte)(bi.BlockLocalData | ((int)BlockFlags.EDITED));
-                            tregion.SetBlockMaterial(corner + new Location(x, y, z), (Material)bi.BlockMaterial, bi.BlockData, bi.BlockPaint, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED), bi.Damage);
+                            tregion.SetBlockMaterial(corner + new Location(tx, ty, z), (Material)bi.BlockMaterial, bi.BlockData, bi.BlockPaint, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED), bi.Damage);
                         }
                     }
                 }

@@ -195,7 +195,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 TheClient.s_shadowvox.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
             }
-            OpenTK.Matrix4 mat = GetTransformationMatrix();
+            OpenTK.Matrix4 mat = GetTransformationMatrix() * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(-shapeOffs));
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetColor(Color);
             vbo.Render(false);

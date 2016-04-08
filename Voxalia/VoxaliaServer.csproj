@@ -236,7 +236,6 @@
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\DropPlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\CommonCommands\StancePlayerCommand.cs" />
     <Compile Include="ServerGame\PlayerCommandSystem\RegionCommands\BlockshipPlayerCommand.cs" />
-    <Compile Include="ServerGame\PlayerCommandSystem\RegionCommands\StructurePlayerCommand.cs" />
     <Compile Include="ServerGame\PluginSystem\Plugin.cs" />
     <Compile Include="ServerGame\PluginSystem\PluginLoader.cs" />
     <Compile Include="ServerGame\PluginSystem\PluginManager.cs" />
