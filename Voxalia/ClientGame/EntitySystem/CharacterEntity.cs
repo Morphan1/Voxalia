@@ -226,15 +226,46 @@ namespace Voxalia.ClientGame.EntitySystem
             return TheRegion.Collision.ShouldCollide(entry);
         }
 
+        public Dictionary<string, Matrix> SavedAdjustments = new Dictionary<string, Matrix>();
+
+        public Dictionary<string, OpenTK.Matrix4> SavedAdjustmentsOTK = new Dictionary<string, OpenTK.Matrix4>();
+
+        public void SetAdjustment(string str, Matrix matr)
+        {
+            SavedAdjustments[str] = matr;
+            OpenTK.Matrix4 mat = ClientUtilities.Convert(matr);
+            SavedAdjustmentsOTK[str] = mat;
+        }
+
+        public Matrix GetAdjustment(string str)
+        {
+            Matrix mat;
+            if (SavedAdjustments.TryGetValue(str, out mat))
+            {
+                return mat;
+            }
+            return Matrix.Identity;
+        }
+
+        public OpenTK.Matrix4 GetAdjustmentOTK(string str)
+        {
+            OpenTK.Matrix4 mat;
+            if (SavedAdjustmentsOTK.TryGetValue(str, out mat))
+            {
+                return mat;
+            }
+            return OpenTK.Matrix4.Identity;
+        }
+
         public Location GetEyePosition()
         {
             Location start = GetPosition() + new Location(0, 0, CBHHeight * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8 : 1.5));
             if (tAnim != null)
             {
                 SingleAnimationNode head = tAnim.GetNode("special06.r");
-                Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
+                Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>(SavedAdjustments);
                 Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 1.75f * Utilities.PI180)));
-                adjs["spine04"] = rotforw;
+                adjs["spine04"] = GetAdjustment("spine04") * rotforw;
                 Matrix m4 = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
                     * head.GetBoneTotalMatrix(0, adjs) * (rotforw * Matrix.CreateTranslation(new Vector3(0, 0, 0.2f)));
                 m4.Transpose();

@@ -6,6 +6,7 @@ using BEPUphysics.CollisionRuleManagement;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ClientGame.WorldSystem;
+using Voxalia.ClientGame.OtherSystems;
 using Voxalia.Shared.Collision;
 using BEPUphysics;
 
@@ -338,9 +339,7 @@ namespace Voxalia.ClientGame.EntitySystem
         /// <returns>.</returns>
         public OpenTK.Matrix4 GetTransformationMatrix()
         {
-            Matrix mat = Body.WorldTransform;
-            return new OpenTK.Matrix4(mat.M11, mat.M12, mat.M13, mat.M14, mat.M21, mat.M22, mat.M23,
-                mat.M24, mat.M31, mat.M32, mat.M33, mat.M34, mat.M41, mat.M42, mat.M43, mat.M44);
+            return ClientUtilities.Convert(Body.WorldTransform);
         }
 
         public OpenTK.Matrix4 GetOrientationMatrix()
@@ -349,10 +348,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return OpenTK.Matrix4.Identity;
             }
-            Matrix3x3 omat = Body.OrientationMatrix;
-            Matrix mat = Matrix3x3.ToMatrix4X4(omat);
-            return new OpenTK.Matrix4(mat.M11, mat.M12, mat.M13, mat.M14, mat.M21, mat.M22,
-                mat.M23, mat.M24, mat.M31, mat.M32, mat.M33, mat.M34, mat.M41, mat.M42, mat.M43, mat.M44);
+            return ClientUtilities.Convert(Matrix3x3.ToMatrix4X4(Body.OrientationMatrix));
         }
 
         /// <summary>

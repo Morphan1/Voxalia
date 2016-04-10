@@ -674,15 +674,16 @@ namespace Voxalia.ClientGame.EntitySystem
                 * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
+            model.CustomAnimationAdjustments = new Dictionary<string, OpenTK.Matrix4>(SavedAdjustmentsOTK);
             // TODO: safe (no-collision) rotation check?
-            model.CustomAnimationAdjustments["spine04"] = OpenTK.Matrix4.CreateRotationX(-(float)(Direction.Pitch / 2f * Utilities.PI180));
+            model.CustomAnimationAdjustments["spine04"] = GetAdjustmentOTK("spine04") * OpenTK.Matrix4.CreateRotationX(-(float)(Direction.Pitch / 2f * Utilities.PI180));
             if (!TheClient.RenderingShadows && TheClient.CVars.g_firstperson.ValueB)
             {
-                model.CustomAnimationAdjustments["neck01"] = OpenTK.Matrix4.CreateRotationX(-(float)(160f * Utilities.PI180));
+                model.CustomAnimationAdjustments["neck01"] = GetAdjustmentOTK("neck01") * OpenTK.Matrix4.CreateRotationX(-(float)(160f * Utilities.PI180));
             }
             else
             {
-                model.CustomAnimationAdjustments["neck01"] = OpenTK.Matrix4.Identity;
+                model.CustomAnimationAdjustments["neck01"] = GetAdjustmentOTK("neck01") * OpenTK.Matrix4.Identity;
             }
             model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
             Model mod = TheClient.GetItemForSlot(TheClient.QuickBarPos).Mod;
@@ -691,9 +692,9 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
                 GL.UniformMatrix4(2, false, ref mat);
-                Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
+                Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>(SavedAdjustments);
                 Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, ((float)(Direction.Pitch / 2f * Utilities.PI180) % 360f)));
-                adjs["spine04"] = rotforw;
+                adjs["spine04"] = GetAdjustment("spine04") * rotforw;
                 SingleAnimationNode hand = tAnim.GetNode("metacarpal2.r");
                 Matrix m4 = Matrix.CreateScale(1.5f, 1.5f, 1.5f)
                     * (Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 90) * Utilities.PI180) % 360f))
@@ -715,7 +716,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 GL.UniformMatrix4(2, false, ref mat);
                 Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
                 Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, ((float)(Direction.Pitch / 2f * Utilities.PI180) % 360f)));
-                adjs["spine04"] = rotforw;
+                adjs["spine04"] = GetAdjustment("spine04") * rotforw;
                 SingleAnimationNode spine = tAnim.GetNode("spine04");
                 Matrix m4 = Matrix.CreateScale(1.5f, 1.5f, 1.5f)
                     * (Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 90) * Utilities.PI180) % 360f))

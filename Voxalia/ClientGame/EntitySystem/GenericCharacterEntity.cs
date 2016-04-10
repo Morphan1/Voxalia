@@ -38,6 +38,7 @@ namespace Voxalia.ClientGame.EntitySystem
             // TODO: Prevent model flipping (Possibly related to animation?)
             Matrix4 mat = PreRot * Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180)) * Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
             GL.UniformMatrix4(2, false, ref mat);
+            model.CustomAnimationAdjustments = new Dictionary<string, Matrix4>(SavedAdjustmentsOTK);
             model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
             TheClient.Rendering.SetColor(Color4.White);
             // TODO: Render held item!
