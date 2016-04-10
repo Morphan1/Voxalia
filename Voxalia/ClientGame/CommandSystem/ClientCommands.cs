@@ -46,8 +46,10 @@ namespace Voxalia.ClientGame.CommandSystem
             CommandSystem.RegisterCommand(new BindblockCommand(TheClient));
             CommandSystem.RegisterCommand(new BindCommand(TheClient));
             CommandSystem.RegisterCommand(new ForwardCommand(TheClient));
+            CommandSystem.RegisterCommand(new ItemdownCommand(TheClient));
             CommandSystem.RegisterCommand(new ItemleftCommand(TheClient));
             CommandSystem.RegisterCommand(new ItemrightCommand(TheClient));
+            CommandSystem.RegisterCommand(new ItemupCommand(TheClient));
             CommandSystem.RegisterCommand(new LeftwardCommand(TheClient));
             CommandSystem.RegisterCommand(new MovedownCommand(TheClient));
             CommandSystem.RegisterCommand(new RightwardCommand(TheClient));

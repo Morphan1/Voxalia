@@ -262,7 +262,9 @@ namespace Voxalia.ClientGame.EntitySystem
                   | (Downward ? KeysPacketData.DOWNWARD : 0)
                   | (Use ? KeysPacketData.USE : 0)
                   | (ItemLeft ? KeysPacketData.ITEMLEFT : 0)
-                  | (ItemRight ? KeysPacketData.ITEMRIGHT : 0);
+                  | (ItemRight ? KeysPacketData.ITEMRIGHT : 0)
+                  | (ItemUp ? KeysPacketData.ITEMUP : 0)
+                  | (ItemDown ? KeysPacketData.ITEMDOWN : 0);
             TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction, lUIS.XMove, lUIS.YMove));
         }
 
@@ -370,6 +372,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool PGPUse;
         public bool PGPILeft;
         public bool PGPIRight;
+        public bool PGPIUp;
+        public bool PGPIDown;
 
         public bool Forward;
         public bool Backward;
@@ -379,6 +383,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool Walk;
         public bool ItemLeft;
         public bool ItemRight;
+        public bool ItemUp;
+        public bool ItemDown;
 
         public override void Tick()
         {
@@ -533,6 +539,26 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 PGPIRight = false;
                 ItemRight = false;
+            }
+            if (GamePadHandler.ItemUp)
+            {
+                PGPIUp = true;
+                ItemUp = true;
+            }
+            else if (PGPIUp)
+            {
+                PGPIUp = false;
+                ItemUp = false;
+            }
+            if (GamePadHandler.ItemDown)
+            {
+                PGPIDown = true;
+                ItemDown = true;
+            }
+            else if (PGPIDown)
+            {
+                PGPIDown = false;
+                ItemDown = false;
             }
             while (Direction.Yaw < 0)
             {

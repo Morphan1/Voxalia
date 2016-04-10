@@ -739,6 +739,8 @@ namespace Voxalia.ServerGame.EntitySystem
         }
 
         public BlockGroupEntity Pasting = null;
+
+        public float PastingDist = 5;
     }
 
     public class ChunkAwarenessInfo

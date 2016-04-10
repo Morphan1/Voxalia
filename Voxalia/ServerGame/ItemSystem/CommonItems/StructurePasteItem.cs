@@ -32,6 +32,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 player.Pasting.RemoveMe();
                 player.Pasting = null;
             }
+            player.PastingDist = 5;
         }
 
         public override void SwitchTo(Entity entity, ItemStack item)
@@ -47,6 +48,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 player.Pasting.RemoveMe();
                 player.Pasting = null;
             }
+            player.PastingDist = 5;
             if (!Program.Files.Exists("structures/" + item.SecondaryName + ".str")) // TODO: structure helper engine
             {
                 throw new Exception("File does not exist!"); // TODO: Handle better.
@@ -95,6 +97,16 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             PlayerEntity player = (PlayerEntity)entity;
+            if (player.ItemUp)
+            {
+                player.PastingDist += (float)(player.TheRegion.Delta * 3.0);
+                player.PastingDist = Math.Min(player.PastingDist, 20);
+            }
+            if (player.ItemDown)
+            {
+                player.PastingDist -= (float)(player.TheRegion.Delta * 3.0);
+                player.PastingDist = Math.Max(player.PastingDist, 0.1f);
+            }
             if (player.Pasting != null)
             {
                 if (player.ItemLeft && !player.WasItemLefting)
@@ -107,9 +119,9 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 }
                 Location eye = player.GetEyePosition();
                 Location forw = player.ForwardVector();
-                player.Pasting.SetPosition((eye + forw * 5 + player.Pasting.rotOffs - player.Pasting.Origin).GetBlockLocation());
+                player.Pasting.SetPosition((eye + forw * player.PastingDist + player.Pasting.rotOffs - player.Pasting.Origin).GetBlockLocation());
                 RayCastResult rcr;
-                bool h = player.TheRegion.SpecialCaseRayTrace(eye, forw, 5, MaterialSolidity.ANY, player.IgnoreThis, out rcr);
+                bool h = player.TheRegion.SpecialCaseRayTrace(eye, forw, player.PastingDist, MaterialSolidity.ANY, player.IgnoreThis, out rcr);
                 if (h)
                 {
                     if (rcr.HitObject != null && rcr.HitObject is EntityCollidable && ((EntityCollidable)rcr.HitObject).Entity != null)
@@ -137,42 +149,48 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             PlayerEntity player = (PlayerEntity)entity;
-            // TODO: Generic 'player.gettargetblock'?
+            if (player.TheRegion.GlobalTickTime - player.LastBlockBreak < 0.2)
+            {
+                return;
+            }
+           // TODO: Generic 'player.gettargetblock'?
             Location eye = player.GetEyePosition();
             Location forw = player.ForwardVector();
             RayCastResult rcr;
-            bool h = player.TheRegion.SpecialCaseRayTrace(eye, forw, 5, MaterialSolidity.ANY, player.IgnoreThis, out rcr);
+            bool h = player.TheRegion.SpecialCaseRayTrace(eye, forw, player.PastingDist, MaterialSolidity.ANY, player.IgnoreThis, out rcr);
+            Location pasteloc = (eye + forw * player.PastingDist + player.Pasting.rotOffs).GetBlockLocation();
             if (h)
             {
                 if (rcr.HitObject != null && rcr.HitObject is EntityCollidable && ((EntityCollidable)rcr.HitObject).Entity != null)
                 {
                     // TODO: ???
                 }
-                else if (player.TheRegion.GlobalTickTime - player.LastBlockBreak >= 0.2)
+                else
                 {
-                    Location block = new Location(rcr.HitData.Location) - new Location(rcr.HitData.Normal).Normalize() * 0.01;
+                    Location block = (new Location(rcr.HitData.Location) - new Location(rcr.HitData.Normal).Normalize() * 0.01).GetBlockLocation();
                     Material mat = player.TheRegion.GetBlockMaterial(block);
                     if (mat != Material.AIR)
                     {
-                        try
-                        {
-                            if (!Program.Files.Exists("structures/" + item.SecondaryName + ".str")) // TODO: structure helper engine
-                            {
-                                throw new Exception("File does not exist!"); // TODO: Handle better.
-                            }
-                            Structure structure = new Structure(Program.Files.ReadBytes("structures/" + item.SecondaryName + ".str"));
-                            int ang = (player.Pasting != null ? player.Pasting.Angle : 0);
-                            structure.Paste(player.TheRegion, block + (player.Pasting != null ? player.Pasting.rotOffs : Location.Zero), ang);
-                            player.Network.SendMessage("^2Pasted structure at " + block + ", with offset of " + structure.Origin.X + "," + structure.Origin.Y + "," + structure.Origin.Z + " at angle " + ang);
-                            // TODO: Pasting sound of some form!
-                            player.LastBlockBreak = player.TheRegion.GlobalTickTime;
-                        }
-                        catch (Exception ex)
-                        {
-                            player.Network.SendMessage("^1Failed to paste structure: " + ex.Message);
-                        }
+                        pasteloc = block + (player.Pasting != null ? player.Pasting.rotOffs : Location.Zero);
                     }
                 }
+            }
+            try
+            {
+                if (!Program.Files.Exists("structures/" + item.SecondaryName + ".str")) // TODO: structure helper engine
+                {
+                    throw new Exception("File does not exist!"); // TODO: Handle better.
+                }
+                Structure structure = new Structure(Program.Files.ReadBytes("structures/" + item.SecondaryName + ".str"));
+                int ang = (player.Pasting != null ? player.Pasting.Angle : 0);
+                structure.Paste(player.TheRegion, pasteloc, ang);
+                player.Network.SendMessage("^2Pasted structure at " + pasteloc + ", with offset of " + structure.Origin.X + "," + structure.Origin.Y + "," + structure.Origin.Z + " at angle " + ang);
+                // TODO: Pasting sound of some form! And particles!
+                player.LastBlockBreak = player.TheRegion.GlobalTickTime;
+            }
+            catch (Exception ex)
+            {
+                player.Network.SendMessage("^1Failed to paste structure: " + ex.Message);
             }
         }
     }

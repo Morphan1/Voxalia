@@ -26,9 +26,7 @@ namespace Voxalia.ClientGame.UISystem
         public static bool PrimaryKey;
 
         public static bool SecondaryKey;
-
-        public static bool DPadUp;
-        public static bool DPadDown;
+        
         public static bool DPadLeft;
         public static bool DPadRight;
 
@@ -37,6 +35,10 @@ namespace Voxalia.ClientGame.UISystem
         public static bool ItemLeft;
 
         public static bool ItemRight;
+
+        public static bool ItemUp;
+
+        public static bool ItemDown;
 
         public static void Tick(double delta)
         {
@@ -49,8 +51,8 @@ namespace Voxalia.ClientGame.UISystem
             SecondaryKey = false;
             ItemLeft = false;
             ItemRight = false;
-            DPadUp = false;
-            DPadDown = false;
+            ItemUp = false;
+            ItemDown = false;
             DPadLeft = false;
             DPadRight = false;
             UseKey = false;
@@ -102,11 +104,11 @@ namespace Voxalia.ClientGame.UISystem
                     }
                     if (cap.HasDPadUpButton && state.DPad.Up == ButtonState.Pressed)
                     {
-                        DPadUp = true;
+                        ItemUp = true;
                     }
                     if (cap.HasDPadDownButton && state.DPad.Down == ButtonState.Pressed)
                     {
-                        DPadDown = true;
+                        ItemDown = true;
                     }
                     if (cap.HasDPadLeftButton && state.DPad.Left == ButtonState.Pressed)
                     {

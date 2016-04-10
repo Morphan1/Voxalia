@@ -128,6 +128,8 @@
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\NetusageCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\TagBases\PlayerTags.cs" />
     <Compile Include="ClientGame\CommandSystem\TagObjects\EntityTagObjects\PlayerTag.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\ItemdownCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\ItemupCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\ItemrightCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\ItemleftCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\UseCommand.cs" />

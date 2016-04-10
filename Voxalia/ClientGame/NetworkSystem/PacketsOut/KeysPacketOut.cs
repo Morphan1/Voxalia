@@ -17,7 +17,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsOut
         }
     }
 
-    public enum KeysPacketData: ushort
+    public enum KeysPacketData: ushort // TODO: Network enum?
     {
         UPWARD = 1,
         CLICK = 2,
@@ -25,6 +25,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsOut
         DOWNWARD = 8,
         USE = 16,
         ITEMLEFT = 32,
-        ITEMRIGHT = 64
+        ITEMRIGHT = 64,
+        ITEMUP = 128,
+        ITEMDOWN = 256
     }
 }

@@ -22,6 +22,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             bool use = val.HasFlag(KeysPacketData.USE);
             bool ileft = val.HasFlag(KeysPacketData.ITEMLEFT);
             bool iright = val.HasFlag(KeysPacketData.ITEMRIGHT);
+            bool iup = val.HasFlag(KeysPacketData.ITEMUP);
+            bool idown = val.HasFlag(KeysPacketData.ITEMDOWN);
             float yaw = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2, 4));
             float pitch = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4, 4));
             float x = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4 + 4, 4));
@@ -44,6 +46,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             Player.Use = use;
             Player.ItemLeft = ileft;
             Player.ItemRight = iright;
+            Player.ItemUp = iup;
+            Player.ItemDown = idown;
             Player.LastKPI = Player.TheRegion.GlobalTickTime;
             Player.Direction.Yaw = yaw;
             Player.Direction.Pitch = pitch;
@@ -63,6 +67,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
         DOWNWARD = 8,
         USE = 16,
         ITEMLEFT = 32,
-        ITEMRIGHT = 64
+        ITEMRIGHT = 64,
+        ITEMUP = 128,
+        ITEMDOWN = 256
     }
 }
