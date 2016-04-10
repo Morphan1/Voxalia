@@ -130,6 +130,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            Sounds.StopAll();
             if (LocalServer != null)
             {
                 LocalServer.ShutDown();
