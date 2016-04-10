@@ -28,22 +28,26 @@ namespace ModelToVMDConverter
                 return;
             }
             AssimpContext ac = new AssimpContext();
-            PT = args.Length > 1 && args[1].ToLower() == "pretrans";
+            PT = args.Length > 1 && args[1].ToLower().Contains("pretrans");
+            TEXTURE = args.Length > 1 && args[1].ToLower().Contains("texture");
             Console.WriteLine("Pre-transform = " + PT);
+            Console.WriteLine("Texture = " + TEXTURE);
             Scene fdata = ac.ImportFile(fname, PostProcessSteps.Triangulate | PostProcessSteps.FlipWindingOrder);
             if (File.Exists(fname + ".vmd"))
             {
                 File.Delete(fname + ".vmd");
             }
             FileStream fs = File.OpenWrite(fname + ".vmd");
-            ExportModelData(fdata, fs);
+            File.WriteAllText(fname + ".skin", ExportModelData(fdata, fs));
             fs.Flush();
             fs.Close();
         }
 
         static bool PT = false;
 
-        static void ExportModelData(Scene scene, Stream baseoutstream)
+        static bool TEXTURE = false;
+
+        static string ExportModelData(Scene scene, Stream baseoutstream)
         {
             baseoutstream.WriteByte((byte)'V');
             baseoutstream.WriteByte((byte)'M');
@@ -56,11 +60,42 @@ namespace ModelToVMDConverter
             WriteMatrix4x4(scene.RootNode.Transform, outstream);
             outstream.WriteInt(scene.MeshCount);
             Console.WriteLine("Writing " + scene.MeshCount + " meshes...");
+            StringBuilder sb = new StringBuilder();
             for (int m = 0; m < scene.MeshCount; m++)
             {
                 Mesh mesh = scene.Meshes[m];
-                Matrix4x4 mat = PT ? GetNode(scene.RootNode, mesh.Name.ToLower()).Transform * scene.RootNode.Transform : Matrix4x4.Identity;
                 Console.WriteLine("Writing mesh: " + mesh.Name);
+                string nname = mesh.Name.ToLower().Replace('#', '_').Replace('.', '_');
+                if (PT && GetNode(scene.RootNode, nname) == null)
+                {
+                    Console.WriteLine("NO NODE FOR: " + nname);
+                    continue;
+                }
+                Matrix4x4 mat = PT ? GetNode(scene.RootNode, nname).Transform * scene.RootNode.Transform : Matrix4x4.Identity;
+                if (TEXTURE)
+                {
+                    Material mater = scene.Materials[mesh.MaterialIndex];
+                    if (mater.HasTextureDiffuse)
+                    {
+                        sb.Append(mesh.Name + "=" + mater.TextureDiffuse.FilePath + "\n");
+                    }
+                    if (mater.HasTextureSpecular)
+                    {
+                        sb.Append(mesh.Name + ":::specular=" + scene.Materials[mesh.MaterialIndex].TextureSpecular.FilePath + "\n");
+                    }
+                    if (mater.HasTextureReflection)
+                    {
+                        sb.Append(mesh.Name + ":::reflectivity=" + scene.Materials[mesh.MaterialIndex].TextureReflection.FilePath + "\n");
+                    }
+                    if (mater.HasTextureNormal)
+                    {
+                        sb.Append(mesh.Name + ":::normal=" + scene.Materials[mesh.MaterialIndex].TextureNormal.FilePath + "\n");
+                    }
+                }
+                else
+                {
+                    sb.Append(mesh.Name + "=UNKNOWN\n");
+                }
                 byte[] dat = UTF8.GetBytes(mesh.Name);
                 outstream.WriteInt(dat.Length);
                 outstream.BaseStream.Write(dat, 0, dat.Length);
@@ -112,6 +147,7 @@ namespace ModelToVMDConverter
             byte[] msd = ms.ToArray();
             msd = GZip(msd);
             baseoutstream.Write(msd, 0, msd.Length);
+            return sb.ToString();
         }
 
         static Node GetNode(Node root, string namelow)
