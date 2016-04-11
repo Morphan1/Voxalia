@@ -33,7 +33,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         List<Vector3> Norms = new List<Vector3>(100);
         List<Vector3> Texs = new List<Vector3>(100);
-        List<uint> Inds = new List<uint>();
+        List<uint> Inds = new List<uint>(100);
         List<Vector4> Cols = new List<Vector4>(100);
 
         public void AddQuad(Vector2 min, Vector2 max, Vector2 tmin, Vector2 tmax, Vector4 color, int tex)
@@ -148,7 +148,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         public void Render()
         {
-            if (Positions.Length == 0 || Indices.Length == 0)
+            if (Indices.Length == 0)
             {
                 return;
             }

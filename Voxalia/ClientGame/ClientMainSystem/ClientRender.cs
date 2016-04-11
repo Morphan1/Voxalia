@@ -76,6 +76,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_fbo = Shaders.GetShader("fbo" + def);
             s_fbot = Shaders.GetShader("fbo" + def + ",MCM_TRANSP_ALLOWED");
             s_fbov = Shaders.GetShader("fbo_vox" + def);
+            s_fbo_refract = Shaders.GetShader("fbo" + def + ",MCM_REFRACT");
+            s_fbov_refract = Shaders.GetShader("fbo_vox" + def + ",MCM_REFRACT");
             s_shadowadder = Shaders.GetShader("shadowadder" + def);
             s_lightadder = Shaders.GetShader("lightadder" + def);
             s_transponly = Shaders.GetShader("transponly" + def);
@@ -85,8 +87,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_transponlylitsh = Shaders.GetShader("transponlylitsh" + def);
             s_transponlyvoxlitsh = Shaders.GetShader("transponlyvoxlitsh" + def);
             s_godray = Shaders.GetShader("godray" + def);
-            s_pointlightadder = Shaders.GetShader("pointlightadder" + def);
-            s_pointshadowadder = Shaders.GetShader("pointshadowadder" + def);
             s_mapvox = Shaders.GetShader("map_vox" + def);
             s_transpadder = Shaders.GetShader("transpadder" + def);
             s_finalgodray = Shaders.GetShader("finalgodray" + def);
@@ -213,6 +213,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_fbo;
         public Shader s_fbov;
         public Shader s_fbot;
+        public Shader s_fbo_refract;
+        public Shader s_fbov_refract;
         public Shader s_shadowadder;
         public Shader s_lightadder;
         public Shader s_transponly;
@@ -223,8 +225,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_transponlyvoxlitsh;
         public Shader s_godray;
         public Shader s_shadowvox;
-        public Shader s_pointlightadder;
-        public Shader s_pointshadowadder;
         public Shader s_mapvox;
         public Shader s_transpadder;
         RenderSurface4Part RS4P;
@@ -342,6 +342,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Stopwatch timer = new Stopwatch();
             try
             {
+                StandardBlend();
                 RenderTextures = true;
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1f, 0f, 1f, 1f });
                 GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
@@ -486,8 +487,21 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 RenderSpecular = true;
                 Rendering.SetColor(Color4.White);
                 VBO.BonesIdentity();
-                // TODO: Render settings
+                StandardBlend();
                 Render3D(false);
+                FBOid = 21;
+                s_fbov_refract = s_fbov_refract.Bind();
+                GL.Uniform1(6, (float)GlobalTickTimeLocal);
+                GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref matident);
+                GL.Uniform2(8, new Vector2(sl_min, sl_max));
+                s_fbo_refract = s_fbo_refract.Bind();
+                GL.Uniform1(6, (float)GlobalTickTimeLocal);
+                GL.UniformMatrix4(1, false, ref combined);
+                GL.UniformMatrix4(2, false, ref matident);
+                GL.DepthMask(false);
+                Render3D(false);
+                GL.DepthMask(true);
                 RenderLights = false;
                 RenderSpecular = false;
                 RS4P.Unbind();
@@ -503,20 +517,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
                 GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-                Shader s_point;
                 Shader s_other;
                 if (CVars.r_shadows.ValueB)
                 {
-                    s_point = s_pointshadowadder;
                     s_other = s_shadowadder;
-                    s_point.Bind();
-                    GL.Uniform1(13, CVars.r_shadowblur.ValueF);
                     s_other.Bind();
                     GL.Uniform1(13, CVars.r_shadowblur.ValueF);
                 }
                 else
                 {
-                    s_point = s_pointlightadder;
                     s_other = s_lightadder;
                 }
                 GL.ActiveTexture(TextureUnit.Texture1);
@@ -529,11 +538,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.RenderhintTexture);
                 GL.ActiveTexture(TextureUnit.Texture6);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.DiffuseTexture);
+                GL.ActiveTexture(TextureUnit.Texture7);
+                GL.BindTexture(TextureTarget.Texture2D, RS4P.Rh2Texture);
                 Matrix4 mat = Matrix4.CreateOrthographicOffCenter(-1, 1, -1, 1, -1, 1);
-                s_point.Bind();
-                GL.UniformMatrix4(1, false, ref mat);
-                GL.UniformMatrix4(2, false, ref matident);
-                GL.Uniform3(10, ClientUtilities.Convert(CameraPos));
                 s_other.Bind();
                 GL.UniformMatrix4(1, false, ref mat);
                 GL.UniformMatrix4(2, false, ref matident);
@@ -545,108 +552,57 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     for (int i = 0; i < Lights.Count; i++)
                     {
-                        if (Lights[i] is PointLight && !CVars.r_shadows.ValueB)
+                        if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
                         {
-                            if (camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                            s_other.Bind();
+                            double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
+                            double d2 = CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance;
+                            double maxrangemult = 0;
+                            if (d1 < d2 * 4 || Lights[i] is SkyLight)
                             {
-                                s_point.Bind();
-                                double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
-                                double d2 = CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance;
-                                double maxrangemult = 0;
-                                if (d1 < d2 * 4 || Lights[i] is SkyLight)
+                                maxrangemult = 1;
+                            }
+                            else if (d1 < d2 * 6)
+                            {
+                                maxrangemult = 1 - ((d1 - (d2 * 4)) / ((d2 * 6) - (d2 * 4)));
+                            }
+                            if (maxrangemult > 0)
+                            {
+                                GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
+                                for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                                 {
-                                    maxrangemult = 1;
-                                }
-                                else if (d1 < d2 * 6)
-                                {
-                                    maxrangemult = 1 - ((d1 - (d2 * 4)) / ((d2 * 6) - (d2 * 4)));
-                                }
-                                if (maxrangemult > 0)
-                                {
-                                    GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
-                                    if (Lights[i].InternalLights[0].color.LengthSquared <= 0.01)
+                                    if (Lights[i].InternalLights[x].color.LengthSquared <= 0.01)
                                     {
                                         continue;
                                     }
                                     if (CVars.r_shadows.ValueB)
                                     {
                                         GL.ActiveTexture(TextureUnit.Texture4);
-                                        GL.BindTexture(TextureTarget.Texture2DArray, ((PointLight)Lights[i]).FBODepthTex);
+                                        GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
                                     }
-                                    GL.Uniform3(4, ref Lights[i].InternalLights[0].eye);
-                                    Vector3 col = Lights[i].InternalLights[0].color * (float)maxrangemult;
+                                    Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
+                                    GL.UniformMatrix4(3, false, ref smat);
+                                    GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
+                                    Vector3 col = Lights[i].InternalLights[x].color * (float)maxrangemult;
                                     GL.Uniform3(8, ref col);
-                                    float range = Lights[i].InternalLights[0].maxrange;
-                                    GL.Uniform1(9, range <= 0 ? LightMaximum: range);
+                                    if (Lights[i].InternalLights[x] is LightOrtho)
+                                    {
+                                        GL.Uniform1(9, LightMaximum);
+                                        GL.Uniform1(7, 1.0f);
+                                    }
+                                    else
+                                    {
+                                        float range = Lights[i].InternalLights[0].maxrange;
+                                        GL.Uniform1(9, range <= 0 ? LightMaximum : range);
+                                        GL.Uniform1(7, 0.0f);
+                                    }
                                     if (CVars.r_shadows.ValueB)
                                     {
-                                        for (int ttx = 0; ttx < 6; ttx++)
-                                        {
-                                            Matrix4 smat = Lights[i].InternalLights[ttx].GetMatrix();
-                                            GL.UniformMatrix4(14 + ttx, false, ref smat);
-                                        }
-                                        GL.Uniform1(12, 1f / Lights[i].InternalLights[0].texsize);
+                                        GL.Uniform1(12, 1f / Lights[i].InternalLights[x].texsize);
                                     }
                                     Rendering.RenderRectangle(-1, -1, 1, 1);
                                     GL.ActiveTexture(TextureUnit.Texture0);
                                     GL.BindTexture(TextureTarget.Texture2D, 0);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
-                            {
-                                s_other.Bind();
-                                double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
-                                double d2 = CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance;
-                                double maxrangemult = 0;
-                                if (d1 < d2 * 4 || Lights[i] is SkyLight)
-                                {
-                                    maxrangemult = 1;
-                                }
-                                else if (d1 < d2 * 6)
-                                {
-                                    maxrangemult = 1 - ((d1 - (d2 * 4)) / ((d2 * 6) - (d2 * 4)));
-                                }
-                                if (maxrangemult > 0)
-                                {
-                                    GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
-                                    for (int x = 0; x < Lights[i].InternalLights.Count; x++)
-                                    {
-                                        if (Lights[i].InternalLights[x].color.LengthSquared <= 0.01)
-                                        {
-                                            continue;
-                                        }
-                                        if (CVars.r_shadows.ValueB)
-                                        {
-                                            GL.ActiveTexture(TextureUnit.Texture4);
-                                            GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
-                                        }
-                                        Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
-                                        GL.UniformMatrix4(3, false, ref smat);
-                                        GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
-                                        Vector3 col = Lights[i].InternalLights[x].color * (float)maxrangemult;
-                                        GL.Uniform3(8, ref col);
-                                        if (Lights[i].InternalLights[x] is LightOrtho)
-                                        {
-                                            GL.Uniform1(9, LightMaximum);
-                                            GL.Uniform1(7, 1.0f);
-                                        }
-                                        else
-                                        {
-                                            float range = Lights[i].InternalLights[0].maxrange;
-                                            GL.Uniform1(9, range <= 0 ? LightMaximum : range);
-                                            GL.Uniform1(7, 0.0f);
-                                        }
-                                        if (CVars.r_shadows.ValueB)
-                                        {
-                                            GL.Uniform1(12, 1f / Lights[i].InternalLights[x].texsize);
-                                        }
-                                        Rendering.RenderRectangle(-1, -1, 1, 1);
-                                        GL.ActiveTexture(TextureUnit.Texture0);
-                                        GL.BindTexture(TextureTarget.Texture2D, 0);
-                                    }
                                 }
                             }
                         }
@@ -697,6 +653,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.UniformMatrix4(1, false, ref mat);
                 GL.UniformMatrix4(2, false, ref matident);
                 Rendering.RenderRectangle(-1, -1, 1, 1);
+                GL.ActiveTexture(TextureUnit.Texture7);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture6);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture5);
@@ -1067,8 +1025,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             if (FBOid == 1)
             {
-                s_fbov= s_fbov.Bind();
+                s_fbov = s_fbov.Bind();
                 GL.Uniform4(7, Color4.Black);
+            }
+            if (FBOid == 21)
+            {
+                s_fbov_refract = s_fbov_refract.Bind();
             }
             else if (FBOid == 3)
             {
@@ -1091,6 +1053,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 s_fbo = s_fbo.Bind();
                 GL.Uniform4(7, Color4.Black);
+            }
+            else if (FBOid == 1)
+            {
+                s_fbo_refract = s_fbo_refract.Bind();
             }
             else if (FBOid == 3)
             {

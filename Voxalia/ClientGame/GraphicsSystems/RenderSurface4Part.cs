@@ -17,6 +17,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public uint DepthTexture;
         public uint RenderhintTexture;
         public uint bwtexture;
+        public int Rh2Texture;
 
         public Renderer Rendering;
 
@@ -75,6 +76,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (uint)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (uint)TextureWrapMode.ClampToEdge);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment4, TextureTarget.Texture2D, bwtexture, 0);
+            GL.GenTextures(1, out Rh2Texture);
+            GL.BindTexture(TextureTarget.Texture2D, Rh2Texture);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba16f, Width, Height, 0, PixelFormat.Rgba, PixelType.Float, IntPtr.Zero);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (uint)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (uint)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (uint)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (uint)TextureWrapMode.ClampToEdge);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment5, TextureTarget.Texture2D, Rh2Texture, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
@@ -87,21 +96,23 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.DeleteTexture(DepthTexture);
             GL.DeleteTexture(RenderhintTexture);
             GL.DeleteTexture(bwtexture);
+            GL.DeleteTexture(Rh2Texture);
         }
 
         public void Bind()
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
             GL.Viewport(0, 0, Width, Height);
-            GL.DrawBuffers(5, new DrawBuffersEnum[] { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1,
-                DrawBuffersEnum.ColorAttachment2, DrawBuffersEnum.ColorAttachment3, DrawBuffersEnum.ColorAttachment4 });
+            GL.DrawBuffers(6, new DrawBuffersEnum[] { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1,
+                DrawBuffersEnum.ColorAttachment2, DrawBuffersEnum.ColorAttachment3, DrawBuffersEnum.ColorAttachment4, DrawBuffersEnum.ColorAttachment5 });
             GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0f, 0f, 0f, 0f });
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1f });
             GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 0f, 0f, 0f, 0f });
             GL.ClearBuffer(ClearBuffer.Color, 2, new float[] { 0f, 0f, 0f, 0f });
             GL.ClearBuffer(ClearBuffer.Color, 3, new float[] { 0f, 0f, 0f, 0f });
             GL.ClearBuffer(ClearBuffer.Color, 4, new float[] { 0f, 0f, 0f, 0f });
-            GL.BlendFunc(3, BlendingFactorSrc.One, BlendingFactorDest.Zero);
+            GL.ClearBuffer(ClearBuffer.Color, 5, new float[] { 0f, 0f, 0f, 0f });
+            //GL.BlendFunc(3, BlendingFactorSrc.One, BlendingFactorDest.Zero);
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.Enable(EnableCap.Texture2D);
         }
@@ -111,33 +122,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.Viewport(0, 0, Client.Central.vpw, Client.Central.vph); // TODO: Pass Client Reference
             GL.DrawBuffer(DrawBufferMode.Back);
-        }
-
-        public void RenderAsRectangle(int x, int y, int width, int height, int type)
-        {
-            uint texture = DiffuseTexture;
-            if (type == 1)
-            {
-                texture = PositionTexture;
-            }
-            else if (type == 2)
-            {
-                texture = NormalsTexture;
-            }
-            else if (type == 3)
-            {
-                texture = DepthTexture;
-            }
-            else if (type == 4)
-            {
-                texture = RenderhintTexture;
-            }
-            else if (type == 5)
-            {
-                texture = bwtexture;
-            }
-            GL.BindTexture(TextureTarget.Texture2D, texture);
-            Rendering.RenderRectangle(x, y, x + width, y + height);
         }
     }
 }

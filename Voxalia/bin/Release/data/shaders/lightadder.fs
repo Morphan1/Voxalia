@@ -6,6 +6,7 @@ layout (binding = 2) uniform sampler2D normaltex;
 layout (binding = 3) uniform sampler2D depthtex;
 layout (binding = 5) uniform sampler2D renderhinttex;
 layout (binding = 6) uniform sampler2D diffusetex;
+layout (binding = 7) uniform sampler2D renderhint2tex;
 
 layout (location = 0) in vec2 f_texcoord;
 
@@ -26,6 +27,7 @@ void main()
 	vec3 normal = texture(normaltex, f_texcoord).xyz;
 	vec3 position = texture(positiontex, f_texcoord).xyz;
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
+	vec4 renderhint2 = texture(renderhint2tex, f_texcoord);
 	vec4 diffuset = texture(diffusetex, f_texcoord);
 	vec4 f_spos = shadow_matrix * vec4(position, 1.0);
 	vec3 N = normalize(-normal);

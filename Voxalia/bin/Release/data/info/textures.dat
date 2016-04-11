@@ -1,10 +1,10 @@
-# Voxalia texture list - MAT=texture OR MAT=t1,t2,...%rate - optionally add &specularity - optionally add *reflectivity - MAT can be name OR # OR m# (total minus the #)
+# Voxalia texture list - MAT=texture OR MAT=t1,t2,...%rate - optionally add &specularity - optionally add *reflectivity - optionally add @refraction_eta - MAT can be name OR # OR m# (total minus the #)
 # Optionally add to the end $normal_texture or $nt1,nt2,...%rate
 AIR=clear
 STONE=blocks/solid/natural/stone
 GRASS_FOREST=blocks/solid/natural/grass_forest_side
 DIRT=blocks/solid/natural/dirt
-WATER=blocks/liquid/water&1$blocks/liquid/water_normal_1,blocks/liquid/water_normal_2,blocks/liquid/water_normal_3,blocks/liquid/water_normal_2%0.2
+WATER=blocks/liquid/water&1@0.75$blocks/liquid/water_normal_1,blocks/liquid/water_normal_2,blocks/liquid/water_normal_3,blocks/liquid/water_normal_2%0.2
 5=blocks/solid/special/db_top,blocks/solid/special/db_exc%1.0&1$normal_def,blocks/solid/special/db_exc_normal%1.0
 LEAVES1=blocks/transparent/leaves_basic1
 CONCRETE=blocks/solid/made/concrete
@@ -25,9 +25,9 @@ COPPER_ORE_SPARSE=blocks/solid/ore/copper_ore_sparse
 COAL_ORE=blocks/solid/ore/coal_ore
 COAL_ORE_SPARSE=blocks/solid/ore/coal_ore_sparse
 COLOR=blocks/solid/made/color
-DIRTY_WATER=blocks/liquid/dirty_water&1$blocks/liquid/water_normal_1,blocks/liquid/water_normal_2,blocks/liquid/water_normal_3,blocks/liquid/water_normal_2%0.2
+DIRTY_WATER=blocks/liquid/dirty_water&1@0.75$blocks/liquid/water_normal_1,blocks/liquid/water_normal_2,blocks/liquid/water_normal_3,blocks/liquid/water_normal_2%0.2
 PLANKS_OAK=blocks/solid/natural/wood_planks
-GLASS_WINDOW=blocks/transparent/glass_window
+GLASS_WINDOW=blocks/transparent/glass_window@0.1
 OIL=blocks/liquid/oil&1*0.1
 ICE=blocks/solid/natural/ice
 HEAVY_GAS=blocks/liquid/heavy_gas

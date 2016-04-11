@@ -10,6 +10,7 @@ layout (binding = 3) uniform sampler2D depthtex;
 layout (binding = 4) uniform sampler2D shtex;
 layout (binding = 5) uniform sampler2D renderhinttex;
 layout (binding = 6) uniform sampler2D bwtex;
+layout (binding = 7) uniform sampler2D renderhint2tex;
 
 layout (location = 0) in vec2 f_texcoord;
 
@@ -56,7 +57,7 @@ vec4 raytrace(in vec3 reflectionVector, in float startDepth)
 		float sampledDepth = linearizeDepth(texture(depthtex, sampledPosition).r);
 		if(currentDepth > sampledDepth)
 		{
-			float delta = (currentDepth - sampledDepth);
+			float delta = currentDepth - sampledDepth;
 			if(delta < 0.03)
 			{
 				return texture(colortex, sampledPosition);
@@ -64,17 +65,6 @@ vec4 raytrace(in vec3 reflectionVector, in float startDepth)
 		}
 	}
 	return vec4(0.0);
-}
-
-vec4 ssr()
-{
-	vec4 norm = texture(normaltex, f_texcoord);
-	vec3 normal = normalize(norm.xyz);
-	float currDepth = linearizeDepth(texture(depthtex, f_texcoord).r);
-	vec3 pos = texture(positiontex, f_texcoord).xyz;
-	vec3 eyePosition = normalize(eye_position - pos);
-	vec4 reflectionVector = proj_mat * reflect(vec4(eyePosition, 0.0), vec4(normal, 0.0));
-	return raytrace(reflectionVector.xyz / reflectionVector.w, currDepth);
 }
 
 vec4 regularize(in vec4 input_r) // TODO: Is this working the best it can?
@@ -312,15 +302,30 @@ void main()
 #endif
 #if MCM_GOOD_GRAPHICS
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
+	vec4 renderhint2 = texture(renderhint2tex, f_texcoord);
 	float dist = texture(depthtex, f_texcoord).r;
 	godray = getGodRay() * vec4(grcolor, 1.0);
 	color = vec4(mix(light_color.xyz, fogCol.xyz, 1.0 - exp(-dist * fogCol.w)), 1.0);
-	if (renderhint.w > 0.0)
+	if (renderhint2.x > 0.01)
 	{
-		vec4 SSR = ssr();
+		vec3 viewDir = texture(positiontex, f_texcoord).xyz - eye_position;
+		vec3 normal = texture(normaltex, f_texcoord).xyz;
+		vec3 refr = refract(normalize(viewDir), normalize(normal), renderhint2.x);
+		vec4 refrCol = getColor(f_texcoord + refr.xy * 0.1);
+		color = color * 0.5 + refrCol * 0.5;
+	}
+	if (renderhint2.y > 0.01)
+	{
+		vec4 norm = texture(normaltex, f_texcoord);
+		vec3 normal = normalize(norm.xyz);
+		float currDepth = linearizeDepth(texture(depthtex, f_texcoord).r);
+		vec3 pos = texture(positiontex, f_texcoord).xyz;
+		vec3 eyePosition = normalize(eye_position - pos);
+		vec4 reflectionVector = proj_mat * reflect(vec4(eyePosition, 0.0), vec4(normal, 0.0));
+		vec4 SSR = raytrace(reflectionVector.xyz / reflectionVector.w, currDepth);
 		if (SSR.w > 0.0)
 		{
-			color = color * (1.0 - renderhint.w) + SSR * renderhint.w;
+			color = color * (1.0 - renderhint2.y) + SSR * renderhint2.y;
 		}
 	}
 	if (texture(bwtex, f_texcoord).w > 0.01)

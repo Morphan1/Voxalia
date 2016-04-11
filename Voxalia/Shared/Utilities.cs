@@ -335,9 +335,7 @@ namespace Voxalia.Shared
         public static Location ForwardVector(double yaw, double pitch)
         {
             double cp = Math.Cos(pitch);
-            return new Location(-(cp * Math.Cos(yaw)),
-            -(cp * Math.Sin(yaw)),
-            (Math.Sin(pitch)));
+            return new Location(-(cp * Math.Cos(yaw)), -(cp * Math.Sin(yaw)), (Math.Sin(pitch)));
         }
 
         /// <summary>
@@ -351,9 +349,7 @@ namespace Voxalia.Shared
             double pitchdeg = pitch * PI180;
             double yawdeg = yaw * PI180;
             double cp = Math.Cos(pitchdeg);
-            return new Location(-(cp * Math.Cos(yawdeg)),
-            -(cp * Math.Sin(yawdeg)),
-            (Math.Sin(pitchdeg)));
+            return new Location(-(cp * Math.Cos(yawdeg)), -(cp * Math.Sin(yawdeg)), (Math.Sin(pitchdeg)));
         }
 
         /// <summary>
@@ -364,8 +360,8 @@ namespace Voxalia.Shared
         /// <returns>The rotated vector.</returns>
         public static Location RotateVector(Location vec, double yaw)
         {
-            double cos = (float)Math.Cos(yaw);
-            double sin = (float)Math.Sin(yaw);
+            double cos = Math.Cos(yaw);
+            double sin = Math.Sin(yaw);
             return new Location((vec.X * cos) - (vec.Y * sin), (vec.X * sin) + (vec.Y * cos), vec.Z);
         }
 
@@ -378,10 +374,10 @@ namespace Voxalia.Shared
         /// <returns>The rotated vector.</returns>
         public static Location RotateVector(Location vec, double yaw, double pitch)
         {
-            double cosyaw = (float)Math.Cos(yaw);
-            double cospitch = (float)Math.Cos(pitch);
-            double sinyaw = (float)Math.Sin(yaw);
-            double sinpitch = (float)Math.Sin(pitch);
+            double cosyaw = Math.Cos(yaw);
+            double cospitch = Math.Cos(pitch);
+            double sinyaw = Math.Sin(yaw);
+            double sinpitch = Math.Sin(pitch);
             double bX = vec.Z * sinpitch + vec.X * cospitch;
             double bZ = vec.Z * cospitch - vec.X * sinpitch;
             return new Location(bX * cosyaw - vec.Y * sinyaw, bX * sinyaw + vec.Y * cosyaw, bZ);

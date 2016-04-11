@@ -167,7 +167,7 @@ namespace Voxalia.ServerGame.OtherSystems
                 {
                     mat = MaterialHelpers.FromNameOrNumber(dat[0]);
                 }
-                string actualtexture = "textures/" + dat[1].Before(",").Before("&").Before("$") + ".png";
+                string actualtexture = "textures/" + dat[1].Before(",").Before("&").Before("$").Before("@")+ ".png";
                 try
                 {
                     Bitmap bmp1 = new Bitmap(Program.Files.ReadToStream(actualtexture));
