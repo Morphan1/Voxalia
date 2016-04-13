@@ -302,19 +302,18 @@ void main()
 #endif
 #if MCM_GOOD_GRAPHICS
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
-	vec4 renderhint2 = texture(renderhint2tex, f_texcoord);
+	vec3 renderhint2 = texture(renderhint2tex, f_texcoord).xyz;
 	float dist = texture(depthtex, f_texcoord).r;
 	godray = getGodRay() * vec4(grcolor, 1.0);
 	color = vec4(mix(light_color.xyz, fogCol.xyz, 1.0 - exp(-dist * fogCol.w)), 1.0);
-	if (renderhint2.x > 0.01)
+	if (dot(renderhint2, renderhint2) > 0.99)
 	{
 		vec3 viewDir = texture(positiontex, f_texcoord).xyz - eye_position;
-		vec3 normal = texture(normaltex, f_texcoord).xyz;
-		vec3 refr = refract(normalize(viewDir), normalize(normal), renderhint2.x);
+		vec3 refr = refract(normalize(viewDir), normalize(renderhint2), 0.75);
 		vec4 refrCol = getColor(f_texcoord + refr.xy * 0.1);
 		color = color * 0.5 + refrCol * 0.5;
 	}
-	if (renderhint2.y > 0.01)
+	else if (renderhint2.y > 0.01)
 	{
 		vec4 norm = texture(normaltex, f_texcoord);
 		vec3 normal = normalize(norm.xyz);

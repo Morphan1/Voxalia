@@ -374,6 +374,7 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool PGPIRight;
         public bool PGPIUp;
         public bool PGPIDown;
+        public bool PGPReload;
 
         public bool Forward;
         public bool Backward;
@@ -512,13 +513,21 @@ namespace Voxalia.ClientGame.EntitySystem
             if (GamePadHandler.UseKey)
             {
                 PGPUse = true;
-                TheClient.Commands.ExecuteCommands("use");
                 Use = true;
             }
             else if (PGPUse)
             {
                 PGPUse = false;
                 Use = false;
+            }
+            if (GamePadHandler.ReloadKey)
+            {
+                PGPReload = true;
+                TheClient.Commands.ExecuteCommands("weaponreload"); // TODO: Less lazy!
+            }
+            else if (PGPUse)
+            {
+                PGPReload = false;
             }
             if (GamePadHandler.ItemLeft)
             {

@@ -36,11 +36,12 @@ void main()
     float refract_eta = texture(htex, vec3(1, 1, f.texcoord.z)).r;
 	if (refract_eta > 0.01)
 	{
+		vec3 tnorms = f.tbn * (texture(normal_tex, f.texcoord).xyz * 2.0 - vec3(1.0));
 		color = vec4(0.0);
 		position = vec4(0.0);
 		normal = vec4(0.0);
 		renderhint = vec4(0.0);
-		renderhint2 = vec4(refract_eta, 0.0, 0.0, 1.0);
+		renderhint2 = vec4(tnorms, 1.0);
 		return;
 	}
 	else
@@ -55,7 +56,7 @@ void main()
     float spec = texture(htex, vec3(0, 0, f.texcoord.z)).r;
     // float wavi = texture(htex, vec3(1, 0, f.texcoord.z)).r; // TODO: Replace with something actually useful.
     float refl = texture(htex, vec3(0, 1, f.texcoord.z)).r;
-	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - 1.0;
+	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - vec3(1.0);
 	color = col * v_color;
 	position = vec4(f.position.xyz, 1.0);
 	normal = vec4(normalize(f.tbn * norms), 1.0);
