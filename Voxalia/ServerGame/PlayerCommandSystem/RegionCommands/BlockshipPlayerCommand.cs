@@ -32,7 +32,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                 tm = BGETraceMode.PERFECT;
             }
             float maxRad = 20; // TODO: Config!
-            Location start = entry.Player.GetPosition().GetBlockLocation() + new Location(0, 0, -1);
+            Location start = (entry.Player.GetPosition() + new Location(0, 0, -0.1)).GetBlockLocation();
             List<KeyValuePair<Location, BlockInternal>> blocks = new List<KeyValuePair<Location, BlockInternal>>();
             AABB extent = new AABB() { Min = start, Max = start };
             if (!FloodFrom(entry.Player.TheRegion, start, blocks, maxRad, extent) || blocks.Count == 0)

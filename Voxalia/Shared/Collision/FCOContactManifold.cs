@@ -63,9 +63,9 @@ namespace Voxalia.Shared.Collision
         private GeneralConvexPairTester GetPair(ref Vector3i position)
         {
             // TODO: Efficiency!
-            var pair = testerPool.Take();
+            GeneralConvexPairTester pair = testerPool.Take();
             Vector3 offs;
-            var boxCollidable = new ReusableGenericCollidable<ConvexShape>((ConvexShape)mesh.ChunkShape.ShapeAt(position.X, position.Y, position.Z, out offs));
+            ReusableGenericCollidable<ConvexShape> boxCollidable = new ReusableGenericCollidable<ConvexShape>((ConvexShape)mesh.ChunkShape.ShapeAt(position.X, position.Y, position.Z, out offs));
             pair.Initialize(convex, boxCollidable);
             boxCollidable.WorldTransform = new RigidTransform(new Vector3(
                 mesh.Position.X + position.X + offs.X,
@@ -96,8 +96,8 @@ namespace Voxalia.Shared.Collision
         
         public override void Update(float dt)
         {
-            var transform = new RigidTransform(mesh.Position);
-            var convexTransform = convex.WorldTransform;
+            RigidTransform transform = new RigidTransform(mesh.Position);
+            RigidTransform convexTransform = convex.WorldTransform;
             ContactRefresher.ContactRefresh(contacts, supplementData, ref convexTransform, ref transform, contactIndicesToRemove);
             RemoveQueuedContacts();
             var overlaps = new QuickList<Vector3i>(BufferPools<Vector3i>.Thread);
@@ -156,8 +156,8 @@ namespace Voxalia.Shared.Collision
         {
             ContactSupplementData supplement;
             supplement.BasePenetrationDepth = contactCandidate.PenetrationDepth;
-            var convexTransform = convex.WorldTransform;
-            var gridTransform = new RigidTransform(mesh.Position);
+            RigidTransform convexTransform = convex.WorldTransform;
+            RigidTransform gridTransform = new RigidTransform(mesh.Position);
             RigidTransform.TransformByInverse(ref contactCandidate.Position, ref convexTransform, out supplement.LocalOffsetA);
             RigidTransform.TransformByInverse(ref contactCandidate.Position, ref gridTransform, out supplement.LocalOffsetB);
             supplementData.Add(ref supplement);

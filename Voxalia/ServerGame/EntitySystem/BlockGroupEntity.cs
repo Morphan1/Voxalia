@@ -55,6 +55,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (TraceMode == BGETraceMode.PERFECT)
             {
                 Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks); // TODO: Anything offset related needed here?
+                SetMass(0);
             }
             else
             {

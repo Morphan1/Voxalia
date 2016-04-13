@@ -53,7 +53,7 @@ void main()
 		discard;
 	}
     float spec = texture(htex, vec3(0, 0, f.texcoord.z)).r;
-    float wavi = texture(htex, vec3(1, 0, f.texcoord.z)).r; // TODO: Implement -> move normal texture coordinates based on time!
+    // float wavi = texture(htex, vec3(1, 0, f.texcoord.z)).r; // TODO: Replace with something actually useful.
     float refl = texture(htex, vec3(0, 1, f.texcoord.z)).r;
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - 1.0;
 	color = col * v_color;

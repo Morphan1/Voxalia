@@ -63,9 +63,9 @@ namespace Voxalia.Shared.Collision
         private GeneralConvexPairTester GetPair(ref Vector3i position)
         {
             // TODO: Efficiency!
-            var pair = testerPool.Take();
+            GeneralConvexPairTester pair = testerPool.Take();
             Vector3 offs;
-            var boxCollidable = new ReusableGenericCollidable<ConvexShape>((ConvexShape)mesh.ChunkShape.ShapeAt(position.X, position.Y, position.Z, out offs));
+            ReusableGenericCollidable<ConvexShape> boxCollidable = new ReusableGenericCollidable<ConvexShape>((ConvexShape)mesh.ChunkShape.ShapeAt(position.X, position.Y, position.Z, out offs));
             pair.Initialize(convex, boxCollidable);
             Vector3 input = new Vector3(position.X + offs.X, position.Y + offs.Y, position.Z + offs.Z);
             RigidTransform rt = mesh.WorldTransform;
@@ -98,12 +98,12 @@ namespace Voxalia.Shared.Collision
         
         public override void Update(float dt)
         {
-            var transform = mesh.WorldTransform;
-            var convexTransform = convex.WorldTransform;
+            RigidTransform transform = mesh.WorldTransform;
+            RigidTransform convexTransform = convex.WorldTransform;
             ContactRefresher.ContactRefresh(contacts, supplementData, ref convexTransform, ref transform, contactIndicesToRemove);
             RemoveQueuedContacts();
             var overlaps = new QuickList<Vector3i>(BufferPools<Vector3i>.Thread);
-            mesh.ChunkShape.GetOverlaps(transform.Position, convex.BoundingBox, ref overlaps);
+            mesh.ChunkShape.GetOverlaps(ref transform, convex.BoundingBox, ref overlaps);
             var candidatesToAdd = new QuickList<ContactData>(BufferPools<ContactData>.Thread, BufferPool<int>.GetPoolIndex(overlaps.Count));
             for (int i = 0; i < overlaps.Count; i++)
             {
@@ -140,7 +140,7 @@ namespace Voxalia.Shared.Collision
                 for (int i = reducedCandidates.Count - 1; i >= 0; i--)
                 {
                     Add(ref reducedCandidates.Elements[i]);
-                    reducedCandidates.RemoveAt(i);
+                    reducedCandidates.RemoveAt(i); // TODO: needed?
                 }
                 reducedCandidates.Dispose();
             }
@@ -158,8 +158,8 @@ namespace Voxalia.Shared.Collision
         {
             ContactSupplementData supplement;
             supplement.BasePenetrationDepth = contactCandidate.PenetrationDepth;
-            var convexTransform = convex.WorldTransform;
-            var gridTransform = mesh.WorldTransform;
+            RigidTransform convexTransform = convex.WorldTransform;
+            RigidTransform gridTransform = mesh.WorldTransform;
             RigidTransform.TransformByInverse(ref contactCandidate.Position, ref convexTransform, out supplement.LocalOffsetA);
             RigidTransform.TransformByInverse(ref contactCandidate.Position, ref gridTransform, out supplement.LocalOffsetB);
             supplementData.Add(ref supplement);

@@ -120,12 +120,13 @@ namespace Voxalia.Shared.Collision
         }
 
         // TODO: Optimize me!
-        public void GetOverlaps(Vector3 gridPosition, BoundingBox boundingBox, ref QuickList<Vector3i> overlaps)
+        public void GetOverlaps(ref RigidTransform transform, BoundingBox boundingBox, ref QuickList<Vector3i> overlaps)
         {
             // TODO: Update!
             BoundingBox b2 = new BoundingBox();
-            Vector3.Subtract(ref boundingBox.Min, ref gridPosition, out b2.Min);
-            Vector3.Subtract(ref boundingBox.Max, ref gridPosition, out b2.Max);
+            // TODO: Maybe not by inverse?
+            RigidTransform.TransformByInverse(ref boundingBox.Min, ref transform, out b2.Min);
+            RigidTransform.TransformByInverse(ref boundingBox.Max, ref transform, out b2.Max);
             var min = new Vector3i
             {
                 X = Math.Max(0, (int)b2.Min.X),
@@ -161,10 +162,10 @@ namespace Voxalia.Shared.Collision
         public override void GetBoundingBox(ref RigidTransform transform, out BoundingBox boundingBox)
         {
             Vector3 min = transform.Position;
-            Vector3 maxbase = new Vector3(30, 30, 30);
+            Vector3 maxbase = new Vector3(ChunkSize.X, ChunkSize.Y, ChunkSize.Z);
             Vector3 max;
             RigidTransform.Transform(ref maxbase, ref transform, out max);
-            boundingBox = new BoundingBox(min, max);
+            boundingBox = new BoundingBox(Vector3.Min(min, max), Vector3.Max(min, max));
         }
     }
 }
