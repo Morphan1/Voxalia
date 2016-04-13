@@ -40,6 +40,8 @@ namespace Voxalia.ClientGame.UISystem
 
         public static bool ItemDown;
 
+        public static bool ReloadKey;
+
         public static void Tick(double delta)
         {
             TotalDirectionX = 0;
@@ -56,6 +58,7 @@ namespace Voxalia.ClientGame.UISystem
             DPadLeft = false;
             DPadRight = false;
             UseKey = false;
+            ReloadKey = false;
             for (int i = 0; i < 4; i++)
             {
                 GamePadCapabilities cap = GamePad.GetCapabilities(i);
@@ -80,7 +83,7 @@ namespace Voxalia.ClientGame.UISystem
                     }
                     if (cap.HasAButton && state.Buttons.A == ButtonState.Pressed)
                     {
-                        JumpKey = true;
+                        ReloadKey = true;
                     }
                     if (cap.HasXButton && state.Buttons.X == ButtonState.Pressed)
                     {
@@ -117,6 +120,10 @@ namespace Voxalia.ClientGame.UISystem
                     if (cap.HasDPadRightButton && state.DPad.Right == ButtonState.Pressed)
                     {
                         DPadRight = true;
+                    }
+                    if (cap.HasLeftStickButton && state.Buttons.LeftStick == ButtonState.Pressed)
+                    {
+                        JumpKey = true;
                     }
                 }
             }

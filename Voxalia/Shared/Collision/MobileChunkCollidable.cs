@@ -14,7 +14,6 @@ using System;
 using BEPUphysics.CollisionTests.Manifolds;
 using BEPUphysics.Constraints.Collision;
 using BEPUphysics.Entities;
-using BEPUphysics.CollisionTests.CollisionAlgorithms.GJK;
 using BEPUphysics.PositionUpdating;
 using BEPUphysics.Settings;
 
