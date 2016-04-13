@@ -25,7 +25,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                     {
                         for (int z = 0; z < csize; z++)
                         {
-                            Utilities.UshortToBytes(chunk.BlocksInternal[chunk.LODBlockIndex(x, y, z, lod)].BlockMaterial).CopyTo(data_orig, (z * csize * csize + y * csize + x) * 2);
+                            Utilities.UshortToBytes(chunk.GetBlockAt(x, y, z).BlockMaterial).CopyTo(data_orig, (z * csize * csize + y * csize + x) * 2);
                         }
                     }
                 }
@@ -46,7 +46,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                     {
                         for (int z = 0; z < csize; z++)
                         {
-                            Utilities.UshortToBytes(chunk.BlocksInternal[chunk.LODBlockIndex(x, y, z, lod)].BlockMaterial).CopyTo(data_orig, (z * csize * csize + y * csize + x) * 2);
+                            Utilities.UshortToBytes((ushort)chunk.LODBlock(x, y, z, lod)).CopyTo(data_orig, (z * csize * csize + y * csize + x) * 2);
                         }
                     }
                 }

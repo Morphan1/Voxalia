@@ -424,7 +424,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     TrySet(pos, 1, 0, 1, false);
                     TrySet(pos, ViewRadiusInChunks / 2, 0, 1, false);
                     TrySet(pos, ViewRadiusInChunks, 0, 1, false);
-                    TrySet(pos, ViewRadiusInChunks + 1, 4, 1, true);
+                    TrySet(pos, ViewRadiusInChunks + 2, 0, 2, true);
                     loadedInitially = true;
                     ChunkNetwork.SendPacket(new TeleportPacketOut(GetPosition()));
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 1));
@@ -435,12 +435,12 @@ namespace Voxalia.ServerGame.EntitySystem
                     TrySet(pos, 1, 0, 1, false);
                     TrySet(pos, ViewRadiusInChunks / 2, 0, 1, false);
                     TrySet(pos, ViewRadiusInChunks, 0, 1, false);
-                    TrySet(pos, ViewRadiusInChunks + 1, 4, 1, true);
+                    TrySet(pos, ViewRadiusInChunks + 2, 0, 2, true);
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
                 }
                 foreach (ChunkAwarenessInfo ch in ChunksAwareOf.Values)
                 {
-                    if (!ShouldSeeChunk(ch.ChunkPos))
+                    if (!ShouldLoadChunk(ch.ChunkPos) || (!ShouldSeeChunk(ch.ChunkPos) && ch.LOD == 1))
                     {
                         removes.Add(TheRegion.GetChunk(ch.ChunkPos));
                     }
@@ -535,9 +535,9 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool ShouldLoadChunk(Location cpos)
         {
             Location wpos = TheRegion.ChunkLocFor(GetPosition());
-            if (Math.Abs(cpos.X - wpos.X) > (ViewRadiusInChunks + 1)
-                || Math.Abs(cpos.Y - wpos.Y) > (ViewRadiusInChunks + 1)
-                || Math.Abs(cpos.Z - wpos.Z) > (ViewRadiusInChunks + 1))
+            if (Math.Abs(cpos.X - wpos.X) > (ViewRadiusInChunks + 2)
+                || Math.Abs(cpos.Y - wpos.Y) > (ViewRadiusInChunks + 2)
+                || Math.Abs(cpos.Z - wpos.Z) > (ViewRadiusInChunks + 2))
             {
                 return false;
             }
@@ -623,15 +623,19 @@ namespace Voxalia.ServerGame.EntitySystem
                     {
                         if (bg)
                         {
-                            Location chl = TheRegion.ChunkLocFor(pos + new Location(30 * x, 30 * y, 30 * z));
+                            Location chl = TheRegion.ChunkLocFor(pos + new Location(Chunk.CHUNK_SIZE * x, Chunk.CHUNK_SIZE * y, Chunk.CHUNK_SIZE * z));
                             TheRegion.TheServer.Schedule.ScheduleSyncTask(() =>
                             {
-                                TheRegion.LoadChunk_Background(chl);
+                                TheRegion.LoadChunk_Background(chl, (b) =>
+                                {
+                                    TryChunk(chl * Chunk.CHUNK_SIZE, 0, posMult);
+                                    ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
+                                });
                             }, Utilities.UtilRandom.NextDouble() * atime);
                         }
                         else
                         {
-                            TryChunk(pos + new Location(30 * x, 30 * y, 30 * z), atime, posMult);
+                            TryChunk(pos + new Location(Chunk.CHUNK_SIZE * x, Chunk.CHUNK_SIZE * y, Chunk.CHUNK_SIZE * z), atime, posMult);
                         }
                     }
                 }
@@ -662,7 +666,14 @@ namespace Voxalia.ServerGame.EntitySystem
                 else
                 {
                     
-                    SyncScheduleItem item = TheServer.Schedule.ScheduleSyncTask(() => { if (!pkick) { Chunk chk = TheRegion.LoadChunk(worldPos); ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult)); } }, Utilities.UtilRandom.NextDouble() * atime);
+                    SyncScheduleItem item = TheServer.Schedule.ScheduleSyncTask(() =>
+                    {
+                        if (!pkick)
+                        {
+                            Chunk chk = TheRegion.LoadChunk(worldPos);
+                            ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult));
+                        }
+                    }, Utilities.UtilRandom.NextDouble() * atime);
                     ChunksAwareOf.Remove(worldPos);
                     ChunksAwareOf.Add(worldPos, new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult, SendToClient = item });
                 }

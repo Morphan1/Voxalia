@@ -86,6 +86,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 for (int i = 0; i < chk.BlocksInternal.Length; i++)
                 {
                     chk.BlocksInternal[i].BlockData = 0;
+                    chk.BlocksInternal[i].BlockPaint = 0;
                 }
             }
             chk.CalculateLighting();

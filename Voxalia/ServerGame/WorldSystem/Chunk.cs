@@ -54,15 +54,22 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public BlockInternal[] BlocksInternal;
 
-        /// <summary>
-        /// Asyncable (math only).
-        /// </summary>
-        public int LODBlockIndex(int x, int y, int z, int lod)
+        public Material LODBlock(int x, int y, int z, int lod)
         {
-            int cs = CHUNK_SIZE / lod;
-            return z * CHUNK_SIZE * CHUNK_SIZE * lod + y * CHUNK_SIZE * lod + x * lod;
+            int xs = x * lod;
+            int ys = y * lod;
+            int zs = z * lod;
+            for (int tz = lod - 1; tz >= 0; tz--)
+            {
+                Material c = GetBlockAt(xs, ys, zs + tz).Material;
+                if (c != Material.AIR)
+                {
+                    return c;
+                }
+            }
+            return Material.AIR;
         }
-
+        
         /// <summary>
         /// Asyncable (math only).
         /// </summary>

@@ -31,6 +31,16 @@ namespace Voxalia.ClientGame.WorldSystem
         new Vector3i(-1, 1, 0), new Vector3i(0, -1, 1), new Vector3i(-1, 0, 1), new Vector3i(1, 1, 1), new Vector3i(-1, 1, 1), new Vector3i(1, -1, 1), new Vector3i(1, 1, -1), new Vector3i(-1, -1, 1),
         new Vector3i(-1, 1, -1), new Vector3i(1, -1, -1) };
 
+        BlockInternal GetMostSolid(Chunk c, int x, int y, int z)
+        {
+            if (c.PosMultiplier == PosMultiplier)
+            {
+                return c.GetBlockAt(x, y, z);
+            }
+            // TODO: better method here...
+            return BlockInternal.AIR;
+        }
+
         void VBOHInternal(Action callback)
         {
             OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
@@ -63,13 +73,12 @@ namespace Voxalia.ClientGame.WorldSystem
                             BlockInternal c = GetBlockAt(x, y, z);
                             if (((Material)c.BlockMaterial).RendersAtAll())
                             {
-                                // TODO: Handle ALL blocks against the surface when low-LOD
-                                BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : (c_zp == null ? t_air : c_zp.GetBlockAt(x, y, z + 1 - CSize));
-                                BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : (c_zm == null ? t_air : c_zm.GetBlockAt(x, y, z - 1 + CSize));
-                                BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : (c_yp == null ? t_air : c_yp.GetBlockAt(x, y + 1 - CSize, z));
-                                BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : (c_ym == null ? t_air : c_ym.GetBlockAt(x, y - 1 + CSize, z));
-                                BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : (c_xp == null ? t_air : c_xp.GetBlockAt(x + 1 - CSize, y, z));
-                                BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : (c_xm == null ? t_air : c_xm.GetBlockAt(x - 1 + CSize, y, z));
+                                BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : (c_zp == null ? t_air : GetMostSolid(c_zp, x, y, z + 1 - CSize));
+                                BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : (c_zm == null ? t_air : GetMostSolid(c_zm, x, y, z - 1 + CSize));
+                                BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : (c_yp == null ? t_air : GetMostSolid(c_yp, x, y + 1 - CSize, z));
+                                BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : (c_ym == null ? t_air : GetMostSolid(c_ym, x, y - 1 + CSize, z));
+                                BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : (c_xp == null ? t_air : GetMostSolid(c_xp, x + 1 - CSize, y, z));
+                                BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : (c_xm == null ? t_air : GetMostSolid(c_xm, x - 1 + CSize, y, z));
                                 bool rAS = !((Material)c.BlockMaterial).GetCanRenderAgainstSelf();
                                 bool pMatters = !c.IsOpaque();
                                 bool zps = (zp.IsOpaque() || (rAS && (zp.BlockMaterial == c.BlockMaterial && (pMatters || zp.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[zp.BlockData].OccupiesBOTTOM();

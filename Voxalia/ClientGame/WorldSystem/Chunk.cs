@@ -45,6 +45,11 @@ namespace Voxalia.ClientGame.WorldSystem
             return BlocksInternal[BlockIndex(x, y, z)];
         }
 
+        public BlockInternal GetBlockAtLOD(int x, int y, int z)
+        {
+            return BlocksInternal[BlockIndex(x / PosMultiplier, y / PosMultiplier, z / PosMultiplier)];
+        }
+
         static Location[] slocs = new Location[] { new Location(1, 0, 0), new Location(-1, 0, 0), new Location(0, 1, 0),
             new Location(0, -1, 0), new Location(0, 0, 1), new Location(0, 0, -1) };
 
@@ -104,9 +109,12 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 return;
             }
-            FCO = new FullChunkObject(WorldPosition.ToBVector() * 30, BlocksInternal);
-            FCO.CollisionRules.Group = CollisionUtil.WorldSolid;
-            OwningRegion.AddChunk(FCO);
+            if (CSize == CHUNK_SIZE)
+            {
+                FCO = new FullChunkObject(WorldPosition.ToBVector() * CHUNK_SIZE, BlocksInternal);
+                FCO.CollisionRules.Group = CollisionUtil.WorldSolid;
+                OwningRegion.AddChunk(FCO);
+            }
         }
 
         public void Destroy()

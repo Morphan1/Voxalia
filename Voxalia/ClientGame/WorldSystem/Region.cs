@@ -441,7 +441,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             foreach (Chunk chunk in LoadedChunks.Values)
             {
-                if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(chunk.WorldPosition * 30, chunk.WorldPosition * 30 + new Location(30, 30, 30)))
+                if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(chunk.WorldPosition * Chunk.CHUNK_SIZE, chunk.WorldPosition * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE)))
                 {
                     chunk.Render();
                 }
@@ -542,7 +542,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 while (z < Chunk.CHUNK_SIZE)
                 {
-                    BlockInternal bi = ch.GetBlockAt((int)x, (int)y, (int)z);
+                    BlockInternal bi = ch.GetBlockAtLOD((int)x, (int)y, (int)z);
                     if (bi.IsOpaque())
                     {
                         return new Location(0, 0, 0);
