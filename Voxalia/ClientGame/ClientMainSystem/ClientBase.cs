@@ -128,9 +128,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Window.Run(1, CVars.r_maxfps.ValueD);
         }
 
+        public XInput RawGamePad = null;
+
         private void Window_Closed(object sender, EventArgs e)
         {
             Sounds.StopAll();
+            if (RawGamePad != null)
+            {
+                RawGamePad.Dispose();
+                RawGamePad = null;
+            }
             if (LocalServer != null)
             {
                 LocalServer.ShutDown();
@@ -286,6 +293,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheChunkWaitingScreen.Init();
             TheSingleplayerMenuScreen.Init();
             ShowMainMenu();
+            SysConsole.Output(OutputType.INIT, "Trying to grab RawGamePad...");
+            try
+            {
+                RawGamePad = new XInput();
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output(OutputType.INIT, "Failed to grab RawGamePad: " + ex.Message);
+            }
             SysConsole.Output(OutputType.INIT, "Ready and looping!");
         }
 

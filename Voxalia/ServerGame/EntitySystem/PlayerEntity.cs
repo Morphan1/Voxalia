@@ -425,7 +425,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 TrySet(pos, ViewRadiusInChunks, 0, 1, false);
                 TrySet(pos, ViewRadiusInChunks + 1, 0, 2, true);
                 TrySet(pos, ViewRadiusInChunks + 2, 10, 2, true);
-                TrySet(pos, ViewRadiusInChunks + 3, 20, 2, true);
+                //TrySet(pos, ViewRadiusInChunks + 3, 20, 2, true);
                 if (!loadedInitially)
                 {
                     loadedInitially = true;
@@ -627,7 +627,10 @@ namespace Voxalia.ServerGame.EntitySystem
                                 TheRegion.LoadChunk_Background(chl, (b) =>
                                 {
                                     TryChunk(chl * Chunk.CHUNK_SIZE, 0, posMult);
-                                    ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
+                                    if (!pkick)
+                                    {
+                                        ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
+                                    }
                                 });
                             }, Utilities.UtilRandom.NextDouble() * atime);
                         }
@@ -642,10 +645,14 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public void TryChunk(Location worldPos, float atime, int posMult) // TODO: Efficiency?
         {
+            if (pkick)
+            {
+                return;
+            }
             worldPos = TheRegion.ChunkLocFor(worldPos);
             ChunkAwarenessInfo cai = new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult };
             if (!ChunksAwareOf.ContainsKey(worldPos) || ChunksAwareOf[worldPos].LOD > posMult) // TODO: Efficiency - TryGetValue?
-            { // TODO: Or ATime > awareOf.remTime?
+            { // TODO: Or ATime < awareOf.remTime?
                 if (ChunksAwareOf.ContainsKey(worldPos)) // TODO: Efficiency - TryGetValue?
                 {
                     ChunkAwarenessInfo acai = ChunksAwareOf[worldPos];

@@ -163,6 +163,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public double GlobalTickTimeLocal = 0;
 
         public double Delta;
+
+        public float GamePadVibration = 0f;
         
         void tick (double delt)
         {
@@ -184,6 +186,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Shaders.Update(GlobalTickTimeLocal);
                     Models.Update(GlobalTickTimeLocal);
                     KeyHandler.Tick();
+                    if (RawGamePad != null)
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (GamePad.GetCapabilities(i).IsConnected)
+                            {
+                                RawGamePad.SetVibration(i, GamePadVibration, GamePadVibration);
+                            }
+                        }
+                    }
                     GamePadHandler.Tick(Delta);
                     MouseHandler.Tick();
                     UIConsole.Tick();
