@@ -5,6 +5,7 @@ using System.Text;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionTests.Manifolds;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using BEPUphysics.CollisionTests.CollisionAlgorithms;
 using BEPUphysics.CollisionTests.CollisionAlgorithms.GJK;
 using BEPUphysics.Constraints.Collision;
 using BEPUphysics.PositionUpdating;
@@ -108,18 +109,16 @@ namespace Voxalia.Shared.Collision
                 //Only perform the test if the minimum radii are small enough relative to the size of the velocity.
                 Vector3 velocity = convex.Entity.LinearVelocity * dt;
                 float velocitySquared = velocity.LengthSquared();
-
-                var minimumRadius = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
+                float minimumRadius = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
                 timeOfImpact = 1;
                 if (minimumRadius * minimumRadius < velocitySquared)
                 {
                     for (int i = 0; i < contactManifold.ActivePairs.Count; i++)
                     {
-                        var pair = contactManifold.ActivePairs.Values[i];
-                        //In the contact manifold, the box collidable is always put into the second slot.
-                        var boxCollidable = (ReusableGenericCollidable<ConvexShape>)pair.CollidableB;
+                        GeneralConvexPairTester pair = contactManifold.ActivePairs.Values[i];
+                        ReusableGenericCollidable<ConvexShape> boxCollidable = (ReusableGenericCollidable<ConvexShape>)pair.CollidableB;
                         RayHit rayHit;
-                        var worldTransform = boxCollidable.WorldTransform;
+                        RigidTransform worldTransform = boxCollidable.WorldTransform;
                         if (GJKToolbox.CCDSphereCast(new Ray(convex.WorldTransform.Position, velocity), minimumRadius, boxCollidable.Shape, ref worldTransform, timeOfImpact, out rayHit) &&
                             rayHit.T > Toolbox.BigEpsilon)
                         {

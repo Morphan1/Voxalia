@@ -885,7 +885,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
         }
 
-        float dist2 = 380; // TODO: View rad
+        float dist2 = 380; // TODO: (View rad + 2) * CHUNK_SIZE ? Or base off ZFAR?
         float dist = 340;
 
         public bool RenderSpecular = false;

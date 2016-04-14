@@ -419,23 +419,21 @@ namespace Voxalia.ServerGame.EntitySystem
             if (cpos != pChunkLoc)
             {
                 // TODO: Move to a separate method that's called once on startup + at every teleport... also, asyncify!
+                // TODO: Better system -> async?
+                TrySet(pos, 1, 0, 1, false);
+                TrySet(pos, ViewRadiusInChunks / 2, 0, 1, false);
+                TrySet(pos, ViewRadiusInChunks, 0, 1, false);
+                TrySet(pos, ViewRadiusInChunks + 1, 0, 2, true);
+                TrySet(pos, ViewRadiusInChunks + 2, 10, 2, true);
+                TrySet(pos, ViewRadiusInChunks + 3, 20, 2, true);
                 if (!loadedInitially)
                 {
-                    TrySet(pos, 1, 0, 1, false);
-                    TrySet(pos, ViewRadiusInChunks / 2, 0, 1, false);
-                    TrySet(pos, ViewRadiusInChunks, 0, 1, false);
-                    TrySet(pos, ViewRadiusInChunks + 2, 0, 2, true);
                     loadedInitially = true;
                     ChunkNetwork.SendPacket(new TeleportPacketOut(GetPosition()));
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 1));
                 }
                 else
                 {
-                    // TODO: Better system -> async?
-                    TrySet(pos, 1, 0, 1, false);
-                    TrySet(pos, ViewRadiusInChunks / 2, 0, 1, false);
-                    TrySet(pos, ViewRadiusInChunks, 0, 1, false);
-                    TrySet(pos, ViewRadiusInChunks + 2, 0, 2, true);
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
                 }
                 foreach (ChunkAwarenessInfo ch in ChunksAwareOf.Values)
