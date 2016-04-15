@@ -281,6 +281,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CVars.a_musicvolume.OnChanged += onMusicVolumeChanged;
             CVars.a_musicpitch.OnChanged += onMusicPitchChanged;
             CVars.a_music.OnChanged += onMusicChanged;
+            CVars.a_echovolume.OnChanged += OnEchoVolumeChanged;
+            OnEchoVolumeChanged(null, null);
             SysConsole.Output(OutputType.INIT, "Preparing inventory...");
             InitInventory();
             SysConsole.Output(OutputType.INIT, "Setting up screens...");
@@ -500,6 +502,22 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     CurrentMusic.IsBackground = true;
                 }
             });
+        }
+
+        public void OnEchoVolumeChanged(object obj, EventArgs e)
+        {
+            if (CVars.a_echovolume.ValueF < 0.001f)
+            {
+                Sounds.Microphone.StopEcho();
+            }
+            else
+            {
+                if (Sounds.Microphone.Capture == null)
+                {
+                    Sounds.Microphone.StartEcho();
+                }
+                Sounds.Microphone.Volume = Math.Min(CVars.a_echovolume.ValueF, 1f);
+            }
         }
 
         public void onMusicChanged(object obj, EventArgs e)

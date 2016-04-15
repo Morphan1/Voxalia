@@ -4,7 +4,7 @@ using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.CommandSystem.TagBases
 {
-    public class PlayerTags: TemplateTagBase
+    public class PlayerTagBase: TemplateTagBase
     {
         // <--[tag]
         // @Base player
@@ -19,7 +19,7 @@ namespace Voxalia.ClientGame.CommandSystem.TagBases
         /// <summary>
         /// Construct the PlayerTags - for internal use only.
         /// </summary>
-        public PlayerTags(Client tclient)
+        public PlayerTagBase(Client tclient)
         {
             Name = "player";
             TheClient = tclient;

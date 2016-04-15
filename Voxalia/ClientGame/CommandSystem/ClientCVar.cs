@@ -35,7 +35,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_godrays, r_godray_samples, r_godray_wexposure, r_godray_decay, r_godray_density, r_godray_color;
 
         // Audio CVars
-        public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect;
+        public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect, a_echovolume;
 
         // UI CVars
         public CVar u_mouse_sensitivity, u_reticle, u_reticlescale, u_showhud,
@@ -67,7 +67,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_fullscreen = Register("r_fullscreen", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use fullscreen mode.");
             r_width = Register("r_width", "1280", CVarFlag.Numeric | CVarFlag.Delayed, "What width the window should be.");
             r_height = Register("r_height", "720", CVarFlag.Numeric | CVarFlag.Delayed, "What height the window should be.");
-            r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed, "What AA mode to use (0 = none)."); // TODO: IMPLEMENT
+            r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed, "What AA mode to use (0 = none)."); // TODO: IMPLEMENT?
             r_vsync = Register("r_vsync", "true", CVarFlag.Boolean, "Whether to use vertical synchronization mode.");
             r_lighting = Register("r_lighting", "true", CVarFlag.Boolean, "Whether to enable 3D lighting (Otherwise, use FullBright).");
             r_renderwireframe = Register("r_renderwireframe", "false", CVarFlag.Boolean, "Whether to render a wireframe.");
@@ -95,7 +95,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_godray_decay = Register("r_godray_decay", "1", CVarFlag.Numeric, "What decay value to use when generating GodRays."); // TODO: Validate?
             r_godray_density = Register("r_godray_density", "0.84", CVarFlag.Numeric, "What density value to use when generating GodRays."); // TODO: Validate?
             r_godray_color = Register("r_godray_color", "1,1,1", CVarFlag.Textual, "What color to use for GodRays.");
-            r_toonify = Register("r_toonify", "false", CVarFlag.Boolean, "Whether to use a 'toonify' post-processing effect."); // TODO: callback to auto-set
+            r_toonify = Register("r_toonify", "false", CVarFlag.Boolean, "Whether to use a 'toonify' post-processing effect.");
             r_transplighting = Register("r_transplighting", "true", CVarFlag.Boolean, "Whether transparent objects should be lit properly (otherwise, fullbright).");
             r_transpshadows = Register("r_transpshadows", "false", CVarFlag.Boolean, "Whether transparent objects should be lit using HD shadows (Requires r_shadows true).");
             // Audio CVars
@@ -105,6 +105,7 @@ namespace Voxalia.ClientGame.CommandSystem
             a_globalpitch = Register("a_globalpitch", "1", CVarFlag.Numeric, "What pitch all sounds should be.");
             a_music = Register("a_music", "music/epic/bcvoxalia", CVarFlag.Textual | CVarFlag.ServerControl, "What music should be played.");
             a_quietondeselect = Register("a_quietondeselect", "true", CVarFlag.Boolean, "Whether to quiet music when the window is deselected.");
+            a_echovolume = Register("a_echovolume", "0", CVarFlag.Numeric, "What volume to echo microphone pickup at, for audio testing purposes. Specify 0 to not listen to the microphone at all.");
             // UI CVars
             u_mouse_sensitivity = Register("u_mouse_sensitivity", "1", CVarFlag.Numeric, "How sensitive the mouse is.");
             u_reticle = Register("u_reticle", "1", CVarFlag.Textual, "What reticle to use.");

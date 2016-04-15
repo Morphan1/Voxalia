@@ -79,8 +79,11 @@ namespace Voxalia.ClientGame.CommandSystem
             CommandSystem.RegisterCommand(new InventoryCommand(TheClient));
             CommandSystem.RegisterCommand(new TesteffectCommand(TheClient));
 
+            // General Tags
+            CommandSystem.TagSystem.Register(new AudioTagBase(TheClient));
+
             // Entity Tags
-            CommandSystem.TagSystem.Register(new PlayerTags(TheClient));
+            CommandSystem.TagSystem.Register(new PlayerTagBase(TheClient));
 
             CommandSystem.PostInit();
         }

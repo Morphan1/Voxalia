@@ -19,6 +19,8 @@ namespace Voxalia.ClientGame.AudioSystem
 
         public AudioContext Context;
 
+        public MicrophoneHandler Microphone;
+
         public Client TheClient;
 
         public ClientCVar CVars;
@@ -33,6 +35,11 @@ namespace Voxalia.ClientGame.AudioSystem
             CVars = cvar;
             Context = new AudioContext(AudioContext.DefaultDevice, 0, 0, false, true);
             Context.MakeCurrent();
+            if (Microphone != null)
+            {
+                Microphone.StopEcho();
+            }
+            Microphone = new MicrophoneHandler(this);
             if (Effects != null)
             {
                 foreach (SoundEffect sfx in Effects.Values)
@@ -86,6 +93,7 @@ namespace Voxalia.ClientGame.AudioSystem
                     PlayingNow[i].Backgrounded = false;
                 }
             }
+            Microphone.Tick();
             Vector3 pos = ClientUtilities.Convert(position);
             Vector3 forw = ClientUtilities.Convert(forward);
             Vector3 upvec = ClientUtilities.Convert(up);

@@ -126,7 +126,8 @@
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\DisconnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\StartlocalserverCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\NetusageCommand.cs" />
-    <Compile Include="ClientGame\CommandSystem\TagBases\PlayerTags.cs" />
+    <Compile Include="ClientGame\CommandSystem\TagBases\AudioTagBase.cs" />
+    <Compile Include="ClientGame\CommandSystem\TagBases\PlayerTagBase.cs" />
     <Compile Include="ClientGame\CommandSystem\TagObjects\EntityTagObjects\PlayerTag.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\ItemdownCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\ItemupCommand.cs" />
@@ -258,6 +259,7 @@
     <Compile Include="ClientGame\UISystem\MenuSystem\UITextLink.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIMenuButton.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIMenuItem.cs" />
+    <Compile Include="ClientGame\AudioSystem\MicrophoneHandler.cs" />
     <Compile Include="ClientGame\UISystem\MouseHandler.cs" />
     <Compile Include="ClientGame\UISystem\RawGamePad.cs" />
     <Compile Include="ClientGame\UISystem\UIConsole.cs" />
