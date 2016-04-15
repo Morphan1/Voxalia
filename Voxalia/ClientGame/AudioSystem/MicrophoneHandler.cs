@@ -33,11 +33,12 @@ namespace Voxalia.ClientGame.AudioSystem
                 StopEcho();
             }
             PlaybackSrc = AL.GenSource();
-            Capture = new AudioCapture(AudioCapture.DefaultDevice, 22050, ALFormat.Mono16, 4096);
+            Capture = new AudioCapture(AudioCapture.DefaultDevice, 11025, ALFormat.Mono8, 4096);
             Capture.Start();
+            AL.Source(PlaybackSrc, ALSourceb.SourceRelative, true);
         }
 
-        short[] buffer = new short[4096];
+        byte[] buffer = new byte[4096];
 
         public void Tick()
         {
@@ -49,9 +50,9 @@ namespace Voxalia.ClientGame.AudioSystem
             if (asamps > 0)
             {
                 Capture.ReadSamples(buffer, asamps);
-                stat_bytes += asamps * sizeof(short);
+                stat_bytes += asamps;
                 int buf = AL.GenBuffer();
-                AL.BufferData(buf, ALFormat.Mono16, buffer, asamps * sizeof(short), Capture.SampleFrequency);
+                AL.BufferData(buf, ALFormat.Mono8, buffer, asamps, Capture.SampleFrequency);
                 AL.SourceQueueBuffer(PlaybackSrc, buf);
                 AL.Source(PlaybackSrc, ALSourcef.Gain, Volume);
                 int bufc;
