@@ -38,6 +38,8 @@ namespace Voxalia.ClientGame.CommandSystem.TagBases
                 {
                     case "microphone_bytes":
                         return new IntegerTag(TheClient.Sounds.Microphone.stat_bytes).Handle(data.Shrink());
+                    case "microphone_post_bytes":
+                        return new IntegerTag(TheClient.Sounds.Microphone.stat_bytes2).Handle(data.Shrink());
                     default:
                         return new TextTag(ToString()).Handle(data);
                 }

@@ -57,6 +57,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>DEBUG</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BEPUphysics">
@@ -98,6 +99,9 @@
     <Compile Include="ClientGame\AudioSystem\ActiveSound.cs" />
     <Compile Include="ClientGame\AudioSystem\NoiseDefault.cs" />
     <Compile Include="ClientGame\AudioSystem\OggDecodeStream.cs" />
+    <Compile Include="ClientGame\AudioSystem\OpusWrapper\OpusAPI.cs" />
+    <Compile Include="ClientGame\AudioSystem\OpusWrapper\OpusDecoder.cs" />
+    <Compile Include="ClientGame\AudioSystem\OpusWrapper\OpusEncoder.cs" />
     <Compile Include="ClientGame\AudioSystem\SoundEffect.cs" />
     <Compile Include="ClientGame\AudioSystem\SoundEngine.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ChunkWaitingScreen.cs" />

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.AudioSystem.OpusWrapper;
 
 namespace Voxalia.ClientGame.AudioSystem
 {
@@ -21,9 +22,19 @@ namespace Voxalia.ClientGame.AudioSystem
 
         public long stat_bytes = 0;
 
+        public long stat_bytes2 = 0;
+
+        public OpusEncoder Encoder;
+
+        public OpusDecoder Decoder;
+
+        const int SampleRate = 16000;
+
         public MicrophoneHandler(SoundEngine eng)
         {
             Engine = eng;
+            Encoder = OpusEncoder.Create(SampleRate, 1, Application.Voip);
+            Decoder = OpusDecoder.Create(SampleRate, 1);
         }
 
         public void StartEcho()
@@ -33,12 +44,16 @@ namespace Voxalia.ClientGame.AudioSystem
                 StopEcho();
             }
             PlaybackSrc = AL.GenSource();
-            Capture = new AudioCapture(AudioCapture.DefaultDevice, 11025, ALFormat.Mono8, 4096);
+            Capture = new AudioCapture(AudioCapture.DefaultDevice, SampleRate, ALFormat.Mono16, 8192);
             Capture.Start();
             AL.Source(PlaybackSrc, ALSourceb.SourceRelative, true);
         }
+        
+        byte[] buffer = new byte[8192 * 2];
 
-        byte[] buffer = new byte[4096];
+        byte[] tempbuf = new byte[8192 * 2];
+
+        int tempasamps = 0;
 
         public void Tick()
         {
@@ -50,11 +65,38 @@ namespace Voxalia.ClientGame.AudioSystem
             if (asamps > 0)
             {
                 Capture.ReadSamples(buffer, asamps);
-                stat_bytes += asamps;
-                int buf = AL.GenBuffer();
-                AL.BufferData(buf, ALFormat.Mono8, buffer, asamps, Capture.SampleFrequency);
-                AL.SourceQueueBuffer(PlaybackSrc, buf);
-                AL.Source(PlaybackSrc, ALSourcef.Gain, Volume);
+                Array.Copy(buffer, 0, tempbuf, tempasamps * 2, asamps * 2);
+                tempasamps += asamps;
+                stat_bytes += asamps * 2;
+                int b = 0;
+                while ((tempasamps - b) >= 960)
+                {
+                    AddSection(b, 960);
+                    b += 960;
+                }
+                // Are the below while loops needed?
+                while ((tempasamps - b) >= 320)
+                {
+                    AddSection(b, 320);
+                    b += 320;
+                }
+                while ((tempasamps - b) >= 80)
+                {
+                    AddSection(b, 80);
+                    b += 80;
+                }
+                while ((tempasamps - b) >= 40)
+                {
+                    AddSection(b, 40);
+                    b += 40;
+                }
+                if (tempasamps - b > 0)
+                {
+                    byte[] tbuf = new byte[tempbuf.Length];
+                    Array.Copy(tempbuf, b, tbuf, 0, tempasamps - b);
+                    tempbuf = tbuf;
+                }
+                tempasamps -= b;
                 int bufc;
                 AL.GetSource(PlaybackSrc, ALGetSourcei.BuffersProcessed, out bufc);
                 if (bufc > 0)
@@ -67,6 +109,19 @@ namespace Voxalia.ClientGame.AudioSystem
                     AL.SourcePlay(PlaybackSrc);
                 }
             }
+        }
+
+        void AddSection(int start, int asamps)
+        {
+            byte[] tbuf = new byte[asamps * 2];
+            Array.Copy(tempbuf, tbuf, tbuf.Length);
+            byte[] dat = Encoder.Encode(tbuf);
+            stat_bytes2 += dat.Length;
+            byte[] decdat = Decoder.Decode(dat, dat.Length);
+            int buf = AL.GenBuffer();
+            AL.BufferData(buf, ALFormat.Mono16, decdat, decdat.Length, SampleRate);
+            AL.SourceQueueBuffer(PlaybackSrc, buf);
+            AL.Source(PlaybackSrc, ALSourcef.Gain, Volume);
         }
         
         public void StopEcho()
