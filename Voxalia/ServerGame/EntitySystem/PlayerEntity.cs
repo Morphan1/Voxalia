@@ -127,6 +127,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public int BestLOD = 1;
 
+        public PhysicsEntity Manipulator_Grabbed = null;
+
+        public float Manipulator_Distance = 10;
+
         /// <summary>
         /// Kicks the player from the server with a specified message.
         /// </summary>
@@ -189,6 +193,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("open_hand", TheServer, 1, "items/common/open_hand_ico", "Open Hand", "Grab things!", Color.White, "items/common/hand", true));
             Items.GiveItem(new ItemStack("fist", TheServer, 1, "items/common/fist_ico", "Fist", "Hit things!", Color.White, "items/common/fist", true));
             Items.GiveItem(new ItemStack("hook", TheServer, 1, "items/common/hook_ico", "Grappling Hook", "Grab distant things!", Color.White, "items/common/hook", true));
+            Items.GiveItem(TheServer.Items.GetItem("admintools/manipulator", 1));
             Items.GiveItem(new ItemStack("pickaxe", TheServer, 1, "items/tools/generic_pickaxe_ico", "Generic Pickaxe", "Rapid stone mining!", Color.White, "items/tools/generic_pickaxe", false));
             Items.GiveItem(new ItemStack("flashlight", TheServer, 1, "items/common/flashlight_ico", "Flashlight", "Lights things up!", Color.White, "items/common/flashlight", false));
             Items.GiveItem(new ItemStack("flashantilight", TheServer, 1, "items/common/flashlight_ico", "Flashantilight", "Lights things down!", Color.White, "items/common/flashlight", false));
