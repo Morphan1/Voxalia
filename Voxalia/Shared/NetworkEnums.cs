@@ -8,7 +8,7 @@ namespace Voxalia.Shared
         NONE = 0,
         RELOADING = 1,
         NEEDS_RELOAD = 2,
-        FOUR = 4,
+        NO_ROTATE = 4,
         EIGHT = 8,
         SIXTEEN = 16,
         THIRTYTWO = 32,

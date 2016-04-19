@@ -265,7 +265,17 @@ namespace Voxalia.ClientGame.EntitySystem
                   | (ItemRight ? KeysPacketData.ITEMRIGHT : 0)
                   | (ItemUp ? KeysPacketData.ITEMUP : 0)
                   | (ItemDown ? KeysPacketData.ITEMDOWN : 0);
-            TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction, lUIS.XMove, lUIS.YMove));
+            if (ServerFlags.HasFlag(YourStatusFlags.NO_ROTATE))
+            {
+                Location loc = new Location();
+                loc.Yaw = tyaw;
+                loc.Pitch = tpitch;
+                TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, loc, lUIS.XMove, lUIS.YMove));
+            }
+            else
+            {
+                TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction, lUIS.XMove, lUIS.YMove));
+            }
         }
 
         public void SetBodyMovement(CharacterController cc, UserInputSet uis)
@@ -386,6 +396,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public bool ItemRight;
         public bool ItemUp;
         public bool ItemDown;
+        double tyaw = 0;
+        double tpitch = 0;
 
         public override void Tick()
         {
@@ -398,10 +410,20 @@ namespace Voxalia.ClientGame.EntitySystem
                 return;
             }
             Body.ActivityInformation.Activate();
-            Direction.Yaw += MouseHandler.MouseDelta.X;
-            Direction.Pitch += MouseHandler.MouseDelta.Y;
-            Direction.Yaw += GamePadHandler.TotalDirectionX * 90f * TheRegion.Delta;
-            Direction.Pitch += GamePadHandler.TotalDirectionY * 45f * TheRegion.Delta;
+            if (ServerFlags.HasFlag(YourStatusFlags.NO_ROTATE))
+            {
+                tyaw = MouseHandler.MouseDelta.X;
+                tpitch = MouseHandler.MouseDelta.Y;
+                tyaw += GamePadHandler.TotalDirectionX * 90f * TheRegion.Delta;
+                tpitch += GamePadHandler.TotalDirectionY * 45f * TheRegion.Delta;
+            }
+            else
+            {
+                Direction.Yaw += MouseHandler.MouseDelta.X;
+                Direction.Pitch += MouseHandler.MouseDelta.Y;
+                Direction.Yaw += GamePadHandler.TotalDirectionX * 90f * TheRegion.Delta;
+                Direction.Pitch += GamePadHandler.TotalDirectionY * 45f * TheRegion.Delta;
+            }
             Vector2 tmove;
             if (Math.Abs(GamePadHandler.TotalMovementX) > 0.05) // TODO: Threshold CVar!
             {

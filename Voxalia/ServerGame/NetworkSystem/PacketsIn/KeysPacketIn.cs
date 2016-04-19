@@ -49,8 +49,16 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             Player.ItemUp = iup;
             Player.ItemDown = idown;
             Player.LastKPI = Player.TheRegion.GlobalTickTime;
-            Player.Direction.Yaw = yaw;
-            Player.Direction.Pitch = pitch;
+            if (Player.Flags.HasFlag(YourStatusFlags.NO_ROTATE))
+            {
+                Player.AttemptedDirectionChange.Yaw += yaw;
+                Player.AttemptedDirectionChange.Pitch += pitch;
+            }
+            else
+            {
+                Player.Direction.Yaw = yaw;
+                Player.Direction.Pitch = pitch;
+            }
             Player.XMove = tmove.X;
             Player.YMove = tmove.Y;
             Player.Network.SendPacket(new YourPositionPacketOut(Player.TheRegion.GlobalTickTime, tid,

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.Shared;
 using Voxalia.Shared.Collision;
+using BEPUutilities;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
@@ -56,6 +57,9 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             PlayerEntity player = (PlayerEntity)entity;
             player.Manipulator_Grabbed = null;
+            player.Flags &= ~YourStatusFlags.NO_ROTATE;
+            player.AttemptedDirectionChange = Location.Zero;
+            player.SendStatus();
         }
 
         public override void Tick(Entity entity, ItemStack item)
@@ -84,6 +88,42 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             Location goal = player.GetEyePosition() + player.ForwardVector() * player.Manipulator_Distance;
             player.Manipulator_Grabbed.SetVelocity((goal - player.Manipulator_Grabbed.GetPosition()) * 5f);
+            if (player.Flags.HasFlag(YourStatusFlags.NO_ROTATE))
+            {
+                // TODO: Better method for easy rotation
+                Quaternion quat = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)player.AttemptedDirectionChange.Pitch * 0.1f)
+                    * Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)player.AttemptedDirectionChange.Yaw * 0.1f);
+                player.Manipulator_Grabbed.SetOrientation(player.Manipulator_Grabbed.GetOrientation() * quat);
+                player.Manipulator_Grabbed.SetAngularVelocity(Location.Zero);
+                player.AttemptedDirectionChange = Location.Zero;
+            }
+        }
+
+        public override void AltClick(Entity entity, ItemStack item)
+        {
+            if (!(entity is PlayerEntity))
+            {
+                return; // TODO: non-player support?
+            }
+            PlayerEntity player = (PlayerEntity)entity;
+            if (!player.Flags.HasFlag(YourStatusFlags.NO_ROTATE))
+            {
+                player.Flags |= YourStatusFlags.NO_ROTATE;
+                player.SendStatus();
+                player.AttemptedDirectionChange = Location.Zero;
+            }
+        }
+
+        public override void ReleaseAltClick(Entity entity, ItemStack item)
+        {
+            if (!(entity is PlayerEntity))
+            {
+                return; // TODO: non-player support?
+            }
+            PlayerEntity player = (PlayerEntity)entity;
+            player.Flags &= ~YourStatusFlags.NO_ROTATE;
+            player.AttemptedDirectionChange = Location.Zero;
+            player.SendStatus();
         }
     }
 }

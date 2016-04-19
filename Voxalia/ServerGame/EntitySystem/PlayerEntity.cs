@@ -131,6 +131,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public float Manipulator_Distance = 10;
 
+        public Location AttemptedDirectionChange = Location.Zero;
+        
         /// <summary>
         /// Kicks the player from the server with a specified message.
         /// </summary>
