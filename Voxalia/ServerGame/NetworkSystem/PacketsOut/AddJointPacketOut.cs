@@ -91,6 +91,18 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 Data[0] = 11;
                 Utilities.FloatToBytes(((ConstWheelStepUp)joint).Height).CopyTo(Data, len);
             }
+            else if (joint is ConnectorBeam)
+            {
+                Data = new byte[len + 4];
+                Data[0] = 12;
+                Utilities.IntToBytes(((ConnectorBeam)joint).color.ToArgb()).CopyTo(Data, len);
+            }
+            else if (joint is ConnectorCurveBeam)
+            {
+                Data = new byte[len + 4];
+                Data[0] = 13;
+                Utilities.IntToBytes(((ConnectorCurveBeam)joint).color.ToArgb()).CopyTo(Data, len);
+            }
             Utilities.LongToBytes(joint.One.EID).CopyTo(Data, 1);
             Utilities.LongToBytes(joint.Two.EID).CopyTo(Data, 1 + 8);
             Utilities.LongToBytes(joint.JID).CopyTo(Data, 1 + 8 + 8);

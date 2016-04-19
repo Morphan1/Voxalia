@@ -7,6 +7,7 @@ using Voxalia.ServerGame.EntitySystem;
 using Voxalia.Shared;
 using Voxalia.Shared.Collision;
 using BEPUutilities;
+using Voxalia.ServerGame.JointSystem;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
@@ -37,6 +38,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             PhysicsEntity target = (PhysicsEntity)cr.HitEnt.Tag;
             player.Manipulator_Grabbed = target;
             player.Manipulator_Distance = (float)(eye - target.GetPosition()).Length();
+            player.Manipulator_Beam = new ConnectorCurveBeam();
+            player.Manipulator_Beam.One = player;
+            player.Manipulator_Beam.Two = target;
+            player.Manipulator_Beam.color = Colors.LIGHT_STROBE_CYAN;
+            player.TheRegion.AddJoint(player.Manipulator_Beam);
         }
 
         public override void ReleaseClick(Entity entity, ItemStack item)
@@ -47,6 +53,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             PlayerEntity player = (PlayerEntity)entity;
             player.Manipulator_Grabbed = null;
+            if (player.Manipulator_Beam != null)
+            {
+                player.TheRegion.DestroyJoint(player.Manipulator_Beam);
+                player.Manipulator_Beam = null;
+            }
         }
 
         public override void SwitchFrom(Entity entity, ItemStack item)
@@ -60,6 +71,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             player.Flags &= ~YourStatusFlags.NO_ROTATE;
             player.AttemptedDirectionChange = Location.Zero;
             player.SendStatus();
+            if (player.Manipulator_Beam != null)
+            {
+                player.TheRegion.DestroyJoint(player.Manipulator_Beam);
+                player.Manipulator_Beam = null;
+            }
         }
 
         public override void Tick(Entity entity, ItemStack item)

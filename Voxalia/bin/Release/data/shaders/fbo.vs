@@ -20,7 +20,7 @@ out struct vox_out
 
 const int MAX_BONES = 200;
 
-vec4 color_for(in vec4 pos);
+vec4 color_for(in vec4 pos, in vec4 colt);
 float snoise2(in vec3 v);
 
 layout (location = 1) uniform mat4 proj_matrix = mat4(1.0);
@@ -65,7 +65,7 @@ void main()
 	f.position = mv_matrix * vec4(pos1.xyz, 1.0);
 	f.position /= f.position.w;
 	//vec4 norm1 = boneTransform * vec4(normal, 1.0);
-    f.color = color_for(f.position) * v_color;
+    f.color = color_for(f.position, color * v_color);
 	gl_Position = proj_matrix * mv_matrix * vec4(pos1.xyz, 1.0);
 	mat4 mv_mat_simple = mv_matrix;
 	mv_mat_simple[3][0] = 0.0;
@@ -79,11 +79,13 @@ void main()
 
 const float min_cstrobe = 3.0 / 255.0;
 
-vec4 color_for(in vec4 pos)
+const float min_transp = 1.0 / 255.0;
+
+vec4 color_for(in vec4 pos, in vec4 colt)
 {
-	if (color.w == 0.0)
+	if (colt.w <= min_transp)
 	{
-		if (color.x == 0.0 && color.y == 0.0 && color.z == 0.0)
+		if (colt.x == 0.0 && colt.y == 0.0 && colt.z == 0.0)
 		{
 			float r = snoise2(vec3((pos.x + time) / 10.0, (pos.y + time) / 10.0, (pos.z + time) / 10.0));
 			float g = snoise2(vec3((pos.x + 50.0 + time * 2) / 10.0, (pos.y + 127.0 + time * 1.7) / 10.0, (pos.z + 10.0 + time * 2.3) / 10.0));
@@ -97,19 +99,19 @@ vec4 color_for(in vec4 pos)
 			{
 				adjust = 2.0 - adjust;
 			}
-			return vec4(color.x * adjust, color.y * adjust, color.z * adjust, 1.0);
+			return vec4(colt.x * adjust, colt.y * adjust, colt.z * adjust, 1.0);
 		}
 	}
-	else if (color.w <= min_cstrobe)
+	else if (colt.w <= min_cstrobe)
 	{
 			float adjust = abs(mod(time * 0.2, 2.0));
 			if (adjust > 1.0)
 			{
 				adjust = 2.0 - adjust;
 			}
-			return vec4(1.0 - color.x * adjust, 1.0 - color.y * adjust, 1.0 - color.z * adjust, 1.0);
+			return vec4(1.0 - colt.x * adjust, 1.0 - colt.y * adjust, 1.0 - colt.z * adjust, 1.0);
 	}
-	return color;
+	return colt;
 }
 
 

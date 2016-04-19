@@ -14,6 +14,7 @@ using Voxalia.Shared.Collision;
 using System.Diagnostics;
 using FreneticScript;
 using Voxalia.ClientGame.WorldSystem;
+using Voxalia.ClientGame.EntitySystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -1128,14 +1129,43 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             for (int i = 0; i < TheRegion.Joints.Count; i++)
             {
-                // TODO: Only render if set to
-                if (TheRegion.Joints[i] is JointDistance)
+                if (TheRegion.Joints[i] is ConnectorBeam)
                 {
-                    Rendering.RenderLine(((JointDistance)TheRegion.Joints[i]).Ent1Pos + TheRegion.Joints[i].One.GetPosition(), ((JointDistance)TheRegion.Joints[i]).Ent2Pos + TheRegion.Joints[i].Two.GetPosition());
+                    Location one = TheRegion.Joints[i].One.GetPosition();
+                    if (TheRegion.Joints[i].One is CharacterEntity)
+                    {
+                        one = ((CharacterEntity)TheRegion.Joints[i].One).GetEyePosition() + new Location(0, 0, -0.3);
+                    }
+                    Location two = TheRegion.Joints[i].Two.GetPosition();
+                    GL.LineWidth(3);
+                    Vector4 col = Rendering.AdaptColor(ClientUtilities.Convert((one + two) * 0.5), ((ConnectorBeam)TheRegion.Joints[i]).color);
+                    Rendering.SetColor(col);
+                    Rendering.RenderLine(one, two);
+                    GL.LineWidth(1);
                 }
-                else
+                else if (TheRegion.Joints[i] is ConnectorCurveBeam)
                 {
-                    //Rendering.RenderLine(Joints[i].Ent1.GetPosition(), Joints[i].Ent2.GetPosition());
+                    Location one = TheRegion.Joints[i].One.GetPosition();
+                    Location two = TheRegion.Joints[i].Two.GetPosition();
+                    Location cPoint = (one + two) * 0.5f;
+                    if (TheRegion.Joints[i].One is CharacterEntity)
+                    {
+                        one = ((CharacterEntity)TheRegion.Joints[i].One).GetEyePosition() + new Location(0, 0, -0.3);
+                        cPoint = one + ((CharacterEntity)TheRegion.Joints[i].One).ForwardVector() * (two - one).Length();
+                    }
+                    GL.LineWidth(3);
+                    const int curvePoints = 10;
+                    const double step = 1.0 / curvePoints;
+                    Location curvePos = one;
+                    for (double t = step; t <= 1; t += step)
+                    {
+                        Vector4 col = Rendering.AdaptColor(ClientUtilities.Convert(cPoint), ((ConnectorCurveBeam)TheRegion.Joints[i]).color);
+                        Rendering.SetColor(col);
+                        Location c2 = CalculateBezierPoint(t, one, cPoint, two);
+                        Rendering.RenderLine(curvePos, c2);
+                        curvePos = c2;
+                    }
+                    GL.LineWidth(1);
                 }
             }
             if (!shadows_only)
@@ -1148,6 +1178,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
             }
+        }
+
+        Location CalculateBezierPoint(double t, Location p0, Location p1, Location p2)
+        {
+            double u = 1 - t;
+            return (u * u) * p0 + 2 * u * t * p1 + t * t * p2;
         }
 
         public bool RenderTextures = true;

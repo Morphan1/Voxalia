@@ -218,6 +218,36 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 TheClient.TheRegion.AddJoint(cwsu);
                 return true;
             }
+            else if (type == 12)
+            {
+                if (data.Length != len + 4)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
+                    return false;
+                }
+                ConnectorBeam cb = new ConnectorBeam();
+                cb.One = pe1;
+                cb.Two = pe2;
+                cb.color = System.Drawing.Color.FromArgb(Utilities.BytesToInt(Utilities.BytesPartial(data, len, 4)));
+                cb.JID = JID;
+                TheClient.TheRegion.AddJoint(cb);
+                return true;
+            }
+            else if (type == 13)
+            {
+                if (data.Length != len + 4)
+                {
+                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
+                    return false;
+                }
+                ConnectorCurveBeam ccb = new ConnectorCurveBeam();
+                ccb.One = pe1;
+                ccb.Two = pe2;
+                ccb.color = System.Drawing.Color.FromArgb(Utilities.BytesToInt(Utilities.BytesPartial(data, len, 4)));
+                ccb.JID = JID;
+                TheClient.TheRegion.AddJoint(ccb);
+                return true;
+            }
             else
             {
                 SysConsole.Output(OutputType.WARNING, "Unknown joint type " + type);

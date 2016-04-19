@@ -160,6 +160,8 @@
     <Compile Include="ServerGame\ItemSystem\RecipeRegistry.cs" />
     <Compile Include="ServerGame\JointSystem\BaseFJoint.cs" />
     <Compile Include="ServerGame\JointSystem\BaseJoint.cs" />
+    <Compile Include="ServerGame\JointSystem\ConnectorBeam.cs" />
+    <Compile Include="ServerGame\JointSystem\ConnectorCurveBeam.cs" />
     <Compile Include="ServerGame\JointSystem\ConstWheelStepUp.cs" />
     <Compile Include="ServerGame\JointSystem\InternalBaseJoint.cs" />
     <Compile Include="ServerGame\JointSystem\JointBallSocket.cs" />
