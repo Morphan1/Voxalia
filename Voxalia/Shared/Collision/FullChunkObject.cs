@@ -25,7 +25,7 @@ namespace Voxalia.Shared.Collision
         public static void RegisterMe()
         {
             NarrowPhasePairFactory<ConvexFCOPairHandler> fact = new NarrowPhasePairFactory<ConvexFCOPairHandler>();
-            //NarrowPhasePairFactory<ConcaveFCOPairHandler> fact2 = new NarrowPhasePairFactory<ConcaveFCOPairHandler>();
+            NarrowPhasePairFactory<MCCFCOPairHandler> fact2 = new NarrowPhasePairFactory<MCCFCOPairHandler>();
             NarrowPhasePairFactory<ConvexMCCPairHandler> fact3 = new NarrowPhasePairFactory<ConvexMCCPairHandler>();
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<BoxShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<SphereShape>), typeof(FullChunkObject)), fact);
@@ -38,7 +38,7 @@ namespace Voxalia.Shared.Collision
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<WrappedShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<ConvexHullShape>), typeof(FullChunkObject)), fact);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(TriangleCollidable), typeof(FullChunkObject)), fact);
-            //NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(MobileMeshCollidable), typeof(FullChunkObject)), fact2);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(MobileMeshCollidable), typeof(FullChunkObject)), fact2);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<BoxShape>), typeof(MobileChunkCollidable)), fact3);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<SphereShape>), typeof(MobileChunkCollidable)), fact3);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<CapsuleShape>), typeof(MobileChunkCollidable)), fact3);

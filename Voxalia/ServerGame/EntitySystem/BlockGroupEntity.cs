@@ -56,7 +56,6 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks); // TODO: Anything offset related needed here?
                 shapeOffs = Location.Zero;
-                SetMass(0);
             }
             else
             {
@@ -64,7 +63,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             SetPosition(baseloc);
         }
-
+        
         public override void SetPosition(Location pos)
         {
             base.SetPosition(pos + shapeOffs);

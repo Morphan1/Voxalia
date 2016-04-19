@@ -124,7 +124,6 @@ namespace Voxalia.Shared.Collision
         {
             // TODO: Update!
             BoundingBox b2 = new BoundingBox();
-            // TODO: Maybe not by inverse?
             RigidTransform.TransformByInverse(ref boundingBox.Min, ref transform, out b2.Min);
             RigidTransform.TransformByInverse(ref boundingBox.Max, ref transform, out b2.Max);
             var min = new Vector3i

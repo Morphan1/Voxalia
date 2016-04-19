@@ -344,12 +344,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 Destroy();
             }
-            if (Vertices.Count == 0)
+            GL.BindVertexArray(0);
+            if (Vertices == null && verts == null)
+            {
+                SysConsole.Output(OutputType.ERROR, "Failed to render VBO, null vertices!");
+                return;
+            }
+            Vector3[] vecs = verts == null ? Vertices.ToArray() : verts;
+            if (vecs.Length == 0)
             {
                 return;
             }
-            GL.BindVertexArray(0);
-            Vector3[] vecs = verts == null ? Vertices.ToArray() : verts;
             uint[] inds = indices == null ? Indices.ToArray() : indices;
             Vector3[] norms = normals == null ? Normals.ToArray() : normals;
             Vector3[] texs = texts == null ? TexCoords.ToArray() : texts;

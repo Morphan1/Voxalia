@@ -99,11 +99,17 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// </summary>
         public bool ShuttingDown = false;
 
+        Thread CurThread;
+
         /// <summary>
         /// Shuts down the server, saving any necessary data.
         /// </summary>
         public void ShutDown()
         {
+            if (CurThread != Thread.CurrentThread)
+            {
+                CurThread.Abort();
+            }
             ShuttingDown = true;
             SysConsole.Output(OutputType.INFO, "[Shutdown] Starting to close server...");
             Schedule.Tasks.Clear();
@@ -151,6 +157,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// </summary>
         public void StartUp(Action loaded = null)
         {
+            CurThread = Thread.CurrentThread;
             SysConsole.Output(OutputType.INIT, "Launching as new server, this is " + (this == Central ? "" : "NOT ") + "the Central server.");
             SysConsole.Output(OutputType.INIT, "Loading console input handler...");
             ConsoleHandler.Init();

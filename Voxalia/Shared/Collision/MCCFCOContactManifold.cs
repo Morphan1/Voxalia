@@ -16,7 +16,6 @@ using BEPUphysics.CollisionTests;
 
 namespace Voxalia.Shared.Collision
 {
-    /*
     public class MCCFCOContactManifold : ContactManifold
     {
         static LockingResourcePool<GeneralConvexPairTester> testerPool = new LockingResourcePool<GeneralConvexPairTester>();
@@ -113,7 +112,19 @@ namespace Voxalia.Shared.Collision
                 QuickList<GeneralConvexPairTester> manifolds;
                 if (!ActivePairs.TryGetValue(overlaps.Elements[i], out manifolds))
                 {
-                    manifolds = GetPairs(ref overlaps.Elements[i]);
+                    RigidTransform rt = mobile.WorldTransform;
+                    Vector3i cur = overlaps.Elements[i];
+                    Vector3 curf = new Vector3(cur.X, cur.Y, cur.Z);
+                    Vector3 cf;
+                    RigidTransform.TransformByInverse(ref curf, ref rt, out cf);
+                    Vector3i holder = new Vector3i((int)cf.X, (int)cf.Y, (int)cf.Z);
+                    Vector3i size = mobile.ChunkShape.ChunkSize;
+                    if (!(holder.X >= size.X || holder.Y >= size.Y || holder.Z >= size.Z
+                        || holder.X < 0 || holder.Y < 0 || holder.Z < 0))
+                    {
+                        continue;
+                    }
+                    manifolds = GetPairs(ref holder, ref overlaps.Elements[i]);
                 }
                 else
                 {
@@ -198,5 +209,5 @@ namespace Voxalia.Shared.Collision
             activePairsBackBuffer.Dispose();
             base.CleanUp();
         }
-    }*/
+    }
 }

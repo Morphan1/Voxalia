@@ -101,11 +101,11 @@ namespace Voxalia.Shared
     {
         public Action MyAction;
 
-        public ScheduleItem FollowUp = null;
+        public ASyncScheduleItem FollowUp = null;
 
         Object Locker = new Object();
 
-        bool Started = false;
+        public bool Started = false;
 
         bool Done = false;
 
@@ -129,6 +129,10 @@ namespace Voxalia.Shared
         {
             lock (Locker)
             {
+                if (FollowUp != null)
+                {
+                    return FollowUp.ReplaceOrFollowWith(item);
+                }
                 if (Started)
                 {
                     if (Done)
@@ -151,7 +155,7 @@ namespace Voxalia.Shared
             }
         }
 
-        public void FollowWith(ScheduleItem item)
+        public void FollowWith(ASyncScheduleItem item)
         {
             lock (Locker)
             {

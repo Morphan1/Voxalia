@@ -21,7 +21,6 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace Voxalia.Shared.Collision
 {
-    /*
     public class MCCFCOPairHandler : StandardPairHandler
     {
         FullChunkObject mesh;
@@ -157,5 +156,5 @@ namespace Voxalia.Shared.Collision
             }
             info.Pair = this;
         }
-    }*/
+    }
 }
