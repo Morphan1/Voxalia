@@ -125,6 +125,8 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public int ViewRadiusInChunks = 3;
 
+        public int BestLOD = 1;
+
         /// <summary>
         /// Kicks the player from the server with a specified message.
         /// </summary>
@@ -438,9 +440,13 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 foreach (ChunkAwarenessInfo ch in ChunksAwareOf.Values)
                 {
-                    if (!ShouldLoadChunk(ch.ChunkPos) || (!ShouldSeeChunk(ch.ChunkPos) && ch.LOD == 1))
+                    if (!ShouldLoadChunk(ch.ChunkPos))
                     {
                         removes.Add(TheRegion.GetChunk(ch.ChunkPos));
+                    }
+                    else if (!ShouldSeeChunk(ch.ChunkPos) && ch.LOD <= BestLOD)
+                    {
+                        ch.LOD = Chunk.CHUNK_SIZE;
                     }
                 }
                 foreach (Chunk loc in removes)
