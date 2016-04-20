@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.JointSystem
 {
@@ -14,5 +15,7 @@ namespace Voxalia.ServerGame.JointSystem
         {
             // Do nothing.
         }
+
+        public BeamType type;
     }
 }

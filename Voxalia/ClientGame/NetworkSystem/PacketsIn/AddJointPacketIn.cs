@@ -220,7 +220,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 12)
             {
-                if (data.Length != len + 4)
+                if (data.Length != len + 4 + 1)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
@@ -230,22 +230,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 cb.Two = pe2;
                 cb.color = System.Drawing.Color.FromArgb(Utilities.BytesToInt(Utilities.BytesPartial(data, len, 4)));
                 cb.JID = JID;
+                cb.type = (BeamType)data[len + 4];
                 TheClient.TheRegion.AddJoint(cb);
-                return true;
-            }
-            else if (type == 13)
-            {
-                if (data.Length != len + 4)
-                {
-                    SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
-                    return false;
-                }
-                ConnectorCurveBeam ccb = new ConnectorCurveBeam();
-                ccb.One = pe1;
-                ccb.Two = pe2;
-                ccb.color = System.Drawing.Color.FromArgb(Utilities.BytesToInt(Utilities.BytesPartial(data, len, 4)));
-                ccb.JID = JID;
-                TheClient.TheRegion.AddJoint(ccb);
                 return true;
             }
             else

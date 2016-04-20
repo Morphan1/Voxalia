@@ -46,6 +46,7 @@ namespace Voxalia.ServerGame.OtherSystems
             }
             catch (Exception ex)
             {
+                Utilities.CheckException(ex);
                 SysConsole.Output(OutputType.ERROR, ex.ToString());
             }
             return null;

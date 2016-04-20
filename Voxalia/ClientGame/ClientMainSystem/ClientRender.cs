@@ -1131,41 +1131,73 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 if (TheRegion.Joints[i] is ConnectorBeam)
                 {
-                    Location one = TheRegion.Joints[i].One.GetPosition();
-                    if (TheRegion.Joints[i].One is CharacterEntity)
+                    switch (((ConnectorBeam)TheRegion.Joints[i]).type)
                     {
-                        one = ((CharacterEntity)TheRegion.Joints[i].One).GetEyePosition() + new Location(0, 0, -0.3);
+                        case BeamType.STRAIGHT:
+                            {
+                                Location one = TheRegion.Joints[i].One.GetPosition();
+                                if (TheRegion.Joints[i].One is CharacterEntity)
+                                {
+                                    one = ((CharacterEntity)TheRegion.Joints[i].One).GetEyePosition() + new Location(0, 0, -0.3);
+                                }
+                                Location two = TheRegion.Joints[i].Two.GetPosition();
+                                GL.LineWidth(3);
+                                Vector4 col = Rendering.AdaptColor(ClientUtilities.Convert((one + two) * 0.5), ((ConnectorBeam)TheRegion.Joints[i]).color);
+                                Rendering.SetColor(col);
+                                Rendering.RenderLine(one, two);
+                                GL.LineWidth(1);
+                            }
+                            break;
+                        case BeamType.CURVE:
+                            {
+                                Location one = TheRegion.Joints[i].One.GetPosition();
+                                Location two = TheRegion.Joints[i].Two.GetPosition();
+                                Location cPoint = (one + two) * 0.5f;
+                                if (TheRegion.Joints[i].One is CharacterEntity)
+                                {
+                                    one = ((CharacterEntity)TheRegion.Joints[i].One).GetEyePosition() + new Location(0, 0, -0.3);
+                                    cPoint = one + ((CharacterEntity)TheRegion.Joints[i].One).ForwardVector() * (two - one).Length();
+                                }
+                                GL.LineWidth(3);
+                                DrawCurve(one, two, cPoint, ((ConnectorBeam)TheRegion.Joints[i]).color);
+                                GL.LineWidth(1);
+                            }
+                            break;
+                        case BeamType.MULTICURVE:
+                            {
+                                Location one = TheRegion.Joints[i].One.GetPosition();
+                                Location two = TheRegion.Joints[i].Two.GetPosition();
+                                double forlen = 1;
+                                Location forw = Location.UnitZ;
+                                if (TheRegion.Joints[i].One is CharacterEntity)
+                                {
+                                    one = ((CharacterEntity)TheRegion.Joints[i].One).GetEyePosition() + new Location(0, 0, -0.3);
+                                    forlen = (two - one).Length();
+                                    forw = ((CharacterEntity)TheRegion.Joints[i].One).ForwardVector();
+                                }
+                                Location spos = one + forw * forlen;
+                                const int curves = 5;
+                                BEPUutilities.Vector3 bvec = new BEPUutilities.Vector3(0, 0, 1);
+                                BEPUutilities.Vector3 bvec2 = new BEPUutilities.Vector3(1, 0, 0);
+                                BEPUutilities.Quaternion bquat;
+                                BEPUutilities.Quaternion.GetQuaternionBetweenNormalizedVectors(ref bvec2, ref bvec, out bquat);
+                                BEPUutilities.Vector3 forwvec = forw.ToBVector();
+                                GL.LineWidth(6);
+                                DrawCurve(one, two, spos, ((ConnectorBeam)TheRegion.Joints[i]).color);
+                                GL.LineWidth(3);
+                                for (int c = 0; c < curves; c++)
+                                {
+                                    double tang = TheRegion.GlobalTickTimeLocal + Math.PI * 2.0 * ((double)c / (double)curves);
+                                    BEPUutilities.Vector3 res = BEPUutilities.Quaternion.Transform(forw.ToBVector(), bquat);
+                                    BEPUutilities.Quaternion quat = BEPUutilities.Quaternion.CreateFromAxisAngle(forw.ToBVector(), (float)(tang % (Math.PI * 2.0)));
+                                    res = BEPUutilities.Quaternion.Transform(res, quat);
+                                    res = res * (float)(0.1 * forlen);
+                                    DrawCurve(one, two, spos + new Location(res), ((ConnectorBeam)TheRegion.Joints[i]).color);
+                                }
+                                GL.LineWidth(1);
+                            }
+                            break;
                     }
-                    Location two = TheRegion.Joints[i].Two.GetPosition();
-                    GL.LineWidth(3);
-                    Vector4 col = Rendering.AdaptColor(ClientUtilities.Convert((one + two) * 0.5), ((ConnectorBeam)TheRegion.Joints[i]).color);
-                    Rendering.SetColor(col);
-                    Rendering.RenderLine(one, two);
-                    GL.LineWidth(1);
-                }
-                else if (TheRegion.Joints[i] is ConnectorCurveBeam)
-                {
-                    Location one = TheRegion.Joints[i].One.GetPosition();
-                    Location two = TheRegion.Joints[i].Two.GetPosition();
-                    Location cPoint = (one + two) * 0.5f;
-                    if (TheRegion.Joints[i].One is CharacterEntity)
-                    {
-                        one = ((CharacterEntity)TheRegion.Joints[i].One).GetEyePosition() + new Location(0, 0, -0.3);
-                        cPoint = one + ((CharacterEntity)TheRegion.Joints[i].One).ForwardVector() * (two - one).Length();
-                    }
-                    GL.LineWidth(3);
-                    const int curvePoints = 10;
-                    const double step = 1.0 / curvePoints;
-                    Location curvePos = one;
-                    for (double t = step; t <= 1; t += step)
-                    {
-                        Vector4 col = Rendering.AdaptColor(ClientUtilities.Convert(cPoint), ((ConnectorCurveBeam)TheRegion.Joints[i]).color);
-                        Rendering.SetColor(col);
-                        Location c2 = CalculateBezierPoint(t, one, cPoint, two);
-                        Rendering.RenderLine(curvePos, c2);
-                        curvePos = c2;
-                    }
-                    GL.LineWidth(1);
                 }
             }
             if (!shadows_only)
@@ -1177,6 +1209,21 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture3);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
+            }
+        }
+
+        void DrawCurve(Location one, Location two, Location cPoint, System.Drawing.Color color)
+        {
+            const int curvePoints = 10;
+            const double step = 1.0 / curvePoints;
+            Location curvePos = one;
+            for (double t = step; t <= 1; t += step)
+            {
+                Vector4 col = Rendering.AdaptColor(ClientUtilities.Convert(cPoint), color);
+                Rendering.SetColor(col);
+                Location c2 = CalculateBezierPoint(t, one, cPoint, two);
+                Rendering.RenderLine(curvePos, c2);
+                curvePos = c2;
             }
         }
 

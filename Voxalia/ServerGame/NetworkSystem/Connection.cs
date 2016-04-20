@@ -290,6 +290,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                 }
                 finally
                 {
+                    Utilities.CheckException(ex);
                     SysConsole.Output(OutputType.WARNING, "Forcibly disconnected client: " + ex.GetType().Name + ": " + ex.Message);
                     // TODO: Debug Only
                     SysConsole.Output(ex);

@@ -156,6 +156,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             }
             catch (Exception ex)
             {
+                Utilities.CheckException(ex);
                 SysConsole.Output(OutputType.ERROR, "Tick: " + ex.ToString());
             }
         }

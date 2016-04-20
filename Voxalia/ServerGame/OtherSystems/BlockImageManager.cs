@@ -187,6 +187,7 @@ namespace Voxalia.ServerGame.OtherSystems
                 }
                 catch (Exception ex)
                 {
+                    Utilities.CheckException(ex);
                     SysConsole.Output("loading texture for '" + dat[0] + "': '" + actualtexture + "'", ex);
                 }
             }

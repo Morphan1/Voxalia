@@ -88,12 +88,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// The system that handles rendering images of blocks.
         /// </summary>
         public BlockImageManager BlockImages;
-
-        /// <summary>
-        /// Whether the server needs to keep ticking - setting this false will end the server central tick process soon.
-        /// </summary>
-        bool TickMe = true;
-
+        
         /// <summary>
         /// Never run unneeded code when in shutdown mode!
         /// </summary>
@@ -123,6 +118,8 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 region.UnloadFully();
             }
             LoadedRegions.Clear();
+            SysConsole.Output(OutputType.INFO, "[Shutdown] Clearing plugins...");
+            Plugins.UnloadPlugins();
             SysConsole.Output(OutputType.INFO, "[Shutdown] Closing server...");
             ShutDownQuickly();
         }
@@ -132,12 +129,17 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// </summary>
         public void ShutDownQuickly()
         {
+            if (CurThread != Thread.CurrentThread)
+            {
+                CurThread.Abort();
+            }
+            ShuttingDown = true;
             foreach (Region reg in LoadedRegions)
             {
                 reg.FinalShutdown();
             }
-            TickMe = false;
             ConsoleHandler.Close();
+            Thread.CurrentThread.Abort();
         }
 
         public void CommandInputHandle(object sender, ConsoleCommandEventArgs e)
@@ -215,54 +217,57 @@ namespace Voxalia.ServerGame.ServerMainSystem
             double CurrentDelta = 0d;
             double TargetDelta = 0d;
             int targettime = 0;
-            while (TickMe)
+            try
             {
-                // Update the tick time usage counter
-                Counter.Reset();
-                Counter.Start();
-                // Update the tick delta counter
-                DeltaCounter.Stop();
-                // Delta time = Elapsed ticks * (ticks/second)
-                CurrentDelta = ((double)DeltaCounter.ElapsedTicks) / ((double)Stopwatch.Frequency);
-                // Begin the delta counter to find out how much time is /really/ slept+ticked for
-                DeltaCounter.Reset();
-                DeltaCounter.Start();
-                // How much time should pass between each tick ideally
-                TARGETFPS = CVars.g_fps.ValueD;
-                if (TARGETFPS < 1 || TARGETFPS > 600)
+                while (true)
                 {
-                    CVars.g_fps.Set("30");
-                    TARGETFPS = 30;
-                }
-                TargetDelta = (1d / TARGETFPS);
-                // How much delta has been built up
-                TotalDelta += CurrentDelta;
-                while (TotalDelta > TargetDelta * 3)
-                {
-                    // Lagging - cheat to catch up!
-                    TargetDelta *= 2;
-                }
-                // As long as there's more delta built up than delta wanted, tick
-                while (TotalDelta > TargetDelta)
-                {
-                    Tick(TargetDelta);
-                    TotalDelta -= TargetDelta;
-                }
-                // The tick is done, stop measuring it
-                Counter.Stop();
-                // Only sleep for target milliseconds/tick minus how long the tick took... this is imprecise but that's okay
-                targettime = (int)((1000d / TARGETFPS) - Counter.ElapsedMilliseconds);
-                // Only sleep at all if we're not lagging
-                if (targettime > 0)
-                {
-                    // Try to sleep for the target time - very imprecise, thus we deal with precision inside the tick code
-                    Thread.Sleep(targettime);
+                    // Update the tick time usage counter
+                    Counter.Reset();
+                    Counter.Start();
+                    // Update the tick delta counter
+                    DeltaCounter.Stop();
+                    // Delta time = Elapsed ticks * (ticks/second)
+                    CurrentDelta = ((double)DeltaCounter.ElapsedTicks) / ((double)Stopwatch.Frequency);
+                    // Begin the delta counter to find out how much time is /really/ slept+ticked for
+                    DeltaCounter.Reset();
+                    DeltaCounter.Start();
+                    // How much time should pass between each tick ideally
+                    TARGETFPS = CVars.g_fps.ValueD;
+                    if (TARGETFPS < 1 || TARGETFPS > 600)
+                    {
+                        CVars.g_fps.Set("30");
+                        TARGETFPS = 30;
+                    }
+                    TargetDelta = (1d / TARGETFPS);
+                    // How much delta has been built up
+                    TotalDelta += CurrentDelta;
+                    while (TotalDelta > TargetDelta * 3)
+                    {
+                        // Lagging - cheat to catch up!
+                        TargetDelta *= 2;
+                    }
+                    // As long as there's more delta built up than delta wanted, tick
+                    while (TotalDelta > TargetDelta)
+                    {
+                        Tick(TargetDelta);
+                        TotalDelta -= TargetDelta;
+                    }
+                    // The tick is done, stop measuring it
+                    Counter.Stop();
+                    // Only sleep for target milliseconds/tick minus how long the tick took... this is imprecise but that's okay
+                    targettime = (int)((1000d / TARGETFPS) - Counter.ElapsedMilliseconds);
+                    // Only sleep at all if we're not lagging
+                    if (targettime > 0)
+                    {
+                        // Try to sleep for the target time - very imprecise, thus we deal with precision inside the tick code
+                        Thread.Sleep(targettime);
+                    }
                 }
             }
-            SysConsole.Output(OutputType.INFO, "[Shutdown] Reached end of server functionality.");
-            SysConsole.Output(OutputType.INFO, "[Shutdown] Clearing plugins...");
-            Plugins.UnloadPlugins();
-            SysConsole.Output(OutputType.INFO, "[Shutdown] Exiting server main!");
+            catch (ThreadAbortException)
+            {
+                return;
+            }
         }
 
         public void AutorunScripts()

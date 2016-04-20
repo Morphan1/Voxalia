@@ -190,6 +190,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             catch (Exception ex)
             {
+                Utilities.CheckException(ex);
                 player.Network.SendMessage("^1Failed to paste structure: " + ex.Message);
             }
         }

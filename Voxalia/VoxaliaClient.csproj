@@ -187,11 +187,9 @@
     <Compile Include="ClientGame\GraphicsSystems\TextureEngine.cs" />
     <Compile Include="ClientGame\GraphicsSystems\TextVBO.cs" />
     <Compile Include="ClientGame\GraphicsSystems\VBO.cs" />
-    <Compile Include="ClientGame\JointSystem\BaseConnector.cs" />
     <Compile Include="ClientGame\JointSystem\BaseFJoint.cs" />
     <Compile Include="ClientGame\JointSystem\BaseJoint.cs" />
     <Compile Include="ClientGame\JointSystem\ConnectorBeam.cs" />
-    <Compile Include="ClientGame\JointSystem\ConnectorCurveBeam.cs" />
     <Compile Include="ClientGame\JointSystem\ConstWheelStepUp.cs" />
     <Compile Include="ClientGame\JointSystem\JointLAxisLimit.cs" />
     <Compile Include="ClientGame\JointSystem\JointSwivelHinge.cs" />

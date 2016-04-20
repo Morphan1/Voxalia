@@ -72,4 +72,11 @@ namespace Voxalia.Shared
         TYPING = 0,
         AFK = 1
     }
+
+    public enum BeamType : byte
+    {
+        STRAIGHT = 0,
+        CURVE = 1,
+        MULTICURVE = 2
+    }
 }

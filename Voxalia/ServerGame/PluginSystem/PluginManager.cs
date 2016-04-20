@@ -104,6 +104,7 @@ namespace Voxalia.ServerGame.PluginSystem
                 }
                 catch (Exception ex)
                 {
+                    Utilities.CheckException(ex);
                     SysConsole.Output("Unloading plugin '" + Plugins[i].Name + "'", ex);
                 }
             }

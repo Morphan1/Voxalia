@@ -93,15 +93,10 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             }
             else if (joint is ConnectorBeam)
             {
-                Data = new byte[len + 4];
+                Data = new byte[len + 4 + 1];
                 Data[0] = 12;
                 Utilities.IntToBytes(((ConnectorBeam)joint).color.ToArgb()).CopyTo(Data, len);
-            }
-            else if (joint is ConnectorCurveBeam)
-            {
-                Data = new byte[len + 4];
-                Data[0] = 13;
-                Utilities.IntToBytes(((ConnectorCurveBeam)joint).color.ToArgb()).CopyTo(Data, len);
+                Data[len + 4] = (byte)((ConnectorBeam)joint).type;
             }
             Utilities.LongToBytes(joint.One.EID).CopyTo(Data, 1);
             Utilities.LongToBytes(joint.Two.EID).CopyTo(Data, 1 + 8);

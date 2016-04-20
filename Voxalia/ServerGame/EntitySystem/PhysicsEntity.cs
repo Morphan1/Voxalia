@@ -309,13 +309,10 @@ namespace Voxalia.ServerGame.EntitySystem
                     {
                         TheRegion.PhysicsWorld.Remove(joint.CurrentJoint);
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
                         // We don't actually care if this errors.
-                        if (e is ThreadAbortException)
-                        {
-                            throw e;
-                        }
+                        Utilities.CheckException(ex);
                     }
                 }
             }

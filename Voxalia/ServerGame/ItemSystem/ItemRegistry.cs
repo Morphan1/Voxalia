@@ -159,6 +159,7 @@ namespace Voxalia.ServerGame.ItemSystem
             }
             catch (Exception ex)
             {
+                Utilities.CheckException(ex);
                 SysConsole.Output("Loading item '" + name + "'", ex);
                 return null;
             }

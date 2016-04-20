@@ -129,7 +129,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public PhysicsEntity Manipulator_Grabbed = null;
 
-        public ConnectorCurveBeam Manipulator_Beam = null;
+        public ConnectorBeam Manipulator_Beam = null;
 
         public float Manipulator_Distance = 10;
 

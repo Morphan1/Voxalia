@@ -48,10 +48,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                 }
                 catch (Exception ex)
                 {
-                    if (ex is ThreadAbortException)
-                    {
-                        throw ex;
-                    }
+                    Utilities.CheckException(ex);
                     SysConsole.Output(OutputType.ERROR, "Network listen: " + ex.ToString());
                 }
             }

@@ -38,7 +38,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             PhysicsEntity target = (PhysicsEntity)cr.HitEnt.Tag;
             player.Manipulator_Grabbed = target;
             player.Manipulator_Distance = (float)(eye - target.GetPosition()).Length();
-            player.Manipulator_Beam = new ConnectorCurveBeam();
+            player.Manipulator_Beam = new ConnectorBeam() { type = BeamType.MULTICURVE };
             player.Manipulator_Beam.One = player;
             player.Manipulator_Beam.Two = target;
             player.Manipulator_Beam.color = Colors.LIGHT_STROBE_CYAN;

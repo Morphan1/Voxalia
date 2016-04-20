@@ -272,6 +272,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         }
                         catch (Exception ex)
                         {
+                            Utilities.CheckException(ex);
                             SysConsole.Output("Spawning an entity of type " + EType, ex);
                         }
                     }

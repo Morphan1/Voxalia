@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using FreneticScript;
 
 namespace Voxalia.Shared
@@ -65,6 +66,14 @@ namespace Voxalia.Shared
         public static byte[] LongToBytes(long intty)
         {
             return BitConverter.GetBytes(intty);
+        }
+
+        public static void CheckException(Exception ex)
+        {
+            if (ex is ThreadAbortException)
+            {
+                throw ex;
+            }
         }
 
         public static byte[] BytesPartial(byte[] full, int start, int length)

@@ -30,8 +30,9 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 Material mat = MaterialHelpers.FromNameOrNumber(input);
                 return new MaterialTag(mat).Handle(data.Shrink());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Utilities.CheckException(ex);
                 data.Error("Invalid material '" + TagParser.Escape(input) + "'!");
                 return new NullTag();
             }
