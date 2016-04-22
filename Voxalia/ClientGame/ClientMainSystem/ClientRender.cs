@@ -1127,6 +1127,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.LineWidth(1);
                 Rendering.SetColor(Color4.White);
             }
+            Textures.GetTexture("effects/beam").Bind(); // TODO: Store
             for (int i = 0; i < TheRegion.Joints.Count; i++)
             {
                 if (TheRegion.Joints[i] is ConnectorBeam)
@@ -1200,6 +1201,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     }
                 }
             }
+            Textures.White.Bind();
             if (!shadows_only)
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
@@ -1217,12 +1219,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
             const int curvePoints = 10;
             const double step = 1.0 / curvePoints;
             Location curvePos = one;
-            for (double t = step; t <= 1; t += step)
+            for (double t = step; t <= 1.0; t += step)
             {
                 Vector4 col = Rendering.AdaptColor(ClientUtilities.Convert(cPoint), color);
                 Rendering.SetColor(col);
                 Location c2 = CalculateBezierPoint(t, one, cPoint, two);
-                Rendering.RenderLine(curvePos, c2);
+                //Rendering.RenderLine(curvePos, c2);
+                Rendering.RenderBilboardLine(curvePos, c2, 3, CameraPos);
                 curvePos = c2;
             }
         }

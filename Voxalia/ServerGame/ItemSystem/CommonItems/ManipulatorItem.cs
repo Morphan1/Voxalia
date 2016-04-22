@@ -41,7 +41,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             player.Manipulator_Beam = new ConnectorBeam() { type = BeamType.MULTICURVE };
             player.Manipulator_Beam.One = player;
             player.Manipulator_Beam.Two = target;
-            player.Manipulator_Beam.color = Colors.LIGHT_STROBE_CYAN;
+            player.Manipulator_Beam.color = Colors.BLUE;
             player.TheRegion.AddJoint(player.Manipulator_Beam);
         }
 

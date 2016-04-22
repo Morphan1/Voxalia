@@ -379,12 +379,37 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public void RenderBillboard(Location pos, Location scale, Location facing)
         {
+            // TODO: Quaternion magic?
             Location relang = Utilities.VectorToAngles(pos - facing);
             Matrix4 mat = Matrix4.CreateTranslation(-0.5f, -0.5f, 0f)
                 * Matrix4.CreateScale(ClientUtilities.Convert(scale))
                 * Matrix4.CreateRotationY((float)((relang.Y - 90) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)(relang.Z * Utilities.PI180))
                 * Matrix4.CreateTranslation(ClientUtilities.Convert(pos));
+            GL.UniformMatrix4(2, false, ref mat);
+            GL.BindVertexArray(Square._VAO);
+            GL.DrawElements(PrimitiveType.Quads, 4, DrawElementsType.UnsignedInt, IntPtr.Zero);
+        }
+        
+        public void RenderBilboardLine(Location pos, Location p2, float width, Location facing)
+        {
+            Location center = (pos + p2) * 0.5;
+            double len = (center - facing).Length();
+            Location lookdir = (center - facing) / len;
+            double len2 = (p2 - pos).Length();
+            if (len < 0.001 || len2 < 0.001)
+            {
+                return;
+            }
+            Location updir = (p2 - pos) / len2;
+            Location right = updir.CrossProduct(lookdir);
+            Matrix4 mat = Matrix4.CreateTranslation(-0.5f, -0.5f, 0f) * Matrix4.CreateScale((float)len2 * 0.5f, width, 1f);
+            Matrix4 m2 = new Matrix4((float)right.X, (float)updir.X, (float)lookdir.X, (float)center.X,
+                (float)right.Y, (float)updir.Y, (float)lookdir.Y, (float)center.Y,
+                (float)right.Z, (float)updir.Z, (float)lookdir.Z, (float)center.Z,
+                0, 0, 0, 1);
+            m2.Transpose();
+            mat *= m2;
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Square._VAO);
             GL.DrawElements(PrimitiveType.Quads, 4, DrawElementsType.UnsignedInt, IntPtr.Zero);
