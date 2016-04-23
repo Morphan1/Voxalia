@@ -19,12 +19,18 @@ layout (location = 3) uniform vec4 v_color = vec4(1.0);
 layout (location = 10) uniform mat4 simplebone_matrix = mat4(1.0);
 layout (location = 11) uniform mat4 boneTrans[MAX_BONES];
 
-layout (location = 0) out vec4 f_color;
-layout (location = 1) out vec2 f_texcoord;
+out struct vox_out
+{
+	vec4 position;
+	vec2 texcoord;
+	vec4 color;
+	mat3 tbn;
+} f;
 
 void main()
 {
 	vec4 pos1;
+	vec4 nor1;
 	float rem = 1.0 - (Weights[0] + Weights[1] + Weights[2] + Weights[3] + Weights2[0] + Weights2[1] + Weights2[2] + Weights2[3]);
 	mat4 BT = mat4(1.0);
 	if (rem < 0.99)
@@ -39,18 +45,31 @@ void main()
 		BT += boneTrans[int(BoneID2[3])] * Weights2[3];
 		BT += mat4(1.0) * rem;
 		pos1 = vec4(position, 1.0) * BT;
+		nor1 = vec4(normal, 1.0) * BT;
 	}
 	else
 	{
 		pos1 = vec4(position, 1.0);
+		nor1 = vec4(normal, 1.0);
 	}
 	pos1 *= simplebone_matrix;
-	f_color = color;
-    if (f_color == vec4(0.0, 0.0, 0.0, 1.0))
+	nor1 *= simplebone_matrix;
+	f.color = color;
+    if (f.color == vec4(0.0, 0.0, 0.0, 1.0))
     {
-        f_color = vec4(1.0);
+        f.color = vec4(1.0);
     }
-    f_color = f_color * v_color;
-	f_texcoord = texcoords;
-	gl_Position = projection * model_matrix * vec4(pos1.xyz, 1.0);
+    f.color = f.color * v_color;
+	f.texcoord = texcoords;
+	vec4 tpos = model_matrix * vec4(pos1.xyz, 1.0);
+	f.position = tpos / tpos.w;
+	gl_Position = projection * tpos;
+	mat4 mv_mat_simple = model_matrix;
+	mv_mat_simple[3][0] = 0.0;
+	mv_mat_simple[3][1] = 0.0;
+	mv_mat_simple[3][2] = 0.0;
+	vec3 tf_normal = (mv_mat_simple * vec4(nor1.xyz, 0.0)).xyz; // TODO: Should BT be here?
+	vec3 tf_tangent = (mv_mat_simple * vec4(tangent, 0.0)).xyz; // TODO: Should BT be here?
+	vec3 tf_bitangent = (mv_mat_simple * vec4(cross(tangent, nor1.xyz), 0.0)).xyz; // TODO: Should BT be here?
+	f.tbn = transpose(mat3(tf_tangent, tf_bitangent, tf_normal)); // TODO: Neccessity of transpose()?
 }

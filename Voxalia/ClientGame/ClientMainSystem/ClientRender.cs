@@ -83,10 +83,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_lightadder = Shaders.GetShader("lightadder" + def);
             s_transponly = Shaders.GetShader("transponly" + def);
             s_transponlyvox = Shaders.GetShader("transponlyvox" + def);
-            s_transponlylit = Shaders.GetShader("transponlylit" + def);
-            s_transponlyvoxlit = Shaders.GetShader("transponlyvoxlit" + def);
-            s_transponlylitsh = Shaders.GetShader("transponlylitsh" + def);
-            s_transponlyvoxlitsh = Shaders.GetShader("transponlyvoxlitsh" + def);
+            s_transponlylit = Shaders.GetShader("transponly" + def + ",MCM_LIT");
+            s_transponlyvoxlit = Shaders.GetShader("transponlyvox" + def + ",MCM_LIT");
+            s_transponlylitsh = Shaders.GetShader("transponly" + def + ",MCM_LIT,MCM_SHADOWS");
+            s_transponlyvoxlitsh = Shaders.GetShader("transponlyvox" + def + ",MCM_LIT,MCM_SHADOWS");
             s_godray = Shaders.GetShader("godray" + def);
             s_mapvox = Shaders.GetShader("map_vox" + def);
             s_transpadder = Shaders.GetShader("transpadder" + def);
@@ -1128,6 +1128,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Rendering.SetColor(Color4.White);
             }
             Textures.GetTexture("effects/beam").Bind(); // TODO: Store
+            Rendering.SetMinimumLight(1);
             for (int i = 0; i < TheRegion.Joints.Count; i++)
             {
                 if (TheRegion.Joints[i] is ConnectorBeam)
@@ -1142,11 +1143,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     one = ((CharacterEntity)TheRegion.Joints[i].One).GetEyePosition() + new Location(0, 0, -0.3);
                                 }
                                 Location two = TheRegion.Joints[i].Two.GetPosition();
-                                GL.LineWidth(3);
                                 Vector4 col = Rendering.AdaptColor(ClientUtilities.Convert((one + two) * 0.5), ((ConnectorBeam)TheRegion.Joints[i]).color);
                                 Rendering.SetColor(col);
                                 Rendering.RenderLine(one, two);
-                                GL.LineWidth(1);
                             }
                             break;
                         case BeamType.CURVE:
@@ -1159,9 +1158,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     one = ((CharacterEntity)TheRegion.Joints[i].One).GetEyePosition() + new Location(0, 0, -0.3);
                                     cPoint = one + ((CharacterEntity)TheRegion.Joints[i].One).ForwardVector() * (two - one).Length();
                                 }
-                                GL.LineWidth(3);
                                 DrawCurve(one, two, cPoint, ((ConnectorBeam)TheRegion.Joints[i]).color);
-                                GL.LineWidth(1);
                             }
                             break;
                         case BeamType.MULTICURVE:
@@ -1185,7 +1182,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 BEPUutilities.Vector3 forwvec = forw.ToBVector();
                                 GL.LineWidth(6);
                                 DrawCurve(one, two, spos, ((ConnectorBeam)TheRegion.Joints[i]).color);
-                                GL.LineWidth(3);
                                 for (int c = 0; c < curves; c++)
                                 {
                                     double tang = TheRegion.GlobalTickTimeLocal + Math.PI * 2.0 * ((double)c / (double)curves);
@@ -1195,12 +1191,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     res = res * (float)(0.1 * forlen);
                                     DrawCurve(one, two, spos + new Location(res), ((ConnectorBeam)TheRegion.Joints[i]).color);
                                 }
-                                GL.LineWidth(1);
                             }
                             break;
                     }
                 }
             }
+            Rendering.SetMinimumLight(0);
             Textures.White.Bind();
             if (!shadows_only)
             {
@@ -1224,7 +1220,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Vector4 col = Rendering.AdaptColor(ClientUtilities.Convert(cPoint), color);
                 Rendering.SetColor(col);
                 Location c2 = CalculateBezierPoint(t, one, cPoint, two);
-                //Rendering.RenderLine(curvePos, c2);
                 Rendering.RenderBilboardLine(curvePos, c2, 3, CameraPos);
                 curvePos = c2;
             }
