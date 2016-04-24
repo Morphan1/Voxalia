@@ -143,6 +143,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 LocalServer.ShutDown();
             }
             // TODO: Cleanup!
+            Environment.Exit(0);
         }
 
         /// <summary>

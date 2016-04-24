@@ -137,9 +137,9 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 if (Vertices.Count == 0)
                 {
-                    OwningRegion.TheClient.ChunksRenderingCurrently--;
                     OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                     {
+                        OwningRegion.TheClient.ChunksRenderingCurrently--;
                         if (_VBO != null)
                         {
                             VBO tV = _VBO;
@@ -200,6 +200,15 @@ namespace Voxalia.ClientGame.WorldSystem
                 tVBO.oldvert();
                 OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                 {
+                    OwningRegion.TheClient.ChunksRenderingCurrently--;
+                    if (DENIED)
+                    {
+                        if (tVBO.generated)
+                        {
+                            tVBO.Destroy();
+                        }
+                        return;
+                    }
                     if (_VBO != null)
                     {
                         VBO tV = _VBO;
@@ -215,9 +224,12 @@ namespace Voxalia.ClientGame.WorldSystem
                             }
                         }
                     }
-                    OwningRegion.TheClient.ChunksRenderingCurrently--;
                     if (DENIED)
                     {
+                        if (tVBO.generated)
+                        {
+                            tVBO.Destroy();
+                        }
                         return;
                     }
                     _VBO = tVBO;

@@ -451,16 +451,24 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     if (!ShouldLoadChunk(ch.ChunkPos))
                     {
-                        removes.Add(TheRegion.GetChunk(ch.ChunkPos));
+                        removes.Add(ch.ChunkPos);
                     }
                     else if (!ShouldSeeChunk(ch.ChunkPos) && ch.LOD <= BestLOD)
                     {
                         ch.LOD = Chunk.CHUNK_SIZE;
                     }
                 }
-                foreach (Chunk loc in removes)
+                foreach (Location loc in removes)
                 {
-                    ForgetChunk(loc, loc.WorldPosition);
+                    Chunk ch = TheRegion.GetChunk(loc);
+                    if (ch != null)
+                    {
+                        ForgetChunk(ch, loc);
+                    }
+                    else
+                    {
+                        ChunksAwareOf.Remove(loc);
+                    }
                 }
                 removes.Clear();
                 pChunkLoc = cpos;
@@ -541,7 +549,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
-        List<Chunk> removes = new List<Chunk>();
+        List<Location> removes = new List<Location>();
 
         public Location losPos = Location.NaN;
 

@@ -139,7 +139,10 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 reg.FinalShutdown();
             }
             ConsoleHandler.Close();
-            Thread.CurrentThread.Abort();
+            if (CurThread == Thread.CurrentThread)
+            {
+                CurThread.Abort();
+            }
         }
 
         public void CommandInputHandle(object sender, ConsoleCommandEventArgs e)

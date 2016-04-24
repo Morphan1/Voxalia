@@ -244,6 +244,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             verts = Vertices.ToArray();
             normals = Normals.ToArray();
             texts = TexCoords.ToArray();
+            // TODO: Other arrays?
         }
 
         bool colors;
@@ -257,6 +258,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public void UpdateBuffer()
         {
+            if (Vertices == null && verts == null)
+            {
+                SysConsole.Output(OutputType.ERROR, "Failed to render VBO, null vertices!");
+                return;
+            }
             Vector3[] vecs = verts == null ? Vertices.ToArray() : verts;
             uint[] inds = indices == null ? Indices.ToArray() : indices;
             Vector3[] norms = normals == null ? Normals.ToArray() : normals;
