@@ -84,6 +84,7 @@ namespace Voxalia.ServerGame.CommandSystem
             CommandSystem.TagSystem.Register(new VehicleEntityTagBase(TheServer));
             CommandSystem.TagSystem.Register(new VehiclePartEntityTagBase(TheServer));
 
+            // Wrap up
             CommandSystem.PostInit();
         }
 

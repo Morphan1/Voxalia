@@ -92,8 +92,8 @@ namespace Voxalia.ClientGame.CommandSystem
             r_godrays = Register("r_godrays", "true", CVarFlag.Boolean, "Whether to render GodRays (rays of light from the sun."); // TODO: Validate?
             r_godray_samples = Register("r_godray_samples", "75", CVarFlag.Numeric, "How many samples to use when generating GodRays."); // TODO: Validate?
             r_godray_wexposure = Register("r_godray_wexposure", (0.003f * 5.65f).ToString(), CVarFlag.Numeric, "What weighted exposure value to use when generating GodRays."); // TODO: Validate?
-            r_godray_decay = Register("r_godray_decay", "1", CVarFlag.Numeric, "What decay value to use when generating GodRays."); // TODO: Validate?
-            r_godray_density = Register("r_godray_density", "0.84", CVarFlag.Numeric, "What density value to use when generating GodRays."); // TODO: Validate?
+            r_godray_decay = Register("r_godray_decay", "1.01", CVarFlag.Numeric, "What decay value to use when generating GodRays."); // TODO: Validate?
+            r_godray_density = Register("r_godray_density", "1.0", CVarFlag.Numeric, "What density value to use when generating GodRays."); // TODO: Validate?
             r_godray_color = Register("r_godray_color", "1,1,1", CVarFlag.Textual, "What color to use for GodRays.");
             r_toonify = Register("r_toonify", "false", CVarFlag.Boolean, "Whether to use a 'toonify' post-processing effect.");
             r_transplighting = Register("r_transplighting", "true", CVarFlag.Boolean, "Whether transparent objects should be lit properly (otherwise, fullbright).");

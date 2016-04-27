@@ -628,12 +628,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.Uniform1(9, CVars.r_dof_strength.ValueF);
                 Vector3 lPos = GetSunLocation();
                 Vector4 t = Vector4.Transform(new Vector4(lPos, 1f), combined);
-                Vector2 lightPos = (t.Xy / t.W) / 2f + new Vector2(0.5f);
+                Vector2 lp1 = t.Xy / t.W;
+                Vector2 lightPos = lp1 * 0.5f + new Vector2(0.5f);
+                float lplenadj = (1f - Math.Min(lp1.Length, 1f)) * (0.99f - 0.6f) + 0.6f;
                 GL.Uniform2(10, ref lightPos);
                 GL.Uniform1(11, CVars.r_godray_samples.ValueI);
                 GL.Uniform1(12, CVars.r_godray_wexposure.ValueF);
                 GL.Uniform1(13, CVars.r_godray_decay.ValueF);
-                GL.Uniform1(14, CVars.r_godray_density.ValueF);
+                GL.Uniform1(14, CVars.r_godray_density.ValueF * lplenadj);
                 GL.Uniform3(15, ClientUtilities.Convert(godrayCol));
                 GL.Uniform1(16, CVars.r_znear.ValueF);
                 GL.Uniform1(17, CVars.r_zfar.ValueF);

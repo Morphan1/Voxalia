@@ -21,7 +21,7 @@ layout (location = 9) uniform float cameraTargetDepth = 0.01;
 layout (location = 10) uniform vec2 lightPos = vec2(0.5);
 layout (location = 11) uniform int numSamples = 75;
 layout (location = 12) uniform float wexposure = 0.0034 * 5.65;
-layout (location = 13) uniform float decay = 1;
+layout (location = 13) uniform float decay = 1.0;
 layout (location = 14) uniform float density = 0.84;
 layout (location = 15) uniform vec3 grcolor = vec3(1.0);
 layout (location = 16) uniform float znear = 0.1;
