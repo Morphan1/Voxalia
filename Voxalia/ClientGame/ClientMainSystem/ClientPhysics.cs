@@ -33,9 +33,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             // TODO: DESTROY OLD REGION!
             // TODO: Radius -> max view rad * 2
             // TODO: Size -> max view rad * 2 + 30 * 2
-            TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, 30 * 10, SunLightDef, new Location(0, 0, -1), 30 * 12);
+            TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, 30 * 12, SunLightDef, new Location(0, 0, -1), 30 * 14);
             // TODO: Separate planet quality CVar?
-            ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 2, 30 * 10, PlanetLightDef, new Location(0, 0, -1), 30 * 12);
+            ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 2, 30 * 12, PlanetLightDef, new Location(0, 0, -1), 30 * 14);
             Lights.Add(TheSun);
             Lights.Add(ThePlanet);
             TheRegion = new Region();

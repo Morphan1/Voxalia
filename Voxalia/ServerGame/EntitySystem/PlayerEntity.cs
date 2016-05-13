@@ -125,6 +125,22 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public int ViewRadiusInChunks = 3;
 
+        public int ViewRadiusHorizontalLOD
+        {
+            get
+            {
+                return ViewRadiusInChunks + 3;
+            }
+        }
+
+        public int ViewRadiusVerticalLOD
+        {
+            get
+            {
+                return ViewRadiusInChunks;
+            }
+        }
+
         public int BestLOD = 1;
 
         public PhysicsEntity Manipulator_Grabbed = null;
@@ -431,12 +447,11 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 // TODO: Move to a separate method that's called once on startup + at every teleport... also, asyncify!
                 // TODO: Better system -> async?
-                TrySet(pos, 1, 0, 1, false);
-                TrySet(pos, ViewRadiusInChunks / 2, 0, 1, false);
-                TrySet(pos, ViewRadiusInChunks, 0, 1, false);
-                TrySet(pos, ViewRadiusInChunks + 1, 0, 2, true);
-                TrySet(pos, ViewRadiusInChunks + 2, 10, 2, true);
-                //TrySet(pos, ViewRadiusInChunks + 3, 20, 2, true);
+                TrySet(pos, 1, 1, 0, 1, false);
+                TrySet(pos, ViewRadiusInChunks / 2, ViewRadiusInChunks / 2, 0, 1, false);
+                TrySet(pos, ViewRadiusInChunks, ViewRadiusInChunks, 0, 1, false);
+                TrySet(pos, ViewRadiusInChunks + 1, ViewRadiusVerticalLOD, 0, 2, true);
+                TrySet(pos, ViewRadiusHorizontalLOD, ViewRadiusVerticalLOD, 15, 2, true);
                 if (!loadedInitially)
                 {
                     loadedInitially = true;
@@ -556,9 +571,9 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool ShouldLoadChunk(Location cpos)
         {
             Location wpos = TheRegion.ChunkLocFor(GetPosition());
-            if (Math.Abs(cpos.X - wpos.X) > (ViewRadiusInChunks + 2)
-                || Math.Abs(cpos.Y - wpos.Y) > (ViewRadiusInChunks + 2)
-                || Math.Abs(cpos.Z - wpos.Z) > (ViewRadiusInChunks + 2))
+            if (Math.Abs(cpos.X - wpos.X) > (ViewRadiusHorizontalLOD)
+                || Math.Abs(cpos.Y - wpos.Y) > (ViewRadiusHorizontalLOD)
+                || Math.Abs(cpos.Z - wpos.Z) > (ViewRadiusVerticalLOD))
             {
                 return false;
             }
@@ -634,13 +649,13 @@ namespace Voxalia.ServerGame.EntitySystem
         
         bool loadedInitially = false;
 
-        public void TrySet(Location pos, int VIEWRAD, float atime, int posMult, bool bg)
+        public void TrySet(Location pos, int VIEWRAD_HOR, int VIEWRAD_VERT, float atime, int posMult, bool bg)
         {
-            for (int x = -VIEWRAD; x <= VIEWRAD; x++)
+            for (int x = -VIEWRAD_HOR; x <= VIEWRAD_HOR; x++)
             {
-                for (int y = -VIEWRAD; y <= VIEWRAD; y++)
+                for (int y = -VIEWRAD_HOR; y <= VIEWRAD_HOR; y++)
                 {
-                    for (int z = -VIEWRAD; z <= VIEWRAD; z++)
+                    for (int z = -VIEWRAD_VERT; z <= VIEWRAD_VERT; z++)
                     {
                         if (bg)
                         {
