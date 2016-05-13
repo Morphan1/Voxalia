@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Voxalia.Shared
 {
@@ -55,6 +56,10 @@ namespace Voxalia.Shared
                     }
                     catch (Exception ex)
                     {
+                        if (ex is ThreadAbortException)
+                        {
+                            throw ex;
+                        }
                         SysConsole.Output("Handling sync task", ex);
                     }
                 }

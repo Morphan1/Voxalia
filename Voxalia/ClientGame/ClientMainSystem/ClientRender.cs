@@ -1263,9 +1263,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         const string timeformat = "#.000";
 
-        const string healthformat = "#.0";
+        const string healthformat = "0.0";
 
-        const string pingformat = "#";
+        const string pingformat = "000";
 
         public int ChunksRenderingCurrently = 0;
 
