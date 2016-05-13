@@ -43,6 +43,7 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new ParachuteItem());
             Register(new SledgehammerItem());
             Register(new ManipulatorItem());
+            Register(new StructureSelectorItem());
             Register(Generic = new GenericItem());
         }
 

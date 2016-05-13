@@ -32,6 +32,24 @@ namespace Voxalia.ServerGame.WorldSystem
             return bge;
         }
 
+        public Structure(Region tregion, Location min, Location max, Location origin)
+        {
+            Location ext = max - min;
+            Size = new Vector3i((int)ext.X + 1, (int)ext.Y + 1, (int)ext.Z + 1);
+            Origin = new Vector3i((int)Math.Floor(origin.X - min.X), (int)Math.Floor(origin.Y - min.Y), (int)Math.Floor(origin.Z - min.Z));
+            Blocks = new BlockInternal[Size.X * Size.Y * Size.Z];
+            for (int x = 0; x < Size.X; x++)
+            {
+                for (int y = 0; y < Size.Y; y++)
+                {
+                    for (int z = 0; z < Size.Z; z++)
+                    {
+                        Blocks[BlockIndex(x, y, z)] = tregion.GetBlockInternal(new Location(min.X + x, min.Y + y, min.Z + z));
+                    }
+                }
+            }
+        }
+
         // TODO: Optimize tracing!
         public Structure(Region tregion, Location startOfTrace, int maxrad)
         {

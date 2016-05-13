@@ -1129,8 +1129,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.LineWidth(1);
                 Rendering.SetColor(Color4.White);
             }
-            Textures.GetTexture("effects/beam").Bind(); // TODO: Store
+            Textures.White.Bind();
             Rendering.SetMinimumLight(1);
+            TheRegion.RenderEffects();
+            Textures.GetTexture("effects/beam").Bind(); // TODO: Store
             for (int i = 0; i < TheRegion.Joints.Count; i++)
             {
                 if (TheRegion.Joints[i] is ConnectorBeam)

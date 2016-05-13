@@ -117,6 +117,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool WasAltClicking = false;
 
+        public bool WasItemUpping = false;
+
         public bool WasItemLefting = false;
 
         public bool WasItemRighting = false;

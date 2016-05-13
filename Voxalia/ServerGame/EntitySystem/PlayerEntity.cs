@@ -383,6 +383,13 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        public AABB Selection;
+
+        public void NetworkSelection()
+        {
+            Network.SendPacket(new HighlightPacketOut(Selection));
+        }
+
         double opstt = 0;
 
         public override void Tick()
@@ -440,6 +447,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             cit.Info.Tick(this, cit);
             WasItemLefting = ItemLeft;
+            WasItemUpping = ItemUp;
             WasItemRighting = ItemRight;
             Location pos = GetPosition();
             Location cpos = TheRegion.ChunkLocFor(pos);

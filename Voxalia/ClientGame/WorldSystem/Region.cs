@@ -37,6 +37,8 @@ namespace Voxalia.ClientGame.WorldSystem
         public List<Entity> Tickers = new List<Entity>();
 
         public List<Entity> ShadowCasters = new List<Entity>();
+
+        public AABB[] Highlights = new AABB[0];
         
         /// <summary>
         /// Builds the physics world.
@@ -421,6 +423,17 @@ namespace Voxalia.ClientGame.WorldSystem
                     ch.CreateVBO();
                 });
             });
+        }
+
+        public void RenderEffects()
+        {
+            GL.LineWidth(5);
+            TheClient.Rendering.SetColor(Color4.White);
+            for (int i = 0; i < Highlights.Length; i++)
+            {
+                TheClient.Rendering.RenderLineBox(Highlights[i].Min, Highlights[i].Max);
+            }
+            GL.LineWidth(1);
         }
 
         public void Render()

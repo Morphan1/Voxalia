@@ -150,6 +150,7 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\PistolGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\RifleGunItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\StructurePasteItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\StructureSelectorItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\SunAnglerItem.cs" />
     <Compile Include="ServerGame\ItemSystem\EntityInventory.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\FlashantilightItem.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\FlagEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\FlashLightPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\GainControlOfVehiclePacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\HighlightPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\MessagePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\NetStringPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\OperationStatusPacketOut.cs" />
