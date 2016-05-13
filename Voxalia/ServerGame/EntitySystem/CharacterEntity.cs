@@ -22,6 +22,7 @@ namespace Voxalia.ServerGame.EntitySystem
             : base(tregion, maxhealth)
         {
             MinZ = CBHHeight;
+            CGroup = CollisionUtil.Character;
         }
 
         public override long GetRAMUsage()
@@ -159,7 +160,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Body.AngularDamping = 1.0f;
             Shape = CBody.Body.CollisionInformation.Shape;
             ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
-            Body.CollisionInformation.CollisionRules.Group = CollisionUtil.Player;
+            Body.CollisionInformation.CollisionRules.Group = CGroup;
             CBody.StepManager.MaximumStepHeight = CBStepHeight;
             CBody.StepManager.MinimumDownStepHeight = CBDownStepHeight;
             TheRegion.PhysicsWorld.Add(CBody);

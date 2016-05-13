@@ -61,7 +61,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 ent.CGroup = CollisionUtil.Item;
             }
-            else if (solidity == (8))
+            else if (solidity == 8)
             {
                 ent.CGroup = CollisionUtil.Player;
             }
@@ -72,6 +72,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             else if (solidity == (2 | 4 | 8))
             {
                 ent.CGroup = CollisionUtil.WorldSolid;
+            }
+            else if (solidity == 16)
+            {
+                ent.CGroup = CollisionUtil.Character;
             }
             ent.model = TheClient.Models.GetModel(TheClient.Network.Strings.StringForIndex(dr.ReadInt()));
             ent.TheRegion.SpawnEntity(ent);

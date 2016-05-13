@@ -41,7 +41,9 @@ namespace Voxalia.Shared.Collision
         public static CollisionGroup Water = new CollisionGroup();
 
         public static CollisionGroup WorldSolid = new CollisionGroup();
-        
+
+        public static CollisionGroup Character = new CollisionGroup();
+
         public bool ShouldCollide(BroadPhaseEntry entry)
         {
             if (entry.CollisionRules.Group == NonSolid || entry.CollisionRules.Group == Water)
@@ -60,7 +62,7 @@ namespace Voxalia.Shared.Collision
             CollisionGroup.DefineCollisionRule(NonSolid, NonSolid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(NonSolid, Solid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Solid, NonSolid, CollisionRule.NoBroadPhase);
-            // Player Vs. NonSolid, Player
+            // Player Vs. NonSolid,Player
             CollisionGroup.DefineCollisionRule(Player, NonSolid, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(NonSolid, Player, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Player, Player, CollisionRule.NoBroadPhase);
@@ -76,6 +78,13 @@ namespace Voxalia.Shared.Collision
             CollisionGroup.DefineCollisionRule(Player, Water, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Water, Item, CollisionRule.NoBroadPhase);
             CollisionGroup.DefineCollisionRule(Item, Water, CollisionRule.NoBroadPhase);
+            // Non-player Character Vs. NonSolid,Item,Water
+            CollisionGroup.DefineCollisionRule(Character, NonSolid, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(NonSolid, Character, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Character, Water, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Water, Character, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Character, Item, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(Item, Character, CollisionRule.NoBroadPhase);
         }
 
         public CollisionResult CuboidLineTrace(Location halfsize, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)

@@ -77,6 +77,10 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 dtx |= 2 | 4 | 8;
             }
+            else if (ent.CGroup == CollisionUtil.Character)
+            {
+                dtx |= 16;
+            }
             dr.Write(dtx);
             dr.WriteInt(ent.TheServer.Networking.Strings.IndexForString(ent.model));
             dr.Flush();

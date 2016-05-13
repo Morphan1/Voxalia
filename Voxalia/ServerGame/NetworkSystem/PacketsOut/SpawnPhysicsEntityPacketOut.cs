@@ -112,6 +112,10 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 Data[Data.Length - 1] |= 2 | 4 | 8;
             }
+            else if (e.CGroup == CollisionUtil.Character)
+            {
+                Data[Data.Length - 1] |= 16;
+            }
         }
     }
 }

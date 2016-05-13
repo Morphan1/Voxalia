@@ -142,7 +142,7 @@ namespace Voxalia.ClientGame.EntitySystem
             BEPUphysics.Entities.Prefabs.Cylinder tb = cb.Body;
             tb.Tag = this;
             tb.AngularDamping = 1.0f;
-            tb.CollisionInformation.CollisionRules.Group = CollisionUtil.Player;
+            tb.CollisionInformation.CollisionRules.Group = CGroup;
             cb.StepManager.MaximumStepHeight = CBStepHeight;
             cb.StepManager.MinimumDownStepHeight = CBDownStepHeight;
             return cb;

@@ -76,7 +76,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             float bounce = Utilities.BytesToFloat(Utilities.BytesPartial(data, data.Length - 5, 4));
             bool Visible = (data[data.Length - 1] & 1) == 1;
-            int solidity = (data[data.Length - 1] & (2|4|8));
+            int solidity = (data[data.Length - 1] & (2 | 4 | 8 | 16));
             if (solidity == 2)
             {
                 ce.CGroup = CollisionUtil.Solid;
@@ -89,7 +89,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 ce.CGroup = CollisionUtil.Item;
             }
-            else if (solidity == (8))
+            else if (solidity == 8)
             {
                 ce.CGroup = CollisionUtil.Player;
             }
@@ -100,6 +100,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             else if (solidity == (2 | 4 | 8))
             {
                 ce.CGroup = CollisionUtil.WorldSolid;
+            }
+            else if (solidity == 16)
+            {
+                ce.CGroup = CollisionUtil.Character;
             }
             ce.Visible = Visible;
             ce.SetMass(mass);
