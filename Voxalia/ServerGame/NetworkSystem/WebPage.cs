@@ -148,11 +148,12 @@ namespace Voxalia.ServerGame.NetworkSystem
                             int sz = Chunk.CHUNK_SIZE * BlockImageManager.TexWidth;
                             StringBuilder content = new StringBuilder();
                             content.Append("<!doctype html>\n<html>\n<head>\n<title>Voxalia EXP-QUICK</title>\n</head>\n<body>\n");
-                            for (int x = -4; x <= 4; x++)
+                            const int SIZE = 6;
+                            for (int x = -SIZE; x <= SIZE; x++)
                             {
-                                for (int y = -4; y <= 4; y++)
+                                for (int y = -SIZE; y <= SIZE; y++)
                                 {
-                                    content.Append("<img style=\"position:absolute;top:" + (y + 4) * sz + "px;left:" + (x + 4) * sz + "px;\" src=\"/map/region/"
+                                    content.Append("<img style=\"position:absolute;top:" + (y + SIZE) * sz + "px;left:" + (x + SIZE) * sz + "px;\" src=\"/map/region/"
                                         + region + "/full_img/" + (bx + x) + "/" + (by + y) + ".png\" />");
                                 }
                             }
