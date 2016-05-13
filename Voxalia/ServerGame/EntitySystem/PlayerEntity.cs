@@ -129,7 +129,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             get
             {
-                return ViewRadiusInChunks + 3;
+                return ViewRadiusInChunks + 6;
             }
         }
 
