@@ -323,6 +323,10 @@ namespace Voxalia.ClientGame.NetworkSystem
                         packet = new HighlightPacketIn();
                         usage = NetUsageType.EFFECTS;
                         break;
+                    case 41:
+                        packet = new PlaySoundPacketIn();
+                        usage = NetUsageType.EFFECTS;
+                        break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);
                 }

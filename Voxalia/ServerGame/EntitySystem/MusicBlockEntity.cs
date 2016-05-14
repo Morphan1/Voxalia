@@ -41,11 +41,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 int itemMusicType = Original.GetAttributeI("music_type", 0);
                 float itemMusicVolume = Original.GetAttributeF("music_volume", 0.5f);
                 float itemMusicPitch = Original.GetAttributeF("music_pitch", 1f);
-                // TODO: Play a musical note, based on item details!
-                if (user is PlayerEntity)
-                {
-                    ((PlayerEntity)user).Network.SendMessage("You used me: " + itemMusicType + ", " + itemMusicVolume + ", " + itemMusicPitch); // TODO: Scrap this.
-                }
+                TheRegion.PlaySound("sfx/musicnotes/" + itemMusicType, GetPosition(), itemMusicVolume, itemMusicPitch);
             }
         }
 

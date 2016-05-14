@@ -231,6 +231,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PhysicsEntityUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PingPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\CharacterUpdatePacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\PlaySoundPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\PrimitiveEntityUpdatePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\RemoveCloudPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\RemoveItemPacketIn.cs" />

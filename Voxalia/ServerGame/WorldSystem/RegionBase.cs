@@ -375,6 +375,20 @@ namespace Voxalia.ServerGame.WorldSystem
             ChunkManager.Shutdown();
         }
 
+        public void PlaySound(string sound, Location pos, float vol, float pitch)
+        {
+            bool nan = pos.IsNaN();
+            Location cpos = nan ? Location.Zero : ChunkLocFor(pos);
+            PlaySoundPacketOut packet = new PlaySoundPacketOut(TheServer, sound, vol, pitch, pos);
+            foreach (PlayerEntity player in Players)
+            {
+                if (nan || player.CanSeeChunk(cpos))
+                {
+                    player.Network.SendPacket(packet);
+                }
+            }
+        }
+
         public void PaintBomb(Location pos, byte bcol, float rad = 5f)
         {
             foreach (Location loc in GetBlocksInRadius(pos, 5))
