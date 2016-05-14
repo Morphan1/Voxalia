@@ -149,123 +149,12 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
-            // TODO: Remove this block
-            if (TheClient.FBOid == 1)
-            {
-                TheClient.s_fbov.Bind();
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
-                GL.ActiveTexture(TextureUnit.Texture1);
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
-                GL.ActiveTexture(TextureUnit.Texture2);
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.NormalTextureID);
-                GL.ActiveTexture(TextureUnit.Texture0);
-            }
-            else if (TheClient.FBOid == 21)
-            {
-                TheClient.s_fbov_refract.Bind();
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
-                GL.ActiveTexture(TextureUnit.Texture1);
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
-                GL.ActiveTexture(TextureUnit.Texture2);
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.NormalTextureID);
-                GL.ActiveTexture(TextureUnit.Texture0);
-            }
-            else if (TheClient.FBOid == 3)
-            {
-                TheClient.s_transponlyvox.Bind();
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
-                GL.ActiveTexture(TextureUnit.Texture1);
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
-                GL.ActiveTexture(TextureUnit.Texture2);
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.NormalTextureID);
-                GL.ActiveTexture(TextureUnit.Texture0);
-            }
-            else if (TheClient.FBOid == 7)
-            {
-                TheClient.s_transponlyvoxlit.Bind();
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
-                GL.ActiveTexture(TextureUnit.Texture1);
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
-                GL.ActiveTexture(TextureUnit.Texture2);
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.NormalTextureID);
-                GL.ActiveTexture(TextureUnit.Texture0);
-            }
-            else if (TheClient.FBOid == 8)
-            {
-                TheClient.s_transponlyvoxlitsh.Bind();
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
-                GL.ActiveTexture(TextureUnit.Texture1);
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.HelpTextureID);
-                GL.ActiveTexture(TextureUnit.Texture2);
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.NormalTextureID);
-                GL.ActiveTexture(TextureUnit.Texture0);
-            }
-            else if (TheClient.FBOid == 4)
-            {
-                TheClient.s_shadowvox.Bind();
-                GL.BindTexture(TextureTarget.Texture2DArray, TheClient.TBlock.TextureID);
-            }
+            TheClient.SetVox();
             OpenTK.Matrix4 mat = GetTransformationMatrix() * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(-shapeOffs));
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetColor(Color);
             vbo.Render(false);
             TheClient.Rendering.SetColor(Color4.White);
-            // TODO: Remove this block
-            if (TheClient.FBOid == 1)
-            {
-                GL.ActiveTexture(TextureUnit.Texture1);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                GL.ActiveTexture(TextureUnit.Texture2);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                TheClient.s_fbo.Bind();
-            }
-            else if (TheClient.FBOid == 21)
-            {
-                GL.ActiveTexture(TextureUnit.Texture1);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                GL.ActiveTexture(TextureUnit.Texture2);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                TheClient.s_fbo_refract.Bind();
-            }
-            else if (TheClient.FBOid == 3)
-            {
-                GL.ActiveTexture(TextureUnit.Texture1);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                GL.ActiveTexture(TextureUnit.Texture2);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                TheClient.s_transponly.Bind();
-            }
-            else if (TheClient.FBOid == 7)
-            {
-                GL.ActiveTexture(TextureUnit.Texture1);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                GL.ActiveTexture(TextureUnit.Texture2);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                TheClient.s_transponlylit.Bind();
-            }
-            else if (TheClient.FBOid == 8)
-            {
-                GL.ActiveTexture(TextureUnit.Texture1);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                GL.ActiveTexture(TextureUnit.Texture2);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                TheClient.s_transponlylitsh.Bind();
-            }
-            else if (TheClient.FBOid == 4)
-            {
-                GL.BindTexture(TextureTarget.Texture2DArray, 0);
-                TheClient.s_shadow.Bind();
-            }
         }
 
         public VBO vbo;

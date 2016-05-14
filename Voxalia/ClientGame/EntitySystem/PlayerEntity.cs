@@ -719,6 +719,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
+            TheClient.SetEnts();
             // TODO: Merge with base.Render() as much as possible!
             if (TheClient.CVars.n_debugmovement.ValueB)
             {

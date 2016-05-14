@@ -33,6 +33,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
+            TheClient.SetEnts();
             TheClient.Rendering.SetColor(TheClient.Rendering.AdaptColor(ClientUtilities.Convert(GetPosition()), color));
             TheClient.Rendering.SetMinimumLight(0.0f);
             // TODO: Prevent model flipping (Possibly related to animation?)

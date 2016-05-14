@@ -980,6 +980,138 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.UniformMatrix4(1, false, ref Ortho);
         }
 
+        bool isVox = false;
+
+        public void SetVox()
+        {
+            if (isVox)
+            {
+                return;
+            }
+            isVox = true;
+            if (FBOid == 1)
+            {
+                s_fbov = s_fbov.Bind();
+                GL.Uniform4(7, Color4.Black);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.NormalTextureID);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
+                GL.ActiveTexture(TextureUnit.Texture0);
+            }
+            if (FBOid == 21)
+            {
+                s_fbov_refract = s_fbov_refract.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.NormalTextureID);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
+                GL.ActiveTexture(TextureUnit.Texture0);
+            }
+            else if (FBOid == 3)
+            {
+                s_transponlyvox = s_transponlyvox.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.NormalTextureID);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
+                GL.ActiveTexture(TextureUnit.Texture0);
+            }
+            else if (FBOid == 7)
+            {
+                s_transponlyvoxlit = s_transponlyvoxlit.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.NormalTextureID);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
+                GL.ActiveTexture(TextureUnit.Texture0);
+            }
+            else if (FBOid == 8)
+            {
+                s_transponlyvoxlitsh = s_transponlyvoxlitsh.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.NormalTextureID);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
+                GL.ActiveTexture(TextureUnit.Texture0);
+            }
+            else if (FBOid == 4)
+            {
+                s_shadowvox = s_shadowvox.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
+            }
+        }
+
+        public void SetEnts()
+        {
+            if (!isVox)
+            {
+                return;
+            }
+            isVox = false;
+            if (FBOid == 1)
+            {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                s_fbo = s_fbo.Bind();
+                GL.Uniform4(7, Color4.Black);
+            }
+            else if (FBOid == 21)
+            {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                s_fbo_refract = s_fbo_refract.Bind();
+            }
+            else if (FBOid == 3)
+            {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                s_transponly = s_transponly.Bind();
+            }
+            else if (FBOid == 7)
+            {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                s_transponlylit = s_transponlylit.Bind();
+            }
+            else if (FBOid == 8)
+            {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                s_transponlylitsh = s_transponlylitsh.Bind();
+            }
+            else if (FBOid == 4)
+            {
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                s_shadow = s_shadow.Bind();
+            }
+        }
+
         public void Render3D(bool shadows_only)
         {
             if (FBOid == 1)
@@ -1026,57 +1158,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture0);
                 Particles.Engine.Render();
             }
-            if (FBOid == 1)
-            {
-                s_fbov = s_fbov.Bind();
-                GL.Uniform4(7, Color4.Black);
-            }
-            if (FBOid == 21)
-            {
-                s_fbov_refract = s_fbov_refract.Bind();
-            }
-            else if (FBOid == 3)
-            {
-                s_transponlyvox = s_transponlyvox.Bind();
-            }
-            else if (FBOid == 7)
-            {
-                s_transponlyvoxlit = s_transponlyvoxlit.Bind();
-            }
-            else if (FBOid == 8)
-            {
-                s_transponlyvoxlitsh = s_transponlyvoxlitsh.Bind();
-            }
-            else if (FBOid == 4)
-            {
-                s_shadowvox = s_shadowvox.Bind();
-            }
+            isVox = false;
+            SetVox();
             TheRegion.Render();
-            if (FBOid == 1)
-            {
-                s_fbo = s_fbo.Bind();
-                GL.Uniform4(7, Color4.Black);
-            }
-            else if (FBOid == 1)
-            {
-                s_fbo_refract = s_fbo_refract.Bind();
-            }
-            else if (FBOid == 3)
-            {
-                s_transponly = s_transponly.Bind();
-            }
-            else if (FBOid == 7)
-            {
-                s_transponlylit = s_transponlylit.Bind();
-            }
-            else if (FBOid == 8)
-            {
-                s_transponlylitsh = s_transponlylitsh.Bind();
-            }
-            else if (FBOid == 4)
-            {
-                s_shadow = s_shadow.Bind();
-            }
+            SetEnts();
             if (!shadows_only)
             {
                 GL.ActiveTexture(TextureUnit.Texture1);

@@ -31,6 +31,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
+            TheClient.SetEnts();
             if (TheClient.RenderTextures)
             {
                 TheClient.Textures.White.Bind();

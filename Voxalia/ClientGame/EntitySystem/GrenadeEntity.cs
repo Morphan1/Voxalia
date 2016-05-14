@@ -33,6 +33,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
+            TheClient.SetEnts();
             TheClient.Textures.White.Bind();
             Matrix4 mat = Matrix4.CreateScale(0.05f, 0.2f, 0.05f) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
