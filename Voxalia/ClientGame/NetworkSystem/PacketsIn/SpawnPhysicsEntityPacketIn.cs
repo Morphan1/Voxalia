@@ -2,6 +2,7 @@
 using Voxalia.ClientGame.EntitySystem;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.Shared.Collision;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
@@ -68,6 +69,12 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             else if (type == 6)
             {
                 ce = new GrenadeEntity(TheClient.TheRegion, true);
+            }
+            else if (type == 7)
+            {
+                int itsbyte = Utilities.BytesToInt(Utilities.BytesPartial(data, start, 4));
+                BlockInternal bi = BlockInternal.FromItemDatum(itsbyte);
+                ce = new StaticBlockEntity(TheClient.TheRegion, bi.Material, bi.BlockPaint);
             }
             else
             {

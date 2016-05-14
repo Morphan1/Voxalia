@@ -1,25 +1,24 @@
-﻿using Voxalia.Shared;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Voxalia.ServerGame.EntitySystem;
-using Voxalia.Shared.Collision;
-using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using BEPUphysics;
 using BEPUutilities;
-using BEPUphysics.BroadPhaseEntries;
+using Voxalia.Shared;
+using Voxalia.Shared.Collision;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using Voxalia.ServerGame.OtherSystems;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
-    public class BlockItem: BaseItemInfo
+    public class CustomBlockItem : GenericItem
     {
-        public BlockItem()
-            : base()
+        public CustomBlockItem()
         {
-            Name = "block";
-        }
-
-        public override void PrepItem(Entity entity, ItemStack item)
-        {
+            Name = "customblock";
         }
 
         public override void AltClick(Entity entity, ItemStack item)
@@ -52,7 +51,8 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                         if (!hit.Hit)
                         {
                             BlockInternal bi = BlockInternal.FromItemDatum(item.Datum);
-                            player.TheRegion.PhysicsSetBlock(block, (Material)bi.BlockMaterial, bi.BlockData, bi.BlockPaint);
+                            StaticBlockEntity sbe = new MusicBlockEntity(player.TheRegion, item, block); // TODO: Vary based on material!
+                            player.TheRegion.SpawnEntity(sbe);
                             player.Network.SendPacket(new DefaultSoundPacketOut(block, DefaultSound.PLACE, (byte)((Material)bi.BlockMaterial).Sound()));
                             item.Count = item.Count - 1;
                             if (item.Count <= 0)
@@ -79,34 +79,6 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             PlayerEntity player = (PlayerEntity)entity;
             player.LastBlockPlace = 0;
-        }
-
-        public override void Click(Entity entity, ItemStack item)
-        {
-            // TODO: Possible store fist item info reference?
-            entity.TheServer.ItemInfos.Infos["fist"].Click(entity, item);
-        }
-
-        public override void ReleaseClick(Entity entity, ItemStack item)
-        {
-            // TODO: Possible store fist item info reference?
-            entity.TheServer.ItemInfos.Infos["fist"].ReleaseClick(entity, item);
-        }
-
-        public override void Use(Entity entity, ItemStack item)
-        {
-        }
-
-        public override void SwitchFrom(Entity entity, ItemStack item)
-        {
-        }
-
-        public override void SwitchTo(Entity entity, ItemStack item)
-        {
-        }
-
-        public override void Tick(Entity entity, ItemStack item)
-        {
         }
     }
 }

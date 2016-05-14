@@ -121,7 +121,7 @@ namespace Voxalia.ServerGame.WorldSystem
             Config.Default("general.spawnpoint", new Location(0, 0, 50).ToString());
             CFGEdited = true;
             Seed = Config.ReadInt("general.seed", 100);
-            SpawnPoint = Location.FromString(Config.ReadString("general.spawnpoint", "ERR"));
+            SpawnPoint = Location.FromString(Config.ReadString("general.spawnpoint", "0,0,50"));
             Random seedGen = new Random(Seed);
             Seed2 = (seedGen.Next(SeedMax) - SeedMax / 2);
             Seed3 = (seedGen.Next(SeedMax) - SeedMax / 2);
@@ -132,6 +132,7 @@ namespace Voxalia.ServerGame.WorldSystem
             EntityConstructors.Add(EntityType.GLOWSTICK, new GlowstickEntityConstructor());
             EntityConstructors.Add(EntityType.MODEL, new ModelEntityConstructor());
             EntityConstructors.Add(EntityType.SMOKE_GRENADE, new SmokeGrenadeEntityConstructor());
+            EntityConstructors.Add(EntityType.MUSIC_BLOCK, new MusicBlockEntityConstructor());
             ChunkManager = new ChunkDataManager();
             ChunkManager.Init(this);
             //LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30), true);

@@ -15,7 +15,7 @@ using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
-    class BlockItemEntity: PhysicsEntity
+    public class BlockItemEntity: PhysicsEntity
     {
         public Material Mat;
         public byte Dat;

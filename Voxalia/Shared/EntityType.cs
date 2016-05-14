@@ -21,6 +21,7 @@ namespace Voxalia.Shared
         TARGET_ENTITY = 12,
         SLIME = 13,
         EXPLOSIVE_GRENADE = 14,
-        PAINT_BOMB = 15
+        PAINT_BOMB = 15,
+        MUSIC_BLOCK = 16
     }
 }

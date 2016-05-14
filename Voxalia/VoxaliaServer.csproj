@@ -109,6 +109,7 @@
     <Compile Include="ServerGame\EntitySystem\GlowstickEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\ItemEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\ModelEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\MusicBlockEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PaintBombEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PlayerEntity.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="ServerGame\EntitySystem\SlimeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\ExplosiveGrenadeEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\SmokeGrenadeEntity.cs" />
+    <Compile Include="ServerGame\EntitySystem\StaticBlockEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\TargetEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\VehicleEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\VehiclePartEntity.cs" />
@@ -126,6 +128,7 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\BowItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BulletItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BlockItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\CustomBlockItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\ExplodobowItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\FuelItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\JetpackItem.cs" />

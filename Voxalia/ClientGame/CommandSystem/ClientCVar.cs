@@ -25,7 +25,7 @@ namespace Voxalia.ClientGame.CommandSystem
         public CVar n_first, n_debugmovement, n_movement_maxdistance, n_movement_adjustment, n_movemode;
 
         // Renderer CVars
-        public CVar r_fullscreen, r_width, r_height, r_antialiasing, r_vsync, r_lighting, r_renderwireframe,
+        public CVar r_fullscreen, r_width, r_height, r_vsync, r_lighting, r_renderwireframe,
             r_fov, r_znear, r_zfar,
             r_dof_strength,
             r_maxfps,
@@ -67,7 +67,6 @@ namespace Voxalia.ClientGame.CommandSystem
             r_fullscreen = Register("r_fullscreen", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use fullscreen mode.");
             r_width = Register("r_width", "1280", CVarFlag.Numeric | CVarFlag.Delayed, "What width the window should be.");
             r_height = Register("r_height", "720", CVarFlag.Numeric | CVarFlag.Delayed, "What height the window should be.");
-            r_antialiasing = Register("r_antialiasing", "2", CVarFlag.Numeric | CVarFlag.Delayed, "What AA mode to use (0 = none)."); // TODO: IMPLEMENT?
             r_vsync = Register("r_vsync", "true", CVarFlag.Boolean, "Whether to use vertical synchronization mode.");
             r_lighting = Register("r_lighting", "true", CVarFlag.Boolean, "Whether to enable 3D lighting (Otherwise, use FullBright).");
             r_renderwireframe = Register("r_renderwireframe", "false", CVarFlag.Boolean, "Whether to render a wireframe.");

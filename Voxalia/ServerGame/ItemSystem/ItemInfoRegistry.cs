@@ -44,6 +44,7 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new SledgehammerItem());
             Register(new ManipulatorItem());
             Register(new StructureSelectorItem());
+            Register(new CustomBlockItem());
             Register(Generic = new GenericItem());
         }
 
