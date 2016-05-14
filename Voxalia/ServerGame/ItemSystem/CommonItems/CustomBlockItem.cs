@@ -61,7 +61,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                             }
                             else
                             {
-                                player.Items.SetSlot(player.Items.cItem, item);
+                                player.Items.SetSlot(player.Items.cItem - 1, item);
                             }
                             player.LastBlockPlace = player.TheRegion.GlobalTickTime;
                         }

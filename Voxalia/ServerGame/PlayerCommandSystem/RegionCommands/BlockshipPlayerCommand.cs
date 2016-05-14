@@ -54,6 +54,12 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                 blocksin[(int)(block.Key.Z - zsub) * ywidth * xwidth + (int)(block.Key.Y - ysub) * xwidth + (int)(block.Key.X - xsub)] = block.Value;
             }
             BlockGroupEntity bge = new BlockGroupEntity(extent.Min, tm, entry.Player.TheRegion, blocksin, xwidth, ywidth, zwidth);
+            if (tm == BGETraceMode.PERFECT)
+            {
+                bge.SetMass(0);
+                bge.SetVelocity(Location.Zero);
+                bge.SetOrientation(BEPUutilities.Quaternion.CreateFromAxisAngle(new BEPUutilities.Vector3(0, 0, 1), 90f * (float)Utilities.PI180));
+            }
             entry.Player.TheRegion.SpawnEntity(bge);
         }
 
