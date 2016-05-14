@@ -72,7 +72,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_renderwireframe = Register("r_renderwireframe", "false", CVarFlag.Boolean, "Whether to render a wireframe.");
             r_fov = Register("r_fov", "70", CVarFlag.Numeric, "What Field of Vision range value to use.");
             r_znear = Register("r_znear", "0.1", CVarFlag.Numeric, "How close the near plane should be to the camera.");
-            r_zfar = Register("r_zfar", "1300", CVarFlag.Numeric, "How far the far plane should be from the camera.");
+            r_zfar = Register("r_zfar", "3000", CVarFlag.Numeric, "How far the far plane should be from the camera.");
             r_dof_strength = Register("r_dof_strength", "4", CVarFlag.Numeric, "How strong the Depth Of Field effect should be.");
             r_maxfps = Register("r_maxfps", "60", CVarFlag.Numeric | CVarFlag.Delayed, "What the FPS cap should be.");
             r_lightmaxdistance = Register("r_lightmaxdistance", "35", CVarFlag.Numeric, "How far away a light can be from the camera before it is disabled.");

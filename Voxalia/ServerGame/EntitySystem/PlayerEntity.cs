@@ -125,22 +125,14 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public int ViewRadiusInChunks = 3;
 
-        public int ViewRadiusHorizontalLOD
-        {
-            get
-            {
-                return ViewRadiusInChunks + 6;
-            }
-        }
+        public int ViewRadExtra2Height = 2;
 
-        public int ViewRadiusVerticalLOD
-        {
-            get
-            {
-                return ViewRadiusInChunks;
-            }
-        }
+        public int ViewRadExtra2 = 6;
 
+        public int ViewRadExtra5 = 10;
+
+        public int ViewRadExtra5Height = 4;
+        
         public int BestLOD = 1;
 
         public PhysicsEntity Manipulator_Grabbed = null;
@@ -458,8 +450,9 @@ namespace Voxalia.ServerGame.EntitySystem
                 TrySet(pos, 1, 1, 0, 1, false);
                 TrySet(pos, ViewRadiusInChunks / 2, ViewRadiusInChunks / 2, 0, 1, false);
                 TrySet(pos, ViewRadiusInChunks, ViewRadiusInChunks, 0, 1, false);
-                TrySet(pos, ViewRadiusInChunks + 1, ViewRadiusVerticalLOD, 0, 2, true);
-                TrySet(pos, ViewRadiusHorizontalLOD, ViewRadiusVerticalLOD, 15, 2, true);
+                TrySet(pos, ViewRadiusInChunks + 1, ViewRadiusInChunks, 0, 2, true);
+                TrySet(pos, ViewRadiusInChunks + ViewRadExtra2, ViewRadiusInChunks + ViewRadExtra2Height, 15, 2, true);
+                TrySet(pos, ViewRadiusInChunks + ViewRadExtra5, ViewRadiusInChunks + ViewRadExtra5Height, 30, 5, true);
                 if (!loadedInitially)
                 {
                     loadedInitially = true;
@@ -579,9 +572,9 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool ShouldLoadChunk(Location cpos)
         {
             Location wpos = TheRegion.ChunkLocFor(GetPosition());
-            if (Math.Abs(cpos.X - wpos.X) > (ViewRadiusHorizontalLOD)
-                || Math.Abs(cpos.Y - wpos.Y) > (ViewRadiusHorizontalLOD)
-                || Math.Abs(cpos.Z - wpos.Z) > (ViewRadiusVerticalLOD))
+            if (Math.Abs(cpos.X - wpos.X) > (ViewRadiusInChunks + ViewRadExtra5)
+                || Math.Abs(cpos.Y - wpos.Y) > (ViewRadiusInChunks + ViewRadExtra5)
+                || Math.Abs(cpos.Z - wpos.Z) > (ViewRadiusInChunks + ViewRadExtra5Height))
             {
                 return false;
             }
