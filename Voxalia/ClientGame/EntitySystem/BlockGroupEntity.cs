@@ -42,7 +42,8 @@ namespace Voxalia.ClientGame.EntitySystem
             TraceMode = mode;
             if (TraceMode == BGETraceMode.PERFECT)
             {
-                Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks);
+                Vector3 shoffs;
+                Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks, out shoffs);
             }
             else
             {

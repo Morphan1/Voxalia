@@ -52,15 +52,16 @@ namespace Voxalia.ServerGame.EntitySystem
             Origin = torigin;
             if (TraceMode == BGETraceMode.PERFECT)
             {
-                Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks); // TODO: Anything offset related needed here?
-                shapeOffs = Location.Zero;
+                Vector3 shoffs;
+                Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks, out shoffs); // TODO: Anything offset related needed here?
+                shapeOffs = -new Location(shoffs);
             }
             else
             {
                 Shape = CalculateHullShape(out shapeOffs);
                 shapeOffs = -shapeOffs;
             }
-            SetPosition(baseloc + shapeOffs);
+            SetPosition(baseloc - shapeOffs);
         }
         
         public override void SetPosition(Location pos)

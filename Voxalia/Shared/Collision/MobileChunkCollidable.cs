@@ -28,17 +28,9 @@ namespace Voxalia.Shared.Collision
             Vector3 max = new Vector3(shape.ChunkSize.X, shape.ChunkSize.Y, shape.ChunkSize.Z);
             boundingBox = new BoundingBox(-max, max);
             Events = new ContactEventManager<EntityCollidable>();
+            LocalPosition = -shape.Center;
         }
-
-        public MobileChunkCollidable(Vector3i size, BlockInternal[] blocks)
-        {
-            ChunkShape = new MobileChunkShape(size, blocks);
-            base.Shape = ChunkShape;
-            Vector3 max = new Vector3(ChunkShape.ChunkSize.X, ChunkShape.ChunkSize.Y, ChunkShape.ChunkSize.Z);
-            boundingBox = new BoundingBox(-max, max);
-            Events = new ContactEventManager<EntityCollidable>();
-        }
-
+        
         public MobileChunkShape ChunkShape;
         
         protected override IContactEventTriggerer EventTriggerer
