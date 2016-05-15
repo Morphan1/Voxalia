@@ -65,13 +65,12 @@ namespace Voxalia.Shared.Collision
             // TODO: Efficiency!
             GeneralConvexPairTester pair = testerPool.Take();
             Vector3 offs;
-            ReusableGenericCollidable<ConvexShape> boxCollidable = new ReusableGenericCollidable<ConvexShape>((ConvexShape)mesh.ChunkShape.ShapeAt(position.X, position.Y, position.Z, out offs));
+            ReusableGenericCollidable<ConvexShape> boxCollidable = new ReusableGenericCollidable<ConvexShape>(mesh.ChunkShape.ShapeAt(position.X, position.Y, position.Z, out offs));
             pair.Initialize(convex, boxCollidable);
             Vector3 input = new Vector3(position.X + offs.X, position.Y + offs.Y, position.Z + offs.Z);
             RigidTransform rt = mesh.WorldTransform;
-            RigidTransform two = new RigidTransform(input, Quaternion.Identity);
-            RigidTransform outp;
-            RigidTransform.Multiply(ref rt, ref two, out outp);
+            Vector3 transfd = Quaternion.Transform(input, rt.Orientation);
+            RigidTransform outp = new RigidTransform(transfd + rt.Position, rt.Orientation);
             boxCollidable.WorldTransform = outp;
             return pair;
         }

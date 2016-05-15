@@ -25,7 +25,8 @@ namespace Voxalia.Shared.Collision
         {
             ChunkShape = shape;
             base.Shape = ChunkShape;
-            boundingBox = new BoundingBox(new Vector3(0, 0, 0), new Vector3(shape.ChunkSize.X, shape.ChunkSize.Y, shape.ChunkSize.Z));
+            Vector3 max = new Vector3(shape.ChunkSize.X, shape.ChunkSize.Y, shape.ChunkSize.Z);
+            boundingBox = new BoundingBox(-max, max);
             Events = new ContactEventManager<EntityCollidable>();
         }
 

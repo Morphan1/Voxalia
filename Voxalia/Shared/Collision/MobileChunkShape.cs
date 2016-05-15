@@ -122,10 +122,10 @@ namespace Voxalia.Shared.Collision
         // TODO: Optimize me!
         public void GetOverlaps(ref RigidTransform transform, BoundingBox boundingBox, ref QuickList<Vector3i> overlaps)
         {
-            // TODO: Update!
-            BoundingBox b2 = new BoundingBox();
-            RigidTransform.TransformByInverse(ref boundingBox.Min, ref transform, out b2.Min);
-            RigidTransform.TransformByInverse(ref boundingBox.Max, ref transform, out b2.Max);
+            Vector3 tmin, tmax;
+            RigidTransform.TransformByInverse(ref boundingBox.Min, ref transform, out tmin);
+            RigidTransform.TransformByInverse(ref boundingBox.Max, ref transform, out tmax);
+            BoundingBox b2 = new BoundingBox(Vector3.Min(tmin, tmax), Vector3.Max(tmin, tmax));
             var min = new Vector3i
             {
                 X = Math.Max(0, (int)b2.Min.X),
@@ -144,7 +144,7 @@ namespace Voxalia.Shared.Collision
                 {
                     for (int z = min.Z; z <= max.Z; z++)
                     {
-                        if (((Material)Blocks[BlockIndex(x, y, z)].BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
+                        if (Blocks[BlockIndex(x, y, z)].Material.GetSolidity() == MaterialSolidity.FULLSOLID)
                         {
                             overlaps.Add(new Vector3i { X = x, Y = y, Z = z });
                         }
@@ -160,11 +160,9 @@ namespace Voxalia.Shared.Collision
 
         public override void GetBoundingBox(ref RigidTransform transform, out BoundingBox boundingBox)
         {
-            Vector3 min = transform.Position;
-            Vector3 maxbase = new Vector3(ChunkSize.X, ChunkSize.Y, ChunkSize.Z);
-            Vector3 max;
-            RigidTransform.Transform(ref maxbase, ref transform, out max);
-            boundingBox = new BoundingBox(Vector3.Min(min, max), Vector3.Max(min, max));
+            // Over-estimate!
+            Vector3 maxbase = new Vector3(ChunkSize.X, ChunkSize.Y, ChunkSize.Z) * 2f;
+            boundingBox = new BoundingBox(transform.Position - maxbase, transform.Position + maxbase);
         }
     }
 }

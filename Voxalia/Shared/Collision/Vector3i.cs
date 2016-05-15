@@ -33,5 +33,10 @@ namespace Voxalia.Shared.Collision
         {
             return new Vector3(X, Y, Z);
         }
+
+        public override string ToString()
+        {
+            return ToVector3().ToString();
+        }
     }
 }

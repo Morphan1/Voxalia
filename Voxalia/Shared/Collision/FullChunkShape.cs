@@ -142,7 +142,7 @@ namespace Voxalia.Shared.Collision
                 {
                     for (int z = min.Z; z <= max.Z; z++)
                     {
-                        if (((Material)Blocks[BlockIndex(x, y, z)].BlockMaterial).GetSolidity() == MaterialSolidity.FULLSOLID)
+                        if (Blocks[BlockIndex(x, y, z)].Material.GetSolidity() == MaterialSolidity.FULLSOLID)
                         {
                             overlaps.Add(new Vector3i { X = x, Y = y, Z = z });
                         }
