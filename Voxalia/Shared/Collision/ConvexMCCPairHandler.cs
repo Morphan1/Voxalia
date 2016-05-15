@@ -80,11 +80,10 @@ namespace Voxalia.Shared.Collision
         public override void CleanUp()
         {
             base.CleanUp();
-
             mesh = null;
             convex = null;
         }
-
+        
         protected override void UpdateContainedPairs()
         {
             RigidTransform rt = mesh.WorldTransform;

@@ -21,13 +21,11 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace Voxalia.Shared.Collision
 {
-    public class MCCFCOPairHandler : StandardPairHandler
+    public class MCCFCOPairHandler : GroupPairHandler
     {
         FullChunkObject mesh;
 
         MobileChunkCollidable mobile;
-
-        private NonConvexContactManifoldConstraint contactConstraint;
         
         public override Collidable CollidableA
         {
@@ -48,22 +46,9 @@ namespace Voxalia.Shared.Collision
         {
             get { return null; }
         }
-
-        public override ContactManifoldConstraint ContactConstraint
-        {
-            get { return contactConstraint; }
-        }
-
-        public override ContactManifold ContactManifold
-        {
-            get { return contactManifold; }
-        }
-
-       MCCFCOContactManifold contactManifold = new MCCFCOContactManifold();
         
         public MCCFCOPairHandler()
         {
-            contactConstraint = new NonConvexContactManifoldConstraint(this);
         }
 
         bool noRecurse = false;
@@ -100,66 +85,38 @@ namespace Voxalia.Shared.Collision
             mobile = null;
         }
         
-        public override void UpdateTimeOfImpact(Collidable requester, float dt)
+        protected override void UpdateContainedPairs()
         {
-            // TODO: UPDATE!
-            //Notice that we don't test for convex entity null explicitly.  The convex.IsActive property does that for us.
-            if (mobile.IsActive && mobile.Entity.PositionUpdateMode == PositionUpdateMode.Continuous)
+            RigidTransform rtMesh = new RigidTransform(mesh.Position);
+            RigidTransform rtMobile = mobile.WorldTransform;
+            QuickList<Vector3i> overlaps = new QuickList<Vector3i>(BufferPools<Vector3i>.Thread);
+            mesh.ChunkShape.GetOverlaps(mesh.Position, mobile.BoundingBox, ref overlaps);
+            for (int i = 0; i < overlaps.Count; i++)
             {
-                //Only perform the test if the minimum radii are small enough relative to the size of the velocity.
-                Vector3 velocity = mobile.Entity.LinearVelocity * dt;
-                float velocitySquared = velocity.LengthSquared();
-
-                var minimumRadius = 1 * MotionSettings.CoreShapeScaling;
-                timeOfImpact = 1;
-                if (minimumRadius * minimumRadius < velocitySquared)
+                Vector3i pos = overlaps.Elements[i];
+                Vector3 offs;
+                ReusableGenericCollidable<ConvexShape> colBox = new ReusableGenericCollidable<ConvexShape>(mesh.ChunkShape.ShapeAt(pos.X, pos.Y, pos.Z, out offs));
+                Vector3 input = new Vector3(pos.X + offs.X, pos.Y + offs.Y, pos.Z + offs.Z);
+                RigidTransform outp = new RigidTransform(input + mesh.Position);
+                colBox.WorldTransform = outp;
+                colBox.UpdateBoundingBoxForTransform(ref outp);
+                QuickList<Vector3i> overlaps2 = new QuickList<Vector3i>(BufferPools<Vector3i>.Thread);
+                mobile.ChunkShape.GetOverlaps(ref rtMobile, colBox.BoundingBox, ref overlaps2);
+                for (int x = 0; x < overlaps2.Count; x++)
                 {
-                    for (int i = 0; i < contactManifold.ActivePairs.Count; i++)
-                    {
-                        var pair = contactManifold.ActivePairs.Values[i];
-                        //In the contact manifold, the box collidable is always put into the second slot.
-                        for (int p = 0; i < pair.Count; p++)
-                        {
-                            var boxCollidable = pair[p];
-                            RayHit rayHit;
-                            var worldTransform = boxCollidable.CollidableA.WorldTransform;
-                            if (GJKToolbox.CCDSphereCast(new Ray(mobile.WorldTransform.Position, velocity), minimumRadius, boxCollidable.CollidableA.Shape, ref worldTransform, timeOfImpact, out rayHit) &&
-                                rayHit.T > Toolbox.BigEpsilon)
-                            {
-                                timeOfImpact = rayHit.T;
-                            }
-                        }
-                    }
+                    Vector3i pos2 = overlaps2.Elements[x];
+                    Vector3 offs2;
+                    ReusableGenericCollidable<ConvexShape> colBox2 = new ReusableGenericCollidable<ConvexShape>(mobile.ChunkShape.ShapeAt(pos2.X, pos2.Y, pos2.Z, out offs2));
+                    colBox2.SetEntity(mobile.Entity);
+                    Vector3 input2 = new Vector3(pos2.X + offs2.X, pos2.Y + offs2.Y, pos2.Z + offs2.Z);
+                    Vector3 transfd2 = Quaternion.Transform(input2, rtMobile.Orientation);
+                    RigidTransform outp2 = new RigidTransform(transfd2 + rtMobile.Position, rtMobile.Orientation);
+                    colBox2.WorldTransform = outp2;
+                    TryToAdd(colBox, colBox2, mesh.Material, mobile.Entity != null ? mobile.Entity.Material : null);
                 }
+                overlaps2.Dispose();
             }
-        }
-        
-        protected override void GetContactInformation(int index, out ContactInformation info)
-        {
-            info.Contact = contactManifold.Contacts[index];
-            //Find the contact's normal and friction forces.
-            info.FrictionImpulse = 0;
-            info.NormalImpulse = 0;
-            for (int i = 0; i < contactConstraint.ContactFrictionConstraints.Count; i++)
-            {
-                if (contactConstraint.ContactFrictionConstraints[i].PenetrationConstraint.Contact == info.Contact)
-                {
-                    info.FrictionImpulse = contactConstraint.ContactFrictionConstraints[i].TotalImpulse;
-                    info.NormalImpulse = contactConstraint.ContactFrictionConstraints[i].PenetrationConstraint.NormalImpulse;
-                    break;
-                }
-            }
-            //Compute relative velocity
-            if (mobile.Entity != null)
-            {
-                // TOOD: UPDATE!?
-                info.RelativeVelocity = Toolbox.GetVelocityOfPoint(info.Contact.Position, mobile.Entity.Position, mobile.Entity.LinearVelocity, mobile.Entity.AngularVelocity);
-            }
-            else
-            {
-                info.RelativeVelocity = new Vector3();
-            }
-            info.Pair = this;
+            overlaps.Dispose();
         }
     }
 }
