@@ -11,14 +11,14 @@ using FreneticScript;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    public class VehicleEntity: ModelEntity, EntityUseable
+    public class CarEntity: ModelEntity, EntityUseable
     {
         public string vehName;
         public Seat DriverSeat;
         public List<JointVehicleMotor> DrivingMotors = new List<JointVehicleMotor>();
         public List<JointVehicleMotor> SteeringMotors = new List<JointVehicleMotor>();
 
-        public VehicleEntity(string vehicle, Region tregion)
+        public CarEntity(string vehicle, Region tregion)
             : base("vehicles/" + vehicle + "_base", tregion)
         {
             vehName = vehicle;

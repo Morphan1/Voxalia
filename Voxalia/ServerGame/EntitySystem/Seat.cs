@@ -50,9 +50,9 @@ namespace Voxalia.ServerGame.EntitySystem
             jbs = new JointBallSocket(SeatHolder, sitter, sitter.GetPosition());
             SeatHolder.TheRegion.AddJoint(js);
             SeatHolder.TheRegion.AddJoint(jbs);
-            if (SeatHolder is VehicleEntity && sitter is PlayerEntity)
+            if (SeatHolder is CarEntity && sitter is PlayerEntity)
             {
-                ((VehicleEntity)SeatHolder).Accepted((PlayerEntity)sitter);
+                ((CarEntity)SeatHolder).Accepted((PlayerEntity)sitter);
             }
             return true;
         }
@@ -82,9 +82,9 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public void HandleInput(CharacterEntity player)
         {
-            if (SeatHolder is VehicleEntity)
+            if (SeatHolder is CarEntity)
             {
-                ((VehicleEntity)SeatHolder).HandleInput(player);
+                ((CarEntity)SeatHolder).HandleInput(player);
             }
         }
     }

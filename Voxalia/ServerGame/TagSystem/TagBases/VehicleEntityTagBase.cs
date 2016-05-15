@@ -39,9 +39,9 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 {
                     foreach (Entity e in r.Entities)
                     {
-                        if (e.EID == eid && e is VehicleEntity)
+                        if (e.EID == eid && e is CarEntity)
                         {
-                            return new VehicleEntityTag((VehicleEntity)e).Handle(data.Shrink());
+                            return new VehicleEntityTag((CarEntity)e).Handle(data.Shrink());
                         }
                     }
                 }

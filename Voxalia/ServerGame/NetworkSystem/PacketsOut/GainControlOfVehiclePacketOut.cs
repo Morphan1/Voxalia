@@ -10,7 +10,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     public class GainControlOfVehiclePacketOut: AbstractPacketOut
     {
-        public GainControlOfVehiclePacketOut(CharacterEntity character, VehicleEntity vehicle)
+        public GainControlOfVehiclePacketOut(CharacterEntity character, CarEntity vehicle)
         {
             ID = 34;
             DataStream ds = new DataStream();

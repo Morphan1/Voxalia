@@ -17,9 +17,9 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
         // @Group Entities
         // @Description Represents any VehicleEntity.
         // -->
-        VehicleEntity Internal;
+        CarEntity Internal;
 
-        public VehicleEntityTag(VehicleEntity ent)
+        public VehicleEntityTag(CarEntity ent)
         {
             Internal = ent;
         }
