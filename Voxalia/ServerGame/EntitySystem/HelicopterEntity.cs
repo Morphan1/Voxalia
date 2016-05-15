@@ -69,25 +69,26 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return;
             }
+            Location up = new Location(Quaternion.Transform(Vector3.UnitZ, GetOrientation()));
             if (ILeft)
             {
-                ApplyForce(Location.UnitZ * LiftStrength * 17.0 * TheRegion.Delta);
-                SysConsole.Output(OutputType.INFO, "Applied force " + LiftStrength * 20 * TheRegion.Delta + " to acheive velocity " + GetVelocity());
+                ApplyForce(up * LiftStrength * 16.0 * TheRegion.Delta);
             }
             else if (IRight)
             {
-                ApplyForce(Location.UnitZ * LiftStrength * 10.0 * TheRegion.Delta);
+                ApplyForce(up * LiftStrength * 9.0 * TheRegion.Delta);
             }
             else
             {
-                ApplyForce(Location.UnitZ * EstimatedMass * 9.8 * (3.0 / 2.0) * TheRegion.Delta);
+                ApplyForce(up * EstimatedMass * 9.8 * (3.0 / 2.0) * TheRegion.Delta);
             }
             Body.ModifyLinearDamping(0.3f);
             Body.ModifyAngularDamping(0.3f);
             Vector3 adj = new Vector3(ForwBack, RightLeft, 0f);
             Vector3 res = Quaternion.Transform(adj, GetOrientation());
-            ApplyForce(new Location(0, 0, 1), new Location(res) * TheRegion.Delta);
-            // TODO: Rotation corrective forces.
+            ApplyForce(Location.UnitZ, new Location(res) * TheRegion.Delta * 8f);
+            Vector3 vup = Quaternion.Transform(Vector3.UnitZ, GetOrientation());
+            ApplyForce(Location.UnitZ, (vup.Z >= 0 ? 4f : -8f) * new Location(vup.X, vup.Y, 0));
         }
 
         public override void HandleInput(CharacterEntity character)
