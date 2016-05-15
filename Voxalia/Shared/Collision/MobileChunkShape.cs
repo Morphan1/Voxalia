@@ -14,9 +14,18 @@ namespace Voxalia.Shared.Collision
 
         public MobileChunkShape(Vector3i csize, BlockInternal[] blocks)
         {
+            Matrix3x3 boxMat = new BoxShape(csize.X, csize.Y, csize.Z).VolumeDistribution;
             ChunkSize = csize;
             Blocks = blocks;
-            UpdateEntityShapeVolume(new EntityShapeVolumeDescription() { Volume = csize.X * csize.Y * csize.Z, VolumeDistribution = Matrix3x3.Identity });
+            float weightInv = 1f / blocks.Length;
+            Vector3 center = new Vector3(csize.X / 2f, csize.Y / 2f, csize.Z / 2f);
+            Matrix3x3 volumeDistribution = new Matrix3x3();
+            RigidTransform transform = new RigidTransform(center);
+            Matrix3x3 contribution;
+            CompoundShape.TransformContribution(ref transform, ref center, ref boxMat, blocks.Length, out contribution);
+            Matrix3x3.Add(ref volumeDistribution, ref contribution, out volumeDistribution);
+            Matrix3x3.Multiply(ref volumeDistribution, weightInv, out volumeDistribution);
+            UpdateEntityShapeVolume(new EntityShapeVolumeDescription() { Volume = csize.X * csize.Y * csize.Z, VolumeDistribution = volumeDistribution });
         }
 
         public BlockInternal[] Blocks = null;

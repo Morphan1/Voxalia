@@ -43,7 +43,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public BlockGroupEntity(Location baseloc, BGETraceMode mode, Region tregion, BlockInternal[] blocks, int xwidth, int ywidth, int zwidth, Location torigin = default(Location)) : base(tregion)
         {
-            SetMass(blocks.Length);
+            SetMass(blocks.Length * 10f);
             XWidth = xwidth;
             YWidth = ywidth;
             ZWidth = zwidth;
