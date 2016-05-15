@@ -11,7 +11,6 @@ namespace Voxalia.Shared.Collision
     public class ReusableGenericCollidable<T> : ConvexCollidable<T> where T: ConvexShape
     {
         public ReusableGenericCollidable(T tshape)
-            : base(null)
         {
             shape = tshape;
         }
