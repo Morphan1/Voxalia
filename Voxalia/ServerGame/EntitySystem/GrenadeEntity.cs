@@ -13,8 +13,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public GrenadeEntity(Region tregion) :
             base(tregion)
         {
-            ConvexEntityShape = new CylinderShape(0.2f, 0.05f);
-            Shape = ConvexEntityShape;
+            Shape = new CylinderShape(0.2f, 0.05f);
             Bounciness = 0.95f;
             SetMass(1);
         }

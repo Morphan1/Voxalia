@@ -87,6 +87,7 @@ namespace Voxalia.Shared.Collision
         
         protected override void UpdateContainedPairs()
         {
+            /*
             RigidTransform rtMesh = new RigidTransform(mesh.Position);
             RigidTransform rtMobile = mobile.WorldTransform;
             QuickList<Vector3i> overlaps = new QuickList<Vector3i>(BufferPools<Vector3i>.Thread);
@@ -116,7 +117,7 @@ namespace Voxalia.Shared.Collision
                 }
                 overlaps2.Dispose();
             }
-            overlaps.Dispose();
+            overlaps.Dispose();*/
         }
     }
 }

@@ -25,8 +25,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             model = TheClient.Models.Sphere;
             GColor = new Color4(0f, 0f, 0f, 1f);
-            ConvexEntityShape = new CylinderShape(0.2f, 0.05f);
-            Shape = ConvexEntityShape;
+            Shape = new CylinderShape(0.2f, 0.05f);
             Bounciness = 0.95f;
             SetMass(1);
         }

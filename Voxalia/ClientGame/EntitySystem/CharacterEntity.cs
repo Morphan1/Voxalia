@@ -157,7 +157,6 @@ namespace Voxalia.ClientGame.EntitySystem
             CBody = GenCharCon();
             Body = CBody.Body;
             Shape = CBody.Body.CollisionInformation.Shape;
-            ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
             TheRegion.PhysicsWorld.Add(CBody);
             Jetpack = new JetpackMotionConstraint(this);
             TheRegion.PhysicsWorld.Add(Jetpack);

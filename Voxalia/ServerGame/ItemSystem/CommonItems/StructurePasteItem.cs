@@ -119,7 +119,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 }
                 Location eye = player.GetEyePosition();
                 Location forw = player.ForwardVector();
-                player.Pasting.SetPosition((eye + forw * player.PastingDist + player.Pasting.rotOffs - player.Pasting.Origin).GetBlockLocation());
+                player.Pasting.SetPosition((eye + forw * player.PastingDist + player.Pasting.rotOffs - player.Pasting.Origin).GetBlockLocation() - player.Pasting.shapeOffs);
                 RayCastResult rcr;
                 bool h = player.TheRegion.SpecialCaseRayTrace(eye, forw, player.PastingDist, MaterialSolidity.ANY, player.IgnoreThis, out rcr);
                 if (h)
@@ -134,7 +134,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                         Material mat = player.TheRegion.GetBlockMaterial(block);
                         if (mat != Material.AIR)
                         {
-                            player.Pasting.SetPosition(block + player.Pasting.rotOffs - player.Pasting.Origin);
+                            player.Pasting.SetPosition(block + player.Pasting.rotOffs - player.Pasting.Origin - player.Pasting.shapeOffs);
                         }
                     }
                 }

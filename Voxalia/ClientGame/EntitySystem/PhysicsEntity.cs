@@ -71,9 +71,7 @@ namespace Voxalia.ClientGame.EntitySystem
         /// The shape of the entity.
         /// </summary>
         public EntityShape Shape = null;
-
-        public ConvexShape ConvexEntityShape = null;
-
+        
         public Location InternalOffset;
 
         public CollisionGroup CGroup;
@@ -96,22 +94,6 @@ namespace Voxalia.ClientGame.EntitySystem
             if (Body != null)
             {
                 DestroyBody();
-            }
-            if (Shape is ConvexShape)
-            {
-                ConvexEntityShape = (ConvexShape)Shape;
-            }
-            else
-            {
-                if (Shape is MobileMeshShape)
-                {
-                    MobileMeshShape mms = (MobileMeshShape)Shape;
-                    RigidTransform rt = new RigidTransform(Vector3.Zero, Quaternion.Identity);
-                    BoundingBox bb;
-                    mms.GetBoundingBox(ref rt, out bb);
-                    Vector3 size = bb.Max - bb.Min;
-                    ConvexEntityShape = new BoxShape(size.X, size.Y, size.Z);
-                }
             }
             Body = new BEPUphysics.Entities.Entity(Shape, Mass);
             Body.CollisionInformation.CollisionRules.Group = CGroup;

@@ -159,7 +159,6 @@ namespace Voxalia.ServerGame.EntitySystem
             Body.Tag = this;
             Body.AngularDamping = 1.0f;
             Shape = CBody.Body.CollisionInformation.Shape;
-            ConvexEntityShape = CBody.Body.CollisionInformation.Shape;
             Body.CollisionInformation.CollisionRules.Group = CGroup;
             CBody.StepManager.MaximumStepHeight = CBStepHeight;
             CBody.StepManager.MinimumDownStepHeight = CBDownStepHeight;

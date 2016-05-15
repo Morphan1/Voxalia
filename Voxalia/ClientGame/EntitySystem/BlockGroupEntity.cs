@@ -40,16 +40,15 @@ namespace Voxalia.ClientGame.EntitySystem
             ZWidth = zwidth;
             Blocks = blocks;
             TraceMode = mode;
-            ConvexEntityShape = (ConvexShape)CalculateHullShape(out shapeOffs);
-            shapeOffs = sOffs;
             if (TraceMode == BGETraceMode.PERFECT)
             {
                 Shape = new MobileChunkShape(new Vector3i(xwidth, ywidth, zwidth), blocks);
             }
             else
             {
-                Shape = ConvexEntityShape;
+                Shape = CalculateHullShape(out shapeOffs);
             }
+            shapeOffs = sOffs;
             SetPosition(GetPosition());
         }
 
@@ -121,12 +120,12 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void SetPosition(Location pos)
         {
-            base.SetPosition(pos + shapeOffs);
+            base.SetPosition(pos);
         }
 
         public override Location GetPosition()
         {
-            return base.GetPosition() - shapeOffs;
+            return base.GetPosition();
         }
 
         public override void Render()
@@ -136,7 +135,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 return;
             }
             TheClient.SetVox();
-            OpenTK.Matrix4 mat = GetTransformationMatrix() * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(-shapeOffs));
+            OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(shapeOffs)) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetColor(Color);
             vbo.Render(false);

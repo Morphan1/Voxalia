@@ -49,8 +49,6 @@ namespace Voxalia.ServerGame.EntitySystem
             ZWidth = zwidth;
             Blocks = blocks;
             TraceMode = mode;
-            ConvexEntityShape = (ConvexShape)CalculateHullShape(out shapeOffs);
-            shapeOffs = -shapeOffs;
             Origin = torigin;
             if (TraceMode == BGETraceMode.PERFECT)
             {
@@ -59,19 +57,20 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             else
             {
-                Shape = ConvexEntityShape;
+                Shape = CalculateHullShape(out shapeOffs);
+                shapeOffs = -shapeOffs;
             }
-            SetPosition(baseloc);
+            SetPosition(baseloc + shapeOffs);
         }
         
         public override void SetPosition(Location pos)
         {
-            base.SetPosition(pos + shapeOffs);
+            base.SetPosition(pos);
         }
 
         public override Location GetPosition()
         {
-            return base.GetPosition() - shapeOffs;
+            return base.GetPosition();
         }
 
         public override EntityType GetEntityType()

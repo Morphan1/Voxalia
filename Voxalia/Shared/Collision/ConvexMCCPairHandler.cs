@@ -82,12 +82,14 @@ namespace Voxalia.Shared.Collision
             base.CleanUp();
             mesh = null;
             convex = null;
+            overlaps.Dispose();
         }
-        
+
+        QuickList<Vector3i> overlaps = new QuickList<Vector3i>(BufferPools<Vector3i>.Thread);
+
         protected override void UpdateContainedPairs()
         {
             RigidTransform rt = mesh.WorldTransform;
-            QuickList<Vector3i> overlaps = new QuickList<Vector3i>(BufferPools<Vector3i>.Thread);
             mesh.ChunkShape.GetOverlaps(ref rt, convex.BoundingBox, ref overlaps);
             for (int i = 0; i < overlaps.Count; i++)
             {
@@ -101,7 +103,7 @@ namespace Voxalia.Shared.Collision
                 colBox.WorldTransform = outp;
                 TryToAdd(colBox, convex, mesh.Entity != null ? mesh.Entity.Material : null, convex.Entity != null ? convex.Entity.Material : null);
             }
-            overlaps.Dispose();
+            overlaps.Clear();
         }
     }
 }
