@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using BEPUphysics.Entities;
 
 namespace Voxalia.Shared.Collision
 {
@@ -18,6 +19,11 @@ namespace Voxalia.Shared.Collision
         {
             Shape.GetBoundingBox(ref worldTransform, out boundingBox);
             ExpandBoundingBox(ref boundingBox, dt);
+        }
+
+        public void SetEntity(Entity e)
+        {
+            Entity = e;
         }
     }
 }

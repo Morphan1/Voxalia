@@ -115,7 +115,12 @@ namespace Voxalia.ClientGame.EntitySystem
             else if (other is EntityCollidable)
             {
                 BEPUphysics.Entities.Entity e = ((EntityCollidable)other).Entity;
-                BEPUutilities.Vector3 relvel = Body.LinearVelocity - e.LinearVelocity;
+                BEPUutilities.Vector3 velocity = BEPUutilities.Vector3.Zero;
+                if (e != null)
+                {
+                    velocity = e.LinearVelocity;
+                }
+                BEPUutilities.Vector3 relvel = Body.LinearVelocity - velocity;
                 float vellen = Math.Abs(relvel.X) + Math.Abs(relvel.Y) + Math.Abs(relvel.Z);
                 float mod = vellen / 5;
                 if (mod > 2)

@@ -119,7 +119,7 @@ namespace Voxalia.ClientGame.EntitySystem
             Body.AngularVelocity = new Vector3((float)AVel.X, (float)AVel.Y, (float)AVel.Z);
             Body.LinearVelocity = new Vector3((float)LVel.X, (float)LVel.Y, (float)LVel.Z);
             Body.WorldTransform = WorldTransform; // TODO: Position + Quaternion
-            Body.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Continuous;
+            Body.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Passive;
             if (!CanRotate)
             {
                 Body.AngularDamping = 1;

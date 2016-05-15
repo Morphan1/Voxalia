@@ -50,6 +50,7 @@ namespace Voxalia.Shared.Collision
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<WrappedShape>), typeof(MobileChunkCollidable)), fact3);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(ConvexCollidable<ConvexHullShape>), typeof(MobileChunkCollidable)), fact3);
             NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(TriangleCollidable), typeof(MobileChunkCollidable)), fact3);
+            NarrowPhaseHelper.CollisionManagers.Add(new TypePair(typeof(MobileChunkCollidable), typeof(MobileChunkCollidable)), fact3);
         }
 
         public FullChunkObject(Vector3 pos, FullChunkShape shape)

@@ -267,7 +267,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Body.LinearVelocity = new Vector3((float)LVel.X, (float)LVel.Y, (float)LVel.Z);
             Body.WorldTransform = WorldTransform; // TODO: Position, Orientation
             Body.Tag = this;
-            Body.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Continuous;
+            Body.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Passive;
             if (!CanRotate)
             {
                 Body.AngularDamping = 1;
