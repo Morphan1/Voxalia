@@ -22,6 +22,7 @@ namespace Voxalia.Shared
         SLIME = 13,
         EXPLOSIVE_GRENADE = 14,
         PAINT_BOMB = 15,
-        MUSIC_BLOCK = 16
+        MUSIC_BLOCK = 16,
+        HELICOPTER = 17
     }
 }

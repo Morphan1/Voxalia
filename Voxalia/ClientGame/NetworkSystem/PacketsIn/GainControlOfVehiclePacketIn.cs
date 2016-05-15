@@ -16,41 +16,50 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             DataStream ds = new DataStream(data);
             DataReader dr = new DataReader(ds);
             long PEID = dr.ReadLong();
+            byte type = dr.ReadByte();
             Entity e = TheClient.TheRegion.GetEntity(PEID);
-            if (e is PlayerEntity)
+            if (type == 0)
             {
-                int drivecount = dr.ReadInt();
-                int steercount = dr.ReadInt();
-                PlayerEntity player = (PlayerEntity)e;
-                player.DrivingMotors.Clear();
-                player.SteeringMotors.Clear();
-                for (int i = 0; i < drivecount; i++)
+                if (e is PlayerEntity)
                 {
-                    long jid = dr.ReadLong();
-                    JointVehicleMotor jvm = (JointVehicleMotor)TheClient.TheRegion.GetJoint(jid);
-                    if (jvm == null)
+                    int drivecount = dr.ReadInt();
+                    int steercount = dr.ReadInt();
+                    PlayerEntity player = (PlayerEntity)e;
+                    player.DrivingMotors.Clear();
+                    player.SteeringMotors.Clear();
+                    for (int i = 0; i < drivecount; i++)
                     {
-                        dr.Close();
-                        return false;
+                        long jid = dr.ReadLong();
+                        JointVehicleMotor jvm = (JointVehicleMotor)TheClient.TheRegion.GetJoint(jid);
+                        if (jvm == null)
+                        {
+                            dr.Close();
+                            return false;
+                        }
+                        player.DrivingMotors.Add(jvm);
                     }
-                    player.DrivingMotors.Add(jvm);
-                }
-                for (int i = 0; i < steercount; i++)
-                {
-                    long jid = dr.ReadLong();
-                    JointVehicleMotor jvm = (JointVehicleMotor)TheClient.TheRegion.GetJoint(jid);
-                    if (jvm == null)
+                    for (int i = 0; i < steercount; i++)
                     {
-                        dr.Close();
-                        return false;
+                        long jid = dr.ReadLong();
+                        JointVehicleMotor jvm = (JointVehicleMotor)TheClient.TheRegion.GetJoint(jid);
+                        if (jvm == null)
+                        {
+                            dr.Close();
+                            return false;
+                        }
+                        player.SteeringMotors.Add(jvm);
                     }
-                    player.SteeringMotors.Add(jvm);
+                    dr.Close();
+                    return true;
                 }
+                // TODO: other CharacterEntity's
+            }
+            else if (type == 1)
+            {
                 dr.Close();
                 return true;
             }
             dr.Close();
-            // TODO: OtherPlayerEntity
             return false;
         }
     }

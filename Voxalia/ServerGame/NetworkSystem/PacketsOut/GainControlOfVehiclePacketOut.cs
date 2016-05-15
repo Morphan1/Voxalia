@@ -10,13 +10,29 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     public class GainControlOfVehiclePacketOut: AbstractPacketOut
     {
-        public GainControlOfVehiclePacketOut(CharacterEntity character, CarEntity vehicle)
+        public GainControlOfVehiclePacketOut(CharacterEntity character, VehicleEntity vehicle)
         {
-            // TODO: Other vehicle types!
+            if (vehicle is CarEntity)
+            {
+                Setup(character, (CarEntity)vehicle);
+            }
+            else if (vehicle is HelicopterEntity)
+            {
+                Setup(character, (HelicopterEntity)vehicle);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private void Setup(CharacterEntity character, CarEntity vehicle)
+        {
             ID = 34;
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);
             dw.WriteLong(character.EID);
+            dw.WriteByte(0);
             dw.WriteInt(vehicle.DrivingMotors.Count);
             dw.WriteInt(vehicle.SteeringMotors.Count);
             for (int i = 0; i < vehicle.DrivingMotors.Count; i++)
@@ -27,6 +43,18 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 dw.WriteLong(vehicle.SteeringMotors[i].JID);
             }
+            dw.Flush();
+            Data = ds.ToArray();
+            dw.Close();
+        }
+
+        private void Setup(CharacterEntity character, HelicopterEntity vehicle)
+        {
+            ID = 34;
+            DataStream ds = new DataStream();
+            DataWriter dw = new DataWriter(ds);
+            dw.WriteLong(character.EID);
+            dw.WriteByte(1);
             dw.Flush();
             Data = ds.ToArray();
             dw.Close();

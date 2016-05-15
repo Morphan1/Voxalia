@@ -82,9 +82,9 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public void HandleInput(CharacterEntity player)
         {
-            if (SeatHolder is CarEntity)
+            if (SeatHolder is VehicleEntity)
             {
-                ((CarEntity)SeatHolder).HandleInput(player);
+                ((VehicleEntity)SeatHolder).HandleInput(player);
             }
         }
     }

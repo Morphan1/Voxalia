@@ -32,9 +32,15 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 return;
             }
             string arg0 = entry.InputArguments[0];
-            if (arg0 == "spawnVehicle" && entry.InputArguments.Count > 1)
+            if (arg0 == "spawnCar" && entry.InputArguments.Count > 1)
             {
                 CarEntity ve = new CarEntity(entry.InputArguments[1], entry.Player.TheRegion);
+                ve.SetPosition(entry.Player.GetEyePosition() + entry.Player.ForwardVector() * 5);
+                entry.Player.TheRegion.SpawnEntity(ve);
+            }
+            else if (arg0 == "spawnHeli" && entry.InputArguments.Count > 1)
+            {
+                HelicopterEntity ve = new HelicopterEntity(entry.InputArguments[1], entry.Player.TheRegion);
                 ve.SetPosition(entry.Player.GetEyePosition() + entry.Player.ForwardVector() * 5);
                 entry.Player.TheRegion.SpawnEntity(ve);
             }
