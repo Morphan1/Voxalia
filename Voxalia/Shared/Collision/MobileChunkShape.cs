@@ -72,8 +72,6 @@ namespace Voxalia.Shared.Collision
             RigidTransform.TransformByInverse(ref boundingBox.Min, ref transform, out tmin);
             RigidTransform.TransformByInverse(ref boundingBox.Max, ref transform, out tmax);
             BoundingBox b2 = new BoundingBox(Vector3.Min(tmin, tmax), Vector3.Max(tmin, tmax));
-            b2.Min -= Center;
-            b2.Max += Center;
             var min = new Vector3i
             {
                 X = Math.Max(0, (int)b2.Min.X),
@@ -110,7 +108,7 @@ namespace Voxalia.Shared.Collision
         {
             // Lazily overestimate!
             Vector3 maxbase = new Vector3(ChunkSize.X, ChunkSize.Y, ChunkSize.Z) * 2f;
-            boundingBox = new BoundingBox(transform.Position - Center - maxbase, transform.Position + Center + maxbase);
+            boundingBox = new BoundingBox(transform.Position - maxbase, transform.Position + maxbase);
         }
     }
 }
