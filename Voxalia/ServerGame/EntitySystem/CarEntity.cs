@@ -11,26 +11,19 @@ using FreneticScript;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    public class CarEntity: ModelEntity, EntityUseable
+    public class CarEntity: VehicleEntity
     {
-        public string vehName;
-        public Seat DriverSeat;
         public List<JointVehicleMotor> DrivingMotors = new List<JointVehicleMotor>();
         public List<JointVehicleMotor> SteeringMotors = new List<JointVehicleMotor>();
 
         public CarEntity(string vehicle, Region tregion)
             : base("vehicles/" + vehicle + "_base", tregion)
         {
-            vehName = vehicle;
-            SetMass(1500);
-            DriverSeat = new Seat(this, Location.UnitZ * 2);
-            Seats = new List<Seat>();
-            Seats.Add(DriverSeat);
         }
 
         public override EntityType GetEntityType()
         {
-            return EntityType.VEHICLE;
+            return EntityType.CAR;
         }
 
         public override byte[] GetSaveBytes()
@@ -155,23 +148,8 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             return null;
         }
-
-        public void StartUse(Entity user)
-        {
-            if (user.CurrentSeat == DriverSeat)
-            {
-                DriverSeat.Kick();
-                return;
-            }
-            DriverSeat.Accept((PhysicsEntity)user);
-        }
         
-        public void StopUse(Entity user)
-        {
-            // Do nothing.
-        }
-
-        public void Accepted(CharacterEntity character)
+        public override void Accepted(CharacterEntity character)
         {
             GainControlOfVehiclePacketOut gcovpo = new GainControlOfVehiclePacketOut(character, this);
             foreach (PlayerEntity plent in TheRegion.Players)
@@ -184,7 +162,7 @@ namespace Voxalia.ServerGame.EntitySystem
             // TODO: handle players coming into/out-of view of the vehicle + driver!
         }
 
-        public void HandleInput(CharacterEntity character)
+        public override void HandleInput(CharacterEntity character)
         {
             // TODO: Dynamic multiplier values.
             foreach (JointVehicleMotor motor in DrivingMotors)

@@ -12,6 +12,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public GainControlOfVehiclePacketOut(CharacterEntity character, CarEntity vehicle)
         {
+            // TODO: Other vehicle types!
             ID = 34;
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);

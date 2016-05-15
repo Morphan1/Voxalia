@@ -50,9 +50,9 @@ namespace Voxalia.ServerGame.EntitySystem
             jbs = new JointBallSocket(SeatHolder, sitter, sitter.GetPosition());
             SeatHolder.TheRegion.AddJoint(js);
             SeatHolder.TheRegion.AddJoint(jbs);
-            if (SeatHolder is CarEntity && sitter is PlayerEntity)
+            if (SeatHolder is VehicleEntity && sitter is PlayerEntity)
             {
-                ((CarEntity)SeatHolder).Accepted((PlayerEntity)sitter);
+                ((VehicleEntity)SeatHolder).Accepted((PlayerEntity)sitter);
             }
             return true;
         }

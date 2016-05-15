@@ -16,7 +16,7 @@ namespace Voxalia.Shared
         SMOKE_GRENADE = 7,
         MODEL = 8,
         ITEM = 9,
-        VEHICLE = 10,
+        CAR = 10,
         VEHICLE_PART = 11,
         TARGET_ENTITY = 12,
         SLIME = 13,
