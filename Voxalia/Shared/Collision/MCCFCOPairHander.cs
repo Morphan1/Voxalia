@@ -59,7 +59,7 @@ namespace Voxalia.Shared.Collision
             get { return contactManifold; }
         }
 
-        FCOContactManifold contactManifold = new FCOContactManifold();
+       MCCFCOContactManifold contactManifold = new MCCFCOContactManifold();
         
         public MCCFCOPairHandler()
         {
@@ -102,6 +102,7 @@ namespace Voxalia.Shared.Collision
         
         public override void UpdateTimeOfImpact(Collidable requester, float dt)
         {
+            // TODO: UPDATE!
             //Notice that we don't test for convex entity null explicitly.  The convex.IsActive property does that for us.
             if (mobile.IsActive && mobile.Entity.PositionUpdateMode == PositionUpdateMode.Continuous)
             {
@@ -117,13 +118,16 @@ namespace Voxalia.Shared.Collision
                     {
                         var pair = contactManifold.ActivePairs.Values[i];
                         //In the contact manifold, the box collidable is always put into the second slot.
-                        var boxCollidable = (ReusableGenericCollidable<ConvexShape>)pair.CollidableB;
-                        RayHit rayHit;
-                        var worldTransform = boxCollidable.WorldTransform;
-                        if (GJKToolbox.CCDSphereCast(new Ray(mobile.WorldTransform.Position, velocity), minimumRadius, boxCollidable.Shape, ref worldTransform, timeOfImpact, out rayHit) &&
-                            rayHit.T > Toolbox.BigEpsilon)
+                        for (int p = 0; i < pair.Count; p++)
                         {
-                            timeOfImpact = rayHit.T;
+                            var boxCollidable = pair[p];
+                            RayHit rayHit;
+                            var worldTransform = boxCollidable.CollidableA.WorldTransform;
+                            if (GJKToolbox.CCDSphereCast(new Ray(mobile.WorldTransform.Position, velocity), minimumRadius, boxCollidable.CollidableA.Shape, ref worldTransform, timeOfImpact, out rayHit) &&
+                                rayHit.T > Toolbox.BigEpsilon)
+                            {
+                                timeOfImpact = rayHit.T;
+                            }
                         }
                     }
                 }
@@ -148,6 +152,7 @@ namespace Voxalia.Shared.Collision
             //Compute relative velocity
             if (mobile.Entity != null)
             {
+                // TOOD: UPDATE!?
                 info.RelativeVelocity = Toolbox.GetVelocityOfPoint(info.Contact.Position, mobile.Entity.Position, mobile.Entity.LinearVelocity, mobile.Entity.AngularVelocity);
             }
             else

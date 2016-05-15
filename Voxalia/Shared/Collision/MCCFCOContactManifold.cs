@@ -62,18 +62,34 @@ namespace Voxalia.Shared.Collision
 
         private QuickList<GeneralConvexPairTester> GetPairs(ref Vector3i pos1, ref Vector3i position)
         {
-            Vector3 offs;
-            var boxCollidable = new ReusableGenericCollidable<ConvexShape>((ConvexShape)mesh.ChunkShape.ShapeAt(position.X, position.Y, position.Z, out offs));
-            boxCollidable.WorldTransform = new RigidTransform(new Vector3(
-                mesh.Position.X + position.X + offs.X,
-                mesh.Position.Y + position.Y + offs.Y,
-                mesh.Position.Z + position.Z + offs.Z));
             QuickList<GeneralConvexPairTester> pairs = new QuickList<GeneralConvexPairTester>();
-            // for (...)
+            Vector3 offs;
+            for (int x = -1; x <= 1; x++)
             {
-                var pair = testerPool.Take();
-                var tempCollidable = new ReusableGenericCollidable<ConvexShape>((ConvexShape)mobile.ChunkShape.ShapeAt(pos1.X, pos1.Y, pos1.Z, out offs));
-                pair.Initialize(tempCollidable, boxCollidable);
+                for (int y = -1; y <= 1; y++)
+                {
+                    for (int z = -1; z <= 1; z++)
+                    {
+                        ConvexShape shape = mesh.ChunkShape.ShapeAt(position.X + x, position.Y + y, position.Z + z, out offs);
+                        if (shape == null)
+                        {
+                            continue;
+                        }
+                        ReusableGenericCollidable<ConvexShape> boxCollidable = new ReusableGenericCollidable<ConvexShape>(shape);
+                        boxCollidable.WorldTransform = new RigidTransform(new Vector3(
+                            mesh.Position.X + position.X + x + offs.X,
+                            mesh.Position.Y + position.Y + y + offs.Y,
+                            mesh.Position.Z + position.Z + z + offs.Z));
+                        GeneralConvexPairTester pair = testerPool.Take();
+                        ReusableGenericCollidable<ConvexShape> tempCollidable = new ReusableGenericCollidable<ConvexShape>(mobile.ChunkShape.ShapeAt(pos1.X, pos1.Y, pos1.Z, out offs));
+                        Vector3 input = new Vector3(pos1.X + offs.X, pos1.Y + offs.Y, pos1.Z + offs.Z);
+                        RigidTransform rt = mobile.WorldTransform;
+                        Vector3 transfd = Quaternion.Transform(input, rt.Orientation);
+                        RigidTransform outp = new RigidTransform(transfd + rt.Position, rt.Orientation);
+                        tempCollidable.WorldTransform = outp;
+                        pair.Initialize(tempCollidable, boxCollidable);
+                    }
+                }
             }
             return pairs;
         }
@@ -100,8 +116,8 @@ namespace Voxalia.Shared.Collision
         
         public override void Update(float dt)
         {
-            var transform = new RigidTransform(mesh.Position);
-            var convexTransform = mobile.WorldTransform;
+            RigidTransform transform = new RigidTransform(mesh.Position);
+            RigidTransform convexTransform = mobile.WorldTransform;
             ContactRefresher.ContactRefresh(contacts, supplementData, ref convexTransform, ref transform, contactIndicesToRemove);
             RemoveQueuedContacts();
             var overlaps = new QuickList<Vector3i>(BufferPools<Vector3i>.Thread);
@@ -112,15 +128,15 @@ namespace Voxalia.Shared.Collision
                 QuickList<GeneralConvexPairTester> manifolds;
                 if (!ActivePairs.TryGetValue(overlaps.Elements[i], out manifolds))
                 {
-                    RigidTransform rt = mobile.WorldTransform;
                     Vector3i cur = overlaps.Elements[i];
                     Vector3 curf = new Vector3(cur.X, cur.Y, cur.Z);
                     Vector3 cf;
-                    RigidTransform.TransformByInverse(ref curf, ref rt, out cf);
+                    RigidTransform.Transform(ref curf, ref transform, out cf);
+                    RigidTransform.TransformByInverse(ref cf, ref convexTransform, out cf);
                     Vector3i holder = new Vector3i((int)cf.X, (int)cf.Y, (int)cf.Z);
                     Vector3i size = mobile.ChunkShape.ChunkSize;
-                    if (!(holder.X >= size.X || holder.Y >= size.Y || holder.Z >= size.Z
-                        || holder.X < 0 || holder.Y < 0 || holder.Z < 0))
+                    if (holder.X >= size.X || holder.Y >= size.Y || holder.Z >= size.Z
+                        || holder.X < 0 || holder.Y < 0 || holder.Z < 0)
                     {
                         continue;
                     }

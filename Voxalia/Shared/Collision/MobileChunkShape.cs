@@ -16,6 +16,7 @@ namespace Voxalia.Shared.Collision
         {
             ChunkSize = csize;
             Blocks = blocks;
+            UpdateEntityShapeVolume(new EntityShapeVolumeDescription() { Volume = csize.X * csize.Y * csize.Z, VolumeDistribution = Matrix3x3.Identity });
         }
 
         public BlockInternal[] Blocks = null;

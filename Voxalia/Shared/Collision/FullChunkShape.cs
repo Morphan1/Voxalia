@@ -26,6 +26,11 @@ namespace Voxalia.Shared.Collision
 
         public ConvexShape ShapeAt(int x, int y, int z, out Vector3 offs)
         {
+            if (x < 0 || y < 0 || z < 0 || x >= CHUNK_SIZE || y >= CHUNK_SIZE || z >= CHUNK_SIZE)
+            {
+                offs = new Vector3(float.NaN, float.NaN, float.NaN);
+                return null;
+            }
             Location loffs;
             BlockInternal bi = Blocks[BlockIndex(x, y, z)];
             ConvexShape shape = (ConvexShape)BlockShapeRegistry.BSD[bi.BlockData].GetShape(bi.Damage, out loffs);

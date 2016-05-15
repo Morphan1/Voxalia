@@ -34,7 +34,8 @@ namespace Voxalia.Shared.Collision
         {
             ChunkShape = new MobileChunkShape(size, blocks);
             base.Shape = ChunkShape;
-            boundingBox = new BoundingBox(new Vector3(0, 0, 0), new Vector3(ChunkShape.ChunkSize.X, ChunkShape.ChunkSize.Y, ChunkShape.ChunkSize.Z));
+            Vector3 max = new Vector3(ChunkShape.ChunkSize.X, ChunkShape.ChunkSize.Y, ChunkShape.ChunkSize.Z);
+            boundingBox = new BoundingBox(-max, max);
             Events = new ContactEventManager<EntityCollidable>();
         }
 
