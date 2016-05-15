@@ -17,6 +17,7 @@ namespace Voxalia.Shared.Collision
         protected override void UpdateBoundingBoxInternal(float dt)
         {
             Shape.GetBoundingBox(ref worldTransform, out boundingBox);
+            ExpandBoundingBox(ref boundingBox, dt);
         }
     }
 }

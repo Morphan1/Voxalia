@@ -47,9 +47,9 @@ namespace Voxalia.Shared.Collision
 
         public MCCFCOContactManifold()
         {
-            contacts = new RawList<Contact>(4);
-            unusedContacts = new UnsafeResourcePool<Contact>(4);
-            contactIndicesToRemove = new RawList<int>(4);
+            contacts = new RawList<Contact>(10);
+            unusedContacts = new UnsafeResourcePool<Contact>(10);
+            contactIndicesToRemove = new RawList<int>(10);
         }
 
         public RawList<Contact> ctcts
@@ -76,10 +76,11 @@ namespace Voxalia.Shared.Collision
                             continue;
                         }
                         ReusableGenericCollidable<ConvexShape> boxCollidable = new ReusableGenericCollidable<ConvexShape>(shape);
-                        boxCollidable.WorldTransform = new RigidTransform(new Vector3(
+                        RigidTransform rtb = new RigidTransform(new Vector3(
                             mesh.Position.X + position.X + x + offs.X,
                             mesh.Position.Y + position.Y + y + offs.Y,
                             mesh.Position.Z + position.Z + z + offs.Z));
+                        boxCollidable.WorldTransform = rtb;
                         GeneralConvexPairTester pair = testerPool.Take();
                         ReusableGenericCollidable<ConvexShape> tempCollidable = new ReusableGenericCollidable<ConvexShape>(mobile.ChunkShape.ShapeAt(pos1.X, pos1.Y, pos1.Z, out offs));
                         Vector3 input = new Vector3(pos1.X + offs.X, pos1.Y + offs.Y, pos1.Z + offs.Z);
@@ -126,28 +127,28 @@ namespace Voxalia.Shared.Collision
             for (int i = 0; i < overlaps.Count; i++)
             {
                 QuickList<GeneralConvexPairTester> manifolds;
-                if (!ActivePairs.TryGetValue(overlaps.Elements[i], out manifolds))
+                //if (!ActivePairs.TryGetValue(overlaps.Elements[i], out manifolds))
+                //{
+                Vector3i cur = overlaps.Elements[i];
+                Vector3 curf = new Vector3(cur.X, cur.Y, cur.Z);
+                Vector3 cf;
+                RigidTransform.Transform(ref curf, ref transform, out cf);
+                RigidTransform.TransformByInverse(ref cf, ref convexTransform, out cf);
+                Vector3i holder = new Vector3i((int)cf.X, (int)cf.Y, (int)cf.Z);
+                Vector3i size = mobile.ChunkShape.ChunkSize;
+                if (holder.X >= size.X || holder.Y >= size.Y || holder.Z >= size.Z
+                    || holder.X < 0 || holder.Y < 0 || holder.Z < 0)
                 {
-                    Vector3i cur = overlaps.Elements[i];
-                    Vector3 curf = new Vector3(cur.X, cur.Y, cur.Z);
-                    Vector3 cf;
-                    RigidTransform.Transform(ref curf, ref transform, out cf);
-                    RigidTransform.TransformByInverse(ref cf, ref convexTransform, out cf);
-                    Vector3i holder = new Vector3i((int)cf.X, (int)cf.Y, (int)cf.Z);
-                    Vector3i size = mobile.ChunkShape.ChunkSize;
-                    if (holder.X >= size.X || holder.Y >= size.Y || holder.Z >= size.Z
-                        || holder.X < 0 || holder.Y < 0 || holder.Z < 0)
-                    {
-                        continue;
-                    }
-                    manifolds = GetPairs(ref holder, ref overlaps.Elements[i]);
+                    continue;
                 }
-                else
-                {
-                    ActivePairs.FastRemove(overlaps.Elements[i]);
-                }
+                manifolds = GetPairs(ref holder, ref overlaps.Elements[i]);
+                //}
+                //else
+                //{
+                //    ActivePairs.FastRemove(overlaps.Elements[i]);
+                //}
                 activePairsBackBuffer.Add(overlaps.Elements[i], manifolds);
-                for (int x = 0; x <  manifolds.Count; x++)
+                for (int x = 0; x < manifolds.Count; x++)
                 {
                     ContactData contactCandidate;
                     if (manifolds[x].GenerateContactCandidate(out contactCandidate))
@@ -163,8 +164,9 @@ namespace Voxalia.Shared.Collision
                 {
                     ReturnPair(ActivePairs.Values[i][x]);
                 }
-                ActivePairs.FastRemove(ActivePairs.Keys[i]);
+                //ActivePairs.FastRemove(ActivePairs.Keys[i]);
             }
+            ActivePairs.FastClear();
             var temp = ActivePairs;
             ActivePairs = activePairsBackBuffer;
             activePairsBackBuffer = temp;

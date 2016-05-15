@@ -45,12 +45,7 @@ namespace Voxalia.Shared.Collision
         {
             get { return Events; }
         }
-
-        public override void UpdateBoundingBox()
-        {
-            ChunkShape.GetBoundingBox(ref worldTransform, out boundingBox);
-        }
-
+        
         public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, float slen, MaterialSolidity solidness, out RayHit hit)
         {
             // TODO: Handle orientation!

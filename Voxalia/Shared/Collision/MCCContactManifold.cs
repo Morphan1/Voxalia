@@ -47,9 +47,9 @@ namespace Voxalia.Shared.Collision
 
         public MCCContactManifold()
         {
-            contacts = new RawList<Contact>(4);
-            unusedContacts = new UnsafeResourcePool<Contact>(4);
-            contactIndicesToRemove = new RawList<int>(4);
+            contacts = new RawList<Contact>(10);
+            unusedContacts = new UnsafeResourcePool<Contact>(10);
+            contactIndicesToRemove = new RawList<int>(10);
         }
 
         public RawList<Contact> ctcts
@@ -72,6 +72,7 @@ namespace Voxalia.Shared.Collision
             Vector3 transfd = Quaternion.Transform(input, rt.Orientation);
             RigidTransform outp = new RigidTransform(transfd + rt.Position, rt.Orientation);
             boxCollidable.WorldTransform = outp;
+            SysConsole.Output(OutputType.INFO, "Found : " + outp.Position + " against " + convex.WorldTransform.Position);
             return pair;
         }
         
@@ -107,27 +108,27 @@ namespace Voxalia.Shared.Collision
             for (int i = 0; i < overlaps.Count; i++)
             {
                 GeneralConvexPairTester manifold;
-                if (!ActivePairs.TryGetValue(overlaps.Elements[i], out manifold))
-                {
-                    manifold = GetPair(ref overlaps.Elements[i]);
-                }
-                else
-                {
-                    ActivePairs.FastRemove(overlaps.Elements[i]);
-                }
+                manifold = GetPair(ref overlaps.Elements[i]);
+                //ActivePairs.FastRemove(overlaps.Elements[i]);
                 activePairsBackBuffer.Add(overlaps.Elements[i], manifold);
                 ContactData contactCandidate;
                 if (manifold.GenerateContactCandidate(out contactCandidate))
                 {
                     candidatesToAdd.Add(ref contactCandidate);
+                    SysConsole.Output(OutputType.INFO, "WANT ADD: " + contactCandidate.Position);
                 }
             }
             overlaps.Dispose();
             for (int i = ActivePairs.Count - 1; i >= 0; i--)
             {
                 ReturnPair(ActivePairs.Values[i]);
-                ActivePairs.FastRemove(ActivePairs.Keys[i]);
+                //ActivePairs.FastRemove(ActivePairs.Keys[i]);
             }
+            while (contacts.Count > 0)
+            {
+                Remove(contacts.Count - 1);
+            }
+            ActivePairs.FastClear();
             var temp = ActivePairs;
             ActivePairs = activePairsBackBuffer;
             activePairsBackBuffer = temp;
@@ -163,6 +164,7 @@ namespace Voxalia.Shared.Collision
             RigidTransform.TransformByInverse(ref contactCandidate.Position, ref gridTransform, out supplement.LocalOffsetB);
             supplementData.Add(ref supplement);
             base.Add(ref contactCandidate);
+            SysConsole.Output(OutputType.INFO, "ADDED: " + contactCandidate.Position + ", " + contactCandidate.PenetrationDepth + ", " + contactCandidate.Normal);
         }
 
         protected override void Remove(int contactIndex)

@@ -86,7 +86,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Body.ModifyAngularDamping(0.3f);
             Vector3 adj = new Vector3(ForwBack, RightLeft, 0f);
             Vector3 res = Quaternion.Transform(adj, GetOrientation());
-            ApplyForce(Location.UnitZ, new Location(res) * TheRegion.Delta * 8f);
+            ApplyForce(Location.UnitZ, new Location(res) * TheRegion.Delta * 20f);
             Vector3 vup = Quaternion.Transform(Vector3.UnitZ, GetOrientation());
             ApplyForce(Location.UnitZ, (vup.Z >= 0 ? 4f : -8f) * new Location(vup.X, vup.Y, 0));
         }
