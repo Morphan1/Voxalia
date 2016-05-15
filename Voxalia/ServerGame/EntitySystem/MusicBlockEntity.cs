@@ -7,14 +7,28 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.WorldSystem;
 using FreneticScript.TagHandlers.Objects;
+using BEPUutilities;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
-    class MusicBlockEntity : StaticBlockEntity, EntityUseable
+    class MusicBlockEntity : ModelEntity, EntityUseable, EntityDamageable
     {
+        public ItemStack Original;
+
         public MusicBlockEntity(Region tregion, ItemStack orig, Location pos)
-            : base(tregion, orig, pos)
+            : base("mapobjects/customblocks/musicblock", tregion)
         {
+            Original = orig;
+            SetMass(0);
+            SetPosition(pos.GetBlockLocation() + new Location(0.5));
+            SetOrientation(Quaternion.Identity);
+        }
+
+        public override void SpawnBody()
+        {
+            base.SpawnBody();
+            //SetPosition(GetPosition() + offset);
+            //ForceNetwork();
         }
 
         public override EntityType GetEntityType()
@@ -48,6 +62,43 @@ namespace Voxalia.ServerGame.EntitySystem
         public void StopUse(Entity user)
         {
             // Do nothing
+        }
+
+        public float Health = 5;
+
+        public float MaxHealth = 5;
+
+        public float GetHealth()
+        {
+            return Health;
+        }
+
+        public float GetMaxHealth()
+        {
+            return MaxHealth;
+        }
+
+        public void SetHealth(float health)
+        {
+            Health = health;
+            if (health < 0)
+            {
+                RemoveMe();
+            }
+        }
+
+        public void SetMaxHealth(float health)
+        {
+            MaxHealth = health;
+            if (Health > MaxHealth)
+            {
+                SetHealth(MaxHealth);
+            }
+        }
+
+        public void Damage(float amount)
+        {
+            SetHealth(GetHealth() - amount);
         }
     }
 

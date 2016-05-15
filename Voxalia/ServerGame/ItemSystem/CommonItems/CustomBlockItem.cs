@@ -51,8 +51,8 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                         if (!hit.Hit)
                         {
                             BlockInternal bi = BlockInternal.FromItemDatum(item.Datum);
-                            StaticBlockEntity sbe = new MusicBlockEntity(player.TheRegion, item, block); // TODO: Vary based on material!
-                            player.TheRegion.SpawnEntity(sbe);
+                            MusicBlockEntity mbe = new MusicBlockEntity(player.TheRegion, item, block); // TODO: Vary based on material!
+                            player.TheRegion.SpawnEntity(mbe);
                             player.Network.SendPacket(new DefaultSoundPacketOut(block, DefaultSound.PLACE, (byte)((Material)bi.BlockMaterial).Sound()));
                             item.Count = item.Count - 1;
                             if (item.Count <= 0)
