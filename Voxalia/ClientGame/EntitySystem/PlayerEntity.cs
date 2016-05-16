@@ -68,6 +68,7 @@ namespace Voxalia.ClientGame.EntitySystem
             : base(tregion)
         {
             SetMass(tmass);
+            mod_scale = 1.5f;
             CanRotate = false;
             EID = -1;
             model = TheClient.Models.GetModel("players/human_male_004");
@@ -118,11 +119,10 @@ namespace Voxalia.ClientGame.EntitySystem
             _vel = vel;
             __pup = _pup;
         }
-
-        HashSet<Location> Quiet = new HashSet<Location>();
-
+        
         public void UpdateForPacketFromServer(double gtt, long ID, Location pos, Location vel, bool _pup)
         {
+            // TODO: big solid entities!
             double now = TheRegion.GlobalTickTimeLocal;
             ServerLocation = pos;
             if (TheClient.CVars.n_movemode.ValueI == 2)
@@ -138,11 +138,6 @@ namespace Voxalia.ClientGame.EntitySystem
                             Chunk chunk = TheRegion.GetChunk(ch);
                             if (chunk == null)
                             {
-                                if (!Quiet.Contains(ch))
-                                {
-                                    Quiet.Add(ch);
-                                    SysConsole.Output(OutputType.WARNING, "Moving around in non-loaded chunks! For loc: " + ch);
-                                }
                                 continue;
                             }
                             if (!NMTWOMeshes.ContainsKey(ch))
