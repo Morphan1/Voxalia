@@ -202,11 +202,11 @@ namespace Voxalia.ServerGame.WorldSystem
             byte[] lod = ChunkManager.GetLODChunkDetails((int)cpos.X, (int)cpos.Y, (int)cpos.Z);
             if (lod != null)
             {
-                return new Chunk(lod);
+                return new Chunk(lod) { WorldPosition = cpos };
             }
             else
             {
-                return LoadChunk(cpos);
+                return null;
             }
         }
 
