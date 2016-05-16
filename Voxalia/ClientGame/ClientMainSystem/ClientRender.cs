@@ -1137,7 +1137,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture3);
                 Textures.NormalDef.Bind();
                 GL.ActiveTexture(TextureUnit.Texture0);
-                if (FBOid == 1)
+                if (FBOid == 1 || FBOid == 3 || FBOid == 7 || FBOid == 8)
                 {
                     s_fbot.Bind();
                     RenderSkybox();

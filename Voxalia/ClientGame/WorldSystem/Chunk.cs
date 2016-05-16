@@ -122,6 +122,7 @@ namespace Voxalia.ClientGame.WorldSystem
         /// </summary>
         public void Destroy()
         {
+            DENIED = true;
             if (FCO != null)
             {
                 OwningRegion.RemoveChunkQuiet(FCO);

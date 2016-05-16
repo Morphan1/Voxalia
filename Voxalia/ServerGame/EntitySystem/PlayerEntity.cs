@@ -581,6 +581,18 @@ namespace Voxalia.ServerGame.EntitySystem
             return true;
         }
 
+        public bool ShouldSeeLODChunkOneSecondAgo(Location cpos)
+        {
+            Location wpos = TheRegion.ChunkLocFor(losPos);
+            if (Math.Abs(cpos.X - wpos.X) > (ViewRadiusInChunks + ViewRadExtra5)
+                || Math.Abs(cpos.Y - wpos.Y) > (ViewRadiusInChunks + ViewRadExtra5)
+                || Math.Abs(cpos.Z - wpos.Z) > (ViewRadiusInChunks + ViewRadExtra5Height))
+            {
+                return false;
+            }
+            return true;
+        }
+
         public bool ShouldSeeChunkOneSecondAgo(Location cpos)
         {
             Location wpos = TheRegion.ChunkLocFor(losPos);
@@ -626,6 +638,15 @@ namespace Voxalia.ServerGame.EntitySystem
             return ShouldSeeChunkOneSecondAgo(TheRegion.ChunkLocFor(pos));
         }
 
+        public bool ShouldSeeLODPositionOneSecondAgo(Location pos)
+        {
+            if (pos.IsNaN() || losPos.IsNaN())
+            {
+                return false;
+            }
+            return ShouldSeeLODChunkOneSecondAgo(TheRegion.ChunkLocFor(pos));
+        }
+
         public bool ShouldSeePositionPreviously(Location pos)
         {
             if (pos.IsNaN() || lPos.IsNaN())
@@ -643,7 +664,16 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             return ShouldSeeChunk(TheRegion.ChunkLocFor(pos));
         }
-        
+
+        public bool ShouldLoadPosition(Location pos)
+        {
+            if (pos.IsNaN())
+            {
+                return false;
+            }
+            return ShouldLoadChunk(TheRegion.ChunkLocFor(pos));
+        }
+
         public int BreadcrumbRadius = 6;
 
         Location pChunkLoc = new Location(0.5);

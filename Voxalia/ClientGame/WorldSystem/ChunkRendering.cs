@@ -54,11 +54,19 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             try
             {
+                if (RH == null || DENIED) // What?!
+                {
+                    return;
+                }
                 OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                 {
                     OwningRegion.TheClient.ChunksRenderingCurrently++;
                 });
                 ChunkRenderHelper rh = RH;
+                if (rh == null || DENIED) // What?!
+                {
+                    return;
+                }
                 rh.Vertices.Clear();
                 rh.TCoords.Clear();
                 rh.TCols.Clear();

@@ -46,8 +46,8 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
                 foreach (PlayerEntity player in Players)
                 {
-                    bool prev = player.ShouldSeePositionOneSecondAgo(ppos);
-                    bool curr = player.ShouldSeePosition(Clouds[i].Position);
+                    bool prev = player.ShouldSeeLODPositionOneSecondAgo(ppos);
+                    bool curr = player.ShouldLoadPosition(Clouds[i].Position);
                     if (prev && !curr)
                     {
                         player.Network.SendPacket(new RemoveCloudPacketOut(Clouds[i].CID));
@@ -63,7 +63,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     AddToCloud(Clouds[i], 0f);
                     foreach (PlayerEntity player in Players)
                     {
-                        bool curr = player.ShouldSeePosition(Clouds[i].Position);
+                        bool curr = player.ShouldLoadPosition(Clouds[i].Position);
                         if (curr)
                         {
                             player.Network.SendPacket(new AddToCloudPacketOut(Clouds[i], Clouds[i].Points.Count - 1));
