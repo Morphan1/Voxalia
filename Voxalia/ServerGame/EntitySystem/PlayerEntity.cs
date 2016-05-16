@@ -129,9 +129,9 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public int ViewRadExtra2Height = 2;
 
-        public int ViewRadExtra5 = 3;
+        public int ViewRadExtra5 = 4;
 
-        public int ViewRadExtra5Height = 2;
+        public int ViewRadExtra5Height = 3;
         
         public int BestLOD = 1;
 
@@ -450,9 +450,9 @@ namespace Voxalia.ServerGame.EntitySystem
                 TrySet(pos, 1, 1, 0, 1, false);
                 TrySet(pos, ViewRadiusInChunks / 2, ViewRadiusInChunks / 2, 0, 1, false);
                 TrySet(pos, ViewRadiusInChunks, ViewRadiusInChunks, 0, 1, false);
-                TrySet(pos, ViewRadiusInChunks + 1, ViewRadiusInChunks, 0, 2, true);
-                TrySet(pos, ViewRadiusInChunks + ViewRadExtra2, ViewRadiusInChunks + ViewRadExtra2Height, 15, 2, true);
-                TrySet(pos, ViewRadiusInChunks + ViewRadExtra5, ViewRadiusInChunks + ViewRadExtra5Height, 30, 5, true);
+                TrySet(pos, ViewRadiusInChunks + 1, ViewRadiusInChunks, 15, 2, false);
+                TrySet(pos, ViewRadiusInChunks + ViewRadExtra2, ViewRadiusInChunks + ViewRadExtra2Height, 30, 2, false);
+                TrySet(pos, ViewRadiusInChunks + ViewRadExtra5, ViewRadiusInChunks + ViewRadExtra5Height, 60, 5, false);
                 if (!loadedInitially)
                 {
                     loadedInitially = true;
@@ -744,8 +744,16 @@ namespace Voxalia.ServerGame.EntitySystem
                     {
                         if (!pkick)
                         {
-                            Chunk chk = TheRegion.LoadChunk(worldPos);
-                            ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult));
+                            if (posMult == 5)
+                            {
+                                Chunk chk = TheRegion.LoadChunkLOD(worldPos);
+                                ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult));
+                            }
+                            else
+                            {
+                                Chunk chk = TheRegion.LoadChunk(worldPos);
+                                ChunkNetwork.SendPacket(new ChunkInfoPacketOut(chk, posMult));
+                            }
                         }
                     }, Utilities.UtilRandom.NextDouble() * atime);
                     ChunksAwareOf.Remove(worldPos);

@@ -177,7 +177,6 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Chunk LoadChunkNoPopulate(Location cpos)
         {
-            CheckThreadValidity();
             Chunk chunk;
             if (LoadedChunks.TryGetValue(cpos, out chunk))
             {
@@ -198,9 +197,21 @@ namespace Voxalia.ServerGame.WorldSystem
             return chunk;
         }
 
+        public Chunk LoadChunkLOD(Location cpos)
+        {
+            byte[] lod = ChunkManager.GetLODChunkDetails((int)cpos.X, (int)cpos.Y, (int)cpos.Z);
+            if (lod != null)
+            {
+                return new Chunk(lod);
+            }
+            else
+            {
+                return LoadChunk(cpos);
+            }
+        }
+
         public Chunk LoadChunk(Location cpos)
         {
-            CheckThreadValidity();
             Chunk chunk;
             if (LoadedChunks.TryGetValue(cpos, out chunk))
             {

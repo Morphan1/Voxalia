@@ -9,7 +9,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public ChunkInfoPacketOut(Chunk chunk, int lod)
         {
-            if (chunk.Flags.HasFlag(ChunkFlags.POPULATING))
+            if (chunk.Flags.HasFlag(ChunkFlags.POPULATING) && lod != 5 && chunk.LOD == null)
             {
                 throw new Exception("Trying to transmit chunk while it's still loading! For chunk at " + chunk.WorldPosition);
             }
@@ -38,18 +38,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             }
             else
             {
-                int csize = Chunk.CHUNK_SIZE / lod;
-                data_orig = new byte[csize * csize * csize * 2];
-                for (int x = 0; x < csize; x++)
-                {
-                    for (int y = 0; y < csize; y++)
-                    {
-                        for (int z = 0; z < csize; z++)
-                        {
-                            Utilities.UshortToBytes((ushort)chunk.LODBlock(x, y, z, lod)).CopyTo(data_orig, (z * csize * csize + y * csize + x) * 2);
-                        }
-                    }
-                }
+                data_orig = chunk.LODBytes(lod);
             }
             byte[] gdata = FileHandler.GZip(data_orig);
             DataStream ds = new DataStream(gdata.Length + 16);

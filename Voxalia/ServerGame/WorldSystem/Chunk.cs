@@ -33,6 +33,8 @@ namespace Voxalia.ServerGame.WorldSystem
             return Lockers[Math.Abs(WorldPosition.GetHashCode()) % 20];
         }
 
+        public byte[] LOD = null;
+
         public ChunkFlags Flags = ChunkFlags.NONE;
         
         public Region OwningRegion = null;
@@ -44,6 +46,11 @@ namespace Voxalia.ServerGame.WorldSystem
         public Chunk()
         {
             BlocksInternal = new BlockInternal[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+        }
+
+        public Chunk(byte[] _lod)
+        {
+            LOD = _lod;
         }
 
         public bool Contains(Location loc)
@@ -216,6 +223,27 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
             });
         }
+
+        public byte[] LODBytes(int lod)
+        {
+            if (LOD != null && lod == 5)
+            {
+                return LOD;
+            }
+            int csize = Chunk.CHUNK_SIZE / lod;
+            byte[] data_orig = new byte[csize * csize * csize * 2];
+            for (int x = 0; x < csize; x++)
+            {
+                for (int y = 0; y < csize; y++)
+                {
+                    for (int z = 0; z < csize; z++)
+                    {
+                        Utilities.UshortToBytes((ushort)LODBlock(x, y, z, lod)).CopyTo(data_orig, (z * csize * csize + y * csize + x) * 2);
+                    }
+                }
+            }
+            return data_orig;
+        }
         
         void SaveToFileI(byte[] blks, byte[] ents)
         {
@@ -229,9 +257,11 @@ namespace Voxalia.ServerGame.WorldSystem
                 det.Flags = Flags;
                 det.Blocks = blks;
                 det.Entities = ents;
+                byte[] lod = LODBytes(5);
                 lock (GetLocker())
                 {
                     OwningRegion.ChunkManager.WriteChunkDetails(det);
+                    OwningRegion.ChunkManager.WriteLODChunkDetails(det.X, det.Y, det.Z, lod);
                 }
                 OwningRegion.TheServer.BlockImages.RenderChunk(OwningRegion, WorldPosition, this);
             }

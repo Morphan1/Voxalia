@@ -11,18 +11,12 @@ namespace Voxalia.ClientGame.WorldSystem
     public partial class Chunk
     {
         public VBO _VBO = null;
-
-        public ChunkRenderHelper RH = null;
         
         /// <summary>
         /// Sync only.
         /// </summary>
         public void CreateVBO(Action callback = null)
         {
-            if (RH == null)
-            {
-                RH = OwningRegion.TheClient.RenderHelpers.Count > 0 ? OwningRegion.TheClient.RenderHelpers.Pop() : new ChunkRenderHelper();
-            }
             if (rendering != null)
             {
                 ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(() => VBOHInternal(callback));
@@ -54,7 +48,8 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             try
             {
-                if (RH == null || DENIED) // What?!
+                ChunkRenderHelper rh = new ChunkRenderHelper();
+                if (DENIED)
                 {
                     return;
                 }
@@ -62,17 +57,6 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     OwningRegion.TheClient.ChunksRenderingCurrently++;
                 });
-                ChunkRenderHelper rh = RH;
-                if (rh == null || DENIED) // What?!
-                {
-                    return;
-                }
-                rh.Vertices.Clear();
-                rh.TCoords.Clear();
-                rh.TCols.Clear();
-                rh.Tangs.Clear();
-                rh.Norms.Clear();
-                rh.Cols.Clear();
                 Vector3 ppos = ClientUtilities.Convert(WorldPosition * CHUNK_SIZE);
                 bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Location(0, 0, 1));
@@ -163,7 +147,7 @@ namespace Voxalia.ClientGame.WorldSystem
                             VBO tV = _VBO;
                             lock (OwningRegion.TheClient.vbos)
                             {
-                                if (OwningRegion.TheClient.vbos.Count < 120)
+                                if (OwningRegion.TheClient.vbos.Count < 40)
                                 {
                                     OwningRegion.TheClient.vbos.Push(tV);
                                 }
@@ -232,7 +216,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         VBO tV = _VBO;
                         lock (OwningRegion.TheClient.vbos)
                         {
-                            if (OwningRegion.TheClient.vbos.Count < 120)
+                            if (OwningRegion.TheClient.vbos.Count < 40)
                             {
                                 OwningRegion.TheClient.vbos.Push(tV);
                             }

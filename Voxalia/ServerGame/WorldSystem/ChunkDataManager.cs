@@ -16,6 +16,10 @@ namespace Voxalia.ServerGame.WorldSystem
 
         LiteCollection<BsonDocument> DBChunks;
 
+        LiteDatabase LODsDatabase;
+
+        LiteCollection<BsonDocument> DBLODs;
+
         LiteDatabase ImageDatabase;
 
         LiteCollection<BsonDocument> DBImages;
@@ -24,6 +28,8 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Object FSLock = new Object();
 
+        public Object LODLock = new Object();
+
         public Object IMGLock = new Object();
 
         public void Init(Region tregion)
@@ -31,6 +37,8 @@ namespace Voxalia.ServerGame.WorldSystem
             TheRegion = tregion;
             Database = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/chunks.ldb");
             DBChunks = Database.GetCollection<BsonDocument>("chunks");
+            LODsDatabase = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/lod_chunks.ldb");
+            DBLODs = LODsDatabase.GetCollection<BsonDocument>("lodchunks");
             ImageDatabase = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/images.ldb");
             DBImages = ImageDatabase.GetCollection<BsonDocument>("images");
             DBMaxes = ImageDatabase.GetCollection<BsonDocument>("maxes");
@@ -103,6 +111,33 @@ namespace Voxalia.ServerGame.WorldSystem
             Utilities.IntToBytes(y).CopyTo(array, 4);
             Utilities.IntToBytes(z).CopyTo(array, 8);
             return new BsonValue(array);
+        }
+
+        public byte[] GetLODChunkDetails(int x, int y, int z)
+        {
+            BsonDocument doc;
+            lock (LODLock)
+            {
+                doc = DBLODs.FindById(GetIDFor(x, y, z));
+            }
+            if (doc == null)
+            {
+                return null;
+            }
+            return FileHandler.UnGZip(doc["blocks"].AsBinary);
+        }
+
+        public void WriteLODChunkDetails(int x, int y, int z, byte[] LOD)
+        {
+            BsonValue id = GetIDFor(x, y, z);
+            BsonDocument newdoc = new BsonDocument();
+            newdoc["_id"] = id;
+            newdoc["blocks"] = new BsonValue(FileHandler.GZip(LOD));
+            lock (LODLock)
+            {
+                DBLODs.Delete(id);
+                DBLODs.Insert(newdoc);
+            }
         }
 
         public ChunkDetails GetChunkDetails(int x, int y, int z)

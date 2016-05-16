@@ -122,7 +122,6 @@ namespace Voxalia.ClientGame.WorldSystem
         /// </summary>
         public void Destroy()
         {
-            DENIED = true;
             if (FCO != null)
             {
                 OwningRegion.RemoveChunkQuiet(FCO);
@@ -142,11 +141,6 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                 }
                 _VBO = null;
-            }
-            if (RH != null)
-            {
-                OwningRegion.TheClient.RenderHelpers.Push(RH);
-                RH = null;
             }
         }
 

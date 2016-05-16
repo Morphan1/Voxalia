@@ -244,6 +244,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
             verts = Vertices.ToArray();
             normals = Normals.ToArray();
             texts = TexCoords.ToArray();
+            Vertices = null;
+            Normals = null;
+            TexCoords = null;
             // TODO: Other arrays?
         }
 
