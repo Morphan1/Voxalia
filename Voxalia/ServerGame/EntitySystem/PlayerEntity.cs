@@ -125,13 +125,13 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public int ViewRadiusInChunks = 3;
 
-        public int ViewRadExtra2 = 3;
+        public int ViewRadExtra2 = 2;
 
-        public int ViewRadExtra2Height = 2;
+        public int ViewRadExtra2Height = 1;
 
-        public int ViewRadExtra5 = 7;
+        public int ViewRadExtra5 = 3;
 
-        public int ViewRadExtra5Height = 5;
+        public int ViewRadExtra5Height = 2;
         
         public int BestLOD = 1;
 
