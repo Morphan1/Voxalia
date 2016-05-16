@@ -142,8 +142,19 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
 
         public byte[] OreShapes = new byte[] { 0, 64, 65, 66, 67, 68 };
 
+        public int MaxNonAirHeight = 2;
+
         public override void Populate(int Seed, int seed2, int seed3, int seed4, int seed5, Chunk chunk)
         {
+            if (chunk.WorldPosition.Z > MaxNonAirHeight)
+            {
+                for (int i = 0; i < chunk.BlocksInternal.Length; i++)
+                {
+                    chunk.BlocksInternal[i] = BlockInternal.AIR;
+                }
+                return;
+            }
+            // TODO: Special case for too far down as well.
             for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
             {
                 for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
