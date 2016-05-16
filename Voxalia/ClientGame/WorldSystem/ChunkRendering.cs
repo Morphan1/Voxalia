@@ -12,8 +12,17 @@ namespace Voxalia.ClientGame.WorldSystem
     {
         public VBO _VBO = null;
 
+        public ChunkRenderHelper RH = null;
+        
+        /// <summary>
+        /// Sync only.
+        /// </summary>
         public void CreateVBO(Action callback = null)
         {
+            if (RH == null)
+            {
+                RH = OwningRegion.TheClient.RenderHelpers.Count > 0 ? OwningRegion.TheClient.RenderHelpers.Pop() : new ChunkRenderHelper();
+            }
             if (rendering != null)
             {
                 ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(() => VBOHInternal(callback));
@@ -43,18 +52,19 @@ namespace Voxalia.ClientGame.WorldSystem
 
         void VBOHInternal(Action callback)
         {
-            OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
-            {
-                OwningRegion.TheClient.ChunksRenderingCurrently++;
-            });
             try
             {
-                List<Vector3> Vertices = new List<Vector3>(CSize * CSize * CSize * 6); // TODO: Make this an array?
-                List<Vector3> TCoords = new List<Vector3>(CSize * CSize * CSize * 6);
-                List<Vector3> Norms = new List<Vector3>(CSize * CSize * CSize * 6);
-                List<Vector4> Cols = new List<Vector4>(CSize * CSize * CSize * 6);
-                List<Vector4> TCols = new List<Vector4>(CSize * CSize * CSize * 6);
-                List<Vector3> Tangs = new List<Vector3>(CSize * CSize * CSize * 6);
+                OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
+                {
+                    OwningRegion.TheClient.ChunksRenderingCurrently++;
+                });
+                ChunkRenderHelper rh = RH;
+                rh.Vertices.Clear();
+                rh.TCoords.Clear();
+                rh.TCols.Clear();
+                rh.Tangs.Clear();
+                rh.Norms.Clear();
+                rh.Cols.Clear();
                 Vector3 ppos = ClientUtilities.Convert(WorldPosition * CHUNK_SIZE);
                 bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Location(0, 0, 1));
@@ -95,47 +105,47 @@ namespace Voxalia.ClientGame.WorldSystem
                                 {
                                     // TODO: is PosMultiplier used correctly here?
                                     Vector3 vt = new Vector3(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z);
-                                    Vertices.Add(vt);
+                                    rh.Vertices.Add(vt);
                                     Vector3 nt = new Vector3(normsi[i].X, normsi[i].Y, normsi[i].Z);
-                                    Norms.Add(nt);
-                                    TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
+                                    rh.Norms.Add(nt);
+                                    rh.TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
                                     Location lcol = OwningRegion.GetLightAmount(ClientUtilities.Convert(vt), ClientUtilities.Convert(nt), this);
-                                    Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
-                                    TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(vt, Colors.ForByte(c.BlockPaint)));
+                                    rh.Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
+                                    rh.TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(vt, Colors.ForByte(c.BlockPaint)));
                                 }
                                 if (!c.IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
                                 {
-                                    int tf = Cols.Count - vecsi.Count;
+                                    int tf = rh.Cols.Count - vecsi.Count;
                                     for (int i = vecsi.Count - 1; i >= 0; i--)
                                     {
-                                        Vertices.Add(new Vector3(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z));
+                                        rh.Vertices.Add(new Vector3(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z));
                                         int tx = tf + i;
-                                        Cols.Add(Cols[tx]);
-                                        TCols.Add(TCols[tx]);
-                                        Norms.Add(new Vector3(-normsi[i].X, -normsi[i].Y, -normsi[i].Z));
-                                        TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
+                                        rh.Cols.Add(rh.Cols[tx]);
+                                        rh.TCols.Add(rh.TCols[tx]);
+                                        rh.Norms.Add(new Vector3(-normsi[i].X, -normsi[i].Y, -normsi[i].Z));
+                                        rh.TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
                                     }
                                 }
                             }
                         }
                     }
                 }
-                for (int i = 0; i < Vertices.Count; i += 3)
+                for (int i = 0; i < rh.Vertices.Count; i += 3)
                 {
-                    Vector3 v1 = Vertices[i];
-                    Vector3 dv1 = Vertices[i + 1] - v1;
-                    Vector3 dv2 = Vertices[i + 2] - v1;
-                    Vector3 t1 = TCoords[i];
-                    Vector3 dt1 = TCoords[i + 1] - t1;
-                    Vector3 dt2 = TCoords[i + 2] - t1;
+                    Vector3 v1 = rh.Vertices[i];
+                    Vector3 dv1 = rh.Vertices[i + 1] - v1;
+                    Vector3 dv2 = rh.Vertices[i + 2] - v1;
+                    Vector3 t1 = rh.TCoords[i];
+                    Vector3 dt1 = rh.TCoords[i + 1] - t1;
+                    Vector3 dt2 = rh.TCoords[i + 2] - t1;
                     Vector3 tangent = (dv1 * dt2.Y - dv2 * dt1.Y) / (dt1.X * dt2.Y - dt1.Y * dt2.X);
-                    Vector3 normal = Norms[i];
+                    Vector3 normal = rh.Norms[i];
                     tangent = (tangent - normal * Vector3.Dot(normal, tangent)).Normalized(); // TODO: Necessity of this correction?
-                    Tangs.Add(tangent);
-                    Tangs.Add(tangent);
-                    Tangs.Add(tangent);
+                    rh.Tangs.Add(tangent);
+                    rh.Tangs.Add(tangent);
+                    rh.Tangs.Add(tangent);
                 }
-                if (Vertices.Count == 0)
+                if (rh.Vertices.Count == 0)
                 {
                     OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                     {
@@ -145,7 +155,7 @@ namespace Voxalia.ClientGame.WorldSystem
                             VBO tV = _VBO;
                             lock (OwningRegion.TheClient.vbos)
                             {
-                                if (OwningRegion.TheClient.vbos.Length < 120)
+                                if (OwningRegion.TheClient.vbos.Count < 120)
                                 {
                                     OwningRegion.TheClient.vbos.Push(tV);
                                 }
@@ -168,15 +178,15 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                     return;
                 }
-                uint[] inds = new uint[Vertices.Count];
-                for (uint i = 0; i < Vertices.Count; i++)
+                uint[] inds = new uint[rh.Vertices.Count];
+                for (uint i = 0; i < rh.Vertices.Count; i++)
                 {
                     inds[i] = i;
                 }
                 VBO tVBO;
                 lock (OwningRegion.TheClient.vbos)
                 {
-                    if (OwningRegion.TheClient.vbos.Length > 0)
+                    if (OwningRegion.TheClient.vbos.Count > 0)
                     {
                         tVBO = OwningRegion.TheClient.vbos.Pop();
                     }
@@ -187,12 +197,12 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                 }
                 tVBO.indices = inds;
-                tVBO.Vertices = Vertices;
-                tVBO.Normals = Norms;
-                tVBO.TexCoords = TCoords;
-                tVBO.Colors = Cols;
-                tVBO.TCOLs = TCols;
-                tVBO.Tangents = Tangs;
+                tVBO.Vertices = rh.Vertices;
+                tVBO.Normals = rh.Norms;
+                tVBO.TexCoords = rh.TCoords;
+                tVBO.Colors = rh.Cols;
+                tVBO.TCOLs = rh.TCols;
+                tVBO.Tangents = rh.Tangs;
                 tVBO.BoneWeights = null;
                 tVBO.BoneIDs = null;
                 tVBO.BoneWeights2 = null;
@@ -214,7 +224,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         VBO tV = _VBO;
                         lock (OwningRegion.TheClient.vbos)
                         {
-                            if (OwningRegion.TheClient.vbos.Length < 120)
+                            if (OwningRegion.TheClient.vbos.Count < 120)
                             {
                                 OwningRegion.TheClient.vbos.Push(tV);
                             }
@@ -256,5 +266,26 @@ namespace Voxalia.ClientGame.WorldSystem
                 _VBO.Render(OwningRegion.TheClient.RenderTextures);
             }
         }
+    }
+
+    public class ChunkRenderHelper
+    {
+        const int CSize = Chunk.CHUNK_SIZE;
+
+        public ChunkRenderHelper()
+        {
+            Vertices = new List<Vector3>(CSize * CSize * CSize * 6);
+            TCoords = new List<Vector3>(CSize * CSize * CSize * 6);
+            Norms = new List<Vector3>(CSize * CSize * CSize * 6);
+            Cols = new List<Vector4>(CSize * CSize * CSize * 6);
+            TCols = new List<Vector4>(CSize * CSize * CSize * 6);
+            Tangs = new List<Vector3>(CSize * CSize * CSize * 6);
+    }
+        public List<Vector3> Vertices;
+        public List<Vector3> TCoords;
+        public List<Vector3> Norms;
+        public List<Vector4> Cols;
+        public List<Vector4> TCols;
+        public List<Vector3> Tangs;
     }
 }

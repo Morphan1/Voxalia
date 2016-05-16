@@ -117,6 +117,9 @@ namespace Voxalia.ClientGame.WorldSystem
             }
         }
 
+        /// <summary>
+        /// Sync only.
+        /// </summary>
         public void Destroy()
         {
             if (FCO != null)
@@ -128,7 +131,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 VBO tV = _VBO;
                 lock (OwningRegion.TheClient.vbos)
                 {
-                    if (OwningRegion.TheClient.vbos.Length < 120)
+                    if (OwningRegion.TheClient.vbos.Count < 120)
                     {
                         OwningRegion.TheClient.vbos.Push(tV);
                     }
@@ -138,6 +141,11 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                 }
                 _VBO = null;
+            }
+            if (RH != null)
+            {
+                OwningRegion.TheClient.RenderHelpers.Push(RH);
+                RH = null;
             }
         }
 

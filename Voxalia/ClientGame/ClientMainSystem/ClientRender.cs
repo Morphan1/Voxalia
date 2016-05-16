@@ -22,7 +22,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
     {
         public double gDelta = 0;
 
-        public ListQueue<VBO> vbos = new ListQueue<VBO>();
+        public Stack<VBO> vbos = new Stack<VBO>(200);
+
+        public Stack<ChunkRenderHelper> RenderHelpers = new Stack<ChunkRenderHelper>(200);
 
         public List<LightObject> Lights = new List<LightObject>();
 
