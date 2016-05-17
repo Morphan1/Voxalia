@@ -21,9 +21,9 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 
 namespace Voxalia.Shared.Collision
 {
-    public class MCCMCCPairHandler : GroupPairHandler
+    public class MCCFCOPairHandler : GroupPairHandler
     {
-        MobileChunkCollidable mesh;
+        FullChunkObject mesh;
 
         MobileChunkCollidable mobile;
         
@@ -47,7 +47,7 @@ namespace Voxalia.Shared.Collision
             get { return null; }
         }
         
-        public MCCMCCPairHandler()
+        public MCCFCOPairHandler()
         {
         }
 
@@ -60,11 +60,11 @@ namespace Voxalia.Shared.Collision
                 return;
             }
             noRecurse = true;
-            mesh = entryA as MobileChunkCollidable;
+            mesh = entryA as FullChunkObject;
             mobile = entryB as MobileChunkCollidable;
             if (mesh == null || mobile == null)
             {
-                mesh = entryB as MobileChunkCollidable;
+                mesh = entryB as FullChunkObject;
                 mobile = entryA as MobileChunkCollidable;
                 if (mesh == null || mobile == null)
                 {
@@ -72,7 +72,7 @@ namespace Voxalia.Shared.Collision
                 }
             }
             broadPhaseOverlap = new BroadPhaseOverlap(mobile, mesh, broadPhaseOverlap.CollisionRule);
-            UpdateMaterialProperties(mobile.Entity != null ? mobile.Entity.Material : null, mesh.Entity != null ? mesh.Entity.Material : null);
+            UpdateMaterialProperties(mobile.Entity != null ? mobile.Entity.Material : null, mesh.Material);
             base.Initialize(entryA, entryB);
             noRecurse = false;
         }
@@ -87,18 +87,17 @@ namespace Voxalia.Shared.Collision
         
         protected override void UpdateContainedPairs()
         {
-            RigidTransform rtMesh = mesh.WorldTransform;
+            RigidTransform rtMesh = new RigidTransform(mesh.Position);
             RigidTransform rtMobile = mobile.WorldTransform;
             QuickList<Vector3i> overlaps = new QuickList<Vector3i>(BufferPools<Vector3i>.Thread);
-            mesh.ChunkShape.GetOverlaps(ref rtMesh, mobile.BoundingBox, ref overlaps);
+            mesh.ChunkShape.GetOverlaps(mesh.Position, mobile.BoundingBox, ref overlaps);
             for (int i = 0; i < overlaps.Count; i++)
             {
                 Vector3i pos = overlaps.Elements[i];
                 Vector3 offs;
                 ReusableGenericCollidable<ConvexShape> colBox = new ReusableGenericCollidable<ConvexShape>(mesh.ChunkShape.ShapeAt(pos.X, pos.Y, pos.Z, out offs));
                 Vector3 input = new Vector3(pos.X + offs.X, pos.Y + offs.Y, pos.Z + offs.Z);
-                Vector3 transfd = Quaternion.Transform(input, rtMesh.Orientation);
-                RigidTransform outp = new RigidTransform(transfd + rtMesh.Position, rtMesh.Orientation);
+                RigidTransform outp = new RigidTransform(input + mesh.Position);
                 colBox.WorldTransform = outp;
                 colBox.UpdateBoundingBoxForTransform(ref outp);
                 QuickList<Vector3i> overlaps2 = new QuickList<Vector3i>(BufferPools<Vector3i>.Thread);
@@ -113,7 +112,7 @@ namespace Voxalia.Shared.Collision
                     Vector3 transfd2 = Quaternion.Transform(input2, rtMobile.Orientation);
                     RigidTransform outp2 = new RigidTransform(transfd2 + rtMobile.Position, rtMobile.Orientation);
                     colBox2.WorldTransform = outp2;
-                    TryToAdd(colBox, colBox2, mesh.Entity != null ? mesh.Entity.Material : null, mobile.Entity != null ? mobile.Entity.Material : null);
+                    TryToAdd(colBox, colBox2, mesh.Material, mobile.Entity != null ? mobile.Entity.Material : null);
                 }
                 overlaps2.Dispose();
             }

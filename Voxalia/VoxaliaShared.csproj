@@ -87,6 +87,7 @@
     <Compile Include="PriorityQueue\IPriorityQueue.cs" />
     <Compile Include="PriorityQueue\SimplePriorityQueue.cs" />
     <Compile Include="Shared\BlockInternal.cs" />
+    <Compile Include="Shared\Collision\MCCMCCPairHandler.cs" />
     <Compile Include="Shared\Collision\WheelStepUpConstraint.cs" />
     <Compile Include="Shared\Colors.cs" />
     <Compile Include="Shared\EntityType.cs" />
