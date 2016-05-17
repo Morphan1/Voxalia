@@ -40,47 +40,35 @@ namespace Voxalia.Shared.Collision
         
         public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, float slen, MaterialSolidity solidness, out RayHit hit)
         {
-            // TODO: Handle orientation!
-            RigidTransform rt = new RigidTransform(startingTransform.Position - worldTransform.Position, startingTransform.Orientation);
-            RayHit rHit;
-            bool h = ChunkShape.ConvexCast(castShape, ref rt, ref sweepnorm, slen, solidness, out rHit);
-            rHit.Location = rHit.Location + worldTransform.Position;
-            hit = rHit;
+            RigidTransform rt;
+            RigidTransform.MultiplyByInverse(ref startingTransform, ref worldTransform, out rt);
+            Vector3 swp = Quaternion.Transform(sweepnorm, Quaternion.Inverse(worldTransform.Orientation));
+            RayHit rh;
+            bool h = ChunkShape.ConvexCast(castShape, ref rt, ref swp, slen, solidness, out rh);
+            RigidTransform.Transform(ref rh.Location, ref worldTransform, out hit.Location);
+            hit.Normal = rh.Normal;
+            hit.T = rh.T;
             return h;
         }
 
         public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, Func<BroadPhaseEntry, bool> filter, out RayHit hit)
         {
-            // TODO: Handle orientation!
-            RigidTransform rt = new RigidTransform(startingTransform.Position - worldTransform.Position, startingTransform.Orientation);
-            RayHit rHit;
-            float slen = sweep.Length();
-            Vector3 sweepnorm = sweep / slen;
-            bool h = ChunkShape.ConvexCast(castShape, ref rt, ref sweepnorm, slen, MaterialSolidity.FULLSOLID, out rHit);
-            rHit.Location = rHit.Location + worldTransform.Position;
-            hit = rHit;
-            return h;
+            Vector3 swp = sweep;
+            float len = swp.Length();
+            swp /= len;
+            return ConvexCast(castShape, ref startingTransform, ref swp, len, MaterialSolidity.FULLSOLID, out hit);
         }
 
         public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, out RayHit hit)
         {
             return ConvexCast(castShape, ref startingTransform, ref sweep, null, out hit);
         }
-
-        public bool RayCast(Ray ray, float maximumLength, Func<BroadPhaseEntry, bool> filter, MaterialSolidity solidness, out RayHit rayHit)
-        {
-            // TODO: Handle orientation!
-            Ray r2 = new Ray(ray.Position - worldTransform.Position, ray.Direction);
-            RayHit rHit;
-            bool h = ChunkShape.RayCast(ref r2, maximumLength, solidness, out rHit);
-            rHit.Location = rHit.Location + worldTransform.Position;
-            rayHit = rHit;
-            return h;
-        }
-
+        
         public override bool RayCast(Ray ray, float maximumLength, Func<BroadPhaseEntry, bool> filter, out RayHit rayHit)
         {
-            return RayCast(ray, maximumLength, filter, MaterialSolidity.FULLSOLID, out rayHit);
+            RigidTransform start = new RigidTransform(ray.Position);
+            Vector3 sweep = ray.Direction;
+            return ConvexCast(new BoxShape(0.1f, 0.1f, 0.1f), ref start, ref sweep, maximumLength, MaterialSolidity.FULLSOLID, out rayHit);
         }
 
         public override bool RayCast(Ray ray, float maximumLength, out RayHit rayHit)
