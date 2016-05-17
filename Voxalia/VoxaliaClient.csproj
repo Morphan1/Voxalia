@@ -128,6 +128,7 @@
     <Compile Include="ClientGame\CommandSystem\GameCommands\TesteffectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\ConnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\DisconnectCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\NetworkCommands\LoginCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\StartlocalserverCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\NetusageCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\TagBases\AudioTagBase.cs" />
@@ -208,7 +209,9 @@
     <Compile Include="ClientGame\NetworkSystem\AbstractPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\AbstractPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\NetStringManager.cs" />
-    <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs" />
+    <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddCloudPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddJointPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddToCloudPacketIn.cs" />

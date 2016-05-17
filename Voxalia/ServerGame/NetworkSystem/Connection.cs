@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Net;
 using System.Net.Sockets;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.EntitySystem;
@@ -7,9 +10,20 @@ using Voxalia.ServerGame.NetworkSystem.PacketsIn;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared.Files;
 using FreneticScript;
+using System.Web;
 
 namespace Voxalia.ServerGame.NetworkSystem
 {
+    class ShortWebClient : WebClient
+    {
+        protected override WebRequest GetWebRequest(Uri uri)
+        {
+            WebRequest w = base.GetWebRequest(uri);
+            w.Timeout = 20 * 1000;
+            return w;
+        }
+    }
+
     public class Connection
     {
         public Server TheServer;
@@ -72,7 +86,38 @@ namespace Voxalia.ServerGame.NetworkSystem
                 PE.Kick("Internal exception.");
             }
         }
-        
+
+        bool trying = false;
+
+        public void CheckWebSession(string username, string key)
+        {
+            if (username == null || key == null)
+            {
+                throw new Exception("Can't get session, not logged in!");
+            }
+            using (ShortWebClient wb = new ShortWebClient())
+            {
+                NameValueCollection data = new NameValueCollection();
+                data["formtype"] = "confirm";
+                data["username"] = username;
+                data["session"] = key;
+                byte[] response = wb.UploadValues("http://frenetic.xyz/account/microconfirm", "POST", data);
+                string resp = FileHandler.encoding.GetString(response).Trim(' ', '\n', '\r', '\t');
+                if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))
+                {
+                    string ip = resp.Substring("ACCEPT=".Length, resp.Length - 1 - "ACCEPT=".Length);
+                    string rip = PrimarySocket.RemoteEndPoint.ToString();
+                    if (rip.Contains("127.0.0.1") || rip.Contains("[::1]") || rip.Contains(ip))
+                    {
+                        SysConsole.Output(OutputType.INFO, "Connection from '" + rip + "' accepted with username: " + username);
+                        return;
+                    }
+                    throw new Exception("Connection from '" + rip + "' rejected because its IP is now " + ip + " or localhost!");
+                }
+                throw new Exception("Failed to get session!");
+            }
+        }
+
         public void Tick(double delta)
         {
             try
@@ -94,6 +139,10 @@ namespace Voxalia.ServerGame.NetworkSystem
                 PrimarySocket.Receive(recd, recdsofar, avail, SocketFlags.None);
                 recdsofar += avail;
                 if (recdsofar < 5)
+                {
+                    return;
+                }
+                if (trying)
                 {
                     return;
                 }
@@ -215,16 +264,45 @@ namespace Voxalia.ServerGame.NetworkSystem
                             {
                                 throw new Exception("Invalid connection - unreasonable username!");
                             }
-                            // TODO: Additional details?
-                            PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
-                            PlayerEntity player = new PlayerEntity(TheServer.LoadedRegions[0], this, name);
-                            PE = player;
-                            player.Host = host;
-                            player.Port = port;
-                            player.IP = PrimarySocket.RemoteEndPoint.ToString();
-                            TheServer.PlayersWaiting.Add(player);
-                            GotBase = true;
-                            recdsofar = 0;
+                            trying = true;
+                            TheServer.Schedule.StartASyncTask(() =>
+                            {
+                                try
+                                {
+                                    CheckWebSession(name, key);
+                                    TheServer.Schedule.ScheduleSyncTask(() =>
+                                    {
+                                        // TODO: Additional details?
+                                        PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
+                                        PlayerEntity player = new PlayerEntity(TheServer.LoadedRegions[0], this, name);
+                                        player.SessionKey = key;
+                                        PE = player;
+                                        player.Host = host;
+                                        player.Port = port;
+                                        player.IP = PrimarySocket.RemoteEndPoint.ToString();
+                                        TheServer.PlayersWaiting.Add(player);
+                                        GotBase = true;
+                                        recdsofar = 0;
+                                        trying = false;
+                                    });
+                                }
+                                catch (Exception ex)
+                                {
+                                    TheServer.Schedule.ScheduleSyncTask(() =>
+                                    {
+                                        if (!Alive)
+                                        {
+                                            return;
+                                        }
+                                        PrimarySocket.Close();
+                                        Utilities.CheckException(ex);
+                                        SysConsole.Output(OutputType.WARNING, "Forcibly disconnected client: " + ex.GetType().Name + ": " + ex.Message);
+                                        // TODO: Debug Only
+                                        SysConsole.Output(ex);
+                                        Alive = false;
+                                    });
+                                }
+                            });
                         }
                     }
                     else if (recd[0] == 'V' && recd[1] == 'O' && recd[2] == 'X' && recd[3] == 'c' && recd[4] == '_')
@@ -250,8 +328,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                             for (int i = 0; i < TheServer.PlayersWaiting.Count; i++)
                             {
                                 if (TheServer.PlayersWaiting[i].Name == name && TheServer.PlayersWaiting[i].Host == host &&
-                                    TheServer.PlayersWaiting[i].Port == port)
-                                    // TODO: Check key
+                                    TheServer.PlayersWaiting[i].Port == port && TheServer.PlayersWaiting[i].SessionKey == key)
                                 {
                                     player = TheServer.PlayersWaiting[i];
                                     TheServer.PlayersWaiting.RemoveAt(i);

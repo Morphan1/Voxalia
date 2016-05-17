@@ -3,15 +3,29 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using Voxalia.Shared;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.NetworkSystem.PacketsIn;
 using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared.Files;
 using System.Threading.Tasks;
 using FreneticScript;
+using System.Web;
+using Voxalia.ClientGame.UISystem;
 
 namespace Voxalia.ClientGame.NetworkSystem
 {
+    class ShortWebClient : WebClient
+    {
+        protected override WebRequest GetWebRequest(Uri uri)
+        {
+            WebRequest w = base.GetWebRequest(uri);
+            w.Timeout = 20 * 1000;
+            return w;
+        }
+    }
+
     public class NetworkBase
     {
         public Client TheClient;
@@ -39,6 +53,65 @@ namespace Voxalia.ClientGame.NetworkSystem
         public bool IsAlive = false;
 
         bool norep = false;
+
+        public string Username;
+
+        public string Key;
+
+        public string GetWebSession()
+        {
+            if (Username == null || Key == null)
+            {
+                throw new Exception("Can't get session, not logged in!");
+            }
+            using (ShortWebClient wb = new ShortWebClient())
+            {
+                NameValueCollection data = new NameValueCollection();
+                data["formtype"] = "getsess";
+                data["username"] = Username;
+                data["session"] = Key;
+                byte[] response = wb.UploadValues("http://frenetic.xyz/account/microgetsess", "POST", data);
+                string resp = FileHandler.encoding.GetString(response).Trim(' ', '\n', '\r', '\t');
+                if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))
+                {
+                    return resp.Substring("ACCEPT=".Length, resp.Length - "ACCEPT=".Length);
+                }
+                throw new Exception("Failed to get session: " + resp);
+            }
+        }
+
+        public void GlobalLoginAttempt(string user, string pass)
+        {
+            TheClient.Schedule.StartASyncTask(() =>
+            {
+                using (ShortWebClient wb = new ShortWebClient())
+                {
+                    NameValueCollection data = new NameValueCollection();
+                    data["formtype"] = "login";
+                    data["username"] = user;
+                    data["password"] = pass;
+                    byte[] response = wb.UploadValues("http://frenetic.xyz/account/micrologin", "POST", data);
+                    string resp = FileHandler.encoding.GetString(response).Trim(' ', '\n', '\r', '\t');
+                    if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))
+                    {
+                        string key = resp.Substring("ACCEPT=".Length, resp.Length - "ACCEPT=".Length);
+                        TheClient.Schedule.ScheduleSyncTask(() =>
+                        {
+                            UIConsole.WriteLine("Login accepted!");
+                            Username = user;
+                            Key = key;
+                        });
+                    }
+                    else
+                    {
+                        TheClient.Schedule.ScheduleSyncTask(() =>
+                        {
+                            UIConsole.WriteLine("Login refused: " + resp);
+                        });
+                    }
+                }
+            });
+        }
 
         public void Disconnect()
         {
@@ -464,7 +537,7 @@ namespace Voxalia.ClientGame.NetworkSystem
         {
             try
             {
-                string key = Utilities.UtilRandom.NextDouble().ToString(); // TODO: Acquire real key
+                string key = GetWebSession();
                 IPAddress address;
                 if (!IPAddress.TryParse(LastIP, out address))
                 {
@@ -557,6 +630,10 @@ namespace Voxalia.ClientGame.NetworkSystem
                 {
                     throw ex;
                 }
+                TheClient.Schedule.ScheduleSyncTask(() =>
+                {
+                    UIConsole.WriteLine("Connection failed: " + ex.Message);
+                });
                 SysConsole.Output(OutputType.ERROR, "Networking / connect internal: " + ex.ToString());
                 if (ConnectionSocket != null)
                 {

@@ -20,6 +20,8 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class PlayerEntity: HumanoidEntity
     {
+        public string SessionKey = null;
+
         public GameMode Mode = GameMode.SURVIVOR;
 
         public bool IsFirstJoin = true;
