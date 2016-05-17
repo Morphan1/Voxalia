@@ -36,6 +36,13 @@ namespace Voxalia.ClientGame.NetworkSystem
             Strings = new NetStringManager();
             recd = new byte[MAX];
             recd2 = new byte[MAX];
+            if (System.IO.File.Exists("logindata.dat"))
+            {
+                string dat = System.IO.File.ReadAllText("logindata.dat");
+                string[] d = dat.SplitFast('=');
+                Username = d[0];
+                Key = d[1];
+            }
         }
 
         public NetStringManager Strings;
@@ -74,7 +81,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                 string resp = FileHandler.encoding.GetString(response).Trim(' ', '\n', '\r', '\t');
                 if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))
                 {
-                    return resp.Substring("ACCEPT=".Length, resp.Length - "ACCEPT=".Length);
+                    return resp.Substring("ACCEPT=".Length, resp.Length - 1 - "ACCEPT=".Length);
                 }
                 throw new Exception("Failed to get session: " + resp);
             }
@@ -94,12 +101,13 @@ namespace Voxalia.ClientGame.NetworkSystem
                     string resp = FileHandler.encoding.GetString(response).Trim(' ', '\n', '\r', '\t');
                     if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))
                     {
-                        string key = resp.Substring("ACCEPT=".Length, resp.Length - "ACCEPT=".Length);
+                        string key = resp.Substring("ACCEPT=".Length, resp.Length - 1 - "ACCEPT=".Length);
                         TheClient.Schedule.ScheduleSyncTask(() =>
                         {
                             UIConsole.WriteLine("Login accepted!");
                             Username = user;
                             Key = key;
+                            System.IO.File.WriteAllText("logindata.dat", Username + "=" + key);
                         });
                     }
                     else
