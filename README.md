@@ -11,6 +11,17 @@ Built within OpenTK, a C# binding of OpenGL for the 3D rendering.
 - Switch the configuration to Release|x64
 - Build -> Build Solution!
 
+## Playing
+
+- Compile everything (see above)
+- Download the assets (included in public releases, or via the private repository)
+- Run `Voxalia.exe` by double clicking it
+- Open your console with the `tilde` key (the key next to the 1 key on standard US English QWERTY keyboards)
+- Type "`login <username> <password>`" (To get an account, register at http://frenetic.xyz/account/register )
+- Close Voxalia after it confirms login
+- Double click `singleplayer.bat` to open that, then wait for it to load
+- You should now be in the game!
+
 ## Also Included
 
 - ModelToVMDConvertor -> converts any given model format (via AssImp) to VMD, the model format used by Voxalia.
