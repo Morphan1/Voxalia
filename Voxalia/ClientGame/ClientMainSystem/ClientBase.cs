@@ -74,12 +74,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// Handles client-to-server networking.
         /// </summary>
         public NetworkBase Network;
-
-        /// <summary>
-        /// The username the player will connect under.
-        /// </summary>
-        public string Username = "Player" + new Random().Next(1000);
-
+        
         /// <summary>
         /// The texture of an Item Frame, for UI rendering.
         /// </summary>

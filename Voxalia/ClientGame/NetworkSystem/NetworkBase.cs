@@ -16,16 +16,6 @@ using Voxalia.ClientGame.UISystem;
 
 namespace Voxalia.ClientGame.NetworkSystem
 {
-    class ShortWebClient : WebClient
-    {
-        protected override WebRequest GetWebRequest(Uri uri)
-        {
-            WebRequest w = base.GetWebRequest(uri);
-            w.Timeout = 20 * 1000;
-            return w;
-        }
-    }
-
     public class NetworkBase
     {
         public Client TheClient;
@@ -601,7 +591,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                 ConnectionSocket.SendBufferSize = 5 * 1024 * 1024;
                 int tport = Utilities.StringToInt(LastPort);
                 ConnectionSocket.Connect(new IPEndPoint(address, tport));
-                ConnectionSocket.Send(FileHandler.encoding.GetBytes("VOX__\r" + TheClient.Username
+                ConnectionSocket.Send(FileHandler.encoding.GetBytes("VOX__\r" + Username
                     + "\r" + key + "\r" + LastIP + "\r" + LastPort + "\n"));
                 byte[] resp = ReceiveUntil(ConnectionSocket, 50, (byte)'\n');
                 if (FileHandler.encoding.GetString(resp) != "ACCEPT")
@@ -618,7 +608,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                 ChunkSocket.ReceiveBufferSize = 5 * 1024 * 1024;
                 ChunkSocket.SendBufferSize = 5 * 1024 * 1024;
                 ChunkSocket.Connect(new IPEndPoint(address, tport));
-                ChunkSocket.Send(FileHandler.encoding.GetBytes("VOXc_\r" + TheClient.Username
+                ChunkSocket.Send(FileHandler.encoding.GetBytes("VOXc_\r" + Username
                     + "\r" + key + "\r" + LastIP + "\r" + LastPort + "\n"));
                 resp = ReceiveUntil(ChunkSocket, 50, (byte)'\n');
                 if (FileHandler.encoding.GetString(resp) != "ACCEPT")
@@ -674,6 +664,16 @@ namespace Voxalia.ClientGame.NetworkSystem
                 gotten++;
             }
             throw new Exception("Maximum byte count reached without valid ender");
+        }
+    }
+
+    class ShortWebClient : WebClient
+    {
+        protected override WebRequest GetWebRequest(Uri uri)
+        {
+            WebRequest w = base.GetWebRequest(uri);
+            w.Timeout = 20 * 1000;
+            return w;
         }
     }
 }

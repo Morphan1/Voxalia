@@ -32,19 +32,6 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             }
             switch (entry.GetArgument(queue, 0))
             {
-                case "userName":
-                    {
-                        if (entry.Arguments.Count > 1)
-                        {
-                            TheClient.Username = entry.GetArgument(queue, 1);
-                            entry.Good(queue, "Set.");
-                        }
-                        else
-                        {
-                            entry.Info(queue, "Your username is: " + TagParser.Escape(TheClient.Username));
-                        }
-                        break;
-                    }
                 case "lightDebug":
                     {
                         Location pos = TheClient.Player.GetPosition();
