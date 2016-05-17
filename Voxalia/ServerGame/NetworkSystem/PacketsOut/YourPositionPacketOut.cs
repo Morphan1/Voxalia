@@ -7,7 +7,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public YourPositionPacketOut(double delta, long tID, Location pos, Location vel, Location avel, Stance stance, bool pup)
         {
-            ID = 1;
+            ID = ServerToClientPacket.YOUR_POSITION;
             Data = new byte[8 + 12 + 12 + 1 + 8];
             Utilities.LongToBytes(tID).CopyTo(Data, 0);
             pos.ToBytes().CopyTo(Data, 8);

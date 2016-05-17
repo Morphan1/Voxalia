@@ -12,7 +12,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public PlaySoundPacketOut(Server tserver, string sound, float vol, float pitch, Location pos)
         {
-            ID = 41;
+            ID = ServerToClientPacket.PLAY_SOUND;
             Data = new byte[4 + 4 + 4 + 12];
             Utilities.IntToBytes(tserver.Networking.Strings.IndexForString(sound)).CopyTo(Data, 0);
             Utilities.FloatToBytes(vol).CopyTo(Data, 4);

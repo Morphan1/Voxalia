@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public FlagEntityPacketOut(Entity e, EntityFlag flag, float value)
         {
-            ID = 32;
+            ID = ServerToClientPacket.FLAG_ENTITY;
             Data = new byte[8 + 1 + 4];
             Utilities.LongToBytes(e.EID).CopyTo(Data, 0);
             Data[8] = (byte)flag;

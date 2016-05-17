@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public AddToCloudPacketOut(Cloud c, int s)
         {
-            ID = 37;
+            ID = ServerToClientPacket.ADD_TO_CLOUD;
             Data = new byte[12 + 4 + 4 + 8];
             c.Points[s].ToBytes().CopyTo(Data, 0);
             Utilities.FloatToBytes(c.Sizes[s]).CopyTo(Data, 12);

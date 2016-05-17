@@ -146,7 +146,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                 {
                     return;
                 }
-                byte packetID = rd[4];
+                ServerToClientPacket packetID = (ServerToClientPacket)rd[4];
                 byte[] data = new byte[len];
                 Array.Copy(rd, 5, data, 0, len);
                 byte[] rem_data = new byte[rdsf - (len + 5)];
@@ -161,173 +161,167 @@ namespace Voxalia.ClientGame.NetworkSystem
                 NetUsageType usage;
                 switch (packetID) // TODO: Packet registry?
                 {
-                    case 0:
+                    case ServerToClientPacket.PING:
                         packet = new PingPacketIn();
                         usage = NetUsageType.PINGS;
                         break;
-                    case 1:
+                    case ServerToClientPacket.YOUR_POSITION:
                         packet = new YourPositionPacketIn();
                         usage = NetUsageType.PLAYERS;
                         break;
-                    case 2:
+                    case ServerToClientPacket.SPAWN_PHYSICS_ENTITY:
                         packet = new SpawnPhysicsEntityPacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
-                    case 3:
+                    case ServerToClientPacket.PHYSICS_ENTITY_UPDATE:
                         packet = new PhysicsEntityUpdatePacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
-                    case 4:
-                        // TODO: Use slot!
-                        throw new NotImplementedException();
-                    case 5:
+                    case ServerToClientPacket.MESSAGE:
                         packet = new MessagePacketIn();
                         usage = NetUsageType.GENERAL;
                         break;
-                    case 6:
+                    case ServerToClientPacket.CHARACTER_UPDATE:
                         packet = new CharacterUpdatePacketIn();
                         usage = NetUsageType.PLAYERS;
                         break;
-                    case 7:
+                    case ServerToClientPacket.SPAWN_BULLET:
                         packet = new SpawnBulletPacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
-                    case 8:
+                    case ServerToClientPacket.DESPAWN_ENTITY:
                         packet = new DespawnEntityPacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
-                    case 9:
+                    case ServerToClientPacket.NET_STRING:
                         packet = new NetStringPacketIn();
                         usage = NetUsageType.GENERAL;
                         break;
-                    case 10:
+                    case ServerToClientPacket.SPAWN_ITEM:
                         packet = new SpawnItemPacketIn();
                         usage = NetUsageType.GENERAL;
                         break;
-                    case 11:
+                    case ServerToClientPacket.YOUR_STATUS:
                         packet = new YourStatusPacketIn();
                         usage = NetUsageType.PLAYERS;
                         break;
-                    case 12:
+                    case ServerToClientPacket.ADD_JOINT:
                         packet = new AddJointPacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
-                    case 13:
+                    case ServerToClientPacket.YOUR_EID:
                         packet = new YourEIDPacketIn();
                         usage = NetUsageType.GENERAL;
                         break;
-                    case 14:
+                    case ServerToClientPacket.DESTROY_JOINT:
                         packet = new DestroyJointPacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
-                    case 15:
+                    case ServerToClientPacket.SPAWN_PRIMITIVE_ENTITY:
                         packet = new SpawnPrimitiveEntityPacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
-                    case 16:
+                    case ServerToClientPacket.PRIMITIVE_ENTITY_UPDATE:
                         packet = new PrimitiveEntityUpdatePacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
-                    case 17:
+                    case ServerToClientPacket.ANIMATION:
                         packet = new AnimationPacketIn();
                         usage = NetUsageType.PLAYERS;
                         break;
-                    case 18:
+                    case ServerToClientPacket.FLASHLIGHT:
                         packet = new FlashLightPacketIn();
                         usage = NetUsageType.PLAYERS;
                         break;
-                    case 19:
+                    case ServerToClientPacket.REMOVE_ITEM:
                         packet = new RemoveItemPacketIn();
                         usage = NetUsageType.GENERAL;
                         break;
-                    case 20:
-                        // TODO: Use slot!
-                        throw new NotImplementedException();
-                    case 21:
+                    case ServerToClientPacket.SET_ITEM:
                         packet = new SetItemPacketIn();
                         usage = NetUsageType.GENERAL;
                         break;
-                    case 22:
+                    case ServerToClientPacket.CVAR_SET:
                         packet = new CVarSetPacketIn();
                         usage = NetUsageType.GENERAL;
                         break;
-                    case 23:
+                    case ServerToClientPacket.SET_HELD_ITEM:
                         packet = new SetHeldItemPacketIn();
                         usage = NetUsageType.GENERAL;
                         break;
-                    case 24:
+                    case ServerToClientPacket.CHUNK_INFO:
                         packet = new ChunkInfoPacketIn();
                         usage = NetUsageType.CHUNKS;
                         break;
-                    case 25:
+                    case ServerToClientPacket.BLOCK_EDIT:
                         packet = new BlockEditPacketIn();
                         usage = NetUsageType.CHUNKS;
                         break;
-                    case 26:
+                    case ServerToClientPacket.SUN_ANGLE:
                         packet = new SunAnglePacketIn();
                         usage = NetUsageType.EFFECTS;
                         break;
-                    case 27:
+                    case ServerToClientPacket.TELEPORT:
                         packet = new TeleportPacketIn();
                         usage = NetUsageType.PLAYERS;
                         break;
-                    case 28:
+                    case ServerToClientPacket.OPERATION_STATUS:
                         packet = new OperationStatusPacketIn();
                         usage = NetUsageType.GENERAL;
                         break;
-                    case 29:
+                    case ServerToClientPacket.PARTICLE_EFFECT:
                         packet = new ParticleEffectPacketIn();
                         usage = NetUsageType.EFFECTS;
                         break;
-                    case 30:
+                    case ServerToClientPacket.PATH:
                         packet = new PathPacketIn();
                         usage = NetUsageType.EFFECTS;
                         break;
-                    case 31:
+                    case ServerToClientPacket.CHUNK_FORGET:
                         packet = new ChunkForgetPacketIn();
                         usage = NetUsageType.CHUNKS;
                         break;
-                    case 32:
+                    case ServerToClientPacket.FLAG_ENTITY:
                         packet = new FlagEntityPacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
-                    case 33:
+                    case ServerToClientPacket.DEFAULT_SOUND:
                         packet = new DefaultSoundPacketIn();
                         usage = NetUsageType.EFFECTS;
                         break;
-                    case 34:
+                    case ServerToClientPacket.GAIN_CONTROL_OF_VEHICLE:
                         packet = new GainControlOfVehiclePacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
-                    case 35:
+                    case ServerToClientPacket.ADD_CLOUD:
                         packet = new AddCloudPacketIn();
                         usage = NetUsageType.CLOUDS;
                         break;
-                    case 36:
+                    case ServerToClientPacket.REMOVE_CLOUD:
                         packet = new RemoveCloudPacketIn();
                         usage = NetUsageType.CLOUDS;
                         break;
-                    case 37:
+                    case ServerToClientPacket.ADD_TO_CLOUD:
                         packet = new AddToCloudPacketIn();
                         usage = NetUsageType.CLOUDS;
                         break;
-                    case 38:
+                    case ServerToClientPacket.SPAWN_CHARACTER:
                         packet = new SpawnCharacterPacketIn();
                         usage = NetUsageType.PLAYERS;
                         break;
-                    case 39:
+                    case ServerToClientPacket.SET_STATUS:
                         packet = new SetStatusPacketIn();
                         usage = NetUsageType.PLAYERS;
                         break;
-                    case 40:
+                    case ServerToClientPacket.HIGHLIGHT:
                         packet = new HighlightPacketIn();
                         usage = NetUsageType.EFFECTS;
                         break;
-                    case 41:
+                    case ServerToClientPacket.PLAY_SOUND:
                         packet = new PlaySoundPacketIn();
                         usage = NetUsageType.EFFECTS;
                         break;
-                    case 42:
+                    case ServerToClientPacket.LOD_MODEL:
                         packet = new LODModelPacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
@@ -338,7 +332,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                 UsagesTotal[(int)usage] += 5 + data.Length;
                 packet.TheClient = TheClient;
                 packet.ChunkN = sock == ChunkSocket;
-                int pid = packetID;
+                ServerToClientPacket pid = packetID;
                 if (asyncable)
                 {
                     // TODO: StartASyncTask?

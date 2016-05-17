@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public LODModelPacketOut(ModelEntity me)
         {
-            ID = 42;
+            ID = ServerToClientPacket.LOD_MODEL;
             Data = new byte[12 + 4 + 16 + 8 + 12];
             me.GetPosition().ToBytes().CopyTo(Data, 0);
             int ind = me.TheServer.Networking.Strings.IndexForString(me.model);

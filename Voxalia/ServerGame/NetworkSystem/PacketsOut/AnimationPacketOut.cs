@@ -7,7 +7,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public AnimationPacketOut(Entity e, string anim, byte mode)
         {
-            ID = 17;
+            ID = ServerToClientPacket.ANIMATION;
             Data = new byte[8 + 4 + 1];
             Utilities.LongToBytes(e.EID).CopyTo(Data, 0);
             Utilities.IntToBytes(e.TheServer.Networking.Strings.IndexForString(anim)).CopyTo(Data, 8);

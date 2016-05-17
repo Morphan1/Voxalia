@@ -6,7 +6,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public OperationStatusPacketOut(StatusOperation operation, byte status)
         {
-            ID = 28;
+            ID = ServerToClientPacket.OPERATION_STATUS;
             Data = new byte[] { (byte)operation, status };
         }
     }

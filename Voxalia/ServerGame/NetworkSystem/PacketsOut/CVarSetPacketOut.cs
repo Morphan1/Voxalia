@@ -1,5 +1,6 @@
 ﻿using FreneticScript;
 using Voxalia.ServerGame.ServerMainSystem;
+using Voxalia.Shared;
 using Voxalia.Shared.Files;
 
 namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
@@ -8,7 +9,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public CVarSetPacketOut(CVar var, Server tserver)
         {
-            ID = 22;
+            ID = ServerToClientPacket.CVAR_SET;
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);
             dw.WriteInt(tserver.Networking.Strings.IndexForString(var.Name.ToLowerFast()));

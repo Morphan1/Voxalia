@@ -8,7 +8,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public SpawnPhysicsEntityPacketOut(PhysicsEntity e)
         {
-            ID = 2;
+            ID = ServerToClientPacket.SPAWN_PHYSICS_ENTITY;
             BlockGroupEntity bge = null;
             Location hs = Location.Zero;
             if (e is BlockGroupEntity)

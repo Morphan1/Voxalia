@@ -1,4 +1,6 @@
-﻿using Voxalia.Shared.Files;
+﻿using System;
+using Voxalia.Shared;
+using Voxalia.Shared.Files;
 
 namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
@@ -6,7 +8,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public NetStringPacketOut(string str)
         {
-            ID = 9;
+            ID = ServerToClientPacket.NET_STRING;
             Data = FileHandler.encoding.GetBytes(str);
         }
     }

@@ -7,7 +7,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public SpawnBulletPacketOut(BulletEntity e)
         {
-            ID = 7;
+            ID = ServerToClientPacket.SPAWN_BULLET;
             Data = new byte[8 + 4 + 12 + 12];
             Utilities.LongToBytes(e.EID).CopyTo(Data, 0);
             Utilities.FloatToBytes(e.Size).CopyTo(Data, 8);

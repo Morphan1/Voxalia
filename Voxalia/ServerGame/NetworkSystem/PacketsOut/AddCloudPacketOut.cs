@@ -12,7 +12,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public AddCloudPacketOut(Cloud cloud)
         {
-            ID = 35;
+            ID = ServerToClientPacket.ADD_CLOUD;
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);
             dw.WriteBytes(cloud.Position.ToBytes());

@@ -13,14 +13,14 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         public HighlightPacketOut(params AABB[] sels)
         {
             int c = 0;
-            for (int i = 0; i <sels.Length; i++)
+            for (int i = 0; i < sels.Length; i++)
             {
                 if (!sels[i].Min.IsNaN())
                 {
                     c++;
                 }
             }
-            ID = 40;
+            ID = ServerToClientPacket.HIGHLIGHT;
             Data = new byte[4 + 12 * 2 * c];
             Utilities.IntToBytes(c).CopyTo(Data, 0);
             int t = 0;

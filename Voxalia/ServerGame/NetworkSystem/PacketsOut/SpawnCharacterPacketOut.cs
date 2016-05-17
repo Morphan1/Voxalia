@@ -14,7 +14,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public SpawnCharacterPacketOut(CharacterEntity ent)
         {
-            ID = 38;
+            ID = ServerToClientPacket.SPAWN_CHARACTER;
             DataStream ds = new DataStream();
             DataWriter dr = new DataWriter(ds);
             dr.WriteBytes(ent.GetPosition().ToBytes());

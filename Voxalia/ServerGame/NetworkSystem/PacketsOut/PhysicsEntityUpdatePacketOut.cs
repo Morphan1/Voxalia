@@ -7,7 +7,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public PhysicsEntityUpdatePacketOut(PhysicsEntity e)
         {
-            ID = 3;
+            ID = ServerToClientPacket.PHYSICS_ENTITY_UPDATE;
             Data = new byte[12 + 12 + 16 + 12 + 1 + 8];
             e.GetPosition().ToBytes().CopyTo(Data, 0);
             e.GetVelocity().ToBytes().CopyTo(Data, 12);

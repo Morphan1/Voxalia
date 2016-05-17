@@ -1,10 +1,13 @@
-﻿namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
+﻿using System;
+using Voxalia.Shared;
+
+namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     public class PingPacketOut: AbstractPacketOut
     {
         public PingPacketOut(byte bit)
         {
-            ID = 0;
+            ID = ServerToClientPacket.PING;
             Data = new byte[] { bit };
         }
     }

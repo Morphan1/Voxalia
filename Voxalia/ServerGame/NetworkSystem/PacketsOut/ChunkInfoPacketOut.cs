@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 throw new Exception("Trying to transmit chunk while it's still loading! For chunk at " + chunk.WorldPosition);
             }
-            ID = 24;
+            ID = ServerToClientPacket.CHUNK_INFO;
             byte[] data_orig;
             if (lod == 1)
             {

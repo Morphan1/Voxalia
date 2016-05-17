@@ -10,7 +10,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public ChunkForgetPacketOut(Location cpos)
         {
-            ID = 31;
+            ID = ServerToClientPacket.CHUNK_FORGET;
             Data = new byte[12];
             Utilities.IntToBytes((int)cpos.X).CopyTo(Data, 0);
             Utilities.IntToBytes((int)cpos.Y).CopyTo(Data, 4);

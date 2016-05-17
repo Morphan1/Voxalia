@@ -7,7 +7,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public SpawnItemPacketOut(int spot, ItemStack item)
         {
-            ID = 10;
+            ID = ServerToClientPacket.SPAWN_ITEM;
             byte[] itemdat = item.ToBytes();
             Data = new byte[4 + itemdat.Length];
             Utilities.IntToBytes(spot).CopyTo(Data, 0);

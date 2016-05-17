@@ -10,7 +10,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public DefaultSoundPacketOut(Location loc, DefaultSound sound, byte subdat)
         {
-            ID = 33;
+            ID = ServerToClientPacket.DEFAULT_SOUND;
             Data = new byte[12 + 1 + 1];
             loc.ToBytes().CopyTo(Data, 0);
             Data[12] = (byte)sound;
