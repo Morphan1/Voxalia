@@ -38,7 +38,7 @@ namespace Voxalia.ServerGame.NetworkSystem
 
         public bool Alive = true;
 
-        PlayerEntity PE;
+        PlayerEntity PE = null;
 
         public void SendMessage(string message)
         {
@@ -58,6 +58,10 @@ namespace Voxalia.ServerGame.NetworkSystem
                     fdata[4] = id;
                     data.CopyTo(fdata, 5);
                     PrimarySocket.Send(fdata);
+                    if (PE != null)
+                    {
+                        PE.UsagesTotal[(int)packet.UsageType] += fdata.Length;
+                    }
                 }
             }
             catch (Exception ex)
@@ -214,12 +218,12 @@ namespace Voxalia.ServerGame.NetworkSystem
                             // TODO: Additional details?
                             PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
                             PlayerEntity player = new PlayerEntity(TheServer.LoadedRegions[0], this, name);
+                            PE = player;
                             player.Host = host;
                             player.Port = port;
                             player.IP = PrimarySocket.RemoteEndPoint.ToString();
                             TheServer.PlayersWaiting.Add(player);
                             GotBase = true;
-                            PE = player;
                             recdsofar = 0;
                         }
                     }
@@ -258,6 +262,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                             {
                                 throw new Exception("Can't find player for VOXc_!");
                             }
+                            PE = player;
                             player.ChunkNetwork = this;
                             PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
                             player.TheRegion.SpawnEntity(player);
@@ -268,7 +273,6 @@ namespace Voxalia.ServerGame.NetworkSystem
                             player.Network.SendPacket(new PingPacketOut(0));
                             player.SendStatus();
                             GotBase = true;
-                            PE = player;
                             recdsofar = 0;
                         }
                     }

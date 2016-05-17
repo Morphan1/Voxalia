@@ -14,6 +14,7 @@ using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.OtherSystems;
 using Voxalia.Shared.Collision;
 using BEPUphysics.Character;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -23,8 +24,17 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool IsFirstJoin = true;
 
+        public long[] UsagesTotal = new long[(int)NetUsageType.COUNT];
+
+        public double SpawnedTime = 0;
+
         public void LoadFromYAML(YAMLConfiguration config)
         {
+            string region = config.ReadString("region", null);
+            if (region != null) // TODO: && TheServer.IsLoadedRegion(region)
+            {
+                // TODO: Set region!
+            }
             if (!Enum.TryParse(config.ReadString("gamemode", "SURVIVOR"), out Mode))
             {
                 SysConsole.Output(OutputType.WARNING, "Invalid gamemode for " + Name + ", reverting to SURVIVOR!");
@@ -43,6 +53,7 @@ namespace Voxalia.ServerGame.EntitySystem
             SetVelocity(Location.FromString(config.ReadString("velocity", "0,0,0")));
             Teleport(Location.FromString(config.ReadString("position", "0,0,50")));
             IsFirstJoin = false;
+            SpawnedTime = TheRegion.GlobalTickTime;
         }
 
         public void SaveToYAML(YAMLConfiguration config)
@@ -53,9 +64,17 @@ namespace Voxalia.ServerGame.EntitySystem
             config.Set("flying", IsFlying ? "true": "false");
             config.Set("velocity", GetVelocity().ToString());
             config.Set("position", GetPosition().ToString());
+            config.Set("region", TheRegion.Name);
+            for (int i = 0; i < (int)NetUsageType.COUNT; i++)
+            {
+                string path = "stats.net_usage." + ((NetUsageType)i).ToString().ToLowerFast();
+                config.Set(path, config.ReadLong(path, 0) + UsagesTotal[i]);
+            }
+            const string timePath = "stats.general.time_seconds";
+            config.Set(timePath, config.ReadDouble(timePath, 0) + (TheRegion.GlobalTickTime - SpawnedTime));
+            // TODO: Other stats!
             // TODO: CBody settings? Mass? ...?
-            // TODO: Inventory
-            // TODO: Region name
+            // TODO: Inventory!
         }
 
         public override EntityType GetEntityType()
