@@ -79,4 +79,28 @@ namespace Voxalia.Shared
         CURVE = 1,
         MULTICURVE = 2
     }
+    
+    public enum KeysPacketData : ushort
+    {
+        UPWARD = 1,
+        CLICK = 2,
+        ALTCLICK = 4,
+        DOWNWARD = 8,
+        USE = 16,
+        ITEMLEFT = 32,
+        ITEMRIGHT = 64,
+        ITEMUP = 128,
+        ITEMDOWN = 256
+    }
+
+    public enum ClientToServerPacket : byte
+    {
+        PING = 0,
+        KEYS = 1,
+        COMMAND = 2,
+        HOLD_ITEM = 3,
+        DISCONNECT = 4,
+        SET_STATUS = 5,
+        PLEASE_REDEFINE = 6
+    }
 }

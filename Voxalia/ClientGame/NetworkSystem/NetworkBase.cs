@@ -423,7 +423,7 @@ namespace Voxalia.ClientGame.NetworkSystem
 
         public byte[] GetBytesFor(AbstractPacketOut packet)
         {
-            byte id = packet.ID;
+            byte id = (byte)packet.ID;
             byte[] data = packet.Data;
             byte[] fdata = new byte[data.Length + 5];
             Utilities.IntToBytes(data.Length).CopyTo(fdata, 0);

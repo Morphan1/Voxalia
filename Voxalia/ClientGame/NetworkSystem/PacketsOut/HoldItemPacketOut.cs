@@ -6,7 +6,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsOut
     {
         public HoldItemPacketOut(int item)
         {
-            ID = 3;
+            ID = ClientToServerPacket.HOLD_ITEM;
             Data = Utilities.IntToBytes(item);
         }
     }

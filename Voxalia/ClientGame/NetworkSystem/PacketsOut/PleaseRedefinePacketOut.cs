@@ -10,7 +10,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsOut
     {
         public PleaseRedefinePacketOut(long eid)
         {
-            ID = 6;
+            ID = ClientToServerPacket.PLEASE_REDEFINE;
             Data = Utilities.LongToBytes(eid);
         }
     }

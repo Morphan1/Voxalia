@@ -1,4 +1,6 @@
-﻿using Voxalia.Shared.Files;
+﻿using System;
+using Voxalia.Shared;
+using Voxalia.Shared.Files;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsOut
 {
@@ -6,7 +8,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsOut
     {
         public CommandPacketOut(string cmd)
         {
-            ID = 2;
+            ID = ClientToServerPacket.COMMAND;
             Data = FileHandler.encoding.GetBytes(cmd);
         }
     }

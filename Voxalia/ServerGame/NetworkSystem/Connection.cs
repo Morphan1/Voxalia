@@ -108,7 +108,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                         {
                             return;
                         }
-                        byte packetID = recd[4];
+                        ClientToServerPacket packetID = (ClientToServerPacket)recd[4];
                         byte[] data = new byte[len];
                         Array.Copy(recd, 5, data, 0, len);
                         byte[] rem_data = new byte[recdsofar - (len + 5)];
@@ -121,25 +121,25 @@ namespace Voxalia.ServerGame.NetworkSystem
                         AbstractPacketIn packet;
                         switch (packetID) // TODO: Packet registry?
                         {
-                            case 0:
+                            case ClientToServerPacket.PING:
                                 packet = new PingPacketIn();
                                 break;
-                            case 1:
+                            case ClientToServerPacket.KEYS:
                                 packet = new KeysPacketIn();
                                 break;
-                            case 2:
+                            case ClientToServerPacket.COMMAND:
                                 packet = new CommandPacketIn();
                                 break;
-                            case 3:
+                            case ClientToServerPacket.HOLD_ITEM:
                                 packet = new HoldItemPacketIn();
                                 break;
-                            case 4:
+                            case ClientToServerPacket.DISCONNECT:
                                 packet = new DisconnectPacketIn();
                                 break;
-                            case 5:
+                            case ClientToServerPacket.SET_STATUS:
                                 packet = new SetStatusPacketIn();
                                 break;
-                            case 6:
+                            case ClientToServerPacket.PLEASE_REDEFINE:
                                 packet = new PleaseRedefinePacketIn();
                                 break;
                             default:

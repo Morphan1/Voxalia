@@ -66,17 +66,4 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             return true;
         }
     }
-
-    public enum KeysPacketData : ushort // TODO: Network enum?
-    {
-        UPWARD = 1,
-        CLICK = 2,
-        ALTCLICK = 4,
-        DOWNWARD = 8,
-        USE = 16,
-        ITEMLEFT = 32,
-        ITEMRIGHT = 64,
-        ITEMUP = 128,
-        ITEMDOWN = 256
-    }
 }

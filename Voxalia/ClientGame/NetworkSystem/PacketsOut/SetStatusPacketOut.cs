@@ -10,7 +10,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsOut
     {
         public SetStatusPacketOut(ClientStatus opt, byte status)
         {
-            ID = 5;
+            ID = ClientToServerPacket.SET_STATUS;
             Data = new byte[2];
             Data[0] = (byte)opt;
             Data[1] = status;
