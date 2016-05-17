@@ -26,6 +26,11 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Location halfsize = Location.FromBytes(data, 4 + 12 + 12 + 16 + 12 + 8 + 4);
             PhysicsEntity ce;
             int start = len - (4 + 1);
+            Entity e = TheClient.TheRegion.GetEntity(eID);
+            if (e != null)
+            {
+                TheClient.TheRegion.Despawn(e);
+            }
             if (type == 2)
             {
                 NetStringManager strings = TheClient.Network.Strings;

@@ -6,6 +6,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.OtherSystems;
+using Voxalia.ServerGame.NetworkSystem;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -16,15 +17,27 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.MODEL;
         }
 
+        public bool CanLOD = false;
+
+        public override AbstractPacketOut GetLODSpawnPacket()
+        {
+            if (CanLOD)
+            {
+                return new LODModelPacketOut(this);
+            }
+            return null;
+        }
+
         public override byte[] GetSaveBytes()
         {
             byte[] modelname = Utilities.encoding.GetBytes(model);
             byte[] bbytes = GetPhysicsBytes();
-            byte[] res = new byte[bbytes.Length + 1 + 4 + modelname.Length];
+            byte[] res = new byte[bbytes.Length + 1 + 4 + modelname.Length + 1];
             bbytes.CopyTo(res, 0);
             res[bbytes.Length] = (byte)mode;
             Utilities.IntToBytes(modelname.Length).CopyTo(res, bbytes.Length + 1);
             modelname.CopyTo(res, bbytes.Length + 1 + 4);
+            res[bbytes.Length + 1 + 4 + modelname.Length] = (byte)(CanLOD ? 1 : 0);
             return res;
         }
 
@@ -119,6 +132,7 @@ namespace Voxalia.ServerGame.EntitySystem
             string name = Utilities.encoding.GetString(input, plen + 1 + 4, namelen);
             ModelEntity ent = new ModelEntity(name, tregion);
             ent.mode = (ModelCollisionMode)mode;
+            ent.CanLOD = input[plen + 1 + 4 + namelen] == 1;
             ent.ApplyBytes(input);
             return ent;
         }

@@ -39,7 +39,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             if (Body == null)
             {
-                // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
+                // TODO: Make it safe to -> TheRegion.DespawnEntity(this); ?
                 return;
             }
             base.Tick();
@@ -48,9 +48,9 @@ namespace Voxalia.ClientGame.EntitySystem
         public override void SpawnBody()
         {
             model = TheClient.Models.GetModel(mod);
-            if (model == null || model.Original == null) // TODO: smod should return a cube when all else fails?
+            if (model == null || model.Original == null) // TODO: model should return a cube when all else fails?
             {
-                // TODO: Make it safe to -> TheRegion.DespawnEntity(this);
+                // TODO: Make it safe to -> TheRegion.DespawnEntity(this); ?
                 return;
             }
             model.LoadSkin(TheClient.Textures);
@@ -122,7 +122,6 @@ namespace Voxalia.ClientGame.EntitySystem
                 return;
             }
             TheClient.SetEnts();
-            // TODO: If farther away than a given distance (set by server), render as a sprite instead of a full model!
             RigidTransform rt = new RigidTransform(Body.Position, Body.Orientation);
             BEPUutilities.Vector3 bmin;
             BEPUutilities.Vector3 bmax;

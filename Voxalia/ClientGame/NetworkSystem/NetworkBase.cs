@@ -327,6 +327,10 @@ namespace Voxalia.ClientGame.NetworkSystem
                         packet = new PlaySoundPacketIn();
                         usage = NetUsageType.EFFECTS;
                         break;
+                    case 42:
+                        packet = new LODModelPacketIn();
+                        usage = NetUsageType.ENTITIES;
+                        break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);
                 }

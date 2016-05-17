@@ -2,6 +2,7 @@
 using Voxalia.Shared;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.Shared.Collision;
+using OpenTK;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -52,6 +53,11 @@ namespace Voxalia.ClientGame.EntitySystem
         public Location Velocity;
 
         public BEPUutilities.Quaternion Angles;
+
+        public Matrix4 GetOrientationMatrix()
+        {
+            return Matrix4.CreateFromQuaternion(new Quaternion(Angles.X, Angles.Y, Angles.Z, Angles.W));
+        }
 
         public override BEPUutilities.Quaternion GetOrientation()
         {

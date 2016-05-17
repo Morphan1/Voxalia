@@ -207,6 +207,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\FlashLightPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\GainControlOfVehiclePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\HighlightPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\LODModelPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\MessagePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\NetStringPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\OperationStatusPacketOut.cs" />

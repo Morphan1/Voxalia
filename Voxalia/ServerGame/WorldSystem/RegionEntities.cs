@@ -301,6 +301,7 @@ namespace Voxalia.ServerGame.WorldSystem
             me.SetOrientation(orient);
             me.SetPosition(h ? new Location(rcr.HitData.Location) : pos);
             me.CGroup = CollisionUtil.NonSolid;
+            me.CanLOD = true;
             SpawnEntity(me);
             me.SetPosition(me.GetPosition() - new Location(Quaternion.Transform(me.offset.ToBVector(), orient)));
             me.ForceNetwork();
@@ -320,6 +321,7 @@ namespace Voxalia.ServerGame.WorldSystem
             Quaternion.GetQuaternionBetweenNormalizedVectors(ref treealign, ref norm, out orient);
             me.SetOrientation(orient);
             me.SetPosition(pos);
+            me.CanLOD = true;
             SpawnEntity(me);
             me.SetPosition(pos - new Location(norm) - new Location(Quaternion.Transform(me.offset.ToBVector(), orient)));
             me.ForceNetwork();

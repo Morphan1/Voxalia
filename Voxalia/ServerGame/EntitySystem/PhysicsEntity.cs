@@ -205,6 +205,23 @@ namespace Voxalia.ServerGame.EntitySystem
                     {
                         player.Network.SendPacket(physupd);
                     }
+                    if (!shouldseec)
+                    {
+                        bool shouldseelongc = player.ShouldLoadPosition(pos);
+                        bool shouldseelongl = player.ShouldLoadPositionPreviously(lPos);
+                        if (shouldseelongc && !shouldseelongl)
+                        {
+                            AbstractPacketOut lod = GetLODSpawnPacket();
+                            if (lod != null)
+                            {
+                                player.Network.SendPacket(lod);
+                            }
+                        }
+                        if (shouldseelongl && !shouldseelongc)
+                        {
+                            player.Network.SendPacket(new DespawnEntityPacketOut(EID));
+                        }
+                    }
                 }
             }
         }
@@ -212,6 +229,11 @@ namespace Voxalia.ServerGame.EntitySystem
         public void EndTick()
         {
             lPos = GetPosition();
+        }
+
+        public virtual AbstractPacketOut GetLODSpawnPacket()
+        {
+            return null;
         }
 
         public virtual AbstractPacketOut GetUpdatePacket()
