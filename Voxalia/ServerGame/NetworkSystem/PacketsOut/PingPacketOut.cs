@@ -7,6 +7,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public PingPacketOut(byte bit)
         {
+            UsageType = NetUsageType.PINGS;
             ID = ServerToClientPacket.PING;
             Data = new byte[] { bit };
         }

@@ -7,6 +7,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public DestroyJointPacketOut(InternalBaseJoint joint)
         {
+            UsageType = NetUsageType.ENTITIES;
             ID = ServerToClientPacket.DESTROY_JOINT;
             Data = Utilities.LongToBytes(joint.JID);
         }

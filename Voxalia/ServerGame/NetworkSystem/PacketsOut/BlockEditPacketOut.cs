@@ -7,6 +7,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public BlockEditPacketOut(Location[] pos, ushort[] mat, byte[] dat, byte[] paints)
         {
+            UsageType = NetUsageType.CHUNKS;
             ID = ServerToClientPacket.BLOCK_EDIT;
             DataStream outp = new DataStream();
             DataWriter dw = new DataWriter(outp);

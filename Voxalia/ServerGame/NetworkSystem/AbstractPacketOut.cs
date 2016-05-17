@@ -14,5 +14,7 @@ namespace Voxalia.ServerGame.NetworkSystem
         /// The binary data held in this packet.
         /// </summary>
         public byte[] Data;
+
+        public NetUsageType UsageType = NetUsageType.GENERAL;
     }
 }

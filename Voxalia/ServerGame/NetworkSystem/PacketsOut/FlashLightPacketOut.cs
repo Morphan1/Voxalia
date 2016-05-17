@@ -7,6 +7,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public FlashLightPacketOut(PlayerEntity player, bool enabled, float distance, Location color)
         {
+            UsageType = NetUsageType.PLAYERS;
             ID = ServerToClientPacket.FLASHLIGHT;
             Data = new byte[8 + 1 + 4 + 12];
             Utilities.LongToBytes(player.EID).CopyTo(Data, 0);

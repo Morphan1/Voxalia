@@ -7,6 +7,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public AddJointPacketOut(InternalBaseJoint joint)
         {
+            UsageType = NetUsageType.ENTITIES;
             ID = ServerToClientPacket.ADD_JOINT;
             int len = 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 4;
             if (joint is JointBallSocket)

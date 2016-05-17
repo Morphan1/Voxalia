@@ -9,6 +9,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public CVarSetPacketOut(CVar var, Server tserver)
         {
+            UsageType = NetUsageType.GENERAL;
             ID = ServerToClientPacket.CVAR_SET;
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);

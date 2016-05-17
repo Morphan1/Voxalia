@@ -10,6 +10,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public PathPacketOut(List<Location> locs)
         {
+            UsageType = NetUsageType.EFFECTS;
             ID = ServerToClientPacket.PATH;
             Data = new byte[locs.Count * 12 + 4];
             Utilities.IntToBytes(locs.Count).CopyTo(Data, 0);

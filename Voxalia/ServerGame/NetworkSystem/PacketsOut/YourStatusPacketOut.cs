@@ -6,6 +6,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public YourStatusPacketOut(float health, float max_health, YourStatusFlags flags)
         {
+            UsageType = NetUsageType.PLAYERS;
             ID = ServerToClientPacket.YOUR_STATUS;
             Data = new byte[4 + 4 + 1];
             Utilities.FloatToBytes(health).CopyTo(Data, 0);

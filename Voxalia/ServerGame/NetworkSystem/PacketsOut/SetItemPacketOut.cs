@@ -7,6 +7,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public SetItemPacketOut(int spot, ItemStack item)
         {
+            UsageType = NetUsageType.GENERAL;
             ID = ServerToClientPacket.SET_ITEM;
             byte[] itemdat = item.ToBytes();
             Data = new byte[4 + itemdat.Length];

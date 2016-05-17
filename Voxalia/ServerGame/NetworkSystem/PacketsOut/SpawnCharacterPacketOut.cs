@@ -14,6 +14,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public SpawnCharacterPacketOut(CharacterEntity ent)
         {
+            UsageType = NetUsageType.PLAYERS;
             ID = ServerToClientPacket.SPAWN_CHARACTER;
             DataStream ds = new DataStream();
             DataWriter dr = new DataWriter(ds);

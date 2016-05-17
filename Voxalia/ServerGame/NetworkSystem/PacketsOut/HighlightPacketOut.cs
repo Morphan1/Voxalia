@@ -12,6 +12,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public HighlightPacketOut(params AABB[] sels)
         {
+            UsageType = NetUsageType.EFFECTS;
             int c = 0;
             for (int i = 0; i < sels.Length; i++)
             {

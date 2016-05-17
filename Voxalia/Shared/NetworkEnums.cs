@@ -24,6 +24,18 @@ namespace Voxalia.Shared
         FULL = 3
     }
 
+    public enum NetUsageType : byte
+    {
+        EFFECTS = 0,
+        ENTITIES = 1,
+        PLAYERS = 2,
+        CLOUDS = 3,
+        PINGS = 4,
+        CHUNKS = 5,
+        GENERAL = 6,
+        COUNT = 7
+    }
+
     public enum StatusOperation : byte
     {
         NONE = 0,

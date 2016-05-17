@@ -6,6 +6,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public SunAnglePacketOut(float yaw, float pitch)
         {
+            UsageType = NetUsageType.EFFECTS;
             ID = ServerToClientPacket.SUN_ANGLE;
             Data = new byte[4 + 4];
             Utilities.FloatToBytes(yaw).CopyTo(Data, 0);

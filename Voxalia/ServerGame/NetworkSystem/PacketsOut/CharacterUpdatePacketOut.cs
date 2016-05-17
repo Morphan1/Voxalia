@@ -8,6 +8,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public CharacterUpdatePacketOut(CharacterEntity player)
         {
+            UsageType = NetUsageType.PLAYERS;
             ID = ServerToClientPacket.CHARACTER_UPDATE;
             Data = new byte[8 + 12 + 12 + 2 + 4 + 4 + 1 + 4 + 4];
             Utilities.LongToBytes(player.EID).CopyTo(Data, 0);

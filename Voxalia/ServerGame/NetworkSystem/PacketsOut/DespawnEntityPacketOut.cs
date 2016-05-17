@@ -6,6 +6,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public DespawnEntityPacketOut(long EID)
         {
+            UsageType = NetUsageType.ENTITIES;
             ID = ServerToClientPacket.DESPAWN_ENTITY;
             Data = Utilities.LongToBytes(EID);
         }

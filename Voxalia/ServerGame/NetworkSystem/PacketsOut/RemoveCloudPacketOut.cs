@@ -10,6 +10,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public RemoveCloudPacketOut(long cid)
         {
+            UsageType = NetUsageType.CLOUDS;
             ID = ServerToClientPacket.REMOVE_CLOUD;
             Data = Utilities.LongToBytes(cid);
         }

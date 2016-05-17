@@ -591,16 +591,4 @@ namespace Voxalia.ClientGame.NetworkSystem
             throw new Exception("Maximum byte count reached without valid ender");
         }
     }
-
-    public enum NetUsageType: byte
-    {
-        EFFECTS = 0,
-        ENTITIES = 1,
-        PLAYERS = 2,
-        CLOUDS = 3,
-        PINGS = 4,
-        CHUNKS = 5,
-        GENERAL = 6,
-        COUNT = 7
-    }
 }

@@ -10,6 +10,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public ParticleEffectPacketOut(ParticleEffectNetType type, float dat1, Location pos)
         {
+            UsageType = NetUsageType.EFFECTS;
             ID = ServerToClientPacket.PARTICLE_EFFECT;
             Data = new byte[1 + 4 + 12];
             Data[0] = (byte)type;
@@ -19,6 +20,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 
         public ParticleEffectPacketOut(ParticleEffectNetType type, float dat1, Location pos, Location dat2)
         {
+            UsageType = NetUsageType.EFFECTS;
             ID = ServerToClientPacket.PARTICLE_EFFECT;
             Data = new byte[1 + 4 + 12 + 12];
             Data[0] = (byte)type;

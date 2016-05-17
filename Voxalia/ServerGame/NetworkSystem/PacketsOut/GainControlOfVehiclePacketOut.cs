@@ -12,6 +12,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public GainControlOfVehiclePacketOut(CharacterEntity character, VehicleEntity vehicle)
         {
+            UsageType = NetUsageType.ENTITIES;
+            ID = ServerToClientPacket.GAIN_CONTROL_OF_VEHICLE;
             if (vehicle is CarEntity)
             {
                 Setup(character, (CarEntity)vehicle);
@@ -28,7 +30,6 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 
         private void Setup(CharacterEntity character, CarEntity vehicle)
         {
-            ID = ServerToClientPacket.GAIN_CONTROL_OF_VEHICLE;
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);
             dw.WriteLong(character.EID);
@@ -50,7 +51,6 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 
         private void Setup(CharacterEntity character, HelicopterEntity vehicle)
         {
-            ID = ServerToClientPacket.GAIN_CONTROL_OF_VEHICLE;
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);
             dw.WriteLong(character.EID);

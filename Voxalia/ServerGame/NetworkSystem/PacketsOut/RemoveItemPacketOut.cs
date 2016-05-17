@@ -6,6 +6,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public RemoveItemPacketOut(int spot)
         {
+            UsageType = NetUsageType.GENERAL;
             ID = ServerToClientPacket.REMOVE_ITEM;
             Data = Utilities.IntToBytes(spot);
         }

@@ -7,6 +7,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public PrimitiveEntityUpdatePacketOut(PrimitiveEntity pe)
         {
+            UsageType = NetUsageType.ENTITIES;
             ID = ServerToClientPacket.PRIMITIVE_ENTITY_UPDATE;
             Data = new byte[12 + 12 + 16 + 12 + 8];
             pe.GetPosition().ToBytes().CopyTo(Data, 0);

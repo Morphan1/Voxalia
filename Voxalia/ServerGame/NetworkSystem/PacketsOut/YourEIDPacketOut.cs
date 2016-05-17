@@ -6,6 +6,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public YourEIDPacketOut(long EID)
         {
+            UsageType = NetUsageType.GENERAL;
             ID = ServerToClientPacket.YOUR_EID;
             Data = Utilities.LongToBytes(EID);
         }

@@ -6,6 +6,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
     {
         public OperationStatusPacketOut(StatusOperation operation, byte status)
         {
+            UsageType = NetUsageType.GENERAL;
             ID = ServerToClientPacket.OPERATION_STATUS;
             Data = new byte[] { (byte)operation, status };
         }
