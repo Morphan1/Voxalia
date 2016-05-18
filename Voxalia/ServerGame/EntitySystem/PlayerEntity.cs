@@ -47,6 +47,8 @@ namespace Voxalia.ServerGame.EntitySystem
             if (config.ReadString("flying", "false").ToLower() == "true") // TODO: ReadBoolean?
             {
                 Fly();
+                Network.SendPacket(new FlagEntityPacketOut(this, EntityFlag.FLYING, 1));
+                Network.SendPacket(new FlagEntityPacketOut(this, EntityFlag.MASS, 0));
             }
             else
             {

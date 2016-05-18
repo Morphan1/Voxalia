@@ -48,7 +48,12 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             try
             {
-                ChunkRenderHelper rh = new ChunkRenderHelper();
+                Object locky = new Object();
+                ChunkRenderHelper rh;
+                lock (locky)
+                {
+                    rh = new ChunkRenderHelper();
+                }
                 if (DENIED)
                 {
                     return;
@@ -188,7 +193,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         tVBO.BufferMode = OpenTK.Graphics.OpenGL4.BufferUsageHint.StreamDraw;
                     }
                 }
-                lock (tVBO)
+                lock (locky)
                 {
                     tVBO.indices = inds;
                     tVBO.Vertices = rh.Vertices;
@@ -238,7 +243,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         return;
                     }
                     _VBO = tVBO;
-                    lock (tVBO)
+                    lock (locky)
                     {
                         tVBO.GenerateOrUpdate();
                         tVBO.CleanLists();
