@@ -188,18 +188,21 @@ namespace Voxalia.ClientGame.WorldSystem
                         tVBO.BufferMode = OpenTK.Graphics.OpenGL4.BufferUsageHint.StreamDraw;
                     }
                 }
-                tVBO.indices = inds;
-                tVBO.Vertices = rh.Vertices;
-                tVBO.Normals = rh.Norms;
-                tVBO.TexCoords = rh.TCoords;
-                tVBO.Colors = rh.Cols;
-                tVBO.TCOLs = rh.TCols;
-                tVBO.Tangents = rh.Tangs;
-                tVBO.BoneWeights = null;
-                tVBO.BoneIDs = null;
-                tVBO.BoneWeights2 = null;
-                tVBO.BoneIDs2 = null;
-                tVBO.oldvert();
+                lock (tVBO)
+                {
+                    tVBO.indices = inds;
+                    tVBO.Vertices = rh.Vertices;
+                    tVBO.Normals = rh.Norms;
+                    tVBO.TexCoords = rh.TCoords;
+                    tVBO.Colors = rh.Cols;
+                    tVBO.TCOLs = rh.TCols;
+                    tVBO.Tangents = rh.Tangs;
+                    tVBO.BoneWeights = null;
+                    tVBO.BoneIDs = null;
+                    tVBO.BoneWeights2 = null;
+                    tVBO.BoneIDs2 = null;
+                    tVBO.oldvert();
+                }
                 OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                 {
                     OwningRegion.TheClient.ChunksRenderingCurrently--;
@@ -235,8 +238,11 @@ namespace Voxalia.ClientGame.WorldSystem
                         return;
                     }
                     _VBO = tVBO;
-                    tVBO.GenerateOrUpdate();
-                    tVBO.CleanLists();
+                    lock (tVBO)
+                    {
+                        tVBO.GenerateOrUpdate();
+                        tVBO.CleanLists();
+                    }
                     if (callback != null)
                     {
                         callback.Invoke();

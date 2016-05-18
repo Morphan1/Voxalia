@@ -34,12 +34,12 @@ Built within OpenTK, a C# binding of OpenGL for the 3D rendering.
 - **Where can I learn more about Voxalia?**
 	- At the current time, information is largely restricted. If you wish to learn more, join us on IRC (see above question).
 - **What do I need to play Voxalia over LAN?**
-	- Run Voxalia server as normal, and disable cvar `n_verifyip` by executing server command: `set n_verifyip false`.
+	- Run Voxalia server as normal, and disable CVar `n_verifyip` by executing server command: `set n_verifyip false`.
 - **Do I need to run the Voxalia server to play with friends?**
 	- No. Your friends can join your singleplayer game as well, if you forward the port to let them in. (There may be additional steps in the future to open a singleplayer game fully.)
 - **What port do I need to forward?**
 	- By default Voxalia server and singleplayer open up on port 28010. This will be editable in the future.
-	
+
 ### Licensing pre-note:
 
 This is an open source project, provided entirely freely, for everyone to use and contribute to.
