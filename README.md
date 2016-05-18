@@ -27,6 +27,19 @@ Built within OpenTK, a C# binding of OpenGL for the 3D rendering.
 - ModelToVMDConvertor -> converts any given model format (via AssImp) to VMD, the model format used by Voxalia.
 - SkeletalAnimationExtractor -> converts .dae animated models to reusable anim files.
 
+## FAQ
+
+- **Where do I get Voxalia assets?**
+	- At the current time, Voxalia assets are being kept private. If you wish to playtest Voxalia, join us on IRC at irc.frenetic.xyz#voxalia - https://client01.chat.mibbit.com/?channel=%23voxalia&server=irc.frenetic.xyz
+- **Where can I learn more about Voxalia?**
+	- At the current time, information is largely restricted. If you wish to learn more, join us on IRC (see above question).
+- **What do I need to play Voxalia over LAN?**
+	- Run Voxalia server as normal, and disable cvar `n_verifyip` by executing server command: `set n_verifyip false`.
+- **Do I need to run the Voxalia server to play with friends?**
+	- No. Your friends can join your singleplayer game as well, if you forward the port to let them in. (There may be additional steps in the future to open a singleplayer game fully.)
+- **What port do I need to forward?**
+	- By default Voxalia server and singleplayer open up on port 28010. This will be editable in the future.
+	
 ### Licensing pre-note:
 
 This is an open source project, provided entirely freely, for everyone to use and contribute to.
