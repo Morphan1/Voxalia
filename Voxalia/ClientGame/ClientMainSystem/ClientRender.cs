@@ -418,6 +418,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Location bx = CVars.r_3d_enable.ValueB ? (CameraPos + cameraAdjust) : CameraPos;
                 Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + forwardVec), ClientUtilities.Convert(CameraUp));
                 Matrix4 combined = view * proj;
+                PrimaryMatrix = combined;
                 Matrix4 view2 = Matrix4.LookAt(ClientUtilities.Convert(CameraPos - cameraAdjust), ClientUtilities.Convert(CameraPos - cameraAdjust + forwardVec), ClientUtilities.Convert(CameraUp));
                 Matrix4 combined2 = view2 * proj;
                 Frustum camFrust = new Frustum(combined);
@@ -1518,7 +1519,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         Window.Width - 10), new Location(0, 0, 0));
                 }
                 int center = Window.Width / 2;
-                int bottomup = 32;
+                int bottomup = 32 + 32;
                 int itemScale = 48;
                 if (RenderExtraItems > 0)
                 {
@@ -1586,10 +1587,44 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Rendering.RenderRectangle(cX + move, cY + move, cX + CVars.u_reticlescale.ValueI + move, cY + CVars.u_reticlescale.ValueI + move);
                 if (CVars.u_showrangefinder.ValueB)
                 {
-                    FontSets.Standard.DrawColoredText(CameraDistance.ToString("#.0"), new Location(cX + move + CVars.u_reticlescale.ValueI, cY + move + CVars.u_reticlescale.ValueI, 0));
+                    FontSets.Standard.DrawColoredText(CameraDistance.ToString("0.0"), new Location(cX + move + CVars.u_reticlescale.ValueI, cY + move + CVars.u_reticlescale.ValueI, 0));
+                }
+                if (CVars.u_showcompass.ValueB)
+                {
+                    Textures.White.Bind();
+                    Rendering.SetColor(Color4.Black);
+                    Rendering.RenderRectangle(64, Window.Height - (32 + 32), Window.Width - 64, Window.Height - 32);
+                    Rendering.SetColor(Color4.Gray);
+                    Rendering.RenderRectangle(66, Window.Height - (32 + 30), Window.Width - 66, Window.Height - 34);
+                    Rendering.SetColor(Color4.White);
+                    RenderCompassCoord(Vector4.UnitY, "N");
+                    RenderCompassCoord(-Vector4.UnitY, "S");
+                    RenderCompassCoord(Vector4.UnitX, "E");
+                    RenderCompassCoord(-Vector4.UnitX, "W");
+                    RenderCompassCoord(new Vector4(1, 1, 0, 0), "NE");
+                    RenderCompassCoord(new Vector4(1, -1, 0, 0), "SE");
+                    RenderCompassCoord(new Vector4(-1, 1, 0, 0), "NW");
+                    RenderCompassCoord(new Vector4(-1, -1, 0, 0), "SW");
                 }
             }
             RenderInvMenu();
+        }
+
+        public void RenderCompassCoord(Vector4 rel, string dir)
+        {
+            Vector4 camp = new Vector4(ClientUtilities.Convert(CameraPos), 1f);
+            Vector4 north = Vector4.Transform(camp + rel * 10, PrimaryMatrix);
+            float northOnScreen = north.X / north.W;
+            if (north.Z <= 0 && northOnScreen < 0)
+            {
+                northOnScreen = -1f;
+            }
+            else if (north.Z <= 0 && northOnScreen > 0)
+            {
+                northOnScreen = 1f;
+            }
+            northOnScreen = Math.Max(100, Math.Min(Window.Width - 100, (0.5f + northOnScreen * 0.5f) * Window.Width));
+            FontSets.Standard.DrawColoredText(dir, new Location(northOnScreen, Window.Height - (32 + 28), 0));
         }
 
         /// <summary>
@@ -1616,5 +1651,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public bool RenderLights = false;
 
         public Matrix4 Ortho;
+
+        public Matrix4 PrimaryMatrix;
     }
 }
