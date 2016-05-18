@@ -43,10 +43,20 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
+        public int physThisTick = 0;
+
+        public double physBoost = 0.1;
+
         public void PhysicsSetBlock(Location block, Material mat, byte dat = 0, byte paint = 0, BlockDamage damage = BlockDamage.NONE)
         {
             SetBlockMaterial(block, mat, dat, paint, (byte)(BlockFlags.EDITED | BlockFlags.NEEDS_RECALC), damage);
-            TheServer.Schedule.ScheduleSyncTask(() => { SurroundRunPhysics(block); }, 0.2);
+            physThisTick++;
+            if (physThisTick > 5)
+            {
+                physThisTick = 0;
+                physBoost += 0.05;
+            }
+            TheServer.Schedule.ScheduleSyncTask(() => { SurroundRunPhysics(block); }, physBoost);
         }
 
         int remPercFor(byte b)
