@@ -63,6 +63,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         float modifier = (float)(WaterDens / dens);
                         float submod = 0.125f;
                         // TODO: Tracing accuracy!
+                        Vector3 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * e.Mass * dt * modifier * submod;
                         for (float x2 = 0.25f; x2 < 1; x2 += 0.5f)
                         {
                             for (float y2 = 0.25f; y2 < 1; y2 += 0.5f)
@@ -74,7 +75,6 @@ namespace Voxalia.ClientGame.WorldSystem
                                     if (e.CollisionInformation.RayCast(new Ray(lc.ToBVector(), new Vector3(0, 0, 1)), 0.01f, out rh)) // TODO: Efficiency!
                                     {
                                         Vector3 center = lc.ToBVector();
-                                        Vector3 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * e.Mass * dt * modifier * submod;
                                         e.ApplyImpulse(ref center, ref impulse);
                                         e.ModifyLinearDamping(0.5f * submod); // TODO: Modifier?
                                         e.ModifyAngularDamping(0.5f * submod);

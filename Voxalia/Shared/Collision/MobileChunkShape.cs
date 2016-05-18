@@ -175,6 +175,7 @@ namespace Voxalia.Shared.Collision
         public override void GetBoundingBox(ref RigidTransform transform, out BoundingBox boundingBox)
         {
             // Lazily overestimate!
+            // TODO: More tightly wrapped around the actual shape.
             Vector3 maxbase = new Vector3(ChunkSize.X, ChunkSize.Y, ChunkSize.Z) * 2f;
             boundingBox = new BoundingBox(transform.Position - maxbase, transform.Position + maxbase);
         }
