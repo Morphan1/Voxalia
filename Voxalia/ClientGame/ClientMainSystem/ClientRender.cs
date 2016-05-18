@@ -1272,7 +1272,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 if (FBOid == 3 || FBOid == 7 || FBOid == 8)
                 {
+                    Rendering.SetMinimumLight(1);
                     TheRegion.RenderClouds();
+                    Rendering.SetMinimumLight(0);
                 }
                 for (int i = 0; i < TheRegion.Entities.Count; i++)
                 {
