@@ -21,6 +21,9 @@ namespace Voxalia.ServerGame.CommandSystem
         // Game CVars
         public CVar g_timescale, g_fps, g_maxheight, g_minheight, g_maxdist;
 
+        // Network CVars
+        public CVar n_verifyip;
+
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
         /// </summary>
@@ -29,13 +32,15 @@ namespace Voxalia.ServerGame.CommandSystem
             system = new CVarSystem(output);
 
             // System CVars
-            s_filepath = Register("s_filepath", Program.Files.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly, "The current system environment filepath (The directory of /data).");
+            s_filepath = Register("s_filepath", Program.Files.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly, "The current system environment filepath (The directory of /data)."); // TODO: Scrap this! Tags!
             // Game CVars
             g_timescale = Register("g_timescale", "1", CVarFlag.Numeric, "The current game time scaling value.");
             g_fps = Register("g_fps", "30", CVarFlag.Numeric, "What framerate to use.");
             g_maxheight = Register("g_maxheight", "5000", CVarFlag.Numeric, "What the highest possible Z coordinate should be (for building)."); // TODO: Also per-world?
             g_minheight = Register("g_minheight", "-5000", CVarFlag.Numeric, "What the lowest possible Z coordinate should be (for building)."); // TODO: Also per-world?
             g_maxdist = Register("g_maxdist", "50000", CVarFlag.Numeric, "How far on the X or Y axis a player may travel from the origin."); // TODO: Also per-world?
+            // Network CVars
+            n_verifyip = Register("n_verifyip", "true", CVarFlag.Boolean, "Whether to verify connecting users' IP addresses with the global server. Disable this to allow LAN connections.");
         }
 
         CVar Register(string name, string value, CVarFlag flags, string desc)

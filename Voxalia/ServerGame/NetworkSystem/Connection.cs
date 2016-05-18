@@ -107,12 +107,12 @@ namespace Voxalia.ServerGame.NetworkSystem
                 {
                     string ip = resp.Substring("ACCEPT=".Length, resp.Length - 1 - "ACCEPT=".Length);
                     string rip = PrimarySocket.RemoteEndPoint.ToString();
-                    if (rip.Contains("127.0.0.1") || rip.Contains("[::1]") || rip.Contains(ip))
+                    if (!TheServer.CVars.n_verifyip.ValueB || rip.Contains("127.0.0.1") || rip.Contains("[::1]") || rip.Contains(ip))
                     {
                         SysConsole.Output(OutputType.INFO, "Connection from '" + rip + "' accepted with username: " + username);
                         return;
                     }
-                    throw new Exception("Connection from '" + rip + "' rejected because its IP is now " + ip + " or localhost!");
+                    throw new Exception("Connection from '" + rip + "' rejected because its IP is not " + ip + " or localhost!");
                 }
                 throw new Exception("Failed to get session!");
             }

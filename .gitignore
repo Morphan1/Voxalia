@@ -29,3 +29,4 @@ Voxalia/bin/Release/*.xml
 Voxalia/bin/Release/bin/
 *.plr
 *.dat
+*.tmp
