@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Voxalia.Shared;
 using System.Diagnostics;
 using System.Threading;
@@ -25,13 +26,31 @@ namespace Voxalia.ServerGame.ServerMainSystem
         /// </summary>
         public static Server Central = null;
 
+        public readonly int Port;
+
         /// <summary>
         /// Starts up a new server.
         /// </summary>
-        public static void Init(string args)
+        public static void Init(string[] args)
         {
-            Central = new Server();
-            Central.StartUp();
+            Central = new Server(args.Length > 0 ? Utilities.StringToInt(args[0]) : 28010);
+            Central.StartUp(() =>
+            {
+                if (args.Length > 1)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 1; i < args.Length; i++)
+                    {
+                        sb.Append(args[i]);
+                    }
+                    Central.Commands.ExecuteCommands(sb.ToString());
+                }
+            });
+        }
+
+        public Server(int port)
+        {
+            Port = port;
         }
 
         /// <summary>

@@ -46,7 +46,9 @@ namespace Voxalia
                 Program.Init();
                 if (args.Length > 0 && args[0] == "server")
                 {
-                    Server.Init(arger.ToString().Substring("server".Length).Trim());
+                    string[] targs = new string[args.Length - 1];
+                    Array.Copy(args, 1, targs, 0, targs.Length);
+                    Server.Init(targs);
                 }
                 else
                 {

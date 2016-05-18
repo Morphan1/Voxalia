@@ -53,7 +53,7 @@ namespace Voxalia.ClientGame.NetworkSystem
 
         public string Username;
 
-        public string Key;
+        private string Key;
 
         public string GetWebSession()
         {
@@ -618,7 +618,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                     throw new Exception("Server did not accept connection");
                 }
                 ChunkSocket.Blocking = false;
-                SysConsole.Output(OutputType.INFO, "Connected to " + address.ToString() + ":" + tport);
+                SysConsole.Output(OutputType.INFO, "Connected to " + address.ToString() + " " + tport);
                 IsAlive = true;
                 LaunchTicker();
             }

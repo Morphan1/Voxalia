@@ -29,8 +29,17 @@ namespace Voxalia.ServerGame.NetworkSystem
 
         public void Init()
         {
-            ListenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); // TODO: IPv4 vs. IPv6 choice (CVar?)
-            ListenSocket.Bind(new IPEndPoint(IPAddress.Any, 28010)); // TODO: Port option (CVar?)
+            if (Socket.OSSupportsIPv6)
+            {
+                ListenSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
+                ListenSocket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
+                ListenSocket.Bind(new IPEndPoint(IPAddress.IPv6Any, TheServer.Port));
+            }
+            else
+            {
+                ListenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                ListenSocket.Bind(new IPEndPoint(IPAddress.Any, TheServer.Port));
+            }
             ListenSocket.Listen(100);
             ListenThread = new Thread(new ThreadStart(ListenLoop));
             ListenThread.Name = Program.GameName + "_v" + Program.GameVersion + "_NetworkListenThread";

@@ -38,7 +38,7 @@ Built within OpenTK, a C# binding of OpenGL for the 3D rendering.
 - **Do I need to run the Voxalia server to play with friends?**
 	- No. Your friends can join your singleplayer game as well, if you forward the port to let them in. (There may be additional steps in the future to open a singleplayer game fully.)
 - **What port do I need to forward?**
-	- By default Voxalia server and singleplayer open up on port 28010. This will be editable in the future.
+	- By default Voxalia server and singleplayer open up on port 28010. You can edit this in your launch command options (first argument is always the port).
 
 ### Licensing pre-note:
 

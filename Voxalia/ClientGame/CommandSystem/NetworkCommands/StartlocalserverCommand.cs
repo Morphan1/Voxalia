@@ -38,7 +38,7 @@ namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
                 TheClient.LocalServer = null;
             }
             entry.Good(queue, "Generating new server...");
-            TheClient.LocalServer = new Server();
+            TheClient.LocalServer = new Server(Utilities.StringToInt(arg0));
             Server.Central = TheClient.LocalServer;
             Action callback = null;
             if (entry.WaitFor && queue.WaitingOn == entry)

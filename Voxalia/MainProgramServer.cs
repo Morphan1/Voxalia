@@ -33,17 +33,12 @@ namespace Voxalia
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
             SysConsole.Init();
-            StringBuilder arger = new StringBuilder();
-            for (int i = 0; i < args.Length; i++)
-            {
-                arger.Append(args[i]).Append(' ');
-            }
             try
             {
                 Program.Files = new FileHandler();
                 Program.Files.Init();
                 Program.Init();
-                Server.Init(arger.ToString());
+                Server.Init(args);
             }
             catch (Exception ex)
             {
