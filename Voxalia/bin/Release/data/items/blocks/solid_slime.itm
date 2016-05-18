@@ -1,6 +1,6 @@
 type: block
 icon: blocks/liquid/slipgoo
-display: Slip-Goo
+display: Solid Slime
 description: Slippery!
 color: 1,1,1
 model: block

@@ -1,0 +1,10 @@
+type: block
+icon: blocks/liquid/slime
+display: Liquid Slime
+description: Don't get stuck in it!
+color: 1,1,1
+model: block
+bound: false
+datum: 31
+weight: 1
+volume: 1

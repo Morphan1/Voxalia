@@ -79,8 +79,8 @@ namespace Voxalia.ServerGame.WorldSystem
                                     {
                                         Vector3 center = lc.ToBVector();
                                         e.ApplyImpulse(ref center, ref impulse);
-                                        e.ModifyLinearDamping(0.3f); // TODO: Modifier? Submod?
-                                        e.ModifyAngularDamping(0.3f);
+                                        e.ModifyLinearDamping(mat.GetSpeedMod());
+                                        e.ModifyAngularDamping(mat.GetSpeedMod());
                                     }
                                 }
                             }

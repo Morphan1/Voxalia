@@ -16,7 +16,7 @@ namespace Voxalia.Shared
         DEBUG = 5,
         LEAVES1 = 6,
         CONCRETE = 7,
-        SLIPGOO = 8,
+        SOLID_SLIME = 8,
         SNOW = 9,
         SMOKE = 10,
         LOG_OAK = 11,
@@ -39,10 +39,11 @@ namespace Voxalia.Shared
         OIL = 28,
         ICE = 29,
         HEAVY_GAS = 30,
+        LIQUID_SLIME = 31,
         /// <summary>
         /// How many materials there are by default. Only for use with internal pre-generation, or direct handling of this enumeration (shouldn't happen often.)
         /// </summary>
-        NUM_DEFAULT = 31,
+        NUM_DEFAULT = 32,
         /// <summary>
         /// How many materials there theoretically can be.
         /// </summary>
@@ -73,13 +74,13 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.STONE) { SpeedMod = 1.1f, Sound = MaterialSound.STONE, Hardness = 20, BreakTime = 2, Breaker = MaterialBreaker.PICKAXE },
                 new MaterialInfo((int)Material.GRASS_FOREST) { Sound = MaterialSound.GRASS, BreakTime = 1, Breaker = MaterialBreaker.SHOVEL },
                 new MaterialInfo((int)Material.DIRT) { Sound = MaterialSound.DIRT, BreakTime = 1, Breaker = MaterialBreaker.SHOVEL },
-                new MaterialInfo((int)Material.WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.28f },
+                new MaterialInfo((int)Material.WATER) { Sound = MaterialSound.METAL /* TODO: LIQUID */, Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.28f, SpeedMod = 0.3f },
                 new MaterialInfo((int)Material.DEBUG) { Sound = MaterialSound.METAL, Hardness = 100, BreakTime = 2f, Breaker = MaterialBreaker.PICKAXE },
                 new MaterialInfo((int)Material.LEAVES1) { Opaque = false, SpeedMod = 0.7f, FogAlpha = 0, CanRenderAgainstSelf = true, Sound = MaterialSound.LEAVES, BreakTime = 0.5f },
                 new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f, Sound = MaterialSound.STONE, Hardness = 25, BreakTime = 3f, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.SLIPGOO) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f, FogColor = new Location(0, 1, 0), Hardness = 5, BreakTime = 1 },
+                new MaterialInfo((int)Material.SOLID_SLIME) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f, FogColor = new Location(0, 1, 0), Hardness = 5, BreakTime = 1 },
                 new MaterialInfo((int)Material.SNOW) { SpeedMod = 0.8f, Sound = MaterialSound.SNOW, BreakTime = 0.5f, Breaker = MaterialBreaker.SHOVEL },
-                new MaterialInfo((int)Material.SMOKE) { Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.8), BreakTime = 0.2f, LightDamage = 0.1f },
+                new MaterialInfo((int)Material.SMOKE) { Sound = MaterialSound.METAL /* TODO: GAS */, Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.8), BreakTime = 0.2f, LightDamage = 0.1f },
                 new MaterialInfo((int)Material.LOG_OAK) { SpeedMod = 1.1f, Sound = MaterialSound.WOOD, BreakTime = 1.5f, Breaker = MaterialBreaker.AXE },
                 new MaterialInfo((int)Material.TALLGRASS) { Solidity = MaterialSolidity.SPECIAL, Opaque = false, Hardness = 1, BreakTime = 0.2f },
                 new MaterialInfo((int)Material.SAND) { Sound = MaterialSound.SAND, BreakTime = 0.5f, Breaker = MaterialBreaker.SHOVEL },
@@ -94,12 +95,13 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.COAL_ORE) { Sound = MaterialSound.STONE, Hardness = 15, BreakTime = 3, Breaker = MaterialBreaker.PICKAXE },
                 new MaterialInfo((int)Material.COAL_ORE_SPARSE) { Sound = MaterialSound.STONE, Hardness = 15, BreakTime = 3, Breaker = MaterialBreaker.PICKAXE },
                 new MaterialInfo((int)Material.COLOR) { Sound = MaterialSound.STONE, Hardness = 5, BreakTime = 1, Breaker = MaterialBreaker.SHOVEL }, // TODO: Clay sound?
-                new MaterialInfo((int)Material.DIRTY_WATER) { Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.35f },
+                new MaterialInfo((int)Material.DIRTY_WATER) { Sound = MaterialSound.METAL /* TODO: LIQUID */, Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.35f, SpeedMod = 0.3f },
                 new MaterialInfo((int)Material.PLANKS_OAK) { SpeedMod = 1.15f, Sound = MaterialSound.WOOD, BreakTime = 1f, Breaker = MaterialBreaker.AXE },
                 new MaterialInfo((int)Material.GLASS_WINDOW) { SpeedMod = 1.1f, Sound = MaterialSound.GLASS, Hardness = 5, BreakTime = 1, Opaque = false, LightDamage = 0.05f },
-                new MaterialInfo((int)Material.OIL) { Solidity = MaterialSolidity.LIQUID, FogColor = new Location(0, 0, 0), Hardness = 5, BreakTime = 0.2f, Spreads = true },
+                new MaterialInfo((int)Material.OIL) { Sound = MaterialSound.METAL /* TODO: LIQUID */, Solidity = MaterialSolidity.LIQUID, FogColor = new Location(0, 0, 0), Hardness = 5, BreakTime = 0.2f, Spreads = true },
                 new MaterialInfo((int)Material.ICE) { Opaque = true, Sound = MaterialSound.GLASS /* TODO: CLAY? */, SpeedMod = 1.2f, FrictionMod = 0.1f, Hardness = 10, BreakTime = 1.5f, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.HEAVY_GAS) { Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.25, 0.25, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.1f },
+                new MaterialInfo((int)Material.HEAVY_GAS) { Sound = MaterialSound.METAL /* TODO: GAS */, Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.25, 0.25, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.1f },
+                new MaterialInfo((int)Material.LIQUID_SLIME) { Sound = MaterialSound.METAL /* TODO: LIQUID */, Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(1, 1, 1), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.28f, SpeedMod = 0.8f },
             };
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.TOP] = MAX_THEORETICAL_MATERIALS - 1; // grass (top)
             mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
