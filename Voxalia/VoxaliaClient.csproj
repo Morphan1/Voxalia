@@ -79,6 +79,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\LiteDB.dll</HintPath>
     </Reference>
+    <Reference Include="Open.Nat">
+      <HintPath>.\Open.Nat.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK">
       <HintPath>.\OpenTK.dll</HintPath>
     </Reference>

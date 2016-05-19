@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using Voxalia.Shared;
+using Open.Nat;
 
 namespace Voxalia.ServerGame.NetworkSystem
 {
@@ -29,6 +30,23 @@ namespace Voxalia.ServerGame.NetworkSystem
 
         public void Init()
         {
+            try
+            {
+                NatDiscoverer natdisc = new NatDiscoverer();
+                NatDevice natdev = natdisc.DiscoverDeviceAsync().Result;
+                Mapping map = natdev.GetSpecificMappingAsync(Protocol.Tcp, TheServer.Port).Result;
+                if (map != null)
+                {
+                    natdev.DeletePortMapAsync(map).Wait();
+                }
+                natdev.CreatePortMapAsync(new Mapping(Protocol.Tcp, TheServer.Port, TheServer.Port, "Voxalia")).Wait();
+                map = natdev.GetSpecificMappingAsync(Protocol.Tcp, TheServer.Port).Result;
+                SysConsole.Output(OutputType.INIT, "Successfully opened server to public address " + map.PrivateIP + " or " + map.PublicIP + ", with port " + map.PrivatePort + " or " + map.PublicPort + ", as " + map.Description);
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output("Trying to open port " + TheServer.Port, ex);
+            }
             if (Socket.OSSupportsIPv6)
             {
                 ListenSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
