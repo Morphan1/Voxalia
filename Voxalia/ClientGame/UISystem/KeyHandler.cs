@@ -54,6 +54,10 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.E, "+itemright");
             BindKey(Key.PageUp, "+itemup");
             BindKey(Key.PageDown, "+itemdown");
+            BindKey(Key.Left, "+itemleft");
+            BindKey(Key.Right, "+itemright");
+            BindKey(Key.Up, "+itemup");
+            BindKey(Key.Down, "+itemdown");
             BindKey(Key.B, "drop");
             BindKey(Key.G, "throw");
             BindKey(Key.R, "weaponreload");
@@ -110,6 +114,8 @@ namespace Voxalia.ClientGame.UISystem
             RegKey("kpdivide", Key.KeypadDivide); RegKey("kpperiod", Key.KeypadPeriod);
             RegKey("space", Key.Space); RegKey("escape", Key.Escape);
             RegKey("pageup", Key.PageUp); RegKey("pagedown", Key.PageDown);
+            RegKey("left", Key.Left); RegKey("right", Key.Right);
+            RegKey("up", Key.Up); RegKey("down", Key.Down);
             RegKey("mouse1", Key.F35);
             RegKey("mouse2", Key.F34);
             RegKey("mouse3", Key.F33);
