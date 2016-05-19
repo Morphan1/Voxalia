@@ -10,7 +10,39 @@ namespace Voxalia.ClientGame.AudioSystem.OpusWrapper
     /// <summary>
     /// Wraps the Opus API.
     /// </summary>
-    public class OpusAPI
+    public class OpusAPI_Linux
+    {
+        const string lib = "libopus.so.0";
+
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr opus_encoder_create(int Fs, int channels, int application, out IntPtr error);
+
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void opus_encoder_destroy(IntPtr encoder);
+
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int opus_encode(IntPtr st, IntPtr pcm, int frame_size, IntPtr data, int max_data_bytes);
+
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr opus_decoder_create(int Fs, int channels, out IntPtr error);
+
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void opus_decoder_destroy(IntPtr decoder);
+
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int opus_decode(IntPtr st, IntPtr data, int len, IntPtr pcm, int frame_size, int decode_fec);
+
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int opus_encoder_ctl(IntPtr st, Ctl request, int value);
+
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int opus_encoder_ctl(IntPtr st, Ctl request, out int value);
+    }
+
+    /// <summary>
+    /// Wraps the Opus API.
+    /// </summary>
+    public class OpusAPI_Windows
     {
         [DllImport("opus.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr opus_encoder_create(int Fs, int channels, int application, out IntPtr error);
@@ -35,6 +67,102 @@ namespace Voxalia.ClientGame.AudioSystem.OpusWrapper
 
         [DllImport("opus.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int opus_encoder_ctl(IntPtr st, Ctl request, out int value);
+    }
+
+    // TODO: Mac?
+
+    public class OpusAPI
+    {
+        public static int Platform = 0;
+
+        static OpusAPI()
+        {
+            try
+            {
+                IntPtr error;
+                IntPtr temp = OpusAPI_Windows.opus_encoder_create(8000, 1, (int)Application.Voip, out error);
+                if ((Errors)error != Errors.OK)
+                {
+                    throw new Exception("Exception occured while creating encoder");
+                }
+            }
+            catch (Exception)
+            {
+                Platform = 1;
+            }
+        }
+        
+        public static IntPtr opus_encoder_create(int Fs, int channels, int application, out IntPtr error)
+        {
+            if (Platform == 1)
+            {
+                return OpusAPI_Linux.opus_encoder_create(Fs, channels, application, out error);
+            }
+            return OpusAPI_Windows.opus_encoder_create(Fs, channels, application, out error);
+        }
+
+        public static void opus_encoder_destroy(IntPtr encoder)
+        {
+            if (Platform == 1)
+            {
+                OpusAPI_Linux.opus_encoder_destroy(encoder);
+            }
+            OpusAPI_Windows.opus_encoder_destroy(encoder);
+        }
+        
+        public static int opus_encode(IntPtr st, IntPtr pcm, int frame_size, IntPtr data, int max_data_bytes)
+        {
+            if (Platform == 1)
+            {
+                return OpusAPI_Linux.opus_encode(st, pcm, frame_size, data, max_data_bytes);
+            }
+            return OpusAPI_Windows.opus_encode(st, pcm, frame_size, data, max_data_bytes);
+        }
+
+        public static IntPtr opus_decoder_create(int Fs, int channels, out IntPtr error)
+        {
+            if (Platform == 1)
+            {
+                return OpusAPI_Linux.opus_decoder_create(Fs, channels, out error);
+            }
+            return OpusAPI_Windows.opus_decoder_create(Fs, channels, out error);
+        }
+        
+        public static void opus_decoder_destroy(IntPtr decoder)
+        {
+            if (Platform == 1)
+            {
+                OpusAPI_Linux.opus_decoder_destroy(decoder);
+            }
+            OpusAPI_Windows.opus_decoder_destroy(decoder);
+        }
+        
+        public static int opus_decode(IntPtr st, IntPtr data, int len, IntPtr pcm, int frame_size, int decode_fec)
+        {
+            if (Platform == 1)
+            {
+                return OpusAPI_Linux.opus_decode(st, data, len, pcm, frame_size, decode_fec);
+            }
+            return OpusAPI_Windows.opus_decode(st, data, len, pcm, frame_size, decode_fec);
+        }
+        
+        public static int opus_encoder_ctl(IntPtr st, Ctl request, int value)
+        {
+            if (Platform == 1)
+            {
+                return OpusAPI_Linux.opus_encoder_ctl(st, request, value);
+            }
+            return OpusAPI_Windows.opus_encoder_ctl(st, request, value);
+        }
+        
+        public static int opus_encoder_ctl(IntPtr st, Ctl request, out int value)
+        {
+            if (Platform == 1)
+            {
+                return OpusAPI_Linux.opus_encoder_ctl(st, request, out value);
+            }
+            return OpusAPI_Windows.opus_encoder_ctl(st, request, out value);
+        }
     }
 
     public enum Ctl : int
