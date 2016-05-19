@@ -53,7 +53,7 @@ void main()
 	}
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
+	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), (200.0 / 1000.0f /* RENDERHINT.Y : SPECULAR POWER */ ) * 1000.0) * specular_albedo * renderhint.x);
 	if (should_sqrt >= 1.0)
 	{
 		f_spos.x = sign(f_spos.x) * sqrt(abs(f_spos.x));

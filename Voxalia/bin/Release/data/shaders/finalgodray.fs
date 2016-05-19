@@ -102,7 +102,8 @@ vec4 getColor(in vec2 pos)
 	vec4 shadow_light_color = texture(shtex, pos);
 	vec4 colortex_color = texture(colortex, pos);
 	vec4 renderhint = texture(renderhinttex, pos);
-	return regularize(vec4(ambient + vec3(renderhint.z), 0.0) * colortex_color + shadow_light_color);
+	//vec3 sub = vec3(1.0 - renderhint.y);
+	return regularize(vec4(ambient + vec3(renderhint.z), 0.0) * colortex_color + (shadow_light_color /* - vec4(sub, 0.0)*/ ));
 }
 
 #define FXAA_SPAN_MAX 8.0

@@ -7,7 +7,7 @@ layout (binding = 1) uniform sampler2DArray htex;
 layout (binding = 2) uniform sampler2DArray normal_tex;
 
 layout (location = 3) uniform vec4 v_color = vec4(1.0);
-layout (location = 4) uniform float specular_power = 200.0 / 1000.0f;
+// ...
 layout (location = 5) uniform float minimum_light = 0.0;
 // ...
 layout (location = 7) uniform vec4 bw_color = vec4(0.0, 0.0, 0.0, 1.0);
@@ -31,7 +31,7 @@ layout (location = 5) out vec4 renderhint2;
 
 void main()
 {
-	vec4 col = texture(s, f.texcoord) * vec4(clamp(f.color.xyz, vec3(light_clamp.x), vec3(light_clamp.y)), f.color.w) * f.tcol;
+	vec4 col = texture(s, f.texcoord) * f.tcol;
 	vec4 dets = texture(htex, f.texcoord);
 #if MCM_REFRACT
     float refract_eta = dets.b;
@@ -54,13 +54,17 @@ void main()
 	{
 		discard;
 	}
+	vec3 lightcol = clamp(f.color.xyz, vec3(light_clamp.x), vec3(light_clamp.y));
     float spec = dets.r;
     float refl = dets.g;
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - vec3(1.0);
 	color = col * v_color;
 	position = vec4(f.position.xyz, 1.0);
 	normal = vec4(normalize(f.tbn * norms), 1.0);
-	renderhint = vec4(spec, specular_power, clamp(minimum_light + dets.a, 0.0, 1.0), 1.0);
+	float light_min = clamp(minimum_light + dets.a, 0.0, 1.0);
+	float blighting = max((lightcol.x + lightcol.y + lightcol.z) / 3.0, light_min);
+	color = vec4(color.xyz * blighting, color.w);
+	renderhint = vec4(spec, 0.0, light_min, 1.0);
 	renderhint2 = vec4(0.0, refl, 0.0, 1.0);
     bw = bw_color;
 }

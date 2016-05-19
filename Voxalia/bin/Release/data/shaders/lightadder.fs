@@ -54,7 +54,7 @@ void main()
 	}
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), renderhint.y * 1000.0) * specular_albedo * renderhint.x);
+	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), (200.0 / 1000.0f /* RENDERHINT.Y : SPECULAR POWER */ ) * 1000.0) * specular_albedo * renderhint.x);
 	color = vec4(((vec4(1.0) *
 		atten * (diffuse * vec4(light_color, 1.0)) * diffuset) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten)).xyz, diffuset.w);
