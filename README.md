@@ -5,6 +5,18 @@ Voxalia, a game about blocks and such.
 
 Built within OpenTK, a C# binding of OpenGL for the 3D rendering.
 
+## Windows Install Notes
+
+- Requires OpenAL (Run `oalinst.exe` from the assets repo)
+
+## Linux Install Notes
+
+- Requires LibOpus
+
+## Mac Install Notes
+
+- ??? (Untested!)
+
 ## Compiling
 
 - Open the .sln in Microsoft Visual Studio 2015
