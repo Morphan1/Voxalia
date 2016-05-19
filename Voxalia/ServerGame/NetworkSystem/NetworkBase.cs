@@ -49,9 +49,18 @@ namespace Voxalia.ServerGame.NetworkSystem
             }
             if (Socket.OSSupportsIPv6)
             {
-                ListenSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
-                ListenSocket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
-                ListenSocket.Bind(new IPEndPoint(IPAddress.IPv6Any, TheServer.Port));
+                try
+                {
+                    ListenSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
+                    ListenSocket.SetSocketOption(SocketOptionLevel.IPv6, (SocketOptionName)27 /* IPv6Only */, false);
+                    ListenSocket.Bind(new IPEndPoint(IPAddress.IPv6Any, TheServer.Port));
+                }
+                catch (Exception ex)
+                {
+                    SysConsole.Output("Opening IPv6/IPv4 combo-socket", ex);
+                    ListenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    ListenSocket.Bind(new IPEndPoint(IPAddress.Any, TheServer.Port));
+                }
             }
             else
             {

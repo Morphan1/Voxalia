@@ -30,3 +30,4 @@ Voxalia/bin/Release/bin/
 *.plr
 *.dat
 *.tmp
+*.mdb
