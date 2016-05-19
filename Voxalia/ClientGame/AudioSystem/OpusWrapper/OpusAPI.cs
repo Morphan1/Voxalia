@@ -85,6 +85,7 @@ namespace Voxalia.ClientGame.AudioSystem.OpusWrapper
                 {
                     throw new Exception("Exception occured while creating encoder");
                 }
+                OpusAPI_Windows.opus_encoder_destroy(temp);
             }
             catch (Exception)
             {
