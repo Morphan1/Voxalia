@@ -32,8 +32,9 @@ layout (location = 5) out vec4 renderhint2;
 void main()
 {
 	vec4 col = texture(s, f.texcoord) * vec4(clamp(f.color.xyz, vec3(light_clamp.x), vec3(light_clamp.y)), f.color.w) * f.tcol;
+	vec4 dets = texture(htex, f.texcoord);
 #if MCM_REFRACT
-    float refract_eta = texture(htex, vec3(1, 1, f.texcoord.z)).r;
+    float refract_eta = dets.b;
 	if (refract_eta > 0.01)
 	{
 		vec3 tnorms = f.tbn * (texture(normal_tex, f.texcoord).xyz * 2.0 - vec3(1.0));
@@ -53,9 +54,8 @@ void main()
 	{
 		discard;
 	}
-    float spec = texture(htex, vec3(0, 0, f.texcoord.z)).r;
-    // float wavi = texture(htex, vec3(1, 0, f.texcoord.z)).r; // TODO: Replace with something actually useful.
-    float refl = texture(htex, vec3(0, 1, f.texcoord.z)).r;
+    float spec = dets.r;
+    float refl = dets.g;
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - vec3(1.0);
 	color = col * v_color;
 	position = vec4(f.position.xyz, 1.0);

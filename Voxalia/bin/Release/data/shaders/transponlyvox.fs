@@ -46,8 +46,9 @@ void main()
     }
 	color = tcolor * f.color; // TODO: Clamp f.color.xyz, match fbo_vox
 #if MCM_LIT
+	vec4 dets = texture(htex, f.texcoord);
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - 1.0;
-    float spec = texture(htex, vec3(0, 0, f.texcoord.z)).r;
+    float spec = dets.r; // TODO: Refract / reflect?
 	float light_radius = light_details[0][0];
 	vec3 diffuse_albedo = vec3(light_details[0][1], light_details[0][2], light_details[0][3]);
 	vec3 specular_albedo = vec3(light_details[1][0], light_details[1][1], light_details[1][2]);

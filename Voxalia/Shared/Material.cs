@@ -57,8 +57,8 @@ namespace Voxalia.Shared
     {
         /// <summary>
         /// Roughly how many materials should be expected during generation, plus several extras for spare room.
-        /// Warning: Do not set this too high, this is used for texture block generation, and this * texture_size^2 will be taken in the vRAM!
-        /// For the same reason, do not set it too low!
+        /// Warning: Do not set this too high, this is used for texture block generation, and this * 12 * texture_size^2 will be taken in the vRAM!
+        /// For the same reason (texture usage), do not set it too low!
         /// </summary>
         public static int MAX_THEORETICAL_MATERIALS = 128;
 
@@ -98,7 +98,7 @@ namespace Voxalia.Shared
                 new MaterialInfo((int)Material.DIRTY_WATER) { Sound = MaterialSound.METAL /* TODO: LIQUID */, Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.35f, SpeedMod = 0.3f },
                 new MaterialInfo((int)Material.PLANKS_OAK) { SpeedMod = 1.15f, Sound = MaterialSound.WOOD, BreakTime = 1f, Breaker = MaterialBreaker.AXE },
                 new MaterialInfo((int)Material.GLASS_WINDOW) { SpeedMod = 1.1f, Sound = MaterialSound.GLASS, Hardness = 5, BreakTime = 1, Opaque = false, LightDamage = 0.05f },
-                new MaterialInfo((int)Material.OIL) { Sound = MaterialSound.METAL /* TODO: LIQUID */, Solidity = MaterialSolidity.LIQUID, FogColor = new Location(0, 0, 0), Hardness = 5, BreakTime = 0.2f, Spreads = true },
+                new MaterialInfo((int)Material.OIL) { Sound = MaterialSound.METAL /* TODO: LIQUID */, Solidity = MaterialSolidity.LIQUID, FogColor = new Location(0, 0, 0), Hardness = 5, BreakTime = 0.2f, Spreads = true, SpeedMod = 0.7f },
                 new MaterialInfo((int)Material.ICE) { Opaque = true, Sound = MaterialSound.GLASS /* TODO: CLAY? */, SpeedMod = 1.2f, FrictionMod = 0.1f, Hardness = 10, BreakTime = 1.5f, Breaker = MaterialBreaker.PICKAXE },
                 new MaterialInfo((int)Material.HEAVY_GAS) { Sound = MaterialSound.METAL /* TODO: GAS */, Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.25, 0.25, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.1f },
                 new MaterialInfo((int)Material.LIQUID_SLIME) { Sound = MaterialSound.METAL /* TODO: LIQUID */, Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(1, 1, 1), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.28f, SpeedMod = 0.8f },

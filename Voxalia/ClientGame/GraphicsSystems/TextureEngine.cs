@@ -101,7 +101,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             texturename = FileHandler.CleanFileName(texturename);
             for (int i = 0; i < LoadedTextures.Count; i++)
             {
-                if (LoadedTextures[i].Name == texturename)
+                if (LoadedTextures[i].Name == texturename && (twidth == 0 || LoadedTextures[i].Width == twidth))
                 {
                     return LoadedTextures[i];
                 }
@@ -187,14 +187,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             return (LoadTexture(name, twidth) ?? LoadTexture("white", twidth)).Original_InternalID;
         }
-
-        /// <summary>
-        /// Loads a texture from file.
-        /// </summary>
-        /// <param name="filename">The name of the file to use.</param>
-        /// <param name="depth">Where in the array to put it.</param>
-        /// <param name="twidth">What width the texture must be at.</param>
-        /// <returns>The loaded texture, or null if it does not exist.</returns>
+        
         public void LoadTextureIntoArray(string filename, int depth, int twidth)
         {
             try
