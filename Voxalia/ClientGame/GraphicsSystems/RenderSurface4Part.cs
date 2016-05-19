@@ -17,7 +17,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public uint DepthTexture;
         public uint RenderhintTexture;
         public uint bwtexture;
-        public int Rh2Texture;
+        public uint Rh2Texture;
 
         public Renderer Rendering;
 

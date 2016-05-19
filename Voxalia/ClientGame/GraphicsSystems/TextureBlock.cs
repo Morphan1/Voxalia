@@ -68,7 +68,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            // TODO: Use normal.a, help.a!
+            // TODO: Use normal.a!
             string[] datums = Program.Files.ReadText("info/textures.dat").SplitFast('\n');
             List<MaterialTextureInfo> texs = new List<MaterialTextureInfo>(datums.Length);
             for (int i = 0; i < datums.Length; i++)
@@ -97,7 +97,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                     tex.RefractTextures = rorn[0].SplitFast(',');
                 }
-                string[] reflornot = refrornot[0].SplitFast('*');
+                string[] glowornot = refrornot[0].SplitFast('!');
+                if (glowornot.Length > 1)
+                {
+                    tex.GlowingTextures = glowornot[1].SplitFast(',');
+                }
+                string[] reflornot = glowornot[0].SplitFast('*');
                 if (reflornot.Length > 1)
                 {
                     tex.ReflectTextures = reflornot[1].SplitFast(',');
@@ -146,7 +151,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 Bitmap combo = GetCombo(texs[i], 0);
                 TEngine.LockBitmapToTexture(combo, (int)texs[i].Mat);
-                if ((texs[i].SpecularTextures != null) && (texs[i].ReflectTextures != null) && (texs[i].RefractTextures != null) && texs[i].SpecularTextures.Length > 1)
+                if ((texs[i].SpecularTextures != null) && (texs[i].ReflectTextures != null) && (texs[i].RefractTextures != null) && (texs[i].GlowingTextures != null) && texs[i].SpecularTextures.Length > 1)
                 {
                     Bitmap[] bmps = new Bitmap[texs[i].SpecularTextures.Length];
                     bmps[0] = combo;
@@ -177,21 +182,25 @@ namespace Voxalia.ClientGame.GraphicsSystems
             string specular = (tex.SpecularTextures != null && tex.SpecularTextures.Length > coord) ? tex.SpecularTextures[coord] : "black";
             Texture tspec = TEngine.GetTexture(specular, TWidth);
             Bitmap bmpspec = tspec.SaveToBMP();
-            Bitmap combo = Combine(bmpspec, bmprefl, bmprefr);
+            string glowing = (tex.GlowingTextures != null && tex.GlowingTextures.Length > coord) ? tex.GlowingTextures[coord] : "black";
+            Texture tglow = TEngine.GetTexture(glowing, TWidth);
+            Bitmap bmpglow = tglow.SaveToBMP();
+            Bitmap combo = Combine(bmpspec, bmprefl, bmprefr, bmpglow);
             bmprefr.Dispose();
             bmprefl.Dispose();
             bmpspec.Dispose();
+            bmpglow.Dispose();
             return combo;
         }
 
-        public Bitmap Combine(Bitmap one, Bitmap two, Bitmap three)
+        public Bitmap Combine(Bitmap one, Bitmap two, Bitmap three, Bitmap four)
         {
             Bitmap combined = new Bitmap(TWidth, TWidth);
             for (int x = 0; x < TWidth; x++)
             {
                 for (int y = 0; y < TWidth; y++)
                 {
-                    combined.SetPixel(x, y, Color.FromArgb(255, Gray(one.GetPixel(x, y)), Gray(two.GetPixel(x, y)), Gray(three.GetPixel(x, y))));
+                    combined.SetPixel(x, y, Color.FromArgb(Gray(four.GetPixel(x, y)), Gray(one.GetPixel(x, y)), Gray(two.GetPixel(x, y)), Gray(three.GetPixel(x, y))));
                 }
             }
             return combined;
@@ -286,6 +295,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public string[] ReflectTextures;
 
         public string[] SpecularTextures;
+
+        public string[] GlowingTextures;
 
         public double Rate = 1;
 

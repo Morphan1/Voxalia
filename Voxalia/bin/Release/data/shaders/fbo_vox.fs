@@ -60,7 +60,7 @@ void main()
 	color = col * v_color;
 	position = vec4(f.position.xyz, 1.0);
 	normal = vec4(normalize(f.tbn * norms), 1.0);
-	renderhint = vec4(spec, specular_power, minimum_light, 1.0);
+	renderhint = vec4(spec, specular_power, clamp(minimum_light + dets.a, 0.0, 1.0), 1.0);
 	renderhint2 = vec4(0.0, refl, 0.0, 1.0);
     bw = bw_color;
 }
