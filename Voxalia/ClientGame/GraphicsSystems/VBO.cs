@@ -411,18 +411,18 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             if (fixQuads) // TODO: Remove need for this!
             {
-                int verts = (vecs.Length / 4) * 6;
-                Vector3[] tvecs = new Vector3[verts];
-                Vector3[] tnorms = new Vector3[verts];
-                Vector3[] ttexs = new Vector3[verts];
-                Vector3[] ttangs = new Vector3[verts];
-                uint[] tinds = new uint[verts];
-                Vector4[] _cols = cols == null ? null : new Vector4[verts];
-                Vector4[] _tcols = tcols == null ? null : new Vector4[verts];
-                Vector4[] tids = ids == null ? null : new Vector4[verts];
-                Vector4[] tids2 = ids2 == null ? null : new Vector4[verts];
-                Vector4[] twei = weights == null ? null : new Vector4[verts];
-                Vector4[] twei2 = weights2  == null ? null : new Vector4[verts];
+                int vertc = (vecs.Length / 4) * 6;
+                Vector3[] tvecs = new Vector3[vertc];
+                Vector3[] tnorms = new Vector3[vertc];
+                Vector3[] ttexs = new Vector3[vertc];
+                Vector3[] ttangs = new Vector3[vertc];
+                uint[] tinds = new uint[vertc];
+                Vector4[] _cols = cols == null ? null : new Vector4[vertc];
+                Vector4[] _tcols = tcols == null ? null : new Vector4[vertc];
+                Vector4[] tids = ids == null ? null : new Vector4[vertc];
+                Vector4[] tids2 = ids2 == null ? null : new Vector4[vertc];
+                Vector4[] twei = weights == null ? null : new Vector4[vertc];
+                Vector4[] twei2 = weights2 == null ? null : new Vector4[vertc];
                 int x = 0;
                 for (int i = 0; i < vecs.Length; i += 4)
                 {
