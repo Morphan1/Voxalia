@@ -83,29 +83,37 @@ namespace Voxalia.ClientGame.NetworkSystem
             {
                 using (ShortWebClient wb = new ShortWebClient())
                 {
-                    NameValueCollection data = new NameValueCollection();
-                    data["formtype"] = "login";
-                    data["username"] = user;
-                    data["password"] = pass;
-                    byte[] response = wb.UploadValues("http://frenetic.xyz/account/micrologin", "POST", data);
-                    string resp = FileHandler.encoding.GetString(response).Trim(' ', '\n', '\r', '\t');
-                    if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))
+                    try
                     {
-                        string key = resp.Substring("ACCEPT=".Length, resp.Length - 1 - "ACCEPT=".Length);
-                        TheClient.Schedule.ScheduleSyncTask(() =>
+                        NameValueCollection data = new NameValueCollection();
+                        data["formtype"] = "login";
+                        data["username"] = user;
+                        data["password"] = pass;
+                        byte[] response = wb.UploadValues("http://frenetic.xyz/account/micrologin", "POST", data);
+                        string resp = FileHandler.encoding.GetString(response).Trim(' ', '\n', '\r', '\t');
+                        if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))
                         {
-                            UIConsole.WriteLine("Login accepted!");
-                            Username = user;
-                            Key = key;
-                            System.IO.File.WriteAllText("logindata.dat", Username + "=" + key);
-                        });
+                            string key = resp.Substring("ACCEPT=".Length, resp.Length - 1 - "ACCEPT=".Length);
+                            TheClient.Schedule.ScheduleSyncTask(() =>
+                            {
+                                UIConsole.WriteLine("Login accepted!");
+                                Username = user;
+                                Key = key;
+                                System.IO.File.WriteAllText("logindata.dat", Username + "=" + key);
+                            });
+                        }
+                        else
+                        {
+                            TheClient.Schedule.ScheduleSyncTask(() =>
+                            {
+                                UIConsole.WriteLine("Login refused: " + resp);
+                            });
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        TheClient.Schedule.ScheduleSyncTask(() =>
-                        {
-                            UIConsole.WriteLine("Login refused: " + resp);
-                        });
+                        UIConsole.WriteLine("Login failed: " + ex.Message);
+                        SysConsole.Output("Connecting to global login server", ex);
                     }
                 }
             });
@@ -672,7 +680,7 @@ namespace Voxalia.ClientGame.NetworkSystem
         protected override WebRequest GetWebRequest(Uri uri)
         {
             WebRequest w = base.GetWebRequest(uri);
-            w.Timeout = 20 * 1000;
+            w.Timeout = 30 * 1000;
             return w;
         }
     }

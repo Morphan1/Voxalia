@@ -19,7 +19,7 @@ namespace Voxalia.ServerGame.NetworkSystem
         protected override WebRequest GetWebRequest(Uri uri)
         {
             WebRequest w = base.GetWebRequest(uri);
-            w.Timeout = 20 * 1000;
+            w.Timeout = 30 * 1000;
             return w;
         }
     }
