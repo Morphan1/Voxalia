@@ -8,13 +8,21 @@ Built within OpenTK, a C# binding of OpenGL for the 3D rendering.
 ## Windows Install Notes
 
 - Requires OpenAL (Run `oalinst.exe` from the assets repo)
+- Requires reasonably up to date graphics drivers
+- Requires a 64-bit system
+- Windows build is primarily tested on Windows 10 with latest NVidia drivers.
 
 ## Linux Install Notes
 
+- Requires mono
 - Requires LibOpus
+- Requires fully up to date non-Intel graphics drivers
+- Requires a 64-bit system
+- Linux build is primarily tested on Ubuntu 16.04 with latest NVidia drivers.
 
 ## Mac Install Notes
 
+- Should be similar to Linux requirements
 - ??? (Untested!)
 
 ## Compiling
@@ -27,11 +35,11 @@ Built within OpenTK, a C# binding of OpenGL for the 3D rendering.
 
 - Compile everything (see above)
 - Download the assets (included in public releases, or via the private repository)
-- Run `Voxalia.exe` by double clicking it
+- Run `Voxalia.exe` by double clicking it on Windows, or via `$ mono Voxalia.exe` on Linux/Mac.
 - Open your console with the `tilde` key (the key next to the 1 key on standard US English QWERTY keyboards)
 - Type "`login <username> <password>`" (To get an account, register at http://frenetic.xyz/account/register )
 - Close Voxalia after it confirms login
-- Double click `singleplayer.bat` to open that, then wait for it to load
+- Double click `singleplayer.bat` (Windows) or `singleplayer.sh` (Linux/Mac) to open that, then wait for it to load
 - You should now be in the game!
 
 ## Also Included
@@ -48,9 +56,10 @@ Built within OpenTK, a C# binding of OpenGL for the 3D rendering.
 - **What do I need to play Voxalia over LAN?**
 	- Run Voxalia server as normal, and disable CVar `n_verifyip` by executing server command: `set n_verifyip false`.
 - **Do I need to run the Voxalia server to play with friends?**
-	- No. Your friends can join your singleplayer game as well, if you forward the port to let them in. (There may be additional steps in the future to open a singleplayer game fully.)
+	- No. Your friends can join your singleplayer game as well. (There may be additional steps in the future to open a singleplayer game fully.)
 - **What port do I need to forward?**
 	- By default Voxalia server and singleplayer open up on port 28010. You can edit this in your launch command options (first argument is always the port).
+	- Note that port forwarding is partially automated by the internals and it generally isn't required that you manually forward it.
 
 ### Licensing pre-note:
 
