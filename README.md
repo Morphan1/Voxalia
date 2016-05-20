@@ -1,9 +1,17 @@
 Voxalia
 -------
 
-Voxalia, a game about blocks and such.
+**Voxalia, a game about blocks and such.**
 
-Built within OpenTK, a C# binding of OpenGL for the 3D rendering.
+Built using OpenTK (a C# binding of OpenGL for the 3D rendering), BEPUphysics (a capable pure-C# physics engine), and FreneticScript (powerful and adaptive game modding).
+
+Also used libraries:
+
+- Open.NAT (automated port forwarding)
+- Opus (network-ready voice compression)
+- csogg/csvorbis (.ogg audio file handling)
+- LiteDB (save file compression)
+- YAMLDotNet (used for FreneticScript data handling and some files in Voxalia's save structure)
 
 ## Windows Install Notes
 
