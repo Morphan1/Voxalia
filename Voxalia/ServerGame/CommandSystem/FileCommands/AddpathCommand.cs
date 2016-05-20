@@ -10,7 +10,7 @@ namespace Voxalia.ServerGame.CommandSystem.FileCommands
 {
     class AddpathCommand: AbstractCommand
     {
-        Server TheServer;
+        public Server TheServer;
 
         public AddpathCommand(Server tserver)
         {

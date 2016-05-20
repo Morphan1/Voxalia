@@ -1,10 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{EE5A02F5-5105-4B5F-8580-1E8F6E091776}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -33,14 +31,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <NoWarn>
-    </NoWarn>
     <Optimize>true</Optimize>
     <DocumentationFile>bin\Release\VoxaliaShared.XML</DocumentationFile>
     <WarningLevel>3</WarningLevel>
@@ -60,13 +54,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BEPUphysics">
-      <HintPath>.\BEPUphysics.dll</HintPath>
+      <HintPath>BEPUphysics.dll</HintPath>
     </Reference>
     <Reference Include="BEPUutilities">
-      <HintPath>.\BEPUutilities.dll</HintPath>
+      <HintPath>BEPUutilities.dll</HintPath>
     </Reference>
     <Reference Include="FreneticScript">
-      <HintPath>.\FreneticScript.dll</HintPath>
+      <HintPath>FreneticScript.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -78,7 +72,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="YamlDotNet">
-      <HintPath>.\YamlDotNet.dll</HintPath>
+      <HintPath>YamlDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@ using System.Linq;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.UISystem;
 using Voxalia.ClientGame.UISystem.MenuSystem;
+using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {

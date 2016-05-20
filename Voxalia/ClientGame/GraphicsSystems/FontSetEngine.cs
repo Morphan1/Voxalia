@@ -452,7 +452,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 for (int z = 0; z < text.Length; z++)
                 {
                     char chr = text[z];
-                    int col = color;
+                    // int col = color;
                     Color tcol = ColorFor(color, trans);
                     if (pseudo)
                     {

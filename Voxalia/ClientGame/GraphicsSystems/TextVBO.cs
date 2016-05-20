@@ -54,6 +54,16 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Inds.Add((uint)(Vecs.Count - 1));
             Cols.Add(color);
             Norms.Add(new Vector3(0, 0, 1));
+            Texs.Add(new Vector3(tmin.X, tmin.Y, tex));
+            Vecs.Add(new Vector3(min.X, min.Y, 0));
+            Inds.Add((uint)(Vecs.Count - 1));
+            Cols.Add(color);
+            Norms.Add(new Vector3(0, 0, 1));
+            Texs.Add(new Vector3(tmax.X, tmax.Y, tex));
+            Vecs.Add(new Vector3(max.X, max.Y, 0));
+            Inds.Add((uint)(Vecs.Count - 1));
+            Cols.Add(color);
+            Norms.Add(new Vector3(0, 0, 1));
             Texs.Add(new Vector3(tmin.X, tmax.Y, tex));
             Vecs.Add(new Vector3(min.X, max.Y, 0));
             Inds.Add((uint)(Vecs.Count - 1));
@@ -156,7 +166,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Matrix4 mat = Matrix4.Identity;
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(VAO);
-            GL.DrawElements(PrimitiveType.Quads, Indices.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.DrawElements(PrimitiveType.Triangles, Indices.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
     }
 }

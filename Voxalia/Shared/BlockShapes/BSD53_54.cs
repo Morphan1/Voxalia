@@ -110,7 +110,7 @@ namespace Voxalia.Shared.BlockShapes
             int tID_YP = mat.TextureID(MaterialSide.YP);
             int tID_YM = mat.TextureID(MaterialSide.YM);
             int tID_ZP = mat.TextureID(MaterialSide.TOP);
-            int tID_ZM = mat.TextureID(MaterialSide.BOTTOM);
+            //int tID_ZM = mat.TextureID(MaterialSide.BOTTOM);
             // Sprite 1: 0,0 -> 1,1, side one
             TCoords.Add(new Vector3(0, 1, tID_XM));
             TCoords.Add(new Vector3(1, 1, tID_XM));

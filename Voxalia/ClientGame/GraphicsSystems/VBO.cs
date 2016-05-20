@@ -312,7 +312,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             else
             {
-                GenerateVBO();
+                GenerateVBO(false);
             }
         }
 
@@ -347,7 +347,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             return tangs;
         }
 
-        public void GenerateVBO()
+        public void GenerateVBO(bool fixQuads = true, bool testFix = false)
         {
             if (generated)
             {
@@ -368,7 +368,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Vector3[] norms = normals == null ? Normals.ToArray() : normals;
             Vector3[] texs = texts == null ? TexCoords.ToArray() : texts;
             Vector3[] tangs = Tangents != null ? Tangents.ToArray() : TangentsFor(vecs, norms, texs);
-            Vector4[] cols = Colors != null ? Colors.ToArray() : null;
+            Vector4[] cols = Colors != null ? Colors.ToArray() : (testFix ? new Vector4[vecs.Length] : null);
             Vector4[] tcols = TCOLs != null ? TCOLs.ToArray() : null;
             vC = inds.Length;
             Vector4[] ids = null;
@@ -377,20 +377,149 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 ids = BoneIDs.ToArray();
                 bones = true;
             }
+            else if (testFix)
+            {
+                ids = new Vector4[vecs.Length];
+                bones = true;
+            }
             Vector4[] weights = null;
             if (BoneWeights != null)
             {
                 weights = BoneWeights.ToArray();
+            }
+            else if (testFix)
+            {
+                weights = new Vector4[vecs.Length];
             }
             Vector4[] ids2 = null;
             if (BoneIDs2 != null)
             {
                 ids2 = BoneIDs2.ToArray();
             }
+            else if (testFix)
+            {
+                ids2 = new Vector4[vecs.Length];
+            }
             Vector4[] weights2 = null;
             if (BoneWeights2 != null)
             {
                 weights2 = BoneWeights2.ToArray();
+            }
+            else if (testFix)
+            {
+                weights2 = new Vector4[vecs.Length];
+            }
+            if (fixQuads) // TODO: Remove need for this!
+            {
+                int verts = (vecs.Length / 4) * 6;
+                Vector3[] tvecs = new Vector3[verts];
+                Vector3[] tnorms = new Vector3[verts];
+                Vector3[] ttexs = new Vector3[verts];
+                Vector3[] ttangs = new Vector3[verts];
+                uint[] tinds = new uint[verts];
+                Vector4[] _cols = cols == null ? null : new Vector4[verts];
+                Vector4[] _tcols = tcols == null ? null : new Vector4[verts];
+                Vector4[] tids = ids == null ? null : new Vector4[verts];
+                Vector4[] tids2 = ids2 == null ? null : new Vector4[verts];
+                Vector4[] twei = weights == null ? null : new Vector4[verts];
+                Vector4[] twei2 = weights2  == null ? null : new Vector4[verts];
+                int x = 0;
+                for (int i = 0; i < vecs.Length; i += 4)
+                {
+                    tvecs[x] = vecs[i];
+                    tvecs[x + 1] = vecs[i + 1];
+                    tvecs[x + 2] = vecs[i + 2];
+                    tvecs[x + 3] = vecs[i];
+                    tvecs[x + 4] = vecs[i + 2];
+                    tvecs[x + 5] = vecs[i + 3];
+                    tnorms[x] = norms[i];
+                    tnorms[x + 1] = norms[i + 1];
+                    tnorms[x + 2] = norms[i + 2];
+                    tnorms[x + 3] = norms[i];
+                    tnorms[x + 4] = norms[i + 2];
+                    tnorms[x + 5] = norms[i + 3];
+                    ttexs[x] = texs[i];
+                    ttexs[x + 1] = texs[i + 1];
+                    ttexs[x + 2] = texs[i + 2];
+                    ttexs[x + 3] = texs[i];
+                    ttexs[x + 4] = texs[i + 2];
+                    ttexs[x + 5] = texs[i + 3];
+                    ttangs[x] = texs[i];
+                    ttangs[x + 1] = tangs[i + 1];
+                    ttangs[x + 2] = tangs[i + 2];
+                    ttangs[x + 3] = tangs[i];
+                    ttangs[x + 4] = tangs[i + 2];
+                    ttangs[x + 5] = tangs[i + 3];
+                    for (int y = 0; y < 6; y++)
+                    {
+                        tinds[x + y] = (uint)(x + y);
+                    }
+                    if (_cols != null)
+                    {
+                        _cols[x] = cols[i];
+                        _cols[x + 1] = cols[i + 1];
+                        _cols[x + 2] = cols[i + 2];
+                        _cols[x + 3] = cols[i];
+                        _cols[x + 4] = cols[i + 2];
+                        _cols[x + 5] = cols[i + 3];
+                    }
+                    if (_tcols != null)
+                    {
+                        _tcols[x] = tcols[i];
+                        _tcols[x + 1] = tcols[i + 1];
+                        _tcols[x + 2] = tcols[i + 2];
+                        _tcols[x + 3] = tcols[i];
+                        _tcols[x + 4] = tcols[i + 2];
+                        _tcols[x + 5] = tcols[i + 3];
+                    }
+                    if (tids != null)
+                    {
+                        tids[x] = ids[i];
+                        tids[x + 1] = ids[i + 1];
+                        tids[x + 2] = ids[i + 2];
+                        tids[x + 3] = ids[i];
+                        tids[x + 4] = ids[i + 2];
+                        tids[x + 5] = ids[i + 3];
+                    }
+                    if (tids2 != null)
+                    {
+                        tids2[x] = ids2[i];
+                        tids2[x + 1] = ids2[i + 1];
+                        tids2[x + 2] = ids2[i + 2];
+                        tids2[x + 3] = ids2[i];
+                        tids2[x + 4] = ids2[i + 2];
+                        tids2[x + 5] = ids2[i + 3];
+                    }
+                    if (twei != null)
+                    {
+                        twei[x] = weights[i];
+                        twei[x + 1] = weights[i + 1];
+                        twei[x + 2] = weights[i + 2];
+                        twei[x + 3] = weights[i];
+                        twei[x + 4] = weights[i + 2];
+                        twei[x + 5] = weights[i + 3];
+                    }
+                    if (twei2 != null)
+                    {
+                        twei2[x] = weights2[i];
+                        twei2[x + 1] = weights2[i + 1];
+                        twei2[x + 2] = weights2[i + 2];
+                        twei2[x + 3] = weights2[i];
+                        twei2[x + 4] = weights2[i + 2];
+                        twei2[x + 5] = weights2[i + 3];
+                    }
+                    x += 6;
+                }
+                vecs = tvecs;
+                norms = tnorms;
+                texs = ttexs;
+                ttangs = tangs;
+                inds = tinds;
+                cols = _cols;
+                ids = tids;
+                ids2 = tids2;
+                weights = twei;
+                weights2 = twei2;
             }
             // Vertex buffer
             GL.GenBuffers(1, out _VertexVBO);

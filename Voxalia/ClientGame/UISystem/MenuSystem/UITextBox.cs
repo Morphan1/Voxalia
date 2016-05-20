@@ -58,7 +58,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         public override void MouseLeftDown()
         {
             Selected = true;
-            KeyHandlerState khs = KeyHandler.GetKBState();
+            /* KeyHandlerState khs = */KeyHandler.GetKBState();
         }
 
         public override void MouseLeftDownOutside()

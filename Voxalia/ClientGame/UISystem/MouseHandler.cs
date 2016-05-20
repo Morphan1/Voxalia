@@ -49,7 +49,7 @@ namespace Voxalia.ClientGame.UISystem
             }
             CenterMouse();
             MouseCaptured = true;
-            Client.Central.Window.CursorVisible = false;
+            // TODO: Linux support for this: Client.Central.Window.CursorVisible = false;
         }
 
         /// <summary>
@@ -68,6 +68,8 @@ namespace Voxalia.ClientGame.UISystem
         {
             Point center = Client.Central.Window.PointToScreen(new Point(Client.Central.Window.Width / 2, Client.Central.Window.Height / 2));
             Mouse.SetPosition(center.X, center.Y);
+            mx = (Client.Central.Window.Width / 2);
+            my = (Client.Central.Window.Height / 2);
         }
 
         public static float pwheelstate;
@@ -101,7 +103,7 @@ namespace Voxalia.ClientGame.UISystem
             {
                 double MoveX = (((Client.Central.Window.Width / 2) - MouseX()) * Client.Central.CVars.u_mouse_sensitivity.ValueD);
                 double MoveY = (((Client.Central.Window.Height / 2) - MouseY()) * Client.Central.CVars.u_mouse_sensitivity.ValueD);
-                MouseDelta = new Location((float)MoveX, (float)MoveY, 0);
+                MouseDelta = new Location(MoveX, MoveY, 0);
                 CenterMouse();
                 PreviousMouse = CurrentMouse;
                 CurrentMouse = Mouse.GetState();

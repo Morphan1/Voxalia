@@ -219,6 +219,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             SysConsole.Output(OutputType.INIT, "Window generated!");
             SysConsole.Output(OutputType.INIT, "Loading textures...");
+            PreInitRendering();
             Textures = new TextureEngine();
             Textures.InitTextureSystem();
             ItemFrame = Textures.GetTexture("ui/hud/item_frame");
@@ -232,6 +233,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CVars.s_glversion.Value = GLVersion;
             GLRenderer = GL.GetString(StringName.Renderer);
             CVars.s_glrenderer.Value = GLRenderer;
+            SysConsole.Output(OutputType.INIT, "Vendor: " + GLVendor + ", GLVersion: " + GLVersion + ", Renderer: " + GLRenderer);
             if (GLVendor.ToLowerFast().Contains("intel"))
             {
                 SysConsole.Output(OutputType.INIT, "Disabling good graphics (Appears to be Intel: '" + GLVendor + "')");

@@ -1,10 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{EE5A02F5-5105-4B5F-8580-1E8F6E091774}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -33,14 +31,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <NoWarn>
-    </NoWarn>
     <Optimize>true</Optimize>
     <DocumentationFile>bin\Release\VoxaliaClientGame.XML</DocumentationFile>
     <WarningLevel>3</WarningLevel>
@@ -61,29 +55,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BEPUphysics">
-      <HintPath>.\BEPUphysics.dll</HintPath>
+      <HintPath>BEPUphysics.dll</HintPath>
     </Reference>
     <Reference Include="BEPUutilities">
-      <HintPath>.\BEPUutilities.dll</HintPath>
+      <HintPath>BEPUutilities.dll</HintPath>
     </Reference>
     <Reference Include="csogg">
-      <HintPath>.\csogg.dll</HintPath>
+      <HintPath>csogg.dll</HintPath>
     </Reference>
     <Reference Include="csvorbis">
-      <HintPath>.\csvorbis.dll</HintPath>
+      <HintPath>csvorbis.dll</HintPath>
     </Reference>
     <Reference Include="FreneticScript">
-      <HintPath>.\FreneticScript.dll</HintPath>
-    </Reference>
-    <Reference Include="LiteDB, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\LiteDB.dll</HintPath>
+      <HintPath>FreneticScript.dll</HintPath>
     </Reference>
     <Reference Include="Open.Nat">
-      <HintPath>.\Open.Nat.dll</HintPath>
+      <HintPath>Open.Nat.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK">
-      <HintPath>.\OpenTK.dll</HintPath>
+      <HintPath>OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -95,7 +85,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="YamlDotNet">
-      <HintPath>.\YamlDotNet.dll</HintPath>
+      <HintPath>YamlDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="LiteDB">
+      <HintPath>LiteDB.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -137,10 +130,10 @@
     <Compile Include="ClientGame\CommandSystem\TagBases\AudioTagBase.cs" />
     <Compile Include="ClientGame\CommandSystem\TagBases\PlayerTagBase.cs" />
     <Compile Include="ClientGame\CommandSystem\TagObjects\EntityTagObjects\PlayerTag.cs" />
-    <Compile Include="ClientGame\CommandSystem\UICommands\ItemdownCommand.cs" />
-    <Compile Include="ClientGame\CommandSystem\UICommands\ItemupCommand.cs" />
-    <Compile Include="ClientGame\CommandSystem\UICommands\ItemrightCommand.cs" />
-    <Compile Include="ClientGame\CommandSystem\UICommands\ItemleftCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\ItemDownCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\ItemUpCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\ItemRightCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\ItemLeftCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\UseCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\AttackCommand.cs" />
@@ -311,11 +304,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="VoxaliaServer.csproj">
-      <Project>{ee5a02f5-5105-4b5f-8580-1e8f6e091775}</Project>
+      <Project>{EE5A02F5-5105-4B5F-8580-1E8F6E091775}</Project>
       <Name>VoxaliaServer</Name>
     </ProjectReference>
     <ProjectReference Include="VoxaliaShared.csproj">
-      <Project>{ee5a02f5-5105-4b5f-8580-1e8f6e091776}</Project>
+      <Project>{EE5A02F5-5105-4B5F-8580-1E8F6E091776}</Project>
       <Name>VoxaliaShared</Name>
     </ProjectReference>
   </ItemGroup>

@@ -9,7 +9,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 {
     public class PointLight : LightObject
     {
-        int Texsize;
+        public int Texsize;
 
         float Radius;
 

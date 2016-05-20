@@ -87,7 +87,6 @@ namespace Voxalia.Shared.Collision
         
         protected override void UpdateContainedPairs()
         {
-            RigidTransform rtMesh = new RigidTransform(mesh.Position);
             RigidTransform rtMobile = mobile.WorldTransform;
             QuickList<Vector3i> overlaps = new QuickList<Vector3i>(BufferPools<Vector3i>.Thread);
             mesh.ChunkShape.GetOverlaps(mesh.Position, mobile.BoundingBox, ref overlaps);

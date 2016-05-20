@@ -348,8 +348,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.UniformMatrix4(11, bones, false, set);
         }
         
-        Matrix4 globalInverse = Matrix4.Identity;
-
         public Dictionary<string, Matrix4> CustomAnimationAdjustments = new Dictionary<string, Matrix4>();
         
         public void UpdateTransforms(ModelNode pNode, Matrix4 transf)
@@ -438,7 +436,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             bool any = hAnim != null || tAnim != null || lAnim != null;
             if (any)
             {
-                globalInverse = Root.Inverted();
+                // globalInverse = Root.Inverted();
                 aTHead = aTimeHead;
                 aTTorso = aTimeTorso;
                 aTLegs = aTimeLegs;
@@ -587,7 +585,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public void GenerateVBO()
         {
-            vbo.GenerateVBO();
+            vbo.GenerateVBO(false);
         }
 
         /// <summary>

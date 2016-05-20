@@ -172,9 +172,6 @@ namespace Voxalia.ServerGame.WorldSystem
             return worldPos;
         }
 
-        static Location[] slocs = new Location[] { new Location(1, 0, 0), new Location(-1, 0, 0), new Location(0, 1, 0),
-            new Location(0, -1, 0), new Location(0, 0, 1), new Location(0, 0, -1) };
-
         public Chunk LoadChunkNoPopulate(Location cpos)
         {
             Chunk chunk;

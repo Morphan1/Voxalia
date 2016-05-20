@@ -108,7 +108,10 @@ namespace Voxalia.ClientGame.AudioSystem.OpusWrapper
             {
                 OpusAPI_Linux.opus_encoder_destroy(encoder);
             }
-            OpusAPI_Windows.opus_encoder_destroy(encoder);
+            else
+            {
+                OpusAPI_Windows.opus_encoder_destroy(encoder);
+            }
         }
         
         public static int opus_encode(IntPtr st, IntPtr pcm, int frame_size, IntPtr data, int max_data_bytes)
@@ -135,7 +138,10 @@ namespace Voxalia.ClientGame.AudioSystem.OpusWrapper
             {
                 OpusAPI_Linux.opus_decoder_destroy(decoder);
             }
-            OpusAPI_Windows.opus_decoder_destroy(decoder);
+            else
+            {
+                OpusAPI_Windows.opus_decoder_destroy(decoder);
+            }
         }
         
         public static int opus_decode(IntPtr st, IntPtr data, int len, IntPtr pcm, int frame_size, int decode_fec)

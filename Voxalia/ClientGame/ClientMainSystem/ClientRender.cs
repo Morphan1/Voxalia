@@ -37,8 +37,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
         }
-        
-        void InitRendering()
+
+        void PreInitRendering()
         {
             GL.Viewport(0, 0, Window.Width, Window.Height);
             vpw = Window.Width;
@@ -49,6 +49,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.Enable(EnableCap.CullFace);
             GL.CullFace(CullFaceMode.Front);
+        }
+        
+        void InitRendering()
+        {
             ShadersCheck();
             generateLightHelpers();
             generateMapHelpers();
@@ -67,7 +71,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             skybox[5].AddSide(Location.UnitY, new TextureCoordinates());
             for (int i = 0; i < 6; i++)
             {
-                skybox[i].GenerateVBO();
+                skybox[i].GenerateVBO(false);
             }
         }
 
@@ -364,7 +368,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Location cameraBasePos;
                 Location cameraAdjust;
                 Location forwardVec = Player.ForwardVector();
-                Frustum cf1 = null;
+               // Frustum cf1 = null;
                 Frustum cf2 = null;
                 if (CVars.g_firstperson.ValueB)
                 {
@@ -394,7 +398,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         box.Include(ch.WorldPosition * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE));
                     }
                     Matrix4 ortho = Matrix4.CreateOrthographicOffCenter((float)box.Min.X, (float)box.Max.X, (float)box.Min.Y, (float)box.Max.Y, (float)box.Min.Z, (float)box.Max.Z);
-                    Matrix4 oident = Matrix4.Identity;
+                  //  Matrix4 oident = Matrix4.Identity;
                     s_mapvox = s_mapvox.Bind();
                     GL.UniformMatrix4(1, false, ref ortho);
                     GL.Viewport(0, 0, 256, 256); // TODO: Customizable!
@@ -422,7 +426,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Matrix4 view2 = Matrix4.LookAt(ClientUtilities.Convert(CameraPos - cameraAdjust), ClientUtilities.Convert(CameraPos - cameraAdjust + forwardVec), ClientUtilities.Convert(CameraUp));
                 Matrix4 combined2 = view2 * proj;
                 Frustum camFrust = new Frustum(combined);
-                cf1 = camFrust;
+              //  cf1 = camFrust;
                 cf2 = new Frustum(combined2);
                 if (shouldRedrawShadows && CVars.r_shadows.ValueB)
                 {
@@ -1411,7 +1415,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                 {
                                     double tang = TheRegion.GlobalTickTimeLocal + Math.PI * 2.0 * ((double)c / (double)curves);
                                     BEPUutilities.Vector3 res = BEPUutilities.Quaternion.Transform(forw.ToBVector(), bquat);
-                                    BEPUutilities.Quaternion quat = BEPUutilities.Quaternion.CreateFromAxisAngle(forw.ToBVector(), (float)(tang % (Math.PI * 2.0)));
+                                    BEPUutilities.Quaternion quat = BEPUutilities.Quaternion.CreateFromAxisAngle(forwvec, (float)(tang % (Math.PI * 2.0)));
                                     res = BEPUutilities.Quaternion.Transform(res, quat);
                                     res = res * (float)(0.1 * forlen);
                                     DrawCurve(one, two, spos + new Location(res), ((ConnectorBeam)TheRegion.Joints[i]).color);

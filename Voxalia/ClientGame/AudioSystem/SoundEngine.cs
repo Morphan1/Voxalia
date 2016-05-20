@@ -271,7 +271,7 @@ namespace Voxalia.ClientGame.AudioSystem
             {
                 throw new NotSupportedException("Not a RIFF .wav file: " + signature);
             }
-            int riff_chunk_size = dr.ReadInt32();
+            /*int riff_chunk_size = */dr.ReadInt32();
             string format = new string(dr.ReadChars(4));
             if (format != "WAVE")
             {
@@ -282,23 +282,23 @@ namespace Voxalia.ClientGame.AudioSystem
             {
                 throw new NotSupportedException("Not a 'fmt ' .wav file: " + format_signature);
             }
-            int format_chunk_size = dr.ReadInt32();
-            int audio_format = dr.ReadInt16();
+            /*int format_chunk_size = */dr.ReadInt32();
+            /*int audio_format = */dr.ReadInt16();
             int num_channels = dr.ReadInt16();
             if (num_channels != 1 && num_channels != 2)
             {
                 throw new NotSupportedException("Invalid number of channels: " + num_channels);
             }
             int sample_rate = dr.ReadInt32();
-            int byte_rate = dr.ReadInt32();
-            int block_align = dr.ReadInt16();
+            /*int byte_rate = */dr.ReadInt32();
+            /*int block_align = */dr.ReadInt16();
             int bits_per_sample = dr.ReadInt16();
             string data_signature = new string(dr.ReadChars(4));
             if (data_signature != "data")
             {
                 throw new NotSupportedException("Not a DATA .wav file: " + data_signature);
             }
-            int data_chunk_size = dr.ReadInt32();
+            /*int data_chunk_size = */dr.ReadInt32();
             channels = num_channels;
             bits = bits_per_sample;
             rate = sample_rate;

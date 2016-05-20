@@ -129,7 +129,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Backgrid.BoneWeights = BoneWeights.ToList();
             Backgrid.BoneIDs2 = BoneIDs2.ToList();
             Backgrid.BoneWeights2 = BoneWeights2.ToList();
-            Backgrid.GenerateVBO();
+            Backgrid.GenerateVBO(false);
         }
 
         void GenerateLineVBO()
@@ -176,7 +176,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Line.BoneWeights = BoneWeights.ToList();
             Line.BoneIDs2 = BoneIDs2.ToList();
             Line.BoneWeights2 = BoneWeights2.ToList();
-            Line.GenerateVBO();
+            Line.GenerateVBO(false);
         }
 
         void GenerateBoxVBO()
@@ -250,7 +250,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Box.BoneWeights = BoneWeights.ToList();
             Box.BoneIDs2 = BoneIDs2.ToList();
             Box.BoneWeights2 = BoneWeights2.ToList();
-            Box.GenerateVBO();
+            Box.GenerateVBO(false);
         }
 
         public Renderer(TextureEngine tengine, ShaderEngine shaderdet)
@@ -374,7 +374,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Matrix4 mat = Matrix4.CreateScale(xmax - xmin, ymax - ymin, 1) * (rot != null && rot.HasValue ? rot.Value : Matrix4.Identity) * Matrix4.CreateTranslation(xmin, ymin, 0);
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Square._VAO);
-            GL.DrawElements(PrimitiveType.Quads, 4, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
 
         public void RenderBillboard(Location pos, Location scale, Location facing)
@@ -388,7 +388,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 * Matrix4.CreateTranslation(ClientUtilities.Convert(pos));
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Square._VAO);
-            GL.DrawElements(PrimitiveType.Quads, 4, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
         
         public void RenderBilboardLine(Location pos, Location p2, float width, Location facing)
@@ -412,7 +412,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             mat *= m2;
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Square._VAO);
-            GL.DrawElements(PrimitiveType.Quads, 4, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
 
         /// <summary>
@@ -422,7 +422,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Backgrid._VAO);
-            GL.DrawElements(PrimitiveType.Quads, 4, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
     }
 }

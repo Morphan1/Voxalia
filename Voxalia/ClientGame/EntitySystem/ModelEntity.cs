@@ -80,7 +80,7 @@ namespace Voxalia.ClientGame.EntitySystem
             else
             {
                 List<BEPUutilities.Vector3> vecs = TheClient.Models.Handler.GetCollisionVertices(model.Original);
-                Location zero = new Location(vecs[0].X, vecs[0].Y, vecs[0].Z);
+                // Location zero = new Location(vecs[0].X, vecs[0].Y, vecs[0].Z);
                 double distSq = 0;
                 for (int v = 1; v < vecs.Count; v++)
                 {

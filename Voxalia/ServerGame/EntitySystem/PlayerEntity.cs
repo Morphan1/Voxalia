@@ -777,7 +777,6 @@ namespace Voxalia.ServerGame.EntitySystem
                 return;
             }
             worldPos = TheRegion.ChunkLocFor(worldPos);
-            ChunkAwarenessInfo cai = new ChunkAwarenessInfo() { ChunkPos = worldPos, LOD = posMult };
             if (!ChunksAwareOf.ContainsKey(worldPos) || ChunksAwareOf[worldPos].LOD > posMult) // TODO: Efficiency - TryGetValue?
             { // TODO: Or ATime < awareOf.remTime?
                 if (ChunksAwareOf.ContainsKey(worldPos)) // TODO: Efficiency - TryGetValue?
