@@ -134,7 +134,11 @@ namespace Voxalia.ServerGame.NetworkSystem
                 }
                 if (avail + recdsofar > MAX)
                 {
-                    throw new Exception("Received too much data!");
+                    avail = MAX - recdsofar;
+                    if (avail == 0)
+                    {
+                        throw new Exception("Received overly massive packet?!");
+                    }
                 }
                 PrimarySocket.Receive(recd, recdsofar, avail, SocketFlags.None);
                 recdsofar += avail;

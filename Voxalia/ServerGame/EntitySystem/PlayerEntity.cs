@@ -165,6 +165,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public float Manipulator_Distance = 10;
 
         public Location AttemptedDirectionChange = Location.Zero;
+
+        public Location LoadRelPos;
         
         /// <summary>
         /// Kicks the player from the server with a specified message.
@@ -464,11 +466,10 @@ namespace Voxalia.ServerGame.EntitySystem
             WasItemLefting = ItemLeft;
             WasItemUpping = ItemUp;
             WasItemRighting = ItemRight;
-            Location pos = GetPosition();
+            Location pos = LoadRelPos;
             Location cpos = TheRegion.ChunkLocFor(pos);
             if (cpos != pChunkLoc)
             {
-                // TODO: Move to a separate method that's called once on startup + at every teleport... also, asyncify!
                 // TODO: Better system -> async?
                 TrySet(pos, 1, 1, 0, 1, false);
                 TrySet(pos, ViewRadiusInChunks / 2, ViewRadiusInChunks / 2, 0, 1, false);
@@ -594,7 +595,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool ShouldLoadChunk(Location cpos)
         {
-            Location wpos = TheRegion.ChunkLocFor(GetPosition());
+            Location wpos = TheRegion.ChunkLocFor(LoadRelPos);
             if (Math.Abs(cpos.X - wpos.X) > (ViewRadiusInChunks + ViewRadExtra5)
                 || Math.Abs(cpos.Y - wpos.Y) > (ViewRadiusInChunks + ViewRadExtra5)
                 || Math.Abs(cpos.Z - wpos.Z) > (ViewRadiusInChunks + ViewRadExtra5Height))
@@ -654,7 +655,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool ShouldSeeChunk(Location cpos)
         {
-            Location wpos = TheRegion.ChunkLocFor(GetPosition());
+            Location wpos = TheRegion.ChunkLocFor(LoadRelPos);
             if (Math.Abs(cpos.X - wpos.X) > ViewRadiusInChunks
                 || Math.Abs(cpos.Y - wpos.Y) > ViewRadiusInChunks
                 || Math.Abs(cpos.Z - wpos.Z) > ViewRadiusInChunks)
@@ -818,6 +819,19 @@ namespace Voxalia.ServerGame.EntitySystem
             return ChunksAwareOf.ContainsKey(cpos);
         }
 
+        public override void EndTick()
+        {
+            if (UpdateLoadPos)
+            {
+                base.EndTick();
+                LoadRelPos = lPos;
+            }
+            else
+            {
+                lPos = LoadRelPos;
+            }
+        }
+
         public bool ForgetChunk(Chunk ch, Location cpos)
         {
             if (ChunksAwareOf.Remove(cpos))
@@ -841,9 +855,16 @@ namespace Voxalia.ServerGame.EntitySystem
             return Math.Abs(pos.X) < maxdist && Math.Abs(pos.Y) < maxdist && Math.Abs(pos.Z) < maxdist;
         }
 
+        public bool UpdateLoadPos = true;
+
         public override void SetPosition(Location pos)
         {
-            base.SetPosition(posClamp(pos));
+            Location l = posClamp(pos);
+            if (UpdateLoadPos)
+            {
+                LoadRelPos = l;
+            }
+            base.SetPosition(l);
         }
 
         public void Teleport(Location pos)

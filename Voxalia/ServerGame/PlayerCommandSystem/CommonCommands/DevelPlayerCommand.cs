@@ -181,6 +181,11 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 entry.Player.Teleport(Location.FromString(entry.InputArguments[1]));
             }
+            else if (arg0 == "loadPos")
+            {
+                entry.Player.UpdateLoadPos = !entry.Player.UpdateLoadPos;
+                entry.Player.Network.SendMessage("Now: " + (entry.Player.UpdateLoadPos ? "true" : "false"));
+            }
             else if (arg0 == "tickRate")
             {
                 entry.Player.Network.SendMessage("Intended tick rate: " + entry.Player.TheServer.CVars.g_fps.ValueI + ", actual tick rate (last second): " + entry.Player.TheServer.TPS);

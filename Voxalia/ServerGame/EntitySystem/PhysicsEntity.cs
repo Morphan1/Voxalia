@@ -226,7 +226,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
-        public void EndTick()
+        public virtual void EndTick()
         {
             lPos = GetPosition();
         }

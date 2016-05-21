@@ -204,7 +204,11 @@ namespace Voxalia.ClientGame.NetworkSystem
             }
             if (avail + rdsf > MAX)
             {
-                throw new Exception("Received too much data!");
+                avail = MAX - rdsf;
+                if (avail == 0)
+                {
+                    throw new Exception("Received overly massive packet?!");
+                }
             }
             sock.Receive(rd, rdsf, avail, SocketFlags.None);
             rdsf += avail;
