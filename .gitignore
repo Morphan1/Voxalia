@@ -28,6 +28,6 @@ Voxalia/bin/Release/*.pdb
 Voxalia/bin/Release/*.xml
 Voxalia/bin/Release/bin/
 *.plr
-*.dat
+logindata.dat
 *.tmp
 *.mdb

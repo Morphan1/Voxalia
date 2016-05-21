@@ -20,6 +20,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.ItemSystem.CommonItems;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -114,7 +115,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 Config = new YAMLConfiguration("");
             }
-            Config.Changed += new EventHandler(configChanged);
+            Config.Changed += configChanged;
             Config.Set("general.IMPORTANT_NOTE", "Edit this configuration at your own risk!");
             Config.Set("general.name", Name);
             Config.Default("general.seed", Utilities.UtilRandom.Next(SeedMax) - SeedMax / 2);
@@ -146,7 +147,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         bool CFGEdited = false;
 
-        void configChanged(object sender, EventArgs e)
+        void configChanged(int prio, EventArgs e)
         {
             CFGEdited = true;
         }

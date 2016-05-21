@@ -58,7 +58,22 @@ namespace Voxalia.ClientGame.CommandSystem
 
         public override string ReadTextFile(string name)
         {
-            return Program.Files.ReadText("scripts/" + name);
+            return Program.Files.ReadText("scripts/client/" + name);
+        }
+
+        public override byte[] ReadDataFile(string name)
+        {
+            return Program.Files.ReadBytes("script_data/client/" + name);
+        }
+
+        public override void WriteDataFile(string name, byte[] data)
+        {
+            Program.Files.WriteBytes("script_data/client/" + name, data);
+        }
+
+        public override void Reload()
+        {
+            // TODO: TheClient.AutorunScripts();
         }
     }
 }

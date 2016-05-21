@@ -145,7 +145,6 @@
     <Compile Include="Shared\SystemExtensions.cs" />
     <Compile Include="Shared\Utilities.cs" />
     <Compile Include="Shared\Files\ZipStorer.cs" />
-    <Compile Include="Shared\YAMLConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

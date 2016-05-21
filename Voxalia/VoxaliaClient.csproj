@@ -119,7 +119,7 @@
     <Compile Include="ClientGame\CommandSystem\CommonCommands\ItemnextCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\PlayCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\CommonCommands\QuitCommand.cs" />
-    <Compile Include="ClientGame\CommandSystem\CommonCommands\ReloadCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\CommonCommands\ReloadGameCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\GameCommands\InventoryCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\GameCommands\TesteffectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\ConnectCommand.cs" />

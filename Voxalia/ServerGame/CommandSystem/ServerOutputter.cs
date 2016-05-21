@@ -48,5 +48,20 @@ namespace Voxalia.ServerGame.CommandSystem
         {
             return Program.Files.ReadText("scripts/server/" + name);
         }
+
+        public override byte[] ReadDataFile(string name)
+        {
+            return Program.Files.ReadBytes("script_data/server/" + name);
+        }
+
+        public override void WriteDataFile(string name, byte[] data)
+        {
+            Program.Files.WriteBytes("script_data/server/" + name, data);
+        }
+
+        public override void Reload()
+        {
+            TheServer.AutorunScripts();
+        }
     }
 }

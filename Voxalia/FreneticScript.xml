@@ -540,13 +540,6 @@
             Get all variables according the script event's current values.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandEvents.ScriptRanPreScriptEvent.ApplyDetermination(FreneticScript.TagHandlers.TemplateObject,FreneticScript.CommandSystem.DebugMode)">
-            <summary>
-            Applies a determination object to the event.
-            </summary>
-            <param name="determ">What was determined.</param>
-            <param name="mode">What debugmode to use.</param>
-        </member>
         <member name="T:FreneticScript.CommandSystem.CommandEvents.ScriptRanPostScriptEvent">
             <summary>
             ScriptRanPostEvent, called by the run command.
@@ -588,13 +581,6 @@
             Get all variables according the script event's current values.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.CommandEvents.ScriptRanPostScriptEvent.ApplyDetermination(FreneticScript.TagHandlers.TemplateObject,FreneticScript.CommandSystem.DebugMode)">
-            <summary>
-            Applies a determination object to the event.
-            </summary>
-            <param name="determ">What was determined.</param>
-            <param name="mode">What debugmode to use.</param>
-        </member>
         <member name="T:FreneticScript.CommandSystem.CommandEvents.ScriptRanScriptEvent">
             <summary>
             ScriptRanPreEvent, called by the run command.
@@ -635,13 +621,6 @@
             <summary>
             Get all variables according the script event's current values.
             </summary>
-        </member>
-        <member name="M:FreneticScript.CommandSystem.CommandEvents.ScriptRanScriptEvent.ApplyDetermination(FreneticScript.TagHandlers.TemplateObject,FreneticScript.CommandSystem.DebugMode)">
-            <summary>
-            Applies a determination object to the event.
-            </summary>
-            <param name="determ">What was determined.</param>
-            <param name="mode">What debugmode to use.</param>
         </member>
         <member name="T:FreneticScript.CommandSystem.CommandQueue">
             <summary>
@@ -715,9 +694,9 @@
             <param name="Delta">The time that passed this tick.</param>
             </summary>
         </member>
-        <member name="F:FreneticScript.CommandSystem.CommandQueue.LastDeterminations">
+        <member name="F:FreneticScript.CommandSystem.CommandQueue.LowestVariables">
             <summary>
-            The determinations ran on the lowest level of this queue.
+            The variables that ran on the lowest level of this queue.
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.CommandQueue.WaitingOn">
@@ -859,12 +838,22 @@
             All script events this command system is aware of.
             </summary>
         </member>
+        <member name="F:FreneticScript.CommandSystem.Commands.OnceBlocks">
+            <summary>
+            All known identifiers for the 'once' block command.
+            </summary>
+        </member>
         <member name="F:FreneticScript.CommandSystem.Commands.random">
             <summary>
             A random number generator.
             </summary>
         </member>
-        <member name="M:FreneticScript.CommandSystem.Commands.ExecuteScript(FreneticScript.CommandSystem.CommandScript,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject},FreneticScript.CommandSystem.CommandQueue@,FreneticScript.CommandSystem.DebugMode)">
+        <member name="M:FreneticScript.CommandSystem.Commands.Reload">
+            <summary>
+            Reloads the entire command system.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.Commands.ExecuteScript(FreneticScript.CommandSystem.CommandScript,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject}@,FreneticScript.CommandSystem.CommandQueue@,FreneticScript.CommandSystem.DebugMode)">
             <summary>
             Executes a command script.
             Returns the determined value(s).
@@ -949,8 +938,8 @@
         <member name="M:FreneticScript.CommandSystem.Commands.Tick(System.Single)">
             <summary>
             Advances any running command queues.
-            <param name="Delta">The time passed this tick.</param>
             </summary>
+            <param name="Delta">The time passed this tick.</param>
         </member>
         <member name="T:FreneticScript.CommandSystem.CommandScript">
             <summary>
@@ -1106,11 +1095,6 @@
             How much debug information this portion of the stack should show.
             </summary>
         </member>
-        <member name="F:FreneticScript.CommandSystem.CommandStackEntry.Determinations">
-            <summary>
-            What was returned by the determine command for this portion of the stack.
-            </summary>
-        </member>
         <member name="M:FreneticScript.CommandSystem.CommandStackEntry.Duplicate">
             <summary>
             Perfectly duplicates this stack entry.
@@ -1136,6 +1120,13 @@
             <summary>
             Tells the queue to stop entirely.
             </summary>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.CommonCmds.ReloadCommand.Execute(FreneticScript.CommandSystem.CommandQueue,FreneticScript.CommandSystem.CommandEntry)">
+            <summary>
+            Executes the command.
+            </summary>
+            <param name="queue">The command queue involved.</param>
+            <param name="entry">Entry to be executed.</param>
         </member>
         <member name="T:FreneticScript.CommandSystem.CommonCmds.CleanmemCommand">
             <summary>
@@ -1284,7 +1275,7 @@
             <para/>Fires when a a script is going to be ran, cancellable.
             <para/>Contains the name of the script only.
             <para/>Second: <see cref="F:FreneticScript.CommandSystem.QueueCmds.RunCommand.OnScriptRanEvent"/>.
-            <para/>Third: <see cref="F:FreneticScript.CommandSystem.QueueCmds.RunCommand.OnScriptRanPostEvent"/>
+            <para/>Third: <see cref="F:FreneticScript.CommandSystem.QueueCmds.RunCommand.OnScriptRanPostEvent"/>.
             </summary>
         </member>
         <member name="F:FreneticScript.CommandSystem.QueueCmds.RunCommand.OnScriptRanEvent">
@@ -1373,12 +1364,6 @@
             Do not edit.
             </summary>
         </member>
-        <member name="F:FreneticScript.CommandSystem.QueueCmds.ScriptRanPostEventArgs.Determinations">
-            <summary>
-            All determines of the script run.
-            Do not edit.
-            </summary>
-        </member>
         <member name="T:FreneticScript.CommandSystem.ErrorInducedException">
             <summary>
             Represents an exception induced by a script error. Should be ignored/re-thrown to let the error propogate up to the script level.
@@ -1431,9 +1416,31 @@
             <param name="name">The filename to read.</param>
             <returns>The read text file.</returns>
         </member>
+        <member name="M:FreneticScript.CommandSystem.Outputter.ReadDataFile(System.String)">
+            <summary>
+            Used to read a text file, generally generic data for a script.
+            File format is along the lines of "mymap/mydata.yml".
+            Throw a System.IO.FileNotFoundException if file does not exist.
+            </summary>
+            <param name="name">The filename to read.</param>
+            <returns>The read data file.</returns>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.Outputter.WriteDataFile(System.String,System.Byte[])">
+            <summary>
+            Used to write a text file, generally generic data for a script.
+            File format is along the lines of "mymap/mydata.yml".
+            </summary>
+            <param name="name">The filename to write.</param>
+            <param name="data">The data to write to file.</param>
+        </member>
+        <member name="M:FreneticScript.CommandSystem.Outputter.Reload">
+            <summary>
+            Used when the system is reloaded, to delete any temporary script-related data.
+            </summary>
+        </member>
         <member name="F:FreneticScript.CommandSystem.Outputter.Initializing">
             <summary>
-            Whether the game is still setting up currently.
+            Whether the game is still setting up currently. (Used by the InitOnly CVar system).
             </summary>
         </member>
         <member name="T:FreneticScript.CommandSystem.ScriptEvent">
@@ -1524,17 +1531,16 @@
             Quickly sorts the event handlers.
             </summary>
         </member>
+        <member name="M:FreneticScript.CommandSystem.ScriptEvent.UpdateVariables(System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TemplateObject})">
+            <summary>
+            Update all variables from a ran script onto the event itself.
+            </summary>
+            <param name="vars">The vars to update.</param>
+        </member>
         <member name="M:FreneticScript.CommandSystem.ScriptEvent.Call(System.Int32)">
             <summary>
             Calls the event.
             </summary>
-        </member>
-        <member name="M:FreneticScript.CommandSystem.ScriptEvent.ApplyDetermination(FreneticScript.TagHandlers.TemplateObject,FreneticScript.CommandSystem.DebugMode)">
-            <summary>
-            Applies a determination object to the event.
-            </summary>
-            <param name="determ">What was determined.</param>
-            <param name="mode">What debugmode to use.</param>
         </member>
         <member name="M:FreneticScript.CommandSystem.ScriptEvent.GetVariables">
             <summary>
@@ -1936,6 +1942,11 @@
             Utilities for FreneticScript.
             </summary>
         </member>
+        <member name="F:FreneticScript.FreneticScriptUtilities.Enc">
+            <summary>
+            The encoding used by FrenetiCScript.
+            </summary>
+        </member>
         <member name="M:FreneticScript.FreneticScriptUtilities.StringToLong(System.String)">
             <summary>
             Converts a string value to the long-integer value it represents.
@@ -2283,20 +2294,19 @@
         </member>
         <member name="M:FreneticScript.TagHandlers.Objects.BinaryTag.For(FreneticScript.TagHandlers.TagData,System.String)">
             <summary>
-            Get a boolean tag relevant to the specified input, erroring on the command system if invalid input is given (Returns false in that case).
-            Never null!
+            Get a binary tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case).
             </summary>
-            <param name="dat">The TagData used to construct this BooleanTag.</param>
-            <param name="input">The input text to create a boolean from.</param>
-            <returns>The boolean tag.</returns>
+            <param name="dat">The TagData used to construct this BinaryTag.</param>
+            <param name="input">The input text to create binary data from.</param>
+            <returns>The binary tag.</returns>
         </member>
         <member name="M:FreneticScript.TagHandlers.Objects.BinaryTag.For(FreneticScript.TagHandlers.TagData,FreneticScript.TagHandlers.TemplateObject)">
             <summary>
             Get a binary tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case).
             </summary>
-            <param name="dat">The TagData used to construct this BooleanTag.</param>
-            <param name="input">The input to create or get a boolean from.</param>
-            <returns>The boolean tag.</returns>
+            <param name="dat">The TagData used to construct this BinaryTag.</param>
+            <param name="input">The input to create or get binary data from.</param>
+            <returns>The binary tag.</returns>
         </member>
         <member name="M:FreneticScript.TagHandlers.Objects.BinaryTag.#ctor(System.Byte[])">
             <summary>
@@ -2524,6 +2534,11 @@
         <member name="M:FreneticScript.TagHandlers.Objects.NullTag.#ctor">
             <summary>
             Constructs a null tag.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.TagHandlers.Objects.NullTag.Handlers">
+            <summary>
+            All tag handlers for this tag type.
             </summary>
         </member>
         <member name="M:FreneticScript.TagHandlers.Objects.NullTag.Handle(FreneticScript.TagHandlers.TagData)">
@@ -2776,6 +2791,13 @@
             Constructs a text tag.
             </summary>
             <param name="_text">The text to construct it from.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Objects.TextTag.For(FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Converts a template object to a text tag.
+            </summary>
+            <param name="text">The text input.</param>
+            <returns>A valid text tag.</returns>
         </member>
         <member name="M:FreneticScript.TagHandlers.Objects.TextTag.Handle(FreneticScript.TagHandlers.TagData)">
             <summary>
@@ -3081,14 +3103,34 @@
             Set up the tag engine after all input has be registered.
             </summary>
         </member>
-        <member name="F:FreneticScript.TagHandlers.TagParser.Type_Text">
+        <member name="F:FreneticScript.TagHandlers.TagParser.Type_Binary">
             <summary>
-            The TextTag type.
+            The BinaryTag type.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.TagHandlers.TagParser.Type_Boolean">
+            <summary>
+            The BooleanTag type.
             </summary>
         </member>
         <member name="F:FreneticScript.TagHandlers.TagParser.Type_Integer">
             <summary>
             The IntegerTag type.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.TagHandlers.TagParser.Type_List">
+            <summary>
+            The ListTag type.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.TagHandlers.TagParser.Type_Map">
+            <summary>
+            The MapTag type.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.TagHandlers.TagParser.Type_Null">
+            <summary>
+            The NullTag type.
             </summary>
         </member>
         <member name="F:FreneticScript.TagHandlers.TagParser.Type_Number">
@@ -3099,6 +3141,16 @@
         <member name="F:FreneticScript.TagHandlers.TagParser.Type_TagType">
             <summary>
             The TagTypeTag type.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.TagHandlers.TagParser.Type_Text">
+            <summary>
+            The TextTag type.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.TagHandlers.TagParser.Type_Time">
+            <summary>
+            The TimeTag type.
             </summary>
         </member>
         <member name="M:FreneticScript.TagHandlers.TagParser.SplitToArgument(System.String,System.Boolean,System.Collections.Generic.Dictionary{System.String,FreneticScript.TagHandlers.TagType})">
@@ -3205,6 +3257,13 @@
             Parse any direct tag input values.
             </summary>
             <param name="data">The input tag data.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.TemplateObject.Basic_For(FreneticScript.TagHandlers.TemplateObject)">
+            <summary>
+            Returns the input as-is, for use with ObjecTypes.
+            </summary>
+            <param name="obj">The object input.</param>
+            <returns>The object input.</returns>
         </member>
         <member name="M:FreneticScript.TagHandlers.TemplateObject.Set(System.String[],FreneticScript.TagHandlers.TemplateObject)">
             <summary>
@@ -3355,6 +3414,144 @@
         </member>
         <member name="F:FreneticScript.TextStyle.Color_Importantinfo">
             <summary>Important information style: ^r^3</summary>
+        </member>
+        <member name="T:FreneticScript.YAMLConfiguration">
+            <summary>
+            Represents a "YAML Ain't Markup Language" data container.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.#ctor(System.String)">
+            <summary>
+            Constructs a YAML configuration from the text of a YAML file.
+            </summary>
+            <param name="input">The text to construct from, or an empty string for an empty configuration.</param>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.#ctor(System.Collections.Generic.Dictionary{System.Object,System.Object})">
+            <summary>
+            Constructs a YAML configuration from known data.
+            </summary>
+            <param name="datas">The data to use.</param>
+        </member>
+        <member name="F:FreneticScript.YAMLConfiguration.Data">
+            <summary>
+            The internal data of this YAMLConfiguration.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.IsList(System.String)">
+            <summary>
+            Returns whether a specified path is a list.
+            </summary>
+            <param name="path">The path to read.</param>
+            <returns>Whether it is a list.</returns>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.ReadStringList(System.String)">
+            <summary>
+            Reads a path as a string list.
+            </summary>
+            <param name="path">The path to read.</param>
+            <returns>The string list, or null.</returns>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.ReadList(System.String)">
+            <summary>
+            Reads a path as a list of objects.
+            </summary>
+            <param name="path">The path to read.</param>
+            <returns>The object list, or null.</returns>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.ReadFloat(System.String,System.Single)">
+            <summary>
+            Reads a path as a single-precision floating point number.
+            </summary>
+            <param name="path">The path to read.</param>
+            <param name="def">The default value to return if the path is invalid.</param>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.ReadDouble(System.String,System.Double)">
+            <summary>
+            Reads a path as a double-precision floating point number.
+            </summary>
+            <param name="path">The path to read.</param>
+            <param name="def">The default value to return if the path is invalid.</param>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.ReadInt(System.String,System.Int32)">
+            <summary>
+            Reads a path as a 32-bit integer number.
+            </summary>
+            <param name="path">The path to read.</param>
+            <param name="def">The default value to return if the path is invalid.</param>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.ReadLong(System.String,System.Int64)">
+            <summary>
+            Reads a path as a 64-bit integer number.
+            </summary>
+            <param name="path">The path to read.</param>
+            <param name="def">The default value to return if the path is invalid.</param>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.ReadString(System.String,System.String)">
+            <summary>
+            Reads a path as a string.
+            </summary>
+            <param name="path">The path to read.</param>
+            <param name="def">The default value to return if the path is invalid.</param>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.Read(System.String,System.Object)">
+            <summary>
+            Reads a path as an object.
+            </summary>
+            <param name="path">The path to read.</param>
+            <param name="def">The default value to return if the path is invalid.</param>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.HasKey(System.String,System.String)">
+            <summary>
+            Returns whether the key at the path exists.
+            </summary>
+            <param name="path">The base path, can be null.</param>
+            <param name="key">The key to use.</param>
+            <returns>Whether the key exists.</returns>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.GetKeys(System.String)">
+            <summary>
+            Gets a list of all keys at the specified path.
+            </summary>
+            <param name="path">The path.</param>
+            <returns>The list of all keys.</returns>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.GetConfigurationSection(System.String)">
+            <summary>
+            Gets a section of this YAML configuration.
+            </summary>
+            <param name="path">The base path to use.</param>
+            <returns>The section.</returns>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.Default(System.String,System.Object)">
+            <summary>
+            Sets an object at a path if the path does not exist yet.
+            </summary>
+            <param name="path">The path.</param>
+            <param name="val">The object.</param>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.Set(System.String,System.Object)">
+            <summary>
+            Force-sets an object at a path.
+            </summary>
+            <param name="path">The path.</param>
+            <param name="val">The object.</param>
+        </member>
+        <member name="F:FreneticScript.YAMLConfiguration.Changed">
+            <summary>
+            Fired when the YAMLConfiguration changes.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.YAMLConfiguration.SaveToString">
+            <summary>
+            Saves the entire YAML configuration to a file-ready string.
+            </summary>
+            <returns>The string.</returns>
         </member>
     </members>
 </doc>

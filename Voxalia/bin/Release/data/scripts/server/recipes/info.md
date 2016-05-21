@@ -1,3 +1,6 @@
+Voxalia Recipes
+---------------
+
 Recipes are defined like so:
 
 ```

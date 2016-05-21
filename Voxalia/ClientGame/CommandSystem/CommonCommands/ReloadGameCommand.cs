@@ -6,15 +6,15 @@ using FreneticScript;
 
 namespace Voxalia.ClientGame.CommandSystem.CommonCommands
 {
-    public class ReloadCommand: AbstractCommand
+    public class ReloadGameCommand: AbstractCommand
     {
         public Client TheClient;
 
-        public ReloadCommand(Client tclient)
+        public ReloadGameCommand(Client tclient)
         {
             TheClient = tclient;
-            Name = "reload";
-            Description = "Reloads all or part of the game";
+            Name = "reloadgame";
+            Description = "Reloads all or part of the game.";
             Arguments = "<chunks/screen/shaders/audio/textures/all>"; // TODO: List input?
         }
 
