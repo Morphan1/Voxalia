@@ -41,7 +41,8 @@ namespace Voxalia.ServerGame.NetworkSystem
                 }
                 natdev.CreatePortMapAsync(new Mapping(Protocol.Tcp, TheServer.Port, TheServer.Port, "Voxalia")).Wait();
                 map = natdev.GetSpecificMappingAsync(Protocol.Tcp, TheServer.Port).Result;
-                SysConsole.Output(OutputType.INIT, "Successfully opened server to public address " + map.PrivateIP + " or " + map.PublicIP + ", with port " + map.PrivatePort + " or " + map.PublicPort + ", as " + map.Description);
+                IPAddress publicIP = natdev.GetExternalIPAsync().Result;
+                SysConsole.Output(OutputType.INIT, "Successfully opened server to public address " + map.PrivateIP + " or " + publicIP.ToString() + ", with port " + map.PrivatePort + ", as " + map.Description);
             }
             catch (Exception ex)
             {
