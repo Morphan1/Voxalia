@@ -1,0 +1,6 @@
+Name=Grass_Forest
+Sound=GRASS
+BreakTime=1
+Breaker=Shovel
+Texture_TOP=m1
+Texture_BOTTOM=dirt

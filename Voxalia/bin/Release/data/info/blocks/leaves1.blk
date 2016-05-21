@@ -1,0 +1,7 @@
+Name=Leaves1
+Opaque=false
+SpeedMod=0.7
+FogAlpha=0
+CanRenderAgainstSelf=true
+Sound=Leaves
+BreakTime=0.5

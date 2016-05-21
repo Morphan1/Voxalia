@@ -89,6 +89,7 @@ namespace Voxalia.ClientGame.NetworkSystem
                         data["formtype"] = "login";
                         data["username"] = user;
                         data["password"] = pass;
+                        data["session_id"] = "0";
                         byte[] response = wb.UploadValues("http://frenetic.xyz/account/micrologin", "POST", data);
                         string resp = FileHandler.encoding.GetString(response).Trim(' ', '\n', '\r', '\t');
                         if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))

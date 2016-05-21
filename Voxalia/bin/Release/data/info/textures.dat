@@ -15,7 +15,6 @@ SOLID_SLIME=blocks/liquid/slipgoo
 SNOW=blocks/solid/natural/snow
 SMOKE=blocks/liquid/smoke
 LOG_OAK=blocks/solid/natural/wood
-TALLGRASS=blocks/transparent/tallgrass
 SAND=blocks/solid/natural/sand
 STEEL_SOLID=blocks/solid/metals/steel_solid
 STEEL_PLATE=blocks/solid/metals/steel_plate

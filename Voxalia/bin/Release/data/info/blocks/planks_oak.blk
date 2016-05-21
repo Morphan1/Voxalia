@@ -1,0 +1,5 @@
+Name=Planks_Oak
+SpeedMod=1.15
+Sound=WOOD
+BreakTime=1
+Breaker=AXE

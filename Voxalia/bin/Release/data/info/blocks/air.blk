@@ -1,0 +1,7 @@
+Name=Air
+Solidity=NONSOLID
+Opaque=false
+RendersAtAll=false
+FogAlpha=0
+BreakTime=Infinity
+LightDamage=0

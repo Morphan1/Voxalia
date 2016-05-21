@@ -1,0 +1,5 @@
+Name=Tin_Ore_Sparse
+Sound=STONE
+Hardness=15
+BreakTime=3
+Breaker=PICKAXE

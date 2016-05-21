@@ -17,6 +17,7 @@ namespace Voxalia.Shared
 
         public static void Init()
         {
+            MaterialHelpers.Populate(Files);
             FullChunkObject.RegisterMe();
         }
     }

@@ -1,0 +1,5 @@
+Name=Snow
+SpeedMod=0.8
+Sound=SNOW
+BreakTime=0.5
+Breaker=SHOVEL

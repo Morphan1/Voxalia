@@ -61,6 +61,7 @@ namespace Voxalia.ServerGame.CommandSystem
 
         public override void Reload()
         {
+            TheServer.Recipes.Recipes.Clear();
             TheServer.AutorunScripts();
         }
     }

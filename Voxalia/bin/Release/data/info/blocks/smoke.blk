@@ -1,0 +1,8 @@
+Name=Smoke
+// TODO: Gas?
+Sound=METAL
+Solidity=GAS
+Opaque=false
+FogColor=0.8,0.8,0.8
+BreakTime=0.2
+LightDamage=0.1

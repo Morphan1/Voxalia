@@ -1,0 +1,10 @@
+Name=Debug
+Sound=METAL
+Hardness=100
+BreakTime=2
+Breaker=PICKAXE
+Texture_BOTTOM=m2
+Texture_XM=m3
+Texture_XP=m4
+Texture_YP=m5
+Texture_YM=m6

@@ -1,0 +1,7 @@
+Name=Glass_Window
+SpeedMod=1.1
+Sound=GLASS
+Hardness=5
+BreakTime=1
+Opaque=false
+LightDamage=0.05

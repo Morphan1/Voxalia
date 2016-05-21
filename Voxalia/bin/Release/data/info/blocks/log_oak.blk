@@ -1,0 +1,7 @@
+Name=Log_Oak
+SpeedMod=1.1
+Sound=WOOD
+BreakTime=1.5
+Breaker=AXE
+Texture_TOP=m7
+Texture_BOTTOM=m7

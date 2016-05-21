@@ -1,0 +1,6 @@
+Name=Steel_Plate
+SpeedMod=1.35
+Sound=METAL
+Hardness=40
+BreakTime=5
+Breaker=PICKAXE

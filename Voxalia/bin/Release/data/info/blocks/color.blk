@@ -1,0 +1,6 @@
+Name=Color
+// TODO: Clay?
+Sound=STONE
+Hardness=5
+BreakTime=1
+Breaker=SHOVEL

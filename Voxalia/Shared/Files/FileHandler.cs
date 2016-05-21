@@ -267,6 +267,37 @@ namespace Voxalia.Shared.Files
             return folds;
         }
 
+        /// <summary>
+        /// Returns a list of all files inside a folder.
+        /// </summary>
+        public List<string> ListFiles(string filepath)
+        {
+            List<string> folds = new List<string>();
+            string fname = "/" + CleanFileName("/" + filepath);
+            while (fname.Contains("//"))
+            {
+                fname = fname.Replace("//", "/");
+            }
+            if (fname.EndsWith("/"))
+            {
+                fname = fname.Substring(0, fname.Length - 1);
+            }
+            string fn2 = fname + "/";
+            if (fn2 == "//")
+            {
+                fn2 = "/";
+            }
+            for (int i = 0; i < Files.Count; i++)
+            {
+                string fina = "/" + Files[i].Name;
+                if (fina.StartsWith(fn2))
+                {
+                    folds.Add(fina);
+                }
+            }
+            return folds;
+        }
+
         public void CreateDirectory(string path)
         {
             string fname = BaseDirectory + CleanFileName(path);

@@ -149,7 +149,7 @@ namespace Voxalia.ServerGame.OtherSystems
 
         public void Init()
         {
-            MaterialImages = new MaterialImage[MaterialHelpers.MAX_THEORETICAL_MATERIALS];
+            MaterialImages = new MaterialImage[MaterialHelpers.TextureCount];
             string[] texs = Program.Files.ReadText("info/textures.dat").SplitFast('\n');
             for (int i = 0; i < texs.Length; i++)
             {
@@ -161,7 +161,7 @@ namespace Voxalia.ServerGame.OtherSystems
                 Material mat;
                 if (dat[0].StartsWith("m"))
                 {
-                    mat = (Material)(MaterialHelpers.MAX_THEORETICAL_MATERIALS - Utilities.StringToInt(dat[0].Substring(1)));
+                    mat = (Material)(MaterialHelpers.TextureCount - Utilities.StringToInt(dat[0].Substring(1)));
                 }
                 else
                 {

@@ -1,0 +1,9 @@
+Name=Ice
+Opaque=true
+// TODO: Clay?
+Sound=GLASS
+SpeedMod=1.2
+FrictionMod=0.1
+Hardness=10
+BreakTime=1.5
+Breaker=PICKAXE

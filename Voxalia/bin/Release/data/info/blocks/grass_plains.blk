@@ -1,0 +1,6 @@
+Name=Grass_Plains
+Sound=GRASS
+BreakTime=1
+Breaker=SHOVEL
+Texture_TOP=m8
+Texture_BOTTOM=dirt

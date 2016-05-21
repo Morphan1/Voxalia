@@ -1,0 +1,10 @@
+Name=Heavy_Gas
+// TODO: GAS
+Sound=Metal
+Solidity=GAS
+Opaque=false
+FogColor=0.25,0.25,0.25
+Hardness=5
+BreakTime=0.2
+Spreads=true
+LightDamage=0.1

@@ -1,0 +1,5 @@
+Name=Coal_Ore
+Sound=STONE
+Hardness=15
+BreakTime=3
+Breaker=PICKAXE

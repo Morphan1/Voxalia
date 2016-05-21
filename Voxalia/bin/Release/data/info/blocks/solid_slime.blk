@@ -1,0 +1,7 @@
+Name=Solid_Slime
+Opaque=false
+SpeedMod=1.2
+FrictionMod=0.01
+FogColor=0,1,0
+Hardness=5
+BreakTime=1

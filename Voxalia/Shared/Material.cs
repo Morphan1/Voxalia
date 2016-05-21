@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Voxalia.Shared.Files;
+using FreneticScript;
 
 namespace Voxalia.Shared
 {
     /// <summary>
-    /// All available block materials.
+    /// All defaultly available block materials.
     /// </summary>
     public enum Material: ushort
     {
@@ -20,7 +22,7 @@ namespace Voxalia.Shared
         SNOW = 9,
         SMOKE = 10,
         LOG_OAK = 11,
-        TALLGRASS = 12, // TODO: Remove me!
+        // Unused=12
         SAND = 13,
         STEEL_SOLID = 14,
         STEEL_PLATE = 15,
@@ -55,67 +57,150 @@ namespace Voxalia.Shared
     /// </summary>
     public static class MaterialHelpers
     {
-        /// <summary>
-        /// Roughly how many materials should be expected during generation, plus several extras for spare room.
-        /// Warning: Do not set this too high, this is used for texture block generation, and this * 12 * texture_size^2 will be taken in the vRAM!
-        /// For the same reason (texture usage), do not set it too low!
-        /// </summary>
-        public static int MAX_THEORETICAL_MATERIALS = 128;
+        public static int TextureCount = 5;
 
+        public static bool Populated = false;
+
+        public static void Populate(FileHandler files)
+        {
+            if (Populated)
+            {
+                return;
+            }
+            Populated = true;
+            List<string> fileList = files.ListFiles("info/blocks/");
+            foreach (string file in fileList)
+            {
+                string f = file.ToLowerFast().After("/blocks/").Before(".blk");
+                Material mat;
+                if (TryGetFromNameOrNumber(f, out mat))
+                {
+                    continue;
+                }
+                mat = (Material)Enum.Parse(typeof(Material), f.ToUpperInvariant());
+                string data = files.ReadText("info/blocks/" + f + ".blk");
+                string[] split = data.Replace("\r", "").Split('\n');
+                MaterialInfo inf = new MaterialInfo((int)mat);
+                for (int i = 0; i < split.Length; i++)
+                {
+                    if (split[i].StartsWith("//") || !split[i].Contains("="))
+                    {
+                        continue;
+                    }
+                    string[] opt = split[i].SplitFast('=', 2);
+                    switch (opt[0].ToLowerFast())
+                    {
+                        case "name":
+                            inf.SetName(opt[1]);
+                            break;
+                        case "sound":
+                            inf.Sound = (MaterialSound)Enum.Parse(typeof(MaterialSound), opt[1].ToUpperInvariant());
+                            break;
+                        case "solidity":
+                            inf.Solidity = (MaterialSolidity)Enum.Parse(typeof(MaterialSolidity), opt[1].ToUpperInvariant());
+                            break;
+                        case "speedmod":
+                            inf.SpeedMod = float.Parse(opt[1]);
+                            break;
+                        case "frictionmod":
+                            inf.FrictionMod = float.Parse(opt[1]);
+                            break;
+                        case "lightdamage":
+                            inf.LightDamage = float.Parse(opt[1]);
+                            break;
+                        case "fogalpha":
+                            inf.FogAlpha = float.Parse(opt[1]);
+                            break;
+                        case "opaque":
+                            inf.Opaque = opt[1].ToLowerFast() == "true";
+                            break;
+                        case "spreads":
+                            inf.Spreads = opt[1].ToLowerFast() == "true";
+                            break;
+                        case "rendersatall":
+                            inf.RendersAtAll = opt[1].ToLowerFast() == "true";
+                            break;
+                        case "fogcolor":
+                            inf.FogColor = Location.FromString(opt[1]);
+                            break;
+                        case "canrenderagainstself":
+                            inf.CanRenderAgainstSelf = opt[1].ToLowerFast() == "true";
+                            break;
+                        case "hardness":
+                            inf.Hardness = float.Parse(opt[1]);
+                            break;
+                        case "breaktime":
+                            inf.BreakTime = opt[1].ToLowerFast() == "infinity" ? float.PositiveInfinity : float.Parse(opt[1]);
+                            break;
+                        case "breaker":
+                            inf.Breaker = (MaterialBreaker)Enum.Parse(typeof(MaterialBreaker), opt[1].ToUpperInvariant());
+                            break;
+                        case "texture_top":
+                            inf.TID[(int)MaterialSide.TOP] = ParseTID(opt[1]);
+                            break;
+                        case "texture_bottom":
+                            inf.TID[(int)MaterialSide.BOTTOM] = ParseTID(opt[1]);
+                            break;
+                        case "texture_xp":
+                            inf.TID[(int)MaterialSide.XP] = ParseTID(opt[1]);
+                            break;
+                        case "texture_xm":
+                            inf.TID[(int)MaterialSide.XM] = ParseTID(opt[1]);
+                            break;
+                        case "texture_yp":
+                            inf.TID[(int)MaterialSide.YP] = ParseTID(opt[1]);
+                            break;
+                        case "texture_ym":
+                            inf.TID[(int)MaterialSide.YM] = ParseTID(opt[1]);
+                            break;
+                        default:
+                            throw new Exception("Invalid option: " + opt[0]);
+                    }
+                }
+                while (ALL_MATS.Count <= (int)mat)
+                {
+                    ALL_MATS.Add(null);
+                }
+                ALL_MATS[(int)mat] = inf;
+                TextureCount++;
+            }
+            TextureCount += TMC;
+            for (int i = 0; i < ALL_MATS.Count; i++)
+            {
+                if (ALL_MATS[i] != null)
+                {
+                    for (int s = 0; s < (int)MaterialSide.COUNT; s++)
+                    {
+                        if (ALL_MATS[i].TID[s] > short.MaxValue)
+                        {
+                            ALL_MATS[i].TID[s] = TextureCount - (ALL_MATS[i].TID[s] - short.MaxValue);
+                        }
+                    }
+                }
+            }
+        }
+
+        static int TMC = 0;
+
+        static int ParseTID(string str)
+        {
+            int min;
+            if (str.StartsWith("m") && int.TryParse(str.Substring(1), out min))
+            {
+                if (TMC < min)
+                {
+                    TMC = min;
+                }
+                return short.MaxValue + min;
+            }
+            Material mat = (Material)Enum.Parse(typeof(Material), str.ToUpperInvariant());
+            return (int)mat;
+        }
+        
         /// <summary>
         /// All material data known to this engine.
         /// </summary>
         public static List<MaterialInfo> ALL_MATS = new List<MaterialInfo>((int)Material.NUM_DEFAULT);
-
-        static MaterialHelpers()
-        {
-            MaterialInfo[] mats = new MaterialInfo[] {
-                new MaterialInfo((int)Material.AIR) { Solidity = MaterialSolidity.NONSOLID, Opaque = false, RendersAtAll = false, FogAlpha = 0, BreakTime = float.PositiveInfinity, LightDamage = 0f },
-                new MaterialInfo((int)Material.STONE) { SpeedMod = 1.1f, Sound = MaterialSound.STONE, Hardness = 20, BreakTime = 2, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.GRASS_FOREST) { Sound = MaterialSound.GRASS, BreakTime = 1, Breaker = MaterialBreaker.SHOVEL },
-                new MaterialInfo((int)Material.DIRT) { Sound = MaterialSound.DIRT, BreakTime = 1, Breaker = MaterialBreaker.SHOVEL },
-                new MaterialInfo((int)Material.WATER) { Sound = MaterialSound.METAL /* TODO: LIQUID */, Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 1), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.28f, SpeedMod = 0.3f },
-                new MaterialInfo((int)Material.DEBUG) { Sound = MaterialSound.METAL, Hardness = 100, BreakTime = 2f, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.LEAVES1) { Opaque = false, SpeedMod = 0.7f, FogAlpha = 0, CanRenderAgainstSelf = true, Sound = MaterialSound.LEAVES, BreakTime = 0.5f },
-                new MaterialInfo((int)Material.CONCRETE) { SpeedMod = 1.2f, Sound = MaterialSound.STONE, Hardness = 25, BreakTime = 3f, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.SOLID_SLIME) { Opaque = false, SpeedMod = 1.2f, FrictionMod = 0.01f, FogColor = new Location(0, 1, 0), Hardness = 5, BreakTime = 1 },
-                new MaterialInfo((int)Material.SNOW) { SpeedMod = 0.8f, Sound = MaterialSound.SNOW, BreakTime = 0.5f, Breaker = MaterialBreaker.SHOVEL },
-                new MaterialInfo((int)Material.SMOKE) { Sound = MaterialSound.METAL /* TODO: GAS */, Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.8), BreakTime = 0.2f, LightDamage = 0.1f },
-                new MaterialInfo((int)Material.LOG_OAK) { SpeedMod = 1.1f, Sound = MaterialSound.WOOD, BreakTime = 1.5f, Breaker = MaterialBreaker.AXE },
-                new MaterialInfo((int)Material.TALLGRASS) { Solidity = MaterialSolidity.SPECIAL, Opaque = false, Hardness = 1, BreakTime = 0.2f },
-                new MaterialInfo((int)Material.SAND) { Sound = MaterialSound.SAND, BreakTime = 0.5f, Breaker = MaterialBreaker.SHOVEL },
-                new MaterialInfo((int)Material.STEEL_SOLID) { SpeedMod = 1.25f, Sound = MaterialSound.METAL, Hardness = 30, BreakTime = 5, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.STEEL_PLATE) { SpeedMod = 1.35f, Sound = MaterialSound.METAL, Hardness = 40, BreakTime = 5, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.GRASS_PLAINS) { Sound = MaterialSound.GRASS, BreakTime = 1, Breaker = MaterialBreaker.SHOVEL },
-                new MaterialInfo((int)Material.SANDSTONE) { Sound = MaterialSound.STONE, Hardness = 15, BreakTime = 1.5f, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.TIN_ORE) { Sound = MaterialSound.STONE, Hardness = 15, BreakTime = 3, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.TIN_ORE_SPARSE) { Sound = MaterialSound.STONE, Hardness = 15, BreakTime = 3, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.COPPER_ORE) { Sound = MaterialSound.STONE, Hardness = 15, BreakTime = 3, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.COPPER_ORE_SPARSE) { Sound = MaterialSound.STONE, Hardness = 15, BreakTime = 3, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.COAL_ORE) { Sound = MaterialSound.STONE, Hardness = 15, BreakTime = 3, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.COAL_ORE_SPARSE) { Sound = MaterialSound.STONE, Hardness = 15, BreakTime = 3, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.COLOR) { Sound = MaterialSound.STONE, Hardness = 5, BreakTime = 1, Breaker = MaterialBreaker.SHOVEL }, // TODO: Clay sound?
-                new MaterialInfo((int)Material.DIRTY_WATER) { Sound = MaterialSound.METAL /* TODO: LIQUID */, Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(0, 0.5, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.35f, SpeedMod = 0.3f },
-                new MaterialInfo((int)Material.PLANKS_OAK) { SpeedMod = 1.15f, Sound = MaterialSound.WOOD, BreakTime = 1f, Breaker = MaterialBreaker.AXE },
-                new MaterialInfo((int)Material.GLASS_WINDOW) { SpeedMod = 1.1f, Sound = MaterialSound.GLASS, Hardness = 5, BreakTime = 1, Opaque = false, LightDamage = 0.05f },
-                new MaterialInfo((int)Material.OIL) { Sound = MaterialSound.METAL /* TODO: LIQUID */, Solidity = MaterialSolidity.LIQUID, FogColor = new Location(0, 0, 0), Hardness = 5, BreakTime = 0.2f, Spreads = true, SpeedMod = 0.7f },
-                new MaterialInfo((int)Material.ICE) { Opaque = true, Sound = MaterialSound.GLASS /* TODO: CLAY? */, SpeedMod = 1.2f, FrictionMod = 0.1f, Hardness = 10, BreakTime = 1.5f, Breaker = MaterialBreaker.PICKAXE },
-                new MaterialInfo((int)Material.HEAVY_GAS) { Sound = MaterialSound.METAL /* TODO: GAS */, Solidity = MaterialSolidity.GAS, Opaque = false, FogColor = new Location(0.25, 0.25, 0.25), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.1f },
-                new MaterialInfo((int)Material.LIQUID_SLIME) { Sound = MaterialSound.METAL /* TODO: LIQUID */, Solidity = MaterialSolidity.LIQUID, Opaque = false, FogColor = new Location(1, 1, 1), Hardness = 5, BreakTime = 0.2f, Spreads = true, LightDamage = 0.28f, SpeedMod = 0.8f },
-            };
-            mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.TOP] = MAX_THEORETICAL_MATERIALS - 1; // grass (top)
-            mats[(int)Material.GRASS_FOREST].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
-            mats[(int)Material.DEBUG].TID[(int)MaterialSide.BOTTOM] = MAX_THEORETICAL_MATERIALS - 2; // db_bottom
-            mats[(int)Material.DEBUG].TID[(int)MaterialSide.XM] = MAX_THEORETICAL_MATERIALS - 3; // db_xm
-            mats[(int)Material.DEBUG].TID[(int)MaterialSide.XP] = MAX_THEORETICAL_MATERIALS - 4; // db_xp
-            mats[(int)Material.DEBUG].TID[(int)MaterialSide.YP] = MAX_THEORETICAL_MATERIALS - 5; // db_yp
-            mats[(int)Material.DEBUG].TID[(int)MaterialSide.YM] = MAX_THEORETICAL_MATERIALS - 6; // db_ym
-            mats[(int)Material.LOG_OAK].TID[(int)MaterialSide.TOP] = MAX_THEORETICAL_MATERIALS - 7; // wood_top
-            mats[(int)Material.LOG_OAK].TID[(int)MaterialSide.BOTTOM] = MAX_THEORETICAL_MATERIALS - 7; // wood_top
-            mats[(int)Material.GRASS_PLAINS].TID[(int)MaterialSide.TOP] = MAX_THEORETICAL_MATERIALS - 8; // grass plains (top)
-            mats[(int)Material.GRASS_PLAINS].TID[(int)MaterialSide.BOTTOM] = 3; // dirt
-            ALL_MATS.AddRange(mats);
-        }
         
         public static MaterialSolidity GetSolidity(this Material mat)
         {
@@ -204,21 +289,34 @@ namespace Voxalia.Shared
 
         public static Type MaterialType = typeof(Material);
 
-        public static Material FromNameOrNumber(string input)
+        public static bool TryGetFromNameOrNumber(string input, out Material mat)
         {
             ushort t;
             if (ushort.TryParse(input, out t))
             {
-                return (Material)t;
+                mat = (Material)t;
+                return true;
             }
             string inp = input.ToUpperInvariant();
             int hash = inp.GetHashCode();
             for (t = 0; t < ALL_MATS.Count; t++)
             {
-                if (ALL_MATS[t].NameHash == hash && ALL_MATS[t].Name == inp)
+                if (ALL_MATS[t] != null && ALL_MATS[t].NameHash == hash && ALL_MATS[t].Name == inp)
                 {
-                    return (Material)t;
+                    mat = (Material)t;
+                    return true;
                 }
+            }
+            mat = Material.AIR;
+            return false;
+        }
+
+        public static Material FromNameOrNumber(string input)
+        {
+            Material mat;
+            if (TryGetFromNameOrNumber(input, out mat))
+            {
+                return mat;
             }
             throw new Exception("Unknown material name or ID: " + input);
         }

@@ -1,0 +1,9 @@
+Name=Oil
+// TODO: Liquid?
+Sound=METAL
+Solidity=LIQUID
+FogColor=0,0,0
+Hardness=5
+BreakTime=0.2
+Spreads=true
+SpeedMod=0.7
