@@ -55,7 +55,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Unfly();
             }
             SetVelocity(Location.FromString(config.ReadString("velocity", "0,0,0")));
-            Teleport(Location.FromString(config.ReadString("position", "0,0,50")));
+            Teleport(Location.FromString(config.ReadString("position", TheRegion.SpawnPoint.ToString())));
             IsFirstJoin = false;
             SpawnedTime = TheRegion.GlobalTickTime;
         }

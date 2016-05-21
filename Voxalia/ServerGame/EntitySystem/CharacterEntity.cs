@@ -317,7 +317,9 @@ namespace Voxalia.ServerGame.EntitySystem
             MinZ = box.Min.Z;
         }
 
-        public float CBHHeight = 1.3f;
+        const float defHalfHeight = 1.3f;
+
+        public float CBHHeight = defHalfHeight;
 
         public float CBProneSpeed = 1f;
 
@@ -402,7 +404,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public abstract Location GetEyePosition();
 
-        public float MinZ = 0;
+        public float MinZ = -defHalfHeight;
 
         public override Location GetPosition()
         {
