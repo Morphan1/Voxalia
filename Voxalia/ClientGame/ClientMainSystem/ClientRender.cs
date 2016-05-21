@@ -71,7 +71,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             skybox[5].AddSide(Location.UnitY, new TextureCoordinates());
             for (int i = 0; i < 6; i++)
             {
-                skybox[i].GenerateVBO(false);
+                skybox[i].GenerateVBO();
             }
         }
 

@@ -22,39 +22,28 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GenerateBoxVBO();
             GenerateSquareVBO();
             GenerateLineVBO();
-            GenerateBackgridVBO();
         }
 
         public VBO Square;
         VBO Line;
         VBO Box;
-        VBO Backgrid;
 
         void GenerateSquareVBO()
         {
-            Vector3[] vecs = new Vector3[4];
-            uint[] inds = new uint[4];
-            Vector3[] norms = new Vector3[4];
-            Vector3[] texs = new Vector3[4];
-            Vector4[] cols = new Vector4[4];
-            for (uint u = 0; u < 4; u++)
+            Vector3[] vecs = new Vector3[6];
+            uint[] inds = new uint[6];
+            Vector3[] norms = new Vector3[6];
+            Vector3[] texs = new Vector3[6];
+            Vector4[] cols = new Vector4[6];
+            Vector4[] BoneIDs = new Vector4[6];
+            Vector4[] BoneWeights = new Vector4[6];
+            Vector4[] BoneIDs2 = new Vector4[6];
+            Vector4[] BoneWeights2 = new Vector4[6];
+            for (uint n = 0; n < 6; n++)
             {
-                inds[u] = u;
-            }
-            for (int n = 0; n < 4; n++)
-            {
+                inds[n] = n;
                 norms[n] = new Vector3(0, 0, 1);
-            }
-            for (int c = 0; c < 4; c++)
-            {
-                cols[c] = new Vector4(1, 1, 1, 1);
-            }
-            Vector4[] BoneIDs = new Vector4[4];
-            Vector4[] BoneWeights = new Vector4[4];
-            Vector4[] BoneIDs2 = new Vector4[4];
-            Vector4[] BoneWeights2 = new Vector4[4];
-            for (int n = 0; n < 4; n++)
-            {
+                cols[n] = new Vector4(1, 1, 1, 1);
                 BoneIDs[n] = new Vector4(0, 0, 0, 0);
                 BoneWeights[n] = new Vector4(0, 0, 0, 0);
                 BoneIDs2[n] = new Vector4(0, 0, 0, 0);
@@ -66,8 +55,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
             texs[1] = new Vector3(1, 1, 0);
             vecs[2] = new Vector3(0, 1, 0);
             texs[2] = new Vector3(0, 1, 0);
-            vecs[3] = new Vector3(0, 0, 0);
-            texs[3] = new Vector3(0, 0, 0);
+            vecs[3] = new Vector3(1, 0, 0);
+            texs[3] = new Vector3(1, 0, 0);
+            vecs[4] = new Vector3(0, 1, 0);
+            texs[4] = new Vector3(0, 1, 0);
+            vecs[5] = new Vector3(0, 0, 0);
+            texs[5] = new Vector3(0, 0, 0);
             Square = new VBO();
             Square.Vertices = vecs.ToList();
             Square.Indices = inds.ToList();
@@ -80,58 +73,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Square.BoneWeights2 = BoneWeights2.ToList();
             Square.GenerateVBO();
         }
-
-        void GenerateBackgridVBO()
-        {
-            Vector3[] vecs = new Vector3[4];
-            uint[] inds = new uint[4];
-            Vector3[] norms = new Vector3[4];
-            Vector3[] texs = new Vector3[4];
-            Vector4[] cols = new Vector4[4];
-            for (uint u = 0; u < 4; u++)
-            {
-                inds[u] = u;
-            }
-            for (int n = 0; n < 4; n++)
-            {
-                norms[n] = new Vector3(0, 0, 1);
-            }
-            for (int c = 0; c < 4; c++)
-            {
-                cols[c] = new Vector4(1, 1, 1, 1);
-            }
-            Vector4[] BoneIDs = new Vector4[4];
-            Vector4[] BoneWeights = new Vector4[4];
-            Vector4[] BoneIDs2 = new Vector4[4];
-            Vector4[] BoneWeights2 = new Vector4[4];
-            for (int n = 0; n < 4; n++)
-            {
-                BoneIDs[n] = new Vector4(0, 0, 0, 0);
-                BoneWeights[n] = new Vector4(0, 0, 0, 0);
-                BoneIDs2[n] = new Vector4(0, 0, 0, 0);
-                BoneWeights2[n] = new Vector4(0, 0, 0, 0);
-            }
-            vecs[0] = new Vector3(10000, -10000, 0);
-            texs[0] = new Vector3(1000, -1000, 0);
-            vecs[1] = new Vector3(10000, 10000, 0);
-            texs[1] = new Vector3(1000, 1000, 0);
-            vecs[2] = new Vector3(-10000, 10000, 0);
-            texs[2] = new Vector3(-1000, 1000, 0);
-            vecs[3] = new Vector3(-10000, -10000, 0);
-            texs[3] = new Vector3(-1000, -1000, 0);
-            Backgrid = new VBO();
-            Backgrid.Vertices = vecs.ToList();
-            Backgrid.Indices = inds.ToList();
-            Backgrid.Normals = norms.ToList();
-            Backgrid.TexCoords = texs.ToList();
-            Backgrid.Colors = cols.ToList();
-            Backgrid.BoneIDs = BoneIDs.ToList();
-            Backgrid.BoneWeights = BoneWeights.ToList();
-            Backgrid.BoneIDs2 = BoneIDs2.ToList();
-            Backgrid.BoneWeights2 = BoneWeights2.ToList();
-            Backgrid.GenerateVBO(false);
-        }
-
+        
         void GenerateLineVBO()
         {
             Vector3[] vecs = new Vector3[2];
@@ -176,7 +118,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Line.BoneWeights = BoneWeights.ToList();
             Line.BoneIDs2 = BoneIDs2.ToList();
             Line.BoneWeights2 = BoneWeights2.ToList();
-            Line.GenerateVBO(false);
+            Line.GenerateVBO();
         }
 
         void GenerateBoxVBO()
@@ -250,7 +192,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Box.BoneWeights = BoneWeights.ToList();
             Box.BoneIDs2 = BoneIDs2.ToList();
             Box.BoneWeights2 = BoneWeights2.ToList();
-            Box.GenerateVBO(false);
+            Box.GenerateVBO();
         }
 
         public Renderer(TextureEngine tengine, ShaderEngine shaderdet)
@@ -412,16 +354,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             mat *= m2;
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Square._VAO);
-            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
-        }
-
-        /// <summary>
-        /// Renders a 2D backgrid.
-        /// </summary>
-        public void RenderBackgrid(Matrix4 mat)
-        {
-            GL.UniformMatrix4(2, false, ref mat);
-            GL.BindVertexArray(Backgrid._VAO);
             GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
     }

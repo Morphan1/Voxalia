@@ -585,7 +585,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public void GenerateVBO()
         {
-            vbo.GenerateVBO(false);
+            vbo.GenerateVBO();
         }
 
         /// <summary>
