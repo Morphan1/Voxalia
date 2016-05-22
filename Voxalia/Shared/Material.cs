@@ -201,6 +201,11 @@ namespace Voxalia.Shared
         /// All material data known to this engine.
         /// </summary>
         public static List<MaterialInfo> ALL_MATS = new List<MaterialInfo>((int)Material.NUM_DEFAULT);
+
+        public static bool IsValid(Material mat)
+        {
+            return (int)mat < ALL_MATS.Count && ALL_MATS[(int)mat] != null;
+        }
         
         public static MaterialSolidity GetSolidity(this Material mat)
         {

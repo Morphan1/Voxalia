@@ -236,9 +236,12 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(new ItemStack("flashantilight", TheServer, 1, "items/common/flashlight_ico", "Flashantilight", "Lights things down!", Color.White, "items/common/flashlight", false));
             Items.GiveItem(new ItemStack("sun_angler", TheServer, 1, "items/tools/sun_angler", "Sun Angler", "Moves the sun itself!", Color.White, "items/tools/sun_angler", false));
             Items.GiveItem(new ItemStack("breadcrumb", TheServer, 1, "items/common/breadcrumbs", "Bread Crumbs", "Finds the way back, even over the river and through the woods!", Color.White, "items/common/breadcrumbs", false));
-            for (int i = 1; i < (int)Material.NUM_DEFAULT; i++)
+            for (int i = 1; i < MaterialHelpers.ALL_MATS.Count; i++)
             {
-                Items.GiveItem(TheServer.Items.GetItem("blocks/" + ((Material)i).ToString(), 100));
+                if (MaterialHelpers.IsValid((Material)i))
+                {
+                    Items.GiveItem(TheServer.Items.GetItem("blocks/" + ((Material)i).ToString(), 100));
+                }
             }
             Items.GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol_ico", "9mm Pistol", "It shoots bullets!", Color.White, "items/weapons/silenced_pistol", false));
             Items.GiveItem(new ItemStack("shotgun_gun", TheServer, 1, "items/weapons/shotgun_ico", "Shotgun", "It shoots many bullets!", Color.White, "items/weapons/shotgun", false));
