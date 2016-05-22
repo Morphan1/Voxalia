@@ -81,7 +81,10 @@ namespace Voxalia.ServerGame.NetworkSystem
                 try
                 {
                     Socket socket = ListenSocket.Accept();
-                    Connections.Add(new Connection(TheServer, socket));
+                    lock (networkLock)
+                    {
+                        Connections.Add(new Connection(TheServer, socket));
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -91,23 +94,28 @@ namespace Voxalia.ServerGame.NetworkSystem
             }
         }
 
+        public Object networkLock = new Object();
+
         public void Tick(double delta)
         {
-            for (int i = 0; i < Connections.Count; i++)
+            lock (networkLock)
             {
-                if (Connections[i] == null)
+                for (int i = 0; i < Connections.Count; i++)
                 {
-                    Connections.RemoveAt(i);
-                    i--;
-                }
-                if (Connections[i].Alive)
-                {
-                    Connections[i].Tick(delta);
-                }
-                if (!Connections[i].Alive)
-                {
-                    Connections.RemoveAt(i);
-                    i--;
+                    if (Connections[i] == null)
+                    {
+                        Connections.RemoveAt(i);
+                        i--;
+                    }
+                    if (Connections[i].Alive)
+                    {
+                        Connections[i].Tick(delta);
+                    }
+                    if (!Connections[i].Alive)
+                    {
+                        Connections.RemoveAt(i);
+                        i--;
+                    }
                 }
             }
         }

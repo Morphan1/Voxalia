@@ -292,7 +292,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 using (DataStream eds = new DataStream(det.Entities))
                 {
                     DataReader edr = new DataReader(eds);
-                    while (eds.Length - eds.Position > 0)
+                    while (edr.BaseStream.Length - eds.Position > 7)
                     {
                         int EType = edr.ReadInt();
                         byte[] dat = edr.ReadFullBytes();
