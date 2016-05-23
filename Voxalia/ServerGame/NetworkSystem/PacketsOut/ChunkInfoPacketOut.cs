@@ -18,19 +18,25 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             byte[] data_orig;
             if (lod == 1)
             {
+                bool isAir = true;
                 data_orig = new byte[chunk.BlocksInternal.Length * 4];
-                int csize = Chunk.CHUNK_SIZE;
-                for (int x = 0; x < csize; x++)
+                for (int x = 0; x < chunk.BlocksInternal.Length; x++)
                 {
-                    for (int y = 0; y < csize; y++)
+                    ushort mat = chunk.BlocksInternal[x].BlockMaterial;
+                    if (mat != 0)
                     {
-                        for (int z = 0; z < csize; z++)
-                        {
-                            Utilities.UshortToBytes(chunk.GetBlockAt(x, y, z).BlockMaterial).CopyTo(data_orig, (z * csize * csize + y * csize + x) * 2);
-                        }
+                        isAir = false;
                     }
+                    Utilities.UshortToBytes(mat).CopyTo(data_orig, x * 2);
                 }
-                // TODO: Why is the above and below different?
+                if (isAir)
+                {
+                    Data = new byte[12];
+                    Utilities.IntToBytes((int)chunk.WorldPosition.X).CopyTo(Data, 0);
+                    Utilities.IntToBytes((int)chunk.WorldPosition.Y).CopyTo(Data, 4);
+                    Utilities.IntToBytes((int)chunk.WorldPosition.Z).CopyTo(Data, 8);
+                    return;
+                }
                 for (int i = 0; i < chunk.BlocksInternal.Length; i++)
                 {
                     data_orig[chunk.BlocksInternal.Length * 2 + i] = chunk.BlocksInternal[i].BlockData;
