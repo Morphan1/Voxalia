@@ -9,8 +9,8 @@ layout (location = 5) in vec4 tcol;
 
 out struct vox_out
 {
-	vec4 position;
-	vec3 texcoord;
+	invariant vec4 position;
+	invariant vec3 texcoord;
 	vec4 color;
 	vec4 tcol;
 	mat3 tbn;
