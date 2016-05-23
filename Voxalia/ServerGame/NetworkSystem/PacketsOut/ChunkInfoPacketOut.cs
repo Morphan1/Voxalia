@@ -10,7 +10,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         public ChunkInfoPacketOut(Chunk chunk, int lod)
         {
             UsageType = NetUsageType.CHUNKS;
-            if (chunk.Flags.HasFlag(ChunkFlags.POPULATING) && lod != 5 && chunk.LOD == null)
+            if (chunk.Flags.HasFlag(ChunkFlags.POPULATING) && (lod != 5 || chunk.LOD == null))
             {
                 throw new Exception("Trying to transmit chunk while it's still loading! For chunk at " + chunk.WorldPosition);
             }
@@ -31,21 +31,28 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 }
                 if (isAir)
                 {
-                    Data = new byte[12];
-                    Utilities.IntToBytes((int)chunk.WorldPosition.X).CopyTo(Data, 0);
-                    Utilities.IntToBytes((int)chunk.WorldPosition.Y).CopyTo(Data, 4);
-                    Utilities.IntToBytes((int)chunk.WorldPosition.Z).CopyTo(Data, 8);
-                    return;
+                    data_orig = null;
                 }
-                for (int i = 0; i < chunk.BlocksInternal.Length; i++)
+                else
                 {
-                    data_orig[chunk.BlocksInternal.Length * 2 + i] = chunk.BlocksInternal[i].BlockData;
-                    data_orig[chunk.BlocksInternal.Length * 3 + i] = chunk.BlocksInternal[i].BlockPaint;
+                    for (int i = 0; i < chunk.BlocksInternal.Length; i++)
+                    {
+                        data_orig[chunk.BlocksInternal.Length * 2 + i] = chunk.BlocksInternal[i].BlockData;
+                        data_orig[chunk.BlocksInternal.Length * 3 + i] = chunk.BlocksInternal[i].BlockPaint;
+                    }
                 }
             }
             else
             {
-                data_orig = chunk.LODBytes(lod);
+                data_orig = chunk.LODBytes(lod, true);
+            }
+            if (data_orig == null)
+            {
+                Data = new byte[12];
+                Utilities.IntToBytes((int)chunk.WorldPosition.X).CopyTo(Data, 0);
+                Utilities.IntToBytes((int)chunk.WorldPosition.Y).CopyTo(Data, 4);
+                Utilities.IntToBytes((int)chunk.WorldPosition.Z).CopyTo(Data, 8);
+                return;
             }
             byte[] gdata = FileHandler.GZip(data_orig);
             DataStream ds = new DataStream(gdata.Length + 16);

@@ -35,6 +35,8 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public byte[] LOD = null;
 
+        public bool LOD_Is_Air = false;
+
         public ChunkFlags Flags = ChunkFlags.NONE;
         
         public Region OwningRegion = null;
@@ -51,6 +53,15 @@ namespace Voxalia.ServerGame.WorldSystem
         public Chunk(byte[] _lod)
         {
             LOD = _lod;
+            LOD_Is_Air = true;
+            for (int i = 0; i < _lod.Length; i++)
+            {
+                if (_lod[i] != 0)
+                {
+                    LOD_Is_Air = false;
+                    break;
+                }
+            }
         }
 
         public bool Contains(Location loc)
@@ -224,12 +235,17 @@ namespace Voxalia.ServerGame.WorldSystem
             });
         }
 
-        public byte[] LODBytes(int lod)
+        public byte[] LODBytes(int lod, bool canReturnNull = false)
         {
             if (LOD != null && lod == 5)
             {
+                if (canReturnNull && LOD_Is_Air)
+                {
+                    return null;
+                }
                 return LOD;
             }
+            bool isAir = canReturnNull;
             int csize = Chunk.CHUNK_SIZE / lod;
             byte[] data_orig = new byte[csize * csize * csize * 2];
             for (int x = 0; x < csize; x++)
@@ -238,9 +254,18 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     for (int z = 0; z < csize; z++)
                     {
-                        Utilities.UshortToBytes((ushort)LODBlock(x, y, z, lod)).CopyTo(data_orig, (z * csize * csize + y * csize + x) * 2);
+                        Material mat = LODBlock(x, y, z, lod);
+                        if (mat != Material.AIR)
+                        {
+                            isAir = false;
+                        }
+                        Utilities.UshortToBytes((ushort)mat).CopyTo(data_orig, (z * csize * csize + y * csize + x) * 2);
                     }
                 }
+            }
+            if (isAir)
+            {
+                return null;
             }
             return data_orig;
         }
