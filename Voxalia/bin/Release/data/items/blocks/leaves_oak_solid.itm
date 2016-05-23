@@ -1,6 +1,6 @@
 type: block
 icon: blocks/transparent/leaves_basic1
-display: Leaves
+display: Oak Leaves (Solid)
 description: Transparent in parts!
 color: 1,1,1
 model: block

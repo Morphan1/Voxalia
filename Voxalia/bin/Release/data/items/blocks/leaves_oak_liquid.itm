@@ -1,0 +1,10 @@
+type: block
+icon: blocks/transparent/leaves_basic1
+display: Oak Leaves (Liquid)
+description: Spreads!
+color: 1,1,1
+model: block
+bound: false
+datum: 32
+weight: 0.5
+volume: 0.5

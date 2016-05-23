@@ -16,7 +16,7 @@ namespace Voxalia.Shared
         DIRT = 3,
         WATER = 4,
         DEBUG = 5,
-        LEAVES1 = 6,
+        LEAVES_OAK_SOLID = 6,
         CONCRETE = 7,
         SOLID_SLIME = 8,
         SNOW = 9,
@@ -42,10 +42,11 @@ namespace Voxalia.Shared
         ICE = 29,
         HEAVY_GAS = 30,
         LIQUID_SLIME = 31,
+        LEAVES_OAK_LIQUID = 32,
         /// <summary>
-        /// How many materials there are by default. Only for use with internal pre-generation, or direct handling of this enumeration (shouldn't happen often.)
+        /// How many materials there are by default. Only for use with direct handling of this enumeration (shouldn't happen often.)
         /// </summary>
-        NUM_DEFAULT = 32,
+        NUM_DEFAULT = 33,
         /// <summary>
         /// How many materials there theoretically can be.
         /// </summary>

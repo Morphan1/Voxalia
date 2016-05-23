@@ -1,0 +1,9 @@
+Name=Leaves_Oak_Liquid
+Opaque=false
+SpeedMod=0.1
+FogAlpha=0
+CanRenderAgainstSelf=true
+Sound=Leaves
+BreakTime=0.5
+Solidity=LIQUID
+Spreads=true

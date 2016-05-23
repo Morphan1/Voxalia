@@ -240,7 +240,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 if (MaterialHelpers.IsValid((Material)i))
                 {
-                    Items.GiveItem(TheServer.Items.GetItem("blocks/" + ((Material)i).ToString(), 100));
+                    Items.GiveItem(TheServer.Items.GetItem("blocks/" + ((Material)i).GetName().ToLowerFast(), 100));
                 }
             }
             Items.GiveItem(new ItemStack("pistol_gun", TheServer, 1, "items/weapons/9mm_pistol_ico", "9mm Pistol", "It shoots bullets!", Color.White, "items/weapons/silenced_pistol", false));

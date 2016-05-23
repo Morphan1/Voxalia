@@ -427,7 +427,7 @@ namespace Voxalia.ServerGame.WorldSystem
                             // TODO: Defensive wall structuring - trace lines and break as appropriate.
                             if ((post - pos).LengthSquared() <= rad * rad && GetBlockMaterial(post).GetHardness() <= expDamage / (post - pos).Length())
                             {
-                                BreakNaturally(post, true, 0);
+                                BreakNaturally(post, true);
                             }
                         }
                     }

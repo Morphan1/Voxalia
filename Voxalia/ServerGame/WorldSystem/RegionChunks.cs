@@ -115,7 +115,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Location[] FellLocs = new Location[] { new Location(0, 0, 1), new Location(1, 0, 0), new Location(0, 1, 0), new Location(-1, 0, 0), new Location(0, -1, 0) };
 
-        public void BreakNaturally(Location pos, bool regentrans = true, int max_subbreaks = 5)
+        public void BreakNaturally(Location pos, bool regentrans = true)
         {
             pos = pos.GetBlockLocation();
             Chunk ch = LoadChunk(ChunkLocFor(pos));
@@ -133,19 +133,6 @@ namespace Voxalia.ServerGame.WorldSystem
                 ch.BlocksInternal[ch.BlockIndex(x, y, z)].BlockLocalData |= (byte)BlockFlags.PROTECTED;
                 if (mat != (ushort)Material.AIR)
                 {
-                    if (max_subbreaks > 0
-                        && !((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.EDITED)
-                        && (mat == Material.LOG_OAK || mat == Material.LEAVES1))
-                    {
-                        foreach (Location loc in FellLocs)
-                        {
-                            Material m2 = GetBlockMaterial(pos + loc);
-                            if (m2 == Material.LOG_OAK || m2 == Material.LEAVES1)
-                            {
-                                BreakNaturally(pos + loc, regentrans, max_subbreaks - 1);
-                            }
-                        }
-                    }
                     ch.SetBlockAt(x, y, z, new BlockInternal((ushort)Material.AIR, 0, 0, (byte)BlockFlags.EDITED));
                     ch.LastEdited = GlobalTickTime;
                     SurroundRunPhysics(pos);
