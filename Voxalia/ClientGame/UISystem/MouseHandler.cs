@@ -1,4 +1,5 @@
-﻿using Voxalia.Shared;
+﻿using System;
+using Voxalia.Shared;
 using OpenTK.Input;
 using Voxalia.ClientGame.ClientMainSystem;
 using System.Drawing;
@@ -37,6 +38,7 @@ namespace Voxalia.ClientGame.UISystem
         /// </summary>
         public static int MouseScroll = 0;
 
+        public static bool IsWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
         /// <summary>
         /// Captures the mouse to this window.
         /// </summary>
@@ -49,7 +51,10 @@ namespace Voxalia.ClientGame.UISystem
             }
             CenterMouse();
             MouseCaptured = true;
-            // TODO: Linux support for this: Client.Central.Window.CursorVisible = false;
+            if (IsWindows)
+            {
+                Client.Central.Window.CursorVisible = false;
+            }
         }
 
         /// <summary>
