@@ -538,6 +538,10 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public Location GetSkyLight(Location pos, Location norm, Chunk chk)
         {
+            if (norm.Z < -0.99)
+            {
+                return Location.Zero;
+            }
             pos.Z = pos.Z + 1;
             double XP = Math.Floor(pos.X / Chunk.CHUNK_SIZE);
             double YP = Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
@@ -551,7 +555,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 Chunk ch = GetChunk(new Location(XP, YP, ZP));
                 if (ch == null)
                 {
-                    return new Location(light, light, light);
+                    break;
                 }
                 while (z < Chunk.CHUNK_SIZE)
                 {
@@ -566,7 +570,13 @@ namespace Voxalia.ClientGame.WorldSystem
                 ZP++;
                 z = 0;
             }
+            // vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
+            return norm.Dot(SunLightPathNegative) * new Location(light) * SkyLightMod;
         }
+
+        static Location SunLightPathNegative = new Location(0, 0, 1);
+
+        const float SkyLightMod = 0.75f;
 
         public Location GetAmbient(Location pos)
         {
