@@ -19,10 +19,10 @@ namespace Voxalia.Shared
         LEAVES_OAK_SOLID = 6,
         CONCRETE = 7,
         SOLID_SLIME = 8,
-        SNOW = 9,
+        SNOW_SOLID = 9,
         SMOKE = 10,
         LOG_OAK = 11,
-        // Unused=12
+        SNOW_LIQUID = 12,
         SAND = 13,
         STEEL_SOLID = 14,
         STEEL_PLATE = 15,

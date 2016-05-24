@@ -1,0 +1,8 @@
+Name=Snow_Liquid
+SpeedMod=0.7
+Sound=SNOW
+BreakTime=0.5
+Breaker=SHOVEL
+Solidity=LIQUID
+Spreads=true
+FogColor=0.9,1,1

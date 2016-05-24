@@ -1,10 +1,10 @@
 type: block
 icon: blocks/solid/natural/snow
-display: Snow
-description: Cold!
+display: Snow (Liquid)
+description: Cold and movable!
 color: 1,1,1
 model: block
 bound: false
-datum: 9
+datum: 12
 weight: 1
 volume: 1

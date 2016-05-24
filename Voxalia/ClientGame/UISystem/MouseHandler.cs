@@ -39,6 +39,7 @@ namespace Voxalia.ClientGame.UISystem
         public static int MouseScroll = 0;
 
         public static bool IsWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
+
         /// <summary>
         /// Captures the mouse to this window.
         /// </summary>
@@ -54,6 +55,10 @@ namespace Voxalia.ClientGame.UISystem
             if (IsWindows)
             {
                 Client.Central.Window.CursorVisible = false;
+            }
+            else
+            {
+                // TODO: Linux mouse magic!
             }
         }
 

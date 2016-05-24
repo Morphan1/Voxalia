@@ -11,12 +11,12 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator.Biomes
 
         public override Material SurfaceBlock()
         {
-            return Material.SNOW;
+            return Material.SNOW_SOLID;
         }
 
         public override Material SecondLayerBlock()
         {
-            return Material.SNOW;
+            return Material.SNOW_SOLID;
         }
     }
 }
