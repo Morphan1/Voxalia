@@ -231,7 +231,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 anim.Textures[i] = GL.GenTexture();
                 GL.BindTexture(TextureTarget.Texture2D, anim.Textures[i]);
-                TEngine.LockBitmapToTexture(textures[i]);
+                TEngine.LockBitmapToTexture(textures[i], false);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 anim.FBOs[i] = GL.GenFramebuffer();
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, anim.FBOs[i]);

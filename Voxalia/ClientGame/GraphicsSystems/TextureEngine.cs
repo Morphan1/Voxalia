@@ -164,7 +164,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenTextures(1, out texture.Original_InternalID);
                 texture.Internal_Texture = texture.Original_InternalID;
                 texture.Bind();
-                LockBitmapToTexture(bmp2);
+                LockBitmapToTexture(bmp2, true);
                 texture.Width = bmp2.Width;
                 texture.Height = bmp2.Height;
                 if (bmp2 != bmp)
@@ -236,7 +236,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             bmp.SetPixel(0, 1, c);
             bmp.SetPixel(1, 0, c);
             bmp.SetPixel(1, 1, c);
-            LockBitmapToTexture(bmp);
+            LockBitmapToTexture(bmp, false);
             bmp.Dispose();
             texture.LoadedProperly = true;
             return texture;
@@ -246,15 +246,15 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// Locks a bitmap file's data to a GL texture.
         /// </summary>
         /// <param name="bmp">The bitmap to use.</param>
-        public void LockBitmapToTexture(Bitmap bmp)
+        public void LockBitmapToTexture(Bitmap bmp, bool linear)
         {
             BitmapData bmp_data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height),
                 ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bmp_data.Width, bmp_data.Height, 0,
                 OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, bmp_data.Scan0);
             bmp.UnlockBits(bmp_data);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, linear ? (int)TextureMinFilter.Linear : (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, linear ? (int)TextureMagFilter.Linear : (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureCompareMode, (int)TextureCompareMode.CompareRefToTexture);
