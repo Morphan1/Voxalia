@@ -135,7 +135,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             if (LocalServer != null)
             {
-                LocalServer.ShutDown();
+                Object tlock = new Object();
+                bool done = false;
+                LocalServer.ShutDown(() => { lock (tlock) { done = true; } });
+                bool b = false;
+                while (!b)
+                {
+                    Thread.Sleep(250);
+                    lock (tlock)
+                    {
+                        b = done;
+                    }
+                }
             }
             // TODO: Cleanup!
             Environment.Exit(0);

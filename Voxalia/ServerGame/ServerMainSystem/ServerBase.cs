@@ -115,14 +115,20 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         Thread CurThread;
 
+        public bool NeedShutdown = false;
+
+        Action shutdownCallback = null;
+
         /// <summary>
         /// Shuts down the server, saving any necessary data.
         /// </summary>
-        public void ShutDown()
+        public void ShutDown(Action callback = null)
         {
+            shutdownCallback = callback;
             if (CurThread != Thread.CurrentThread)
             {
-                CurThread.Abort();
+                NeedShutdown = true; // TODO: Lock for this?
+                return;
             }
             ShuttingDown = true;
             SysConsole.Output(OutputType.INFO, "[Shutdown] Starting to close server...");
@@ -158,6 +164,10 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 reg.FinalShutdown();
             }
             ConsoleHandler.Close();
+            if (shutdownCallback != null)
+            {
+                shutdownCallback.Invoke();
+            }
             if (CurThread == Thread.CurrentThread)
             {
                 CurThread.Abort();
@@ -271,6 +281,12 @@ namespace Voxalia.ServerGame.ServerMainSystem
                     // As long as there's more delta built up than delta wanted, tick
                     while (TotalDelta > TargetDelta)
                     {
+                        if (NeedShutdown)
+                        {
+                            CurThread = Thread.CurrentThread;
+                            ShutDown(shutdownCallback);
+                            return;
+                        }
                         Tick(TargetDelta);
                         TotalDelta -= TargetDelta;
                     }
