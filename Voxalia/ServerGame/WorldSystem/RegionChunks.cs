@@ -348,9 +348,14 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         dat = ChunkManager.GetChunkDetails((int)chunk.WorldPosition.X, (int)chunk.WorldPosition.Y, (int)chunk.WorldPosition.Z);
                     }
+                    ChunkDetails ents;
+                    lock (chunk.GetLocker())
+                    {
+                        ents = ChunkManager.GetChunkEntities((int)chunk.WorldPosition.X, (int)chunk.WorldPosition.Y, (int)chunk.WorldPosition.Z);
+                    }
                     if (dat != null)
                     {
-                        chunk.LoadFromSaveData(dat);
+                        chunk.LoadFromSaveData(dat, ents);
                         TheServer.Schedule.ScheduleSyncTask(() =>
                         {
                             chunk.AddToWorld();

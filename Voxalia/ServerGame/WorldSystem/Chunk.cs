@@ -197,7 +197,7 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public void UnloadSafely(Action callback = null)
         {
-            SaveToFile(callback);
+            SaveAsNeeded(callback);
             clearentities();
             if (FCO != null)
             {
@@ -208,6 +208,37 @@ namespace Voxalia.ServerGame.WorldSystem
         }
 
         public double UnloadTimer = 0;
+
+        /// <summary>
+        /// Sync only.
+        /// </summary>
+        public void SaveAsNeeded(Action callback = null)
+        {
+            if (FCO == null)
+            {
+                if (callback != null)
+                {
+                    callback.Invoke();
+                }
+                return;
+            }
+            if (LastEdited == -1)
+            {
+                byte[] ents = GetEntitySaveData();
+                OwningRegion.TheServer.Schedule.StartASyncTask(() =>
+                {
+                    SaveToFileE(ents);
+                    if (callback != null)
+                    {
+                        callback.Invoke();
+                    }
+                });
+            }
+            else
+            {
+                SaveToFile(callback);
+            }
+        }
         
         /// <summary>
         /// Sync only.
@@ -227,7 +258,8 @@ namespace Voxalia.ServerGame.WorldSystem
             byte[] blks = GetChunkSaveData();
             OwningRegion.TheServer.Schedule.StartASyncTask(() =>
             {
-                SaveToFileI(blks, ents);
+                SaveToFileI(blks);
+                SaveToFileE(ents);
                 if (callback != null)
                 {
                     callback.Invoke();
@@ -270,7 +302,7 @@ namespace Voxalia.ServerGame.WorldSystem
             return data_orig;
         }
         
-        void SaveToFileI(byte[] blks, byte[] ents)
+        void SaveToFileI(byte[] blks)
         {
             try
             {
@@ -281,7 +313,6 @@ namespace Voxalia.ServerGame.WorldSystem
                 det.Z = (int)WorldPosition.Z;
                 det.Flags = Flags;
                 det.Blocks = blks;
-                det.Entities = ents;
                 byte[] lod = LODBytes(5);
                 lock (GetLocker())
                 {
@@ -296,9 +327,30 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
+        void SaveToFileE(byte[] ents)
+        {
+            try
+            {
+                ChunkDetails det = new ChunkDetails();
+                det.Version = 1;
+                det.X = (int)WorldPosition.X;
+                det.Y = (int)WorldPosition.Y;
+                det.Z = (int)WorldPosition.Z;
+                det.Blocks = ents;
+                lock (GetLocker())
+                {
+                    OwningRegion.ChunkManager.WriteChunkEntities(det);
+                }
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output(OutputType.ERROR, "Saving entities for chunk " + WorldPosition.ToString() + " to file: " + ex.ToString());
+            }
+        }
+
         List<Entity> entsToSpawn = new List<Entity>();
         
-        public void LoadFromSaveData(ChunkDetails det)
+        public void LoadFromSaveData(ChunkDetails det, ChunkDetails ents)
         {
             if (det.Version != 1)
             {
@@ -312,9 +364,9 @@ namespace Voxalia.ServerGame.WorldSystem
                 BlocksInternal[i].BlockLocalData = det.Blocks[BlocksInternal.Length * 3 + i];
                 BlocksInternal[i].BlockPaint = det.Blocks[BlocksInternal.Length * 4 + i];
             }
-            if (det.Entities.Length > 0)
+            if (ents.Blocks.Length > 0)
             {
-                using (DataStream eds = new DataStream(det.Entities))
+                using (DataStream eds = new DataStream(ents.Blocks))
                 {
                     DataReader edr = new DataReader(eds);
                     while (edr.BaseStream.Length - eds.Position > 7)

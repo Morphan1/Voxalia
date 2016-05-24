@@ -20,6 +20,10 @@ namespace Voxalia.ServerGame.WorldSystem
 
         LiteCollection<BsonDocument> DBLODs;
 
+        LiteDatabase EntsDatabase;
+
+        LiteCollection<BsonDocument> DBEnts;
+
         LiteDatabase ImageDatabase;
 
         LiteCollection<BsonDocument> DBImages;
@@ -27,6 +31,8 @@ namespace Voxalia.ServerGame.WorldSystem
         LiteCollection<BsonDocument> DBMaxes;
 
         public Object FSLock = new Object();
+
+        public Object EntLock = new Object();
 
         public Object LODLock = new Object();
 
@@ -39,6 +45,8 @@ namespace Voxalia.ServerGame.WorldSystem
             DBChunks = Database.GetCollection<BsonDocument>("chunks");
             LODsDatabase = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/lod_chunks.ldb");
             DBLODs = LODsDatabase.GetCollection<BsonDocument>("lodchunks");
+            EntsDatabase = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/ents.ldb");
+            DBEnts = EntsDatabase.GetCollection<BsonDocument>("ents");
             ImageDatabase = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/images.ldb");
             DBImages = ImageDatabase.GetCollection<BsonDocument>("images");
             DBMaxes = ImageDatabase.GetCollection<BsonDocument>("maxes");
@@ -140,6 +148,40 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
+        public ChunkDetails GetChunkEntities(int x, int y, int z)
+        {
+            BsonDocument doc;
+            lock (EntLock)
+            {
+                doc = DBEnts.FindById(GetIDFor(x, y, z));
+            }
+            if (doc == null)
+            {
+                return null;
+            }
+            ChunkDetails det = new ChunkDetails();
+            det.X = x;
+            det.Y = y;
+            det.Z = z;
+            det.Version = doc["version"].AsInt32;
+            det.Blocks = FileHandler.UnGZip(doc["entities"].AsBinary);
+            return det;
+        }
+
+        public void WriteChunkEntities(ChunkDetails details)
+        {
+            BsonValue id = GetIDFor(details.X, details.Y, details.Z);
+            BsonDocument newdoc = new BsonDocument();
+            newdoc["_id"] = id;
+            newdoc["version"] = new BsonValue(details.Version);
+            newdoc["entities"] = new BsonValue(FileHandler.GZip(details.Blocks));
+            lock (EntLock)
+            {
+                DBEnts.Delete(id);
+                DBEnts.Insert(newdoc);
+            }
+        }
+
         public ChunkDetails GetChunkDetails(int x, int y, int z)
         {
             BsonDocument doc;
@@ -158,7 +200,6 @@ namespace Voxalia.ServerGame.WorldSystem
             det.Version = doc["version"].AsInt32;
             det.Flags = (ChunkFlags)doc["flags"].AsInt32;
             det.Blocks = FileHandler.UnGZip(doc["blocks"].AsBinary);
-            det.Entities = FileHandler.UnGZip(doc["entities"].AsBinary);
             return det;
         }
         
@@ -170,7 +211,6 @@ namespace Voxalia.ServerGame.WorldSystem
             newdoc["version"] = new BsonValue(details.Version);
             newdoc["flags"] = new BsonValue((int)details.Flags);
             newdoc["blocks"] = new BsonValue(FileHandler.GZip(details.Blocks));
-            newdoc["entities"] = new BsonValue(FileHandler.GZip(details.Entities));
             lock (FSLock)
             {
                 DBChunks.Delete(id);
