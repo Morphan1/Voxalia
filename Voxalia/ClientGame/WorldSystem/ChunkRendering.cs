@@ -98,9 +98,10 @@ namespace Voxalia.ClientGame.WorldSystem
                                 List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[c.BlockData].GetVertices(pos, xps, xms, yps, yms, zps, zms);
                                 List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[c.BlockData].GetNormals(pos, xps, xms, yps, yms, zps, zms);
                                 List<BEPUutilities.Vector3> tci = BlockShapeRegistry.BSD[c.BlockData].GetTCoords(pos, (Material)c.BlockMaterial, xps, xms, yps, yms, zps, zms);
+                                KeyValuePair<List<BEPUutilities.Vector4>, List<BEPUutilities.Vector4>> ths = !c.BlockShareTex ? default(KeyValuePair<List<BEPUutilities.Vector4>, List<BEPUutilities.Vector4>>) :
+                                    BlockShapeRegistry.BSD[c.BlockData].GetStretchData(pos, vecsi, xp, xm, yp, ym, zp, zm, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
-                                    // TODO: is PosMultiplier used correctly here?
                                     Vector3 vt = new Vector3(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z);
                                     rh.Vertices.Add(vt);
                                     Vector3 nt = new Vector3(normsi[i].X, normsi[i].Y, normsi[i].Z);
@@ -109,6 +110,16 @@ namespace Voxalia.ClientGame.WorldSystem
                                     Location lcol = OwningRegion.GetLightAmount(ClientUtilities.Convert(vt), ClientUtilities.Convert(nt), this);
                                     rh.Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
                                     rh.TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(vt, Colors.ForByte(c.BlockPaint)));
+                                    if (ths.Key != null)
+                                    {
+                                        rh.THVs.Add(new Vector4(ths.Key[i].X, ths.Key[i].Y, ths.Key[i].Z, ths.Key[i].W));
+                                        rh.THWs.Add(new Vector4(ths.Value[i].X, ths.Value[i].Y, ths.Value[i].Z, ths.Value[i].W));
+                                    }
+                                    else
+                                    {
+                                        rh.THVs.Add(new Vector4(0, 0, 0, 0));
+                                        rh.THWs.Add(new Vector4(0, 0, 0, 0));
+                                    }
                                 }
                                 if (!c.IsOpaque() && BlockShapeRegistry.BSD[c.BlockData].BackTextureAllowed)
                                 {
@@ -121,6 +132,16 @@ namespace Voxalia.ClientGame.WorldSystem
                                         rh.TCols.Add(rh.TCols[tx]);
                                         rh.Norms.Add(new Vector3(-normsi[i].X, -normsi[i].Y, -normsi[i].Z));
                                         rh.TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
+                                        if (ths.Key != null)
+                                        {
+                                            rh.THVs.Add(new Vector4(ths.Key[i].X, ths.Key[i].Y, ths.Key[i].Z, ths.Key[i].W));
+                                            rh.THWs.Add(new Vector4(ths.Value[i].X, ths.Value[i].Y, ths.Value[i].Z, ths.Value[i].W));
+                                        }
+                                        else
+                                        {
+                                            rh.THVs.Add(new Vector4(0, 0, 0, 0));
+                                            rh.THWs.Add(new Vector4(0, 0, 0, 0));
+                                        }
                                     }
                                 }
                             }
@@ -201,6 +222,8 @@ namespace Voxalia.ClientGame.WorldSystem
                     tVBO.TexCoords = rh.TCoords;
                     tVBO.Colors = rh.Cols;
                     tVBO.TCOLs = rh.TCols;
+                    tVBO.THVs = rh.THVs;
+                    tVBO.THWs = rh.THWs;
                     tVBO.Tangents = rh.Tangs;
                     tVBO.BoneWeights = null;
                     tVBO.BoneIDs = null;
@@ -282,6 +305,8 @@ namespace Voxalia.ClientGame.WorldSystem
             Norms = new List<Vector3>(CSize * CSize * CSize * 6);
             Cols = new List<Vector4>(CSize * CSize * CSize * 6);
             TCols = new List<Vector4>(CSize * CSize * CSize * 6);
+            THVs = new List<Vector4>(CSize * CSize * CSize * 6);
+            THWs = new List<Vector4>(CSize * CSize * CSize * 6);
             Tangs = new List<Vector3>(CSize * CSize * CSize * 6);
     }
         public List<Vector3> Vertices;
@@ -289,6 +314,8 @@ namespace Voxalia.ClientGame.WorldSystem
         public List<Vector3> Norms;
         public List<Vector4> Cols;
         public List<Vector4> TCols;
+        public List<Vector4> THVs;
+        public List<Vector4> THWs;
         public List<Vector3> Tangs;
     }
 }

@@ -49,6 +49,8 @@ namespace Voxalia.ClientGame.EntitySystem
             vbo.Colors = new List<Vector4>();
             vbo.TCOLs = new List<Vector4>();
             vbo.Tangents = new List<Vector3>();
+            vbo.THVs = new List<Vector4>();
+            vbo.THWs = new List<Vector4>();
             System.Drawing.Color tcol = Voxalia.Shared.Colors.ForByte(Paint);
             for (int i = 0; i < vecs.Count; i++)
             {
@@ -71,9 +73,12 @@ namespace Voxalia.ClientGame.EntitySystem
                 OpenTK.Vector3 tangent = (dv1 * dt2.Y - dv2 * dt1.Y) * 1f / (dt1.X * dt2.Y - dt1.Y * dt2.X);
                 OpenTK.Vector3 normal = vbo.Normals[basis];
                 tangent = (tangent - normal * OpenTK.Vector3.Dot(normal, tangent)).Normalized();
-                vbo.Tangents.Add(tangent);
-                vbo.Tangents.Add(tangent);
-                vbo.Tangents.Add(tangent);
+                for (int x = 0; x < 3; x++)
+                {
+                    vbo.Tangents.Add(tangent);
+                    vbo.THVs.Add(new Vector4(0, 0, 0, 0));
+                    vbo.THWs.Add(new Vector4(0, 0, 0, 0));
+                }
             }
             vbo.GenerateVBO();
             base.SpawnBody();

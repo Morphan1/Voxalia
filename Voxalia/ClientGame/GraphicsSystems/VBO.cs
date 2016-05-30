@@ -20,6 +20,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         uint _BoneID2VBO;
         uint _BoneWeight2VBO;
         uint _TCOLVBO;
+        uint _THVVBO;
+        uint _THWVBO;
         uint _TangentVBO;
         public uint _VAO;
 
@@ -39,6 +41,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public List<Vector4> BoneIDs2;
         public List<Vector4> BoneWeights2;
         public List<Vector4> TCOLs;
+        public List<Vector4> THVs;
+        public List<Vector4> THWs;
 
         public void CleanLists()
         {
@@ -57,6 +61,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             normals = null;
             texts = null;
             TCOLs = null;
+            THVs = null;
+            THWs = null;
         }
 
         int vC;
@@ -225,6 +231,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 if (tcols)
                 {
                     GL.DeleteBuffer(_TCOLVBO);
+                    GL.DeleteBuffer(_THVVBO);
+                    GL.DeleteBuffer(_THWVBO);
                     tcols = false;
                 }
                 if (bones)
@@ -273,6 +281,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Vector3[] tangs = Tangents != null ? Tangents.ToArray() : TangentsFor(vecs, norms, texs);
             Vector4[] cols = Colors != null ? Colors.ToArray() : null;
             Vector4[] tcols = TCOLs != null ? TCOLs.ToArray() : null;
+            Vector4[] thvs = THVs != null ? THVs.ToArray() : null;
+            Vector4[] thws = THWs != null ? THWs.ToArray() : null;
             vC = vecs.Length;
             // Vertex buffer
             GL.BindBuffer(BufferTarget.ArrayBuffer, _VertexVBO);
@@ -297,6 +307,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _TCOLVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(tcols.Length * Vector4.SizeInBytes), tcols, BufferMode);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _THVVBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(thvs.Length * Vector4.SizeInBytes), thvs, BufferMode);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _THWVBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(thws.Length * Vector4.SizeInBytes), thws, BufferMode);
             }
             // Index buffer
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IndexVBO);
@@ -370,6 +384,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Vector3[] tangs = Tangents != null ? Tangents.ToArray() : TangentsFor(vecs, norms, texs);
             Vector4[] cols = Colors != null ? Colors.ToArray() : null;
             Vector4[] tcols = TCOLs != null ? TCOLs.ToArray() : null;
+            Vector4[] thvs = THVs != null ? THVs.ToArray() : null;
+            Vector4[] thws = THWs != null ? THWs.ToArray() : null;
             vC = inds.Length;
             Vector4[] ids = null;
             if (BoneIDs != null)
@@ -422,6 +438,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenBuffers(1, out _TCOLVBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _TCOLVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(tcols.Length * Vector4.SizeInBytes), tcols, BufferMode);
+                GL.GenBuffers(1, out _THVVBO);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _THVVBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(thvs.Length * Vector4.SizeInBytes), thvs, BufferMode);
+                GL.GenBuffers(1, out _THWVBO);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _THWVBO);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(thws.Length * Vector4.SizeInBytes), thws, BufferMode);
             }
             // Weight buffer
             if (weights != null)
@@ -477,6 +499,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _TCOLVBO);
                 GL.VertexAttribPointer(5, 4, VertexAttribPointerType.Float, false, 0, 0);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _THVVBO);
+                GL.VertexAttribPointer(6, 4, VertexAttribPointerType.Float, false, 0, 0);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _THWVBO);
+                GL.VertexAttribPointer(7, 4, VertexAttribPointerType.Float, false, 0, 0);
             }
             if (weights != null)
             {
@@ -509,6 +535,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             if (tcols != null)
             {
                 GL.EnableVertexAttribArray(5);
+                GL.EnableVertexAttribArray(6);
+                GL.EnableVertexAttribArray(7);
             }
             if (weights != null)
             {

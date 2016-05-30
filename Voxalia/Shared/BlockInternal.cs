@@ -107,11 +107,39 @@ namespace Voxalia.Shared
         /// </summary>
         public byte BlockData;
 
+        public byte _BlockPaintInternal;
+
         /// <summary>
         /// The paint details represented by this block.
-        /// Currently a directly read field, may be replaced with a getter that shortens the bit count.
+        /// This is a custom getter, that returns a small portion of the potential space.
         /// </summary>
-        public byte BlockPaint;
+        public byte BlockPaint
+        {
+            get
+            {
+                return (byte)(_BlockPaintInternal & 127);
+            }
+            set
+            {
+                _BlockPaintInternal = (byte)(value | (BlockShareTex ? 128 : 0));
+            }
+        }
+
+        /// <summary>
+        /// Whether this block should grab surrounding texture data to color itself.
+        /// This is a custom getter, that returns a small portion of the potential space.
+        /// </summary>
+        public bool BlockShareTex
+        {
+            get
+            {
+                return (_BlockPaintInternal & 128) == 128;
+            }
+            set
+            {
+                _BlockPaintInternal = (byte)(BlockPaint | (value ? 128 : 0));
+            }
+        }
         
         /// <summary>
         /// The local details represented by this block.
@@ -131,7 +159,7 @@ namespace Voxalia.Shared
         {
             _BlockMaterialInternal = mat;
             BlockData = dat;
-            BlockPaint = paint;
+            _BlockPaintInternal = paint;
             BlockLocalData = loc;
         }
 
@@ -157,7 +185,7 @@ namespace Voxalia.Shared
         /// </summary>
         public uint GetItemDatumU()
         {
-            return (uint)_BlockMaterialInternal | ((uint)BlockData * 256u * 256u) | ((uint)BlockPaint * 256u * 256u * 256u);
+            return (uint)_BlockMaterialInternal | ((uint)BlockData * 256u * 256u) | ((uint)_BlockPaintInternal * 256u * 256u * 256u);
         }
 
         /// <summary>
@@ -165,7 +193,7 @@ namespace Voxalia.Shared
         /// </summary>
         public override string ToString()
         {
-            return ((Material)BlockMaterial) + ":" + BlockData + ":" + BlockPaint + ":" + BlockLocalData;
+            return ((Material)_BlockMaterialInternal) + ":" + BlockData + ":" + _BlockPaintInternal + ":" + BlockLocalData;
         }
     }
 }

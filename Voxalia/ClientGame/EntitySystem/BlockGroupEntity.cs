@@ -235,12 +235,16 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
+            vbo = new VBO();
+            vbo.THVs = new List<OpenTK.Vector4>();
+            vbo.THWs = new List<OpenTK.Vector4>();
             List<uint> Indices = new List<uint>(Vertices.Count);
             for (uint i = 0; i < Vertices.Count; i++)
             {
                 Indices.Add(i);
+                vbo.THVs.Add(new OpenTK.Vector4(0, 0, 0, 0));
+                vbo.THWs.Add(new OpenTK.Vector4(0, 0, 0, 0));
             }
-            vbo = new VBO();
             vbo.Vertices = Vertices;
             vbo.Normals = Normals;
             vbo.TexCoords = TexCoords;

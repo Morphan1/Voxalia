@@ -6,6 +6,8 @@ layout (location = 2) in vec3 texcoords;
 layout (location = 3) in vec3 tangent;
 layout (location = 4) in vec4 color;
 layout (location = 5) in vec4 tcol;
+layout (location = 6) in vec4 thv;
+layout (location = 7) in vec4 thw;
 
 out struct vox_out
 {
@@ -14,6 +16,8 @@ out struct vox_out
 	vec4 color;
 	vec4 tcol;
 	mat3 tbn;
+	vec4 thv;
+	vec4 thw;
 } f;
 
 layout (location = 1) uniform mat4 proj_matrix = mat4(1.0);
@@ -30,6 +34,8 @@ void main()
 	f.texcoord = texcoords;
 	f.position = mv_matrix * vec4(position, 1.0);
 	f.tcol = color_for(f.position);
+	f.thv = thv;
+	f.thw = thw;
 	f.position /= f.position.w;
 	gl_Position = proj_matrix * mv_matrix * vec4(position, 1.0);
 	mat4 mv_mat_simple = mv_matrix;

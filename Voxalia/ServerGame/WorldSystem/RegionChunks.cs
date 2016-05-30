@@ -86,7 +86,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void SetBlockMaterial(Location pos, BlockInternal bi, bool broadcast = true, bool regen = true, bool override_protection = false)
         {
-            SetBlockMaterial(pos, bi.Material, bi.BlockData, bi.BlockPaint, bi.BlockLocalData, bi.Damage, broadcast, regen, override_protection);
+            SetBlockMaterial(pos, bi.Material, bi.BlockData, bi._BlockPaintInternal, bi.BlockLocalData, bi.Damage, broadcast, regen, override_protection);
         }
 
         public void SetBlockMaterial(Location pos, Material mat, byte dat = 0, byte paint = 0, byte locdat = (byte)BlockFlags.EDITED, BlockDamage damage = BlockDamage.NONE,

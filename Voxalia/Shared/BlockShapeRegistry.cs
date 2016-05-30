@@ -165,6 +165,19 @@ namespace Voxalia.Shared
 
         public Location OffsetCache;
 
+        public virtual KeyValuePair<List<Vector4>, List<Vector4>> GetStretchData(Vector3 blockpos, List<Vector3> vertices, BlockInternal XP, BlockInternal XM,
+            BlockInternal YP, BlockInternal YM, BlockInternal ZP, BlockInternal ZM, bool bxp, bool bxm, bool byp, bool bym, bool bzp, bool bzm)
+        {
+            List<Vector4> stretchvals = new List<Vector4>();
+            List<Vector4> stretchweis = new List<Vector4>();
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                stretchvals.Add(new Vector4(0, 0, 0, 0));
+                stretchweis.Add(new Vector4(0, 0, 0, 0));
+            }
+            return new KeyValuePair<List<Vector4>, List<Vector4>>(stretchvals, stretchweis);
+        }
+
         public virtual EntityShape GetShape(BlockDamage damage, out Location offset)
         {
             if (BlockShapeCache != null)

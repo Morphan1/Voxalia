@@ -228,6 +228,15 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                     entry.Player.Network.SendMessage("/devel <subcommand> [ values ... ]");
                 }
             }
+            else if (arg0 == "blockShare" && entry.InputArguments.Count > 1)
+            {
+                Location posBlock = (entry.Player.GetPosition() + new Location(0, 0, -0.05f)).GetBlockLocation();
+                BlockInternal bi = entry.Player.TheRegion.GetBlockInternal(posBlock);
+                bool temp = entry.InputArguments[1].ToLowerFast() == "true";
+                bi.BlockShareTex = temp;
+                entry.Player.TheRegion.SetBlockMaterial(posBlock, bi);
+                entry.Player.Network.SendMessage("Block " + posBlock + " which is a " + bi.Material + " set ShareTex mode to " + temp + " yields " + bi.BlockShareTex);
+            }
             else
             {
                 entry.Player.Network.SendMessage("/devel <subcommand> [ values ... ]");
