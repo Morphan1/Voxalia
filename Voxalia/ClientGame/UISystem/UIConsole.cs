@@ -387,6 +387,8 @@ namespace Voxalia.ClientGame.UISystem
             }
         }
 
+        public static bool NoLinks = false;
+
         /// <summary>
         /// Renders the console, called every tick.
         /// </summary>
@@ -432,11 +434,71 @@ namespace Voxalia.ClientGame.UISystem
                     }
                     Client.Central.FontSets.Standard.DrawColoredText("|", new Location(TypingLoc.X + XAdd, TypingLoc.Y, 0));
                 }
-                // Render the console text
-                Client.Central.FontSets.Standard.DrawColoredText(ConsoleText, ConsoleTextLoc, (int)(Client.Central.Window.Height / 2 - Client.Central.FontSets.Standard.font_default.Height * 3));
+                // Render the console 
+                float maxy = Client.Central.Window.Height / 2 - Client.Central.FontSets.Standard.font_default.Height * 3;
+                Client.Central.FontSets.Standard.DrawColoredText(ConsoleText, ConsoleTextLoc, (int)maxy);
                 if (ScrolledLine != 0)
                 {
                     Client.Central.FontSets.Standard.DrawColoredText(ScrollText, ScrollTextLoc);
+                }
+                double sy = ConsoleTextLoc.Y;
+                float sh = Client.Central.Fonts.Standard.Height;
+                foreach (string str in ConsoleText.Split('\n'))
+                {
+                    if (sy + sh > 0)
+                    {
+                        if (str.Contains("^["))
+                        {
+                            List<KeyValuePair<string, Rectangle2F>> rects = new List<KeyValuePair<string, Rectangle2F>>();
+                            Client.Central.FontSets.Standard.MeasureFancyText(str, out rects);
+                            foreach (KeyValuePair<string, Rectangle2F> rectent in rects)
+                            {
+                                rectent.Value.Y += (float)sy;
+                                if (MouseHandler.MouseX() >= rectent.Value.X && MouseHandler.MouseX() <= rectent.Value.X + rectent.Value.Width
+                                    && MouseHandler.MouseY() >= rectent.Value.Y && MouseHandler.MouseY() <= rectent.Value.Y + rectent.Value.Height)
+                                {
+                                    bool isUrl = (rectent.Key.StartsWith("url=http://") || rectent.Key.StartsWith("url=https://"));
+                                    bool isHover = (rectent.Key.StartsWith("hover="));
+                                    bool clicked = Client.Central.Window.Focused && OpenTK.Input.Mouse.GetState().LeftButton == OpenTK.Input.ButtonState.Pressed;
+                                    if (isUrl && clicked && !NoLinks)
+                                    {
+                                        System.Diagnostics.Process.Start(rectent.Key.Substring("url=".Length));
+                                    }
+                                    NoLinks = clicked;
+                                    string renderme;
+                                    if (isUrl)
+                                    {
+                                        string url = rectent.Key.StartsWith("url=http://") ? rectent.Key.After("url=http://") : rectent.Key.After("url=https://");
+                                        renderme = "Click:URL<" + FontSet.EscapeFancyText(url) + ">";
+                                    }
+                                    else if (isHover)
+                                    {
+                                        renderme = "<" + FontSet.EscapeFancyText(rectent.Key.Substring("hover=".Length).Replace("\\n", "\n")) + ">";
+                                    }
+                                    else
+                                    {
+                                        continue;
+                                    }
+                                    Location lens = Client.Central.FontSets.Standard.MeasureFancyLinesOfText(renderme);
+                                    float len = (float)lens.X;
+                                    float hei = (float)lens.Y;
+                                    float x = (rectent.Value.X + len > Client.Central.Window.Width) ? 0 : rectent.Value.X;
+                                    float y = rectent.Value.Y + sh;
+                                    Client.Central.Rendering.SetColor(Color4.Blue);
+                                    Client.Central.Rendering.RenderRectangle(x, y, x + len + 5, y + 5 + hei);
+                                    Client.Central.Rendering.SetColor(Color4.LightGray);
+                                    Client.Central.Rendering.RenderRectangle(x + 1, y + 1, x + len + 4, y + 4 + hei);
+                                    Client.Central.Rendering.SetColor(Color4.White);
+                                    Client.Central.FontSets.Standard.DrawColoredText("^)" + renderme, new Location(x, y, 0));
+                                }
+                            }
+                        }
+                    }
+                    sy += sh;
+                    if (sy > maxy)
+                    {
+                        break;
+                    }
                 }
             }
             else

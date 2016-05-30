@@ -223,7 +223,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 int start = 0;
                 for (int x = 0; x < line.Length; x++)
                 {
-                    if ((line[x] == '^' && x + 1 < line.Length && IsColorSymbol(line[x + 1])) || (x + 1 == line.Length))
+                    if ((line[x] == '^' && x + 1 < line.Length && (IsColorSymbol(line[x + 1]) || line[x + 1] == '[')) || (x + 1 == line.Length))
                     {
                         string drawme = line.Substring(start, (x - start) + ((x + 1 < line.Length) ? 0 : 1));
                         start = x + 2;
@@ -233,15 +233,15 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             float width = font.MeasureString(drawme);
                             if (highlight)
                             {
-                                DrawRectangle(X, Y, width, font.Height, font, ColorFor(hcolor, htrans));
+                                DrawRectangle(X, Y, width, font_default.Height, font, ColorFor(hcolor, htrans));
                             }
                             if (underline)
                             {
-                                DrawRectangle(X, Y + ((float)font.Height * 4f / 5f), width, 1, font, ColorFor(ucolor, utrans));
+                                DrawRectangle(X, Y + ((float)font.Height * 4f / 5f), width, 2, font, ColorFor(ucolor, utrans));
                             }
                             if (overline)
                             {
-                                DrawRectangle(X, Y + 2f, width, 1f, font, ColorFor(ocolor, otrans));
+                                DrawRectangle(X, Y + 2f, width, 2, font, ColorFor(ocolor, otrans));
                             }
                             if (extrashadow)
                             {
@@ -254,11 +254,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             {
                                 foreach (Point point in ShadowPoints)
                                 {
-                                    RenderBaseText(X + point.X, Y + point.Y, drawme, font, 0, 255, flip);
+                                    RenderBaseText(X + point.X, Y + point.Y, drawme, font, 0, trans / 2, flip);
                                 }
                                 foreach (Point point in BetterShadowPoints)
                                 {
-                                    RenderBaseText(X + point.X, Y + point.Y, drawme, font, 0, 255, flip);
+                                    RenderBaseText(X + point.X, Y + point.Y, drawme, font, 0, trans / 4, flip);
                                 }
                             }
                             if (emphasis)
@@ -275,7 +275,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             RenderBaseText(X, Y, drawme, font, color, trans, flip, pseudo, random, jello, obfu);
                             if (strike)
                             {
-                                DrawRectangle(X, Y + (font.Height / 2), width, 1, font, ColorFor(scolor, strans));
+                                DrawRectangle(X, Y + (font.Height / 2), width, 2, font, ColorFor(scolor, strans));
                             }
                             X += width;
                         }
@@ -283,6 +283,36 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         {
                             switch (line[x])
                             {
+                                case '[':
+                                    {
+                                        StringBuilder sb = new StringBuilder();
+                                        x++;
+                                        while (x < line.Length)
+                                        {
+                                            if (line[x] == ']')
+                                            {
+                                                break;
+                                            }
+                                            sb.Append(line[x]);
+                                            x++;
+                                        }
+                                        string ttext;
+                                        if (x == line.Length)
+                                        {
+                                            ttext = "^[" + sb.ToString();
+                                        }
+                                        else
+                                        {
+                                            ttext = sb.ToString().After("|");
+                                        }
+                                        float widt = font_default.MeasureString(ttext);
+                                        DrawRectangle(X, Y, widt, font_default.Height, font_default, Color.Black);
+                                        RenderBaseText(X, Y, ttext, font_default, 5);
+                                        DrawRectangle(X, Y + ((float)font_default.Height * 4f / 5f), widt, 2, font_default, Color.Blue);
+                                        X += widt;
+                                        start = x + 1;
+                                    }
+                                    break;
                                 case '1': color = 1; break;
                                 case '!': color = 11; break;
                                 case '2': color = 2; break;
@@ -426,6 +456,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Engine.GLFonts.Shaders.ColorMultShader.Bind();
         }
 
+        public static string EscapeFancyText(string input)
+        {
+            return input.Replace("^", "^^n");
+        }
+
         TextVBO VBO;
 
         /// <summary>
@@ -508,16 +543,23 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>the X-width of the text.</returns>
         public float MeasureFancyText(string line, string bcolor = "^r^7")
         {
+            List<KeyValuePair<string, Rectangle2F>> links;
+            return MeasureFancyText(line, out links, bcolor);
+        }
+        
+        public float MeasureFancyText(string line, out List<KeyValuePair<string, Rectangle2F>> links, string bcolor = "^r^7")
+        {
             bool bold = false;
             bool italic = false;
             bool sub = false;
             float MeasWidth = 0;
             GLFont font = font_default;
             int start = 0;
+            List<KeyValuePair<string, Rectangle2F>> tlinks = new List<KeyValuePair<string, Rectangle2F>>();
             line = line.Replace("^q", "\"").Replace("^B", bcolor);
             for (int x = 0; x < line.Length; x++)
             {
-                if ((line[x] == '^' && x + 1 < line.Length && IsColorSymbol(line[x + 1])) || (x + 1 == line.Length))
+                if ((line[x] == '^' && x + 1 < line.Length && (IsColorSymbol(line[x + 1]) || line[x + 1] == '[')) || (x + 1 == line.Length))
                 {
                     string drawme = line.Substring(start, (x - start) + ((x + 1 < line.Length) ? 0 : 1));
                     start = x + 2;
@@ -530,6 +572,34 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     {
                         switch (line[x])
                         {
+                            case '[':
+                                {
+                                    StringBuilder sb = new StringBuilder();
+                                    x++;
+                                    while (x < line.Length)
+                                    {
+                                        if (line[x] == ']')
+                                        {
+                                            break;
+                                        }
+                                        sb.Append(line[x]);
+                                        x++;
+                                    }
+                                    string ttext;
+                                    if (x == line.Length)
+                                    {
+                                        ttext = "^[" + sb.ToString();
+                                    }
+                                    else
+                                    {
+                                        ttext = sb.ToString().After("|");
+                                    }
+                                    float widt = font_default.MeasureString(ttext);
+                                    tlinks.Add(new KeyValuePair<string, Rectangle2F>(sb.ToString().Before("|"), new Rectangle2F() { X = MeasWidth, Y = 0, Width = widt, Height = font_default.Height }));
+                                    MeasWidth += widt;
+                                    start = x + 1;
+                                }
+                                    break;
                             case 'r':
                                 font = font_default;
                                 bold = false;
@@ -558,6 +628,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                 }
             }
+            links = tlinks;
             return MeasWidth;
         }
 
@@ -616,7 +687,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         }
 
         /// <summary>
-        /// Used to identify if an input character is a valid color symbol (generally the character that follows a '^'), for use by RenderColoredText
+        /// Used to identify if an input character is a valid color symbol (generally the character that follows a '^'), for use by RenderColoredText.
+        /// Does not return true for '[' as that is not a formatter but a long-block format adjuster.
         /// </summary>
         /// <param name="c"><paramref name="c"/>The character to check.</param>
         /// <returns>whether the character is a valid color symbol.</returns>
@@ -637,5 +709,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     (c == '@')    // 64
                    );
         }
+    }
+
+    public class Rectangle2F
+    {
+        public float X;
+        public float Y;
+        public float Width;
+        public float Height;
     }
 }

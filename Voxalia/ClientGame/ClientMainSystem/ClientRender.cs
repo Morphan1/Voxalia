@@ -43,7 +43,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.Viewport(0, 0, Window.Width, Window.Height);
             vpw = Window.Width;
             vph = Window.Height;
-            GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.Texture2D); // TODO: Other texture modes we use as well?
             GL.Enable(EnableCap.Blend);
             StandardBlend();
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
