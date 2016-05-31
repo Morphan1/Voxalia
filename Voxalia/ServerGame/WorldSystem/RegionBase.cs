@@ -123,7 +123,7 @@ namespace Voxalia.ServerGame.WorldSystem
             CFGEdited = true;
             Seed = Config.ReadInt("general.seed", 100);
             SpawnPoint = Location.FromString(Config.ReadString("general.spawnpoint", "0,0,50"));
-            Random seedGen = new Random(Seed);
+            Random seedGen = new Random(Seed);// TODO: Own random method that doesn't depend on C# impl!
             Seed2 = (seedGen.Next(SeedMax) - SeedMax / 2);
             Seed3 = (seedGen.Next(SeedMax) - SeedMax / 2);
             Seed4 = (seedGen.Next(SeedMax) - SeedMax / 2);
@@ -204,9 +204,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public int Seed4;
 
         public int Seed5;
-
-        public int Seed6;
-
+        
         void OncePerSecondActions()
         {
             TickClouds();

@@ -49,7 +49,10 @@ void main()
 	thstr += f.thw.w;
 	thval += thcolw * f.thw.w;
 	float tw = col.w;
-	col = thstr > 0.01 ? thval / thstr : col;
+	thstr *= 0.25;
+	thval *= 0.25;
+	//col = thstr > 0.01 ? thval / thstr : col;
+	col = thstr > 0.01 ? col * (1.0 - thstr) + thval : col;
 	col.w = tw;
 	col *= f.tcol;
 	vec4 dets = texture(htex, f.texcoord);

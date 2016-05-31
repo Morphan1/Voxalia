@@ -149,10 +149,10 @@ namespace Voxalia.ServerGame.WorldSystem
                 byte[] bytes = new byte[BlocksInternal.Length * 5];
                 for (int i = 0; i < BlocksInternal.Length; i++)
                 {
-                    Utilities.UshortToBytes(BlocksInternal[i].BlockMaterial).CopyTo(bytes, i * 2);
+                    Utilities.UshortToBytes(BlocksInternal[i]._BlockMaterialInternal).CopyTo(bytes, i * 2);
                     bytes[BlocksInternal.Length * 2 + i] = BlocksInternal[i].BlockData;
                     bytes[BlocksInternal.Length * 3 + i] = BlocksInternal[i].BlockLocalData;
-                    bytes[BlocksInternal.Length * 4 + i] = BlocksInternal[i].BlockPaint;
+                    bytes[BlocksInternal.Length * 4 + i] = BlocksInternal[i]._BlockPaintInternal;
                 }
                 return bytes;
             }
@@ -362,7 +362,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 BlocksInternal[i]._BlockMaterialInternal = Utilities.BytesToUshort(Utilities.BytesPartial(det.Blocks, i * 2, 2));
                 BlocksInternal[i].BlockData = det.Blocks[BlocksInternal.Length * 2 + i];
                 BlocksInternal[i].BlockLocalData = det.Blocks[BlocksInternal.Length * 3 + i];
-                BlocksInternal[i].BlockPaint = det.Blocks[BlocksInternal.Length * 4 + i];
+                BlocksInternal[i]._BlockPaintInternal = det.Blocks[BlocksInternal.Length * 4 + i];
             }
             if (ents.Blocks.Length > 0)
             {
