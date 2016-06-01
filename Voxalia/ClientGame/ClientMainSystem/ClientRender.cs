@@ -98,6 +98,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_transpadder = Shaders.GetShader("transpadder" + def);
             s_finalgodray = Shaders.GetShader("finalgodray" + def);
             s_finalgodray_toonify = Shaders.GetShader("finalgodray" + def + ",MCM_TOONIFY");
+            s_forw = Shaders.GetShader("forward" + def);
+            s_forw_vox = Shaders.GetShader("forward" + def + ",MCM_VOX");
+            s_forw_trans = Shaders.GetShader("forward" + def + ",MCM_TRANSP");
+            s_forw_vox_trans = Shaders.GetShader("forward" + def + ",MCM_VOX,MCM_TRANSP");
         }
 
         int map_fbo_main;
@@ -234,6 +238,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_shadowvox;
         public Shader s_mapvox;
         public Shader s_transpadder;
+        public Shader s_forw;
+        public Shader s_forw_vox;
+        public Shader s_forw_trans;
+        public Shader s_forw_vox_trans;
         RenderSurface4Part RS4P;
 
         public Location CameraUp = Location.UnitZ;
@@ -428,6 +436,44 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Frustum camFrust = new Frustum(combined);
               //  cf1 = camFrust;
                 cf2 = new Frustum(combined2);
+                if (CVars.r_fast.ValueB)
+                {
+                    RenderingShadows = false;
+                    CFrust = camFrust;
+                    GL.ActiveTexture(TextureUnit.Texture0);
+                    Matrix4 fident = Matrix4.Identity;
+                    FBOid = 99;
+                    s_forw_vox.Bind();
+                    GL.UniformMatrix4(1, false, ref combined);
+                    GL.UniformMatrix4(2, false, ref fident);
+                    GL.Uniform1(6, (float)GlobalTickTimeLocal);
+                    Rendering.SetColor(Color4.White);
+                    s_forw.Bind();
+                    GL.UniformMatrix4(1, false, ref combined);
+                    GL.UniformMatrix4(2, false, ref fident);
+                    GL.Uniform1(6, (float)GlobalTickTimeLocal);
+                    Rendering.SetColor(Color4.White);
+                    Render3D(false);
+                    FBOid = 98;
+                    s_forw_vox_trans.Bind();
+                    GL.UniformMatrix4(1, false, ref combined);
+                    GL.UniformMatrix4(2, false, ref fident);
+                    GL.Uniform1(6, (float)GlobalTickTimeLocal);
+                    Rendering.SetColor(Color4.White);
+                    s_forw_trans.Bind();
+                    GL.UniformMatrix4(1, false, ref combined);
+                    GL.UniformMatrix4(2, false, ref fident);
+                    GL.Uniform1(6, (float)GlobalTickTimeLocal);
+                    Rendering.SetColor(Color4.White);
+                    ReverseEntitiesOrder();
+                    Particles.Sort();
+                    GL.DepthMask(false);
+                    Render3D(false);
+                    GL.DepthMask(true);
+                    Establish2D();
+                    Render2D();
+                    return;
+                }
                 if (shouldRedrawShadows && CVars.r_shadows.ValueB)
                 {
                     timer.Start();
@@ -1174,6 +1220,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
             }
+            else if (FBOid == 99)
+            {
+                s_forw_vox = s_forw_vox.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
+            }
+            else if (FBOid == 98)
+            {
+                s_forw_vox_trans = s_forw_vox_trans.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
+            }
             else if (FBOid == 4)
             {
                 s_shadowvox = s_shadowvox.Bind();
@@ -1239,6 +1295,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 s_transponlylitsh = s_transponlylitsh.Bind();
             }
+            else if (FBOid == 99)
+            {
+                s_forw = s_forw.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+            }
+            else if (FBOid == 98)
+            {
+                s_forw_trans = s_forw_trans.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+            }
             else if (FBOid == 4)
             {
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
@@ -1275,7 +1341,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     RenderSkybox();
                     s_fbo.Bind();
                 }
-                if (FBOid == 3 || FBOid == 7 || FBOid == 8)
+                if (FBOid == 99 || FBOid == 98)
+                {
+                    RenderSkybox(); // TODO: s_fbot equivalent for forward renderer?
+                }
+                if (FBOid == 3 || FBOid == 7 || FBOid == 8 || FBOid == 99 || FBOid == 98)
                 {
                     Rendering.SetMinimumLight(1);
                     TheRegion.RenderClouds();

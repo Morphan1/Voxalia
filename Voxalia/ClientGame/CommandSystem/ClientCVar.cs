@@ -33,7 +33,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun, r_shadowpace, r_shadows,
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth, r_toonify, r_transplighting, r_transpshadows,
             r_godrays, r_godray_samples, r_godray_wexposure, r_godray_decay, r_godray_density, r_godray_color,
-            r_3d_enable;
+            r_3d_enable, r_fast;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect, a_echovolume;
@@ -99,6 +99,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_transplighting = Register("r_transplighting", "true", CVarFlag.Boolean, "Whether transparent objects should be lit properly (otherwise, fullbright).");
             r_transpshadows = Register("r_transpshadows", "false", CVarFlag.Boolean, "Whether transparent objects should be lit using HD shadows (Requires r_shadows true).");
             r_3d_enable = Register("r_3d_enable", "false", CVarFlag.Boolean, "Whether to use 3D side-by-side rendering mode.");
+            r_fast = Register("r_fast", "false", CVarFlag.Boolean, "Whether to use 'fast' rendering mode.");
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric, "What volume the music should be.");
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");
