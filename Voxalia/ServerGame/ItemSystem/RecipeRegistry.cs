@@ -160,7 +160,7 @@ namespace Voxalia.ServerGame.ItemSystem
     }
 
     [Flags]
-    public enum RecipeMode
+    public enum RecipeMode : int
     {
         TYPE = 1,
         SECONDARY = 2,
