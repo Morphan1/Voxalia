@@ -1,0 +1,6 @@
+Name=Cobblestone
+SpeedMod=1.5
+Sound=STONE
+Hardness=20
+BreakTime=2
+Breaker=PICKAXE

@@ -49,8 +49,8 @@ void main()
 	thstr += f.thw.w;
 	thval += thcolw * f.thw.w;
 	float tw = col.w;
-	thstr *= 0.25;
-	thval *= 0.25;
+	thstr *= 0.5;
+	thval *= 0.5;
 	//col = thstr > 0.01 ? thval / thstr : col;
 	col = thstr > 0.01 ? col * (1.0 - thstr) + thval : col;
 	col.w = tw;

@@ -128,10 +128,10 @@ namespace Voxalia.ServerGame.WorldSystem
             Utilities.IntToBytes(Origin.Z).CopyTo(dat, 12 + 8);
             for (int i = 0; i < Blocks.Length; i++)
             {
-                Utilities.UshortToBytes(Blocks[i].BlockMaterial).CopyTo(dat, 12 + 12 + i * 2);
+                Utilities.UshortToBytes(Blocks[i]._BlockMaterialInternal).CopyTo(dat, 12 + 12 + i * 2);
                 dat[12 + 12 + Blocks.Length * 2 + i] = Blocks[i].BlockData;
                 dat[12 + 12 + Blocks.Length * 3 + i] = Blocks[i].BlockLocalData;
-                dat[12 + 12 + Blocks.Length * 4 + i] = Blocks[i].BlockPaint;
+                dat[12 + 12 + Blocks.Length * 4 + i] = Blocks[i]._BlockPaintInternal;
             }
             return dat;
         }
@@ -168,7 +168,7 @@ namespace Voxalia.ServerGame.WorldSystem
                                 ty = -(x + 1);
                             }
                             bi.BlockLocalData = (byte)(bi.BlockLocalData | ((int)BlockFlags.EDITED));
-                            tregion.SetBlockMaterial(corner + new Location(tx, ty, z), (Material)bi.BlockMaterial, bi.BlockData, bi.BlockPaint, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED), bi.Damage);
+                            tregion.SetBlockMaterial(corner + new Location(tx, ty, z), (Material)bi.BlockMaterial, bi.BlockData, bi._BlockPaintInternal, (byte)(bi.BlockLocalData | (byte)BlockFlags.EDITED), bi.Damage);
                         }
                     }
                 }

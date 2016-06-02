@@ -43,10 +43,11 @@ namespace Voxalia.Shared
         HEAVY_GAS = 30,
         LIQUID_SLIME = 31,
         LEAVES_OAK_LIQUID = 32,
+        COBBLESTONE = 33,
         /// <summary>
         /// How many materials there are by default. Only for use with direct handling of this enumeration (shouldn't happen often.)
         /// </summary>
-        NUM_DEFAULT = 33,
+        NUM_DEFAULT = 34,
         /// <summary>
         /// How many materials there theoretically can be.
         /// </summary>

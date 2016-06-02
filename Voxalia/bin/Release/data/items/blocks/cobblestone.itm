@@ -1,0 +1,10 @@
+type: block
+icon: blocks/solid/natural/cobblestone
+display: Cobblestone
+description: Ideal for roads!
+color: 1,1,1
+model: block
+bound: false
+datum: 33
+weight: 3
+volume: 1
