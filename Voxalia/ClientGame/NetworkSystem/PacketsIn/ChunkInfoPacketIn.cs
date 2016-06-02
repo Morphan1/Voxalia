@@ -91,7 +91,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 for (int i = 0; i < chk.BlocksInternal.Length; i++)
                 {
                     chk.BlocksInternal[i].BlockData = data_orig[chk.BlocksInternal.Length * 2 + i];
-                    chk.BlocksInternal[i].BlockPaint = data_orig[chk.BlocksInternal.Length * 3 + i];
+                    chk.BlocksInternal[i]._BlockPaintInternal = data_orig[chk.BlocksInternal.Length * 3 + i];
                 }
             }
             else

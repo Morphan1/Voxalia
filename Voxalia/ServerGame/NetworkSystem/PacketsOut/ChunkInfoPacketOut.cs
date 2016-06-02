@@ -38,7 +38,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                     for (int i = 0; i < chunk.BlocksInternal.Length; i++)
                     {
                         data_orig[chunk.BlocksInternal.Length * 2 + i] = chunk.BlocksInternal[i].BlockData;
-                        data_orig[chunk.BlocksInternal.Length * 3 + i] = chunk.BlocksInternal[i].BlockPaint;
+                        data_orig[chunk.BlocksInternal.Length * 3 + i] = chunk.BlocksInternal[i]._BlockPaintInternal;
                     }
                 }
             }
