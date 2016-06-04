@@ -70,7 +70,10 @@ namespace Voxalia.ServerGame.NetworkSystem
             catch (Exception ex)
             {
                 Utilities.CheckException(ex);
-                SysConsole.Output("Handling webpage", ex); // TODO: DebugWebError cvar?
+                if (TheServer.CVars.s_debug.ValueB)
+                {
+                    SysConsole.Output("Handling webpage", ex);
+                }
                 http_response_id = 500;
                 http_response_itname = "Internal Server Error";
                 http_response_contenttype = "text/plain; charset=UTF-8";

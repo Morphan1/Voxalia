@@ -81,8 +81,10 @@ namespace Voxalia.ServerGame.NetworkSystem
             catch (Exception ex)
             {
                 SysConsole.Output(OutputType.WARNING, "Disconnected " + PE + " -> " + ex.GetType().Name + ": " + ex.Message);
-                // TODO: Debug Only
-                SysConsole.Output(ex);
+                if (TheServer.CVars.s_debug.ValueB)
+                {
+                    SysConsole.Output(ex);
+                }
                 PE.Kick("Internal exception.");
             }
         }
@@ -301,8 +303,10 @@ namespace Voxalia.ServerGame.NetworkSystem
                                         PrimarySocket.Close();
                                         Utilities.CheckException(ex);
                                         SysConsole.Output(OutputType.WARNING, "Forcibly disconnected client: " + ex.GetType().Name + ": " + ex.Message);
-                                        // TODO: Debug Only
-                                        SysConsole.Output(ex);
+                                        if (TheServer.CVars.s_debug.ValueB)
+                                        {
+                                            SysConsole.Output(ex);
+                                        }
                                         Alive = false;
                                     });
                                 }
@@ -377,8 +381,10 @@ namespace Voxalia.ServerGame.NetworkSystem
                 {
                     Utilities.CheckException(ex);
                     SysConsole.Output(OutputType.WARNING, "Forcibly disconnected client: " + ex.GetType().Name + ": " + ex.Message);
-                    // TODO: Debug Only
-                    SysConsole.Output(ex);
+                    if (TheServer.CVars.s_debug.ValueB)
+                    {
+                        SysConsole.Output(ex);
+                    }
                     Alive = false;
                 }
             }

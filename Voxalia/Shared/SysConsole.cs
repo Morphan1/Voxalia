@@ -233,6 +233,8 @@ namespace Voxalia.Shared
             WriteLine("^r^7" + Utilities.DateTimeToString(DateTime.Now) + " [" + bcolor + type + "^r^7] " + bcolor + message, bcolor);
         }
 
+        public static Func<bool> ShouldOutputDebug = () => true;
+
         /// <summary>
         /// Properly formats system console output.
         /// </summary>
@@ -240,6 +242,10 @@ namespace Voxalia.Shared
         /// <param name="text">The text to output.</param>
         public static void Output(OutputType ot, string text, string bcolor = null)
         {
+            if (ot == OutputType.DEBUG && !ShouldOutputDebug())
+            {
+                return;
+            }
             WriteLine("^r^7" + Utilities.DateTimeToString(DateTime.Now) + " [" + OutputColors[(int)ot] +
                 OutputNames[(int)ot] + "^r^7] " + OutputColors[(int)ot] + text, bcolor ?? OutputColors[(int)ot]);
         }
@@ -252,6 +258,7 @@ namespace Voxalia.Shared
             "^r^3",
             "^r^7^h^0",
             "^r^7",
+            "^7^&",
         };
 
         static string[] OutputNames = new string[]
@@ -262,6 +269,7 @@ namespace Voxalia.Shared
             "WARNING",
             "ERROR",
             "INFO",
+            "DEBUG",
         };
     }
 
@@ -294,6 +302,10 @@ namespace Voxalia.Shared
         /// General information.
         /// </summary>
         INFO = 5,
+        /// <summary>
+        /// Disable-able minor debug information.
+        /// </summary>
+        DEBUG = 6,
         // TODO: More?
     }
 }

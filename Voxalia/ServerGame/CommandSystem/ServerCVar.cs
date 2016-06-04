@@ -16,7 +16,7 @@ namespace Voxalia.ServerGame.CommandSystem
         public CVarSystem system;
 
         // System CVars
-        public CVar s_filepath;
+        public CVar s_filepath, s_debug;
 
         // Game CVars
         public CVar g_timescale, g_fps, g_maxheight, g_minheight, g_maxdist;
@@ -33,6 +33,7 @@ namespace Voxalia.ServerGame.CommandSystem
 
             // System CVars
             s_filepath = Register("s_filepath", Program.Files.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly, "The current system environment filepath (The directory of /data)."); // TODO: Scrap this! Tags!
+            s_debug = Register("s_debug", "true", CVarFlag.Boolean, "Whether to output debug information.");
             // Game CVars
             g_timescale = Register("g_timescale", "1", CVarFlag.Numeric, "The current game time scaling value.");
             g_fps = Register("g_fps", "30", CVarFlag.Numeric, "What framerate to use.");
