@@ -45,8 +45,8 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             if (arg == "shaders" || is_all)
             {
                 success = true;
-                TheClient.ShadersCheck();
                 TheClient.Shaders.Clear();
+                TheClient.ShadersCheck();
             }
             if (arg == "audio" || is_all)
             {
