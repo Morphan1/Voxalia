@@ -35,23 +35,13 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public ChunkDataManager ChunkManager;
 
-        public void ChunkSendToAll(AbstractPacketOut packet, Location cpos)
+        public void ChunkSendToAll(AbstractPacketOut packet, Vector3i cpos)
         {
-            if (cpos.IsNaN())
+            for (int i = 0; i < Players.Count; i++)
             {
-                for (int i = 0; i < Players.Count; i++)
+                if (Players[i].CanSeeChunk(cpos))
                 {
                     Players[i].Network.SendPacket(packet);
-                }
-            }
-            else
-            {
-                for (int i = 0; i < Players.Count; i++)
-                {
-                    if (Players[i].CanSeeChunk(cpos))
-                    {
-                        Players[i].Network.SendPacket(packet);
-                    }
                 }
             }
         }
@@ -154,18 +144,18 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void LoadRegion(Location min, Location max, bool announce = true)
         {
-            Location minc = ChunkLocFor(min);
-            Location maxc = ChunkLocFor(max);
+            Vector3i minc = ChunkLocFor(min);
+            Vector3i maxc = ChunkLocFor(max);
             Object locker = new Object();
             int c = 0;
             int done = 0;
-            for (double x = minc.X; x <= maxc.X; x++)
+            for (int x = minc.X; x <= maxc.X; x++)
             {
-                for (double y = minc.Y; y <= maxc.Y; y++)
+                for (int y = minc.Y; y <= maxc.Y; y++)
                 {
-                    for (double z = minc.Z; z <= maxc.Z; z++)
+                    for (int z = minc.Z; z <= maxc.Z; z++)
                     {
-                        LoadChunk_Background_Startup(new Location(x, y, z), (o) => { lock (locker) { done++; } }, LoadTimeScheduler);
+                        LoadChunk_Background_Startup(new Vector3i(x, y, z), (o) => { lock (locker) { done++; } }, LoadTimeScheduler);
                         c++;
                     }
                 }
@@ -208,7 +198,7 @@ namespace Voxalia.ServerGame.WorldSystem
         void OncePerSecondActions()
         {
             TickClouds();
-            List<Location> DelMe = new List<Location>();
+            List<Vector3i> DelMe = new List<Vector3i>();
             foreach (Chunk chk in LoadedChunks.Values)
             {
                 if (chk.LastEdited >= 0)
@@ -235,7 +225,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     }
                 }
             }
-            foreach (Location loc in DelMe)
+            foreach (Vector3i loc in DelMe)
             {
                 LoadedChunks.Remove(loc);
             }
@@ -379,7 +369,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public void PlaySound(string sound, Location pos, float vol, float pitch)
         {
             bool nan = pos.IsNaN();
-            Location cpos = nan ? Location.Zero : ChunkLocFor(pos);
+            Vector3i cpos = nan ? Vector3i.Zero : ChunkLocFor(pos);
             PlaySoundPacketOut packet = new PlaySoundPacketOut(TheServer, sound, vol, pitch, pos);
             foreach (PlayerEntity player in Players)
             {

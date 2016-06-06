@@ -101,7 +101,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Space NMTWOWorld = new Space(null);
 
-        Dictionary<Location, FullChunkObject> NMTWOMeshes = new Dictionary<Location, FullChunkObject>();
+        Dictionary<Vector3i, FullChunkObject> NMTWOMeshes = new Dictionary<Vector3i, FullChunkObject>();
 
         double lGTT = 0;
 
@@ -134,7 +134,7 @@ namespace Voxalia.ClientGame.EntitySystem
                     {
                         for (int z = -1; z <= 1; z++)
                         {
-                            Location ch = TheRegion.ChunkLocFor(pos) + new Location(x, y, z);
+                            Vector3i ch = TheRegion.ChunkLocFor(pos) + new Vector3i(x, y, z);
                             Chunk chunk = TheRegion.GetChunk(ch);
                             if (chunk == null)
                             {

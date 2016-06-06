@@ -15,6 +15,8 @@ namespace Voxalia.Shared.Collision
             Z = z;
         }
 
+        public static readonly Vector3i Zero = new Vector3i(0, 0, 0);
+
         public int X;
         public int Y;
         public int Z;
@@ -22,6 +24,11 @@ namespace Voxalia.Shared.Collision
         public override int GetHashCode()
         {
             return X + Y + Z;
+        }
+
+        public override bool Equals(object other)
+        {
+            return Equals((Vector3i)other);
         }
 
         public bool Equals(Vector3i other)
@@ -34,9 +41,34 @@ namespace Voxalia.Shared.Collision
             return new Vector3(X, Y, Z);
         }
 
+        public Location ToLocation()
+        {
+            return new Location(X, Y, Z);
+        }
+
         public override string ToString()
         {
             return ToVector3().ToString();
+        }
+
+        public static bool operator !=(Vector3i one, Vector3i two)
+        {
+            return !one.Equals(two);
+        }
+
+        public static bool operator ==(Vector3i one, Vector3i two)
+        {
+            return one.Equals(two);
+        }
+
+        public static Vector3i operator +(Vector3i one, Vector3i two)
+        {
+            return new Vector3i(one.X + two.X, one.Y + two.Y, one.Z + two.Z);
+        }
+
+        public static Vector3i operator *(Vector3i one, int two)
+        {
+            return new Vector3i(one.X * two, one.Y * two, one.Z * two);
         }
     }
 }

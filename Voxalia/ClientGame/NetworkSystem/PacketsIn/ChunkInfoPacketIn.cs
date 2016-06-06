@@ -2,6 +2,7 @@
 using Voxalia.Shared;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.Shared.Files;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
@@ -14,7 +15,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 int x = Utilities.BytesToInt(Utilities.BytesPartial(data, 0, 4));
                 int y = Utilities.BytesToInt(Utilities.BytesPartial(data, 4, 4));
                 int z = Utilities.BytesToInt(Utilities.BytesPartial(data, 8, 4));
-                Location wpos = new Location(x, y, z);
+                Vector3i wpos = new Vector3i(x, y, z);
                 Chunk tchk;
                 if (TheClient.TheRegion.LoadedChunks.TryGetValue(wpos, out tchk))
                 {
@@ -59,7 +60,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             Action act = () =>
             {
-                Chunk chk = TheClient.TheRegion.LoadChunk(new Location(x, y, z), posMult);
+                Chunk chk = TheClient.TheRegion.LoadChunk(new Vector3i(x, y, z), posMult);
                 chk.LOADING = true;
                 chk.PROCESSED = false;
                 TheClient.Schedule.StartASyncTask(() => parsechunk2(chk, data_orig, posMult));

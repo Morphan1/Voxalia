@@ -402,8 +402,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     AABB box = new AABB() { Min = Player.GetPosition(), Max = Player.GetPosition() };
                     foreach (Chunk ch in TheRegion.LoadedChunks.Values)
                     {
-                        box.Include(ch.WorldPosition * Chunk.CHUNK_SIZE);
-                        box.Include(ch.WorldPosition * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE));
+                        box.Include(ch.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE);
+                        box.Include(ch.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE));
                     }
                     Matrix4 ortho = Matrix4.CreateOrthographicOffCenter((float)box.Min.X, (float)box.Max.X, (float)box.Min.Y, (float)box.Max.Y, (float)box.Min.Z, (float)box.Max.Z);
                   //  Matrix4 oident = Matrix4.Identity;
@@ -1418,7 +1418,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     if (chunk._VBO == null && !chunk.IsAir)
                     {
-                        Rendering.RenderLineBox(chunk.WorldPosition * Chunk.CHUNK_SIZE, (chunk.WorldPosition + Location.One) * Chunk.CHUNK_SIZE);
+                        Rendering.RenderLineBox(chunk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE, (chunk.WorldPosition.ToLocation() + Location.One) * Chunk.CHUNK_SIZE);
                     }
                 }
                 GL.LineWidth(1);

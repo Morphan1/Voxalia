@@ -116,7 +116,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         {
             if (X < 0 || Y < 0 || Z < 0 || X >= Chunk.CHUNK_SIZE || Y >= Chunk.CHUNK_SIZE || Z >= Chunk.CHUNK_SIZE)
             {
-                Location chloc = chunk.OwningRegion.ChunkLocFor(new Location(X, Y, Z));
+                Vector3i chloc = chunk.OwningRegion.ChunkLocFor(new Location(X, Y, Z));
                 Chunk ch = chunk.OwningRegion.LoadChunkNoPopulate(chunk.WorldPosition + chloc);
                 int x = (int)(X - chloc.X * Chunk.CHUNK_SIZE);
                 int y = (int)(Y - chloc.Y * Chunk.CHUNK_SIZE);
@@ -159,7 +159,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             {
                 for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
                 {
-                    Location cpos = chunk.WorldPosition * Chunk.CHUNK_SIZE;
+                    Location cpos = chunk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE;
                     // Prepare basics
                     int cx = (int)cpos.X + x;
                     int cy = (int)cpos.Y + y;

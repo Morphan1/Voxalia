@@ -5,6 +5,7 @@ using System.Text;
 using Voxalia.Shared;
 using Voxalia.ServerGame.EntitySystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -23,7 +24,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         double d1 = Utilities.UtilRandom.NextDouble() * Chunk.CHUNK_SIZE;
                         double d2 = Utilities.UtilRandom.NextDouble() * Chunk.CHUNK_SIZE;
                         double d3 = Utilities.UtilRandom.NextDouble() * Chunk.CHUNK_SIZE;
-                        Cloud cloud = new Cloud(this, chunk.WorldPosition * Chunk.CHUNK_SIZE + new Location(d1, d2, d3));
+                        Cloud cloud = new Cloud(this, chunk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(d1, d2, d3));
                         SpawnCloud(cloud);
                     }
                 }
@@ -70,7 +71,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         }
                     }
                 }
-                Location cpos = ChunkLocFor(Clouds[i].Position);
+                Vector3i cpos = ChunkLocFor(Clouds[i].Position);
                 if (!LoadedChunks.ContainsKey(cpos))
                 {
                     DeleteCloud(Clouds[i]);
@@ -125,7 +126,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 double d1 = Utilities.UtilRandom.NextDouble() * Chunk.CHUNK_SIZE;
                 double d2 = Utilities.UtilRandom.NextDouble() * Chunk.CHUNK_SIZE;
                 double d3 = Utilities.UtilRandom.NextDouble() * Chunk.CHUNK_SIZE;
-                Cloud cloud = new Cloud(this, chunk.WorldPosition * Chunk.CHUNK_SIZE + new Location(d1, d2, d3));
+                Cloud cloud = new Cloud(this, chunk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(d1, d2, d3));
                 int rand = Utilities.UtilRandom.Next(7) > 2 ? Utilities.UtilRandom.Next(50) + 50: Utilities.UtilRandom.Next(100);
                 for (int i = 0; i < rand; i++)
                 {

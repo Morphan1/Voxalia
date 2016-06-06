@@ -41,7 +41,7 @@ namespace Voxalia.ServerGame.WorldSystem
         
         public Region OwningRegion = null;
 
-        public Location WorldPosition;
+        public Vector3i WorldPosition;
 
         public volatile ASyncScheduleItem LoadSchedule = null;
 
@@ -134,7 +134,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 return;
             }
-            FCO = new FullChunkObject(WorldPosition.ToBVector() * 30, BlocksInternal);
+            FCO = new FullChunkObject(WorldPosition.ToVector3() * CHUNK_SIZE, BlocksInternal);
             FCO.CollisionRules.Group = CollisionUtil.WorldSolid;
             OwningRegion.AddChunk(FCO);
             OwningRegion.AddCloudsToNewChunk(this);

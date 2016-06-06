@@ -87,13 +87,13 @@ namespace Voxalia.ClientGame.WorldSystem
             box.Min = start;
             box.Max = start;
             box.Include(start + dir * len);
-            foreach (KeyValuePair<Location, Chunk> chunk in LoadedChunks)
+            foreach (KeyValuePair<Vector3i, Chunk> chunk in LoadedChunks)
             {
                 if (chunk.Value == null || chunk.Value.FCO == null)
                 {
                     continue;
                 }
-                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition * 30, Max = chunk.Value.WorldPosition * 30 + new Location(30, 30, 30) }))
+                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition.ToLocation() * 30, Max = chunk.Value.WorldPosition.ToLocation() * 30 + new Location(30, 30, 30) }))
                 {
                     continue;
                 }
@@ -133,13 +133,13 @@ namespace Voxalia.ClientGame.WorldSystem
             box.Min = start;
             box.Max = start;
             box.Include(start + dir * len);
-            foreach (KeyValuePair<Location, Chunk> chunk in LoadedChunks)
+            foreach (KeyValuePair<Vector3i, Chunk> chunk in LoadedChunks)
             {
                 if (chunk.Value == null || chunk.Value.FCO == null)
                 {
                     continue;
                 }
-                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition * 30, Max = chunk.Value.WorldPosition * 30 + new Location(30, 30, 30) }))
+                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition.ToLocation() * 30, Max = chunk.Value.WorldPosition.ToLocation() * 30 + new Location(30, 30, 30) }))
                 {
                     continue;
                 }
@@ -270,19 +270,20 @@ namespace Voxalia.ClientGame.WorldSystem
             return null;
         }
 
-        public Dictionary<Location, Chunk> LoadedChunks = new Dictionary<Location, Chunk>();
+        public Dictionary<Vector3i, Chunk> LoadedChunks = new Dictionary<Vector3i, Chunk>();
 
         public Client TheClient;
 
-        public Location ChunkLocFor(Location pos)
+        public Vector3i ChunkLocFor(Location pos)
         {
-            pos.X = Math.Floor(pos.X / Chunk.CHUNK_SIZE);
-            pos.Y = Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
-            pos.Z = Math.Floor(pos.Z / Chunk.CHUNK_SIZE);
-            return pos;
+            Vector3i temp;
+            temp.X = (int)Math.Floor(pos.X / Chunk.CHUNK_SIZE);
+            temp.Y = (int)Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
+            temp.Z = (int)Math.Floor(pos.Z / Chunk.CHUNK_SIZE);
+            return temp;
         }
 
-        public Chunk LoadChunk(Location pos, int posMult)
+        public Chunk LoadChunk(Vector3i pos, int posMult)
         {
             Chunk chunk;
             if (LoadedChunks.TryGetValue(pos, out chunk))
@@ -311,7 +312,7 @@ namespace Voxalia.ClientGame.WorldSystem
             return chunk;
         }
 
-        public Chunk GetChunk(Location pos)
+        public Chunk GetChunk(Vector3i pos)
         {
             Chunk chunk;
             if (LoadedChunks.TryGetValue(pos, out chunk))
@@ -454,7 +455,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             foreach (Chunk chunk in LoadedChunks.Values)
             {
-                if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(chunk.WorldPosition * Chunk.CHUNK_SIZE, chunk.WorldPosition * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE)))
+                if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(chunk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE, chunk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE)))
                 {
                     chunk.Render();
                 }
@@ -505,7 +506,7 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public double GlobalTickTimeLocal = 0;
 
-        public void ForgetChunk(Location cpos)
+        public void ForgetChunk(Vector3i cpos)
         {
             Chunk ch;
             if (LoadedChunks.TryGetValue(cpos, out ch))
@@ -543,16 +544,16 @@ namespace Voxalia.ClientGame.WorldSystem
                 return Location.Zero;
             }
             pos.Z = pos.Z + 1;
-            double XP = Math.Floor(pos.X / Chunk.CHUNK_SIZE);
-            double YP = Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
-            double ZP = Math.Floor(pos.Z / Chunk.CHUNK_SIZE);
+            int XP = (int)Math.Floor(pos.X / Chunk.CHUNK_SIZE);
+            int YP = (int)Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
+            int ZP = (int)Math.Floor(pos.Z / Chunk.CHUNK_SIZE);
             int x = (int)(Math.Floor(pos.X) - (XP * Chunk.CHUNK_SIZE));
             int y = (int)(Math.Floor(pos.Y) - (YP * Chunk.CHUNK_SIZE));
             int z = (int)(Math.Floor(pos.Z) - (ZP * Chunk.CHUNK_SIZE));
             float light = 1f;
             while (true)
             {
-                Chunk ch = GetChunk(new Location(XP, YP, ZP));
+                Chunk ch = GetChunk(new Vector3i(XP, YP, ZP));
                 if (ch == null)
                 {
                     break;

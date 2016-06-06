@@ -8,6 +8,7 @@ using FreneticScript.CommandSystem;
 using Voxalia.Shared;
 using Voxalia.ClientGame.WorldSystem;
 using FreneticScript.TagHandlers;
+using Voxalia.Shared.Collision;
 
 namespace Voxalia.ClientGame.CommandSystem.CommonCommands
 {
@@ -36,15 +37,15 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                     {
                         Location pos = TheClient.Player.GetPosition();
                         pos.Z = pos.Z + 1;
-                        double XP = Math.Floor(pos.X / Chunk.CHUNK_SIZE);
-                        double YP = Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
-                        double ZP = Math.Floor(pos.Z / Chunk.CHUNK_SIZE);
+                        int XP = (int)Math.Floor(pos.X / Chunk.CHUNK_SIZE);
+                        int YP = (int)Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
+                        int ZP = (int)Math.Floor(pos.Z / Chunk.CHUNK_SIZE);
                         int x = (int)(Math.Floor(pos.X) - (XP * Chunk.CHUNK_SIZE));
                         int y = (int)(Math.Floor(pos.Y) - (YP * Chunk.CHUNK_SIZE));
                         int z = (int)(Math.Floor(pos.Z) - (ZP * Chunk.CHUNK_SIZE));
                         while (true)
                         {
-                            Chunk ch = TheClient.TheRegion.GetChunk(new Location(XP, YP, ZP));
+                            Chunk ch = TheClient.TheRegion.GetChunk(new Vector3i(XP, YP, ZP));
                             if (ch == null)
                             {
                                 entry.Good(queue, "Passed with flying light sources!");

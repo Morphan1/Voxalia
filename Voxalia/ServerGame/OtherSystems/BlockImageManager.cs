@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using Voxalia.Shared;
 using Voxalia.Shared.Files;
+using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.WorldSystem;
 using FreneticScript;
 
@@ -26,7 +27,7 @@ namespace Voxalia.ServerGame.OtherSystems
 
         static readonly Color Transp = Color.FromArgb(0, 0, 0, 0);
 
-        public void RenderChunk(WorldSystem.Region tregion, Location chunkCoords, Chunk chunk)
+        public void RenderChunk(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)
         {
             RenderChunkInternal(tregion, chunkCoords, chunk);
         }
@@ -80,7 +81,7 @@ namespace Voxalia.ServerGame.OtherSystems
             }
         }
 
-        void RenderChunkInternal(WorldSystem.Region tregion, Location chunkCoords, Chunk chunk)
+        void RenderChunkInternal(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)
         {
             Bitmap bmp = new Bitmap(Chunk.CHUNK_SIZE * TexWidth, Chunk.CHUNK_SIZE * TexWidth, PixelFormat.Format32bppArgb);
             for (int x = 0; x < Chunk.CHUNK_SIZE; x++)

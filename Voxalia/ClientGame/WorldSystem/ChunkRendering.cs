@@ -62,14 +62,14 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     OwningRegion.TheClient.ChunksRenderingCurrently++;
                 });
-                Vector3 ppos = ClientUtilities.Convert(WorldPosition * CHUNK_SIZE);
+                Vector3 ppos = ClientUtilities.Convert(WorldPosition.ToLocation() * CHUNK_SIZE);
                 //bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
-                Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Location(0, 0, 1));
-                Chunk c_zm = OwningRegion.GetChunk(WorldPosition + new Location(0, 0, -1));
-                Chunk c_yp = OwningRegion.GetChunk(WorldPosition + new Location(0, 1, 0));
-                Chunk c_ym = OwningRegion.GetChunk(WorldPosition + new Location(0, -1, 0));
-                Chunk c_xp = OwningRegion.GetChunk(WorldPosition + new Location(1, 0, 0));
-                Chunk c_xm = OwningRegion.GetChunk(WorldPosition + new Location(-1, 0, 0));
+                Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, 1));
+                Chunk c_zm = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, -1));
+                Chunk c_yp = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 1, 0));
+                Chunk c_ym = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, -1, 0));
+                Chunk c_xp = OwningRegion.GetChunk(WorldPosition + new Vector3i(1, 0, 0));
+                Chunk c_xm = OwningRegion.GetChunk(WorldPosition + new Vector3i(-1, 0, 0));
                 BlockInternal t_air = new BlockInternal(0, 0, 0, 0);
                 for (int x = 0; x < CSize; x++)
                 {

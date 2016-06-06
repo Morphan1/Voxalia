@@ -47,13 +47,14 @@ namespace Voxalia.ServerGame.WorldSystem
             box.Min = start;
             box.Max = start;
             box.Include(start + dir * len);
-            foreach (KeyValuePair<Location, Chunk> chunk in LoadedChunks)
+            foreach (KeyValuePair<Vector3i, Chunk> chunk in LoadedChunks)
             {
                 if (chunk.Value == null || chunk.Value.FCO == null)
                 {
                     continue;
                 }
-                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition * 30, Max = chunk.Value.WorldPosition * 30 + new Location(30, 30, 30) }))
+                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE,
+                    Max = chunk.Value.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE) }))
                 {
                     continue;
                 }
@@ -92,13 +93,14 @@ namespace Voxalia.ServerGame.WorldSystem
             box.Min = start;
             box.Max = start;
             box.Include(start + dir * len);
-            foreach (KeyValuePair<Location, Chunk> chunk in LoadedChunks)
+            foreach (KeyValuePair<Vector3i, Chunk> chunk in LoadedChunks)
             {
                 if (chunk.Value == null || chunk.Value.FCO == null)
                 {
                     continue;
                 }
-                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition * 30, Max = chunk.Value.WorldPosition * 30 + new Location(30, 30, 30) }))
+                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE,
+                    Max = chunk.Value.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE) }))
                 {
                     continue;
                 }

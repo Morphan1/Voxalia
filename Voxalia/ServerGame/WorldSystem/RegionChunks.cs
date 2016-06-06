@@ -46,7 +46,7 @@ namespace Voxalia.ServerGame.WorldSystem
             PhysicsWorld.Remove(mesh);
         }
 
-        public Dictionary<Location, Chunk> LoadedChunks = new Dictionary<Location, Chunk>();
+        public Dictionary<Vector3i, Chunk> LoadedChunks = new Dictionary<Vector3i, Chunk>();
 
         public bool IsAllowedToBreak(CharacterEntity ent, Location block, Material mat)
         {
@@ -151,15 +151,16 @@ namespace Voxalia.ServerGame.WorldSystem
             return new Location(Math.Floor(worldPos.X), Math.Floor(worldPos.Y), Math.Floor(worldPos.Z));
         }
 
-        public Location ChunkLocFor(Location worldPos)
+        public Vector3i ChunkLocFor(Location worldPos)
         {
-            worldPos.X = Math.Floor(worldPos.X / 30.0);
-            worldPos.Y = Math.Floor(worldPos.Y / 30.0);
-            worldPos.Z = Math.Floor(worldPos.Z / 30.0);
-            return worldPos;
+            Vector3i temp;
+            temp.X = (int)Math.Floor(worldPos.X / 30.0);
+            temp.Y = (int)Math.Floor(worldPos.Y / 30.0);
+            temp.Z = (int)Math.Floor(worldPos.Z / 30.0);
+            return temp;
         }
 
-        public Chunk LoadChunkNoPopulate(Location cpos)
+        public Chunk LoadChunkNoPopulate(Vector3i cpos)
         {
             Chunk chunk;
             if (LoadedChunks.TryGetValue(cpos, out chunk))
@@ -181,9 +182,9 @@ namespace Voxalia.ServerGame.WorldSystem
             return chunk;
         }
 
-        public Chunk LoadChunkLOD(Location cpos)
+        public Chunk LoadChunkLOD(Vector3i cpos)
         {
-            byte[] lod = ChunkManager.GetLODChunkDetails((int)cpos.X, (int)cpos.Y, (int)cpos.Z);
+            byte[] lod = ChunkManager.GetLODChunkDetails(cpos.X, cpos.Y, cpos.Z);
             if (lod != null)
             {
                 return new Chunk(lod) { WorldPosition = cpos };
@@ -194,7 +195,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        public Chunk LoadChunk(Location cpos)
+        public Chunk LoadChunk(Vector3i cpos)
         {
             Chunk chunk;
             if (LoadedChunks.TryGetValue(cpos, out chunk))
@@ -257,7 +258,7 @@ namespace Voxalia.ServerGame.WorldSystem
         /// <summary>
         /// Designed for startup time.
         /// </summary>
-        void LoadChunk_Background_Startup(Location cpos, Action<bool> callback, Scheduler schedule)
+        void LoadChunk_Background_Startup(Vector3i cpos, Action<bool> callback, Scheduler schedule)
         {
             Chunk ch;
             if (LoadedChunks.TryGetValue(cpos, out ch))
@@ -298,7 +299,7 @@ namespace Voxalia.ServerGame.WorldSystem
             ch.LoadSchedule.RunMe();
         }
 
-        public void LoadChunk_Background(Location cpos, Action<bool> callback = null)
+        public void LoadChunk_Background(Vector3i cpos, Action<bool> callback = null)
         {
             TheServer.Schedule.ScheduleSyncTask(() =>
             {
@@ -307,7 +308,7 @@ namespace Voxalia.ServerGame.WorldSystem
         }
 
 
-        public Chunk GetChunk(Location cpos)
+        public Chunk GetChunk(Vector3i cpos)
         {
             Chunk chunk;
             if (LoadedChunks.TryGetValue(cpos, out chunk))

@@ -115,7 +115,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
             }
             lPos = GetPosition();
-            Location cpos = TheRegion.ChunkLocFor(lPos);
+            Vector3i cpos = TheRegion.ChunkLocFor(lPos);
             if (CanSave && !TheRegion.LoadedChunks.ContainsKey(cpos))
             {
                 TheRegion.LoadChunk(cpos);

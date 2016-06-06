@@ -15,7 +15,7 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public Region OwningRegion = null;
 
-        public Location WorldPosition;
+        public Vector3i WorldPosition;
 
         public int CSize = CHUNK_SIZE;
 
@@ -50,12 +50,12 @@ namespace Voxalia.ClientGame.WorldSystem
             return BlocksInternal[BlockIndex(x / PosMultiplier, y / PosMultiplier, z / PosMultiplier)];
         }
 
-        static Location[] slocs = new Location[] { new Location(1, 0, 0), new Location(-1, 0, 0), new Location(0, 1, 0),
-            new Location(0, -1, 0), new Location(0, 0, 1), new Location(0, 0, -1) };
+        static Vector3i[] slocs = new Vector3i[] { new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0), new Vector3i(0, 1, 0),
+            new Vector3i(0, -1, 0), new Vector3i(0, 0, 1), new Vector3i(0, 0, -1) };
 
         public void UpdateSurroundingsFully()
         {
-            foreach (Location loc in slocs)
+            foreach (Vector3i loc in slocs)
             {
                 Chunk ch = OwningRegion.GetChunk(WorldPosition + loc);
                 if (ch != null)
@@ -111,7 +111,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             if (CSize == CHUNK_SIZE)
             {
-                FCO = new FullChunkObject(WorldPosition.ToBVector() * CHUNK_SIZE, BlocksInternal);
+                FCO = new FullChunkObject(WorldPosition.ToVector3() * CHUNK_SIZE, BlocksInternal);
                 FCO.CollisionRules.Group = CollisionUtil.WorldSolid;
                 OwningRegion.AddChunk(FCO);
             }
