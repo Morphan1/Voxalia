@@ -204,9 +204,18 @@ namespace Voxalia.ServerGame.EntitySystem
                 RemoveMe();
             }
             YAMLConfiguration config = new YAMLConfiguration("");
-            SaveToYAML(config);
             string nl = Name.ToLower();
-            Program.Files.WriteText("server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr", config.SaveToString());
+            string fn = "server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr";
+            if (Program.Files.Exists(fn))
+            {
+                string dat = Program.Files.ReadText(fn);
+                if (dat != null)
+                {
+                    config = new YAMLConfiguration(dat);
+                }
+            }
+            SaveToYAML(config);
+            Program.Files.WriteText(fn, config.SaveToString());
         }
 
         /// <summary>
