@@ -104,9 +104,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_forw_vox_trans = Shaders.GetShader("forward" + def + ",MCM_VOX,MCM_TRANSP");
         }
 
-        int map_fbo_main;
-        int map_fbo_texture;
-        int map_fbo_depthtex;
+        int map_fbo_main = -1;
+        int map_fbo_texture = -1;
+        int map_fbo_depthtex = -1;
 
         public void generateMapHelpers()
         {
@@ -133,12 +133,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
-        int transp_fbo_main;
-        int transp_fbo_texture;
-        int transp_fbo_depthtex;
+        int transp_fbo_main = -1;
+        int transp_fbo_texture = -1;
+        int transp_fbo_depthtex = -1;
 
         public void generateTranspHelpers()
         {
+            if (transp_fbo_main != -1)
+            {
+                GL.DeleteFramebuffer(transp_fbo_main);
+                GL.DeleteTexture(transp_fbo_texture);
+                GL.DeleteTexture(transp_fbo_depthtex);
+            }
             // TODO: Helper class!
             transp_fbo_texture = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, transp_fbo_texture);

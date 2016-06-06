@@ -108,7 +108,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Window = new GameWindow(CVars.r_width.ValueI, CVars.r_height.ValueI, new GraphicsMode(24, 24, 0, 0), Program.GameName + " v" + Program.GameVersion,
                 GameWindowFlags.Default, DisplayDevice.Default, 4, 3, GraphicsContextFlags.ForwardCompatible);
             Window.WindowState = CVars.r_fullscreen.ValueB ? WindowState.Fullscreen : WindowState.Normal;
-            Window.WindowBorder = WindowBorder.Fixed;
             Window.Load += new EventHandler<EventArgs>(Window_Load);
             Window.RenderFrame += new EventHandler<FrameEventArgs>(Window_RenderFrame);
             Window.Mouse.Move += new EventHandler<MouseMoveEventArgs>(MouseHandler.Window_MouseMove);
@@ -118,11 +117,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Window.Mouse.WheelChanged += new EventHandler<MouseWheelEventArgs>(KeyHandler.Mouse_Wheel);
             Window.Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonDown);
             Window.Mouse.ButtonUp += new EventHandler<MouseButtonEventArgs>(KeyHandler.Mouse_ButtonUp);
+            Window.Resize += Window_Resize;
             Window.Closed += Window_Closed;
             onVsyncChanged(CVars.r_vsync, null);
             Window.Run(1, CVars.r_maxfps.ValueD);
         }
-
+        
         public XInput RawGamePad = null;
 
         private void Window_Closed(object sender, EventArgs e)
@@ -565,7 +565,22 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 BackgroundMusic();
             }
         }
-        
+
+        private void Window_Resize(object sender, EventArgs e)
+        {
+            if (Window.ClientSize.Width < 1280)
+            {
+                Window.ClientSize = new Size(1280, Window.ClientSize.Height);
+            }
+            if (Window.ClientSize.Height < 720)
+            {
+                Window.ClientSize = new Size(Window.ClientSize.Width, 720);
+            }
+            CVars.r_width.Set(Window.ClientSize.Width.ToString());
+            CVars.r_height.Set(Window.ClientSize.Height.ToString());
+            windowupdatehandle();
+        }
+
         public void UpdateWindow()
         {
             if (CVars.r_width.ValueI < 1280)
@@ -578,7 +593,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             Window.ClientSize = new Size(CVars.r_width.ValueI, CVars.r_height.ValueI);
             Window.WindowState = CVars.r_fullscreen.ValueB ? WindowState.Fullscreen : WindowState.Normal;
+            windowupdatehandle();
+        }
+
+        void windowupdatehandle()
+        {
             SetViewport();
+            generateTranspHelpers();
+            destroyLightHelpers();
+            generateLightHelpers();
         }
     }
 }
