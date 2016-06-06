@@ -30,6 +30,10 @@ namespace Voxalia.ServerGame.OtherSystems
         public void RenderChunk(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)
         {
             RenderChunkInternal(tregion, chunkCoords, chunk);
+            if (tregion.TheServer.CVars.n_rendersides.ValueB)
+            {
+                RenderChunkInternalAngle(tregion, chunkCoords, chunk);
+            }
         }
 
         public byte[] Combine(List<byte[]> originals)
@@ -79,6 +83,73 @@ namespace Voxalia.ServerGame.OtherSystems
                     bmp.SetPixel(xmin + x, ymin + y, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
                 }
             }
+        }
+
+        void RenderChunkInternalAngle(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)
+        {
+            Bitmap bmp = new Bitmap(Chunk.CHUNK_SIZE * TexWidth, Chunk.CHUNK_SIZE * TexWidth, PixelFormat.Format32bppArgb);
+            for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
+            {
+                for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
+                {
+                    // TODO: async chunk read locker?
+                    BlockInternal topOpaque = BlockInternal.AIR;
+                    int topZ = 0;
+                    for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
+                    {
+                        BlockInternal bi = chunk.GetBlockAt(x, y, z);
+                        if (bi.IsOpaque())
+                        {
+                            topOpaque = bi;
+                            topZ = z;
+                        }
+                    }
+                    if (topOpaque.Material != Material.AIR)
+                    {
+                        MaterialImage matbmp = MaterialImages[topOpaque.Material.TextureID(MaterialSide.BOTTOM)];
+                        if (matbmp == null)
+                        {
+                            continue;
+                        }
+                        Color color = Colors.ForByte(topOpaque.BlockPaint);
+                        if (color.A == 0)
+                        {
+                            color = Color.White;
+                        }
+                        DrawImage(bmp, matbmp, x * TexWidth, y * TexWidth, color);
+                    }
+                    else
+                    {
+                        DrawImage(bmp, MaterialImages[0], x * TexWidth, y * TexWidth, Color.Transparent);
+                    }
+                    for (int z = topZ; z < Chunk.CHUNK_SIZE; z++)
+                    {
+                        BlockInternal bi = chunk.GetBlockAt(x, y, z);
+                        if (bi.Material != Material.AIR)
+                        {
+                            MaterialImage zmatbmp = MaterialImages[bi.Material.TextureID(MaterialSide.BOTTOM)];
+                            if (zmatbmp == null)
+                            {
+                                continue;
+                            }
+                            Color zcolor = Colors.ForByte(bi.BlockPaint);
+                            if (zcolor.A == 0)
+                            {
+                                zcolor = Color.White;
+                            }
+                            DrawImage(bmp, zmatbmp, x * TexWidth, y * TexWidth, zcolor);
+                        }
+                    }
+                }
+            }
+            DataStream ds = new DataStream();
+            bmp.Save(ds, ImageFormat.Png);
+            lock (OneAtATimePlease)
+            {
+                KeyValuePair<int, int> maxes = tregion.ChunkManager.GetMaxesAngle((int)chunkCoords.X, (int)chunkCoords.Y);
+                tregion.ChunkManager.SetMaxesAngle((int)chunkCoords.X, (int)chunkCoords.Y, Math.Min(maxes.Key, (int)chunkCoords.Z), Math.Max(maxes.Value, (int)chunkCoords.Z));
+            }
+            tregion.ChunkManager.WriteImageAngle((int)chunkCoords.X, (int)chunkCoords.Y, (int)chunkCoords.Z, ds.ToArray());
         }
 
         void RenderChunkInternal(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)

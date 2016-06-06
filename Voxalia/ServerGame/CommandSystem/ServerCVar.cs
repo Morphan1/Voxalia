@@ -22,7 +22,7 @@ namespace Voxalia.ServerGame.CommandSystem
         public CVar g_timescale, g_fps, g_maxheight, g_minheight, g_maxdist;
 
         // Network CVars
-        public CVar n_verifyip;
+        public CVar n_verifyip, n_rendersides;
 
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
@@ -42,6 +42,7 @@ namespace Voxalia.ServerGame.CommandSystem
             g_maxdist = Register("g_maxdist", "50000", CVarFlag.Numeric, "How far on the X or Y axis a player may travel from the origin."); // TODO: Also per-world?
             // Network CVars
             n_verifyip = Register("n_verifyip", "true", CVarFlag.Boolean, "Whether to verify connecting users' IP addresses with the global server. Disable this to allow LAN connections.");
+            n_rendersides = Register("n_rendersides", "true", CVarFlag.Boolean, "Whether to render the side-on map view for the linked webpage.");
         }
 
         CVar Register(string name, string value, CVarFlag flags, string desc)

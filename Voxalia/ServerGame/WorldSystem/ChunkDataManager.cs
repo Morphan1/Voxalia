@@ -30,6 +30,10 @@ namespace Voxalia.ServerGame.WorldSystem
 
         LiteCollection<BsonDocument> DBMaxes;
 
+        LiteCollection<BsonDocument> DBImages2;
+
+        LiteCollection<BsonDocument> DBMaxes2;
+
         public Object FSLock = new Object();
 
         public Object EntLock = new Object();
@@ -50,6 +54,22 @@ namespace Voxalia.ServerGame.WorldSystem
             ImageDatabase = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/images.ldb");
             DBImages = ImageDatabase.GetCollection<BsonDocument>("images");
             DBMaxes = ImageDatabase.GetCollection<BsonDocument>("maxes");
+            DBImages2 = ImageDatabase.GetCollection<BsonDocument>("images_angle");
+            DBMaxes2 = ImageDatabase.GetCollection<BsonDocument>("maxes_angle");
+        }
+
+        public KeyValuePair<int, int> GetMaxesAngle(int x, int y)
+        {
+            BsonDocument doc;
+            lock (IMGLock)
+            {
+                doc = DBMaxes2.FindById(GetIDFor(x, y, 0));
+            }
+            if (doc == null)
+            {
+                return new KeyValuePair<int, int>(0, 0);
+            }
+            return new KeyValuePair<int, int>(doc["min"].AsInt32, doc["max"].AsInt32);
         }
 
         public KeyValuePair<int, int> GetMaxes(int x, int y)
@@ -66,6 +86,20 @@ namespace Voxalia.ServerGame.WorldSystem
             return new KeyValuePair<int, int>(doc["min"].AsInt32, doc["max"].AsInt32);
         }
 
+        public void SetMaxesAngle(int x, int y, int min, int max)
+        {
+            BsonValue id = GetIDFor(x, y, 0);
+            BsonDocument newdoc = new BsonDocument();
+            newdoc["_id"] = id;
+            newdoc["min"] = new BsonValue(min);
+            newdoc["max"] = new BsonValue(max);
+            lock (IMGLock)
+            {
+                DBMaxes2.Delete(id);
+                DBMaxes2.Insert(newdoc);
+            }
+        }
+
         public void SetMaxes(int x, int y, int min, int max)
         {
             BsonValue id = GetIDFor(x, y, 0);
@@ -80,6 +114,20 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
+        public byte[] GetImageAngle(int x, int y, int z)
+        {
+            BsonDocument doc;
+            lock (IMGLock)
+            {
+                doc = DBImages2.FindById(GetIDFor(x, y, z));
+            }
+            if (doc == null)
+            {
+                return null;
+            }
+            return doc["image"].AsBinary;
+        }
+
         public byte[] GetImage(int x, int y, int z)
         {
             BsonDocument doc;
@@ -92,6 +140,19 @@ namespace Voxalia.ServerGame.WorldSystem
                 return null;
             }
             return doc["image"].AsBinary;
+        }
+
+        public void WriteImageAngle(int x, int y, int z, byte[] data)
+        {
+            BsonValue id = GetIDFor(x, y, z);
+            BsonDocument newdoc = new BsonDocument();
+            newdoc["_id"] = id;
+            newdoc["image"] = new BsonValue(data);
+            lock (IMGLock)
+            {
+                DBImages2.Delete(id);
+                DBImages2.Insert(newdoc);
+            }
         }
 
         public void WriteImage(int x, int y, int z, byte[] data)
