@@ -220,6 +220,15 @@ namespace Voxalia.Shared
         }
 
         /// <summary>
+        /// Returns whether the location is infinite.
+        /// </summary>
+        /// <returns>whether the location is infinite.</returns>
+        public bool IsInfinite()
+        {
+            return double.IsInfinity(X) || double.IsInfinity(Y) || double.IsInfinity(Z);
+        }
+
+        /// <summary>
         /// Returns the dot product of this and another location.
         /// </summary>
         /// <param name="two">The second location.</param>

@@ -15,6 +15,7 @@ using Voxalia.ServerGame.OtherSystems;
 using Voxalia.Shared.Collision;
 using BEPUphysics.Character;
 using FreneticScript;
+using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -30,6 +31,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public double SpawnedTime = 0;
 
+        public bool SecureMovement = true;
+
         public void LoadFromYAML(YAMLConfiguration config)
         {
             string region = config.ReadString("region", null);
@@ -44,7 +47,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             SetMaxHealth(config.ReadFloat("maxhealth", 100));
             SetHealth(config.ReadFloat("health", 100));
-            if (config.ReadString("flying", "false").ToLower() == "true") // TODO: ReadBoolean?
+            if (config.ReadString("flying", "false").ToLowerFast() == "true") // TODO: ReadBoolean?
             {
                 Fly();
                 Network.SendPacket(new FlagEntityPacketOut(this, EntityFlag.FLYING, 1));
@@ -56,6 +59,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             SetVelocity(Location.FromString(config.ReadString("velocity", "0,0,0")));
             Teleport(Location.FromString(config.ReadString("position", TheRegion.SpawnPoint.ToString())));
+            SecureMovement = config.ReadString("secure_movement", "true").ToLowerFast() == "true"; // TODO: ReadBoolean?
             IsFirstJoin = false;
             SpawnedTime = TheRegion.GlobalTickTime;
         }
@@ -65,9 +69,10 @@ namespace Voxalia.ServerGame.EntitySystem
             config.Set("gamemode", Mode.ToString());
             config.Set("maxhealth", GetMaxHealth());
             config.Set("health", GetHealth());
-            config.Set("flying", IsFlying ? "true": "false");
+            config.Set("flying", IsFlying ? "true": "false"); // TODO: Boolean safety
             config.Set("velocity", GetVelocity().ToString());
             config.Set("position", GetPosition().ToString());
+            config.Set("secure_movement", SecureMovement ? "true" : "false"); // TODO: Boolean safety
             config.Set("region", TheRegion.Name);
             for (int i = 0; i < (int)NetUsageType.COUNT; i++)
             {

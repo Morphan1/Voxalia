@@ -63,6 +63,20 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                      + ", mass: " + entry.Player.CBody.Body.Mass + ", radius: " + entry.Player.CBody.BodyRadius + ", hasSupport: " + entry.Player.CBody.SupportFinder.HasSupport
                      + ", hasTraction: " + entry.Player.CBody.SupportFinder.HasTraction + ", isAFK: " + entry.Player.IsAFK + ", timeAFK: " + entry.Player.TimeAFK);
             }
+            else if (arg0 == "secureMovement")
+            {
+                entry.Player.SecureMovement = !entry.Player.SecureMovement;
+                entry.Player.Network.SendMessage("Toggled secure movement to : " + entry.Player.SecureMovement);
+                if (entry.Player.SecureMovement)
+                {
+                    entry.Player.Flags &= ~YourStatusFlags.INSECURE_MOVEMENT;
+                }
+                else
+                {
+                    entry.Player.Flags |= YourStatusFlags.INSECURE_MOVEMENT;
+                }
+                entry.Player.SendStatus();
+            }
             else if (arg0 == "chunkDebug")
             {
                 Biome biome;

@@ -122,9 +122,13 @@ namespace Voxalia.ClientGame.EntitySystem
         
         public void UpdateForPacketFromServer(double gtt, long ID, Location pos, Location vel, bool _pup)
         {
+            ServerLocation = pos;
+            if (ServerFlags.HasFlag(YourStatusFlags.INSECURE_MOVEMENT))
+            {
+                return;
+            }
             // TODO: big solid entities!
             double now = TheRegion.GlobalTickTimeLocal;
-            ServerLocation = pos;
             if (TheClient.CVars.n_movemode.ValueI == 2)
             {
                 // TODO: Remove outsider chunks!
@@ -265,11 +269,11 @@ namespace Voxalia.ClientGame.EntitySystem
                 Location loc = new Location();
                 loc.Yaw = tyaw;
                 loc.Pitch = tpitch;
-                TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, loc, lUIS.XMove, lUIS.YMove));
+                TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, loc, lUIS.XMove, lUIS.YMove, GetPosition(), GetVelocity()));
             }
             else
             {
-                TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction, lUIS.XMove, lUIS.YMove));
+                TheClient.Network.SendPacket(new KeysPacketOut(lUIS.ID, kpd, Direction, lUIS.XMove, lUIS.YMove, GetPosition(), GetVelocity()));
             }
         }
 
