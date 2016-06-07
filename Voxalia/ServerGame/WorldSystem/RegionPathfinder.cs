@@ -22,10 +22,13 @@ namespace Voxalia.ServerGame.WorldSystem
             PathFindNode end = new PathFindNode() { Internal = endloc, F = 0, G = 0 };
             SimplePriorityQueue<PathFindNode> open = new SimplePriorityQueue<PathFindNode>();
             HashSet<Location> closed = new HashSet<Location>();
+            HashSet<Location> openset = new HashSet<Location>();
             open.Enqueue(start, start.F);
+            openset.Add(start.Internal);
             while (open.Count > 0)
             {
                 PathFindNode next = open.Dequeue();
+                openset.Remove(next.Internal);
                 if ((end.Internal - next.Internal).LengthSquared() < gosq)
                 {
                     return Reconstruct(next);
@@ -58,11 +61,12 @@ namespace Voxalia.ServerGame.WorldSystem
                     node.G = next.G + 1; // Note: Distance beween 'node' and 'next' is 1.
                     node.F = node.G + node.Distance(end);
                     node.Parent = next;
-                    if (open.Contains(node))
+                    if (openset.Contains(node.Internal))
                     {
                         continue;
                     }
                     open.Enqueue(node, node.F);
+                    openset.Add(node.Internal);
                 }
             }
             return null;
