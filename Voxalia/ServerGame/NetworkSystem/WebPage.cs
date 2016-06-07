@@ -8,6 +8,8 @@ using FreneticScript;
 using Voxalia.Shared;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.OtherSystems;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Voxalia.ServerGame.NetworkSystem
 {
@@ -124,17 +126,26 @@ namespace Voxalia.ServerGame.NetworkSystem
                                     datums.Add(dt);
                                 }
                             }
+                            http_response_contenttype = "image/png";
                             if (datums.Count > 1)
                             {
-                                http_response_contenttype = "image/png";
-                                http_response_content = TheServer.BlockImages.Combine(datums);
-                                return;
+                                http_response_content = TheServer.BlockImages.Combine(datums, false);
                             }
                             else if (datums.Count == 1)
                             {
-                                http_response_contenttype = "image/png";
                                 http_response_content = datums[0];
                             }
+                            else
+                            {
+                                Bitmap bmp = new Bitmap(1, 1);
+                                bmp.SetPixel(0, 0, Color.Black);
+                                DataStream ds = new DataStream();
+                                bmp.Save(ds, ImageFormat.Png);
+                                http_response_content = ds.ToArray();
+                                ds.Dispose();
+                                bmp.Dispose();
+                            }
+                            return;
                         }
                         else if (dat[0] == "full_img_angle" && dat.Length >= 3)
                         {
@@ -150,17 +161,26 @@ namespace Voxalia.ServerGame.NetworkSystem
                                     datums.Add(dt);
                                 }
                             }
+                            http_response_contenttype = "image/png";
                             if (datums.Count > 1)
                             {
-                                http_response_contenttype = "image/png";
-                                http_response_content = TheServer.BlockImages.Combine(datums);
-                                return;
+                                http_response_content = TheServer.BlockImages.Combine(datums, true);
                             }
                             else if (datums.Count == 1)
                             {
-                                http_response_contenttype = "image/png";
                                 http_response_content = datums[0];
                             }
+                            else
+                            {
+                                Bitmap bmp = new Bitmap(1, 1);
+                                bmp.SetPixel(0, 0, Color.Black);
+                                DataStream ds = new DataStream();
+                                bmp.Save(ds, ImageFormat.Png);
+                                http_response_content = ds.ToArray();
+                                ds.Dispose();
+                                bmp.Dispose();
+                            }
+                            return;
                         }
                         else if (dat[0] == "maxes" && dat.Length >= 3)
                         {
@@ -183,7 +203,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                                 for (int y = -SIZE; y <= SIZE; y++)
                                 {
                                     content.Append("<img style=\"position:absolute;top:" + (y + SIZE) * sz + "px;left:" + (x + SIZE) * sz + "px;\" src=\"/map/region/"
-                                        + region + "/full_img/" + (bx + x) + "/" + (by + y) + ".png\" />");
+                                        + region + "/full_img/" + (bx + x) + "/" + (by + y) + ".png\" width=\"" + sz + "\" height=\"" + sz + "\" />");
                                 }
                             }
                             content.Append("\n</body>\n</html>\n");
@@ -194,16 +214,16 @@ namespace Voxalia.ServerGame.NetworkSystem
                         {
                             int bx = Utilities.StringToInt(dat[1]);
                             int by = Utilities.StringToInt(dat[2]);
-                            int sz = Chunk.CHUNK_SIZE * BlockImageManager.TexWidth;
+                            int sz = Chunk.CHUNK_SIZE * BlockImageManager.TexWidth2;
                             StringBuilder content = new StringBuilder();
                             content.Append("<!doctype html>\n<html>\n<head>\n<title>Voxalia EXP-QUICK (Angled)</title>\n</head>\n<body>\n");
-                            const int SIZE = 6;
+                            const int SIZE = 3;
                             for (int x = -SIZE; x <= SIZE; x++)
                             {
                                 for (int y = -SIZE; y <= SIZE; y++)
                                 {
                                     content.Append("<img style=\"position:absolute;top:" + (y + SIZE) * sz + "px;left:" + (x + SIZE) * sz + "px;\" src=\"/map/region/"
-                                        + region + "/full_img_angle/" + (bx + x) + "/" + (by + y) + ".png\" />");
+                                        + region + "/full_img_angle/" + (bx + x) + "/" + (by + y) + ".png\" width=\"" + sz + "\" height=\"" + sz + "\" />");
                                 }
                             }
                             content.Append("\n</body>\n</html>\n");

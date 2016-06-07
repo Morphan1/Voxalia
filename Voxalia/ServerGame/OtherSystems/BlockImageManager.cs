@@ -9,6 +9,7 @@ using Voxalia.Shared.Files;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.WorldSystem;
 using FreneticScript;
+using BEPUutilities;
 
 namespace Voxalia.ServerGame.OtherSystems
 {
@@ -20,6 +21,7 @@ namespace Voxalia.ServerGame.OtherSystems
     public class BlockImageManager
     {
         public const int TexWidth = 4;
+        public const int TexWidth2 = TexWidth * 2;
 
         public MaterialImage[] MaterialImages;
 
@@ -36,9 +38,9 @@ namespace Voxalia.ServerGame.OtherSystems
             }
         }
 
-        public byte[] Combine(List<byte[]> originals)
+        public byte[] Combine(List<byte[]> originals, bool angle)
         {
-            Bitmap bmp = new Bitmap(Chunk.CHUNK_SIZE * TexWidth, Chunk.CHUNK_SIZE * TexWidth, PixelFormat.Format32bppArgb);
+            Bitmap bmp = new Bitmap(Chunk.CHUNK_SIZE * (angle ? TexWidth2 : TexWidth), Chunk.CHUNK_SIZE * (angle ? TexWidth2 : TexWidth), PixelFormat.Format32bppArgb);
             using (Graphics graphics = Graphics.FromImage(bmp))
             {
                 graphics.Clear(Transp);
@@ -85,9 +87,53 @@ namespace Voxalia.ServerGame.OtherSystems
             }
         }
 
+        void DrawImageShiftX(Bitmap bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
+        {
+            xmin += TexWidth;
+            ymin += TexWidth;
+            for (int x = 0; x < TexWidth; x++)
+            {
+                for (int y = 0; y < TexWidth; y++)
+                {
+                    int sx = xmin + x;
+                    int sy = ymin + y - x;
+                    Color basepx = bmp.GetPixel(sx, sy);
+                    bmp.SetPixel(sx, sy, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
+                }
+            }
+        }
+
+        void DrawImageShiftY(Bitmap bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
+        {
+            ymin += TexWidth;
+            for (int x = 0; x < TexWidth; x++)
+            {
+                for (int y = 0; y < TexWidth; y++)
+                {
+                    Color basepx = bmp.GetPixel(xmin + x, ymin + y);
+                    bmp.SetPixel(xmin + x, ymin + y, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
+                }
+            }
+        }
+        
+        void DrawImageShiftZ(Bitmap bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
+        {
+            xmin += TexWidth;
+            for (int x = 0; x < TexWidth; x++)
+            {
+                for (int y = 0; y < TexWidth; y++)
+                {
+                    int sx = xmin + x - y;
+                    int sy = ymin + y;
+                    Color basepx = bmp.GetPixel(sx, sy);
+                    bmp.SetPixel(sx, sy, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
+                }
+            }
+        }
+
         void RenderChunkInternalAngle(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)
         {
-            Bitmap bmp = new Bitmap(Chunk.CHUNK_SIZE * TexWidth, Chunk.CHUNK_SIZE * TexWidth, PixelFormat.Format32bppArgb);
+            Bitmap bmp = new Bitmap(Chunk.CHUNK_SIZE * TexWidth2, Chunk.CHUNK_SIZE * TexWidth2, PixelFormat.Format32bppArgb);
             for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
             {
                 for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
@@ -104,31 +150,21 @@ namespace Voxalia.ServerGame.OtherSystems
                             topZ = z;
                         }
                     }
-                    if (topOpaque.Material != Material.AIR)
+                    if (topOpaque.Material == Material.AIR)
                     {
-                        MaterialImage matbmp = MaterialImages[topOpaque.Material.TextureID(MaterialSide.BOTTOM)];
-                        if (matbmp == null)
-                        {
-                            continue;
-                        }
-                        Color color = Colors.ForByte(topOpaque.BlockPaint);
-                        if (color.A == 0)
-                        {
-                            color = Color.White;
-                        }
-                        DrawImage(bmp, matbmp, x * TexWidth, y * TexWidth, color);
-                    }
-                    else
-                    {
-                        DrawImage(bmp, MaterialImages[0], x * TexWidth, y * TexWidth, Color.Transparent);
+                        DrawImageShiftX(bmp, MaterialImages[0], x * TexWidth2, y * TexWidth2, Color.Transparent);
+                        DrawImageShiftY(bmp, MaterialImages[0], x * TexWidth2, y * TexWidth2, Color.Transparent);
+                        DrawImageShiftZ(bmp, MaterialImages[0], x * TexWidth2, y * TexWidth2, Color.Transparent);
                     }
                     for (int z = topZ; z < Chunk.CHUNK_SIZE; z++)
                     {
                         BlockInternal bi = chunk.GetBlockAt(x, y, z);
                         if (bi.Material != Material.AIR)
                         {
-                            MaterialImage zmatbmp = MaterialImages[bi.Material.TextureID(MaterialSide.BOTTOM)];
-                            if (zmatbmp == null)
+                            MaterialImage zmatbmpXP = MaterialImages[bi.Material.TextureID(MaterialSide.XP)];
+                            MaterialImage zmatbmpYP = MaterialImages[bi.Material.TextureID(MaterialSide.YP)];
+                            MaterialImage zmatbmpZP = MaterialImages[bi.Material.TextureID(MaterialSide.TOP)];
+                            if (zmatbmpXP == null || zmatbmpYP == null || zmatbmpZP == null)
                             {
                                 continue;
                             }
@@ -137,7 +173,9 @@ namespace Voxalia.ServerGame.OtherSystems
                             {
                                 zcolor = Color.White;
                             }
-                            DrawImage(bmp, zmatbmp, x * TexWidth, y * TexWidth, zcolor);
+                            DrawImageShiftX(bmp, zmatbmpXP, x * TexWidth2, y * TexWidth2, zcolor);
+                            DrawImageShiftY(bmp, zmatbmpYP, x * TexWidth2, y * TexWidth2, zcolor);
+                            DrawImageShiftZ(bmp, zmatbmpZP, x * TexWidth2, y * TexWidth2, zcolor);
                         }
                     }
                 }
@@ -171,21 +209,7 @@ namespace Voxalia.ServerGame.OtherSystems
                             topZ = z;
                         }
                     }
-                    if (topOpaque.Material != Material.AIR)
-                    {
-                        MaterialImage matbmp = MaterialImages[topOpaque.Material.TextureID(MaterialSide.TOP)];
-                        if (matbmp == null)
-                        {
-                            continue;
-                        }
-                        Color color = Colors.ForByte(topOpaque.BlockPaint);
-                        if (color.A == 0)
-                        {
-                            color = Color.White;
-                        }
-                        DrawImage(bmp, matbmp, x * TexWidth, y * TexWidth, color);
-                    }
-                    else
+                    if (topOpaque.Material == Material.AIR)
                     {
                         DrawImage(bmp, MaterialImages[0], x * TexWidth, y * TexWidth, Color.Transparent);
                     }
