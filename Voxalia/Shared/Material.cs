@@ -122,6 +122,9 @@ namespace Voxalia.Shared
                         case "rendersatall":
                             inf.RendersAtAll = opt[1].ToLowerFast() == "true";
                             break;
+                        case "breaksfromothertools":
+                            inf.BreaksFromOtherTools = opt[1].ToLowerFast() == "true";
+                            break;
                         case "fogcolor":
                             inf.FogColor = Location.FromString(opt[1]);
                             break;
@@ -136,6 +139,12 @@ namespace Voxalia.Shared
                             break;
                         case "breaker":
                             inf.Breaker = (MaterialBreaker)Enum.Parse(typeof(MaterialBreaker), opt[1].ToUpperInvariant());
+                            break;
+                        case "breaksinto":
+                            inf.BreaksInto = (Material)Enum.Parse(typeof(Material), opt[1].ToUpperInvariant());
+                            break;
+                        case "solidifiesinto":
+                            inf.SolidifiesInto = (Material)Enum.Parse(typeof(Material), opt[1].ToUpperInvariant());
                             break;
                         case "texture_top":
                             inf.TID[(int)MaterialSide.TOP] = ParseTID(opt[1]);
@@ -224,6 +233,11 @@ namespace Voxalia.Shared
             return ALL_MATS[(int)mat].RendersAtAll;
         }
 
+        public static bool GetBreaksFromOtherTools(this Material mat)
+        {
+            return ALL_MATS[(int)mat].BreaksFromOtherTools;
+        }
+
         public static int TextureID(this Material mat, MaterialSide side)
         {
             return ALL_MATS[(int)mat].TID[(int)side];
@@ -292,6 +306,16 @@ namespace Voxalia.Shared
         public static MaterialBreaker GetBreaker(this Material mat)
         {
             return ALL_MATS[(int)mat].Breaker;
+        }
+
+        public static Material GetBreaksInto(this Material mat)
+        {
+            return ALL_MATS[(int)mat].BreaksInto;
+        }
+
+        public static Material GetSolidifiesInto(this Material mat)
+        {
+            return ALL_MATS[(int)mat].SolidifiesInto;
         }
 
         public static Type MaterialType = typeof(Material);
@@ -400,48 +424,123 @@ namespace Voxalia.Shared
                 TID[i] = ID;
             }
             SetName(((Material)ID).ToString());
+            BreaksInto = (Material)ID;
+            SolidifiesInto = (Material)ID;
         }
 
+        /// <summary>
+        /// Use this to properly set the name of the material.
+        /// </summary>
+        /// <param name="name"></param>
         public void SetName(string name)
         {
             Name = name.ToUpperInvariant();
             NameHash = Name.GetHashCode();
         }
 
+        /// <summary>
+        /// The name of the material.
+        /// </summary>
         public string Name = null;
 
+        /// <summary>
+        /// The hash of the material's name. This value is for use internally, and is subject to arbitrary change.
+        /// </summary>
         public int NameHash = 0;
         
+        /// <summary>
+        /// The material ID number of this material.
+        /// </summary>
         public int ID = 0;
 
+        /// <summary>
+        /// The movement speed modifier for things (particularly characters) moving along the surface of this material.
+        /// </summary>
         public float SpeedMod = 1f;
         
+        /// <summary>
+        /// Whether this material is fully opaque.
+        /// </summary>
         public bool Opaque = true;
 
+        /// <summary>
+        /// Whether this material renders at all.
+        /// </summary>
         public bool RendersAtAll = true;
 
+        /// <summary>
+        /// Whether this material is allowed to have its texture appear on the connections between the block and another block both of this material.
+        /// </summary>
         public bool CanRenderAgainstSelf = false;
 
+        /// <summary>
+        /// The friction modifier for objects on the surface of this material.
+        /// </summary>
         public float FrictionMod = 1f;
 
+        /// <summary>
+        /// What color fog to display when the camera is inside this material.
+        /// </summary>
         public Location FogColor = new Location(0.7);
-
+        
+        /// <summary>
+        /// The opacity value of fog when the camera is inside this material.
+        /// </summary>
         public float FogAlpha = 1;
 
+        /// <summary>
+        /// How hard the material is (this affects EG how badly it is damaged by explosions).
+        /// </summary>
         public float Hardness = 10;
 
+        /// <summary>
+        /// How long it takes, in seconds, for this material to break by default. Different breakers affect how fast this breaks.
+        /// </summary>
         public float BreakTime = 1f;
 
+        /// <summary>
+        /// How strongly this material blocks out light.
+        /// </summary>
         public float LightDamage = 1f;
 
+        /// <summary>
+        /// What sound type this material plays when struck.
+        /// </summary>
         public MaterialSound Sound = MaterialSound.NONE;
 
+        /// <summary>
+        /// What solidity mode this material uses, EG solid or liquid.
+        /// </summary>
         public MaterialSolidity Solidity = MaterialSolidity.FULLSOLID;
 
+        /// <summary>
+        /// Whether this material spreads (like a liquid).
+        /// </summary>
         public bool Spreads = false;
         
+        /// <summary>
+        /// The texture IDs for this material.
+        /// </summary>
         public int[] TID = new int[(int)MaterialSide.COUNT];
 
+        /// <summary>
+        /// What tool type breaks this material.
+        /// </summary>
         public MaterialBreaker Breaker = MaterialBreaker.HAND;
+
+        /// <summary>
+        /// What material this materail breaks into when placed and smashed.
+        /// </summary>
+        public Material BreaksInto;
+
+        /// <summary>
+        /// What material this material solidifies into if compressed.
+        /// </summary>
+        public Material SolidifiesInto;
+
+        /// <summary>
+        /// Whether this block can be broken by tools other than its primary Breaker tool.
+        /// </summary>
+        public bool BreaksFromOtherTools = true;
     }
 }

@@ -7,3 +7,4 @@ Sound=Leaves
 BreakTime=0.5
 Solidity=LIQUID
 Spreads=true
+SolidifiesInto=leaves_oak_solid

@@ -5,3 +5,4 @@ FogAlpha=0
 CanRenderAgainstSelf=true
 Sound=Leaves
 BreakTime=0.5
+BreaksInto=leaves_oak_liquid
