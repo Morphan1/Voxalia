@@ -184,16 +184,19 @@ namespace Voxalia.ClientGame.WorldSystem
                             }
                         }
                     });
-                    IsAir = true;
-                    _VBO = null;
-                    if (DENIED)
+                    OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                     {
-                        return;
-                    }
-                    if (callback != null)
-                    {
-                        callback.Invoke();
-                    }
+                        IsAir = true;
+                        _VBO = null;
+                        if (DENIED)
+                        {
+                            return;
+                        }
+                        if (callback != null)
+                        {
+                            callback.Invoke();
+                        }
+                    });
                     return;
                 }
                 uint[] inds = new uint[rh.Vertices.Count];
