@@ -65,7 +65,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             return mat == Material.AIR;
         }
-
+        
         public Material GetBlockMaterial(Location pos)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos));

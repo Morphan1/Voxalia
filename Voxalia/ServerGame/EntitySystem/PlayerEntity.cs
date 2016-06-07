@@ -624,6 +624,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool ShouldLoadChunkPreviously(Vector3i cpos)
         {
+            if (lPos.IsNaN())
+            {
+                return false;
+            }
             Vector3i wpos = TheRegion.ChunkLocFor(lPos);
             if (Math.Abs(cpos.X - wpos.X) > (ViewRadiusInChunks + ViewRadExtra5)
                 || Math.Abs(cpos.Y - wpos.Y) > (ViewRadiusInChunks + ViewRadExtra5)
@@ -648,6 +652,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool ShouldSeeChunkOneSecondAgo(Vector3i cpos)
         {
+            if (losPos.IsNaN())
+            {
+                return false;
+            }
             Vector3i wpos = TheRegion.ChunkLocFor(losPos);
             if (Math.Abs(cpos.X - wpos.X) > ViewRadiusInChunks
                 || Math.Abs(cpos.Y - wpos.Y) > ViewRadiusInChunks
@@ -660,6 +668,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool ShouldSeeChunkPreviously(Vector3i cpos)
         {
+            if (lPos.IsNaN())
+            {
+                return false;
+            }
             Vector3i wpos = TheRegion.ChunkLocFor(lPos);
             if (Math.Abs(cpos.X - wpos.X) > ViewRadiusInChunks
                 || Math.Abs(cpos.Y - wpos.Y) > ViewRadiusInChunks
@@ -672,6 +684,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool ShouldSeeChunk(Vector3i cpos)
         {
+            if (LoadRelPos.IsNaN())
+            {
+                return false;
+            }
             Vector3i wpos = TheRegion.ChunkLocFor(LoadRelPos);
             if (Math.Abs(cpos.X - wpos.X) > ViewRadiusInChunks
                 || Math.Abs(cpos.Y - wpos.Y) > ViewRadiusInChunks
@@ -738,7 +754,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public int BreadcrumbRadius = 6;
 
-        Vector3i pChunkLoc = new Vector3i(int.MinValue, int.MinValue, int.MinValue);
+        Vector3i pChunkLoc = new Vector3i(-100000, -100000, -100000);
         
         bool loadedInitially = false;
 

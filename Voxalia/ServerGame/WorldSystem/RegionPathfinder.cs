@@ -11,8 +11,9 @@ namespace Voxalia.ServerGame.WorldSystem
     public partial class Region
     {
         // Thanks to fullwall for the reference sources this was built off
-        public List<Location> FindPath(Location startloc, Location endloc, double maxRadius, double goaldist)
+        public List<Location> FindPath(Location startloc, Location endloc, double maxRadius, double goaldist, bool isAsync = false)
         {
+            // TODO: Async safety!
             startloc = startloc.GetBlockLocation() + new Location(0.5, 0.5, 1.0);
             endloc = endloc.GetBlockLocation() + new Location(0.5, 0.5, 1.0);
             double mrsq = maxRadius * maxRadius;

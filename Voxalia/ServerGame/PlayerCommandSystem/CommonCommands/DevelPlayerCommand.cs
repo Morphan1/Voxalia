@@ -149,20 +149,24 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             else if (arg0 == "timePathfind" && entry.InputArguments.Count > 1)
             {
                 double dist = Utilities.StringToDouble(entry.InputArguments[1]);
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
-                List<Location> locs = entry.Player.TheRegion.FindPath(entry.Player.GetPosition(), entry.Player.GetPosition() + new Location(dist, 0, 0), dist * 2, 1.5f);
-                sw.Stop();
-                if (locs != null)
+                entry.Player.TheServer.Schedule.StartASyncTask(() =>
                 {
-                    entry.Player.Network.SendPacket(new PathPacketOut(locs));
-                }
-                entry.Player.Network.SendMessage("Took " + sw.ElapsedMilliseconds + "ms, passed: " + (locs != null));
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
+                    List<Location> locs = entry.Player.TheRegion.FindPath(entry.Player.GetPosition(), entry.Player.GetPosition() + new Location(dist, 0, 0), dist * 2, 1.5f, true);
+                    sw.Stop();
+                    entry.Player.TheServer.Schedule.ScheduleSyncTask(() =>
+                    {
+                        if (locs != null)
+                        {
+                            entry.Player.Network.SendPacket(new PathPacketOut(locs));
+                        }
+                        entry.Player.Network.SendMessage("Took " + sw.ElapsedMilliseconds + "ms, passed: " + (locs != null));
+                    });
+                });
             }
             else if (arg0 == "findPath")
             {
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
                 Location eye = entry.Player.GetEyePosition();
                 Location forw = entry.Player.ForwardVector();
                 Location goal;
@@ -175,13 +179,21 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 {
                     goal = eye + forw * 50;
                 }
-                List<Location> locs = entry.Player.TheRegion.FindPath(entry.Player.GetPosition(), goal, 50 * 2, 1.5f);
-                sw.Stop();
-                if (locs != null)
+                entry.Player.TheServer.Schedule.StartASyncTask(() =>
                 {
-                    entry.Player.Network.SendPacket(new PathPacketOut(locs));
-                }
-                entry.Player.Network.SendMessage("Took " + sw.ElapsedMilliseconds + "ms, passed: " + (locs != null));
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
+                    List<Location> locs = entry.Player.TheRegion.FindPath(entry.Player.GetPosition(), goal, 50 * 2, 1.5f, true);
+                    sw.Stop();
+                    entry.Player.TheServer.Schedule.ScheduleSyncTask(() =>
+                    {
+                        if (locs != null)
+                        {
+                            entry.Player.Network.SendPacket(new PathPacketOut(locs));
+                        }
+                        entry.Player.Network.SendMessage("Took " + sw.ElapsedMilliseconds + "ms, passed: " + (locs != null));
+                    });
+                });
             }
             else if (arg0 == "gameMode" && entry.InputArguments.Count > 1)
             {
