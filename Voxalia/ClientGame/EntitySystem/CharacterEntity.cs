@@ -172,7 +172,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public float CBDownStepHeight = 0.6f;
 
-        public float CBRadius = 0.75f;
+        public float CBRadius = 0.57f;
 
         public float CBMaxTractionSlope = 1.0f;
 
