@@ -1,0 +1,16 @@
+Please read the below AND the contributing document! That's here: https://github.com/FreneticXYZ/Voxalia/blob/master/CONTRIBUTING.md
+If you do not use the template and follow the rules, your issue may be closed as invalid!
+**YOU** are responsible for any content you post. Any code you post MUST be unlicensed (or MIT or compatible licensed) and/or free to be used for Voxalia. All of Voxalia's own code fits this requirement.
+This is to be considered a public reporting service, not a private service nor an open discussion ground.
+Sample answers for the statements below would be: "` No / Bug / 0.1.0 / Windows 10 / NVidia GeForce GTX 860M / My player character explodes when attempting to eat stone. `"
+This text and up is provided for you, not for the issue report. Everything starting with "Please fill in..." is for the issue report itself.
+
+**(Remove this line and up from your actual issue post, but not the below.)**
+
+Please fill in the following statements (do not remove the asterisks):
+- I am a programmer: **Yes/No**
+- I am reporting a: **Bug/Feature Request**
+- I am running the Voxalia version: **...**
+- I am running on the Operating System version: **...**
+- My graphics card is: **...**
+- The details of my report are: ...
