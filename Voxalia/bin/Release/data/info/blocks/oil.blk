@@ -7,3 +7,5 @@ Hardness=5
 BreakTime=0.2
 Spreads=true
 SpeedMod=0.7
+Breaker=NON_BREAKABLE
+BreaksFromOtherTools=false

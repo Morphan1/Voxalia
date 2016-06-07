@@ -9,3 +9,5 @@ BreakTime=0.2
 Spreads=true
 LightDamage=0.28
 SpeedMod=0.3
+Breaker=NON_BREAKABLE
+BreaksFromOtherTools=false

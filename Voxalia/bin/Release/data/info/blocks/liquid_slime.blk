@@ -10,3 +10,5 @@ Spreads=true
 LightDamage=0.28
 SpeedMod=0.8
 SolidifiesInto=solid_slime
+Breaker=NON_BREAKABLE
+BreaksFromOtherTools=false

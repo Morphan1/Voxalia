@@ -124,6 +124,7 @@
     <Compile Include="ServerGame\ItemSystem\BaseItemInfo.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BaseAmmoItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BaseGunItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\BlockBreakerItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BowItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BulletItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\BlockItem.cs" />

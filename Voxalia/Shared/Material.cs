@@ -383,6 +383,7 @@ namespace Voxalia.Shared
         WOOD = 8,
         GLASS = 9,
         // TODO: Clay?
+        // TODO: Liquid!
         /// <summary>
         /// How many total material-generated sound types there are.
         /// </summary>
@@ -391,6 +392,7 @@ namespace Voxalia.Shared
 
     public enum MaterialBreaker
     {
+        NON_BREAKABLE = 0,
         HAND = 1,
         PICKAXE = 2,
         AXE = 3,
@@ -495,6 +497,7 @@ namespace Voxalia.Shared
 
         /// <summary>
         /// How long it takes, in seconds, for this material to break by default. Different breakers affect how fast this breaks.
+        /// The exact value is how fast a hand will break it.
         /// </summary>
         public float BreakTime = 1f;
 
