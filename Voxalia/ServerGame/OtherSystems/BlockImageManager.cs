@@ -90,13 +90,16 @@ namespace Voxalia.ServerGame.OtherSystems
         void DrawImageShiftX(Bitmap bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
         {
             xmin += TexWidth;
-            ymin += TexWidth;
             for (int x = 0; x < TexWidth; x++)
             {
                 for (int y = 0; y < TexWidth; y++)
                 {
                     int sx = xmin + x;
                     int sy = ymin + y - x;
+                    if (sx < 0 || sy < 0 || sx >= TexWidth2 || sy >= TexWidth2)
+                    {
+                        continue;
+                    }
                     Color basepx = bmp.GetPixel(sx, sy);
                     bmp.SetPixel(sx, sy, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
                 }
@@ -105,7 +108,6 @@ namespace Voxalia.ServerGame.OtherSystems
 
         void DrawImageShiftY(Bitmap bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
         {
-            ymin += TexWidth;
             for (int x = 0; x < TexWidth; x++)
             {
                 for (int y = 0; y < TexWidth; y++)
@@ -118,6 +120,7 @@ namespace Voxalia.ServerGame.OtherSystems
         
         void DrawImageShiftZ(Bitmap bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
         {
+            ymin -= TexWidth;
             xmin += TexWidth;
             for (int x = 0; x < TexWidth; x++)
             {
@@ -125,57 +128,52 @@ namespace Voxalia.ServerGame.OtherSystems
                 {
                     int sx = xmin + x - y;
                     int sy = ymin + y;
+                    if (sx < 0 || sy < 0 || sx >= TexWidth2 || sy >= TexWidth2)
+                    {
+                        continue;
+                    }
                     Color basepx = bmp.GetPixel(sx, sy);
                     bmp.SetPixel(sx, sy, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
                 }
             }
         }
 
+        const int mid = Chunk.CHUNK_SIZE / 2;
+
+        void RenderBlockIntoAngle(BlockInternal bi, int x, int y, int z, Bitmap bmp)
+        {
+            MaterialImage zmatbmpXP = MaterialImages[bi.Material.TextureID(MaterialSide.XP)];
+            MaterialImage zmatbmpYP = MaterialImages[bi.Material.TextureID(MaterialSide.YP)];
+            MaterialImage zmatbmpZP = MaterialImages[bi.Material.TextureID(MaterialSide.TOP)];
+            if (zmatbmpXP == null || zmatbmpYP == null || zmatbmpZP == null)
+            {
+                return;
+            }
+            Color zcolor = Colors.ForByte(bi.BlockPaint);
+            if (zcolor.A == 0)
+            {
+                zcolor = Color.White;
+            }
+            DrawImageShiftX(bmp, zmatbmpXP, x * TexWidth, y * TexWidth, zcolor);
+            DrawImageShiftY(bmp, zmatbmpYP, x * TexWidth, y * TexWidth, zcolor);
+            DrawImageShiftZ(bmp, zmatbmpZP, x * TexWidth, y * TexWidth, zcolor);
+        }
+
         void RenderChunkInternalAngle(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)
         {
+            // TODO: Rework into logicalness.
             Bitmap bmp = new Bitmap(Chunk.CHUNK_SIZE * TexWidth2, Chunk.CHUNK_SIZE * TexWidth2, PixelFormat.Format32bppArgb);
-            for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
+            for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
             {
-                for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
+                for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
                 {
-                    // TODO: async chunk read locker?
-                    BlockInternal topOpaque = BlockInternal.AIR;
-                    int topZ = 0;
-                    for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
+                    for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
                     {
+                        // TODO: async chunk read locker?
                         BlockInternal bi = chunk.GetBlockAt(x, y, z);
-                        if (bi.IsOpaque())
+                        if (bi.Material.RendersAtAll())
                         {
-                            topOpaque = bi;
-                            topZ = z;
-                        }
-                    }
-                    if (topOpaque.Material == Material.AIR)
-                    {
-                        DrawImageShiftX(bmp, MaterialImages[0], x * TexWidth2, y * TexWidth2, Color.Transparent);
-                        DrawImageShiftY(bmp, MaterialImages[0], x * TexWidth2, y * TexWidth2, Color.Transparent);
-                        DrawImageShiftZ(bmp, MaterialImages[0], x * TexWidth2, y * TexWidth2, Color.Transparent);
-                    }
-                    for (int z = topZ; z < Chunk.CHUNK_SIZE; z++)
-                    {
-                        BlockInternal bi = chunk.GetBlockAt(x, y, z);
-                        if (bi.Material != Material.AIR)
-                        {
-                            MaterialImage zmatbmpXP = MaterialImages[bi.Material.TextureID(MaterialSide.XP)];
-                            MaterialImage zmatbmpYP = MaterialImages[bi.Material.TextureID(MaterialSide.YP)];
-                            MaterialImage zmatbmpZP = MaterialImages[bi.Material.TextureID(MaterialSide.TOP)];
-                            if (zmatbmpXP == null || zmatbmpYP == null || zmatbmpZP == null)
-                            {
-                                continue;
-                            }
-                            Color zcolor = Colors.ForByte(bi.BlockPaint);
-                            if (zcolor.A == 0)
-                            {
-                                zcolor = Color.White;
-                            }
-                            DrawImageShiftX(bmp, zmatbmpXP, x * TexWidth2, y * TexWidth2, zcolor);
-                            DrawImageShiftY(bmp, zmatbmpYP, x * TexWidth2, y * TexWidth2, zcolor);
-                            DrawImageShiftZ(bmp, zmatbmpZP, x * TexWidth2, y * TexWidth2, zcolor);
+                            RenderBlockIntoAngle(bi, x, y, z, bmp);
                         }
                     }
                 }
@@ -209,14 +207,14 @@ namespace Voxalia.ServerGame.OtherSystems
                             topZ = z;
                         }
                     }
-                    if (topOpaque.Material == Material.AIR)
+                    if (!topOpaque.Material.RendersAtAll())
                     {
                         DrawImage(bmp, MaterialImages[0], x * TexWidth, y * TexWidth, Color.Transparent);
                     }
                     for (int z = topZ; z < Chunk.CHUNK_SIZE; z++)
                     {
                         BlockInternal bi = chunk.GetBlockAt(x, y, z);
-                        if (bi.Material != Material.AIR)
+                        if (bi.Material.RendersAtAll())
                         {
                             MaterialImage zmatbmp = MaterialImages[bi.Material.TextureID(MaterialSide.TOP)];
                             if (zmatbmp == null)
