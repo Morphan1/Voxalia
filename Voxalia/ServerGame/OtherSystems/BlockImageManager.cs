@@ -22,6 +22,7 @@ namespace Voxalia.ServerGame.OtherSystems
     {
         public const int TexWidth = 4;
         public const int TexWidth2 = TexWidth * 2;
+        const int BmpSize2 = TexWidth2 * Chunk.CHUNK_SIZE;
 
         public MaterialImage[] MaterialImages;
 
@@ -96,7 +97,7 @@ namespace Voxalia.ServerGame.OtherSystems
                 {
                     int sx = xmin + x;
                     int sy = ymin + y - x;
-                    if (sx < 0 || sy < 0 || sx >= TexWidth2 || sy >= TexWidth2)
+                    if (sx < 0 || sy < 0 || sx >= BmpSize2 || sy >= BmpSize2)
                     {
                         continue;
                     }
@@ -112,8 +113,14 @@ namespace Voxalia.ServerGame.OtherSystems
             {
                 for (int y = 0; y < TexWidth; y++)
                 {
-                    Color basepx = bmp.GetPixel(xmin + x, ymin + y);
-                    bmp.SetPixel(xmin + x, ymin + y, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
+                    int sx = xmin + x;
+                    int sy = ymin + y;
+                    if (sx < 0 || sy < 0 || sx >= BmpSize2 || sy >= BmpSize2)
+                    {
+                        continue;
+                    }
+                    Color basepx = bmp.GetPixel(sx, sy);
+                    bmp.SetPixel(sx, sy, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
                 }
             }
         }
@@ -128,7 +135,7 @@ namespace Voxalia.ServerGame.OtherSystems
                 {
                     int sx = xmin + x - y;
                     int sy = ymin + y;
-                    if (sx < 0 || sy < 0 || sx >= TexWidth2 || sy >= TexWidth2)
+                    if (sx < 0 || sy < 0 || sx >= BmpSize2 || sy >= BmpSize2)
                     {
                         continue;
                     }
@@ -154,9 +161,24 @@ namespace Voxalia.ServerGame.OtherSystems
             {
                 zcolor = Color.White;
             }
-            DrawImageShiftX(bmp, zmatbmpXP, x * TexWidth, y * TexWidth, zcolor);
-            DrawImageShiftY(bmp, zmatbmpYP, x * TexWidth, y * TexWidth, zcolor);
-            DrawImageShiftZ(bmp, zmatbmpZP, x * TexWidth, y * TexWidth, zcolor);
+            int x1 = x * TexWidth;
+            int y1 = y * TexWidth;
+            //    int xw = x * TexWidth;
+            //    int yw = y * TexWidth;
+            // tileWidth/2*x+tileHeight/2*y, tileWidth/2*x+tileHeight/2*y
+            //   int xw = TexWidth * x / 2 + TexWidth * y / 2;
+            //   int yw = TexWidth * x / 2 + TexWidth * y / 2;
+            // tempPt.x = pt.x - pt.y; tempPt.y = (pt.x + pt.y) / 2;
+            int xw = x1 - y1;
+            int yw = (x1 + y1) / 2;
+            //   tempPt.x = (2 * pt.y + pt.x) / 2; tempPt.y = (2 * pt.y - pt.x) / 2;
+            // int xw = (2 * y1 + x1) / 2;
+            //  int yw = (2 * y1 - x1) / 2;
+            xw += BmpSize2 / 2;
+            yw += BmpSize2 / 2;
+            DrawImageShiftX(bmp, zmatbmpXP, xw, yw, zcolor);
+            DrawImageShiftY(bmp, zmatbmpYP, xw, yw, zcolor);
+            DrawImageShiftZ(bmp, zmatbmpZP, xw, yw, zcolor);
         }
 
         void RenderChunkInternalAngle(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)

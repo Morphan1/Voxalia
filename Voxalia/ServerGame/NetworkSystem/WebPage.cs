@@ -214,7 +214,8 @@ namespace Voxalia.ServerGame.NetworkSystem
                         {
                             int bx = Utilities.StringToInt(dat[1]);
                             int by = Utilities.StringToInt(dat[2]);
-                            int sz = Chunk.CHUNK_SIZE * BlockImageManager.TexWidth2;
+                            int sz = Chunk.CHUNK_SIZE * BlockImageManager.TexWidth;
+                            int sz2 = Chunk.CHUNK_SIZE * BlockImageManager.TexWidth2;
                             StringBuilder content = new StringBuilder();
                             content.Append("<!doctype html>\n<html>\n<head>\n<title>Voxalia EXP-QUICK (Angled)</title>\n</head>\n<body>\n");
                             const int SIZE = 3;
@@ -222,8 +223,12 @@ namespace Voxalia.ServerGame.NetworkSystem
                             {
                                 for (int y = -SIZE; y <= SIZE; y++)
                                 {
-                                    content.Append("<img style=\"position:absolute;top:" + (y + SIZE) * sz + "px;left:" + (x + SIZE) * sz + "px;\" src=\"/map/region/"
-                                        + region + "/full_img_angle/" + (bx + x) + "/" + (by + y) + ".png\" width=\"" + sz + "\" height=\"" + sz + "\" />");
+                                    int x1 = (x) * sz;
+                                    int y1 = (y) * sz;
+                                    int xw = (SIZE * 2 * sz) + (x1 - y1);
+                                    int yw = (SIZE * sz) + ((x1 + y1) / 2);
+                                    content.Append("<img style=\"position:absolute;top:" + yw + "px;left:" + xw + "px;\" src=\"/map/region/"
+                                        + region + "/full_img_angle/" + (bx + x) + "/" + (by + y) + ".png\" width=\"" + sz2 + "\" height=\"" + sz2 + "\" />");
                                 }
                             }
                             content.Append("\n</body>\n</html>\n");
