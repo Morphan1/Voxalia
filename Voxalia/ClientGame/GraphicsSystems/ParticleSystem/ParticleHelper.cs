@@ -130,8 +130,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                 nvel.Z += 3;
                 double xoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
                 double yoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
-                double zoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
-                Location temp = new Location(xoff, yoff, zoff);
+                Location temp = new Location(xoff, yoff, TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.15f);
                 float ttl = (float)Utilities.UtilRandom.NextDouble() * 3f + 3f;
                 Texture tex = TheClient.Textures.GetTexture(TheClient.TBlock.IntTexs[mat.TextureID(MaterialSide.TOP)]);
                 Location size = new Location(0.1, 0.1, 0.1);

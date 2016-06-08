@@ -30,7 +30,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Location eye = player.GetEyePosition();
             Location forw = player.ForwardVector();
             RayCastResult rcr;
-            bool h = player.TheRegion.SpecialCaseRayTrace(eye, forw, 5, MaterialSolidity.ANY, player.IgnoreThis, out rcr);
+            bool h = player.TheRegion.SpecialCaseRayTrace(eye, forw, 5, MaterialSolidity.FULLSOLID, player.IgnoreThis, out rcr);
             if (h)
             {
                 if (rcr.HitObject != null && rcr.HitObject is EntityCollidable && ((EntityCollidable)rcr.HitObject).Entity != null)
