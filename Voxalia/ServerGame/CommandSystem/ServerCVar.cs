@@ -42,7 +42,7 @@ namespace Voxalia.ServerGame.CommandSystem
             g_maxdist = Register("g_maxdist", "50000", CVarFlag.Numeric, "How far on the X or Y axis a player may travel from the origin."); // TODO: Also per-world?
             // Network CVars
             n_verifyip = Register("n_verifyip", "true", CVarFlag.Boolean, "Whether to verify connecting users' IP addresses with the global server. Disable this to allow LAN connections.");
-            n_rendersides = Register("n_rendersides", "true", CVarFlag.Boolean, "Whether to render the side-on map view for the linked webpage.");
+            n_rendersides = Register("n_rendersides", "false", CVarFlag.Boolean, "Whether to render the side-on map view for the linked webpage.");
         }
 
         CVar Register(string name, string value, CVarFlag flags, string desc)

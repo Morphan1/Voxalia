@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Diagnostics;
+using System.Runtime;
+using System.Runtime.InteropServices;
 using Voxalia.Shared;
 using Voxalia.Shared.Files;
 using Voxalia.Shared.Collision;
@@ -22,6 +25,7 @@ namespace Voxalia.ServerGame.OtherSystems
     {
         public const int TexWidth = 4;
         public const int TexWidth2 = TexWidth * 2;
+        const int BmpSize = TexWidth * Chunk.CHUNK_SIZE;
         const int BmpSize2 = TexWidth2 * Chunk.CHUNK_SIZE;
 
         public MaterialImage[] MaterialImages;
@@ -76,19 +80,19 @@ namespace Voxalia.ServerGame.OtherSystems
                 (byte)(((one.B / 255f) * (two.B / 255f)) * 255));
         }
 
-        void DrawImage(Bitmap bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
+        void DrawImage(MaterialImage bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
         {
             for (int x = 0; x < TexWidth; x++)
             {
                 for (int y = 0; y < TexWidth; y++)
                 {
-                    Color basepx = bmp.GetPixel(xmin + x, ymin + y);
-                    bmp.SetPixel(xmin + x, ymin + y, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
+                    Color basepx = bmp.Colors[xmin + x, ymin + y];
+                    bmp.Colors[xmin + x, ymin + y] = Blend(Multiply(bmpnew.Colors[x, y], col), basepx);
                 }
             }
         }
 
-        void DrawImageShiftX(Bitmap bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
+        void DrawImageShiftX(MaterialImage bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
         {
             xmin += TexWidth;
             for (int x = 0; x < TexWidth; x++)
@@ -101,13 +105,13 @@ namespace Voxalia.ServerGame.OtherSystems
                     {
                         continue;
                     }
-                    Color basepx = bmp.GetPixel(sx, sy);
-                    bmp.SetPixel(sx, sy, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
+                    Color basepx = bmp.Colors[sx, sy];
+                    bmp.Colors[sx, sy] = Blend(Multiply(bmpnew.Colors[x, y], col), basepx);
                 }
             }
         }
 
-        void DrawImageShiftY(Bitmap bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
+        void DrawImageShiftY(MaterialImage bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
         {
             for (int x = 0; x < TexWidth; x++)
             {
@@ -119,13 +123,13 @@ namespace Voxalia.ServerGame.OtherSystems
                     {
                         continue;
                     }
-                    Color basepx = bmp.GetPixel(sx, sy);
-                    bmp.SetPixel(sx, sy, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
+                    Color basepx = bmp.Colors[sx, sy];
+                    bmp.Colors[sx, sy] = Blend(Multiply(bmpnew.Colors[x, y], col), basepx);
                 }
             }
         }
         
-        void DrawImageShiftZ(Bitmap bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
+        void DrawImageShiftZ(MaterialImage bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
         {
             ymin -= TexWidth;
             xmin += TexWidth;
@@ -139,15 +143,15 @@ namespace Voxalia.ServerGame.OtherSystems
                     {
                         continue;
                     }
-                    Color basepx = bmp.GetPixel(sx, sy);
-                    bmp.SetPixel(sx, sy, Blend(Multiply(bmpnew.Colors[x, y], col), basepx));
+                    Color basepx = bmp.Colors[sx, sy];
+                    bmp.Colors[sx, sy] = Blend(Multiply(bmpnew.Colors[x, y], col), basepx);
                 }
             }
         }
 
         const int mid = Chunk.CHUNK_SIZE / 2;
 
-        void RenderBlockIntoAngle(BlockInternal bi, int x, int y, int z, Bitmap bmp)
+        void RenderBlockIntoAngle(BlockInternal bi, int x, int y, int z, MaterialImage bmp)
         {
             MaterialImage zmatbmpXP = MaterialImages[bi.Material.TextureID(MaterialSide.XP)];
             MaterialImage zmatbmpYP = MaterialImages[bi.Material.TextureID(MaterialSide.YP)];
@@ -184,8 +188,7 @@ namespace Voxalia.ServerGame.OtherSystems
 
         void RenderChunkInternalAngle(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)
         {
-            // TODO: Rework into logicalness.
-            Bitmap bmp = new Bitmap(Chunk.CHUNK_SIZE * TexWidth2, Chunk.CHUNK_SIZE * TexWidth2, PixelFormat.Format32bppArgb);
+            MaterialImage bmp = new MaterialImage() { Colors = new Color[BmpSize2, BmpSize2] };
             for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
             {
                 for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
@@ -201,14 +204,33 @@ namespace Voxalia.ServerGame.OtherSystems
                     }
                 }
             }
+            Bitmap tbmp = new Bitmap(BmpSize2, BmpSize2);
+            BitmapData bdat = tbmp.LockBits(new Rectangle(0, 0, tbmp.Width, tbmp.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            int stride = bdat.Stride;
+            // Surely there's a better way to do this!
+            unsafe
+            {
+                byte* ptr = (byte*)bdat.Scan0;
+                for (int x = 0; x < BmpSize2; x++)
+                {
+                    for (int y = 0; y < BmpSize2; y++)
+                    {
+                        Color tcol = bmp.Colors[x, y];
+                        ptr[(x * 4) + y * stride + 0] = tcol.B;
+                        ptr[(x * 4) + y * stride + 1] = tcol.G;
+                        ptr[(x * 4) + y * stride + 2] = tcol.R;
+                        ptr[(x * 4) + y * stride + 3] = tcol.A;
+                    }
+                }
+            }
             DataStream ds = new DataStream();
-            bmp.Save(ds, ImageFormat.Png);
+            tbmp.Save(ds, ImageFormat.Png);
             tregion.ChunkManager.WriteImageAngle((int)chunkCoords.X, (int)chunkCoords.Y, (int)chunkCoords.Z, ds.ToArray());
         }
 
         void RenderChunkInternal(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)
         {
-            Bitmap bmp = new Bitmap(Chunk.CHUNK_SIZE * TexWidth, Chunk.CHUNK_SIZE * TexWidth, PixelFormat.Format32bppArgb);
+            MaterialImage bmp = new MaterialImage() { Colors = new Color[BmpSize, BmpSize] };
             for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
             {
                 for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
@@ -249,8 +271,27 @@ namespace Voxalia.ServerGame.OtherSystems
                     }
                 }
             }
+            Bitmap tbmp = new Bitmap(BmpSize2, BmpSize2);
+            BitmapData bdat = tbmp.LockBits(new Rectangle(0, 0, tbmp.Width, tbmp.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            int stride = bdat.Stride;
+            // Surely there's a better way to do this!
+            unsafe
+            {
+                byte* ptr = (byte*)bdat.Scan0;
+                for (int x = 0; x < BmpSize; x++)
+                {
+                    for (int y = 0; y < BmpSize; y++)
+                    {
+                        Color tcol = bmp.Colors[x, y];
+                        ptr[(x * 4) + y * stride + 0] = tcol.B;
+                        ptr[(x * 4) + y * stride + 1] = tcol.G;
+                        ptr[(x * 4) + y * stride + 2] = tcol.R;
+                        ptr[(x * 4) + y * stride + 3] = tcol.A;
+                    }
+                }
+            }
             DataStream ds = new DataStream();
-            bmp.Save(ds, ImageFormat.Png);
+            tbmp.Save(ds, ImageFormat.Png);
             lock (OneAtATimePlease) // NOTE: We can make this grab off an array of locks to reduce load a little.
             {
                 KeyValuePair<int, int> maxes = tregion.ChunkManager.GetMaxes((int)chunkCoords.X, (int)chunkCoords.Y);

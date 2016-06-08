@@ -39,6 +39,7 @@
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Release\VoxaliaServerGame.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'zDebug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
