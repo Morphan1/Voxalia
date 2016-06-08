@@ -64,20 +64,19 @@ namespace Voxalia.ServerGame.OtherSystems
 
         Color Blend(Color one, Color two)
         {
-            float a1 = one.A / 255f;
-            float a2 = 1f - a1;
-            float r = ((one.R / 255f) * a1) + (two.R / 255f) * a2;
-            float g = ((one.G / 255f) * a1) + (two.G / 255f) * a2;
-            float b = ((one.B / 255f) * a1) + (two.B / 255f) * a2;
-            return Color.FromArgb((byte)Math.Min(one.A + (int)two.A, 255), (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
+            byte a2 = (byte)(255 - one.A);
+            return Color.FromArgb((byte)Math.Min(one.A + two.A, 255),
+                (byte)(one.R * one.A / 255 + two.R * a2 / 255),
+                (byte)(one.G * one.A / 255 + two.G * a2 / 255),
+                (byte)(one.B * one.A / 255 + two.B * a2 / 255));
         }
 
         Color Multiply(Color one, Color two)
         {
-            return Color.FromArgb((byte)(((one.A / 255f) * (two.A / 255f)) * 255),
-                (byte)(((one.R / 255f) * (two.R / 255f)) * 255),
-                (byte)(((one.G / 255f) * (two.G / 255f)) * 255),
-                (byte)(((one.B / 255f) * (two.B / 255f)) * 255));
+            return Color.FromArgb((byte)(one.A * two.A / 255),
+                (byte)(one.R * two.R / 255),
+                (byte)(one.G * two.G / 255),
+                (byte)(one.B * two.B / 255));
         }
 
         void DrawImage(MaterialImage bmp, MaterialImage bmpnew, int xmin, int ymin, Color col)
