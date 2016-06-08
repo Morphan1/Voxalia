@@ -31,9 +31,7 @@ namespace Voxalia.ServerGame.WorldSystem
         LiteCollection<BsonDocument> DBMaxes;
 
         LiteCollection<BsonDocument> DBImages2;
-
-        LiteCollection<BsonDocument> DBMaxes2;
-
+        
         public Object FSLock = new Object();
 
         public Object EntLock = new Object();
@@ -55,23 +53,8 @@ namespace Voxalia.ServerGame.WorldSystem
             DBImages = ImageDatabase.GetCollection<BsonDocument>("images");
             DBMaxes = ImageDatabase.GetCollection<BsonDocument>("maxes");
             DBImages2 = ImageDatabase.GetCollection<BsonDocument>("images_angle");
-            DBMaxes2 = ImageDatabase.GetCollection<BsonDocument>("maxes_angle");
         }
-
-        public KeyValuePair<int, int> GetMaxesAngle(int x, int y)
-        {
-            BsonDocument doc;
-            lock (IMGLock)
-            {
-                doc = DBMaxes2.FindById(GetIDFor(x, y, 0));
-            }
-            if (doc == null)
-            {
-                return new KeyValuePair<int, int>(0, 0);
-            }
-            return new KeyValuePair<int, int>(doc["min"].AsInt32, doc["max"].AsInt32);
-        }
-
+        
         public KeyValuePair<int, int> GetMaxes(int x, int y)
         {
             BsonDocument doc;
@@ -85,20 +68,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             return new KeyValuePair<int, int>(doc["min"].AsInt32, doc["max"].AsInt32);
         }
-
-        public void SetMaxesAngle(int x, int y, int min, int max)
-        {
-            BsonValue id = GetIDFor(x, y, 0);
-            BsonDocument newdoc = new BsonDocument();
-            newdoc["_id"] = id;
-            newdoc["min"] = new BsonValue(min);
-            newdoc["max"] = new BsonValue(max);
-            lock (IMGLock)
-            {
-                DBMaxes2.Delete(id);
-                DBMaxes2.Insert(newdoc);
-            }
-        }
+        
 
         public void SetMaxes(int x, int y, int min, int max)
         {

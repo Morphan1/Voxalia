@@ -147,33 +147,21 @@ namespace Voxalia.ServerGame.NetworkSystem
                             }
                             return;
                         }
-                        else if (dat[0] == "full_img_angle" && dat.Length >= 3)
+                        else if (dat[0] == "full_img_angle" && dat.Length >= 4)
                         {
                             int x = Utilities.StringToInt(dat[1]);
-                            int y = Utilities.StringToInt(dat[2].Before("."));
-                            KeyValuePair<int, int> maxes = TheServer.LoadedRegions[i].ChunkManager.GetMaxesAngle(x, y);
-                            List<byte[]> datums = new List<byte[]>();
-                            for (int z = maxes.Key; z <= maxes.Value; z++)
-                            {
-                                byte[] dt = TheServer.LoadedRegions[i].ChunkManager.GetImageAngle(x, y, z);
-                                if (dt != null)
-                                {
-                                    datums.Add(dt);
-                                }
-                            }
+                            int y = Utilities.StringToInt(dat[2]);
+                            int z = Utilities.StringToInt(dat[3].Before("."));
+                            byte[] dt = TheServer.LoadedRegions[i].ChunkManager.GetImageAngle(x, y, z);
                             http_response_contenttype = "image/png";
-                            if (datums.Count > 1)
+                            if (dt != null)
                             {
-                                http_response_content = TheServer.BlockImages.Combine(datums, true);
-                            }
-                            else if (datums.Count == 1)
-                            {
-                                http_response_content = datums[0];
+                                http_response_content = dt;
                             }
                             else
                             {
                                 Bitmap bmp = new Bitmap(1, 1);
-                                bmp.SetPixel(0, 0, Color.Black);
+                                bmp.SetPixel(0, 0, Color.Transparent);
                                 DataStream ds = new DataStream();
                                 bmp.Save(ds, ImageFormat.Png);
                                 http_response_content = ds.ToArray();
@@ -210,10 +198,11 @@ namespace Voxalia.ServerGame.NetworkSystem
                             http_response_content = FileHandler.encoding.GetBytes(content.ToString());
                             return;
                         }
-                        else if (dat[0] == "expquick_angle" && dat.Length >= 3)
+                        else if (dat[0] == "expquick_angle" && dat.Length >= 4)
                         {
                             int bx = Utilities.StringToInt(dat[1]);
                             int by = Utilities.StringToInt(dat[2]);
+                            int bz = Utilities.StringToInt(dat[3]);
                             int sz = Chunk.CHUNK_SIZE * BlockImageManager.TexWidth;
                             int sz2 = Chunk.CHUNK_SIZE * BlockImageManager.TexWidth2;
                             StringBuilder content = new StringBuilder();
@@ -223,12 +212,16 @@ namespace Voxalia.ServerGame.NetworkSystem
                             {
                                 for (int y = -SIZE; y <= SIZE; y++)
                                 {
-                                    int x1 = (x) * sz;
-                                    int y1 = (y) * sz;
-                                    int xw = (SIZE * 2 * sz) + (x1 - y1);
-                                    int yw = (SIZE * sz) + ((x1 + y1) / 2);
-                                    content.Append("<img style=\"position:absolute;top:" + yw + "px;left:" + xw + "px;\" src=\"/map/region/"
-                                        + region + "/full_img_angle/" + (bx + x) + "/" + (by + y) + ".png\" width=\"" + sz2 + "\" height=\"" + sz2 + "\" />");
+                                    for (int z = -SIZE; z <= SIZE; z++)
+                                    {
+                                        int x1 = (x) * sz;
+                                        int y1 = (y) * sz;
+                                        int z1 = (bz + z) * sz;
+                                        int xw = (SIZE * 2 * sz) + (x1 - y1);
+                                        int yw = ((SIZE * 2 * sz) + ((x1 + y1) - (z1))) / 2;
+                                        content.Append("<img style=\"position:absolute;top:" + yw + "px;left:" + xw + "px;z-index:" + z + ";\" src=\"/map/region/"
+                                            + region + "/full_img_angle/" + (bx + x) + "/" + (by + y) + "/" + (bz + z) + ".png\" width=\"" + sz2 + "\" height=\"" + sz2 + "\" />");
+                                    }
                                 }
                             }
                             content.Append("\n</body>\n</html>\n");

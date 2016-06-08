@@ -163,6 +163,7 @@ namespace Voxalia.ServerGame.OtherSystems
             }
             int x1 = x * TexWidth;
             int y1 = y * TexWidth;
+            int z1 = z * TexWidth;
             //    int xw = x * TexWidth;
             //    int yw = y * TexWidth;
             // tileWidth/2*x+tileHeight/2*y, tileWidth/2*x+tileHeight/2*y
@@ -170,7 +171,7 @@ namespace Voxalia.ServerGame.OtherSystems
             //   int yw = TexWidth * x / 2 + TexWidth * y / 2;
             // tempPt.x = pt.x - pt.y; tempPt.y = (pt.x + pt.y) / 2;
             int xw = x1 - y1;
-            int yw = (x1 + y1) / 2;
+            int yw = ((x1 + y1) - (z1)) / 2;
             //   tempPt.x = (2 * pt.y + pt.x) / 2; tempPt.y = (2 * pt.y - pt.x) / 2;
             // int xw = (2 * y1 + x1) / 2;
             //  int yw = (2 * y1 - x1) / 2;
@@ -202,11 +203,6 @@ namespace Voxalia.ServerGame.OtherSystems
             }
             DataStream ds = new DataStream();
             bmp.Save(ds, ImageFormat.Png);
-            lock (OneAtATimePlease)
-            {
-                KeyValuePair<int, int> maxes = tregion.ChunkManager.GetMaxesAngle((int)chunkCoords.X, (int)chunkCoords.Y);
-                tregion.ChunkManager.SetMaxesAngle((int)chunkCoords.X, (int)chunkCoords.Y, Math.Min(maxes.Key, (int)chunkCoords.Z), Math.Max(maxes.Value, (int)chunkCoords.Z));
-            }
             tregion.ChunkManager.WriteImageAngle((int)chunkCoords.X, (int)chunkCoords.Y, (int)chunkCoords.Z, ds.ToArray());
         }
 
