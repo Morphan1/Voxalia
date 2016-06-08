@@ -28,6 +28,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public int TWidth;
 
+        /// <summary>
+        /// TODO: Direct links, not lookup strings!
+        /// </summary>
+        public string[] IntTexs;
+
         public void Generate(Client tclient, ClientCVar cvars, TextureEngine eng)
         {
             TheClient = tclient;
@@ -72,6 +77,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             string[] datums = Program.Files.ReadText("info/textures.dat").SplitFast('\n');
             // TODO: Separate files for each texture detail!
             List<MaterialTextureInfo> texs = new List<MaterialTextureInfo>(datums.Length);
+            IntTexs = new string[MaterialHelpers.TextureCount];
             for (int i = 0; i < datums.Length; i++)
             {
                 if (datums[i].StartsWith("#") || datums[i].Length <= 1)
@@ -146,6 +152,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     SetAnimated((int)tex.Mat, tex.Rate, tex.Textures, TextureID);
                 }
                 texs.Add(tex);
+                IntTexs[(int)tex.Mat] = tex.Textures[0];
             }
             GL.BindTexture(TextureTarget.Texture2DArray, HelpTextureID);
             for (int i = 0; i < texs.Count; i++)

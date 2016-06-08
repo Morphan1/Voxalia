@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Voxalia.Shared;
 using Voxalia.ClientGame.ClientMainSystem;
+using BEPUutilities;
 
 namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 {
@@ -86,8 +87,9 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             double xoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
             double yoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
             double zoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+            Location temp = new Location(xoff, yoff, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.33f + zoff);
             // TODO: Gravity directionalism fix.
-            Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + new Location(xoff, yoff, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.33f + zoff) * (1 - o.TTL / o.O_TTL)
+            Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL)
                 + new Location(xoff, yoff, 0) * Math.Sqrt(1 - o.TTL / o.O_TTL) + vel * (1 - o.TTL / o.O_TTL),
                 (o) => new Location(1f), (o) => 0, 10, color, color, true, tex);
         }
@@ -97,7 +99,8 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             double xoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
             double yoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
             double zoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
-            Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + new Location(xoff, yoff, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.5f + zoff) * (1 - o.TTL / o.O_TTL),
+            Location temp = new Location(xoff, yoff, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.5f + zoff);
+            Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL),
                 (o) => new Location(10f * (1 - o.TTL / o.O_TTL)), (o) => 0, 35, color, color, true, SmokeT);
         }
 
@@ -113,6 +116,28 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             Engine.AddEffect(ParticleEffectType.CYLINDER, (o) => pos, (o) => pos + height * ((o.TTL / o.O_TTL) / 2 + 0.5f),
                 (o) => 0.7f, 4f, new Location(0, 1, 1), new Location(0, 1, 1), true, White_Blur, 0.40f);
             Engine.AddEffect(ParticleEffectType.LINE, (o) => pos, (o) => target(), (o) => 1, 4f, new Location(0, 0.5f, 0.5f), new Location(0, 0.5f, 0.5f), true, White, 1);
+        }
+
+        public void Steps(Location pos, Material mat, Location vel, float vlen)
+        {
+            const double spread = 0.5f;
+            int c = Utilities.UtilRandom.Next(5) + 3;
+            Vector3 tvec = vel.ToBVector();
+            for (int i = 0; i < c; i++)
+            {
+                Quaternion quat = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)(Utilities.UtilRandom.NextDouble() * (Math.PI / 2.0)));
+                Location nvel = new Location(Quaternion.Transform(tvec, quat));
+                nvel.Z += 3;
+                double xoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+                double yoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+                double zoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+                Location temp = new Location(xoff, yoff, zoff);
+                float ttl = (float)Utilities.UtilRandom.NextDouble() * 3f + 3f;
+                Texture tex = TheClient.Textures.GetTexture(TheClient.TBlock.IntTexs[mat.TextureID(MaterialSide.TOP)]);
+                Location size = new Location(0.1, 0.1, 0.1);
+                Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL)
+                + new Location(xoff, yoff, 0) * Math.Sqrt(1 - o.TTL / o.O_TTL) + nvel * (1 - o.TTL / o.O_TTL), (o) => size, (o) => 1, ttl, Location.One, Location.One, true, tex, 1);
+            }
         }
     }
 }

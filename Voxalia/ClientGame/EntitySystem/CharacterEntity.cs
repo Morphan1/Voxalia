@@ -91,7 +91,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 SoundTimeout -= TheRegion.Delta;
                 return;
             }
-            if (GetVelocity().LengthSquared() < 0.2)
+            Location vel = GetVelocity();
+            if (vel.LengthSquared() < 0.2)
             {
                 return;
             }
@@ -101,8 +102,10 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
-            new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(GetPosition(), sound, 1f, 0.14f * (float)GetVelocity().Length());
-            SoundTimeout = (Utilities.UtilRandom.NextDouble() * 0.2 + 1.0) / GetVelocity().Length();
+            double velLen = vel.Length();
+            new DefaultSoundPacketIn() { TheClient = TheClient }.PlayDefaultBlockSound(GetPosition(), sound, 1f, 0.14f * (float)velLen);
+            TheClient.Particles.Steps(GetPosition(), mat, GetVelocity(), (float)velLen);
+            SoundTimeout = (Utilities.UtilRandom.NextDouble() * 0.2 + 1.0) / velLen;
         }
         
         public float XMove = 0;
