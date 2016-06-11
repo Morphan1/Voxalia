@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Voxalia.Shared;
 using Voxalia.ServerGame.WorldSystem;
 using BEPUutilities;
+using BEPUphysics.Constraints;
+using BEPUphysics.Constraints.SingleEntity;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -14,6 +16,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public HelicopterEntity(string heli, Region tregion)
             : base(heli, tregion)
         {
+            SetMass(1000);
         }
 
         public override EntityType GetEntityType()
@@ -36,59 +39,110 @@ namespace Voxalia.ServerGame.EntitySystem
         public override void SpawnBody()
         {
             base.SpawnBody();
+            Motion = new HelicopterMotionConstraint(this);
+            TheRegion.PhysicsWorld.Add(Motion);
         }
 
         public float LiftStrength
         {
             get
             {
-                return GetMass() + 500;
+                return GetMass() * 20f;
             }
         }
 
-        public float EstimatedMass
+        public float FallStrength
         {
             get
             {
-                float basic = GetMass();
-                foreach (Seat seat in Seats)
-                {
-                    if (seat.Sitter != null)
-                    {
-                        basic += seat.Sitter.GetMass();
-                    }
-                }
-                return basic;
+                return GetMass() * 9f;
             }
         }
 
+        public HelicopterMotionConstraint Motion;
+
         public override void Tick()
         {
+            Motion.FlyUp = ILeft && !IRight;
+            Motion.FlyHover = !IRight;
             base.Tick();
-            if (DriverSeat.Sitter == null)
+        }
+
+        public class HelicopterMotionConstraint : SingleEntityConstraint
+        {
+            HelicopterEntity Helicopter;
+
+            public bool FlyUp;
+            public bool FlyHover;
+
+            public HelicopterMotionConstraint(HelicopterEntity heli)
             {
-                return;
+                Helicopter = heli;
+                Entity = heli.Body;
             }
-            Location up = new Location(Quaternion.Transform(Vector3.UnitZ, GetOrientation()));
-            if (ILeft)
+
+            public override void ExclusiveUpdate()
             {
-                ApplyForce(up * LiftStrength * 16.0 * TheRegion.Delta);
+                if (Helicopter.DriverSeat.Sitter == null)
+                {
+                    return; // Don't fly when there's nobody driving this!
+                }
+                // Collect the helicopter's relative "up" vector
+                Vector3 up = Quaternion.Transform(Vector3.UnitZ, Entity.Orientation);
+                if (FlyUp)
+                {
+                    // Apply our maximum upward strength.
+                    Vector3 upvel = up * Helicopter.LiftStrength * Delta;
+                    Entity.ApplyLinearImpulse(ref upvel);
+                }
+                else if (FlyHover)
+                {
+                    // Apply the amount of force necessary to counteract downward force, within a limit.
+                    // POTENTIAL: Adjust according to orientation?
+                    Vector3 upvel = up * Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass) * Delta;
+                    Entity.ApplyLinearImpulse(ref upvel);
+                }
+                else // FlyDown
+                {
+                    // Apply the minimum lift strength allowed to sortof just fall downward.
+                    Vector3 upvel = up * Helicopter.FallStrength * Delta;
+                    Entity.ApplyLinearImpulse(ref upvel);
+                }
+                // Rotate slightly to move in a direction.
+                // At the same time, fight against existing rotation.
+                Vector3 VecUp = new Vector3(Helicopter.ForwBack * 0.25f, Helicopter.RightLeft * 0.25f, 1);
+                VecUp.Normalize();
+                Vector3 axis = Vector3.Cross(VecUp, up);
+                float len = axis.Length();
+                if (len > 0)
+                {
+                    float angle = (float)Math.Asin(len);
+                    if (!float.IsNaN(angle))
+                    {
+                        float avel = Vector3.Dot(Entity.AngularVelocity, axis);
+                        Vector3 torque = axis * ((-angle) - 0.3f * avel);
+                        torque *= Entity.Mass * Delta * 30;
+                        Entity.ApplyAngularImpulse(ref torque);
+                    }
+                }
+                // Apply air drag
+                Entity.ModifyLinearDamping(0.3f); // TODO: arbitrary constant
+                Entity.ModifyAngularDamping(0.3f); // TODO: arbitrary constant
+                // Ensure we're active if flying!
+                Entity.ActivityInformation.Activate();
             }
-            else if (IRight)
+
+            public override float SolveIteration()
             {
-                ApplyForce(up * LiftStrength * 9.0 * TheRegion.Delta);
+                return 0; // Do nothing
             }
-            else
+
+            float Delta;
+
+            public override void Update(float dt)
             {
-                ApplyForce(up * EstimatedMass * 9.8 * (3.0 / 2.0) * TheRegion.Delta);
+                Delta = dt;
             }
-            Body.ModifyLinearDamping(0.3f);
-            Body.ModifyAngularDamping(0.3f);
-            Vector3 adj = new Vector3(ForwBack, RightLeft, 0f);
-            Vector3 res = Quaternion.Transform(adj, GetOrientation());
-            ApplyForce(Location.UnitZ, new Location(res) * TheRegion.Delta * 20f);
-            Vector3 vup = Quaternion.Transform(Vector3.UnitZ, GetOrientation());
-            ApplyForce(Location.UnitZ, (vup.Z >= 0 ? 4f : -8f) * new Location(vup.X, vup.Y, 0));
         }
 
         public override void HandleInput(CharacterEntity character)
