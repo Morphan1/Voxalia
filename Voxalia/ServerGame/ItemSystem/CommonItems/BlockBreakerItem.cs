@@ -35,6 +35,9 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             {
                 if (rcr.HitObject != null && rcr.HitObject is EntityCollidable && ((EntityCollidable)rcr.HitObject).Entity != null)
                 {
+                    BEPUphysics.Entities.Entity hitent = ((EntityCollidable)rcr.HitObject).Entity;
+                    Vector3 force = forw.ToBVector() * 75; // TODO: Arbitrary constant!
+                    hitent.ApplyImpulse(ref rcr.HitData.Location, ref force);
                     // TODO: Damage
                     return;
                 }
