@@ -110,6 +110,7 @@ namespace Voxalia.ClientGame.EntitySystem
             // TODO: Gravity
             Body.Tag = this;
             SetFriction(Friction);
+            SetBounciness(Bounciness);
             TheRegion.PhysicsWorld.Add(Body);
             for (int i = 0; i < Joints.Count; i++)
             {

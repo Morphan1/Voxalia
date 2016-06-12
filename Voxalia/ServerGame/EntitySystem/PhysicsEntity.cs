@@ -62,7 +62,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// The bounciness (restitution coefficient) of the entity.
         /// </summary>
-        internal float Bounciness = 0f;
+        internal float Bounciness = 0.25f;
 
         /// <summary>
         /// The gravity power of this entity.
@@ -279,6 +279,7 @@ namespace Voxalia.ServerGame.EntitySystem
             // TODO: Other settings
             // TODO: Gravity
             SetFriction(Friction);
+            SetBounciness(Bounciness);
             TheRegion.PhysicsWorld.Add(Body);
             for (int i = 0; i < Joints.Count; i++)
             {

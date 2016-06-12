@@ -61,6 +61,7 @@ namespace Voxalia.Shared.Collision
             Position = pos;
             boundingBox = new BoundingBox(Position, Position + new Vector3(30, 30, 30));
             Events = new ContactEventManager<FullChunkObject>(this);
+            Material.Bounciness = 0.75f;
         }
 
         public FullChunkObject(Vector3 pos, BlockInternal[] blocks)
@@ -70,6 +71,7 @@ namespace Voxalia.Shared.Collision
             Position = pos;
             boundingBox = new BoundingBox(Position, Position + new Vector3(30, 30, 30));
             Events = new ContactEventManager<FullChunkObject>(this);
+            Material.Bounciness = 0.75f;
         }
 
         public FullChunkShape ChunkShape;

@@ -63,6 +63,17 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                      + ", mass: " + entry.Player.CBody.Body.Mass + ", radius: " + entry.Player.CBody.BodyRadius + ", hasSupport: " + entry.Player.CBody.SupportFinder.HasSupport
                      + ", hasTraction: " + entry.Player.CBody.SupportFinder.HasTraction + ", isAFK: " + entry.Player.IsAFK + ", timeAFK: " + entry.Player.TimeAFK);
             }
+            else if (arg0 == "playBall")
+            {
+                // TODO: Item for this?
+                ModelEntity me = new ModelEntity("sphere", entry.Player.TheRegion);
+                me.SetMass(5);
+                me.SetPosition(entry.Player.GetCenter() + entry.Player.ForwardVector());
+                me.mode = ModelCollisionMode.SPHERE;
+                me.SetVelocity(entry.Player.ForwardVector());
+                me.SetBounciness(0.95f);
+                entry.Player.TheRegion.SpawnEntity(me);
+            }
             else if (arg0 == "secureMovement")
             {
                 entry.Player.SecureMovement = !entry.Player.SecureMovement;

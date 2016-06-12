@@ -1501,6 +1501,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     }
                 }
             }
+            Rendering.SetColor(Color4.White);
             Rendering.SetMinimumLight(0);
             Textures.White.Bind();
             if (!shadows_only)
