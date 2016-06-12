@@ -4,6 +4,7 @@ using BEPUutilities;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.WorldSystem;
+using BEPUphysics.CollisionRuleManagement;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -17,6 +18,13 @@ namespace Voxalia.ServerGame.EntitySystem
             Gravity = new Location(grav);
             Scale = new Location(0.05f, 0.05f, 0.05f);
         }
+
+        public override string GetModel()
+        {
+            return HasHat ? "projectiles/hat_arrow" : "projectiles/arrow";
+        }
+
+        public bool HasHat = false;
 
         public override void PotentialActivate()
         {
@@ -43,8 +51,21 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Matrix RelMat;
 
+        public ModelEntity SolidHat = null;
+
+        public override void Destroy()
+        {
+            SolidHat.RemoveMe();
+            base.Destroy();
+        }
+
         public override void Tick()
         {
+            if (SolidHat != null)
+            {
+                SolidHat.SetPosition(GetPosition()); // TODO: offset this so it's centered on the bits of the arrow sticking out rather than inside the target?
+                SolidHat.SetOrientation(GetOrientation());
+            }
             if (StuckTo != null)
             {
                 if (!StuckTo.IsSpawned)
@@ -66,33 +87,51 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        public bool Stuck = false;
+
         public void OnCollide(object sender, CollisionEventArgs args)
         {
-            double len = GetVelocity().Length();
-            if (len > 1)
+            if (Stuck)
             {
-                if (args.Info.HitEnt != null)
+                return;
+            }
+            double len = GetVelocity().Length();
+            SetPosition(args.Info.Position + (GetVelocity() / len) * 0.05f);
+            SetVelocity(Location.Zero);
+            Gravity = Location.Zero;
+            if (HasHat)
+            {
+                SolidHat = new ModelEntity("invisbox", TheRegion);
+                SolidHat.SetMass(0);
+                SolidHat.SetPosition(GetPosition());
+                SolidHat.SetOrientation(GetOrientation());
+                SolidHat.scale = new Location(0.6, 1.5, 0.6);
+                SolidHat.Visible = false;
+                SolidHat.CanSave = false;
+                TheRegion.SpawnEntity(SolidHat);
+            }
+            if (args.Info.HitEnt != null)
+            {
+                PhysicsEntity pe = (PhysicsEntity)args.Info.HitEnt.Tag;
+                if (pe is EntityDamageable)
                 {
-                    PhysicsEntity pe = (PhysicsEntity)args.Info.HitEnt.Tag;
-                    if (pe is EntityDamageable)
-                    {
-                        ((EntityDamageable)pe).Damage(Damage + DamageTimesVelocity * (float)len);
-                    }
-                    Vector3 loc = (args.Info.Position - pe.GetPosition()).ToBVector();
-                    Vector3 impulse = GetVelocity().ToBVector() * DamageTimesVelocity / 1000f;
-                    pe.Body.ApplyImpulse(ref loc, ref impulse);
-                    StuckTo = pe;
+                    ((EntityDamageable)pe).Damage(Damage + DamageTimesVelocity * (float)len);
                 }
-                SetPosition(args.Info.Position + (GetVelocity() / len) * 0.05f);
-                SetVelocity(Location.Zero);
-                Gravity = Location.Zero;
-                TheRegion.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
-                if (args.Info.HitEnt != null)
+                Vector3 loc = (args.Info.Position - pe.GetPosition()).ToBVector();
+                Vector3 impulse = GetVelocity().ToBVector() * DamageTimesVelocity / 1000f;
+                pe.Body.ApplyImpulse(ref loc, ref impulse);
+                StuckTo = pe;
+                if (HasHat)
                 {
-                    PhysicsEntity pe = (PhysicsEntity)args.Info.HitEnt.Tag;
-                    JointForceWeld jfw = new JointForceWeld(pe, this);
-                    TheRegion.AddJoint(jfw);
+                    CollisionRules.AddRule(pe.Body, SolidHat.Body, CollisionRule.NoBroadPhase); // TODO: Broadcast this info! Perhaps abuse the joint system?
                 }
+            }
+            TheRegion.SendToAll(new PrimitiveEntityUpdatePacketOut(this));
+            if (args.Info.HitEnt != null)
+            {
+                PhysicsEntity pe = (PhysicsEntity)args.Info.HitEnt.Tag;
+                JointForceWeld jfw = new JointForceWeld(pe, this);
+                TheRegion.AddJoint(jfw);
             }
         }
     }

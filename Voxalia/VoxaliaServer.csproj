@@ -132,6 +132,7 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\CustomBlockItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\ExplodobowItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\FuelItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\HatCannonItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\JetpackItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\ManipulatorItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\ParachuteItem.cs" />

@@ -22,11 +22,13 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public Location Gravity = Location.Zero;
 
-        public List<long> NoCollide = new List<long>();
+        public HashSet<long> NoCollide = new HashSet<long>();
+
+        public abstract string GetModel();
 
         public override long GetRAMUsage()
         {
-            return base.GetRAMUsage() + 50 + NoCollide.Capacity * 8;
+            return base.GetRAMUsage() + 50 + NoCollide.Count * 16;
         }
 
         public PrimitiveEntity(Region tregion)

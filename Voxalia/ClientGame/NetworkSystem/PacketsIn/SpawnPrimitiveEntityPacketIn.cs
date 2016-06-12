@@ -7,12 +7,12 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 12 + 12 + 16 + 12 + 12 + 8)
+            if (data.Length != 12 + 12 + 16 + 12 + 12 + 8 + 4)
             {
                 return false;
             }
             BasicPrimitiveEntity bpe = new BasicPrimitiveEntity(TheClient.TheRegion, false);
-            bpe.model = TheClient.Models.GetModel("projectiles/arrow");
+            bpe.model = TheClient.Models.GetModel(TheClient.Network.Strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, 12 + 12 + 16 + 12 + 12 + 8, 4))));
             bpe.Position = Location.FromBytes(data, 0);
             bpe.Velocity = Location.FromBytes(data, 12);
             bpe.Angles = Utilities.BytesToQuaternion(data, 12 + 12);

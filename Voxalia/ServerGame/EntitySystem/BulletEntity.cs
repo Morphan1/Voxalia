@@ -16,6 +16,11 @@ namespace Voxalia.ServerGame.EntitySystem
             Gravity = new Location(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
         }
 
+        public override string GetModel()
+        {
+            return "invisbox";
+        }
+
         public override EntityType GetEntityType()
         {
             return EntityType.BULLET;

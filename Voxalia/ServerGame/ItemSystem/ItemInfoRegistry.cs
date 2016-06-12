@@ -45,6 +45,7 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new ManipulatorItem());
             Register(new StructureSelectorItem());
             Register(new CustomBlockItem());
+            Register(new HatCannonItem());
             Register(Generic = new GenericItem());
         }
 
