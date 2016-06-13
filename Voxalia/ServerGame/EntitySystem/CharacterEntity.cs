@@ -21,7 +21,6 @@ namespace Voxalia.ServerGame.EntitySystem
         public CharacterEntity(Region tregion, float maxhealth)
             : base(tregion, maxhealth)
         {
-            MinZ = CBHHeight;
             CGroup = CollisionUtil.Character;
         }
 
@@ -404,7 +403,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public abstract Location GetEyePosition();
 
-        public float MinZ = -defHalfHeight;
+        public float MinZ = -defHalfHeight * 1.5f;
 
         public override Location GetPosition()
         {
