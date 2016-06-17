@@ -54,19 +54,33 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             }
         }
 
-        public void Explode(Location pos, float size, int dens = 50)
+        public void Explode(Location pos, float size, int dens = 200)
         {
             Location c1 = new Location(1, 0.7, 0);
             Location c2 = new Location(1);
+            float spread = size * 0.25f;
             for (int i = 0; i < dens; i++)
             {
                 Texture tex = Explosion[Utilities.UtilRandom.Next(Explosion.Length)];
                 Location forward = Utilities.ForwardVector_Deg(Utilities.UtilRandom.NextDouble() * 360, Utilities.UtilRandom.NextDouble() * 360 - 180);
-                double ssize = Utilities.UtilRandom.NextDouble() * 0.25 + 0.25;
-                float ttl = (float)Utilities.UtilRandom.NextDouble() * 5f + 3f;
+                double ssize = Utilities.UtilRandom.NextDouble() * 0.5 + 0.5;
+                float ttl = (float)Utilities.UtilRandom.NextDouble() * 5f + 5f;
                 double speed = Utilities.UtilRandom.NextDouble();
                 Location loc = new Location(ssize);
-                Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + (forward * size * speed) * o.TTL / o.O_TTL, (o) => loc, (o) => 0, ttl, c1, c2, true, tex);
+                Location temp = forward * size * speed;
+                double xoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+                double yoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+                double zoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+                Location start = pos + new Location(xoff, yoff, zoff);
+                Engine.AddEffect(ParticleEffectType.SQUARE, (o) => start + temp * (1 - o.TTL / o.O_TTL), (o) => loc, (o) => 0, ttl, c1, c2, true, tex);
+            }
+            for (int i = 0; i < dens / 2; i++)
+            {
+                double xoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+                double yoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+                double zoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
+                Location forward = Utilities.ForwardVector_Deg(Utilities.UtilRandom.NextDouble() * 360, Utilities.UtilRandom.NextDouble() * 360 - 180) * 2;
+                SmokeyParticle(pos + new Location(xoff, yoff, zoff), size * 1.5f, new Location(0.5f), SmokeT, forward);
             }
         }
 

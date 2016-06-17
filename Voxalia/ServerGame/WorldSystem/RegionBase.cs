@@ -399,6 +399,10 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void Explode(Location pos, float rad = 5f, bool effect = true, bool breakblock = true, bool applyforce = true, bool doDamage = true)
         {
+            if (doDamage)
+            {
+                // TODO: DO DAMAGE!
+            }
             float expDamage = 5 * rad;
             CheckThreadValidity();
             if (breakblock)
@@ -423,7 +427,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             if (effect)
             {
-                ParticleEffectPacketOut pepo = new ParticleEffectPacketOut(ParticleEffectNetType.EXPLOSION, rad + 15, pos);
+                ParticleEffectPacketOut pepo = new ParticleEffectPacketOut(ParticleEffectNetType.EXPLOSION, rad, pos);
                 foreach (PlayerEntity pe in GetPlayersInRadius(pos, rad + 30)) // TODO: Better particle view dist
                 {
                     pe.Network.SendPacket(pepo);
@@ -443,10 +447,6 @@ namespace Voxalia.ServerGame.WorldSystem
                         ((PhysicsEntity)e).ApplyForce(force);
                     }
                 }
-            }
-            if (doDamage)
-            {
-                // TODO: DO DAMAGE!
             }
         }
     }
