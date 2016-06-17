@@ -46,6 +46,8 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new StructureSelectorItem());
             Register(new CustomBlockItem());
             Register(new HatCannonItem());
+            Register(new SuctionRayItem());
+            Register(new PushRayItem());
             Register(Generic = new GenericItem());
         }
 

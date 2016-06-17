@@ -58,7 +58,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 for (int i = 0; i < shots; i++)
                 {
                     BulletEntity be = new BulletEntity(character.TheRegion);
-                    be.SetPosition(character.GetEyePosition());
+                    be.SetPosition(character.GetEyePosition()); // TODO: ItemPosition?
                     be.NoCollide.Add(character.EID);
                     Location ang = character.Direction;
                     ang.Yaw += Utilities.UtilRandom.NextDouble() * spread * 2 - spread;
