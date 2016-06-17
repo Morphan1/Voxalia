@@ -171,6 +171,7 @@
     <Compile Include="ServerGame\JointSystem\InternalBaseJoint.cs" />
     <Compile Include="ServerGame\JointSystem\JointBallSocket.cs" />
     <Compile Include="ServerGame\JointSystem\JointDistance.cs" />
+    <Compile Include="ServerGame\JointSystem\JointFlyingDisc.cs" />
     <Compile Include="ServerGame\JointSystem\JointForceWeld.cs" />
     <Compile Include="ServerGame\JointSystem\JointLAxisLimit.cs" />
     <Compile Include="ServerGame\JointSystem\JointSwivelHinge.cs" />

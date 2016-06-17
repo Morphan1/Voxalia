@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using FreneticScript;
+using BEPUutilities;
 
 namespace Voxalia.Shared
 {
@@ -392,22 +393,22 @@ namespace Voxalia.Shared
             return new Location(bX * cosyaw - vec.Y * sinyaw, bX * sinyaw + vec.Y * cosyaw, bZ);
         }
 
-        public static BEPUutilities.Quaternion StringToQuat(string input)
+        public static Quaternion StringToQuat(string input)
         {
             string[] data = input.Replace('(', ' ').Replace(')', ' ').Replace(" ", "").SplitFast(',');
             if (data.Length != 4)
             {
-                return BEPUutilities.Quaternion.Identity;
+                return Quaternion.Identity;
             }
-            return new BEPUutilities.Quaternion(StringToFloat(data[0]), StringToFloat(data[1]), StringToFloat(data[2]), StringToFloat(data[3]));
+            return new Quaternion(StringToFloat(data[0]), StringToFloat(data[1]), StringToFloat(data[2]), StringToFloat(data[3]));
         }
 
-        public static string QuatToString(BEPUutilities.Quaternion quat)
+        public static string QuatToString(Quaternion quat)
         {
             return "(" + quat.X + ", " + quat.Y + ", " + quat.Z + ", " + quat.W + ")";
         }
 
-        public static byte[] QuaternionToBytes(BEPUutilities.Quaternion quat)
+        public static byte[] QuaternionToBytes(Quaternion quat)
         {
             byte[] dat = new byte[4 + 4 + 4 + 4];
             Utilities.FloatToBytes(quat.X).CopyTo(dat, 0);
@@ -417,24 +418,24 @@ namespace Voxalia.Shared
             return dat;
         }
 
-        public static BEPUutilities.Quaternion BytesToQuaternion(byte[] dat, int offset)
+        public static Quaternion BytesToQuaternion(byte[] dat, int offset)
         {
-            return new BEPUutilities.Quaternion(BytesToFloat(BytesPartial(dat, offset, 4)), BytesToFloat(BytesPartial(dat, offset + 4, 4)),
+            return new Quaternion(BytesToFloat(BytesPartial(dat, offset, 4)), BytesToFloat(BytesPartial(dat, offset + 4, 4)),
                 BytesToFloat(BytesPartial(dat, offset + 4 + 4, 4)), BytesToFloat(BytesPartial(dat, offset + 4 + 4 + 4, 4)));
 
         }
 
-        public static BEPUutilities.Matrix LookAtLH(Location start, Location end, Location up)
+        public static Matrix LookAtLH(Location start, Location end, Location up)
         {
             Location zAxis = (end - start).Normalize();
             Location xAxis = up.CrossProduct(zAxis).Normalize();
             Location yAxis = zAxis.CrossProduct(xAxis);
-            return new BEPUutilities.Matrix((float)xAxis.X, (float)yAxis.X, (float)zAxis.X, 0, (float)xAxis.Y,
+            return new Matrix((float)xAxis.X, (float)yAxis.X, (float)zAxis.X, 0, (float)xAxis.Y,
                 (float)yAxis.Y, (float)zAxis.Y, 0, (float)xAxis.Z, (float)yAxis.Z, (float)zAxis.Z, 0,
                 (float)-xAxis.Dot(start), (float)-yAxis.Dot(start), (float)-zAxis.Dot(start), 1);
         }
 
-        public static Location MatrixToAngles(BEPUutilities.Matrix WorldTransform)
+        public static Location MatrixToAngles(Matrix WorldTransform)
         {
             Location rot;
             rot.X = Math.Atan2(WorldTransform.M32, WorldTransform.M33) * 180 / Math.PI;
@@ -443,11 +444,12 @@ namespace Voxalia.Shared
             return rot;
         }
 
-        public static BEPUutilities.Matrix AnglesToMatrix(Location rot)
+        public static Matrix AnglesToMatrix(Location rot)
         {
-            return BEPUutilities.Matrix.CreateFromAxisAngle(new BEPUutilities.Vector3(1, 0, 0), (float)(rot.X * Utilities.PI180))
-                    * BEPUutilities.Matrix.CreateFromAxisAngle(new BEPUutilities.Vector3(0, 1, 0), (float)(rot.Y * Utilities.PI180))
-                    * BEPUutilities.Matrix.CreateFromAxisAngle(new BEPUutilities.Vector3(0, 0, 1), (float)(rot.Z * Utilities.PI180));
+            // TODO: better method?
+            return Matrix.CreateFromAxisAngle(new BEPUutilities.Vector3(1, 0, 0), (float)(rot.X * Utilities.PI180))
+                    * Matrix.CreateFromAxisAngle(new BEPUutilities.Vector3(0, 1, 0), (float)(rot.Y * Utilities.PI180))
+                    * Matrix.CreateFromAxisAngle(new BEPUutilities.Vector3(0, 0, 1), (float)(rot.Z * Utilities.PI180));
         }
 
         /// <summary>
@@ -582,6 +584,11 @@ namespace Voxalia.Shared
                 c++;
             }
             return creation;
+        }
+        
+        public static Vector3 Project(Vector3 a, Vector3 b)
+        {
+            return b * (Vector3.Dot(a, b) / b.LengthSquared());
         }
     }
 

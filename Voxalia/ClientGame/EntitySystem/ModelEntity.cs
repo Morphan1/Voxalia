@@ -125,7 +125,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
-            if (!Visible)
+            if (!Visible || model.Meshes.Count == 0)
             {
                 return;
             }

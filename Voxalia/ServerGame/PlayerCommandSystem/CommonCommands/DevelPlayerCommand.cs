@@ -13,6 +13,8 @@ using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript;
 using Voxalia.ServerGame.TagSystem.TagObjects;
+using Voxalia.Shared.Collision;
+using Voxalia.ServerGame.JointSystem;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
@@ -73,6 +75,18 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 me.SetVelocity(entry.Player.ForwardVector());
                 me.SetBounciness(0.95f);
                 entry.Player.TheRegion.SpawnEntity(me);
+            }
+            else if (arg0 == "playDisc")
+            {
+                // TODO: Item for this?
+                ModelEntity me = new ModelEntity("flyingdisc", entry.Player.TheRegion);
+                me.SetMass(5);
+                me.SetPosition(entry.Player.GetCenter() + entry.Player.ForwardVector() * 1.5f); // TODO: 1.5 -> 'reach' value?
+                me.mode = ModelCollisionMode.AABB;
+                me.SetVelocity(entry.Player.ForwardVector() * 25f); // TODO: 25 -> 'strength' value?
+                me.SetAngularVelocity(new Location(0, 0, 10));
+                entry.Player.TheRegion.SpawnEntity(me);
+                entry.Player.TheRegion.AddJoint(new JointFlyingDisc(me));
             }
             else if (arg0 == "secureMovement")
             {

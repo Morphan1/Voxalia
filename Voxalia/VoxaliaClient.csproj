@@ -190,6 +190,7 @@
     <Compile Include="ClientGame\JointSystem\BaseJoint.cs" />
     <Compile Include="ClientGame\JointSystem\ConnectorBeam.cs" />
     <Compile Include="ClientGame\JointSystem\ConstWheelStepUp.cs" />
+    <Compile Include="ClientGame\JointSystem\JointFlyingDisc.cs" />
     <Compile Include="ClientGame\JointSystem\JointLAxisLimit.cs" />
     <Compile Include="ClientGame\JointSystem\JointSwivelHinge.cs" />
     <Compile Include="ClientGame\JointSystem\JointVehicleMotor.cs" />
