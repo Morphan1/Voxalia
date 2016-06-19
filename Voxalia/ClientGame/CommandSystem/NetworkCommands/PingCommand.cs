@@ -24,15 +24,17 @@ namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
                 ShowUsage(queue, entry);
                 return;
             }
-            TheClient.Network.Ping(entry.GetArgument(queue, 0), entry.GetArgument(queue, 1), (info) =>
+            string ip = entry.GetArgument(queue, 0);
+            string port = entry.GetArgument(queue, 1);
+            TheClient.Network.Ping(ip, port, (info) =>
             {
-                if (info.success)
+                if (info.Success)
                 {
-                    UIConsole.WriteLine("^r^2" + info.motd + " (" + info.ping + "ms)");
+                    UIConsole.WriteLine("^r^2Ping success(" + ip + " " + port + "): " + info.Message + " (" + info.Ping + "ms)");
                 }
                 else
                 {
-                    UIConsole.WriteLine("^r^1" + info.motd);
+                    UIConsole.WriteLine("^r^1Ping failure (" + ip + " " + port + "): " + info.Message);
                 }
             });
         }

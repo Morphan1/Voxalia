@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Voxalia.ServerGame.NetworkSystem
+namespace Voxalia.Shared
 {
     public class PingInfo
     {
-        public bool success;
-        public string motd;
-        public long ping;
+        public bool Success;
+
+        public string Message;
+
+        public long Ping;
     }
 }

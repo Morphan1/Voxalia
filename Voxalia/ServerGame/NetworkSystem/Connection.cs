@@ -222,7 +222,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                             WebPage wp = new WebPage(TheServer, this);
                             wp.Init(FileHandler.encoding.GetString(recd, 0, recdsofar));
                             PrimarySocket.Send(wp.GetFullData());
-                            PrimarySocket.Close();
+                            PrimarySocket.Close(5);
                             Alive = false;
                         }
                     }
@@ -239,7 +239,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                             WebPage wp = new WebPage(TheServer, this);
                             wp.Init(FileHandler.encoding.GetString(recd, 0, recdsofar));
                             PrimarySocket.Send(FileHandler.encoding.GetBytes(wp.GetHeaders()));
-                            PrimarySocket.Close();
+                            PrimarySocket.Close(5);
                             Alive = false;
                         }
                     }
@@ -248,8 +248,8 @@ namespace Voxalia.ServerGame.NetworkSystem
                         // VOXALIA ping
                         if (recd[recdsofar - 1] == '\n')
                         {
-                            PrimarySocket.Send(FileHandler.encoding.GetBytes("SUCCESS\rYes hello I am voxalia server yes hi\n"));
-                            PrimarySocket.Close();
+                            PrimarySocket.Send(FileHandler.encoding.GetBytes("SUCCESS\rVoxalia Server Online\n"));
+                            PrimarySocket.Close(5);
                             Alive = false;
                         }
                     }
