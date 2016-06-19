@@ -238,6 +238,7 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourPositionPacketOut.cs" />
     <Compile Include="ServerGame\ItemSystem\ItemStack.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourStatusPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PingInfo.cs" />
     <Compile Include="ServerGame\NetworkSystem\WebPage.cs" />
     <Compile Include="ServerGame\OtherSystems\BlockImageManager.cs" />
     <Compile Include="ServerGame\OtherSystems\GameMode.cs" />

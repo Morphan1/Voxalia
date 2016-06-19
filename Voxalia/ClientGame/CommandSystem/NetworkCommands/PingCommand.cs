@@ -1,6 +1,7 @@
 ﻿using FreneticScript.CommandSystem;
 using System;
 using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.UISystem;
 
 namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
 {
@@ -23,14 +24,17 @@ namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
                 ShowUsage(queue, entry);
                 return;
             }
-            try {
-                string response = TheClient.Network.Ping(entry.GetArgument(queue, 0), entry.GetArgument(queue, 1));
-                entry.Good(queue, response);
-            }
-            catch (Exception e)
+            TheClient.Network.Ping(entry.GetArgument(queue, 0), entry.GetArgument(queue, 1), (info) =>
             {
-                entry.Bad(queue, e.Message);
-            }
+                if (info.success)
+                {
+                    UIConsole.WriteLine("^r^2" + info.motd + " (" + info.ping + "ms)");
+                }
+                else
+                {
+                    UIConsole.WriteLine("^r^1" + info.motd);
+                }
+            });
         }
     }
 }
