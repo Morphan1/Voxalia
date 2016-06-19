@@ -515,6 +515,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void OnEchoVolumeChanged(object obj, EventArgs e)
         {
+            if (Sounds.Microphone == null)
+            {
+                return;
+            }
             if (CVars.a_echovolume.ValueF < 0.001f)
             {
                 Sounds.Microphone.StopEcho();
