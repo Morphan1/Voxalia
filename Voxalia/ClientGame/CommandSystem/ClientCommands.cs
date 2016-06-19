@@ -74,6 +74,7 @@ namespace Voxalia.ClientGame.CommandSystem
             CommandSystem.RegisterCommand(new DisconnectCommand(TheClient));
             CommandSystem.RegisterCommand(new LoginCommand(TheClient));
             CommandSystem.RegisterCommand(new NetusageCommand(TheClient));
+            CommandSystem.RegisterCommand(new PingCommand(TheClient));
             CommandSystem.RegisterCommand(new StartlocalserverCommand(TheClient));
 
             // Game Commands

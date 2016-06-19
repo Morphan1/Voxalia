@@ -178,6 +178,37 @@ namespace Voxalia.ClientGame.NetworkSystem
             ConnectionThread.Start();
         }
 
+        // TODO: more info
+        public String Ping(string IP, string port)
+        {
+            IPAddress address = GetAddress(IP);
+            ConnectionSocket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            ConnectionSocket.LingerState.LingerTime = 5;
+            ConnectionSocket.LingerState.Enabled = true;
+            ConnectionSocket.ReceiveTimeout = 10000;
+            ConnectionSocket.SendTimeout = 10000;
+            ConnectionSocket.ReceiveBufferSize = 5 * 1024 * 1024;
+            ConnectionSocket.SendBufferSize = 5 * 1024 * 1024;
+            int tport = Utilities.StringToInt(port);
+            ConnectionSocket.Connect(new IPEndPoint(address, tport));
+            ConnectionSocket.Send(FileHandler.encoding.GetBytes("VOXp_\n"));
+            byte[] resp = ReceiveUntil(ConnectionSocket, 50, (byte)'\n');
+            string respString = FileHandler.encoding.GetString(resp);
+            if (respString != null)
+            {
+                string[] datums = respString.SplitFast('\r');
+                if (datums.Length != 2 || datums[0] != "SUCCESS")
+                {
+                    throw new Exception("Invalid server ping details!");
+                }
+                return datums[1];
+            }
+            else
+            {
+                throw new Exception("No server ping response.");
+            }
+        }
+
         int MAX = 1024 * 1024 * 2; // 2 MB by default
 
         byte[] recd;
@@ -549,52 +580,7 @@ namespace Voxalia.ClientGame.NetworkSystem
             try
             {
                 string key = GetWebSession();
-                IPAddress address;
-                if (!IPAddress.TryParse(LastIP, out address))
-                {
-                    IPHostEntry entry = Dns.GetHostEntry(LastIP);
-                    if (entry.AddressList.Length == 0)
-                    {
-                        throw new Exception("Empty address list for DNS server at '" + LastIP + "'");
-                    }
-                    if (TheClient.CVars.n_first.Value.ToLowerFast() == "ipv4")
-                    {
-                        foreach (IPAddress saddress in entry.AddressList)
-                        {
-                            if (saddress.AddressFamily == AddressFamily.InterNetwork)
-                            {
-                                address = saddress;
-                                break;
-                            }
-                        }
-                    }
-                    else if (TheClient.CVars.n_first.Value.ToLowerFast() == "ipv6")
-                    {
-                        foreach (IPAddress saddress in entry.AddressList)
-                        {
-                            if (saddress.AddressFamily == AddressFamily.InterNetworkV6)
-                            {
-                                address = saddress;
-                                break;
-                            }
-                        }
-                    }
-                    if (address == null)
-                    {
-                        foreach (IPAddress saddress in entry.AddressList)
-                        {
-                            if (saddress.AddressFamily == AddressFamily.InterNetworkV6 || saddress.AddressFamily == AddressFamily.InterNetwork)
-                            {
-                                address = saddress;
-                                break;
-                            }
-                        }
-                    }
-                    if (address == null)
-                    {
-                        throw new Exception("DNS has entries, but none are IPv4 or IPv6!");
-                    }
-                }
+                IPAddress address = GetAddress(LastIP);
                 ConnectionSocket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 ConnectionSocket.LingerState.LingerTime = 5;
                 ConnectionSocket.LingerState.Enabled = true;
@@ -655,6 +641,57 @@ namespace Voxalia.ClientGame.NetworkSystem
                     ChunkSocket.Close(5);
                 }
             }
+        }
+
+        IPAddress GetAddress(string IP)
+        {
+            IPAddress address;
+            if (!IPAddress.TryParse(IP, out address))
+            {
+                IPHostEntry entry = Dns.GetHostEntry(IP);
+                if (entry.AddressList.Length == 0)
+                {
+                    throw new Exception("Empty address list for DNS server at '" + IP + "'");
+                }
+                if (TheClient.CVars.n_first.Value.ToLowerFast() == "ipv4")
+                {
+                    foreach (IPAddress saddress in entry.AddressList)
+                    {
+                        if (saddress.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            address = saddress;
+                            break;
+                        }
+                    }
+                }
+                else if (TheClient.CVars.n_first.Value.ToLowerFast() == "ipv6")
+                {
+                    foreach (IPAddress saddress in entry.AddressList)
+                    {
+                        if (saddress.AddressFamily == AddressFamily.InterNetworkV6)
+                        {
+                            address = saddress;
+                            break;
+                        }
+                    }
+                }
+                if (address == null)
+                {
+                    foreach (IPAddress saddress in entry.AddressList)
+                    {
+                        if (saddress.AddressFamily == AddressFamily.InterNetworkV6 || saddress.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            address = saddress;
+                            break;
+                        }
+                    }
+                }
+                if (address == null)
+                {
+                    throw new Exception("DNS has entries, but none are IPv4 or IPv6!");
+                }
+            }
+            return address;
         }
 
         byte[] ReceiveUntil(Socket s, int max_bytecount, byte ender)

@@ -122,6 +122,7 @@
     <Compile Include="ClientGame\CommandSystem\CommonCommands\ReloadGameCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\GameCommands\InventoryCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\GameCommands\TesteffectCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\NetworkCommands\PingCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\ConnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\DisconnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\LoginCommand.cs" />
