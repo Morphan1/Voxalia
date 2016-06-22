@@ -67,5 +67,5 @@ void main()
 	normal = vec4(normalize(f.tbn * norms), 1.0);
 	renderhint = vec4(specular_strength, 0.0 /* TODO: LIGHT? */, minimum_light, 1.0);
 	renderhint2 = vec4(0.0, reflection_amt, 0.0, 1.0);
-    bw = bw_color;
+    bw = vec4(bw_color.xyz, color.w);
 }
