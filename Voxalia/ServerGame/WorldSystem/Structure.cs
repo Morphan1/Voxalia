@@ -25,7 +25,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public BlockGroupEntity ToBGE(Region tregion, Location pos)
         {
-            BlockGroupEntity bge = new BlockGroupEntity(pos, BGETraceMode.CONVEX, tregion, Blocks, Size.X, Size.Y, Size.Z, new Location(Origin.X, Origin.Y, Origin.Z));
+            BlockGroupEntity bge = new BlockGroupEntity(pos, BGETraceMode.PERFECT, tregion, Blocks, Size.X, Size.Y, Size.Z, new Location(Origin.X, Origin.Y, Origin.Z));
             bge.SetMass(0);
             bge.CGroup = CollisionUtil.NonSolid;
             bge.Color = System.Drawing.Color.FromArgb(160, 255, 255, 255);
