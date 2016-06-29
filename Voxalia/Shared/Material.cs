@@ -110,6 +110,12 @@ namespace Voxalia.Shared
                         case "lightdamage":
                             inf.LightDamage = float.Parse(opt[1]);
                             break;
+                        case "lightemitrange":
+                            inf.LightEmitRange = float.Parse(opt[1]);
+                            break;
+                        case "lightemit":
+                            inf.LightEmit = Location.FromString(opt[1]);
+                            break;
                         case "fogalpha":
                             inf.FogAlpha = float.Parse(opt[1]);
                             break;
@@ -318,6 +324,16 @@ namespace Voxalia.Shared
             return ALL_MATS[(int)mat].SolidifiesInto;
         }
 
+        public static Location GetLightEmit(this Material mat)
+        {
+            return ALL_MATS[(int)mat].LightEmit;
+        }
+
+        public static float GetLightEmitRange(this Material mat)
+        {
+            return ALL_MATS[(int)mat].LightEmitRange;
+        }
+
         public static Type MaterialType = typeof(Material);
 
         public static bool TryGetFromNameOrNumber(string input, out Material mat)
@@ -325,6 +341,11 @@ namespace Voxalia.Shared
             ushort t;
             if (ushort.TryParse(input, out t))
             {
+                if (t >= ALL_MATS.Count || ALL_MATS[t] == null)
+                {
+                    mat = Material.AIR;
+                    return false;
+                }
                 mat = (Material)t;
                 return true;
             }
@@ -545,5 +566,15 @@ namespace Voxalia.Shared
         /// Whether this block can be broken by tools other than its primary Breaker tool.
         /// </summary>
         public bool BreaksFromOtherTools = true;
+
+        /// <summary>
+        /// What light color this block should emit.
+        /// </summary>
+        public Location LightEmit = Location.Zero;
+
+        /// <summary>
+        /// How far this block should emit light.
+        /// </summary>
+        public float LightEmitRange = 0;
     }
 }

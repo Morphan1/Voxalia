@@ -563,7 +563,23 @@ namespace Voxalia.ClientGame.WorldSystem
                     BlockInternal bi = ch.GetBlockAtLOD((int)x, (int)y, (int)z);
                     if (bi.IsOpaque())
                     {
-                        return new Location(0, 0, 0);
+                        Material mat = (Material)bi.BlockMaterial;
+                        float lrange = mat.GetLightEmitRange();
+                        if (lrange > 0)
+                        {
+                            int biz = z + ZP * Chunk.CHUNK_SIZE;
+                            int dist = biz - (int)pos.Z;
+                            if (dist <= 0)
+                            {
+                                return mat.GetLightEmit();
+                            }
+                            if (dist >= lrange)
+                            {
+                                return Location.Zero;
+                            }
+                            return mat.GetLightEmit() * (1f - dist / lrange) * SkyLightMod;
+                        }
+                        return Location.Zero;
                     }
                     light -= ((Material)bi.BlockMaterial).GetLightDamage();
                     z++;
@@ -571,7 +587,6 @@ namespace Voxalia.ClientGame.WorldSystem
                 ZP++;
                 z = 0;
             }
-            // vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
             return norm.Dot(SunLightPathNegative) * new Location(light) * SkyLightMod;
         }
 
