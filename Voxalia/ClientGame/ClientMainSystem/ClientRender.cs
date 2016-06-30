@@ -102,11 +102,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_forw_vox = Shaders.GetShader("forward" + def + ",MCM_VOX");
             s_forw_trans = Shaders.GetShader("forward" + def + ",MCM_TRANSP");
             s_forw_vox_trans = Shaders.GetShader("forward" + def + ",MCM_VOX,MCM_TRANSP");
+            // TODO: Better place for models?
             RainCyl = Models.GetModel("raincyl");
             RainCyl.LoadSkin(Textures);
+            SnowCyl = Models.GetModel("snowcyl");
+            SnowCyl.LoadSkin(Textures);
         }
 
         public Model RainCyl;
+
+        public Model SnowCyl;
 
         int map_fbo_main = -1;
         int map_fbo_texture = -1;
@@ -1368,18 +1373,26 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     TheRegion.Entities[i].Render();
                 }
                 SetEnts();
-                if (CVars.g_raining.ValueB)
+                if (CVars.g_weathermode.ValueI > 0)
                 {
-                    RainCylPos += gDelta * 0.5;
+                    RainCylPos += gDelta * ((CVars.g_weathermode.ValueI == 1) ? 0.5 : 0.1);
                     while (RainCylPos > 1.0)
                     {
                         RainCylPos -= 1.0;
                     }
+                    Matrix4 rot = (CVars.g_weathermode.ValueI == 2) ? Matrix4.CreateRotationZ((float)Math.Sin(RainCylPos * 2f * Math.PI) * 0.1f) : Matrix4.Identity;
                     for (int i = -10; i <= 10; i++)
                     {
-                        Matrix4 mat = Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + new Location(0, 0, 4 * i + RainCylPos * -4)));
+                        Matrix4 mat = rot * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + new Location(0, 0, 4 * i + RainCylPos * -4)));
                         GL.UniformMatrix4(2, false, ref mat);
-                        RainCyl.Draw();
+                        if (CVars.g_weathermode.ValueI == 1)
+                        {
+                            RainCyl.Draw();
+                        }
+                        else if (CVars.g_weathermode.ValueI == 2)
+                        {
+                            SnowCyl.Draw();
+                        }
                     }
                 }
                 if (FBOid == 1)
