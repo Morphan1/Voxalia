@@ -1,0 +1,35 @@
+# Text for Voxalia's core setup.
+# These can be accessed by any in-game text writer via ^[LANG=voxalia|example.path.here]
+# Arguments can be given as such: ^[LANG=voxalia|example.path.here|alpha|beta] where {{1}} will become alpha, {{2}} becomes beta, etc.
+# You can use color codes here, but use them sparingly (IE, only use as needed). Try not to use language calls ("^[LANG=...]")... instead, use arguments!
+# Note to editors: Please only edit the strings (text after the ":" symbol), not the comments (text after "#" symbol) nor the ID's (text before a ":" symbol)
+# This file is:
+#  ENGLISH - UNITED STATES VARIANT.
+
+# General information for this language file.
+language:
+    id: en-us
+    cleanname: English (United States)
+    flagtexture: flags/usa
+
+# Common text.
+common:
+    languages:
+        badinput: (Unknown or empty language data request, failed to read!)
+        badkey: (Unknown or bad language key value, failed to read!)
+
+# Text used by /commands in-game.
+commands:
+    # Those used by the server.
+    server:
+    # Commands a player runs on the server.
+    player:
+    # Those used by the client.
+    client:
+
+# Text used by in game items.
+items:
+    admintools:
+        manipulator:
+            display: Manipulator
+            description: Firmly grasp it!

@@ -85,6 +85,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// </summary>
         public Screen CScreen;
 
+        public LanguageEngine Languages = new LanguageEngine();
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>

@@ -178,32 +178,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="MaxY">The maximum Y location to render text at.</param>
         /// <param name="transmod">Transparency modifier (EG, 0.5 = half opacity) (0.0 - 1.0).</param>
         /// <param name="extrashadow">Whether to always have a mini drop-shadow.</param>
-        public void DrawColoredText(string Text, Location Position, int MaxY = int.MaxValue, float transmod = 1, bool extrashadow = false, string bcolor = "^r^7")
+        public void DrawColoredText(string Text, Location Position, int MaxY = int.MaxValue, float transmod = 1, bool extrashadow = false, string bcolor = "^r^7",
+            int color = DefaultColor, bool bold = false, bool italic = false, bool underline = false, bool strike = false, bool overline = false, bool highlight = false, bool emphasis = false,
+            int ucolor = DefaultColor, int scolor = DefaultColor, int ocolor = DefaultColor, int hcolor = DefaultColor, int ecolor = DefaultColor,
+            bool super = false, bool sub = false, bool flip = false, bool pseudo = false, bool jello = false, bool obfu = false, bool random = false, bool shadow = false, GLFont font = null)
         {
             Text = Text.Replace("^B", bcolor);
             string[] lines = Text.Replace('\r', ' ').Replace(' ', (char)0x00A0).Replace("^q", "\"").SplitFast('\n');
-            int color = DefaultColor;
             int trans = (int)(255 * transmod);
-            bool bold = false;
-            bool italic = false;
-            bool underline = false;
-            bool strike = false;
-            bool overline = false;
-            bool highlight = false;
-            bool emphasis = false;
-            int ucolor = DefaultColor;
-            int scolor = DefaultColor;
-            int ocolor = DefaultColor;
-            int hcolor = DefaultColor;
-            int ecolor = DefaultColor;
-            bool super = false;
-            bool sub = false;
-            bool flip = false;
-            bool pseudo = false;
-            bool jello = false;
-            bool obfu = false;
-            bool random = false;
-            bool shadow = false;
             int otrans = (int)(255 * transmod);
             int etrans = (int)(255 * transmod);
             int htrans = (int)(255 * transmod);
@@ -211,7 +193,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             int utrans = (int)(255 * transmod);
             float X = (float)Position.X;
             float Y = (float)Position.Y;
-            GLFont font = font_default;
+            if (font == null)
+            {
+                font = font_default;
+            }
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];
@@ -297,19 +282,43 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                             x++;
                                         }
                                         string ttext;
+                                        bool highl = true;
                                         if (x == line.Length)
                                         {
                                             ttext = "^[" + sb.ToString();
                                         }
                                         else
                                         {
-                                            ttext = sb.ToString().After("|");
+                                            string sbt = sb.ToString();
+                                            string sbl = sbt.ToLowerFast();
+                                            if (sbl.StartsWith("lang="))
+                                            {
+                                                string langinfo = sbl.After("lang=");
+                                                string[] subdats = langinfo.SplitFast('|');
+                                                ttext = Client.Central.Languages.GetText(subdats);
+                                                highl = false;
+                                            }
+                                            else
+                                            {
+                                                ttext = sbt.After("|");
+                                            }
                                         }
-                                        float widt = font_default.MeasureString(ttext);
-                                        DrawRectangle(X, Y, widt, font_default.Height, font_default, Color.Black);
-                                        RenderBaseText(X, Y, ttext, font_default, 5);
-                                        DrawRectangle(X, Y + ((float)font_default.Height * 4f / 5f), widt, 2, font_default, Color.Blue);
-                                        X += widt;
+                                        if (highl)
+                                        {
+                                            float widt = font_default.MeasureString(ttext);
+                                            DrawRectangle(X, Y, widt, font_default.Height, font_default, Color.Black);
+                                            RenderBaseText(X, Y, ttext, font_default, 5);
+                                            DrawRectangle(X, Y + ((float)font_default.Height * 4f / 5f), widt, 2, font_default, Color.Blue);
+                                            X += widt;
+                                        }
+                                        else
+                                        {
+                                            float widt = MeasureFancyText(ttext);
+                                            DrawColoredText(ttext, new Location(X, Y, 0), MaxY, transmod, extrashadow, bcolor,
+                                                color, bold, italic, underline, strike, overline, highlight, emphasis, ucolor, scolor, ocolor, hcolor, ecolor, super,
+                                                sub, flip, pseudo, jello, obfu, random, shadow, font);
+                                            X += widt;
+                                        }
                                         start = x + 1;
                                     }
                                     break;
@@ -592,7 +601,18 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                     }
                                     else
                                     {
-                                        ttext = sb.ToString().After("|");
+                                        string sbt = sb.ToString();
+                                        string sbl = sbt.ToLowerFast();
+                                        if (sbl.StartsWith("lang="))
+                                        {
+                                            string langinfo = sbl.After("lang=");
+                                            string[] subdats = langinfo.SplitFast('|');
+                                            ttext = Client.Central.Languages.GetText(subdats);
+                                        }
+                                        else
+                                        {
+                                            ttext = sbt.After("|");
+                                        }
                                     }
                                     float widt = font_default.MeasureString(ttext);
                                     tlinks.Add(new KeyValuePair<string, Rectangle2F>(sb.ToString().Before("|"), new Rectangle2F() { X = MeasWidth, Y = 0, Width = widt, Height = font_default.Height }));
