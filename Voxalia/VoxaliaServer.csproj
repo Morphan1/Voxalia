@@ -317,6 +317,7 @@
     <Compile Include="ServerGame\WorldSystem\RegionWeather.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionEntities.cs" />
     <Compile Include="ServerGame\WorldSystem\RegionPhysics.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleAlmostHellBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleFrozenLakeBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleColdMountainBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleDesertBiome.cs" />
@@ -329,6 +330,7 @@
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimplePlainsBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleRainForestBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleSnowBiome.cs" />
+    <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleStoneBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\Biomes\SimpleSwampBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleBiome.cs" />
     <Compile Include="ServerGame\WorldSystem\SimpleGenerator\SimpleBiomeGenerator.cs" />

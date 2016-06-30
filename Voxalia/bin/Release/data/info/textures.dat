@@ -37,6 +37,7 @@ HEAVY_GAS=blocks/liquid/heavy_gas
 LIQUID_SLIME=blocks/liquid/slime
 LEAVES_OAK_LIQUID=blocks/transparent/leaves_basic1
 COBBLESTONE=blocks/solid/natural/cobblestone$blocks/solid/natural/cobblestone_norm&black*black!black@black
+HELLSTONE=blocks/solid/natural/hellstone$blocks/solid/natural/stone_norm&black*black!black@black
 m8=blocks/solid/natural/grass_plains
 m7=blocks/solid/natural/wood_top
 m6=blocks/solid/special/db_ym,blocks/solid/special/db_exc%1.0$normal_def,blocks/solid/special/db_exc_normal%1.0&white,white*black,black!black,white@black,black%1.0

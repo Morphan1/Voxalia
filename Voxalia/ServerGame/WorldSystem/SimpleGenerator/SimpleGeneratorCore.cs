@@ -13,9 +13,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         public const float LocalHeightMapSize = 40;
 
         public const float SolidityMapSize = 100;
-
-        public const float SolidityTolerance = 0.8f;
-
+        
         public const float OreMapSize = 70;
 
         public const float OreTypeMapSize = 150;
@@ -65,11 +63,11 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             }
         }
 
-        public bool CanBeSolid(int seed3, int seed4, int seed5, int x, int y, int z)
+        public bool CanBeSolid(int seed3, int seed4, int seed5, int x, int y, int z, SimpleBiome biome)
         {
             float val = SimplexNoise.Generate((float)seed3 + (x / SolidityMapSize), (float)seed4 + (y / SolidityMapSize), (float)seed5 + (z / SolidityMapSize));
             //SysConsole.Output(OutputType.INFO, seed3 + "," + seed4 + "," + seed5 + " -> " + x + ", " + y + ", " + z + " -> " + val);
-            return val < SolidityTolerance;
+            return val < biome.AirDensity();
         }
 
         public float GetHeightQuick(int Seed, int seed2, float x, float y)
@@ -166,17 +164,25 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     Biome biomeOrig;
                     float hheight = GetHeight(Seed, seed2, seed3, seed4, seed5, cx, cy, (float)cpos.Z, out biomeOrig);
                     SimpleBiome biome = (SimpleBiome)biomeOrig;
+                    Biome biomeOrig2;
+                    float hheight2 = GetHeight(Seed, seed2, seed3, seed4, seed5, cx + 7, cy + 7, (float)cpos.Z + 7, out biomeOrig2);
+                    SimpleBiome biome2 = (SimpleBiome)biomeOrig2;
                     Material surf = biome.SurfaceBlock();
                     Material seco = biome.SecondLayerBlock();
                     Material basb = biome.BaseBlock();
                     Material water = biome.WaterMaterial();
+                    Material surf2 = biome2.SurfaceBlock();
+                    Material seco2 = biome2.SecondLayerBlock();
+                    Material basb2 = biome2.BaseBlock();
+                    // TODO: Make this possible?: hheight = (hheight + hheight2) / 2f;
                     int hheightint = (int)Math.Round(hheight);
                     float topf = hheight - (float)(chunk.WorldPosition.Z * Chunk.CHUNK_SIZE);
                     int top = (int)Math.Round(topf);
                     // General natural ground
                     for (int z = 0; z < Math.Min(top - 5, 30); z++)
                     {
-                        if (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z))
+                        bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
+                        if (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z, biome))
                         {
                             Material typex = GetMatType(seed2, seed3, seed4, seed5, cx, cy, (int)cpos.Z + z);
                             byte shape = 0;
@@ -184,25 +190,27 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             {
                                 shape = OreShapes[new Random((int)((hheight + cx + cy + cpos.Z + z) * 5)).Next(OreShapes.Length)];
                             }
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(typex == Material.AIR ? basb : typex), shape, 0, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(typex == Material.AIR ? (choice ? basb2 : basb) : typex), shape, 0, 0);
                         }
-                        else if ((CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z - 1) || (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z + 1))) &&
-                            (CanBeSolid(seed3, seed4, seed5, cx + 1, cy, (int)cpos.Z + z) || CanBeSolid(seed3, seed4, seed5, cx, cy + 1, (int)cpos.Z + z)
-                                || CanBeSolid(seed3, seed4, seed5, cx - 1, cy, (int)cpos.Z + z) || CanBeSolid(seed3, seed4, seed5, cx, cy - 1, (int)cpos.Z + z)))
+                        else if ((CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z - 1, biome) || (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z + 1, biome))) &&
+                            (CanBeSolid(seed3, seed4, seed5, cx + 1, cy, (int)cpos.Z + z, biome) || CanBeSolid(seed3, seed4, seed5, cx, cy + 1, (int)cpos.Z + z, biome)
+                                || CanBeSolid(seed3, seed4, seed5, cx - 1, cy, (int)cpos.Z + z, biome) || CanBeSolid(seed3, seed4, seed5, cx, cy - 1, (int)cpos.Z + z, biome)))
                         {
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)basb, 3, 0, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(choice ? basb2 : basb), 3, 0, 0);
                         }
                     }
                     for (int z = Math.Max(top - 5, 0); z < Math.Min(top - 1, 30); z++)
                     {
-                        if (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z))
+                        bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
+                        if (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z, biome))
                         {
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)seco, 0, 0, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(choice ? seco2 : seco), 0, 0, 0);
                         }
                     }
                     for (int z = Math.Max(top - 1, 0); z < Math.Min(top, 30); z++)
                     {
-                        chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0);
+                        bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
+                        chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(choice ? surf2 : surf), 0, 0, 0);
                     }
                     // Smooth terrain cap
                     Biome tempb;
@@ -216,6 +224,8 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     float topfym = heightfym - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
                     for (int z = Math.Max(top, 0); z < Math.Min(top + 1, 30); z++)
                     {
+                        bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
+                        ushort tsf = (ushort)(choice ? surf2 : surf);
                         if (topf - top > 0f)
                         {
                             bool xp = topfxp > topf && topfxp - Math.Round(topfxp) <= 0;
@@ -224,22 +234,22 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             bool ym = topfym > topf && topfym - Math.Round(topfym) <= 0;
                             if (xm && xp) { /* Fine as-is */ }
                             else if (ym && yp) { /* Fine as-is */ }
-                            else if (yp && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
-                            else if (yp && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
-                            else if (xp && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
-                            else if (xp && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
-                            else if (ym && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
-                            else if (ym && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
-                            else if (xm && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
-                            else if (xm && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 0, 0, 0); } // TODO: Shape
-                            else if (xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 80, 0, 0); }
-                            else if (xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 81, 0, 0); }
-                            else if (yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 82, 0, 0); }
-                            else if (ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 83, 0, 0); }
-                            else { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); }
+                            else if (yp && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 0, 0, 0); } // TODO: Shape
+                            else if (yp && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 0, 0, 0); } // TODO: Shape
+                            else if (xp && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 0, 0, 0); } // TODO: Shape
+                            else if (xp && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 0, 0, 0); } // TODO: Shape
+                            else if (ym && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 0, 0, 0); } // TODO: Shape
+                            else if (ym && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 0, 0, 0); } // TODO: Shape
+                            else if (xm && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 0, 0, 0); } // TODO: Shape
+                            else if (xm && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 0, 0, 0); } // TODO: Shape
+                            else if (xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 80, 0, 0); }
+                            else if (xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 81, 0, 0); }
+                            else if (yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 82, 0, 0); }
+                            else if (ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 83, 0, 0); }
+                            else { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 3, 0, 0); }
                             if (z > 0)
                             {
-                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z - 1)] = new BlockInternal((ushort)seco, 0, 0, 0);
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, z - 1)] = new BlockInternal((ushort)(choice ? seco2 : seco), 0, 0, 0);
                             }
                         }
                         else
@@ -250,18 +260,18 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             bool ym = topfym > topf && topfym - Math.Round(topfym) > 0;
                             if (xm && xp) { /* Fine as-is */ }
                             else if (ym && yp) { /* Fine as-is */ }
-                            else if (yp && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
-                            else if (yp && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
-                            else if (xp && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
-                            else if (xp && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
-                            else if (ym && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
-                            else if (ym && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
-                            else if (xm && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
-                            else if (xm && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 3, 0, 0); } // TODO: Shape
-                            else if (xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 73, 0, 0); }
-                            else if (xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 72, 0, 0); }
-                            else if (yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 74, 0, 0); }
-                            else if (ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)surf, 75, 0, 0); }
+                            else if (yp && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 3, 0, 0); } // TODO: Shape
+                            else if (yp && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 3, 0, 0); } // TODO: Shape
+                            else if (xp && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 3, 0, 0); } // TODO: Shape
+                            else if (xp && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 3, 0, 0); } // TODO: Shape
+                            else if (ym && xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 3, 0, 0); } // TODO: Shape
+                            else if (ym && xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 3, 0, 0); } // TODO: Shape
+                            else if (xm && ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 3, 0, 0); } // TODO: Shape
+                            else if (xm && yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 3, 0, 0); } // TODO: Shape
+                            else if (xp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 73, 0, 0); }
+                            else if (xm) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 72, 0, 0); }
+                            else if (yp) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 74, 0, 0); }
+                            else if (ym) { chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(tsf, 75, 0, 0); }
                             else { /* Fine as-is */ }
                         }
                     }
@@ -269,7 +279,8 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     int level = 0 - (int)(chunk.WorldPosition.Z * Chunk.CHUNK_SIZE);
                     if (hheightint <= 0)
                     {
-                        ushort sandmat = (ushort)biome.SandMaterial();
+                        bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z) / 10f) >= 0.5f;
+                        ushort sandmat = (ushort)(choice ? biome2 : biome).SandMaterial();
                         for (int z = Math.Max(top, 0); z < Math.Min(top + 1, Chunk.CHUNK_SIZE); z++)
                         {
                             chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal(sandmat, 0, 0, 0);
@@ -285,11 +296,13 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         {
                             if (Math.Round(heightfxp) <= 0 || Math.Round(heightfxm) <= 0 || Math.Round(heightfyp) <= 0 || Math.Round(heightfym) <= 0)
                             {
-                                chunk.BlocksInternal[chunk.BlockIndex(x, y, level)] = new BlockInternal((ushort)biome.SandMaterial(), 0, 0, 0);
+                                bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z) / 10f) >= 0.5f;
+                                chunk.BlocksInternal[chunk.BlockIndex(x, y, level)] = new BlockInternal((ushort)(choice ? biome2 : biome).SandMaterial(), 0, 0, 0);
                             }
                         }
                     }
                     // Special case: trees.
+                    // TODO: Separate entity generation?
                     if (hheight > 0 && top >= 0 && top < Chunk.CHUNK_SIZE)
                     {
                         Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000)); // TODO: Improve!

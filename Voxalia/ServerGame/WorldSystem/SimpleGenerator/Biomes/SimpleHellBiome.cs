@@ -11,7 +11,12 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator.Biomes
 
         public override Material BaseBlock()
         {
-            return base.BaseBlock(); // TODO: Hell stone!
+            return Material.HELLSTONE;
+        }
+
+        public override float AirDensity()
+        {
+            return 0.5f;
         }
     }
 }

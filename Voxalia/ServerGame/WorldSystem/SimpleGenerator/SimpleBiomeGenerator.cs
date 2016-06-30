@@ -44,79 +44,82 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         SimpleFrozenLakeBiome FrozenLake = new SimpleFrozenLakeBiome();
 
         SimpleHellBiome Hell = new SimpleHellBiome();
-        
+
+        SimpleStoneBiome Stone = new SimpleStoneBiome();
+
         public override Biome BiomeFor(int seed2, int seed3, int seed4, float x, float y, float z, float height)
         {
-            if (z > -120)
+            if (z < -300)
             {
-                float temp = GetTemperature(seed2, seed3, x, y);
-                float down = GetDownfallRate(seed3, seed4, x, y);
-                if (height > 0f && height < 20f)
+                return Hell;
+            }
+            if (z < 90)
+            {
+                return Stone;
+            }
+            float temp = GetTemperature(seed2, seed3, x, y);
+            float down = GetDownfallRate(seed3, seed4, x, y);
+            if (height > 0f && height < 20f)
+            {
+                if (down >= 0.8f && temp >= 80f)
                 {
-                    if (down >= 0.8f && temp >= 80f)
-                    {
-                        return RainForest;
-                    }
-                    if (down >= 0.5f && down < 0.8f && temp >= 60f)
-                    {
-                        return Forest;
-                    }
-                    else if (down >= 0.3f && down < 0.5f && temp >= 90f)
-                    {
-                        return Swamp;
-                    }
-                    if (down >= 0.3f && down < 0.5f && temp >= 50f && temp < 90f)
-                    {
-                        return Plains;
-                    }
-                    if (down < 0.3f && temp >= 50f)
-                    {
-                        return Desert;
-                    }
-                    if (temp >= 32f)
-                    {
-                        return Plains;
-                    }
-                    if (down > 0.5f)
-                    {
-                        return Snow;
-                    }
-                    else
-                    {
-                        return Icy;
-                    }
+                    return RainForest;
                 }
-                else if (height >= 20 && height < 40)
+                if (down >= 0.5f && down < 0.8f && temp >= 60f)
                 {
-                    return LightForestHill;
-                    // TODO: Snow hill, etc?
+                    return Forest;
                 }
-                else if (height >= 40)
+                else if (down >= 0.3f && down < 0.5f && temp >= 90f)
                 {
-                    if (temp > 70)
-                    {
-                        return Mountain;
-                    }
-                    else
-                    {
-                        return ColdMountain;
-                    }
+                    return Swamp;
+                }
+                if (down >= 0.3f && down < 0.5f && temp >= 50f && temp < 90f)
+                {
+                    return Plains;
+                }
+                if (down < 0.3f && temp >= 50f)
+                {
+                    return Desert;
+                }
+                if (temp >= 32f)
+                {
+                    return Plains;
+                }
+                if (down > 0.5f)
+                {
+                    return Snow;
                 }
                 else
                 {
-                    if (temp > 32)
-                    {
-                        return Lake;
-                    }
-                    else
-                    {
-                        return FrozenLake;
-                    }
+                    return Icy;
+                }
+            }
+            else if (height >= 20 && height < 40)
+            {
+                return LightForestHill;
+                // TODO: Snow hill, etc?
+            }
+            else if (height >= 40)
+            {
+                if (temp > 70)
+                {
+                    return Mountain;
+                }
+                else
+                {
+                    return ColdMountain;
                 }
             }
             else
             {
-                return Hell;
+                if (temp > 32)
+                {
+                    return Lake;
+                }
+                else
+                {
+                    return FrozenLake;
+                }
             }
         }
     }

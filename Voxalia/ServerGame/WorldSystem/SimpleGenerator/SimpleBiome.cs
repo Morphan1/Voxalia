@@ -37,5 +37,10 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         {
             return Material.SAND;
         }
+
+        public virtual float AirDensity()
+        {
+            return 0.8f;
+        }
     }
 }

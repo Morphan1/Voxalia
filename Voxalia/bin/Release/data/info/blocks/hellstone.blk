@@ -1,0 +1,6 @@
+Name=Hellstone
+SpeedMod=1.1
+Sound=STONE
+Hardness=20
+BreakTime=2
+Breaker=PICKAXE
