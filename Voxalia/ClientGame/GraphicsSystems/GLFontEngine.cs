@@ -269,12 +269,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                     if (X + nwidth >= Engine.bwidth)
                     {
-                        Y += Height + 4;
-                        X = 0;
+                        Y += Height + 8;
+                        X = 6;
                     }
                     gfx.DrawString(chr, font, brush, new PointF(X, Y), sf);
                     CharacterLocations.Add(new RectangleF(X, Y, nwidth, Height));
-                    X += nwidth + 4f;
+                    X += nwidth + 8f;
                 }
             }
             BitmapData data = bmp.LockBits(new Rectangle(0, 0, Engine.bwidth, Engine.bheight), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -284,6 +284,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             cZ = cZ % 48;
             // TODO: Handle > 24 fonts more cleanly
             bmp.UnlockBits(data);
+            bmp.Dispose();
         }
 
         /// <summary>
