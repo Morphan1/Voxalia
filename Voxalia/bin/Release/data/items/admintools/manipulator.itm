@@ -1,7 +1,5 @@
 type: manipulator
 icon: items/tools/admin/manipulator
-display: ^[LANG=voxalia|items.admintools.manipulator.display]
-description: ^[LANG=voxalia|items.admintools.manipulator.description]
 color: 1,1,1
 model: items/tools/admin/manipulator
 bound: true

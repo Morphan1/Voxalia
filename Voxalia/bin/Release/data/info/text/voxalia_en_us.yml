@@ -20,12 +20,10 @@ common:
 
 # Text used by /commands in-game.
 commands:
-    # Those used by the server.
-    server:
     # Commands a player runs on the server.
+    # Note that server/client commands are handled by FreneticScript, not this language engine currently.
     player:
-    # Those used by the client.
-    client:
+    
 
 # Text used by in game items.
 items:

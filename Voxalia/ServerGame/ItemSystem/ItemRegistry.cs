@@ -52,7 +52,8 @@ namespace Voxalia.ServerGame.ItemSystem
 
         private ItemStack Load(string name)
         {
-            string fname = "items/" + name + ".itm";
+            string tname = name.ToLowerFast();
+            string fname = "items/" + tname + ".itm";
             if (!Program.Files.Exists(fname))
             {
                 SysConsole.Output(OutputType.WARNING, "Tried to load non-existent item: " + name);
@@ -132,6 +133,14 @@ namespace Voxalia.ServerGame.ItemSystem
                             }
                             break;
                     }
+                }
+                if (string.IsNullOrEmpty(res_display))
+                {
+                    res_display = "^[lang=voxalia|items." + tname.Replace("/", ".") + ".display]";
+                }
+                if (string.IsNullOrEmpty(res_description))
+                {
+                    res_description = "^[lang=voxalia|items." + tname.Replace("/", ".") + ".description]";
                 }
                 ItemStack it = new ItemStack(res_type, res_subtype, TheServer, 1, res_icon, res_display, res_description, ColorTag.For(res_color).Internal, res_model, res_bound.ToLower() == "true")
                 {
