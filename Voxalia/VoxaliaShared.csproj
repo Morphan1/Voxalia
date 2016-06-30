@@ -80,6 +80,7 @@
     <Compile Include="PriorityQueue\FastPriorityQueueNode.cs" />
     <Compile Include="PriorityQueue\IPriorityQueue.cs" />
     <Compile Include="PriorityQueue\SimplePriorityQueue.cs" />
+    <Compile Include="Shared\BFrustum.cs" />
     <Compile Include="Shared\BlockInternal.cs" />
     <Compile Include="Shared\Collision\FlyingDiscConstraint.cs" />
     <Compile Include="Shared\Collision\MCCMCCPairHandler.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Shared\Material.cs" />
     <Compile Include="Shared\ModelHandler.cs" />
     <Compile Include="Shared\PingInfo.cs" />
+    <Compile Include="Shared\Plane.cs" />
     <Compile Include="Shared\Program.cs" />
     <Compile Include="Shared\Scheduler.cs" />
     <Compile Include="Shared\SimplexNoise.cs" />

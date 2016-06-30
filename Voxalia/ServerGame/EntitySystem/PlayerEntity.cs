@@ -172,6 +172,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public Location AttemptedDirectionChange = Location.Zero;
 
         public Location LoadRelPos;
+        public Location LoadRelDir;
         
         /// <summary>
         /// Kicks the player from the server with a specified message.
@@ -488,8 +489,10 @@ namespace Voxalia.ServerGame.EntitySystem
             WasItemRighting = ItemRight;
             Location pos = LoadRelPos;
             Vector3i cpos = TheRegion.ChunkLocFor(pos);
+            ChunkMarchAndSend();
             if (cpos != pChunkLoc)
             {
+                /*
                 // TODO: Better system -> async?
                 TrySet(pos, 1, 1, 0, 1, false);
                 TrySet(pos, ViewRadiusInChunks / 2, ViewRadiusInChunks / 2, 0, 1, false);
@@ -497,6 +500,8 @@ namespace Voxalia.ServerGame.EntitySystem
                 TrySet(pos, ViewRadiusInChunks + 1, ViewRadiusInChunks, 15, 2, true);
                 TrySet(pos, ViewRadiusInChunks + ViewRadExtra2, ViewRadiusInChunks + ViewRadExtra2Height, 30, 2, true);
                 TrySet(pos, ViewRadiusInChunks + ViewRadExtra5, ViewRadiusInChunks + ViewRadExtra5Height, 60, 5, true);
+                */
+                /*
                 if (!loadedInitially)
                 {
                     loadedInitially = true;
@@ -507,6 +512,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
                 }
+                */
                 foreach (ChunkAwarenessInfo ch in ChunksAwareOf.Values)
                 {
                     if (!ShouldLoadChunk(ch.ChunkPos))
@@ -581,6 +587,226 @@ namespace Voxalia.ServerGame.EntitySystem
             if (!CanReach(GetPosition()))
             {
                 Teleport(posClamp(GetPosition()));
+            }
+        }
+
+        static Vector3i[] MoveDirs = new Vector3i[] { new Vector3i(-1, 0, 0), new Vector3i(1, 0, 0),
+            new Vector3i(0, -1, 0), new Vector3i(0, 1, 0), new Vector3i(0, 0, -1), new Vector3i(0, 0, 1) };
+
+        const float Max_FOV = 90f;
+
+        void ChunkMarchAndSend()
+        {
+            if (LoadRelPos.IsNaN() || LoadRelDir.IsNaN() || LoadRelDir.LengthSquared() < 0.1f)
+            {
+                return;
+            }
+            Matrix proj = Matrix.CreatePerspectiveFieldOfViewRH(Max_FOV * (float)Utilities.PI180, 1, 0.5f, 1000f);
+            Matrix view = Matrix.CreateLookAtRH((LoadRelPos - LoadRelDir * 8).ToBVector(), (LoadRelPos + LoadRelDir * 8).ToBVector(), new Vector3(0, 0, 1));
+            Matrix combined = view * proj;
+            BFrustum bfs = new BFrustum(combined);
+            Vector3i start = TheRegion.ChunkLocFor(GetEyePosition());
+            HashSet<Vector3i> seen = new HashSet<Vector3i>();
+            Queue<Vector3i> toSee = new Queue<Vector3i>();
+            toSee.Enqueue(start);
+            while (toSee.Count > 0)
+            {
+                Vector3i cur = toSee.Dequeue();
+                seen.Add(cur);
+                if (Math.Abs(cur.X - start.X) > (ViewRadiusInChunks + ViewRadExtra5)
+                    || Math.Abs(cur.Y - start.Y) > (ViewRadiusInChunks + ViewRadExtra5)
+                    || Math.Abs(cur.Z - start.Z) > (ViewRadiusInChunks + ViewRadExtra5Height))
+                {
+                    continue;
+                }
+                if (Math.Abs(cur.X - start.X) <= ViewRadiusInChunks
+                    || Math.Abs(cur.Y - start.Y) <= ViewRadiusInChunks
+                    || Math.Abs(cur.Z - start.Z) <= ViewRadiusInChunks)
+                {
+                    TryChunk(cur, 0, 1);
+                }
+                else if (Math.Abs(cur.X - start.X) <= (ViewRadiusInChunks + ViewRadExtra2)
+                    || Math.Abs(cur.Y - start.Y) <= (ViewRadiusInChunks + ViewRadExtra2)
+                    || Math.Abs(cur.Z - start.Z) <= (ViewRadiusInChunks + ViewRadExtra2Height))
+                {
+                    TryChunk(cur, 10, 2);
+                }
+                else
+                {
+                    TryChunk(cur, 25, 5);
+                }
+                for (int i = 0; i < MoveDirs.Length; i++)
+                {
+                    Vector3i t = cur + MoveDirs[i];
+                    if (!seen.Contains(t) && !toSee.Contains(t))
+                    {
+                        //toSee.Enqueue(t);
+                        for (int j = 0; j < MoveDirs.Length; j++)
+                        {
+                            Vector3i nt = cur + MoveDirs[j];
+                            if (!seen.Contains(nt) && !toSee.Contains(nt))
+                            {
+                                bool val = false;
+                                Chunk ch = TheRegion.GetChunk(t);
+                                if (ch == null)
+                                {
+                                    val = true;
+                                }
+                                // TODO: Oh, come on!
+                                else if (MoveDirs[i].X == -1)
+                                {
+                                    if (MoveDirs[j].X == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.XP_XM];
+                                    }
+                                    else if (MoveDirs[j].Y == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.XP_YM];
+                                    }
+                                    else if (MoveDirs[j].Y == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.XP_YP];
+                                    }
+                                    else if (MoveDirs[j].Z == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZM_XP];
+                                    }
+                                    else if (MoveDirs[j].Z == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZP_XP];
+                                    }
+                                }
+                                else if (MoveDirs[i].X == 1)
+                                {
+                                    if (MoveDirs[j].X == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.XP_XM];
+                                    }
+                                    else if (MoveDirs[j].Y == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.XM_YM];
+                                    }
+                                    else if (MoveDirs[j].Y == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.XM_YP];
+                                    }
+                                    else if (MoveDirs[j].Z == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZM_XM];
+                                    }
+                                    else if (MoveDirs[j].Z == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZP_XM];
+                                    }
+                                }
+                                else if (MoveDirs[i].Y == -1)
+                                {
+                                    if (MoveDirs[j].Y == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.YP_YM];
+                                    }
+                                    else if (MoveDirs[j].X == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.XM_YP];
+                                    }
+                                    else if (MoveDirs[j].X == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.XP_YP];
+                                    }
+                                    else if (MoveDirs[j].Z == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZM_YP];
+                                    }
+                                    else if (MoveDirs[j].Z == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZP_YP];
+                                    }
+                                }
+                                else if (MoveDirs[i].Y == 1)
+                                {
+                                    if (MoveDirs[j].Y == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.YP_YM];
+                                    }
+                                    else if (MoveDirs[j].X == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.XM_YP];
+                                    }
+                                    else if (MoveDirs[j].X == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.XP_YP];
+                                    }
+                                    else if (MoveDirs[j].Z == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZM_YP];
+                                    }
+                                    else if (MoveDirs[j].Z == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZP_YP];
+                                    }
+                                }
+                                else if (MoveDirs[i].Z == -1)
+                                {
+                                    if (MoveDirs[j].Z == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZP_ZM];
+                                    }
+                                    else if (MoveDirs[j].X == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZP_XM];
+                                    }
+                                    else if (MoveDirs[j].X == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZP_XP];
+                                    }
+                                    else if (MoveDirs[j].Y == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZP_YM];
+                                    }
+                                    else if (MoveDirs[j].Y == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZP_YP];
+                                    }
+                                }
+                                else if (MoveDirs[i].Z == 1)
+                                {
+                                    if (MoveDirs[j].Z == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZP_ZM];
+                                    }
+                                    else if (MoveDirs[j].X == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZM_XM];
+                                    }
+                                    else if (MoveDirs[j].X == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZM_XP];
+                                    }
+                                    else if (MoveDirs[j].Y == -1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZM_YM];
+                                    }
+                                    else if (MoveDirs[j].Y == 1)
+                                    {
+                                        val = ch.Reachability[(int)ChunkReachability.ZM_YP];
+                                    }
+                                }
+                                if (val)
+                                {
+                                    Location min = nt.ToLocation() * Chunk.CHUNK_SIZE;
+                                    if (bfs.ContainsBox(min, min + new Location(Chunk.CHUNK_SIZE)))
+                                    {
+                                        toSee.Enqueue(nt);
+                                    }
+                                    else
+                                    {
+                                        seen.Add(nt);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -759,8 +985,9 @@ namespace Voxalia.ServerGame.EntitySystem
 
         Vector3i pChunkLoc = new Vector3i(-100000, -100000, -100000);
         
-        bool loadedInitially = false;
+       // bool loadedInitially = false;
 
+        /*
         public void TrySet(Location pos, int VIEWRAD_HOR, int VIEWRAD_VERT, float atime, int posMult, bool bg)
         {
             for (int x = -VIEWRAD_HOR; x <= VIEWRAD_HOR; x++)
@@ -805,15 +1032,15 @@ namespace Voxalia.ServerGame.EntitySystem
                     }
                 }
             }
-        }
+        }*/
 
-        public void TryChunk(Location worldPos, float atime, int posMult, Chunk chi = null) // TODO: Efficiency?
+        public void TryChunk(Vector3i cworldPos, float atime, int posMult, Chunk chi = null) // TODO: Efficiency?
         {
             if (pkick)
             {
                 return;
             }
-            Vector3i cworldPos = TheRegion.ChunkLocFor(worldPos);
+            //Vector3i cworldPos = TheRegion.ChunkLocFor(worldPos);
             if (!ChunksAwareOf.ContainsKey(cworldPos) || ChunksAwareOf[cworldPos].LOD > posMult) // TODO: Efficiency - TryGetValue?
             { // TODO: Or ATime < awareOf.remTime?
                 if (ChunksAwareOf.ContainsKey(cworldPos)) // TODO: Efficiency - TryGetValue?
@@ -833,7 +1060,6 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 else
                 {
-                    
                     SyncScheduleItem item = TheServer.Schedule.ScheduleSyncTask(() =>
                     {
                         if (!pkick)
@@ -861,6 +1087,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 base.EndTick();
                 LoadRelPos = lPos;
+                LoadRelDir = ForwardVector();
             }
             else
             {
@@ -899,6 +1126,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (UpdateLoadPos)
             {
                 LoadRelPos = l;
+                LoadRelDir = ForwardVector();
             }
             base.SetPosition(l);
         }

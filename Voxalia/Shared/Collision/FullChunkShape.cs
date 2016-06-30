@@ -1,9 +1,10 @@
-﻿using BEPUphysics.CollisionShapes;
+﻿using System;
+using System.Collections.Generic;
+using BEPUphysics.CollisionShapes;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
-using System;
 using BEPUutilities.DataStructures;
 
 namespace Voxalia.Shared.Collision
@@ -22,6 +23,116 @@ namespace Voxalia.Shared.Collision
         public int BlockIndex(int x, int y, int z)
         {
             return z * CHUNK_SIZE * CHUNK_SIZE + y * CHUNK_SIZE + x;
+        }
+
+        public static Vector3i[] ReachStarts = new Vector3i[]
+        {
+            new Vector3i(0, 0, 1),
+            new Vector3i(0, 0, 1),
+            new Vector3i(0, 0, 1),
+            new Vector3i(0, 0, 1),
+            new Vector3i(0, 0, 1),
+            new Vector3i(1, 0, 0),
+            new Vector3i(1, 0, 0),
+            new Vector3i(1, 0, 0),
+            new Vector3i(0, 1, 0)
+        };
+        public static Vector3i[] ReachEnds = new Vector3i[]
+        {
+            new Vector3i(0, 0, -1),
+            new Vector3i(-1, 0, 0),
+            new Vector3i(1, 0, 0),
+            new Vector3i(0, 1, 0),
+            new Vector3i(0, -1, 0),
+            new Vector3i(-1, 0, 0),
+            new Vector3i(0, 1, 0),
+            new Vector3i(0, -1, 0),
+            new Vector3i(0, -1, 0)
+        };
+
+        static Vector3i[] MoveDirs = new Vector3i[] { new Vector3i(-1, 0, 0), new Vector3i(1, 0, 0),
+            new Vector3i(0, -1, 0), new Vector3i(0, 1, 0), new Vector3i(0, 0, -1), new Vector3i(0, 0, 1) };
+
+        public bool CanReach(Vector3i snorm, Vector3i enorm)
+        {
+            // Probably a better way to do this
+            Vector3i low;
+            Vector3i high;
+            if (snorm.X == -1)
+            {
+                low = new Vector3i(0, 0, 0);
+                high = new Vector3i(0, CHUNK_SIZE, CHUNK_SIZE);
+            }
+            else if (snorm.X == 1)
+            {
+                low = new Vector3i(CHUNK_SIZE, 0, 0);
+                high = new Vector3i(CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE);
+            }
+            else if (snorm.Y == -1)
+            {
+                low = new Vector3i(0, 0, 0);
+                high = new Vector3i(CHUNK_SIZE, 0, CHUNK_SIZE);
+            }
+            else if (snorm.Y == 1)
+            {
+                low = new Vector3i(0, CHUNK_SIZE, 0);
+                high = new Vector3i(CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE);
+            }
+            else if (snorm.Z == -1)
+            {
+                low = new Vector3i(0, 0, 0);
+                high = new Vector3i(CHUNK_SIZE, CHUNK_SIZE, 0);
+            }
+            else
+            {
+                low = new Vector3i(0, 0, CHUNK_SIZE);
+                high = new Vector3i(CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE);
+            }
+            for (int x = low.X; x <= high.X; x++)
+            {
+                for (int y = low.Y; y <= high.Y; y++)
+                {
+                    for (int z = low.Z; z <= high.Z; z++)
+                    {
+                        if (PointCanReach(new Vector3i(x, y, z), enorm))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool PointCanReach(Vector3i p, Vector3i enorm)
+        {
+            HashSet<Vector3i> traced = new HashSet<Vector3i>();
+            Queue<Vector3i> toTrace = new Queue<Vector3i>();
+            toTrace.Enqueue(p);
+            while (toTrace.Count > 0)
+            {
+                Vector3i tp = toTrace.Dequeue();
+                traced.Add(tp);
+                for (int i = 0; i < MoveDirs.Length; i++)
+                {
+                    Vector3i np = tp + MoveDirs[i];
+                    if (np.X < 0 || np.Y < 0 || np.Z < 0 || np.X >= CHUNK_SIZE || np.Y >= CHUNK_SIZE || np.Z >= CHUNK_SIZE)
+                    {
+                        if ((np.X < 0 && enorm.X == -1) || (np.X >= CHUNK_SIZE && enorm.X == 1)
+                            || (np.Y < 0 && enorm.Y == -1) || (np.Y >= CHUNK_SIZE && enorm.Y == 1)
+                            || (np.Y < 0 && enorm.Y == -1) || (np.Y >= CHUNK_SIZE && enorm.Y == 1))
+                        {
+                            return true;
+                        }
+                        continue;
+                    }
+                    if (!traced.Contains(np) && !Blocks[BlockIndex(np.X, np.Y, np.Z)].IsOpaque())
+                    {
+                        toTrace.Enqueue(np);
+                    }
+                }
+            }
+            return false;
         }
 
         public ConvexShape ShapeAt(int x, int y, int z, out Vector3 offs)

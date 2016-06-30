@@ -138,7 +138,10 @@ namespace Voxalia.ServerGame.WorldSystem
             FCO.CollisionRules.Group = CollisionUtil.WorldSolid;
             OwningRegion.AddChunk(FCO);
             OwningRegion.AddCloudsToNewChunk(this);
+            chunkAccessDetection = OwningRegion.TheServer.Schedule.StartASyncTask(DetectChunkAccess);
         }
+
+        public ASyncScheduleItem chunkAccessDetection = null;
 
         public Object EditSessionLock = new Object();
         
@@ -265,6 +268,20 @@ namespace Voxalia.ServerGame.WorldSystem
                     callback.Invoke();
                 }
             });
+        }
+
+        public bool[] Reachability = new bool[(int)ChunkReachability.COUNT] { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
+
+        public void DetectChunkAccess()
+        {
+            for (int i = 0; i < (int)ChunkReachability.COUNT; i++)
+            {
+                // TODO: REUSE DATA WHERE POSSIBLE? Should only trace once from each direction!
+                // TODO: REIMPLEMENT BUT SPEEDIER!
+                // TODO: SAVE THIS DATA TO FILE TO REDUCE NEED TO CALCULATE SO MUCH!
+                // TODO: SEND THIS DATA TO THE CLIENT FOR THEM TO USE!
+                //Reachability[i] = FCO.ChunkShape.CanReach(FullChunkShape.ReachStarts[i], FullChunkShape.ReachEnds[i]);
+            }
         }
 
         public byte[] LODBytes(int lod, bool canReturnNull = false)

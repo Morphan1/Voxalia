@@ -104,6 +104,26 @@ namespace Voxalia.Shared
         ITEMUP = 128,
         ITEMDOWN = 256
     }
+    
+    public enum ChunkReachability : byte
+    {
+        ZP_ZM = 0,
+        ZP_XP = 1,
+        ZP_YP = 2,
+        ZP_XM = 3,
+        ZP_YM = 4,
+        ZM_XP = 5,
+        ZM_YP = 6,
+        ZM_XM = 7,
+        ZM_YM = 8,
+        XP_YP = 9,
+        XP_YM = 10,
+        XP_XM = 11,
+        XM_YP = 12,
+        XM_YM = 13,
+        YP_YM = 14,
+        COUNT = 15
+    }
 
     public enum ClientToServerPacket : byte
     {

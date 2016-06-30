@@ -28,50 +28,9 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             switch ((StatusOperation)data[0])
             {
-                case StatusOperation.CHUNK_LOAD:
-                    if (data[1] == 1)
-                    {
-                        TheClient.Schedule.StartASyncTask(() =>
-                        {
-                            int c = 1;
-                            while (c > 0)
-                            {
-                                TheClient.Schedule.ScheduleSyncTask(() =>
-                                {
-                                    lock (TheClient.TheChunkWaitingScreen.WaitLock)
-                                    {
-                                        TheClient.TheChunkWaitingScreen.ChunksStillWaiting = ChunksStillLoading();
-                                    }
-                                });
-                                Thread.Sleep(16);
-                                lock (TheClient.TheChunkWaitingScreen.WaitLock)
-                                {
-                                    c = TheClient.TheChunkWaitingScreen.ChunksStillWaiting;
-                                }
-                            }
-                            TheClient.Schedule.ScheduleSyncTask(() =>
-                            {
-                                TheClient.ShowGame();
-                            });
-                        });
-                    }
-                    else if (data[1] == 0)
-                    {
-                        TheClient.ShowChunkWaiting();
-                    }
-                    else if (data[1] == 2)
-                    {
-                        TheClient.ProcessChunks();
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                    break;
                 default:
                     return false;
             }
-            return true;
         }
     }
 }

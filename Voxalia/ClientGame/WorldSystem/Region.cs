@@ -411,10 +411,6 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void UpdateChunk(Chunk ch)
         {
-            if (TheClient.IsWaitingOnChunks())
-            {
-                return;
-            }
             TheClient.Schedule.StartASyncTask(() =>
             {
                 ch.CalculateLighting();

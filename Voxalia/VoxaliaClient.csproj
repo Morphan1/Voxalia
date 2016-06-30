@@ -100,7 +100,6 @@
     <Compile Include="ClientGame\AudioSystem\OpusWrapper\OpusEncoder.cs" />
     <Compile Include="ClientGame\AudioSystem\SoundEffect.cs" />
     <Compile Include="ClientGame\AudioSystem\SoundEngine.cs" />
-    <Compile Include="ClientGame\ClientMainSystem\ChunkWaitingScreen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientBase.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientInventory.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientPhysics.cs" />

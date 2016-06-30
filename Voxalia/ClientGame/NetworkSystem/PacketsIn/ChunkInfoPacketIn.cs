@@ -23,14 +23,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 }
                 return true;
             }
-            if (TheClient.IsWaitingOnChunks())
-            {
-                ParseData(data);
-            }
-            else
-            {
-                TheClient.Schedule.StartASyncTask(() => ParseData(data));
-            }
+            TheClient.Schedule.StartASyncTask(() => ParseData(data));
             return true;
         }
 
@@ -65,14 +58,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 chk.PROCESSED = false;
                 TheClient.Schedule.StartASyncTask(() => parsechunk2(chk, data_orig, posMult));
             };
-            if (TheClient.IsWaitingOnChunks())
-            {
-                act.Invoke();
-            }
-            else
-            {
-                TheClient.Schedule.ScheduleSyncTask(act);
-            }
+            TheClient.Schedule.ScheduleSyncTask(act);
         }
 
         void parsechunk2(Chunk chk, byte[] data_orig, int posMult)

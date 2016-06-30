@@ -105,6 +105,8 @@ namespace Voxalia.ServerGame.WorldSystem
                 BlockInternal bi = new BlockInternal((ushort)mat, dat, paint, locdat) { Damage = damage };
                 ch.SetBlockAt(x, y, z, bi);
                 ch.LastEdited = GlobalTickTime;
+                ch.chunkAccessDetection = ch.chunkAccessDetection.ReplaceOrFollowWith(TheServer.Schedule.StartASyncTask(ch.DetectChunkAccess));
+                // TODO: See if this makes any new chunks visible!
                 if (broadcast)
                 {
                     // TODO: Send per-person based on chunk awareness details
@@ -112,7 +114,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
             }
         }
-
+        
         public Location[] FellLocs = new Location[] { new Location(0, 0, 1), new Location(1, 0, 0), new Location(0, 1, 0), new Location(-1, 0, 0), new Location(0, -1, 0) };
 
         public void BreakNaturally(Location pos, bool regentrans = true)

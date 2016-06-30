@@ -527,7 +527,7 @@ namespace Voxalia.ClientGame.NetworkSystem
             {
                 if (!pLive)
                 {
-                    TheClient.Schedule.ScheduleSyncTask(() => { TheClient.ShowChunkWaiting(); });
+                    TheClient.Schedule.ScheduleSyncTask(() => { TheClient.ShowGame(); });
                     pLive = true;
                 }
                 TickSocket(ConnectionSocket, ref recd, ref recdsofar);

@@ -299,11 +299,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Setting up screens...");
             TheMainMenuScreen = new MainMenuScreen() { TheClient = this };
             TheGameScreen = new GameScreen() { TheClient = this };
-            TheChunkWaitingScreen = new ChunkWaitingScreen() { TheClient = this };
             TheSingleplayerMenuScreen = new SingleplayerMenuScreen() { TheClient = this };
             TheMainMenuScreen.Init();
             TheGameScreen.Init();
-            TheChunkWaitingScreen.Init();
             TheSingleplayerMenuScreen.Init();
             ShowMainMenu();
             SysConsole.Output(OutputType.INIT, "Trying to grab RawGamePad...");
@@ -332,31 +330,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             Window.VSync = CVars.r_vsync.ValueB ? VSyncMode.Adaptive : VSyncMode.Off;
         }
-        
+
         /// <summary>
         /// Shows the 'game' screen to the client - delays until chunks are loaded.
         /// </summary>
         public void ShowGame()
         {
-            if (IsWaitingOnChunks() && TheChunkWaitingScreen.LACS == null)
-            {
-                TheChunkWaitingScreen.LACS = new LoadAllChunksSystem(TheRegion);
-                TheChunkWaitingScreen.LACS.LoadAll(() =>
-                {
-                    Schedule.ScheduleSyncTask(() =>
-                    {
-                        // TODO: handle cancel-button cancelling neatly
-                        CScreen = TheGameScreen;
-                        CScreen.SwitchTo();
-                        TheChunkWaitingScreen.LACS = null;
-                    });
-                });
-            }
-            else
-            {
-                CScreen = TheGameScreen;
-                CScreen.SwitchTo();
-            }
+            CScreen = TheGameScreen;
+            CScreen.SwitchTo();
         }
         
         /// <summary>
@@ -378,15 +359,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
         }
 
         /// <summary>
-        /// Shows the 'waiting on chunks' menu screen to the client.
-        /// </summary>
-        public void ShowChunkWaiting()
-        {
-            CScreen = TheChunkWaitingScreen;
-            CScreen.SwitchTo();
-        }
-
-        /// <summary>
         /// For use by ProcessChunks() alone.
         /// </summary>
         byte pMode = 0;
@@ -399,7 +371,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// </summary>
         public void ProcessChunks()
         {
-            if (pMode != 0 || IsWaitingOnChunks())
+            if (pMode != 0)
             {
                 return;
             }
@@ -461,15 +433,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 });
             });
         }
-
-        /// <summary>
-        /// Returns whether the client is currently on the 'chunk waiting' screen.
-        /// </summary>
-        public bool IsWaitingOnChunks()
-        {
-            return CScreen is ChunkWaitingScreen;
-        }
-
+        
         /// <summary>
         /// The "Game" screen.
         /// </summary>
@@ -484,11 +448,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// The "singleplayer" main menu screen.
         /// </summary>
         SingleplayerMenuScreen TheSingleplayerMenuScreen;
-
-        /// <summary>
-        /// The "waiting on chunks" main menu screen.
-        /// </summary>
-        public ChunkWaitingScreen TheChunkWaitingScreen;
         
         /// <summary>
         /// The current sound object for the playing background music.
