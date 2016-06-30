@@ -165,7 +165,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     float hheight = GetHeight(Seed, seed2, seed3, seed4, seed5, cx, cy, (float)cpos.Z, out biomeOrig);
                     SimpleBiome biome = (SimpleBiome)biomeOrig;
                     Biome biomeOrig2;
-                    float hheight2 = GetHeight(Seed, seed2, seed3, seed4, seed5, cx + 7, cy + 7, (float)cpos.Z + 7, out biomeOrig2);
+                    /*float hheight2 = */GetHeight(Seed, seed2, seed3, seed4, seed5, cx + 7, cy + 7, (float)cpos.Z + 7, out biomeOrig2);
                     SimpleBiome biome2 = (SimpleBiome)biomeOrig2;
                     Material surf = biome.SurfaceBlock();
                     Material seco = biome.SecondLayerBlock();
