@@ -8,21 +8,31 @@
 
 # General information for this language file.
 language:
-    id: en-us
+    # The internal ID of this language (Should match the file name!)
+    id: en_us
+    # The clean name of the language (human readable)
     cleanname: English (United States)
+    # What texture to use for the flag
     flagtexture: flags/usa
+    # What version of Voxalia this is for
+    forversion: 0.0.8
 
 # Common text.
 common:
+    # Things related to the language system itself
     languages:
         badinput: (Unknown or empty language data request, failed to read!)
         badkey: (Unknown or bad language key value, failed to read!)
+    true: true
+    false: false
 
 # Text used by /commands in-game.
 commands:
     # Commands a player runs on the server.
     # Note that server/client commands are handled by FreneticScript, not this language engine currently.
     player:
+        devel:
+            secure_movement: Toggled secure movement to {{1}}.
     
 
 # Text used by in game items.

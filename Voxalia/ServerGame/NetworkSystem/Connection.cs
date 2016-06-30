@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
@@ -53,6 +54,27 @@ namespace Voxalia.ServerGame.NetworkSystem
         public bool Alive = true;
 
         PlayerEntity PE = null;
+
+        public string GetLanguageData(params string[] message)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("^[lang=");
+            for (int i = 0; i < message.Length; i++)
+            {
+                sb.Append(message[i]);
+                if (i + 1 < message.Length)
+                {
+                    sb.Append("|");
+                }
+            }
+            sb.Append("]");
+            return sb.ToString();
+        }
+
+        public void SendLanguageData(params string[] message)
+        {
+            SendMessage(GetLanguageData(message));
+        }
 
         public void SendMessage(string message)
         {

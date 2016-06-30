@@ -91,7 +91,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             else if (arg0 == "secureMovement")
             {
                 entry.Player.SecureMovement = !entry.Player.SecureMovement;
-                entry.Player.Network.SendMessage("Toggled secure movement to : " + entry.Player.SecureMovement);
+                entry.Player.Network.SendLanguageData("voxalia", "commands.player.devel.secure_movement", entry.Player.Network.GetLanguageData("voxalia", "common." + (entry.Player.SecureMovement ? "true" : "false")));
                 if (entry.Player.SecureMovement)
                 {
                     entry.Player.Flags &= ~YourStatusFlags.INSECURE_MOVEMENT;

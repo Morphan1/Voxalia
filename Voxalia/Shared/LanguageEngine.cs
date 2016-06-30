@@ -60,6 +60,16 @@ namespace Voxalia.Shared
 
         const string badkey = "common.languages.badkey";
 
+        public string Handle(string info, string[] pathAndVars)
+        {
+            info = info.Replace('\r', '\n').Replace("\n", "");
+            for (int i = 2; i < pathAndVars.Length; i++)
+            {
+                info = info.Replace("{{" + (i - 1).ToString() + "}}", pathAndVars[i]);
+            }
+            return info;
+        }
+
         public string GetText(params string[] pathAndVars)
         {
             if (pathAndVars.Length < 2)
@@ -76,7 +86,7 @@ namespace Voxalia.Shared
                 str = lang.ReadString(defPath, null);
                 if (str != null)
                 {
-                    return str.Replace("\n", "");
+                    return Handle(str, pathAndVars);
                 }
             }
             if (langen != null)
@@ -84,7 +94,7 @@ namespace Voxalia.Shared
                 str = langen.ReadString(defPath, null);
                 if (str != null)
                 {
-                    return str.Replace("\n", "");
+                    return Handle(str, pathAndVars);
                 }
             }
             if (defPath == badkey)

@@ -272,17 +272,26 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                     {
                                         StringBuilder sb = new StringBuilder();
                                         x++;
+                                        int c = 0;
                                         while (x < line.Length)
                                         {
+                                            if (line[x] == '[')
+                                            {
+                                                c++;
+                                            }
                                             if (line[x] == ']')
                                             {
-                                                break;
+                                                c--;
+                                                if (c == -1)
+                                                {
+                                                    break;
+                                                }
                                             }
                                             sb.Append(line[x]);
                                             x++;
                                         }
-                                        string ttext;
                                         bool highl = true;
+                                        string ttext;
                                         if (x == line.Length)
                                         {
                                             ttext = "^[" + sb.ToString();
@@ -294,7 +303,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                             if (sbl.StartsWith("lang="))
                                             {
                                                 string langinfo = sbl.After("lang=");
-                                                string[] subdats = langinfo.SplitFast('|');
+                                                string[] subdats = csplit(langinfo).ToArray();
                                                 ttext = Client.Central.Languages.GetText(subdats);
                                                 highl = false;
                                             }
@@ -556,13 +565,38 @@ namespace Voxalia.ClientGame.GraphicsSystems
             return MeasureFancyText(line, out links, bcolor);
         }
         
-        public float MeasureFancyText(string line, out List<KeyValuePair<string, Rectangle2F>> links, string bcolor = "^r^7")
+        public List<string> csplit(string input)
         {
-            bool bold = false;
-            bool italic = false;
-            bool sub = false;
+            List<string> temp = new List<string>();
+            int start = 0;
+            int c = 0;
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] == '[')
+                {
+                    c++;
+                }
+                if (input[i] == ']')
+                {
+                    c--;
+                }
+                if (c == 0 && input[i] == '|')
+                {
+                    temp.Add(input.Substring(start, i - start));
+                    start = i + 1;
+                }
+            }
+            temp.Add(input.Substring(start, input.Length - start));
+            return temp;
+        }
+        
+        public float MeasureFancyText(string line, out List<KeyValuePair<string, Rectangle2F>> links, string bcolor = "^r^7", bool bold = false, bool italic = false, bool sub = false, GLFont font = null)
+        {
             float MeasWidth = 0;
-            GLFont font = font_default;
+            if (font == null)
+            {
+                font = font_default;
+            }
             int start = 0;
             List<KeyValuePair<string, Rectangle2F>> tlinks = new List<KeyValuePair<string, Rectangle2F>>();
             line = line.Replace("^q", "\"").Replace("^B", bcolor);
@@ -585,15 +619,25 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                 {
                                     StringBuilder sb = new StringBuilder();
                                     x++;
+                                    int c = 0;
                                     while (x < line.Length)
                                     {
+                                        if (line[x] == '[')
+                                        {
+                                            c++;
+                                        }
                                         if (line[x] == ']')
                                         {
-                                            break;
+                                            c--;
+                                            if (c == -1)
+                                            {
+                                                break;
+                                            }
                                         }
                                         sb.Append(line[x]);
                                         x++;
                                     }
+                                    bool highl = true;
                                     string ttext;
                                     if (x == line.Length)
                                     {
@@ -606,17 +650,27 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                         if (sbl.StartsWith("lang="))
                                         {
                                             string langinfo = sbl.After("lang=");
-                                            string[] subdats = langinfo.SplitFast('|');
+                                            string[] subdats = csplit(langinfo).ToArray();
                                             ttext = Client.Central.Languages.GetText(subdats);
+                                            highl = false;
                                         }
                                         else
                                         {
                                             ttext = sbt.After("|");
                                         }
                                     }
-                                    float widt = font_default.MeasureString(ttext);
-                                    tlinks.Add(new KeyValuePair<string, Rectangle2F>(sb.ToString().Before("|"), new Rectangle2F() { X = MeasWidth, Y = 0, Width = widt, Height = font_default.Height }));
-                                    MeasWidth += widt;
+                                    if (highl)
+                                    {
+                                        float widt = font_default.MeasureString(ttext);
+                                        tlinks.Add(new KeyValuePair<string, Rectangle2F>(sb.ToString().Before("|"), new Rectangle2F() { X = MeasWidth, Y = 0, Width = widt, Height = font_default.Height }));
+                                        MeasWidth += widt;
+                                    }
+                                    else
+                                    {
+                                        List<KeyValuePair<string, Rectangle2F>> ttlinks;
+                                        float widt = MeasureFancyText(ttext, out ttlinks, bcolor, bold, italic, sub, font);
+                                        MeasWidth += widt;
+                                    }
                                     start = x + 1;
                                 }
                                     break;
