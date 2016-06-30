@@ -105,7 +105,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 BlockInternal bi = new BlockInternal((ushort)mat, dat, paint, locdat) { Damage = damage };
                 ch.SetBlockAt(x, y, z, bi);
                 ch.LastEdited = GlobalTickTime;
-                ch.chunkAccessDetection = ch.chunkAccessDetection.ReplaceOrFollowWith(TheServer.Schedule.StartASyncTask(ch.DetectChunkAccess));
+                ch.ChunkDetect();
                 // TODO: See if this makes any new chunks visible!
                 if (broadcast)
                 {
@@ -383,6 +383,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 return false;
             }
             Generator.Populate(Seed, Seed2, Seed3, Seed4, Seed5, chunk);
+            chunk.ChunkDetect();
             chunk.LastEdited = GlobalTickTime;
             chunk.Flags &= ~(ChunkFlags.POPULATING | ChunkFlags.ISCUSTOM);
             return true;

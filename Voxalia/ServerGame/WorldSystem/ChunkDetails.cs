@@ -11,5 +11,6 @@ namespace Voxalia.ServerGame.WorldSystem
         public ChunkFlags Flags;
         public int X, Y, Z;
         public int Version;
+        public byte[] Reachables;
     }
 }

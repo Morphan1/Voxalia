@@ -115,6 +115,11 @@ namespace Voxalia.ServerGame.WorldSystem
         }
         
         public FullChunkObject FCO = null;
+
+        public void ChunkDetect()
+        {
+            chunkAccessDetection = chunkAccessDetection == null ? OwningRegion.TheServer.Schedule.StartASyncTask(DetectChunkAccess) : chunkAccessDetection.ReplaceOrFollowWith(OwningRegion.TheServer.Schedule.AddASyncTask(DetectChunkAccess));
+        }
         
         /// <summary>
         /// Sync only.
@@ -138,7 +143,6 @@ namespace Voxalia.ServerGame.WorldSystem
             FCO.CollisionRules.Group = CollisionUtil.WorldSolid;
             OwningRegion.AddChunk(FCO);
             OwningRegion.AddCloudsToNewChunk(this);
-            chunkAccessDetection = OwningRegion.TheServer.Schedule.StartASyncTask(DetectChunkAccess);
         }
 
         public ASyncScheduleItem chunkAccessDetection = null;
@@ -278,9 +282,8 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 // TODO: REUSE DATA WHERE POSSIBLE? Should only trace once from each direction!
                 // TODO: REIMPLEMENT BUT SPEEDIER!
-                // TODO: SAVE THIS DATA TO FILE TO REDUCE NEED TO CALCULATE SO MUCH!
                 // TODO: SEND THIS DATA TO THE CLIENT FOR THEM TO USE!
-                //Reachability[i] = FCO.ChunkShape.CanReach(FullChunkShape.ReachStarts[i], FullChunkShape.ReachEnds[i]);
+                Reachability[i] = FCO.ChunkShape.CanReach(FullChunkShape.ReachStarts[i], FullChunkShape.ReachEnds[i]);
             }
         }
 
@@ -330,6 +333,11 @@ namespace Voxalia.ServerGame.WorldSystem
                 det.Z = (int)WorldPosition.Z;
                 det.Flags = Flags;
                 det.Blocks = blks;
+                det.Reachables = new byte[(int)ChunkReachability.COUNT];
+                for (int i = 0; i < det.Reachables.Length; i++)
+                {
+                    det.Reachables[i] = (byte)(Reachability[i] ? 1 : 0);
+                }
                 byte[] lod = LODBytes(5);
                 lock (GetLocker())
                 {
@@ -349,7 +357,7 @@ namespace Voxalia.ServerGame.WorldSystem
             try
             {
                 ChunkDetails det = new ChunkDetails();
-                det.Version = 1;
+                det.Version = 2;
                 det.X = (int)WorldPosition.X;
                 det.Y = (int)WorldPosition.Y;
                 det.Z = (int)WorldPosition.Z;
@@ -369,7 +377,7 @@ namespace Voxalia.ServerGame.WorldSystem
         
         public void LoadFromSaveData(ChunkDetails det, ChunkDetails ents)
         {
-            if (det.Version != 1)
+            if (det.Version != 2)
             {
                 throw new Exception("invalid save data VERSION: " + det.Version + "!");
             }
@@ -380,6 +388,10 @@ namespace Voxalia.ServerGame.WorldSystem
                 BlocksInternal[i].BlockData = det.Blocks[BlocksInternal.Length * 2 + i];
                 BlocksInternal[i].BlockLocalData = det.Blocks[BlocksInternal.Length * 3 + i];
                 BlocksInternal[i]._BlockPaintInternal = det.Blocks[BlocksInternal.Length * 4 + i];
+            }
+            for (int i = 0; i < Reachability.Length; i++)
+            {
+                Reachability[i] = det.Reachables[i] == 1;
             }
             if (ents.Blocks.Length > 0)
             {

@@ -106,13 +106,13 @@ namespace Voxalia.Shared.Collision
 
         public bool PointCanReach(Vector3i p, Vector3i enorm)
         {
-            HashSet<Vector3i> traced = new HashSet<Vector3i>();
+            bool[] traced = new bool[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
             Queue<Vector3i> toTrace = new Queue<Vector3i>();
             toTrace.Enqueue(p);
             while (toTrace.Count > 0)
             {
                 Vector3i tp = toTrace.Dequeue();
-                traced.Add(tp);
+                traced[BlockIndex(tp.X, tp.Y, tp.Z)] = true;
                 for (int i = 0; i < MoveDirs.Length; i++)
                 {
                     Vector3i np = tp + MoveDirs[i];
@@ -126,7 +126,7 @@ namespace Voxalia.Shared.Collision
                         }
                         continue;
                     }
-                    if (!traced.Contains(np) && !Blocks[BlockIndex(np.X, np.Y, np.Z)].IsOpaque())
+                    if (!traced[BlockIndex(tp.X, tp.Y, tp.Z)] && !Blocks[BlockIndex(np.X, np.Y, np.Z)].IsOpaque())
                     {
                         toTrace.Enqueue(np);
                     }

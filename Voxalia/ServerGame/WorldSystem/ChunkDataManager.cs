@@ -231,6 +231,7 @@ namespace Voxalia.ServerGame.WorldSystem
             det.Version = doc["version"].AsInt32;
             det.Flags = (ChunkFlags)doc["flags"].AsInt32;
             det.Blocks = FileHandler.UnGZip(doc["blocks"].AsBinary);
+            det.Reachables = doc["reach"].AsBinary;
             return det;
         }
         
@@ -242,6 +243,7 @@ namespace Voxalia.ServerGame.WorldSystem
             newdoc["version"] = new BsonValue(details.Version);
             newdoc["flags"] = new BsonValue((int)details.Flags);
             newdoc["blocks"] = new BsonValue(FileHandler.GZip(details.Blocks));
+            newdoc["reach"] = new BsonValue(details.Reachables);
             lock (FSLock)
             {
                 DBChunks.Delete(id);
