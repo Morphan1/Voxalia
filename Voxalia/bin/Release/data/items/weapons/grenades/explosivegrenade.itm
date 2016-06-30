@@ -1,7 +1,5 @@
 type: explosivegrenade
 icon: items/weapons/explosivegrenade_ico
-display: Explosive Grenade
-description: Not safe around squishy living creatures!
 color: 1,1,1
 model: items/weapons/explosivegrenade
 bound: false

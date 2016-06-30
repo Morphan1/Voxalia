@@ -1,7 +1,5 @@
 type: fuel
 icon: items/useful/fuel_ico
-display: Fuel
-description: Burns nicely!
 color: 1,1,1
 model: items/useful/fuel
 bound: false

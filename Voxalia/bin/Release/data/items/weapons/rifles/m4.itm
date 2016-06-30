@@ -1,7 +1,5 @@
 type: rifle_gun
 icon: items/weapons/rifle_ico
-display: Assault Rifle
-description: It shoots rapid-fire bullets!
 color: 1,1,1
 model: items/weapons/m4a1
 bound: false

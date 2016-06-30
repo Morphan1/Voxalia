@@ -31,3 +31,43 @@ items:
         manipulator:
             display: Manipulator
             description: Firmly grasp it!
+    special:
+        jetpack:
+            display: Jetpack
+            description: Be careful with this!
+        parachute:
+            display: Parachute
+            description: For when you forgot to be careful!
+    tools:
+        paintbrush:
+            display: Paint Brush
+            description: Colorful!
+        sledgehammer:
+            display: Sledgehammer
+            description: Smashing!
+    useful:
+        fuel:
+            display: Fuel
+            description: Burns nicely!
+    weapons:
+        bows:
+        grenades:
+            explosivegrenade:
+                display: Explosive Grenade
+                description: Not safe around squishy living creatures!
+            paintbomb:
+                display: Paint Bomb
+                description: Wow! Pretty colors! Everywhere!
+            smoke:
+                display: Smoke Grenade
+                description: Not safe around those with asthma!
+            smokesignal:
+                display: Smoke Signal
+                description: Avoid when hiding from aircraft!
+        rifles:
+            m4:
+                display: Assault Rifle
+                description: It shoots rapid-fire bullets!
+            minigun:
+                display: Minigun
+                description: It shoots ^bvery^B rapid-fire bullets!

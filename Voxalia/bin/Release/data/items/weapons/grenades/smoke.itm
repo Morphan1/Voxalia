@@ -1,7 +1,5 @@
 type: smokegrenade
 icon: items/weapons/smokegrenade_ico
-display: Smoke Grenade
-description: Not safe around those with asthma!
 color: 1,1,1
 model: items/weapons/smokegrenade
 bound: false
