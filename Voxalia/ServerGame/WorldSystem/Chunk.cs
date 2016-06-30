@@ -282,7 +282,6 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 // TODO: REUSE DATA WHERE POSSIBLE? Should only trace once from each direction!
                 // TODO: REIMPLEMENT BUT SPEEDIER!
-                // TODO: SEND THIS DATA TO THE CLIENT FOR THEM TO USE!
                 Reachability[i] = FCO.ChunkShape.CanReach(FullChunkShape.ReachStarts[i], FullChunkShape.ReachEnds[i]);
             }
         }
@@ -327,7 +326,7 @@ namespace Voxalia.ServerGame.WorldSystem
             try
             {
                 ChunkDetails det = new ChunkDetails();
-                det.Version = 1;
+                det.Version = 2;
                 det.X = (int)WorldPosition.X;
                 det.Y = (int)WorldPosition.Y;
                 det.Z = (int)WorldPosition.Z;
@@ -377,9 +376,9 @@ namespace Voxalia.ServerGame.WorldSystem
         
         public void LoadFromSaveData(ChunkDetails det, ChunkDetails ents)
         {
-            if (det.Version != 2)
+            if (det.Version != 2 || ents.Version != 2)
             {
-                throw new Exception("invalid save data VERSION: " + det.Version + "!");
+                throw new Exception("invalid save data VERSION: " + det.Version + " and " + ents.Version + "!");
             }
             Flags = det.Flags & ~(ChunkFlags.POPULATING);
             for (int i = 0; i < BlocksInternal.Length; i++)

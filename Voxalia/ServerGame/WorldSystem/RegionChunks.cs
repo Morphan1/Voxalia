@@ -383,9 +383,9 @@ namespace Voxalia.ServerGame.WorldSystem
                 return false;
             }
             Generator.Populate(Seed, Seed2, Seed3, Seed4, Seed5, chunk);
-            chunk.ChunkDetect();
             chunk.LastEdited = GlobalTickTime;
             chunk.Flags &= ~(ChunkFlags.POPULATING | ChunkFlags.ISCUSTOM);
+            chunk.ChunkDetect();
             return true;
         }
 

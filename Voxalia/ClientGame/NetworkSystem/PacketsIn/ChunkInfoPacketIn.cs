@@ -35,6 +35,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             int y = dr.ReadInt();
             int z = dr.ReadInt();
             int posMult = dr.ReadInt();
+            byte[] reach = dr.ReadBytes((int)ChunkReachability.COUNT);
             int csize = Chunk.CHUNK_SIZE / posMult;
             byte[] data_unzipped = dr.ReadBytes(data.Length - 16);
             byte[] data_orig = FileHandler.UnGZip(data_unzipped);
@@ -54,6 +55,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Action act = () =>
             {
                 Chunk chk = TheClient.TheRegion.LoadChunk(new Vector3i(x, y, z), posMult);
+                for (int i = 0; i < reach.Length; i++)
+                {
+                    chk.Reachability[i] = reach[i] == 1;
+                }
                 chk.LOADING = true;
                 chk.PROCESSED = false;
                 TheClient.Schedule.StartASyncTask(() => parsechunk2(chk, data_orig, posMult));

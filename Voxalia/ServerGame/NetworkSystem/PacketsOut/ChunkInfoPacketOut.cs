@@ -61,6 +61,12 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             dw.WriteInt((int)chunk.WorldPosition.Y);
             dw.WriteInt((int)chunk.WorldPosition.Z);
             dw.WriteInt(lod);
+            byte[] reach = new byte[chunk.Reachability.Length];
+            for (int i = 0; i < reach.Length; i++)
+            {
+                reach[i] = (byte)(chunk.Reachability[i] ? 1 : 0);
+            }
+            dw.WriteBytes(reach);
             dw.WriteBytes(gdata);
             Data = ds.ToArray();
         }

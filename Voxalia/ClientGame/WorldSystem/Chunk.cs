@@ -19,6 +19,8 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public int CSize = CHUNK_SIZE;
 
+        public bool[] Reachability = new bool[(int)ChunkReachability.COUNT] { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
+
         public int PosMultiplier;
 
         public Chunk(int posMult)
