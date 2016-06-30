@@ -643,6 +643,10 @@ namespace Voxalia.ServerGame.EntitySystem
                         //toSee.Enqueue(t);
                         for (int j = 0; j < MoveDirs.Length; j++)
                         {
+                            if (Vector3.Dot(MoveDirs[j].ToVector3(), LoadRelDir.ToBVector()) < -0.65f) // TODO: Wut?
+                            {
+                                continue;
+                            }
                             Vector3i nt = cur + MoveDirs[j];
                             if (!seen.Contains(nt) && !toSee.Contains(nt))
                             {
