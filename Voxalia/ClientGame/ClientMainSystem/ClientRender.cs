@@ -102,7 +102,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_forw_vox = Shaders.GetShader("forward" + def + ",MCM_VOX");
             s_forw_trans = Shaders.GetShader("forward" + def + ",MCM_TRANSP");
             s_forw_vox_trans = Shaders.GetShader("forward" + def + ",MCM_VOX,MCM_TRANSP");
+            RainCyl = Models.GetModel("raincyl");
+            RainCyl.LoadSkin(Textures);
         }
+
+        public Model RainCyl;
 
         int map_fbo_main = -1;
         int map_fbo_texture = -1;
@@ -1318,6 +1322,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
         }
 
+        public double RainCylPos = 0;
+
         public void Render3D(bool shadows_only)
         {
             if (FBOid == 1)
@@ -1360,6 +1366,21 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 for (int i = 0; i < TheRegion.Entities.Count; i++)
                 {
                     TheRegion.Entities[i].Render();
+                }
+                SetEnts();
+                if (CVars.g_raining.ValueB)
+                {
+                    RainCylPos += gDelta * 0.5;
+                    while (RainCylPos > 1.0)
+                    {
+                        RainCylPos -= 1.0;
+                    }
+                    for (int i = -10; i <= 10; i++)
+                    {
+                        Matrix4 mat = Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + new Location(0, 0, 4 * i + RainCylPos * -4)));
+                        GL.UniformMatrix4(2, false, ref mat);
+                        RainCyl.Draw();
+                    }
                 }
                 if (FBOid == 1)
                 {

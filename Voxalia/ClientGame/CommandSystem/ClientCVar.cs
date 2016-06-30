@@ -19,7 +19,7 @@ namespace Voxalia.ClientGame.CommandSystem
         public CVar s_filepath, s_glversion, s_glrenderer, s_glvendor, s_littleendian;
 
         // Game CVars
-        public CVar g_timescale, g_firstperson;
+        public CVar g_timescale, g_firstperson, g_raining;
 
         // Network CVars
         public CVar n_first, n_debugmovement, n_movement_maxdistance, n_movement_adjustment, n_movemode;
@@ -58,6 +58,7 @@ namespace Voxalia.ClientGame.CommandSystem
             // Game CVars
             g_timescale = Register("g_timescale", "1", CVarFlag.Numeric | CVarFlag.ServerControl, "The current game time scale value.");
             g_firstperson = Register("g_firstperson", "true", CVarFlag.Boolean, "Whether to be in FirstPerson view mode.");
+            g_raining = Register("g_raining", "false", CVarFlag.Boolean | CVarFlag.ServerControl, "Whether it is currently raining.");
             // Network CVars
             n_first = Register("n_first", "ipv4", CVarFlag.Textual, "Whether to prefer IPv4 or IPv6.");
             n_debugmovement = Register("n_debugmovement", "false", CVarFlag.Boolean, "Whether to debug movement networking.");
