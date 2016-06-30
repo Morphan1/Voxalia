@@ -41,6 +41,10 @@ namespace Voxalia.ClientGame.WorldSystem
                 return c.GetBlockAt(x, y, z);
             }
             // TODO: better method here...
+            if (c.PosMultiplier > PosMultiplier)
+            {
+                return new BlockInternal((ushort)Material.STONE, 0, 0, 0);
+            }
             return BlockInternal.AIR;
         }
 
@@ -70,7 +74,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 Chunk c_ym = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, -1, 0));
                 Chunk c_xp = OwningRegion.GetChunk(WorldPosition + new Vector3i(1, 0, 0));
                 Chunk c_xm = OwningRegion.GetChunk(WorldPosition + new Vector3i(-1, 0, 0));
-                BlockInternal t_air = new BlockInternal(0, 0, 0, 0);
+                BlockInternal t_air = new BlockInternal((ushort)Material.STONE, 0, 0, 0);
                 for (int x = 0; x < CSize; x++)
                 {
                     for (int y = 0; y < CSize; y++)
