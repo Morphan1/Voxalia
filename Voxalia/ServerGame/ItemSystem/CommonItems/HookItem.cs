@@ -63,18 +63,15 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 pe = (PhysicsEntity)HitEnt.Tag;
             }
             JointDistance jd;
-            jd = new JointDistance(player, pe, 0.01f, len + 0.01f, player.GetCenter(), Position);
-            player.TheRegion.AddJoint(jd);
-            player.Hooks.Add(new HookInfo() { Joint = jd, Hit = pe, IsBar = false });
-
-
-
+            //jd = new JointDistance(player, pe, 0.01f, len + 0.01f, player.GetCenter(), Position);
+            //player.TheRegion.AddJoint(jd);
+            //player.Hooks.Add(new HookInfo() { Joint = jd, Hit = pe, IsBar = false });
             PhysicsEntity cent = pe;
             for (float f = 0; f < len - 1f; f += 0.5f)
             {
                 Location cpos = Position + step * f;
                 ModelEntity ce = new ModelEntity("cube", player.TheRegion);
-                ce.Mass = 1;
+                ce.Mass = 15;
                 ce.CanSave = false;
                 ce.scale = new Location(0.023, 0.05, 0.05);
                 ce.mode = ModelCollisionMode.AABB;
