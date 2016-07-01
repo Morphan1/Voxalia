@@ -11,7 +11,7 @@ namespace Voxalia.ClientGame.WorldSystem
 {
     public partial class Chunk
     {
-        public const int CHUNK_SIZE = 30;
+        public const int CHUNK_SIZE = FullChunkShape.CHUNK_SIZE;
 
         public Region OwningRegion = null;
 

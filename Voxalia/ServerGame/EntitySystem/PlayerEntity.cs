@@ -597,6 +597,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         void ChunkMarchAndSend()
         {
+            // TODO: Limit how many chunks can be gathered to send in a single call to this function? This should allow the server to tick more safely!
             if (LoadRelPos.IsNaN() || LoadRelDir.IsNaN() || LoadRelDir.LengthSquared() < 0.1f)
             {
                 return;

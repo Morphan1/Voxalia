@@ -93,7 +93,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     continue;
                 }
-                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition.ToLocation() * 30, Max = chunk.Value.WorldPosition.ToLocation() * 30 + new Location(30, 30, 30) }))
+                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE, Max = chunk.Value.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE) }))
                 {
                     continue;
                 }
@@ -139,7 +139,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     continue;
                 }
-                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition.ToLocation() * 30, Max = chunk.Value.WorldPosition.ToLocation() * 30 + new Location(30, 30, 30) }))
+                if (!box.Intersects(new AABB() { Min = chunk.Value.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE, Max = chunk.Value.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE) }))
                 {
                     continue;
                 }
@@ -341,18 +341,18 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 return new BlockInternal((ushort)Material.AIR, 0, 0, 128);
             }
-            int x = (int)Math.Floor(((int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30) / (float)ch.PosMultiplier);
-            int y = (int)Math.Floor(((int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30) / (float)ch.PosMultiplier);
-            int z = (int)Math.Floor(((int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30) / (float)ch.PosMultiplier);
+            int x = (int)Math.Floor(((int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * Chunk.CHUNK_SIZE) / (float)ch.PosMultiplier);
+            int y = (int)Math.Floor(((int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * Chunk.CHUNK_SIZE) / (float)ch.PosMultiplier);
+            int z = (int)Math.Floor(((int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * Chunk.CHUNK_SIZE) / (float)ch.PosMultiplier);
             return ch.GetBlockAt(x, y, z);
         }
 
         public void SetBlockMaterial(Location pos, ushort mat, byte dat = 0, byte paint = 0, bool regen = true)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos), 1);
-            int x = (int)Math.Floor(((int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30) / (float)ch.PosMultiplier);
-            int y = (int)Math.Floor(((int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30) / (float)ch.PosMultiplier);
-            int z = (int)Math.Floor(((int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30) / (float)ch.PosMultiplier);
+            int x = (int)Math.Floor(((int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * Chunk.CHUNK_SIZE) / (float)ch.PosMultiplier);
+            int y = (int)Math.Floor(((int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * Chunk.CHUNK_SIZE) / (float)ch.PosMultiplier);
+            int z = (int)Math.Floor(((int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * Chunk.CHUNK_SIZE) / (float)ch.PosMultiplier);
             ch.SetBlockAt(x, y, z, new BlockInternal(mat, dat, paint, 0));
             if (regen)
             {

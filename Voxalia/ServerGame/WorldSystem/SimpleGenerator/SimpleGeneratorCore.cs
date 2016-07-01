@@ -179,7 +179,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     float topf = hheight - (float)(chunk.WorldPosition.Z * Chunk.CHUNK_SIZE);
                     int top = (int)Math.Round(topf);
                     // General natural ground
-                    for (int z = 0; z < Math.Min(top - 5, 30); z++)
+                    for (int z = 0; z < Math.Min(top - 5, Chunk.CHUNK_SIZE); z++)
                     {
                         bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
                         if (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z, biome))
@@ -199,7 +199,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(choice ? basb2 : basb), 3, 0, 0);
                         }
                     }
-                    for (int z = Math.Max(top - 5, 0); z < Math.Min(top - 1, 30); z++)
+                    for (int z = Math.Max(top - 5, 0); z < Math.Min(top - 1, Chunk.CHUNK_SIZE); z++)
                     {
                         bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
                         if (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z, biome))
@@ -207,7 +207,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(choice ? seco2 : seco), 0, 0, 0);
                         }
                     }
-                    for (int z = Math.Max(top - 1, 0); z < Math.Min(top, 30); z++)
+                    for (int z = Math.Max(top - 1, 0); z < Math.Min(top, Chunk.CHUNK_SIZE); z++)
                     {
                         bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
                         chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(choice ? surf2 : surf), 0, 0, 0);
@@ -222,7 +222,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     float topfxm = heightfxm - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
                     float topfyp = heightfyp - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
                     float topfym = heightfym - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
-                    for (int z = Math.Max(top, 0); z < Math.Min(top + 1, 30); z++)
+                    for (int z = Math.Max(top, 0); z < Math.Min(top + 1, Chunk.CHUNK_SIZE); z++)
                     {
                         bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
                         ushort tsf = (ushort)(choice ? surf2 : surf);

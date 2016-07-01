@@ -69,18 +69,18 @@ namespace Voxalia.ServerGame.WorldSystem
         public Material GetBlockMaterial(Location pos)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos));
-            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
-            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
-            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * Chunk.CHUNK_SIZE;
+            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * Chunk.CHUNK_SIZE;
+            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * Chunk.CHUNK_SIZE;
             return (Material)ch.GetBlockAt(x, y, z).BlockMaterial;
         }
 
         public BlockInternal GetBlockInternal(Location pos)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos));
-            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
-            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
-            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * Chunk.CHUNK_SIZE;
+            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * Chunk.CHUNK_SIZE;
+            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * Chunk.CHUNK_SIZE;
             return ch.GetBlockAt(x, y, z);
         }
 
@@ -95,9 +95,9 @@ namespace Voxalia.ServerGame.WorldSystem
             Chunk ch = LoadChunk(ChunkLocFor(pos));
             lock (ch.EditSessionLock)
             {
-                int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
-                int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
-                int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+                int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * Chunk.CHUNK_SIZE;
+                int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * Chunk.CHUNK_SIZE;
+                int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * Chunk.CHUNK_SIZE;
                 if (!override_protection && ((BlockFlags)ch.GetBlockAt(x, y, z).BlockLocalData).HasFlag(BlockFlags.PROTECTED))
                 {
                     return;
@@ -123,9 +123,9 @@ namespace Voxalia.ServerGame.WorldSystem
             Chunk ch = LoadChunk(ChunkLocFor(pos));
             lock (ch.EditSessionLock)
             {
-                int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
-                int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
-                int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+                int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * Chunk.CHUNK_SIZE;
+                int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * Chunk.CHUNK_SIZE;
+                int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * Chunk.CHUNK_SIZE;
                 BlockInternal bi = ch.GetBlockAt(x, y, z);
                 if (((BlockFlags)bi.BlockLocalData).HasFlag(BlockFlags.PROTECTED))
                 {
@@ -157,9 +157,9 @@ namespace Voxalia.ServerGame.WorldSystem
         public Vector3i ChunkLocFor(Location worldPos)
         {
             Vector3i temp;
-            temp.X = (int)Math.Floor(worldPos.X / 30.0);
-            temp.Y = (int)Math.Floor(worldPos.Y / 30.0);
-            temp.Z = (int)Math.Floor(worldPos.Z / 30.0);
+            temp.X = (int)Math.Floor(worldPos.X / (double)Chunk.CHUNK_SIZE);
+            temp.Y = (int)Math.Floor(worldPos.Y / (double)Chunk.CHUNK_SIZE);
+            temp.Z = (int)Math.Floor(worldPos.Z / (double)Chunk.CHUNK_SIZE);
             return temp;
         }
 
@@ -332,9 +332,9 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 return BlockInternal.AIR;
             }
-            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * 30;
-            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * 30;
-            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * 30;
+            int x = (int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * Chunk.CHUNK_SIZE;
+            int y = (int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * Chunk.CHUNK_SIZE;
+            int z = (int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * Chunk.CHUNK_SIZE;
             return ch.GetBlockAt(x, y, z);
         }
 

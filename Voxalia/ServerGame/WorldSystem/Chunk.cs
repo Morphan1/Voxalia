@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.WorldSystem
 {
     public class Chunk
     {
-        public const int CHUNK_SIZE = 30;
+        public const int CHUNK_SIZE = FullChunkShape.CHUNK_SIZE;
 
         public const int RAM_USAGE = CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 5;
 
