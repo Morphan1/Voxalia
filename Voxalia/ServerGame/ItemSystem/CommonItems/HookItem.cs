@@ -152,12 +152,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public void Shrink(PlayerEntity player)
         {
-            // TODO: Even out the magic player joint.
             for (int i = 0; i < player.Hooks.Count; i++)
             {
                 if (player.Hooks[i].Joint != null)
                 {
-                    if (player.Hooks[i].Joint.One == player || player.Hooks[i].Joint.Max > 0.3f)
+                    if (player.Hooks[i].Joint.Max > 0.3f)
                     {
                         player.Hooks[i].Joint.Max *= 0.9f;
                         // TODO: less lazy networking of this
@@ -170,12 +169,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 
         public void Extend(PlayerEntity player)
         {
-            // TODO: Even out the magic player joint.
             for (int i = 0; i < player.Hooks.Count; i++)
             {
                 if (player.Hooks[i].Joint != null)
                 {
-                    if (player.Hooks[i].Joint.One == player || player.Hooks[i].Joint.Max < 3f)
+                    if (player.Hooks[i].Joint.Max < 3f)
                     {
                         player.Hooks[i].Joint.Max *= 1.1f;
                         // TODO: less lazy networking of this

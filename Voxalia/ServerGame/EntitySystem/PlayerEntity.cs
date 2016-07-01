@@ -595,9 +595,11 @@ namespace Voxalia.ServerGame.EntitySystem
 
         const float Max_FOV = 90f;
 
+        const int Max_Chunks_Per_March = 25; // TODO: CVar?
+
         void ChunkMarchAndSend()
         {
-            // TODO: Limit how many chunks can be gathered to send in a single call to this function? This should allow the server to tick more safely!
+            int chunksFound = 0;
             if (LoadRelPos.IsNaN() || LoadRelDir.IsNaN() || LoadRelDir.LengthSquared() < 0.1f)
             {
                 return;
@@ -624,17 +626,38 @@ namespace Voxalia.ServerGame.EntitySystem
                     || Math.Abs(cur.Y - start.Y) <= ViewRadiusInChunks
                     || Math.Abs(cur.Z - start.Z) <= ViewRadiusInChunks)
                 {
-                    TryChunk(cur, 0, 1);
+                    if (TryChunk(cur, 0, 1))
+                    {
+                        chunksFound++;
+                        if (chunksFound > Max_Chunks_Per_March)
+                        {
+                            return;
+                        }
+                    }
                 }
                 else if (Math.Abs(cur.X - start.X) <= (ViewRadiusInChunks + ViewRadExtra2)
                     || Math.Abs(cur.Y - start.Y) <= (ViewRadiusInChunks + ViewRadExtra2)
                     || Math.Abs(cur.Z - start.Z) <= (ViewRadiusInChunks + ViewRadExtra2Height))
                 {
-                    TryChunk(cur, 10, 2);
+                    if (TryChunk(cur, 10, 2))
+                    {
+                        chunksFound++;
+                        if (chunksFound > Max_Chunks_Per_March)
+                        {
+                            return;
+                        }
+                    }
                 }
                 else
                 {
-                    TryChunk(cur, 25, 5);
+                    if (TryChunk(cur, 25, 5))
+                    {
+                        chunksFound++;
+                        if (chunksFound > Max_Chunks_Per_March)
+                        {
+                            return;
+                        }
+                    }
                 }
                 for (int i = 0; i < MoveDirs.Length; i++)
                 {
@@ -1039,11 +1062,11 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }*/
 
-        public void TryChunk(Vector3i cworldPos, float atime, int posMult, Chunk chi = null) // TODO: Efficiency?
+        public bool TryChunk(Vector3i cworldPos, float atime, int posMult, Chunk chi = null) // TODO: Efficiency?
         {
             if (pkick)
             {
-                return;
+                return false;
             }
             //Vector3i cworldPos = TheRegion.ChunkLocFor(worldPos);
             if (!ChunksAwareOf.ContainsKey(cworldPos) || ChunksAwareOf[cworldPos].LOD > posMult) // TODO: Efficiency - TryGetValue?
@@ -1076,7 +1099,9 @@ namespace Voxalia.ServerGame.EntitySystem
                     ChunksAwareOf.Remove(cworldPos);
                     ChunksAwareOf.Add(cworldPos, new ChunkAwarenessInfo() { ChunkPos = cworldPos, LOD = posMult, SendToClient = item });
                 }
+                return true;
             }
+            return false;
         }
 
         public Dictionary<Vector3i, ChunkAwarenessInfo> ChunksAwareOf = new Dictionary<Vector3i, ChunkAwarenessInfo>();
