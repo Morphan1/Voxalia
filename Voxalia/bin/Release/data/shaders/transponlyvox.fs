@@ -35,7 +35,15 @@ vec3 desaturate(vec3 c)
 
 void main()
 {
-	vec4 tcolor = texture(tex, f.texcoord) * f.tcol;
+	vec4 tcolor = texture(tex, f.texcoord);
+	if (f.tcol.w == 0.0 && f.tcol.x == 0.0 && f.tcol.z == 0.0 && f.tcol.y > 0.3 && f.tcol.y < 0.7)
+	{
+		// float rhBlur = (f.tcol.y - 0.31) * ((1.0 / 0.38) * (3.14159 * 2.0));
+	}
+	else
+	{
+		tcolor *= f.tcol;
+	}
 	if (tcolor.w * f.color.w >= 0.99)
 	{
 		discard;

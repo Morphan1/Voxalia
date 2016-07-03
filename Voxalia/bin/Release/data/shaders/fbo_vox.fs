@@ -35,14 +35,35 @@ void main()
 {
 	vec4 dets = texture(htex, f.texcoord);
 #if MCM_REFRACT
+	float refr_rhblur = 0.0;
+	if (f.tcol.w == 0.0 && f.tcol.x == 0.0 && f.tcol.z == 0.0 && f.tcol.y > 0.3 && f.tcol.y < 0.7)
+	{
+		refr_rhblur = (f.tcol.y - 0.31) * ((1.0 / 0.38) * (3.14159 * 2.0));
+	}
 	if (dets.z > 0.01) // TODO: Use the exact refraction value?!
 	{
 		vec3 tnorms = f.tbn * (texture(normal_tex, f.texcoord).xyz * 2.0 - vec3(1.0));
 		color = vec4(0.0);
 		position = vec4(0.0);
 		normal = vec4(0.0);
-		renderhint = vec4(0.0);
+		if (refr_rhblur > 0.0)
+		{
+			renderhint = vec4(0.0, refr_rhblur, 0.0, 1.0);
+		}
+		else
+		{
+			renderhint = vec4(0.0);
+		}
 		renderhint2 = vec4(tnorms, 1.0);
+		return;
+	}
+	else if (refr_rhblur > 0.0)
+	{
+		color = vec4(0.0);
+		position = vec4(0.0);
+		normal = vec4(0.0);
+		renderhint = vec4(0.0, refr_rhblur, 0.0, 1.0);
+		renderhint2 = vec4(0.0);
 		return;
 	}
 	else
