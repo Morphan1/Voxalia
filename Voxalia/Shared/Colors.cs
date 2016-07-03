@@ -105,6 +105,7 @@ namespace Voxalia.Shared
 
         public static int TRANS1;
         public static int TRANS2;
+        public static int M_BLUR;
 
         static int Register(string name, Color col)
         {
@@ -179,7 +180,7 @@ namespace Voxalia.Shared
             Register("MAGIC", MAGIC);
             Register("OLD_MAGIC", OLD_MAGIC);
             Register("RAINBOW", RAINBOW);
-            Register("BLUR", BLUR);
+            M_BLUR = Register("BLUR", BLUR);
         }
     }
 }

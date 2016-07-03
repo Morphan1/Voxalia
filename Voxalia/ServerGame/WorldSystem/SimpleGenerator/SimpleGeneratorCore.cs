@@ -287,7 +287,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         }
                         for (int z = Math.Max(top + 1, 0); z <= Math.Min(level, Chunk.CHUNK_SIZE - 1); z++)
                         {
-                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)water, 0, 0, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)water, 0, (byte)Colors.M_BLUR, 0);
                         }
                     }
                     else
