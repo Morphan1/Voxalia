@@ -298,7 +298,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public int LightsC = 0;
 
-        public byte FBOid = 0;
+        public FBOID FBOid = 0;
 
         int rTicks = 1000;
 
@@ -457,7 +457,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     CFrust = camFrust;
                     GL.ActiveTexture(TextureUnit.Texture0);
                     Matrix4 fident = Matrix4.Identity;
-                    FBOid = 99;
+                    FBOid = FBOID.FORWARD_SOLID;
                     s_forw_vox.Bind();
                     GL.UniformMatrix4(1, false, ref combined);
                     GL.UniformMatrix4(2, false, ref fident);
@@ -469,7 +469,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     GL.Uniform1(6, (float)GlobalTickTimeLocal);
                     Rendering.SetColor(Color4.White);
                     Render3D(false);
-                    FBOid = 98;
+                    FBOid = FBOID.FORWARD_TRANSP;
                     s_forw_vox_trans.Bind();
                     GL.UniformMatrix4(1, false, ref combined);
                     GL.UniformMatrix4(2, false, ref fident);
@@ -526,7 +526,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     {
                                         GL.Uniform1(3, 0.0f);
                                     }
-                                    FBOid = 4;
+                                    FBOid = FBOID.SHADOWS;
                                     s_shadow = s_shadow.Bind();
                                     GL.UniformMatrix4(2, false, ref tident);
                                     if (Lights[i].InternalLights[x] is LightOrtho)
@@ -540,7 +540,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     Lights[i].InternalLights[x].Attach();
                                     // TODO: Render settings
                                     Render3D(true);
-                                    FBOid = 0;
+                                    FBOid = FBOID.NONE;
                                     Lights[i].InternalLights[x].Complete();
                                 }
                             }
@@ -570,7 +570,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.Uniform1(6, (float)GlobalTickTimeLocal);
                 GL.UniformMatrix4(1, false, ref combined);
                 GL.UniformMatrix4(2, false, ref matident);
-                FBOid = 1;
+                FBOid = FBOID.MAIN;
                 RenderingShadows = false;
                 CFrust = camFrust;
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -602,7 +602,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     Render3D(false);
                 }
-                FBOid = 21;
+                FBOid = FBOID.REFRACT;
                 s_fbov_refract = s_fbov_refract.Bind();
                 GL.Uniform1(6, (float)GlobalTickTimeLocal);
                 GL.UniformMatrix4(1, false, ref combined);
@@ -637,7 +637,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 RenderLights = false;
                 RenderSpecular = false;
                 RS4P.Unbind();
-                FBOid = 0;
+                FBOid = FBOID.NONE;
                 timer.Stop();
                 FBOTime = (double)timer.ElapsedMilliseconds / 1000f;
                 if (FBOTime > FBOSpikeTime)
@@ -840,18 +840,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                     {
                         s_transponlylitsh = s_transponlylitsh.Bind();
-                        FBOid = 8;
+                        FBOid = FBOID.TRANSP_SHADOWS;
                     }
                     else
                     {
                         s_transponlylit = s_transponlylit.Bind();
-                        FBOid = 7;
+                        FBOid = FBOID.TRANSP_LIT;
                     }
                 }
                 else
                 {
                     s_transponly = s_transponly.Bind();
-                    FBOid = 3;
+                    FBOid = FBOID.TRANSP_UNLIT;
                 }
                 VBO.BonesIdentity();
                 GL.UniformMatrix4(1, false, ref combined);
@@ -895,18 +895,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                         {
                             s_transponlylitsh = s_transponlylitsh.Bind();
-                            FBOid = 8;
+                            FBOid = FBOID.TRANSP_SHADOWS;
                         }
                         else
                         {
                             s_transponlylit = s_transponlylit.Bind();
-                            FBOid = 7;
+                            FBOid = FBOID.TRANSP_LIT;
                         }
                     }
                     else
                     {
                         s_transponly = s_transponly.Bind();
-                        FBOid = 3;
+                        FBOid = FBOID.TRANSP_UNLIT;
                     }
                     GL.UniformMatrix4(1, false, ref combined2);
                     CameraPos = cameraBasePos - cameraAdjust;
@@ -926,7 +926,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 GL.DrawBuffer(DrawBufferMode.Back);
                 StandardBlend();
-                FBOid = 0;
+                FBOid = FBOID.NONE;
                 GL.ActiveTexture(TextureUnit.Texture0);
                 if (CVars.r_godrays.ValueB)
                 {
@@ -1100,7 +1100,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void RenderSkybox()
         {
-            if (FBOid == 1)
+            if (FBOid == FBOID.MAIN)
             {
                 GL.Uniform4(7, new Vector4(0f, 0f, 0f, 0f));
             }
@@ -1138,7 +1138,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             skybox[4].Render(false);
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/yp").Bind();
             skybox[5].Render(false);
-            if (FBOid == 1)
+            if (FBOid == FBOID.MAIN)
             {
                 GL.Uniform4(7, Color4.White);
             }
@@ -1149,7 +1149,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 * Matrix4.CreateRotationZ((float)((180f + SunAngle.Yaw) * Utilities.PI180))
                 * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + TheSun.Direction * -(dist * 0.96f)));
             Rendering.RenderRectangle(0, 0, 300, 300, rot); // TODO: Adjust scale based on view rad
-            if (FBOid == 1)
+            if (FBOid == FBOID.MAIN)
             {
                 GL.Uniform4(7, Color4.Black);
             }
@@ -1185,7 +1185,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 return;
             }
             isVox = true;
-            if (FBOid == 1)
+            if (FBOid == FBOID.MAIN)
             {
                 s_fbov = s_fbov.Bind();
                 GL.Uniform4(7, Color4.Black);
@@ -1196,7 +1196,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
             }
-            if (FBOid == 21)
+            if (FBOid == FBOID.REFRACT)
             {
                 s_fbov_refract = s_fbov_refract.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
@@ -1206,7 +1206,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
             }
-            else if (FBOid == 3)
+            else if (FBOid == FBOID.TRANSP_UNLIT)
             {
                 s_transponlyvox = s_transponlyvox.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
@@ -1216,7 +1216,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
             }
-            else if (FBOid == 7)
+            else if (FBOid == FBOID.TRANSP_LIT)
             {
                 s_transponlyvoxlit = s_transponlyvoxlit.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
@@ -1226,7 +1226,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
             }
-            else if (FBOid == 8)
+            else if (FBOid == FBOID.TRANSP_SHADOWS)
             {
                 s_transponlyvoxlitsh = s_transponlyvoxlitsh.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
@@ -1236,17 +1236,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
             }
-            else if (FBOid == 99)
+            else if (FBOid == FBOID.FORWARD_SOLID)
             {
                 s_forw_vox = s_forw_vox.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
             }
-            else if (FBOid == 98)
+            else if (FBOid == FBOID.FORWARD_TRANSP)
             {
                 s_forw_vox_trans = s_forw_vox_trans.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
             }
-            else if (FBOid == 4)
+            else if (FBOid == FBOID.SHADOWS)
             {
                 s_shadowvox = s_shadowvox.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
@@ -1260,7 +1260,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 return;
             }
             isVox = false;
-            if (FBOid == 1)
+            if (FBOid == FBOID.MAIN)
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
@@ -1271,7 +1271,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 s_fbo = s_fbo.Bind();
                 GL.Uniform4(7, Color4.Black);
             }
-            else if (FBOid == 21)
+            else if (FBOid == FBOID.REFRACT)
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
@@ -1281,7 +1281,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 s_fbo_refract = s_fbo_refract.Bind();
             }
-            else if (FBOid == 3)
+            else if (FBOid == FBOID.TRANSP_UNLIT)
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
@@ -1291,7 +1291,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 s_transponly = s_transponly.Bind();
             }
-            else if (FBOid == 7)
+            else if (FBOid == FBOID.TRANSP_LIT)
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
@@ -1301,7 +1301,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 s_transponlylit = s_transponlylit.Bind();
             }
-            else if (FBOid == 8)
+            else if (FBOid == FBOID.TRANSP_SHADOWS)
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
@@ -1311,17 +1311,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 s_transponlylitsh = s_transponlylitsh.Bind();
             }
-            else if (FBOid == 99)
+            else if (FBOid == FBOID.FORWARD_SOLID)
             {
                 s_forw = s_forw.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
             }
-            else if (FBOid == 98)
+            else if (FBOid == FBOID.FORWARD_TRANSP)
             {
                 s_forw_trans = s_forw_trans.Bind();
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
             }
-            else if (FBOid == 4)
+            else if (FBOid == FBOID.SHADOWS)
             {
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 s_shadow = s_shadow.Bind();
@@ -1332,7 +1332,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void Render3D(bool shadows_only)
         {
-            if (FBOid == 1)
+            if (FBOid == FBOID.MAIN)
             {
                 GL.Uniform4(7, Color4.Black);
             }
@@ -1353,17 +1353,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture3);
                 Textures.NormalDef.Bind();
                 GL.ActiveTexture(TextureUnit.Texture0);
-                if (FBOid == 1)
+                if (FBOid == FBOID.MAIN)
                 {
                     s_fbot.Bind();
                     RenderSkybox();
                     s_fbo.Bind();
                 }
-                if (FBOid == 99 || FBOid == 98)
+                if (FBOid == FBOID.FORWARD_SOLID || FBOid == FBOID.FORWARD_TRANSP)
                 {
                     RenderSkybox(); // TODO: s_fbot equivalent for forward renderer?
                 }
-                if (FBOid == 3 || FBOid == 7 || FBOid == 8 || FBOid == 99 || FBOid == 98)
+                if (FBOid == FBOID.TRANSP_UNLIT || FBOid == FBOID.TRANSP_LIT || FBOid == FBOID.TRANSP_SHADOWS || FBOid == FBOID.FORWARD_SOLID || FBOid == FBOID.FORWARD_TRANSP)
                 {
                     Rendering.SetMinimumLight(1);
                     TheRegion.RenderClouds();
@@ -1396,7 +1396,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         }
                     }
                 }
-                if (FBOid == 1)
+                if (FBOid == FBOID.MAIN)
                 {
                     Rendering.SetMinimumLight(1f);
                 }
@@ -1447,7 +1447,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 Rendering.SetColor(Color4.White);
             }
-            if (FBOid == 1)
+            if (FBOid == FBOID.MAIN)
             {
                 Rendering.SetMinimumLight(0f);
             }
@@ -1769,5 +1769,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Matrix4 Ortho;
 
         public Matrix4 PrimaryMatrix;
+    }
+
+    public enum FBOID : byte
+    {
+        NONE = 0,
+        MAIN = 1,
+        TRANSP_UNLIT = 3,
+        SHADOWS = 4,
+        TRANSP_LIT = 7,
+        TRANSP_SHADOWS = 8,
+        REFRACT = 21,
+        FORWARD_TRANSP = 98,
+        FORWARD_SOLID = 99,
     }
 }

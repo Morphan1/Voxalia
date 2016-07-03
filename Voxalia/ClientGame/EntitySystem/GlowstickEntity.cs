@@ -11,6 +11,7 @@ using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.OtherSystems;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -27,14 +28,14 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
-            if (TheClient.FBOid == 1)
+            if (TheClient.FBOid == FBOID.MAIN)
             {
                 GL.Uniform4(7, new Vector4(GColor.R, GColor.B, GColor.B, 1f));
             }
             TheClient.Rendering.SetMinimumLight(1);
             base.Render();
             TheClient.Rendering.SetMinimumLight(0);
-            if (TheClient.FBOid == 1)
+            if (TheClient.FBOid == FBOID.MAIN)
             {
                 GL.Uniform4(7, new Vector4(0f, 0f, 0f, 0f));
             }
