@@ -71,11 +71,12 @@ namespace Voxalia.ClientGame.EntitySystem
             else
             {
                 TheClient.Rendering.SetMinimumLight(1f);
-                TheClient.Rendering.SetColor(Color4.White);
+                TheClient.Rendering.SetColor(Color4.DarkRed);
                 TheClient.Rendering.RenderCylinder(GetPosition(), GetPosition() - Velocity / 20f, 0.01f);
                 TheClient.Particles.Engine.AddEffect(ParticleEffectType.CYLINDER, (o) => ppos, (o) => Position, (o) => 0.01f, 2f,
-                    Location.One, Location.One, true, TheClient.Textures.GetTexture("common/smoke"));
+                    Location.One, Location.One, true, TheClient.Textures.GetTexture("white"));
                 ppos = Position;
+                TheClient.Rendering.SetColor(Color4.White);
             }
         }
     }
