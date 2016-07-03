@@ -15,6 +15,7 @@ using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.Shared.Collision;
 using System.Diagnostics;
+using Priority_Queue;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -39,7 +40,7 @@ namespace Voxalia.ClientGame.WorldSystem
         public List<Entity> ShadowCasters = new List<Entity>();
 
         public AABB[] Highlights = new AABB[0];
-        
+
         /// <summary>
         /// Builds the physics world.
         /// </summary>
@@ -183,6 +184,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             SolveJoints();
             TickClouds();
+            CheckForRenderNeed();
         }
 
         public void SolveJoints()
@@ -809,12 +811,52 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             return col / Math.Max(col.X, Math.Max(col.Y, col.Z));
         }
-        
+
         public Location GetLightAmount(Location pos, Location norm, Chunk ch)
         {
             Location amb = GetAmbient(pos);
             Location sky = GetSkyLight(pos, norm, ch);
             return Regularize(amb + sky);
+        }
+
+        public SimplePriorityQueue<Vector3i> NeedsRendering = new SimplePriorityQueue<Vector3i>();
+
+        public HashSet<Vector3i> RenderingNow = new HashSet<Vector3i>();
+
+        public void CheckForRenderNeed()
+        {
+            lock (RenderingNow)
+            {
+                while (NeedsRendering.Count > 0 && RenderingNow.Count < TheClient.CVars.r_chunksatonce.ValueI)
+                {
+                    Vector3i temp = NeedsRendering.Dequeue();
+                    Chunk ch = GetChunk(temp);
+                    if (ch != null)
+                    {
+                        ch.MakeVBONow();
+                        RenderingNow.Add(temp);
+                    }
+                }
+            }
+        }
+
+        public void DoneRendering(Chunk ch)
+        {
+            lock (RenderingNow)
+            {
+                RenderingNow.Remove(ch.WorldPosition);
+            }
+        }
+
+        public void NeedToRender(Chunk ch)
+        {
+            lock (RenderingNow)
+            {
+                if (!NeedsRendering.Contains(ch.WorldPosition))
+                {
+                    NeedsRendering.Enqueue(ch.WorldPosition, (ch.WorldPosition.ToLocation() - TheClient.CameraPos).LengthSquared());
+                }
+            }
         }
     }
 }

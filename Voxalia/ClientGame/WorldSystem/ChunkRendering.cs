@@ -12,19 +12,24 @@ namespace Voxalia.ClientGame.WorldSystem
     {
         public VBO _VBO = null;
         
+        public void CreateVBO()
+        {
+            OwningRegion.NeedToRender(this);
+        }
+
         /// <summary>
-        /// Sync only.
+        /// Internal region call only.
         /// </summary>
-        public void CreateVBO(Action callback = null)
+        public void MakeVBONow()
         {
             if (rendering != null)
             {
-                ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(() => VBOHInternal(callback));
+                ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(() => VBOHInternal());
                 rendering = rendering.ReplaceOrFollowWith(item);
             }
             else
             {
-                rendering = OwningRegion.TheClient.Schedule.StartASyncTask(() => VBOHInternal(callback));
+                rendering = OwningRegion.TheClient.Schedule.StartASyncTask(() => VBOHInternal());
             }
         }
 
@@ -48,7 +53,7 @@ namespace Voxalia.ClientGame.WorldSystem
             return BlockInternal.AIR;
         }
 
-        void VBOHInternal(Action callback)
+        void VBOHInternal()
         {
             try
             {
@@ -62,10 +67,6 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     return;
                 }
-                OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
-                {
-                    OwningRegion.TheClient.ChunksRenderingCurrently++;
-                });
                 Vector3 ppos = ClientUtilities.Convert(WorldPosition.ToLocation() * CHUNK_SIZE);
                 //bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, 1));
@@ -171,7 +172,6 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                     {
-                        OwningRegion.TheClient.ChunksRenderingCurrently--;
                         if (_VBO != null)
                         {
                             VBO tV = _VBO;
@@ -187,20 +187,10 @@ namespace Voxalia.ClientGame.WorldSystem
                                 }
                             }
                         }
-                    });
-                    OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
-                    {
                         IsAir = true;
                         _VBO = null;
-                        if (DENIED)
-                        {
-                            return;
-                        }
-                        if (callback != null)
-                        {
-                            callback.Invoke();
-                        }
                     });
+                    OwningRegion.DoneRendering(this);
                     return;
                 }
                 uint[] inds = new uint[rh.Vertices.Count];
@@ -240,7 +230,6 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                 {
-                    OwningRegion.TheClient.ChunksRenderingCurrently--;
                     if (DENIED)
                     {
                         if (tVBO.generated)
@@ -278,15 +267,13 @@ namespace Voxalia.ClientGame.WorldSystem
                         tVBO.GenerateOrUpdate();
                         tVBO.CleanLists();
                     }
-                    if (callback != null)
-                    {
-                        callback.Invoke();
-                    }
                 });
+                OwningRegion.DoneRendering(this);
             }
             catch (Exception ex)
             {
                 SysConsole.Output(OutputType.ERROR, "Generating ChunkVBO...: " + ex.ToString());
+                OwningRegion.DoneRendering(this);
             }
         }
 
