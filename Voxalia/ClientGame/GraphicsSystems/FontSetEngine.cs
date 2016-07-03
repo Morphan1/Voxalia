@@ -307,6 +307,16 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                                 ttext = Client.Central.Languages.GetText(subdats);
                                                 highl = false;
                                             }
+                                            else if (sbl == "lb")
+                                            {
+                                                ttext = "[";
+                                                highl = false;
+                                            }
+                                            else if (sbl == "rb")
+                                            {
+                                                ttext = "]";
+                                                highl = false;
+                                            }
                                             else
                                             {
                                                 ttext = sbt.After("|");
@@ -652,6 +662,16 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                             string langinfo = sbl.After("lang=");
                                             string[] subdats = csplit(langinfo).ToArray();
                                             ttext = Client.Central.Languages.GetText(subdats);
+                                            highl = false;
+                                        }
+                                        else if (sbl == "lb")
+                                        {
+                                            ttext = "[";
+                                            highl = false;
+                                        }
+                                        else if (sbl == "rb")
+                                        {
+                                            ttext = "]";
                                             highl = false;
                                         }
                                         else
