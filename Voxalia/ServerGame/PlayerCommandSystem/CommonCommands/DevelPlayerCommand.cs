@@ -30,7 +30,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
         {
             if (entry.InputArguments.Count <= 0)
             {
-                entry.Player.Network.SendMessage("/devel <subcommand> [ values ... ]");
+                ShowUsage(entry);
                 return;
             }
             string arg0 = entry.InputArguments[0];
@@ -290,7 +290,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             }
             else
             {
-                entry.Player.Network.SendMessage("/devel <subcommand> [ values ... ]");
+                ShowUsage(entry);
                 return;
             }
         }

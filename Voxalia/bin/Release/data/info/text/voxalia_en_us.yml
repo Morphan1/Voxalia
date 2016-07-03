@@ -32,6 +32,9 @@ commands:
     # Note that server/client commands are handled by FreneticScript, not this language engine currently.
     player:
         devel:
+            usage: /devel <subcommand> [ values ... ]
+            description: Runs a developmental command.
+            # TODO: Just two separate messages, after {{1}}/etc. gets used elsewhere.
             secure_movement: Toggled secure movement to {{1}}.
     
 
