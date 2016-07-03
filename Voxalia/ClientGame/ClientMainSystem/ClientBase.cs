@@ -358,6 +358,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CScreen.SwitchTo();
         }
 
+        /*
         /// <summary>
         /// For use by ProcessChunks() alone.
         /// </summary>
@@ -433,7 +434,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 });
             });
         }
-        
+        */
+
         /// <summary>
         /// The "Game" screen.
         /// </summary>

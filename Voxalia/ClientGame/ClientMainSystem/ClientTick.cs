@@ -207,7 +207,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Schedule.RunAllSyncTasks(0);
                     Player.PostTick();
                     TheRegion.SolveJoints();
-                    ProcessChunks();
+                    //ProcessChunks();
                 }
                 catch (Exception ex)
                 {

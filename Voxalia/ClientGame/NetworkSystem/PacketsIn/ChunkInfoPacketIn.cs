@@ -97,6 +97,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             chk.CalculateLighting();
             chk.LOADING = false;
             chk.PRED = true;
+            chk.OwningRegion.Regen(chk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE, chk);
         }
     }
 }

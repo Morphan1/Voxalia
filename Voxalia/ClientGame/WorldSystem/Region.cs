@@ -349,6 +349,59 @@ namespace Voxalia.ClientGame.WorldSystem
             return ch.GetBlockAt(x, y, z);
         }
 
+        public void Regen(Location pos, Chunk ch, int x = 1, int y = 1, int z = 1)
+        {
+            UpdateChunk(ch);
+            if (x == 0 || TheClient.CVars.r_chunkoverrender.ValueB)
+            {
+                ch = GetChunk(ChunkLocFor(pos + new Location(-1, 0, 0)));
+                if (ch != null)
+                {
+                    UpdateChunk(ch);
+                }
+            }
+            if (y == 0 || TheClient.CVars.r_chunkoverrender.ValueB)
+            {
+                ch = GetChunk(ChunkLocFor(pos + new Location(0, -1, 0)));
+                if (ch != null)
+                {
+                    UpdateChunk(ch);
+                }
+            }
+            if (z == 0 || TheClient.CVars.r_chunkoverrender.ValueB)
+            {
+                ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, -1)));
+                if (ch != null)
+                {
+                    UpdateChunk(ch);
+                }
+            }
+            if (x == ch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
+            {
+                ch = GetChunk(ChunkLocFor(pos + new Location(1, 0, 0)));
+                if (ch != null)
+                {
+                    UpdateChunk(ch);
+                }
+            }
+            if (y == ch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
+            {
+                ch = GetChunk(ChunkLocFor(pos + new Location(0, 1, 0)));
+                if (ch != null)
+                {
+                    UpdateChunk(ch);
+                }
+            }
+            if (z == ch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
+            {
+                ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, 1)));
+                if (ch != null)
+                {
+                    UpdateChunk(ch);
+                }
+            }
+        }
+
         public void SetBlockMaterial(Location pos, ushort mat, byte dat = 0, byte paint = 0, bool regen = true)
         {
             Chunk ch = LoadChunk(ChunkLocFor(pos), 1);
@@ -358,56 +411,7 @@ namespace Voxalia.ClientGame.WorldSystem
             ch.SetBlockAt(x, y, z, new BlockInternal(mat, dat, paint, 0));
             if (regen)
             {
-                UpdateChunk(ch);
-                if (x == 0)
-                {
-                    ch = GetChunk(ChunkLocFor(pos + new Location(-1, 0, 0)));
-                    if (ch != null)
-                    {
-                        UpdateChunk(ch);
-                    }
-                }
-                if (y == 0)
-                {
-                    ch = GetChunk(ChunkLocFor(pos + new Location(0, -1, 0)));
-                    if (ch != null)
-                    {
-                        UpdateChunk(ch);
-                    }
-                }
-                if (z == 0)
-                {
-                    ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, -1)));
-                    if (ch != null)
-                    {
-                        UpdateChunk(ch);
-                    }
-                }
-                if (x == ch.CSize - 1)
-                {
-                    ch = GetChunk(ChunkLocFor(pos + new Location(1, 0, 0)));
-                    if (ch != null)
-                    {
-                        UpdateChunk(ch);
-                    }
-                }
-
-                if (y == ch.CSize - 1)
-                {
-                    ch = GetChunk(ChunkLocFor(pos + new Location(0, 1, 0)));
-                    if (ch != null)
-                    {
-                        UpdateChunk(ch);
-                    }
-                }
-                if (z == ch.CSize - 1)
-                {
-                    ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, 1)));
-                    if (ch != null)
-                    {
-                        UpdateChunk(ch);
-                    }
-                }
+                Regen(pos, ch, x, y, z);
             }
         }
 
