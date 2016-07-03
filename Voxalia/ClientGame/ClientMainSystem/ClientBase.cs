@@ -421,8 +421,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                             c++;
                             // TODO: chunk.CalculateLighting() ?
                             // TODO: Surroundings ?
-                            Schedule.ScheduleSyncTask(() => { chunk.AddToWorld(); }, Utilities.UtilRandom.NextDouble() * 10);
-                            Schedule.ScheduleSyncTask(() => { chunk.CreateVBO(); }, Utilities.UtilRandom.NextDouble() * 10);
+                            Schedule.ScheduleSyncTask(() => { chunk.AddToWorld(); });
+                            Schedule.ScheduleSyncTask(() => { chunk.CreateVBO(); });
                             chunk.PROCESSED = true;
                         }
                     }
