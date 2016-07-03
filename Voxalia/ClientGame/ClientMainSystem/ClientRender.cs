@@ -310,27 +310,30 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 gDelta = e.Time;
                 gTicks++;
-                try
+                if (Window.Visible && Window.WindowState != WindowState.Minimized)
                 {
-                    Shaders.ColorMultShader.Bind();
-                    GL.Uniform1(6, (float)GlobalTickTimeLocal);
-                    CScreen.Render();
-                    if (CVars.r_3d_enable.ValueB)
+                    try
                     {
-                        GL.Viewport(Window.Width / 2, 0, Window.Width / 2, Window.Height);
-                        UIConsole.Draw();
-                        GL.Viewport(0, 0, Window.Width / 2, Window.Height);
-                        UIConsole.Draw();
-                        GL.Viewport(0, 0, Window.Width, Window.Height);
+                        Shaders.ColorMultShader.Bind();
+                        GL.Uniform1(6, (float)GlobalTickTimeLocal);
+                        CScreen.Render();
+                        if (CVars.r_3d_enable.ValueB)
+                        {
+                            GL.Viewport(Window.Width / 2, 0, Window.Width / 2, Window.Height);
+                            UIConsole.Draw();
+                            GL.Viewport(0, 0, Window.Width / 2, Window.Height);
+                            UIConsole.Draw();
+                            GL.Viewport(0, 0, Window.Width, Window.Height);
+                        }
+                        else
+                        {
+                            UIConsole.Draw();
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        UIConsole.Draw();
+                        SysConsole.Output(OutputType.ERROR, "Rendering (general): " + ex.ToString());
                     }
-                }
-                catch (Exception ex)
-                {
-                    SysConsole.Output(OutputType.ERROR, "Rendering (general): " + ex.ToString());
                 }
                 Stopwatch timer = new Stopwatch();
                 try
