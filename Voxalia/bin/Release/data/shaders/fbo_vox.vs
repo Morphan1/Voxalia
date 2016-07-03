@@ -61,6 +61,10 @@ vec4 color_for(in vec4 pos)
 			float b = snoise2(vec3((pos.x - 50.0 - time) / 10.0, (pos.y - 65.0 - time * 1.56) / 10.0, (pos.z + 73.0 - time * 1.3) / 10.0));
 			return vec4(r, g, b, 1.0);
 		}
+		else if (tcol.y < 0.7 && tcol.y > 0.3 && tcol.x == 0.0 && tcol.z == 0.0)
+		{
+			return vec4(0.0, 0.31 + snoise2(pos.xyz) * 0.38, 0.0, 0.0);
+		}
 		else
 		{
 			float adjust = abs(mod(time * 0.2, 2.0));

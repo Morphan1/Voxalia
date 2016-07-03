@@ -66,6 +66,7 @@ namespace Voxalia.Shared
         public static Color MAGIC = Color.FromArgb(0, 0, 0, 0);
         public static Color OLD_MAGIC = Color.FromArgb(0, 127, 0, 0);
         public static Color RAINBOW = Color.FromArgb(0, 127, 0, 127);
+        public static Color BLUR = Color.FromArgb(0, 0, 127, 0);
 
         public static Dictionary<string, byte> KnownColorNames = new Dictionary<string, byte>();
 
@@ -145,7 +146,6 @@ namespace Voxalia.Shared
             Register("LIME", LIME);
             Register("SKY_BLUE", SKY_BLUE);
             Register("VERY_DARK_GRAY", VERY_DARK_GRAY);
-            Register("PLACEHOLDER_9", WHITE);
             Register("PLACEHOLDER_8", WHITE);
             Register("PLACEHOLDER_7", WHITE);
             Register("PLACEHOLDER_6", WHITE);
@@ -179,6 +179,7 @@ namespace Voxalia.Shared
             Register("MAGIC", MAGIC);
             Register("OLD_MAGIC", OLD_MAGIC);
             Register("RAINBOW", RAINBOW);
+            Register("BLUR", BLUR);
         }
     }
 }

@@ -33,6 +33,23 @@ layout (location = 5) out vec4 renderhint2;
 
 void main()
 {
+	vec4 dets = texture(htex, f.texcoord);
+#if MCM_REFRACT
+	if (dets.z > 0.01) // TODO: Use the exact refraction value?!
+	{
+		vec3 tnorms = f.tbn * (texture(normal_tex, f.texcoord).xyz * 2.0 - vec3(1.0));
+		color = vec4(0.0);
+		position = vec4(0.0);
+		normal = vec4(0.0);
+		renderhint = vec4(0.0);
+		renderhint2 = vec4(tnorms, 1.0);
+		return;
+	}
+	else
+	{
+		discard;
+	}
+#endif
 	vec4 col = texture(s, f.texcoord);
 	vec4 thval = vec4(0.0);
 	float thstr = 0.0;
@@ -53,32 +70,22 @@ void main()
 	thstr += 1.0;
 	col = thval / thstr;
 	col.w = tw;
-	col *= f.tcol;
-	vec4 dets = texture(htex, f.texcoord);
-#if MCM_REFRACT
-    float refract_eta = dets.b;
-	if (refract_eta > 0.01)
+	float rhBlur = 0.0;
+	if (f.tcol.w == 0.0 && f.tcol.x == 0.0 && f.tcol.z == 0.0 && f.tcol.y > 0.3 && f.tcol.y < 0.7)
 	{
-		vec3 tnorms = f.tbn * (texture(normal_tex, f.texcoord).xyz * 2.0 - vec3(1.0));
-		color = vec4(0.0);
-		position = vec4(0.0);
-		normal = vec4(0.0);
-		renderhint = vec4(0.0);
-		renderhint2 = vec4(tnorms, 1.0);
-		return;
+		rhBlur = (f.tcol.y - 0.31) * ((1.0 / 0.38) * (3.14159 * 2.0));
 	}
 	else
 	{
-		discard;
+		col *= f.tcol;
 	}
-#endif
 	if (col.w * v_color.w < 0.99)
 	{
 		discard;
 	}
 	vec3 lightcol = clamp(f.color.xyz, vec3(light_clamp.x), vec3(light_clamp.y));
-    float spec = dets.r;
-    float refl = dets.g;
+    float spec = dets.x;
+    float refl = dets.y;
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - vec3(1.0);
 	color = col * v_color;
 	position = vec4(f.position.xyz, 1.0);
@@ -86,7 +93,7 @@ void main()
 	float light_min = clamp(minimum_light + dets.a, 0.0, 1.0);
 	float blighting = max((lightcol.x + lightcol.y + lightcol.z) / 3.0, light_min);
 	color = vec4(color.xyz * blighting, color.w);
-	renderhint = vec4(spec, 0.0, light_min, 1.0);
+	renderhint = vec4(spec, rhBlur, light_min, 1.0);
 	renderhint2 = vec4(0.0, refl, 0.0, 1.0);
     bw = bw_color;
 }

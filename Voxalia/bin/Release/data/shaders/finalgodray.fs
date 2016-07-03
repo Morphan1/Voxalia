@@ -28,13 +28,13 @@ layout (location = 16) uniform float znear = 0.1;
 layout (location = 17) uniform float zfar = 1000.0;
 layout (location = 18) uniform vec4 fogCol = vec4(0.0);
 layout (location = 19) uniform float desaturationAmount = 1.0;
-
 layout (location = 20) uniform vec3 eye_position = vec3(0.0);
 layout (location = 21) uniform float MIN_DEPTH = 1.0;
 layout (location = 22) uniform mat4 proj_mat = mat4(1.0);
 layout (location = 23) uniform float MAX_DEPTH = 1000.0;
 layout (location = 24) uniform float WIDTH = 1280.0;
 layout (location = 25) uniform float HEIGHT = 720.0;
+layout (location = 26) uniform float time = 0.0;
 
 layout (location = 0) out vec4 color;
 layout (location = 1) out vec4 godray;
@@ -97,13 +97,25 @@ vec3 desaturate(in vec3 c)
 	return mix(c, vec3(0.95, 0.77, 0.55) * dot(c, vec3(1.0)), desaturationAmount);
 }
 
-vec4 getColor(in vec2 pos)
+vec4 getColorInt(in vec2 pos)
 {
 	vec4 shadow_light_color = texture(shtex, pos);
 	vec4 colortex_color = texture(colortex, pos);
 	vec4 renderhint = texture(renderhinttex, pos);
 	//vec3 sub = vec3(1.0 - renderhint.y);
 	return regularize(vec4(ambient + vec3(renderhint.z), 0.0) * colortex_color + (shadow_light_color /* - vec4(sub, 0.0)*/ ));
+}
+
+vec4 getColor(in vec2 pos)
+{
+	vec4 renderhint = texture(renderhinttex, pos);
+	if (renderhint.y > 0.01)
+	{
+		// TODO: Better variation to the blur effect.
+		vec2 psx = normalize(pos - vec2(0.5 + cos(time + renderhint.y), 0.5 + sin(time + renderhint.y))) * 0.02;
+		return getColorInt(pos + psx);
+	}
+	return getColorInt(pos);
 }
 
 #define FXAA_SPAN_MAX 8.0
