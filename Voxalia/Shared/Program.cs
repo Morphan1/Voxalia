@@ -11,7 +11,7 @@ namespace Voxalia.Shared
     {
         public static string GameName = "Voxalia";
 
-        public static string GameVersion = "0.0.8";
+        public static string GameVersion = "0.0.9";
 
         public static FileHandler Files;
 
