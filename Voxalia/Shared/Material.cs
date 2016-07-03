@@ -45,10 +45,11 @@ namespace Voxalia.Shared
         LEAVES_OAK_LIQUID = 32,
         COBBLESTONE = 33,
         HELLSTONE = 34,
+        LAVA = 35,
         /// <summary>
         /// How many materials there are by default. Only for use with direct handling of this enumeration (shouldn't happen often.)
         /// </summary>
-        NUM_DEFAULT = 35,
+        NUM_DEFAULT = 36,
         /// <summary>
         /// How many materials there theoretically can be.
         /// </summary>

@@ -1,0 +1,10 @@
+type: block
+icon: blocks/liquid/lava
+display: Lava
+description: May cause burning sensation!
+color: 1,1,1
+model: block
+bound: false
+datum: 35
+weight: 1
+volume: 1
