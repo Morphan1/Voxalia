@@ -5,3 +5,4 @@ FrictionMod=0.01
 FogColor=0,1,0
 Hardness=5
 BreakTime=1
+SOUND=SLIME

@@ -52,6 +52,9 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 case MaterialSound.STONE:
                 case MaterialSound.SNOW:
                 case MaterialSound.GLASS:
+                case MaterialSound.CLAY:
+                case MaterialSound.LIQUID:
+                case MaterialSound.SLIME:
                     // TODO: Don't manually search the sound list every time!
                     TheClient.Sounds.Play(TheClient.Sounds.GetSound("sfx/steps/humanoid/" + sound.ToString().ToLowerFast() + (Utilities.UtilRandom.Next(4) + 1)), false, pos, pitch, volume);
                     break;

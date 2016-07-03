@@ -789,7 +789,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 ZP++;
                 z = 0;
             }
-            return norm.Dot(SunLightPathNegative) * new Location(light) * SkyLightMod;
+            return Math.Max(norm.Dot(SunLightPathNegative), 0.5) * new Location(light) * SkyLightMod;
         }
 
         static Location SunLightPathNegative = new Location(0, 0, 1);

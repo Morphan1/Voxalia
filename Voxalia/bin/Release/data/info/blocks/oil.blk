@@ -1,6 +1,5 @@
 Name=Oil
-// TODO: Liquid?
-Sound=METAL
+Sound=LIQUID
 Solidity=LIQUID
 FogColor=0,0,0
 Hardness=5

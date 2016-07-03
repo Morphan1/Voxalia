@@ -1,6 +1,5 @@
 Name=Water
-// TODO: Liquid
-Sound=METAL
+Sound=LIQUID
 Solidity=LIQUID
 Opaque=false
 FogCOlor=0,0.5,1

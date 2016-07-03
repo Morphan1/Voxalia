@@ -1,6 +1,5 @@
 Name=Dirty_Water
-// TODO: LIQUID?
-Sound=METAL
+Sound=LIQUID
 Solidity=LIQUID
 Opaque=false
 FogColor=0,0.5,0.25

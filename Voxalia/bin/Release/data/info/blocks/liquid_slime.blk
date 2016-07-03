@@ -1,6 +1,5 @@
 Name=Liquid_Slime
-// TODO: Liquid
-Sound=METAL
+Sound=SLIME
 Solidity=LIQUID
 Opaque=false
 FogColor=1,1,1

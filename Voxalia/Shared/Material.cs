@@ -404,12 +404,13 @@ namespace Voxalia.Shared
         DIRT = 7,
         WOOD = 8,
         GLASS = 9,
-        // TODO: Clay?
-        // TODO: Liquid!
+        LIQUID = 10,
+        CLAY = 11,
+        SLIME = 12,
         /// <summary>
         /// How many total material-generated sound types there are.
         /// </summary>
-        COUNT = 10
+        COUNT = 13
     }
 
     public enum MaterialBreaker
