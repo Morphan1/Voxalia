@@ -67,6 +67,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
         }
 
+        /*
         public void CalculateLighting()
         {
             if (OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB)
@@ -100,6 +101,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
             }
         }
+        */
         
         public FullChunkObject FCO = null;
         

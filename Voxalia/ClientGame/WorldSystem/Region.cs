@@ -324,13 +324,6 @@ namespace Voxalia.ClientGame.WorldSystem
             return null;
         }
 
-        public OpenTK.Vector4 GetBlockLighting(Location pos)
-        {
-            BlockInternal bi = GetBlockInternal(pos);
-            float col = bi.BlockLocalData / 255f;
-            return new OpenTK.Vector4(col, col, col, 1f);
-        }
-
         public Material GetBlockMaterial(Location pos)
         {
             return (Material)GetBlockInternal(pos).BlockMaterial;
@@ -400,6 +393,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     UpdateChunk(ch);
                 }
             }
+            // TODO: Cascade downward for lighting updates?
         }
 
         public void SetBlockMaterial(Location pos, ushort mat, byte dat = 0, byte paint = 0, bool regen = true)
@@ -417,14 +411,14 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void UpdateChunk(Chunk ch)
         {
-            TheClient.Schedule.StartASyncTask(() =>
+            /*TheClient.Schedule.StartASyncTask(() =>
             {
                 ch.CalculateLighting();
-                TheClient.Schedule.ScheduleSyncTask(() =>
-                {
-                    ch.AddToWorld();
-                    ch.CreateVBO();
-                });
+            });*/
+            TheClient.Schedule.ScheduleSyncTask(() =>
+            {
+                ch.AddToWorld();
+                ch.CreateVBO();
             });
         }
 
@@ -745,7 +739,7 @@ namespace Voxalia.ClientGame.WorldSystem
             return false;
         }
 
-        public Location GetSkyLight(Location pos, Location norm, Chunk chk)
+        public Location GetSkyLight(Location pos, Location norm)
         {
             if (norm.Z < -0.99)
             {
@@ -816,13 +810,13 @@ namespace Voxalia.ClientGame.WorldSystem
             return col / Math.Max(col.X, Math.Max(col.Y, col.Z));
         }
 
-        public Location GetLightAmount(Location pos, Location norm, Chunk ch)
+        public Location GetLightAmount(Location pos, Location norm)
         {
             Location amb = GetAmbient(pos);
-            Location sky = GetSkyLight(pos, norm, ch);
+            Location sky = GetSkyLight(pos, norm);
             return Regularize(amb + sky);
         }
-
+        
         public SimplePriorityQueue<Vector3i> NeedsRendering = new SimplePriorityQueue<Vector3i>();
 
         public HashSet<Vector3i> RenderingNow = new HashSet<Vector3i>();
