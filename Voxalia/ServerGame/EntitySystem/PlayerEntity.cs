@@ -594,11 +594,10 @@ namespace Voxalia.ServerGame.EntitySystem
             new Vector3i(0, -1, 0), new Vector3i(0, 1, 0), new Vector3i(0, 0, -1), new Vector3i(0, 0, 1) };
 
         const float Max_FOV = 90f;
-
-        const int Max_Chunks_Per_March = 25; // TODO: CVar?
-
+        
         void ChunkMarchAndSend()
         {
+            int maxChunks = TheServer.CVars.n_chunkspertick.ValueI;
             int chunksFound = 0;
             if (LoadRelPos.IsNaN() || LoadRelDir.IsNaN() || LoadRelDir.LengthSquared() < 0.1f)
             {
@@ -629,7 +628,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     if (TryChunk(cur, 0, 1))
                     {
                         chunksFound++;
-                        if (chunksFound > Max_Chunks_Per_March)
+                        if (chunksFound > maxChunks)
                         {
                             return;
                         }
@@ -642,7 +641,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     if (TryChunk(cur, 10, 2))
                     {
                         chunksFound++;
-                        if (chunksFound > Max_Chunks_Per_March)
+                        if (chunksFound > maxChunks)
                         {
                             return;
                         }
@@ -653,7 +652,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     if (TryChunk(cur, 25, 5))
                     {
                         chunksFound++;
-                        if (chunksFound > Max_Chunks_Per_March)
+                        if (chunksFound > maxChunks)
                         {
                             return;
                         }

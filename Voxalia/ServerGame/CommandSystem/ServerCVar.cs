@@ -22,7 +22,7 @@ namespace Voxalia.ServerGame.CommandSystem
         public CVar g_timescale, g_fps, g_maxheight, g_minheight, g_maxdist;
 
         // Network CVars
-        public CVar n_verifyip, n_rendersides;
+        public CVar n_verifyip, n_rendersides, n_chunkspertick;
 
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
@@ -43,6 +43,7 @@ namespace Voxalia.ServerGame.CommandSystem
             // Network CVars
             n_verifyip = Register("n_verifyip", "true", CVarFlag.Boolean, "Whether to verify connecting users' IP addresses with the global server. Disable this to allow LAN connections.");
             n_rendersides = Register("n_rendersides", "false", CVarFlag.Boolean, "Whether to render the side-on map view for the linked webpage.");
+            n_chunkspertick = Register("n_chunkspertick", "5", CVarFlag.Numeric, "How many chunks can be sent in a single server tick, per player.");
         }
 
         CVar Register(string name, string value, CVarFlag flags, string desc)
