@@ -280,7 +280,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public bool RenderingShadows = false;
 
-        public void sortEntities()
+        public void sortEntities() // TODO: Maybe reverse ent order first, then this, to counteract existing reversal?
         {
             TheRegion.Entities = TheRegion.Entities.OrderBy(o => (o.GetPosition() - CameraPos).LengthSquared()).ToList();
         }
@@ -824,7 +824,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                     {
-                        s_transponlyvoxlitsh =s_transponlyvoxlitsh.Bind();
+                        s_transponlyvoxlitsh = s_transponlyvoxlitsh.Bind();
                     }
                     else
                     {

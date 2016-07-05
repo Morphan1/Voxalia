@@ -15,7 +15,7 @@ language:
     # What texture to use for the flag
     flagtexture: flags/usa
     # What version of Voxalia this is for
-    forversion: 0.0.8
+    forversion: 0.0.9
 
 # Common text.
 common:
