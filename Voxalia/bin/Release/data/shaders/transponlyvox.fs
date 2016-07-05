@@ -219,7 +219,7 @@ void main()
 	memoryBarrier();
 	imageAtomicExchange(ui_page, ivec3(scrpos, 2), 0U);
 	vec4 abv = color;
-	abv.z = (abv.x * 255) + (abv.w * 255 * 255);
+	abv.z = (color.z * 255) + (color.w * 255 * 255);
 	abv.w = f.z;
 	imageStore(uib_spage, int(page + frag), abv);
 #endif

@@ -230,7 +230,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.BindTexture(TextureTarget.TextureBuffer, ttex);
             GL.TexBuffer(TextureBufferTarget.TextureBuffer, flip ? SizedInternalFormat.R32f : SizedInternalFormat.Rgba32f, temp);
             GL.BindImageTexture(4 + c, ttex, 0, false, 0, TextureAccess.ReadWrite, flip ? SizedInternalFormat.R32ui : SizedInternalFormat.Rgba32f);
-            TransTexs[c] = temp;
+            TransTexs[c] = ttex;
             //GL.BindTexture(TextureTarget.TextureBuffer, 0);
             return temp;
         }
@@ -1172,11 +1172,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 GL.ActiveTexture(TextureUnit.Texture4);
                 GL.BindTexture(TextureTarget.Texture2DArray, TransTexs[0]);
-                for (int i = 1; i < TransTexs.Length; i++)
-                {
-                    GL.ActiveTexture(TextureUnit.Texture4 + i);
-                    GL.BindTexture(TextureTarget.TextureBuffer, TransTexs[i]);
-                }
+                GL.BindImageTexture(4, TransTexs[0], 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.R32ui);
+                GL.ActiveTexture(TextureUnit.Texture5);
+                GL.BindTexture(TextureTarget.TextureBuffer, TransTexs[1]);
+                GL.BindImageTexture(5, TransTexs[1], 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.Rgba32f);
+                GL.ActiveTexture(TextureUnit.Texture6);
+                GL.BindTexture(TextureTarget.TextureBuffer, TransTexs[2]);
+                GL.BindImageTexture(6, TransTexs[2], 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.R32ui);
+                GL.ActiveTexture(TextureUnit.Texture7);
+                GL.BindTexture(TextureTarget.TextureBuffer, TransTexs[3]);
+                GL.BindImageTexture(7, TransTexs[3], 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.R32ui);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 s_ll_clearer.Bind();
                 GL.Uniform2(4, new Vector2(Window.Width, Window.Height));

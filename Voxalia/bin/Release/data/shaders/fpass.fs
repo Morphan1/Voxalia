@@ -24,7 +24,6 @@ void main()
 	{
 		discard;
 	}
-	color = vec4(1.0);return;
 	int numFrags = int(imageLoad(ui_page, ivec3(scrpos, 1)).x);
 	if (numFrags <= 0)
 	{
@@ -72,8 +71,7 @@ void main()
 		}
 	}
 	vec4 tcol = vec4(0.0);
-	float thickness = flist[0].w * 0.5;
-	const float fragmentAlpha=0.5f;
+	//float thickness = flist[0].w * 0.5;
 	for (int i = 0; i < numFrags; i++)
 	{
 		vec4 frag = flist[i];
