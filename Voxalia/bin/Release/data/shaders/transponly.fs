@@ -6,17 +6,21 @@
 #define MCM_SHADOWS 0
 #define MCM_LL 0
 
+#define AB_SIZE 32
+#define P_SIZE 4
+
+// TODO: more dynamically defined?
+#define ab_shared_pool_size (32 * 1024 * 1024)
+
 layout (binding = 0) uniform sampler2D tex;
 // TODO: Spec, refl!
-layout (binding = 3) uniform sampler2D normal_tex;
-layout (binding = 4) uniform sampler2DShadow shadowtex;
+layout (binding = 1) uniform sampler2D normal_tex;
+layout (binding = 2) uniform sampler2DShadow shadowtex;
 #if MCM_LL
-layout(size1x32, binding = 5) coherent uniform uimage2D ui_page;
-layout(size1x32, binding = 6) coherent uniform uimage2D ui_frag;
-layout(size1x32, binding = 7) coherent uniform uimage2D ui_sema;
-layout(size4x32, binding = 8) coherent uniform imageBuffer uib_spage;
-layout(size1x32, binding = 9) coherent uniform uimageBuffer uib_llist;
-layout(size1x32, binding = 10) coherent uniform uimageBuffer uib_cspage;
+layout(size1x32, binding = 4) coherent uniform uimage2DArray ui_page;
+layout(size4x32, binding = 5) coherent uniform imageBuffer uib_spage;
+layout(size1x32, binding = 6) coherent uniform uimageBuffer uib_llist;
+layout(size1x32, binding = 7) coherent uniform uimageBuffer uib_cspage;
 #endif
 
 layout (location = 4) uniform float desaturationAmount = 1.0;
@@ -50,6 +54,7 @@ void main()
 {
 #if MCM_LL
 	vec4 color;
+	vec2 u_screensize = vec2(light_details2[0][3], light_details2[1][3]);
 #endif
 	vec4 tcolor = texture(tex, f.texcoord);
 	if (tcolor.w * f.color.w >= 0.99)
@@ -80,7 +85,6 @@ void main()
 		+ vec4(minimum_light, minimum_light, minimum_light, 0.0)) / lightc;
 	vec3 eye_pos = vec3(light_details2[0][0], light_details2[0][1], light_details2[0][2]);
 	vec3 light_pos = vec3(light_details2[1][0], light_details2[1][1], light_details2[1][2]);
-	vec2 u_screensize = vec2(light_details2[0][3], light_details2[1][3]);
 	vec4 x_spos = shadow_matrix * vec4(f.position.xyz, 1.0);
 	vec3 N = normalize(-normalize(f.tbn * norms));
 	vec3 light_path = light_pos - f.position.xyz;
@@ -173,7 +177,7 @@ void main()
 	uint frag_mod = 0;
 	ivec2 scrpos = ivec2(f.scrpos * u_screensize);
 	int i = 0;
-	while (imageAtomicExchange(ui_sema, scrpos, 1U) != 0U && i < 1000) // TODO: 1000 -> uniform var?!
+	while (imageAtomicExchange(ui_page, ivec3(scrpos, 2), 1U) != 0U && i < 1000) // TODO: 1000 -> uniform var?!
 	{
 		memoryBarrier();
 		i++;
@@ -182,8 +186,8 @@ void main()
 	{
 		return;
 	}*/
-	page = imageLoad(ui_page, scrpos).x;
-	frag = imageLoad(ui_frag, scrpos).x;
+	page = imageLoad(ui_page, ivec3(scrpos, 0)).x;
+	frag = imageLoad(ui_page, ivec3(scrpos, 1)).x;
 	frag_mod = frag % P_SIZE;
 	if (frag_mod == 0)
 	{
@@ -191,7 +195,7 @@ void main()
 		if (npage < ab_shared_pool_size)
 		{
 			imageStore(uib_llist, int(npage / P_SIZE), uvec4(page, 0U, 0U, 0U));
-			imageStore(ui_page, scrpos, uvec4(npage, 0U, 0U, 0U));
+			imageStore(ui_page, ivec3(scrpos, 0), uvec4(npage, 0U, 0U, 0U));
 			page = npage;
 		}
 		else
@@ -201,11 +205,11 @@ void main()
 	}
 	if (page > 0)
 	{
-		imageStore(ui_frag, scrpos, uvec4(frag + 1, 0U, 0U, 0U));
+		imageStore(ui_page, ivec3(scrpos, 1), uvec4(frag + 1, 0U, 0U, 0U));
 	}
 	frag = frag_mod;
 	memoryBarrier();
-	imageAtomicExchange(ui_sema, scrpos, 0U);
+	imageAtomicExchange(ui_page, ivec3(scrpos, 2), 0U);
 	vec4 abv = color;
 	abv.z = (abv.x * 255) + (abv.w * 255 * 255);
 	abv.w = f.z;
