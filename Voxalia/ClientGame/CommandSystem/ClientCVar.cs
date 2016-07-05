@@ -33,7 +33,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun, r_shadowpace, r_shadows,
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth, r_toonify, r_transplighting, r_transpshadows,
             r_godrays, r_godray_samples, r_godray_wexposure, r_godray_decay, r_godray_density, r_godray_color,
-            r_3d_enable, r_fast, r_chunksatonce, r_chunkoverrender;
+            r_3d_enable, r_fast, r_chunksatonce, r_chunkoverrender, r_transpll;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect, a_echovolume;
@@ -103,6 +103,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_fast = Register("r_fast", "false", CVarFlag.Boolean, "Whether to use 'fast' rendering mode.");
             r_chunksatonce = Register("r_chunksatonce", "20", CVarFlag.Numeric, "How many chunks can render at once.");
             r_chunkoverrender = Register("r_chunkoverrender", "true", CVarFlag.Boolean, "Whether to render chunks more often for quality's sake, at risk of performance.");
+            r_transpll = Register("r_transpll", "true", CVarFlag.Boolean, "Whether to use GPU linked lists when rendering transparent objects.");
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric, "What volume the music should be.");
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");

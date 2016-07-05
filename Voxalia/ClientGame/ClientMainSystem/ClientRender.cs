@@ -102,6 +102,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_forw_vox = Shaders.GetShader("forward" + def + ",MCM_VOX");
             s_forw_trans = Shaders.GetShader("forward" + def + ",MCM_TRANSP");
             s_forw_vox_trans = Shaders.GetShader("forward" + def + ",MCM_VOX,MCM_TRANSP");
+            s_transponly = Shaders.GetShader("transponly" + def + ",MCM_LL");
+            s_transponlyvox = Shaders.GetShader("transponlyvox" + def + ",MCM_LL");
+            s_transponlylit = Shaders.GetShader("transponly" + def + ",MCM_LIT,MCM_LL");
+            s_transponlyvoxlit = Shaders.GetShader("transponlyvox" + def + ",MCM_LIT,MCM_LL");
+            s_transponlylitsh = Shaders.GetShader("transponly" + def + ",MCM_LIT,MCM_SHADOWS,MCM_LL");
+            s_transponlyvoxlitsh = Shaders.GetShader("transponlyvox" + def + ",MCM_LIT,MCM_SHADOWS,MCM_LL");
+            s_ll_clearer = Shaders.GetShader("clearer" + def);
+            s_ll_fpass = Shaders.GetShader("fpass" + def);
             // TODO: Better place for models?
             RainCyl = Models.GetModel("raincyl");
             RainCyl.LoadSkin(Textures);
@@ -175,7 +183,56 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, transp_fbo_depthtex, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.BindTexture(TextureTarget.Texture2D, 0);
+            // Linked list stuff
+            // TODO: Regeneratable, on window resize in particular.
+            GenTexture(0);
+            GenTexture(1);
+            GenTexture(2);
+            GenBuffer(3, false);
+            GenBuffer(4, true);
+            int cspb = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, cspb);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)sizeof(uint), IntPtr.Zero, BufferUsageHint.StaticDraw);
+            int csp = GL.GenTexture();
+            GL.BindTexture(TextureTarget.TextureBuffer, csp);
+            GL.TexBuffer(TextureBufferTarget.TextureBuffer, SizedInternalFormat.R32f, cspb);
+            GL.BindImageTexture(5, csp, 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.R32ui);
+            TransTexs[5] = csp;
+            GL.BindTexture(TextureTarget.TextureBuffer, 0);
         }
+
+        int[] TransTexs = new int[6];
+
+        public int GenTexture(int c)
+        {
+            int temp = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, temp);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.R32f, Window.Width, Window.Height, 0, PixelFormat.Red, PixelType.Float, IntPtr.Zero);
+            GL.BindImageTexture(c, temp, 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.R32ui);
+            TransTexs[c] = temp;
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+            return temp;
+        }
+
+        public int AB_SIZE = 16 * 1024 * 1024; // TODO: Tweak me!
+        public const int P_SIZE = 4;
+
+        public int GenBuffer(int c, bool flip)
+        {
+            int temp = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.TextureBuffer, temp);
+            GL.BufferData(BufferTarget.TextureBuffer, (IntPtr)(flip ? AB_SIZE / P_SIZE * sizeof(uint) : AB_SIZE * sizeof(float) * 4), IntPtr.Zero, BufferUsageHint.StaticDraw);
+            int ttex = GL.GenTexture();
+            GL.BindTexture(TextureTarget.TextureBuffer, ttex);
+            GL.TexBuffer(TextureBufferTarget.TextureBuffer, flip ? SizedInternalFormat.R32f : SizedInternalFormat.Rgba32f, temp);
+            GL.BindImageTexture(c, ttex, 0, false, 0, TextureAccess.ReadWrite, flip ? SizedInternalFormat.R32ui : SizedInternalFormat.Rgba32f);
+            TransTexs[c] = temp;
+            GL.BindTexture(TextureTarget.TextureBuffer, 0);
+            return temp;
+        }
+
 
         VBO[] skybox;
 
@@ -257,6 +314,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_forw_vox;
         public Shader s_forw_trans;
         public Shader s_forw_vox_trans;
+        public Shader s_transponly_ll;
+        public Shader s_transponlyvox_ll;
+        public Shader s_transponlylit_ll;
+        public Shader s_transponlyvoxlit_ll;
+        public Shader s_transponlylitsh_ll;
+        public Shader s_transponlyvoxlitsh_ll;
+        public Shader s_ll_clearer;
+        public Shader s_ll_fpass;
         RenderSurface4Part RS4P;
 
         public Location CameraUp = Location.UnitZ;
@@ -1004,6 +1069,52 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         void RenderTransp(ref int lightc, Frustum camFrust)
         {
+            if (CVars.r_transpll.ValueB)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    GL.ActiveTexture(TextureUnit.Texture5 + i);
+                    GL.BindTexture(TextureTarget.Texture2D, TransTexs[i]);
+                }
+                for (int i = 3; i < 6; i++)
+                {
+                    GL.ActiveTexture(TextureUnit.Texture5 + i);
+                    GL.BindTexture(TextureTarget.TextureBuffer, TransTexs[i]);
+                }
+                GL.ActiveTexture(TextureUnit.Texture0);
+                s_ll_clearer.Bind();
+                Matrix4 flatProj = Matrix4.CreateOrthographicOffCenter(-1, 1, 1, -1, -1, 1);
+                GL.UniformMatrix4(1, false, ref flatProj);
+                Matrix4 ident = Matrix4.Identity;
+                GL.UniformMatrix4(2, false, ref ident);
+                GL.Uniform2(4, new Vector2(Window.Width, Window.Height));
+                Rendering.RenderRectangle(-1, -1, 1, 1);
+                GL.MemoryBarrier(MemoryBarrierFlags.AllBarrierBits);
+                //s_whatever.Bind();
+                //GL.Uniform2(4, new Vector2(Window.Width, Window.Height));
+                //GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0f, 0f, 0f, 1f });
+                //GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1f });
+                //Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(FOV, Window.Width / (float)Window.Height, ZNear, ZFar);
+                //Matrix4 view = Matrix4.LookAt(CamPos, CamGoal, Vector3.UnitZ);
+                //Matrix4 combined = view * proj;
+                //GL.UniformMatrix4(1, false, ref combined);
+                renderTranspInt(ref lightc, camFrust);
+                GL.MemoryBarrier(MemoryBarrierFlags.AllBarrierBits);
+                s_ll_fpass.Bind();
+                GL.UniformMatrix4(1, false, ref flatProj);
+                GL.UniformMatrix4(2, false, ref ident);
+                GL.Uniform2(4, new Vector2(Window.Width, Window.Height));
+                Rendering.RenderRectangle(-1, -1, 1, 1);
+                Window.SwapBuffers();
+            }
+            else
+            {
+                renderTranspInt(ref lightc, camFrust);
+            }
+        }
+
+        void renderTranspInt(ref int lightc, Frustum camFrust)
+        {
             if (CVars.r_transplighting.ValueB)
             {
                 RenderLights = true;
@@ -1025,14 +1136,28 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         {
                             if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                             {
-                                s_transponlyvoxlitsh = s_transponlyvoxlitsh.Bind();
+                                if (CVars.r_transpll.ValueB)
+                                {
+                                    s_transponlyvoxlitsh_ll = s_transponlyvoxlitsh_ll.Bind();
+                                }
+                                else
+                                {
+                                    s_transponlyvoxlitsh = s_transponlyvoxlitsh.Bind();
+                                }
                                 GL.ActiveTexture(TextureUnit.Texture4);
                                 GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
                                 GL.ActiveTexture(TextureUnit.Texture0);
                             }
                             else
                             {
-                                s_transponlyvoxlit = s_transponlyvoxlit.Bind();
+                                if (CVars.r_transpll.ValueB)
+                                {
+                                    s_transponlyvoxlit_ll = s_transponlyvoxlit_ll.Bind();
+                                }
+                                else
+                                {
+                                    s_transponlyvoxlit = s_transponlyvoxlit.Bind();
+                                }
                             }
                             Matrix4 lmat = Lights[i].InternalLights[x].GetMatrix();
                             GL.UniformMatrix4(6, false, ref lmat);
@@ -1059,17 +1184,33 @@ namespace Voxalia.ClientGame.ClientMainSystem
                             matabc[0, 0] = (float)CameraPos.X;
                             matabc[0, 1] = (float)CameraPos.Y;
                             matabc[0, 2] = (float)CameraPos.Z;
+                            matabc[0, 3] = (float)Window.Width;
                             matabc[1, 0] = (float)Lights[i].EyePos.X;
                             matabc[1, 1] = (float)Lights[i].EyePos.Y;
                             matabc[1, 2] = (float)Lights[i].EyePos.Z;
+                            matabc[1, 3] = (float)Window.Height;
                             GL.UniformMatrix4(9, false, ref matabc);
                             if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                             {
-                                s_transponlylitsh = s_transponlylitsh.Bind();
+                                if (CVars.r_transpll.ValueB)
+                                {
+                                    s_transponlylitsh_ll = s_transponlylitsh_ll.Bind();
+                                }
+                                else
+                                {
+                                    s_transponlylitsh = s_transponlylitsh.Bind();
+                                }
                             }
                             else
                             {
-                                s_transponlylit = s_transponlylit.Bind();
+                                if (CVars.r_transpll.ValueB)
+                                {
+                                    s_transponlylit_ll = s_transponlylit_ll.Bind();
+                                }
+                                else
+                                {
+                                    s_transponlylit = s_transponlylit.Bind();
+                                }
                             }
                             GL.Uniform3(5, Lights[i].InternalLights[x].eye);
                             GL.UniformMatrix4(6, false, ref lmat);
@@ -1239,6 +1380,36 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
                 GL.ActiveTexture(TextureUnit.Texture0);
             }
+            else if (FBOid == FBOID.TRANSP_LL)
+            {
+                s_transponlyvox_ll = s_transponlyvox_ll.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.NormalTextureID);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
+                GL.ActiveTexture(TextureUnit.Texture0);
+            }
+            else if (FBOid == FBOID.TRANSP_LIT_LL)
+            {
+                s_transponlyvoxlit_ll = s_transponlyvoxlit_ll.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.NormalTextureID);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
+                GL.ActiveTexture(TextureUnit.Texture0);
+            }
+            else if (FBOid == FBOID.TRANSP_SHADOWS_LL)
+            {
+                s_transponlyvoxlitsh_ll = s_transponlyvoxlitsh_ll.Bind();
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.NormalTextureID);
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, TBlock.HelpTextureID);
+                GL.ActiveTexture(TextureUnit.Texture0);
+            }
             else if (FBOid == FBOID.FORWARD_SOLID)
             {
                 s_forw_vox = s_forw_vox.Bind();
@@ -1313,6 +1484,36 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 s_transponlylitsh = s_transponlylitsh.Bind();
+            }
+            else if (FBOid == FBOID.TRANSP_LL)
+            {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                s_transponly_ll = s_transponly_ll.Bind();
+            }
+            else if (FBOid == FBOID.TRANSP_LIT_LL)
+            {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                s_transponlylit_ll = s_transponlylit_ll.Bind();
+            }
+            else if (FBOid == FBOID.TRANSP_SHADOWS_LL)
+            {
+                GL.ActiveTexture(TextureUnit.Texture1);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2DArray, 0);
+                s_transponlylitsh_ll = s_transponlylitsh_ll.Bind();
             }
             else if (FBOid == FBOID.FORWARD_SOLID)
             {
@@ -1780,6 +1981,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
         SHADOWS = 4,
         TRANSP_LIT = 7,
         TRANSP_SHADOWS = 8,
+        TRANSP_LL = 12,
+        TRANSP_LIT_LL = 13,
+        TRANSP_SHADOWS_LL = 14,
         REFRACT = 21,
         FORWARD_TRANSP = 98,
         FORWARD_SOLID = 99,

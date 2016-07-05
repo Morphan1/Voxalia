@@ -4,11 +4,20 @@
 #define MCM_GOOD_GRAPHICS 0
 #define MCM_LIT 0
 #define MCM_SHADOWS 0
+#define MCM_LL 0
 
 layout (binding = 0) uniform sampler2D tex;
 // TODO: Spec, refl!
 layout (binding = 3) uniform sampler2D normal_tex;
 layout (binding = 4) uniform sampler2DShadow shadowtex;
+#if MCM_LL
+layout(size1x32, binding = 5) coherent uniform uimage2D ui_page;
+layout(size1x32, binding = 6) coherent uniform uimage2D ui_frag;
+layout(size1x32, binding = 7) coherent uniform uimage2D ui_sema;
+layout(size4x32, binding = 8) coherent uniform imageBuffer uib_spage;
+layout(size1x32, binding = 9) coherent uniform uimageBuffer uib_llist;
+layout(size1x32, binding = 10) coherent uniform uimageBuffer uib_cspage;
+#endif
 
 layout (location = 4) uniform float desaturationAmount = 1.0;
 layout (location = 5) uniform float minimum_light;
@@ -23,9 +32,14 @@ in struct vox_out
 	vec2 texcoord;
 	vec4 color;
 	mat3 tbn;
+	vec2 scrpos;
+	float z;
 } f;
 
+#if MCM_LL
+#else
 out vec4 color;
+#endif
 
 vec3 desaturate(vec3 c)
 {
@@ -34,6 +48,9 @@ vec3 desaturate(vec3 c)
 
 void main()
 {
+#if MCM_LL
+	vec4 color;
+#endif
 	vec4 tcolor = texture(tex, f.texcoord);
 	if (tcolor.w * f.color.w >= 0.99)
 	{
@@ -63,6 +80,7 @@ void main()
 		+ vec4(minimum_light, minimum_light, minimum_light, 0.0)) / lightc;
 	vec3 eye_pos = vec3(light_details2[0][0], light_details2[0][1], light_details2[0][2]);
 	vec3 light_pos = vec3(light_details2[1][0], light_details2[1][1], light_details2[1][2]);
+	vec2 u_screensize = vec2(light_details2[0][3], light_details2[1][3]);
 	vec4 x_spos = shadow_matrix * vec4(f.position.xyz, 1.0);
 	vec3 N = normalize(-normalize(f.tbn * norms));
 	vec3 light_path = light_pos - f.position.xyz;
@@ -148,5 +166,49 @@ void main()
 #endif
 #if MCM_GOOD_GRAPHICS
 	color = vec4(desaturate(color.xyz), color.w);
+#endif
+#if MCM_LL
+	uint page = 0;
+	uint frag = 0;
+	uint frag_mod = 0;
+	ivec2 scrpos = ivec2(f.scrpos * u_screensize);
+	int i = 0;
+	while (imageAtomicExchange(ui_sema, scrpos, 1U) != 0U && i < 1000) // TODO: 1000 -> uniform var?!
+	{
+		memoryBarrier();
+		i++;
+	}
+	/*if (i == 1000)
+	{
+		return;
+	}*/
+	page = imageLoad(ui_page, scrpos).x;
+	frag = imageLoad(ui_frag, scrpos).x;
+	frag_mod = frag % P_SIZE;
+	if (frag_mod == 0)
+	{
+		uint npage = imageAtomicAdd(uib_cspage, 0, P_SIZE);
+		if (npage < ab_shared_pool_size)
+		{
+			imageStore(uib_llist, int(npage / P_SIZE), uvec4(page, 0U, 0U, 0U));
+			imageStore(ui_page, scrpos, uvec4(npage, 0U, 0U, 0U));
+			page = npage;
+		}
+		else
+		{
+			page = 0;
+		}
+	}
+	if (page > 0)
+	{
+		imageStore(ui_frag, scrpos, uvec4(frag + 1, 0U, 0U, 0U));
+	}
+	frag = frag_mod;
+	memoryBarrier();
+	imageAtomicExchange(ui_sema, scrpos, 0U);
+	vec4 abv = color;
+	abv.z = (abv.x * 255) + (abv.w * 255 * 255);
+	abv.w = f.z;
+	imageStore(uib_spage, int(page + frag), abv);
 #endif
 }

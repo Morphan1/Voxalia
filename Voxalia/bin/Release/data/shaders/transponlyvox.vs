@@ -20,6 +20,8 @@ out struct vox_out
 	vec4 color;
 	vec4 tcol;
 	mat3 tbn;
+	vec2 scrpos;
+	float z;
 } f;
 
 vec4 color_for(in vec4 pos);
@@ -35,9 +37,13 @@ void main()
     f.color = f.color * v_color;
 	f.texcoord = texcoord;
 	vec4 tpos = model_matrix * vec4(position, 1.0);
-	f.position = tpos;
+	f.position = tpos / tpos.w;
 	f.tcol = color_for(f.position);
-	gl_Position = projection * tpos;
+	vec4 npos = projection * tpos;
+	npos /= npos.w;
+	f.scrpos = npos.xy * 0.5 + vec2(0.5);
+	f.z = npos.z;
+	gl_Position = npos;
 	mat4 mv_mat_simple = model_matrix;
 	mv_mat_simple[3][0] = 0.0;
 	mv_mat_simple[3][1] = 0.0;
