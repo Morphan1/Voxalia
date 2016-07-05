@@ -177,7 +177,7 @@ void main()
 	uint frag_mod = 0;
 	ivec2 scrpos = ivec2(f.scrpos * u_screensize);
 	int i = 0;
-	while (imageAtomicExchange(ui_page, ivec3(scrpos, 2), 1U) != 0U && i < 1000) // TODO: 1000 -> uniform var?!
+	while (imageAtomicExchange(ui_page, ivec3(scrpos, 2), 1U) != 0U && i < 100) // TODO: 100 -> uniform var?!
 	{
 		memoryBarrier();
 		i++;

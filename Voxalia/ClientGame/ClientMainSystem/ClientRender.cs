@@ -887,16 +887,37 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                     {
-                        s_transponlyvoxlitsh = s_transponlyvoxlitsh.Bind();
+                        if (CVars.r_transpll.ValueB)
+                        {
+                            s_transponlyvoxlitsh_ll = s_transponlyvoxlitsh_ll.Bind();
+                        }
+                        else
+                        {
+                            s_transponlyvoxlitsh = s_transponlyvoxlitsh.Bind();
+                        }
                     }
                     else
                     {
-                        s_transponlyvoxlit = s_transponlyvoxlit.Bind();
+                        if (CVars.r_transpll.ValueB)
+                        {
+                            s_transponlyvoxlit_ll = s_transponlyvoxlit_ll.Bind();
+                        }
+                        else
+                        {
+                            s_transponlyvoxlit = s_transponlyvoxlit.Bind();
+                        }
                     }
                 }
                 else
                 {
-                    s_transponlyvox = s_transponlyvox.Bind();
+                    if (CVars.r_transpll.ValueB)
+                    {
+                        s_transponlyvox_ll = s_transponlyvox_ll.Bind();
+                    }
+                    else
+                    {
+                        s_transponlyvox = s_transponlyvox.Bind();
+                    }
                 }
                 GL.UniformMatrix4(1, false, ref combined);
                 GL.UniformMatrix4(2, false, ref def);
@@ -905,19 +926,43 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                     {
-                        s_transponlylitsh = s_transponlylitsh.Bind();
-                        FBOid = FBOID.TRANSP_SHADOWS;
+                        if (CVars.r_transpll.ValueB)
+                        {
+                            s_transponlylitsh_ll = s_transponlylitsh_ll.Bind();
+                            FBOid = FBOID.TRANSP_SHADOWS_LL;
+                        }
+                        else
+                        {
+                            s_transponlylitsh = s_transponlylitsh.Bind();
+                            FBOid = FBOID.TRANSP_SHADOWS;
+                        }
                     }
                     else
                     {
-                        s_transponlylit = s_transponlylit.Bind();
-                        FBOid = FBOID.TRANSP_LIT;
+                        if (CVars.r_transpll.ValueB)
+                        {
+                            s_transponlylit_ll = s_transponlylit_ll.Bind();
+                            FBOid = FBOID.TRANSP_LIT_LL;
+                        }
+                        else
+                        {
+                            s_transponlylit = s_transponlylit.Bind();
+                            FBOid = FBOID.TRANSP_LIT;
+                        }
                     }
                 }
                 else
                 {
-                    s_transponly = s_transponly.Bind();
-                    FBOid = FBOID.TRANSP_UNLIT;
+                    if (CVars.r_transpll.ValueB)
+                    {
+                        s_transponly_ll = s_transponly_ll.Bind();
+                        FBOid = FBOID.TRANSP_LL;
+                    }
+                    else
+                    {
+                        s_transponly = s_transponly.Bind();
+                        FBOid = FBOID.TRANSP_UNLIT;
+                    }
                 }
                 VBO.BonesIdentity();
                 GL.UniformMatrix4(1, false, ref combined);
@@ -945,35 +990,80 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     {
                         if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                         {
-                            s_transponlyvoxlitsh = s_transponlyvoxlitsh.Bind();
+                            if (CVars.r_transpll.ValueB)
+                            {
+                                s_transponlyvoxlitsh_ll = s_transponlyvoxlitsh_ll.Bind();
+                            }
+                            else
+                            {
+                                s_transponlyvoxlitsh = s_transponlyvoxlitsh.Bind();
+                            }
                         }
                         else
                         {
-                            s_transponlyvoxlit = s_transponlyvoxlit.Bind();
+                            if (CVars.r_transpll.ValueB)
+                            {
+                                s_transponlyvoxlit_ll = s_transponlyvoxlit_ll.Bind();
+                            }
+                            else
+                            {
+                                s_transponlyvoxlit = s_transponlyvoxlit.Bind();
+                            }
                         }
                     }
                     else
                     {
-                        s_transponlyvox = s_transponlyvox.Bind();
+                        if (CVars.r_transpll.ValueB)
+                        {
+                            s_transponlyvox_ll = s_transponlyvox_ll.Bind();
+                        }
+                        else
+                        {
+                            s_transponlyvox = s_transponlyvox.Bind();
+                        }
                     }
                     GL.UniformMatrix4(1, false, ref combined2);
                     if (CVars.r_transplighting.ValueB)
                     {
                         if (CVars.r_transpshadows.ValueB && CVars.r_shadows.ValueB)
                         {
-                            s_transponlylitsh = s_transponlylitsh.Bind();
-                            FBOid = FBOID.TRANSP_SHADOWS;
+                            if (CVars.r_transpll.ValueB)
+                            {
+                                s_transponlylitsh_ll = s_transponlylitsh_ll.Bind();
+                                FBOid = FBOID.TRANSP_SHADOWS_LL;
+                            }
+                            else
+                            {
+                                s_transponlylitsh = s_transponlylitsh.Bind();
+                                FBOid = FBOID.TRANSP_SHADOWS;
+                            }
                         }
                         else
                         {
-                            s_transponlylit = s_transponlylit.Bind();
-                            FBOid = FBOID.TRANSP_LIT;
+                            if (CVars.r_transpll.ValueB)
+                            {
+                                s_transponlylit_ll = s_transponlylit_ll.Bind();
+                                FBOid = FBOID.TRANSP_LIT_LL;
+                            }
+                            else
+                            {
+                                s_transponlylit = s_transponlylit.Bind();
+                                FBOid = FBOID.TRANSP_LIT;
+                            }
                         }
                     }
                     else
                     {
-                        s_transponly = s_transponly.Bind();
-                        FBOid = FBOID.TRANSP_UNLIT;
+                        if (CVars.r_transpll.ValueB)
+                        {
+                            s_transponly_ll = s_transponly_ll.Bind();
+                            FBOid = FBOID.TRANSP_LL;
+                        }
+                        else
+                        {
+                            s_transponly = s_transponly.Bind();
+                            FBOid = FBOID.TRANSP_UNLIT;
+                        }
                     }
                     GL.UniformMatrix4(1, false, ref combined2);
                     CameraPos = cameraBasePos - cameraAdjust;
