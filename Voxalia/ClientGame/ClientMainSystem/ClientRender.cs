@@ -188,6 +188,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GenTexture();
             GenBuffer(1, false);
             GenBuffer(2, true);
+            GL.ActiveTexture(TextureUnit.Texture7);
             int cspb = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, cspb);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)sizeof(uint), IntPtr.Zero, BufferUsageHint.StaticDraw);
@@ -197,12 +198,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.BindImageTexture(5, csp, 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.R32ui);
             TransTexs[3] = csp;
             GL.BindTexture(TextureTarget.TextureBuffer, 0);
+            GL.ActiveTexture(TextureUnit.Texture0);
         }
 
         int[] TransTexs = new int[4];
 
         public int GenTexture()
         {
+            GL.ActiveTexture(TextureUnit.Texture4);
             int temp = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2DArray, temp);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
@@ -210,7 +213,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.TexImage3D(TextureTarget.Texture2DArray, 0, PixelInternalFormat.R32f, Window.Width, Window.Height, 3, 0, PixelFormat.Red, PixelType.Float, IntPtr.Zero);
             GL.BindImageTexture(4, temp, 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.R32ui);
             TransTexs[0] = temp;
-            GL.BindTexture(TextureTarget.Texture2DArray, 0);
+            //GL.BindTexture(TextureTarget.Texture2DArray, 0);
             return temp;
         }
 
@@ -219,6 +222,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public int GenBuffer(int c, bool flip)
         {
+            GL.ActiveTexture(TextureUnit.Texture4 + c);
             int temp = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.TextureBuffer, temp);
             GL.BufferData(BufferTarget.TextureBuffer, (IntPtr)(flip ? AB_SIZE / P_SIZE * sizeof(uint) : AB_SIZE * sizeof(float) * 4), IntPtr.Zero, BufferUsageHint.StaticDraw);
@@ -227,7 +231,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.TexBuffer(TextureBufferTarget.TextureBuffer, flip ? SizedInternalFormat.R32f : SizedInternalFormat.Rgba32f, temp);
             GL.BindImageTexture(4 + c, ttex, 0, false, 0, TextureAccess.ReadWrite, flip ? SizedInternalFormat.R32ui : SizedInternalFormat.Rgba32f);
             TransTexs[c] = temp;
-            GL.BindTexture(TextureTarget.TextureBuffer, 0);
+            //GL.BindTexture(TextureTarget.TextureBuffer, 0);
             return temp;
         }
 
@@ -366,6 +370,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         int rTicks = 1000;
 
         public bool shouldRedrawShadows = false;
+
+        Matrix4 combined;
 
         public void Window_RenderFrame(object sender, FrameEventArgs e)
         {
@@ -510,7 +516,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(CVars.r_fov.ValueF), (float)Window.Width / (float)Window.Height, CVars.r_znear.ValueF, CVars.r_zfar.ValueF);
                 Location bx = CVars.r_3d_enable.ValueB ? (CameraPos + cameraAdjust) : CameraPos;
                 Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + forwardVec), ClientUtilities.Convert(CameraUp));
-                Matrix4 combined = view * proj;
+                combined = view * proj;
                 PrimaryMatrix = combined;
                 Matrix4 view2 = Matrix4.LookAt(ClientUtilities.Convert(CameraPos - cameraAdjust), ClientUtilities.Convert(CameraPos - cameraAdjust + forwardVec), ClientUtilities.Convert(CameraUp));
                 Matrix4 combined2 = view2 * proj;
@@ -1169,6 +1175,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 GL.ActiveTexture(TextureUnit.Texture0);
                 s_ll_clearer.Bind();
+                GL.Uniform2(4, new Vector2(Window.Width, Window.Height));
                 Matrix4 flatProj = Matrix4.CreateOrthographicOffCenter(-1, 1, 1, -1, -1, 1);
                 GL.UniformMatrix4(1, false, ref flatProj);
                 Matrix4 ident = Matrix4.Identity;
@@ -1187,6 +1194,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 renderTranspInt(ref lightc, camFrust);
                 GL.MemoryBarrier(MemoryBarrierFlags.AllBarrierBits);
                 s_ll_fpass.Bind();
+                GL.Uniform2(4, new Vector2(Window.Width, Window.Height));
                 GL.UniformMatrix4(1, false, ref flatProj);
                 GL.UniformMatrix4(2, false, ref ident);
                 GL.Uniform2(4, new Vector2(Window.Width, Window.Height));
@@ -1244,6 +1252,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     s_transponlyvoxlit = s_transponlyvoxlit.Bind();
                                 }
                             }
+                            Matrix4 ident = Matrix4.Identity;
+                            GL.UniformMatrix4(1, false, ref combined);
+                            GL.UniformMatrix4(2, false, ref ident);
                             Matrix4 lmat = Lights[i].InternalLights[x].GetMatrix();
                             GL.UniformMatrix4(6, false, ref lmat);
                             GL.Uniform3(7, Lights[i].InternalLights[x].color);
@@ -1297,6 +1308,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     s_transponlylit = s_transponlylit.Bind();
                                 }
                             }
+                            GL.UniformMatrix4(1, false, ref combined);
+                            GL.UniformMatrix4(2, false, ref ident);
                             GL.Uniform3(5, Lights[i].InternalLights[x].eye);
                             GL.UniformMatrix4(6, false, ref lmat);
                             GL.Uniform3(7, Lights[i].InternalLights[x].color);
@@ -1316,12 +1329,27 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 if (CVars.r_transpll.ValueB)
                 {
                     s_transponlyvox_ll.Bind();
+                    Matrix4 ident = Matrix4.Identity;
+                    GL.UniformMatrix4(1, false, ref combined);
+                    GL.UniformMatrix4(2, false, ref ident);
                     Matrix4 matabc = new Matrix4(Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero);
                     matabc[0, 3] = (float)Window.Width;
                     matabc[1, 3] = (float)Window.Height;
                     GL.UniformMatrix4(9, false, ref matabc);
                     s_transponly_ll.Bind();
+                    GL.UniformMatrix4(1, false, ref combined);
+                    GL.UniformMatrix4(2, false, ref ident);
                     GL.UniformMatrix4(9, false, ref matabc);
+                }
+                else
+                {
+                    s_transponlyvox.Bind();
+                    Matrix4 ident = Matrix4.Identity;
+                    GL.UniformMatrix4(1, false, ref combined);
+                    GL.UniformMatrix4(2, false, ref ident);
+                    s_transponly.Bind();
+                    GL.UniformMatrix4(1, false, ref combined);
+                    GL.UniformMatrix4(2, false, ref ident);
                 }
                 Render3D(false);
             }
@@ -1699,10 +1727,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (!shadows_only)
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
-                Textures.Black.Bind();
-                GL.ActiveTexture(TextureUnit.Texture2);
-                Textures.Black.Bind();
-                GL.ActiveTexture(TextureUnit.Texture3);
                 Textures.NormalDef.Bind();
                 GL.ActiveTexture(TextureUnit.Texture0);
             }

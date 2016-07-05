@@ -24,6 +24,7 @@ void main()
 	{
 		discard;
 	}
+	color = vec4(1.0);return;
 	int numFrags = int(imageLoad(ui_page, ivec3(scrpos, 1)).x);
 	if (numFrags <= 0)
 	{

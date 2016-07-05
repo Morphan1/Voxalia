@@ -11,8 +11,6 @@ layout (location = 4) uniform vec2 u_screensize = vec2(1024, 1024);
 
 layout (location = 1) in vec2 f_scrpos;
 
-out vec4 color;
-
 void main()
 {
 	ivec2 scrpos = ivec2(f_scrpos * u_screensize);

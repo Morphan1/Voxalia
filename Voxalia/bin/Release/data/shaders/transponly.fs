@@ -15,7 +15,7 @@
 layout (binding = 0) uniform sampler2D tex;
 // TODO: Spec, refl!
 layout (binding = 1) uniform sampler2D normal_tex;
-layout (binding = 2) uniform sampler2DShadow shadowtex;
+layout (binding = 3) uniform sampler2DShadow shadowtex;
 #if MCM_LL
 layout(size1x32, binding = 4) coherent uniform uimage2DArray ui_page;
 layout(size4x32, binding = 5) coherent uniform imageBuffer uib_spage;
