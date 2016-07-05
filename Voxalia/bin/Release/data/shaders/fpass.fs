@@ -1,6 +1,6 @@
 #version 430 core
 
-#define AB_SIZE 32
+#define AB_SIZE 16
 #define P_SIZE 4
 
 vec4 flist[AB_SIZE];

@@ -217,7 +217,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             return temp;
         }
 
-        public int AB_SIZE = 32 * 1024 * 1024; // TODO: Tweak me!
+        public int AB_SIZE = 16 * 1024 * 1024; // TODO: Tweak me!
         public const int P_SIZE = 4;
 
         public int GenBuffer(int c, bool flip)

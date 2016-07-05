@@ -6,11 +6,11 @@
 #define MCM_SHADOWS 0
 #define MCM_LL 0
 
-#define AB_SIZE 32
+#define AB_SIZE 16
 #define P_SIZE 4
 
 // TODO: more dynamically defined?
-#define ab_shared_pool_size (32 * 1024 * 1024)
+#define ab_shared_pool_size (AB_SIZE * 1024 * 1024)
 
 layout (binding = 0) uniform sampler2D tex;
 // TODO: Spec, refl!
@@ -211,7 +211,7 @@ void main()
 	memoryBarrier();
 	imageAtomicExchange(ui_page, ivec3(scrpos, 2), 0U);
 	vec4 abv = color;
-	abv.z = (color.z * 255) + (color.w * 255 * 255);
+	abv.z = float(int(color.z * 255) & 255 | int(color.w * 255 * 255) & (255 * 255));
 	abv.w = f.z;
 	imageStore(uib_spage, int(page + frag), abv);
 #endif
