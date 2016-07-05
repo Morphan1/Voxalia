@@ -588,7 +588,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             if (texture && Tex != null)
             {
-                Tex.Bind();
                 // TODO: Use spec, refl.
                 /*GL.ActiveTexture(TextureUnit.Texture1);
                 if (Tex_Specular != null)
@@ -618,20 +617,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     Tex.Engine.NormalDef.Bind();
                 }
                 GL.ActiveTexture(TextureUnit.Texture0);
+                Tex.Bind();
             }
             GL.BindVertexArray(_VAO);
             GL.DrawElements(PrimitiveType.Triangles, vC, DrawElementsType.UnsignedInt, IntPtr.Zero);
             GL.BindVertexArray(0);
             if (fixafter && texture && Tex != null)
             {
-                Tex.Engine.White.Bind();
                 GL.ActiveTexture(TextureUnit.Texture1);
-                Tex.Engine.Black.Bind();
-                GL.ActiveTexture(TextureUnit.Texture2);
-                Tex.Engine.Black.Bind();
-                GL.ActiveTexture(TextureUnit.Texture3);
                 Tex.Engine.NormalDef.Bind();
                 GL.ActiveTexture(TextureUnit.Texture0);
+                Tex.Engine.White.Bind();
             }
         }
     }

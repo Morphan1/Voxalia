@@ -66,7 +66,7 @@ void main()
 	vec4 tpos = model_matrix * vec4(pos1.xyz, 1.0);
 	f.position = tpos / tpos.w;
 	vec4 npos = projection * tpos;
-	npos /= npos.w;
+	//npos /= npos.w;
 	f.scrpos = npos.xy * 0.5 + vec2(0.5);
 	f.z = npos.z;
 	gl_Position = npos;
