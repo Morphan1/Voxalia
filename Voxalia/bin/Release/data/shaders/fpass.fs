@@ -90,9 +90,8 @@ void main()
 		}
 		c.w = 1.0 - pow(1.0 - c.w, thickness * sig);
 		*/
-		c.xyz = c.xyz * c.w;
+		//c.xyz = c.xyz * c.w;
 		tcol += c * (1.0 - tcol.w);
 	}
-	//const vec4 backCol = vec4(0.0);
-	color = tcol;// + backCol * (1.0 - tcol.w);
+	color = tcol;
 }
