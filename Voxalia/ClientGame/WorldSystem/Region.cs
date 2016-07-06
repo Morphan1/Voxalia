@@ -457,7 +457,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     chunk.Render();
                 }
             }*/
-            if (TheClient.FBOid == FBOID.MAIN)
+            if (TheClient.FBOid == FBOID.MAIN || TheClient.FBOid == FBOID.NONE || TheClient.FBOid == FBOID.FORWARD_SOLID)
             {
                 chToRender.Clear();
                 ChunkMarchAndDraw();
