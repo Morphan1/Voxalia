@@ -195,7 +195,7 @@ namespace Voxalia.ServerGame.WorldSystem
             det.Y = y;
             det.Z = z;
             det.Version = doc["version"].AsInt32;
-            det.Blocks = FileHandler.UnGZip(doc["entities"].AsBinary);
+            det.Blocks = /*FileHandler.UnGZip(*/doc["entities"].AsBinary/*)*/;
             return det;
         }
 
@@ -205,7 +205,7 @@ namespace Voxalia.ServerGame.WorldSystem
             BsonDocument newdoc = new BsonDocument();
             newdoc["_id"] = id;
             newdoc["version"] = new BsonValue(details.Version);
-            newdoc["entities"] = new BsonValue(FileHandler.GZip(details.Blocks));
+            newdoc["entities"] = new BsonValue(/*FileHandler.GZip(*/details.Blocks/*)*/);
             lock (EntLock)
             {
                 DBEnts.Delete(id);
