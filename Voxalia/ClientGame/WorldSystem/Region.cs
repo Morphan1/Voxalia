@@ -16,6 +16,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.Shared.Collision;
 using System.Diagnostics;
 using Priority_Queue;
+using FreneticScript;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -456,7 +457,18 @@ namespace Voxalia.ClientGame.WorldSystem
                     chunk.Render();
                 }
             }*/
-            ChunkMarchAndDraw();
+            if (TheClient.FBOid == FBOID.MAIN)
+            {
+                chToRender.Clear();
+                ChunkMarchAndDraw();
+            }
+            else
+            {
+                foreach (Chunk ch in chToRender)
+                {
+                    ch.Render();
+                }
+            }
             if (TheClient.RenderTextures)
             {
                 GL.BindTexture(TextureTarget.Texture2D, 0);
@@ -469,12 +481,14 @@ namespace Voxalia.ClientGame.WorldSystem
             }
         }
 
+        public List<Chunk> chToRender = new List<Chunk>();
+
         static Vector3i[] MoveDirs = new Vector3i[] { new Vector3i(-1, 0, 0), new Vector3i(1, 0, 0),
             new Vector3i(0, -1, 0), new Vector3i(0, 1, 0), new Vector3i(0, 0, -1), new Vector3i(0, 0, 1) };
 
-        static int MaxRenderDistanceChunks = 7;
+        public int MaxRenderDistanceChunks = 7;
 
-        void ChunkMarchAndDraw()
+        public void ChunkMarchAndDraw()
         {
             Vector3i start = ChunkLocFor(TheClient.CameraPos);
             HashSet<Vector3i> seen = new HashSet<Vector3i>();
@@ -494,6 +508,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 if (chcur != null)
                 {
                     chcur.Render();
+                    chToRender.Add(chcur);
                 }
                 for (int i = 0; i < MoveDirs.Length; i++)
                 {
