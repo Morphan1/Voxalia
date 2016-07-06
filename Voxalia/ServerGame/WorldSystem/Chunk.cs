@@ -74,6 +74,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Material LODBlock(int x, int y, int z, int lod)
         {
+            // TODO: Prefer maximum opaqueness.
             int xs = x * lod;
             int ys = y * lod;
             int zs = z * lod;
@@ -305,12 +306,14 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     for (int z = 0; z < csize; z++)
                     {
-                        Material mat = LODBlock(x, y, z, lod);
-                        if (mat != Material.AIR)
+                        ushort mat = (ushort)LODBlock(x, y, z, lod);
+                        if (mat != 0)
                         {
                             isAir = false;
                         }
-                        Utilities.UshortToBytes((ushort)mat).CopyTo(data_orig, (z * csize * csize + y * csize + x) * 2);
+                        int sp = (z * csize * csize + y * csize + x) * 2;
+                        data_orig[sp] = (byte)(mat & 0xFF);
+                        data_orig[sp + 1] = (byte)((mat >> 8) & 0xFF);
                     }
                 }
             }

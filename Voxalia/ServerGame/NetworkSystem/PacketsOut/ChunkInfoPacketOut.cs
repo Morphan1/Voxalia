@@ -27,7 +27,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                     {
                         isAir = false;
                     }
-                    Utilities.UshortToBytes(mat).CopyTo(data_orig, x * 2);
+                    data_orig[x * 2] = (byte)(mat & 0xFF);
+                    data_orig[x * 2 + 1] = (byte)((mat >> 8) & 0xFF);
                 }
                 if (isAir)
                 {

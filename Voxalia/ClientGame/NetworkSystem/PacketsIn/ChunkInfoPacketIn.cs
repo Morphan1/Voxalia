@@ -74,7 +74,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 {
                     for (int z = 0; z < chk.CSize; z++)
                     {
-                        chk.BlocksInternal[chk.BlockIndex(x, y, z)]._BlockMaterialInternal = Utilities.BytesToUshort(Utilities.BytesPartial(data_orig, (z * chk.CSize * chk.CSize + y * chk.CSize + x) * 2, 2));
+                        int sp = (z * chk.CSize * chk.CSize + y * chk.CSize + x) * 2;
+                        chk.BlocksInternal[chk.BlockIndex(x, y, z)]._BlockMaterialInternal = (ushort)((ushort)data_orig[sp] + (((ushort)data_orig[sp + 1]) << 8));
                     }
                 }
             }
