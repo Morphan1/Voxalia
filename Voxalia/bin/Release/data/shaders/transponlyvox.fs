@@ -10,7 +10,7 @@
 #define P_SIZE 4
 
 // TODO: more dynamically defined?
-#define ab_shared_pool_size (AB_SIZE * 1024 * 1024)
+#define ab_shared_pool_size (8 * 1024 * 1024)
 
 layout (binding = 0) uniform sampler2DArray tex;
 layout (binding = 1) uniform sampler2DArray htex;
