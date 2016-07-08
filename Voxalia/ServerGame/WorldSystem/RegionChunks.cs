@@ -215,6 +215,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
                 if (chunk.Flags.HasFlag(ChunkFlags.POPULATING))
                 {
+                    LoadedChunks.Remove(cpos);
                     throw new Exception("Non-custom chunk was still loading when grabbed?!");
                 }
                 chunk.UnloadTimer = 0;
