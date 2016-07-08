@@ -31,6 +31,7 @@ namespace Voxalia.ClientGame.WorldSystem
             TheClient.Textures.GetTexture("effects/clouds/cloud1").Bind(); // TODO: Cache!
             foreach (Cloud cloud in Clouds)
             {
+                // TODO: culling?
                 for (int i = 0; i < cloud.Points.Count; i++)
                 {
                     TheClient.Rendering.RenderBillboard(cloud.Points[i] + cloud.Position, new Location(cloud.Sizes[i]), TheClient.CameraPos);

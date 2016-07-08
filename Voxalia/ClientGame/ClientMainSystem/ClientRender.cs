@@ -185,6 +185,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.BindTexture(TextureTarget.Texture2D, 0);
             // Linked list stuff
             // TODO: Regeneratable, on window resize in particular.
+            // TODO: only generate this once LL is activated, to reduce vRAM waste?
             GenTexture();
             GenBuffer(1, false);
             GenBuffer(2, true);
@@ -1434,7 +1435,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             rot = Matrix4.CreateTranslation(-450f, -450f, 0f)
                 * Matrix4.CreateRotationY((float)((-PlanetAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + PlanetAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + ThePlanet.Direction * -(dist * 0.8f)));
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(CameraPos + PlanetDir * -(dist * 0.8f)));
             Rendering.RenderRectangle(0, 0, 900, 900, rot);
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.Enable(EnableCap.CullFace);

@@ -12,14 +12,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
     {
         public SkyLight TheSun = null;
 
-        public SkyLight ThePlanet = null;
+    //    public SkyLight ThePlanet = null;
 
         // Note: the client only has one region loaded at any given time.
         public Region TheRegion = null;
 
         public Location SunLightDef = Location.One;
 
-        public Location PlanetLightDef = new Location(0.75, 0.3, 0) * 0.25f;
+       // public Location PlanetLightDef = new Location(0.75, 0.3, 0) * 0.25f;
 
         public void BuildWorld()
         {
@@ -27,17 +27,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 TheSun.Destroy();
                 Lights.Remove(TheSun);
-                ThePlanet.Destroy();
-                Lights.Remove(ThePlanet);
+    //            ThePlanet.Destroy();
+     //           Lights.Remove(ThePlanet);
             }
             // TODO: DESTROY OLD REGION!
             // TODO: Radius -> max view rad * 2
             // TODO: Size -> max view rad * 2 + 30 * 2
             TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, Chunk.CHUNK_SIZE * 30, SunLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35);
             // TODO: Separate planet quality CVar?
-            ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 2, Chunk.CHUNK_SIZE * 30, PlanetLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35);
+     //       ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 2, Chunk.CHUNK_SIZE * 30, PlanetLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35);
             Lights.Add(TheSun);
-            Lights.Add(ThePlanet);
+       //     Lights.Add(ThePlanet);
             TheRegion = new Region();
             TheRegion.TheClient = this;
             TheRegion.BuildWorld();
@@ -58,6 +58,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public float sl_min = 0;
         public float sl_max = 1;
 
+        Location PlanetDir;
+
         public void TickWorld(double delta)
         {
             rTicks++;
@@ -66,23 +68,24 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 // TODO: Z+ -> max view rad + 30
                 TheSun.Direction = Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch);
                 TheSun.Reposition(Player.GetPosition().GetBlockLocation() - TheSun.Direction * 30 * 6);
-                ThePlanet.Direction = Utilities.ForwardVector_Deg(PlanetAngle.Yaw, PlanetAngle.Pitch);
-                ThePlanet.Reposition(Player.GetPosition().GetBlockLocation() - ThePlanet.Direction * 30 * 6);
+                PlanetDir = Utilities.ForwardVector_Deg(PlanetAngle.Yaw, PlanetAngle.Pitch);
+                //        ThePlanet.Direction = pdir;
+                //        ThePlanet.Reposition(Player.GetPosition().GetBlockLocation() - ThePlanet.Direction * 30 * 6);
                 Quaternion diff;
                 Vector3 tsd = TheSun.Direction.ToBVector();
-                Vector3 tpd = ThePlanet.Direction.ToBVector();
+                Vector3 tpd = PlanetDir.ToBVector();
                 Quaternion.GetQuaternionBetweenNormalizedVectors(ref tsd, ref tpd, out diff);
                 PlanetSunDist = Quaternion.GetAngleFromQuaternion(ref diff) / (float)Utilities.PI180;
                 if (PlanetSunDist < 75)
                 {
                     TheSun.InternalLights[0].color = new OpenTK.Vector3((float)Math.Min(SunLightDef.X * (PlanetSunDist / 15), 1),
                         (float)Math.Min(SunLightDef.Y * (PlanetSunDist / 20), 1), (float)Math.Min(SunLightDef.Z * (PlanetSunDist / 60), 1));
-                    ThePlanet.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
+       //             ThePlanet.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
                 }
                 else
                 {
                     TheSun.InternalLights[0].color = ClientUtilities.Convert(SunLightDef);
-                    ThePlanet.InternalLights[0].color = ClientUtilities.Convert(PlanetLightDef * Math.Min((PlanetSunDist / 180f), 1f));
+           //         ThePlanet.InternalLights[0].color = ClientUtilities.Convert(PlanetLightDef * Math.Min((PlanetSunDist / 180f), 1f));
                 }
                 PlanetLight = PlanetSunDist / 180f;
                 if (SunAngle.Pitch < 10 && SunAngle.Pitch > -30)
