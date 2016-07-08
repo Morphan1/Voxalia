@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using LiteDB;
 using Voxalia.Shared;
+using Voxalia.Shared.Collision;
 using Voxalia.Shared.Files;
 
 namespace Voxalia.ServerGame.WorldSystem
@@ -248,6 +249,15 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 DBChunks.Delete(id);
                 DBChunks.Insert(newdoc);
+            }
+        }
+
+        public void ClearChunkDetails(Vector3i details)
+        {
+            BsonValue id = GetIDFor(details.X, details.Y, details.Z);
+            lock (FSLock)
+            {
+                DBChunks.Delete(id);
             }
         }
     }

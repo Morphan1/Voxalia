@@ -90,6 +90,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 SetBlockMaterial(block, c, false, false, true);
             }
             Material cmat = (Material)c.BlockMaterial;
+            byte cpaint = c.BlockPaint;
             if (cmat.ShouldSpread())
             {
                 int remainingperc = remPercFor(c.BlockData);
@@ -121,10 +122,10 @@ namespace Voxalia.ServerGame.WorldSystem
                     bool eym = HassSolidEntity(lym + new Location(0.1, 0.1, 0.1), lym + new Location(0.9, 0.9, 0.9));
                     if (mzm == Material.AIR && !ezm)
                     {
-                        PhysicsSetBlock(lzm, cmat);
+                        PhysicsSetBlock(lzm, cmat, 0, c.BlockPaint);
                         PhysicsSetBlock(block, Material.AIR);
                     }
-                    else if (mzm == cmat && zm.BlockData != 0)
+                    else if (mzm == cmat && zm.BlockPaint == cpaint && zm.BlockData != 0)
                     {
                         CombineWater(remainingperc, cmat, remPercFor(zm.BlockData), block, lzm, c.BlockPaint);
                     }
@@ -228,19 +229,19 @@ namespace Voxalia.ServerGame.WorldSystem
                         int rxm = remPercFor(xm.BlockData);
                         int ryp = remPercFor(yp.BlockData);
                         int rym = remPercFor(ym.BlockData);
-                        if (mxp == cmat && rxp < remainingperc)
+                        if (mxp == cmat && cpaint == xp.BlockPaint && rxp < remainingperc)
                         {
                             CombineWaterSide(remainingperc, cmat, rxp, block, lxp, c.BlockPaint);
                         }
-                        else if (mxm == cmat && rxm < remainingperc)
+                        else if (mxm == cmat && cpaint == xm.BlockPaint && rxm < remainingperc)
                         {
                             CombineWaterSide(remainingperc, cmat, rxm, block, lxm, c.BlockPaint);
                         }
-                        else if (myp == cmat && ryp < remainingperc)
+                        else if (myp == cmat && cpaint == yp.BlockPaint && ryp < remainingperc)
                         {
                             CombineWaterSide(remainingperc, cmat, ryp, block, lyp, c.BlockPaint);
                         }
-                        else if (mym == cmat && rym < remainingperc)
+                        else if (mym == cmat && cpaint == ym.BlockPaint && rym < remainingperc)
                         {
                             CombineWaterSide(remainingperc, cmat, rym, block, lym, c.BlockPaint);
                         }

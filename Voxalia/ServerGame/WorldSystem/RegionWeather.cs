@@ -17,7 +17,8 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             foreach (Chunk chunk in LoadedChunks.Values)
             {
-                if (chunk.WorldPosition.Z >= 3 && chunk.WorldPosition.Z <= 7)
+                // TODO: Only if pure air?
+                if (chunk.WorldPosition.Z >= 3 && chunk.WorldPosition.Z <= 7) // TODO: Better estimating
                 {
                     if (Utilities.UtilRandom.Next(400) > 399)
                     {
@@ -31,6 +32,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             for (int i = Clouds.Count - 1; i >= 0; i--)
             {
+                // TODO: if in non-air chunk, dissipate rapidly?
                 Location ppos = Clouds[i].Position;
                 Clouds[i].Position = ppos + Wind + Clouds[i].Velocity;
                 bool changed = (Utilities.UtilRandom.Next(100) > Clouds[i].Points.Count)
