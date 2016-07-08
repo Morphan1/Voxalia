@@ -344,7 +344,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         if (counter.Value == pval)
                         {
                             pvtime++;
-                            if (pvtime > 5)
+                            if (pvtime > 15)
                             {
                                 SysConsole.Output(OutputType.INFO, "Giving up.");
                                 return;
