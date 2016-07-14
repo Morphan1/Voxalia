@@ -20,15 +20,15 @@ layout (location = 8) in vec4 BoneID2;
 
 out struct vox_out
 {
-	invariant vec4 position;
+	vec4 position;
 #if MCM_VOX
-	invariant vec3 texcoord;
+	vec3 texcoord;
 	vec4 tcol;
 	mat3 tbn;
 	vec4 thv;
 	vec4 thw;
 #else
-	invariant vec2 texcoord;
+	vec2 texcoord;
 #endif
 	vec4 color;
 } f;

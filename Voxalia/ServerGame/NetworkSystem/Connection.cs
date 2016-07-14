@@ -117,7 +117,7 @@ namespace Voxalia.ServerGame.NetworkSystem
         {
             if (username == null || key == null)
             {
-                throw new Exception("Can't get session, not logged in!");
+                throw new ArgumentNullException();
             }
             using (ShortWebClient wb = new ShortWebClient())
             {
@@ -127,18 +127,18 @@ namespace Voxalia.ServerGame.NetworkSystem
                 data["session"] = key;
                 byte[] response = wb.UploadValues("http://frenetic.xyz/account/microconfirm", "POST", data);
                 string resp = FileHandler.encoding.GetString(response).Trim(' ', '\n', '\r', '\t');
+                string rip = PrimarySocket.RemoteEndPoint.ToString();
                 if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))
                 {
                     string ip = resp.Substring("ACCEPT=".Length, resp.Length - 1 - "ACCEPT=".Length);
-                    string rip = PrimarySocket.RemoteEndPoint.ToString();
-                    if (!TheServer.CVars.n_verifyip.ValueB || rip.Contains("127.0.0.1") || rip.Contains("[::1]") || rip.Contains(ip))
+                    if (!TheServer.CVars.n_verifyip.ValueB || rip.Contains("127.0.0.1") || rip.Contains("[::1]") || rip.Contains("192.168.0.") || rip.Contains(ip))
                     {
                         SysConsole.Output(OutputType.INFO, "Connection from '" + rip + "' accepted with username: " + username);
                         return;
                     }
                     throw new Exception("Connection from '" + rip + "' rejected because its IP is not " + ip + " or localhost!");
                 }
-                throw new Exception("Failed to get session!");
+                throw new Exception("Connection from '" + rip + "' rejected because: Failed to verify session!");
             }
         }
 

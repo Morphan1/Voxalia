@@ -12,8 +12,8 @@ layout (location = 8) in vec4 BoneID2;
 
 out struct vox_out
 {
-	invariant vec4 position;
-	invariant vec2 texcoord;
+	vec4 position;
+	vec2 texcoord;
 	vec4 color;
 	mat3 tbn;
 } f;

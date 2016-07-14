@@ -11,8 +11,8 @@ layout (location = 7) in vec4 thw;
 
 out struct vox_out
 {
-	invariant vec4 position;
-	invariant vec3 texcoord;
+	vec4 position;
+	vec3 texcoord;
 	vec4 color;
 	vec4 tcol;
 	mat3 tbn;
