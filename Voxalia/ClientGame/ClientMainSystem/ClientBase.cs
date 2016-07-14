@@ -47,7 +47,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public int ViewRadius = 3;
 
         /// <summary>
-        /// Starts up a new server.
+        /// Starts up a new client.
         /// </summary>
         public static void Init(string args)
         {

@@ -33,12 +33,14 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             bool h = player.TheRegion.SpecialCaseRayTrace(eye, forw, 5, MaterialSolidity.FULLSOLID, player.IgnoreThis, out rcr);
             if (h)
             {
-                if (rcr.HitObject != null && rcr.HitObject is EntityCollidable && ((EntityCollidable)rcr.HitObject).Entity != null)
+                bool hitIt = (player.TheRegion.GlobalTickTime - player.LastBlockBreak) > 0.5f; // TODO: Arbitrary constant!
+                if (hitIt && rcr.HitObject != null && rcr.HitObject is EntityCollidable && ((EntityCollidable)rcr.HitObject).Entity != null)
                 {
                     BEPUphysics.Entities.Entity hitent = ((EntityCollidable)rcr.HitObject).Entity;
                     Vector3 force = forw.ToBVector() * 75; // TODO: Arbitrary constant!
                     hitent.ApplyImpulse(ref rcr.HitData.Location, ref force);
                     // TODO: Damage
+                    player.LastBlockBreak = player.TheRegion.GlobalTickTime;
                     return;
                 }
                 if (!player.Mode.GetDetails().CanBreak)
@@ -55,7 +57,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 Material mat = player.TheRegion.GetBlockMaterial(block);
                 if (player.Mode.GetDetails().FastBreak)
                 {
-                    breakIt = player.TheRegion.GlobalTickTime - player.LastBlockBreak >= 0.2;
+                    breakIt = player.TheRegion.GlobalTickTime - player.LastBlockBreak >= 0.2; // TODO: Arbitrary constant!
                 }
                 else
                 {
@@ -70,6 +72,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     {
                         return;
                     }
+                    // TODO: arbitrary constants!
                     if (breaker == MaterialBreaker.PICKAXE)
                     {
                         if (matbreaker == MaterialBreaker.PICKAXE)
