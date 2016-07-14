@@ -131,7 +131,13 @@ namespace Voxalia.ServerGame.NetworkSystem
                 if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))
                 {
                     string ip = resp.Substring("ACCEPT=".Length, resp.Length - 1 - "ACCEPT=".Length);
-                    if (!TheServer.CVars.n_verifyip.ValueB || rip.Contains("127.0.0.1") || rip.Contains("[::1]") || rip.Contains("192.168.0.") || rip.Contains(ip))
+                    if (!TheServer.CVars.n_verifyip.ValueB
+                        || rip.Contains("127.0.0.1")
+                        || rip.Contains("[::1]")
+                        || rip.Contains("192.168.0.")
+                        || rip.Contains("192.168.1.")
+                        || rip.Contains("10.0.0.")
+                        || rip.Contains(ip))
                     {
                         SysConsole.Output(OutputType.INFO, "Connection from '" + rip + "' accepted with username: " + username);
                         return;
