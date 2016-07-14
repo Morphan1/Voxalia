@@ -62,6 +62,10 @@ void main()
 	{
 		// float rhBlur = (f.tcol.y - 0.31) * ((1.0 / 0.38) * (3.14159 * 2.0));
 	}
+	else if (f.tcol.w == 0.0 && f.tcol.x > 0.3 && f.tcol.x < 0.7 && f.tcol.y > 0.3 && f.tcol.y < 0.7 && f.tcol.z > 0.3 && f.tcol.z < 0.7)
+	{
+		tcolor *= texture(tex, vec3(f.texcoord.xy, 0));
+	}
 	else
 	{
 		tcolor *= f.tcol;

@@ -70,6 +70,10 @@ vec4 color_for(in vec4 pos)
 		{
 			return vec4(0.0, 0.31 + snoise2(pos.xyz) * 0.38, 0.0, 0.0);
 		}
+		else if (tcol.x > 0.3 && tcol.x < 0.7 && tcol.y > 0.3 && tcol.y < 0.7 && tcol.z > 0.3 && tcol.z < 0.7)
+		{
+			return tcol;
+		}
 		else
 		{
 			float adjust = abs(mod(time * 0.2, 2.0));

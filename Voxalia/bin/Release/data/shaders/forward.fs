@@ -32,26 +32,7 @@ void main()
 {
 	vec4 col = texture(s, f.texcoord);
 #if MCM_VOX
-	vec4 thval = vec4(0.0);
-	float thstr = 0.0;
-	vec4 thcolx = texture(s, vec3(f.texcoord.xy, f.thv.x));
-	thstr += f.thw.x;
-	thval += thcolx * f.thw.x;
-	vec4 thcoly = texture(s, vec3(f.texcoord.xy, f.thv.y));
-	thstr += f.thw.y;
-	thval += thcoly * f.thw.y;
-	vec4 thcolz = texture(s, vec3(f.texcoord.xy, f.thv.z));
-	thstr += f.thw.z;
-	thval += thcolz * f.thw.z;
-	vec4 thcolw = texture(s, vec3(f.texcoord.xy, f.thv.w));
-	thstr += f.thw.w;
-	thval += thcolw * f.thw.w;
-	float tw = col.w;
-	thstr *= 0.25;
-	thval *= 0.25;
-	//col = thstr > 0.01 ? thval / thstr : col;
-	col = thstr > 0.01 ? col * (1.0 - thstr) + thval : col;
-	col.w = tw;
+	// TODO: Special color handlers?
 	col *= f.tcol;
 #endif
 #if MCM_TRANSP
