@@ -518,7 +518,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         //toSee.Enqueue(t);
                         for (int j = 0; j < MoveDirs.Length; j++)
                         {
-                            if (BEPUutilities.Vector3.Dot(MoveDirs[j].ToVector3(), (TheClient.CameraTarget - TheClient.CameraPos).ToBVector()) < -0.65f) // TODO: Wut?
+                            if (BEPUutilities.Vector3.Dot(MoveDirs[j].ToVector3(), (TheClient.CameraTarget - TheClient.CameraPos).ToBVector()) < -0.8f) // TODO: Wut?
                             {
                                 continue;
                             }
