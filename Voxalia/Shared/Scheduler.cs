@@ -50,9 +50,6 @@ namespace Voxalia.Shared
                     try
                     {
                         node.Value.MyAction.Invoke();
-                        LinkedListNode<SyncScheduleItem> torem = node;
-                        node = node.Next;
-                        Tasks.Remove(torem); // TODO: Why would this error around shutdown time?
                     }
                     catch (Exception ex)
                     {
@@ -62,6 +59,9 @@ namespace Voxalia.Shared
                         }
                         SysConsole.Output("Handling sync task", ex);
                     }
+                    LinkedListNode<SyncScheduleItem> torem = node;
+                    node = node.Next;
+                    Tasks.Remove(torem); // TODO: Why would this error around shutdown time?
                 }
             }
         }
