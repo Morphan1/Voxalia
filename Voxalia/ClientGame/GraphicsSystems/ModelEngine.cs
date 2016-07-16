@@ -423,7 +423,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         double aTLegs;
 
         public double LastDrawTime;
-
+        
         /// <summary>
         /// Draws the model.
         /// </summary>

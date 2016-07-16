@@ -42,6 +42,12 @@ namespace Voxalia
             }
             catch (Exception ex)
             {
+                if (ex is ThreadAbortException)
+                {
+                    Console.WriteLine("Forced shutdown - terminating process.");
+                    Environment.Exit(0);
+                    return;
+                }
                 SysConsole.Output(ex);
                 File.WriteAllText("GLOBALERR_" + DateTime.Now.ToFileTimeUtc().ToString() + ".txt", ex.ToString() + "\n\n" + Environment.StackTrace);
             }
