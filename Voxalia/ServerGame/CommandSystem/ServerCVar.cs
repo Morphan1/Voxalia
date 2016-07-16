@@ -25,7 +25,7 @@ namespace Voxalia.ServerGame.CommandSystem
         public CVar n_verifyip, n_rendersides, n_chunkspertick;
 
         // Text CVars
-        public CVar t_translateurls;
+        public CVar t_translateurls, t_blockurls, t_blockcolors;
 
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
@@ -49,6 +49,8 @@ namespace Voxalia.ServerGame.CommandSystem
             n_chunkspertick = Register("n_chunkspertick", "5", CVarFlag.Numeric, "How many chunks can be sent in a single server tick, per player.");
             // Text CVars
             t_translateurls = Register("t_translateurls", "true", CVarFlag.Boolean, "Whether to automatically translate URLs posted in chat.");
+            t_blockurls = Register("t_blockurls", "false", CVarFlag.Boolean, "Whether to block URLs as input to chat.");
+            t_blockcolors = Register("t_blockcolors", "false", CVarFlag.Boolean, "Whether to block colors as input to chat.");
         }
 
         CVar Register(string name, string value, CVarFlag flags, string desc)
