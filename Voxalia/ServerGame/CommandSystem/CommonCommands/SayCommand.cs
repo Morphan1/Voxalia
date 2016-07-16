@@ -25,9 +25,9 @@ namespace Voxalia.ServerGame.CommandSystem.CommonCommands
                 return;
             }
             DateTime Now = DateTime.Now;
-            // TODO: Better format (customizable?)
-            TheServer.Broadcast("^r^7[^d^5" + Utilities.Pad(Now.Hour.ToString(), '0', 2, true) + "^7:^5" + Utilities.Pad(Now.Minute.ToString(), '0', 2, true)
-                + "^7:^5" + Utilities.Pad(Now.Second.ToString(), '0', 2, true) + "^r^7] ^3^dSERVER^r^7: ^2^d" + entry.AllArguments(queue), "^r^2^d");
+            // TODO: Better format (customizable!)
+            TheServer.ChatMessage("^r^7[^d^5" + Utilities.Pad(Now.Hour.ToString(), '0', 2, true) + "^7:^5" + Utilities.Pad(Now.Minute.ToString(), '0', 2, true)
+                + "^7:^5" + Utilities.Pad(Now.Second.ToString(), '0', 2, true) + "^r^7] ^3^dSERVER^r^7:^2^d " + entry.AllArguments(queue), "^r^2^d");
         }
     }
 }

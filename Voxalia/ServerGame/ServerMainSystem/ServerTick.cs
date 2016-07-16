@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Voxalia.Shared;
 using Voxalia.ServerGame.EntitySystem;
@@ -25,6 +26,35 @@ namespace Voxalia.ServerGame.ServerMainSystem
         public double opsat = 0;
 
         string SaveStr = null;
+
+        // TODO: Non-regex?
+        private const string URL_REGEX = "(?<!([^\\s]))(https?:\\/\\/[^\\s]+)";
+        Regex urlregex = new Regex(URL_REGEX, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public string TranslateURLs(string input)
+        {
+            return urlregex.Replace(input, "^[url=$2|$2]");
+        }
+
+        public void ChatMessage(string message, string bcolor = null)
+        {
+            if (message.Contains("\n"))
+            {
+                foreach (string str in message.SplitFast('\n'))
+                {
+                    ChatMessage(str, bcolor);
+                }
+                return;
+            }
+            if (CVars.t_translateurls.ValueB)
+            {
+                message = TranslateURLs(message);
+            }
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Players[i].Network.SendMessage(message);
+            }
+            SysConsole.Output(OutputType.INFO, "[Chat] " + message, bcolor);
+        }
 
         public void Broadcast(string message, string bcolor = null)
         {
