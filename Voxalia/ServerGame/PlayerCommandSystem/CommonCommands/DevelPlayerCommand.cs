@@ -150,6 +150,10 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 entry.Player.Items.GiveItem(new ItemStack("structurepaste", arg1, entry.Player.TheServer, 1, "items/admin/structure_paste",
                     "Structor Paster", "Pastes a ;" + arg1 + "; structure!", System.Drawing.Color.White, "items/admin/structure_paste", false));
             }
+            else if (arg0 == "testPerm" && entry.InputArguments.Count > 1)
+            {
+                entry.Player.Network.SendMessage("Testing " + entry.InputArguments[1] + ": " + entry.Player.HasPermission(entry.InputArguments[1]));
+            }
             else if (arg0 == "spawnSmallPlant" && entry.InputArguments.Count > 1)
             {
                 entry.Player.TheRegion.SpawnSmallPlant(entry.InputArguments[1].ToLowerFast(), entry.Player.GetPosition());

@@ -33,6 +33,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool SecureMovement = true;
 
+        public YAMLConfiguration Permissions = null;
+        
         public void LoadFromYAML(YAMLConfiguration config)
         {
             string region = config.ReadString("region", null);
@@ -60,6 +62,14 @@ namespace Voxalia.ServerGame.EntitySystem
             SetVelocity(Location.FromString(config.ReadString("velocity", "0,0,0")));
             Teleport(Location.FromString(config.ReadString("position", TheRegion.SpawnPoint.ToString())));
             SecureMovement = config.ReadString("secure_movement", "true").ToLowerFast() == "true"; // TODO: ReadBoolean?
+            if (config.HasKey(null, "permissions"))
+            {
+                Permissions = config.GetConfigurationSection("permissions");
+            }
+            if (Permissions == null)
+            {
+                Permissions = new YAMLConfiguration("");
+            }
             IsFirstJoin = false;
             SpawnedTime = TheRegion.GlobalTickTime;
         }
@@ -81,9 +91,34 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             const string timePath = "stats.general.time_seconds";
             config.Set(timePath, config.ReadDouble(timePath, 0) + (TheRegion.GlobalTickTime - SpawnedTime));
+            config.Set("permissions", Permissions.Data);
             // TODO: Other stats!
             // TODO: CBody settings? Mass? ...?
             // TODO: Inventory!
+        }
+
+        public bool HasSpecificPermissionNodeInternal(string node)
+        {
+            return Permissions.ReadString(node, "false").ToLowerFast() == "true";
+        }
+
+        public bool HasPermissionInternal(params string[] path)
+        {
+            string constructed = "";
+            for (int i = 0; i < path.Length; i++)
+            {
+                if (HasSpecificPermissionNodeInternal(constructed + "*"))
+                {
+                    return true;
+                }
+                constructed += path[i] + ".";
+            }
+            return HasSpecificPermissionNodeInternal(constructed.Substring(0, constructed.Length - 1));
+        }
+
+        public bool HasPermission(string permission)
+        {
+            return HasPermissionInternal(permission.ToLowerFast().SplitFast('.'));
         }
 
         public override EntityType GetEntityType()
@@ -173,6 +208,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Location LoadRelPos;
         public Location LoadRelDir;
+
+        public YAMLConfiguration PlayerConfig = null;
         
         /// <summary>
         /// Kicks the player from the server with a specified message.
@@ -204,19 +241,10 @@ namespace Voxalia.ServerGame.EntitySystem
                 HookItem.RemoveHook(this);
                 RemoveMe();
             }
-            YAMLConfiguration config = new YAMLConfiguration("");
             string nl = Name.ToLower();
             string fn = "server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr";
-            if (Program.Files.Exists(fn))
-            {
-                string dat = Program.Files.ReadText(fn);
-                if (dat != null)
-                {
-                    config = new YAMLConfiguration(dat);
-                }
-            }
-            SaveToYAML(config);
-            Program.Files.WriteText(fn, config.SaveToString());
+            SaveToYAML(PlayerConfig);
+            Program.Files.WriteText(fn, PlayerConfig.SaveToString());
         }
 
         /// <summary>
@@ -286,9 +314,14 @@ namespace Voxalia.ServerGame.EntitySystem
                 string dat = Program.Files.ReadText(fn);
                 if (dat != null)
                 {
-                    YAMLConfiguration config = new YAMLConfiguration(dat);
-                    LoadFromYAML(config);
+                    PlayerConfig = new YAMLConfiguration(dat);
+                    LoadFromYAML(PlayerConfig);
                 }
+            }
+            if (PlayerConfig == null)
+            {
+                PlayerConfig = new YAMLConfiguration("");
+                SaveToYAML(PlayerConfig);
             }
         }
 
