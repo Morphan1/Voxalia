@@ -68,7 +68,7 @@ namespace Voxalia.ServerGame.EntitySystem
             base.Tick();
         }
 
-        public class HelicopterMotionConstraint : SingleEntityConstraint
+        public class HelicopterMotionConstraint : SingleEntityConstraint // TODO: network!
         {
             HelicopterEntity Helicopter;
 

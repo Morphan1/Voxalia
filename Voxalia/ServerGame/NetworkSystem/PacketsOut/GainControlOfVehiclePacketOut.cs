@@ -22,6 +22,10 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 Setup(character, (HelicopterEntity)vehicle);
             }
+            else if (vehicle is PlaneEntity)
+            {
+                Setup(character, (PlaneEntity)vehicle);
+            }
             else
             {
                 throw new NotImplementedException();
@@ -50,6 +54,17 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         }
 
         private void Setup(CharacterEntity character, HelicopterEntity vehicle)
+        {
+            DataStream ds = new DataStream();
+            DataWriter dw = new DataWriter(ds);
+            dw.WriteLong(character.EID);
+            dw.WriteByte(1);
+            dw.Flush();
+            Data = ds.ToArray();
+            dw.Close();
+        }
+
+        private void Setup(CharacterEntity character, PlaneEntity vehicle)
         {
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);

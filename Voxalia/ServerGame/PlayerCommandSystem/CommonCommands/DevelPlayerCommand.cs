@@ -46,6 +46,12 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 ve.SetPosition(entry.Player.GetEyePosition() + entry.Player.ForwardVector() * 5);
                 entry.Player.TheRegion.SpawnEntity(ve);
             }
+            else if (arg0 == "spawnPlane" && entry.InputArguments.Count > 1)
+            {
+                PlaneEntity ve = new PlaneEntity(entry.InputArguments[1], entry.Player.TheRegion);
+                ve.SetPosition(entry.Player.GetEyePosition() + entry.Player.ForwardVector() * 5);
+                entry.Player.TheRegion.SpawnEntity(ve);
+            }
             else if (arg0 == "fly")
             {
                 if (entry.Player.IsFlying)

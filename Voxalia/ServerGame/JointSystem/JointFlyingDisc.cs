@@ -9,7 +9,7 @@ using Voxalia.Shared.Collision;
 
 namespace Voxalia.ServerGame.JointSystem
 {
-    class JointFlyingDisc : BaseJoint
+    public class JointFlyingDisc : BaseJoint
     {
         public JointFlyingDisc(Entity e)
         {
