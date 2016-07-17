@@ -186,15 +186,15 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// How far (in chunks) the player can see, as a cubic radius, excluding the chunk the player is in.
         /// </summary>
-        public int ViewRadiusInChunks = 3;
+        public int ViewRadiusInChunks = 4;
 
         public int ViewRadExtra2 = 2;
 
-        public int ViewRadExtra2Height = 1;
+        public int ViewRadExtra2Height = 3;
 
         public int ViewRadExtra5 = 3;
 
-        public int ViewRadExtra5Height = 2;
+        public int ViewRadExtra5Height = 4;
         
         public int BestLOD = 1;
 
@@ -626,7 +626,7 @@ namespace Voxalia.ServerGame.EntitySystem
         static Vector3i[] MoveDirs = new Vector3i[] { new Vector3i(-1, 0, 0), new Vector3i(1, 0, 0),
             new Vector3i(0, -1, 0), new Vector3i(0, 1, 0), new Vector3i(0, 0, -1), new Vector3i(0, 0, 1) };
 
-        const float Max_FOV = 90f;
+        const float Max_FOV = 100f;
         
         void ChunkMarchAndSend()
         {
@@ -636,11 +636,11 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return;
             }
-            Matrix proj = Matrix.CreatePerspectiveFieldOfViewRH(Max_FOV * (float)Utilities.PI180, 1, 0.5f, 1000f);
+            Matrix proj = Matrix.CreatePerspectiveFieldOfViewRH(Max_FOV * (float)Utilities.PI180, 1, 0.5f, 3000f);
             Matrix view = Matrix.CreateLookAtRH((LoadRelPos - LoadRelDir * 8).ToBVector(), (LoadRelPos + LoadRelDir * 8).ToBVector(), new Vector3(0, 0, 1));
             Matrix combined = view * proj;
             BFrustum bfs = new BFrustum(combined);
-            Vector3i start = TheRegion.ChunkLocFor(GetEyePosition());
+            Vector3i start = TheRegion.ChunkLocFor(LoadRelPos);
             HashSet<Vector3i> seen = new HashSet<Vector3i>();
             Queue<Vector3i> toSee = new Queue<Vector3i>();
             toSee.Enqueue(start);
@@ -655,8 +655,8 @@ namespace Voxalia.ServerGame.EntitySystem
                     continue;
                 }
                 if (Math.Abs(cur.X - start.X) <= ViewRadiusInChunks
-                    || Math.Abs(cur.Y - start.Y) <= ViewRadiusInChunks
-                    || Math.Abs(cur.Z - start.Z) <= ViewRadiusInChunks)
+                    && Math.Abs(cur.Y - start.Y) <= ViewRadiusInChunks
+                    && Math.Abs(cur.Z - start.Z) <= ViewRadiusInChunks)
                 {
                     if (TryChunk(cur, 0, 1))
                     {
@@ -668,10 +668,10 @@ namespace Voxalia.ServerGame.EntitySystem
                     }
                 }
                 else if (Math.Abs(cur.X - start.X) <= (ViewRadiusInChunks + ViewRadExtra2)
-                    || Math.Abs(cur.Y - start.Y) <= (ViewRadiusInChunks + ViewRadExtra2)
-                    || Math.Abs(cur.Z - start.Z) <= (ViewRadiusInChunks + ViewRadExtra2Height))
+                    && Math.Abs(cur.Y - start.Y) <= (ViewRadiusInChunks + ViewRadExtra2)
+                    && Math.Abs(cur.Z - start.Z) <= (ViewRadiusInChunks + ViewRadExtra2Height))
                 {
-                    if (TryChunk(cur, 10, 2))
+                    if (TryChunk(cur, 0, 2))
                     {
                         chunksFound++;
                         if (chunksFound > maxChunks)
@@ -682,7 +682,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 else
                 {
-                    if (TryChunk(cur, 25, 5))
+                    if (TryChunk(cur, 0, 5))
                     {
                         chunksFound++;
                         if (chunksFound > maxChunks)
@@ -707,7 +707,7 @@ namespace Voxalia.ServerGame.EntitySystem
                             if (!seen.Contains(nt) && !toSee.Contains(nt))
                             {
                                 bool val = false;
-                                Chunk ch = TheRegion.GetChunk(t);
+                                Chunk ch = TheRegion.LoadChunk(t);
                                 if (ch == null)
                                 {
                                     val = true;
@@ -1045,62 +1045,12 @@ namespace Voxalia.ServerGame.EntitySystem
 
         Vector3i pChunkLoc = new Vector3i(-100000, -100000, -100000);
         
-       // bool loadedInitially = false;
-
-        /*
-        public void TrySet(Location pos, int VIEWRAD_HOR, int VIEWRAD_VERT, float atime, int posMult, bool bg)
-        {
-            for (int x = -VIEWRAD_HOR; x <= VIEWRAD_HOR; x++)
-            {
-                for (int y = -VIEWRAD_HOR; y <= VIEWRAD_HOR; y++)
-                {
-                    for (int z = -VIEWRAD_VERT; z <= VIEWRAD_VERT; z++)
-                    {
-                        if (bg)
-                        {
-                            Vector3i chl = TheRegion.ChunkLocFor(pos + new Location(Chunk.CHUNK_SIZE * x, Chunk.CHUNK_SIZE * y, Chunk.CHUNK_SIZE * z));
-                            TheRegion.TheServer.Schedule.ScheduleSyncTask(() =>
-                            {
-                                if (pkick)
-                                {
-                                    return;
-                                }
-                                if (posMult == 5)
-                                {
-                                    Chunk ch = TheRegion.LoadChunkLOD(chl);
-                                    if (ch != null)
-                                    {
-                                        TryChunk(chl.ToLocation() * Chunk.CHUNK_SIZE, 0, posMult, ch);
-                                        ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
-                                        return;
-                                    }
-                                }
-                                TheRegion.LoadChunk_Background(chl, (b) =>
-                                {
-                                    TryChunk(chl.ToLocation() * Chunk.CHUNK_SIZE, 0, posMult);
-                                    if (!pkick)
-                                    {
-                                        ChunkNetwork.SendPacket(new OperationStatusPacketOut(StatusOperation.CHUNK_LOAD, 2));
-                                    }
-                                });
-                            }, Utilities.UtilRandom.NextDouble() * atime);
-                        }
-                        else
-                        {
-                            TryChunk(pos + new Location(Chunk.CHUNK_SIZE * x, Chunk.CHUNK_SIZE * y, Chunk.CHUNK_SIZE * z), atime, posMult);
-                        }
-                    }
-                }
-            }
-        }*/
-
         public bool TryChunk(Vector3i cworldPos, float atime, int posMult, Chunk chi = null) // TODO: Efficiency?
         {
             if (pkick)
             {
                 return false;
             }
-            //Vector3i cworldPos = TheRegion.ChunkLocFor(worldPos);
             if (!ChunksAwareOf.ContainsKey(cworldPos) || ChunksAwareOf[cworldPos].LOD > posMult) // TODO: Efficiency - TryGetValue?
             { // TODO: Or ATime < awareOf.remTime?
                 if (ChunksAwareOf.ContainsKey(cworldPos)) // TODO: Efficiency - TryGetValue?
