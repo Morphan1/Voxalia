@@ -20,9 +20,9 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
             }
             Material chosenMat = MaterialHelpers.FromNameOrNumber(entry.InputArguments[0]);
             float maxRad = Utilities.StringToFloat(entry.InputArguments[1]);
-            if (maxRad > 20) // TODO: Config!
+            if (maxRad > 50) // TODO: Config!
             {
-                entry.Player.Network.SendMessage("Maximum radius is 20!");
+                entry.Player.Network.SendMessage("Maximum radius is 50!");
                 return;
             }
             Location start = entry.Player.GetPosition().GetBlockLocation() + new Location(0, 0, 1);

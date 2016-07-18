@@ -48,14 +48,14 @@ namespace Voxalia.ServerGame.EntitySystem
             TheRegion.PhysicsWorld.Add(Motion);
             Wings = new JointFlyingDisc(this);
             TheRegion.AddJoint(Wings);
-            // TODO: Wheels, like a car!
+            HandleWheels();
         }
 
         public float FastStrength
         {
             get
             {
-                return GetMass() * 17f;
+                return GetMass() * 30f;
             }
         }
 
@@ -71,7 +71,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             get
             {
-                return GetMass() * -7f;
+                return GetMass() * -5f;
             }
         }
 
@@ -102,8 +102,8 @@ namespace Voxalia.ServerGame.EntitySystem
                     return; // Don't fly when there's nobody driving this!
                 }
                 // Collect the plane's relative vectors
-                Vector3 forward = Quaternion.Transform(Vector3.UnitX, Entity.Orientation);
-                Vector3 side = Quaternion.Transform(Vector3.UnitY, Entity.Orientation);
+                Vector3 forward = Quaternion.Transform(Vector3.UnitY, Entity.Orientation);
+                Vector3 side = Quaternion.Transform(Vector3.UnitX, Entity.Orientation);
                 // Engines!
                 if (Plane.Fast)
                 {
@@ -120,11 +120,11 @@ namespace Voxalia.ServerGame.EntitySystem
                     Vector3 force = forward * Plane.RegularStrength * Delta;
                     entity.ApplyLinearImpulse(ref force);
                 }
-                entity.ApplyImpulse(forward * 5 + entity.Position, new Vector3(0, 0, Plane.ForwBack) * entity.Mass * 0.5f * Delta);
-                entity.ApplyImpulse(side * 5 + entity.Position, new Vector3(0, 0, Plane.RightLeft) * entity.Mass * 0.5f * Delta);
-                entity.ApplyImpulse(forward * 5 + entity.Position, new Vector3(0, (Plane.IRight ? -1 : 0) + (Plane.ILeft ? 1 : 0), 0) * entity.Mass * 0.5f * Delta);
+                entity.ApplyImpulse(forward * 5 + entity.Position, new Vector3(0, 0, Plane.ForwBack) * entity.Mass * 2.5f * Delta);
+                entity.ApplyImpulse(side * 5 + entity.Position, new Vector3(0, 0, Plane.RightLeft) * entity.Mass * 3f * Delta);
+                entity.ApplyImpulse(forward * 5 + entity.Position, new Vector3((Plane.IRight ? 1 : 0) + (Plane.ILeft ? -1 : 0), 0, 0) * entity.Mass * 3f * Delta);
                 // Apply air drag
-                Entity.ModifyLinearDamping(0.3f); // TODO: arbitrary constant
+                Entity.ModifyLinearDamping(0.5f); // TODO: arbitrary constant
                 Entity.ModifyAngularDamping(0.8f); // TODO: arbitrary constant
                 // Ensure we're active if flying!
                 Entity.ActivityInformation.Activate();
