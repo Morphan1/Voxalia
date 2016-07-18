@@ -13,6 +13,8 @@ namespace Voxalia.ClientGame.UISystem
         {
         }
 
+        // TODO: Sprint/walk buttons! (Bumper thingies?)
+
         public static double TotalDirectionX;
 
         public static double TotalDirectionY;

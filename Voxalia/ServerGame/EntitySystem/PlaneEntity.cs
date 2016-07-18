@@ -35,6 +35,9 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool ILeft = false;
         public bool IRight = false;
 
+        public bool Fast = false;
+        public bool Slow = false;
+
         public float ForwBack = 0;
         public float RightLeft = 0;
 
@@ -52,7 +55,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             get
             {
-                return GetMass() * 0.2f;
+                return GetMass() * 17f;
             }
         }
 
@@ -60,7 +63,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             get
             {
-                return GetMass() * 0.1f;
+                return GetMass() * 7f;
             }
         }
 
@@ -68,7 +71,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             get
             {
-                return GetMass() * 0.05f;
+                return GetMass() * -7f;
             }
         }
 
@@ -79,18 +82,13 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
-            Motion.FlyFast = ILeft && !IRight;
-            Motion.FlySlow = IRight && !ILeft;
             base.Tick();
         }
 
         public class PlaneMotionConstraint : SingleEntityConstraint // TODO: network!
         {
             PlaneEntity Plane;
-
-            public bool FlyFast;
-            public bool FlySlow;
-
+            
             public PlaneMotionConstraint(PlaneEntity pln)
             {
                 Plane = pln;
@@ -103,26 +101,28 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     return; // Don't fly when there's nobody driving this!
                 }
-                // Collect the plane's relative "forward" vector
+                // Collect the plane's relative vectors
                 Vector3 forward = Quaternion.Transform(Vector3.UnitX, Entity.Orientation);
+                Vector3 side = Quaternion.Transform(Vector3.UnitY, Entity.Orientation);
                 // Engines!
-                if (FlyFast)
+                if (Plane.Fast)
                 {
-                    Vector3 force = forward * Plane.FastStrength;
+                    Vector3 force = forward * Plane.FastStrength * Delta;
                     entity.ApplyLinearImpulse(ref force);
                 }
-                else if (FlySlow)
+                else if (Plane.Slow)
                 {
-                    Vector3 force = forward * Plane.SlowStrength;
+                    Vector3 force = forward * Plane.SlowStrength * Delta;
                     entity.ApplyLinearImpulse(ref force);
                 }
                 else // FlyNormal
                 {
-                    Vector3 force = forward * Plane.RegularStrength;
+                    Vector3 force = forward * Plane.RegularStrength * Delta;
                     entity.ApplyLinearImpulse(ref force);
                 }
-                entity.ApplyImpulse(forward * 5 + entity.Position, new Vector3(0, 0, Plane.ForwBack) * entity.Mass * 0.005f);
-                entity.ApplyImpulse(forward * 5 + entity.Position, new Vector3(0, Plane.RightLeft, 0) * entity.Mass * 0.005f);
+                entity.ApplyImpulse(forward * 5 + entity.Position, new Vector3(0, 0, Plane.ForwBack) * entity.Mass * 0.5f * Delta);
+                entity.ApplyImpulse(side * 5 + entity.Position, new Vector3(0, 0, Plane.RightLeft) * entity.Mass * 0.5f * Delta);
+                entity.ApplyImpulse(forward * 5 + entity.Position, new Vector3(0, (Plane.IRight ? -1 : 0) + (Plane.ILeft ? 1 : 0), 0) * entity.Mass * 0.5f * Delta);
                 // Apply air drag
                 Entity.ModifyLinearDamping(0.3f); // TODO: arbitrary constant
                 Entity.ModifyAngularDamping(0.8f); // TODO: arbitrary constant
@@ -149,6 +149,8 @@ namespace Voxalia.ServerGame.EntitySystem
             IRight = character.ItemRight;
             ForwBack = character.YMove;
             RightLeft = character.XMove;
+            Fast = character.Sprint;
+            Slow = character.Walk;
         }
     }
 }

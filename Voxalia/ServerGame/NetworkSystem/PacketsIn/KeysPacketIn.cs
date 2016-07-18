@@ -53,6 +53,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             Player.ItemRight = iright;
             Player.ItemUp = iup;
             Player.ItemDown = idown;
+            Player.Sprint = val.HasFlag(KeysPacketData.SPRINT);
+            Player.Walk = val.HasFlag(KeysPacketData.WALK);
             Player.LastKPI = Player.TheRegion.GlobalTickTime;
             if (Player.Flags.HasFlag(YourStatusFlags.NO_ROTATE))
             {

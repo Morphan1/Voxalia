@@ -247,6 +247,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 Downward = Downward,
                 GlobalTimeRemote = lGTT,
                 pup = pup,
+                Sprint = Sprint,
+                Walk = Walk,
                 GlobalTimeLocal = TheRegion.GlobalTickTimeLocal
             };
             Input.Push(uis);
@@ -263,7 +265,9 @@ namespace Voxalia.ClientGame.EntitySystem
                   | (ItemLeft ? KeysPacketData.ITEMLEFT : 0)
                   | (ItemRight ? KeysPacketData.ITEMRIGHT : 0)
                   | (ItemUp ? KeysPacketData.ITEMUP : 0)
-                  | (ItemDown ? KeysPacketData.ITEMDOWN : 0);
+                  | (ItemDown ? KeysPacketData.ITEMDOWN : 0)
+                  | (Sprint ? KeysPacketData.SPRINT : 0)
+                  | (Walk ? KeysPacketData.WALK : 0);
             if (ServerFlags.HasFlag(YourStatusFlags.NO_ROTATE))
             {
                 Location loc = new Location();
@@ -343,6 +347,14 @@ namespace Voxalia.ClientGame.EntitySystem
         public void SetMoveSpeed(CharacterController cc, UserInputSet uis)
         {
             float speedmod = new Vector2(uis.XMove, uis.YMove).Length() * 2;
+            if (uis.Walk)
+            {
+                speedmod *= 0.5f;
+            }
+            if (!uis.Sprint)
+            {
+                speedmod *= 0.5f;
+            }
             if (Click)
             {
                 ItemStack item = TheClient.GetItemForSlot(TheClient.QuickBarPos);
@@ -465,14 +477,6 @@ namespace Voxalia.ClientGame.EntitySystem
                 if (tmove.LengthSquared() > 1)
                 {
                     tmove.Normalize();
-                    if (Walk)
-                    {
-                        tmove *= 0.5f;
-                    }
-                    if (!Sprint)
-                    {
-                        tmove *= 0.5f;
-                    }
                 }
             }
             XMove = tmove.X;
@@ -818,5 +822,9 @@ namespace Voxalia.ClientGame.EntitySystem
         public Location Position;
 
         public Location Velocity;
+
+        public bool Sprint;
+
+        public bool Walk;
     }
 }
