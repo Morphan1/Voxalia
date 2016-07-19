@@ -9,6 +9,8 @@ using Voxalia.ClientGame.WorldSystem;
 using Voxalia.Shared.Collision;
 using Voxalia.ClientGame.OtherSystems;
 using BEPUutilities;
+using BEPUphysics.Constraints;
+using BEPUphysics.Constraints.SingleEntity;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -33,6 +35,107 @@ namespace Voxalia.ClientGame.EntitySystem
             : base(tregion, true, true)
         {
             mod = model_in;
+        }
+
+        public void TurnIntoPlane(PlayerEntity pilot)
+        {
+            PlanePilot = pilot;
+            Plane = new PlaneMotionConstraint(this);
+            TheRegion.PhysicsWorld.Add(Plane);
+        }
+
+        public float PlaneFastStrength
+        {
+            get
+            {
+                return GetMass() * 25f;
+            }
+        }
+
+        public float PlaneRegularStrength
+        {
+            get
+            {
+                return GetMass() * 7f;
+            }
+        }
+
+        public float PlaneSlowStrength
+        {
+            get
+            {
+                return GetMass() * -5f;
+            }
+        }
+
+        public PlaneMotionConstraint Plane = null;
+
+        public PlayerEntity PlanePilot = null;
+
+        public class PlaneMotionConstraint : SingleEntityConstraint
+        {
+            ModelEntity Plane;
+            
+            public PlaneMotionConstraint(ModelEntity pln)
+            {
+                Plane = pln;
+                Entity = pln.Body;
+            }
+
+            public override void ExclusiveUpdate()
+            {
+                if (Plane.PlanePilot == null)
+                {
+                    return; // Don't fly when there's nobody driving this!
+                }
+                // TODO: Special case for motion on land: only push forward if W key is pressed? Or maybe apply that rule in general?
+                // Collect the plane's relative vectors
+                BEPUutilities.Vector3 forward = BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitY, Entity.Orientation);
+                BEPUutilities.Vector3 side = BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitX, Entity.Orientation);
+                BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitZ, Entity.Orientation);
+                // Engines!
+                if (Plane.PlanePilot.Sprint && !Plane.PlanePilot.Walk)
+                {
+                    BEPUutilities.Vector3 force = forward * Plane.PlaneFastStrength * Delta;
+                    entity.ApplyLinearImpulse(ref force);
+                }
+                else if (Plane.PlanePilot.Walk && !Plane.PlanePilot.Sprint)
+                {
+                    BEPUutilities.Vector3 force = forward * Plane.PlaneSlowStrength * Delta;
+                    entity.ApplyLinearImpulse(ref force);
+                }
+                else // FlyNormal
+                {
+                    BEPUutilities.Vector3 force = forward * Plane.PlaneRegularStrength * Delta;
+                    entity.ApplyLinearImpulse(ref force);
+                }
+                entity.ApplyImpulse(forward * 5 + entity.Position, up * Plane.PlanePilot.YMove * entity.Mass * 2.5f * Delta);
+                entity.ApplyImpulse(side * 5 + entity.Position, up * -Plane.PlanePilot.XMove * entity.Mass * 3f * Delta);
+                entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.PlanePilot.ItemRight ? 1 : 0) + (Plane.PlanePilot.ItemLeft ? -1 : 0)) * entity.Mass * 3f * Delta);
+                // Apply air drag
+                Entity.ModifyLinearDamping(0.5f); // TODO: arbitrary constant
+                Entity.ModifyAngularDamping(0.8f); // TODO: arbitrary constant
+                Entity.ModifyAngularDamping(0.8f); // TODO: arbitrary constant
+                // Ensure we're active if flying!
+                Entity.ActivityInformation.Activate();
+            }
+
+            public override float SolveIteration()
+            {
+                return 0; // Do nothing
+            }
+
+            float Delta;
+
+            public override void Update(float dt)
+            {
+                Delta = dt;
+            }
+        }
+
+        public void NoLongerAPlane() // TODO: Use me!
+        {
+
         }
 
         public override void Tick()

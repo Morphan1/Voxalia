@@ -233,6 +233,8 @@ namespace Voxalia.ClientGame.EntitySystem
 
         long cPacketID = 0;
 
+        public bool InVehicle = false;
+
         public void AddUIS()
         {
             UserInputSet uis = new UserInputSet()
@@ -283,7 +285,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public void SetBodyMovement(CharacterController cc, UserInputSet uis)
         {
-            Vector2 movement = new Vector2(uis.XMove, uis.YMove);
+            Vector2 movement = InVehicle ? Vector2.Zero : new Vector2(uis.XMove, uis.YMove);
             if (movement.LengthSquared() > 0)
             {
                 movement.Normalize();
@@ -324,7 +326,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public void TryToJump()
         {
-            if (Upward && !IsFlying && !pup && CBody.SupportFinder.HasSupport)
+            if (!InVehicle && Upward && !IsFlying && !pup && CBody.SupportFinder.HasSupport)
             {
                 CBody.Jump();
                 pup = true;
@@ -337,7 +339,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public void NMTWOTryToJump(UserInputSet uis)
         {
-            if (uis.Upward && !uis.pup && !IsFlying && NMTWOCBody.SupportFinder.HasSupport)
+            if (!InVehicle && uis.Upward && !uis.pup && !IsFlying && NMTWOCBody.SupportFinder.HasSupport)
             {
                 NMTWOCBody.Jump();
                 uis.pup = true;

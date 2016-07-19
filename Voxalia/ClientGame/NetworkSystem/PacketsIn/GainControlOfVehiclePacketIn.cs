@@ -9,6 +9,8 @@ using Voxalia.ClientGame.JointSystem;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
+    // TODO: LoseControlOfVehiclePacket!
+
     public class GainControlOfVehiclePacketIn: AbstractPacketIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
@@ -22,6 +24,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 if (e is PlayerEntity)
                 {
+                    ((PlayerEntity)e).InVehicle = true;
                     int drivecount = dr.ReadInt();
                     int steercount = dr.ReadInt();
                     PlayerEntity player = (PlayerEntity)e;
@@ -62,7 +65,22 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 2)
             {
-                // TODO: planes!
+                if (e is PlayerEntity)
+                {
+                    ((PlayerEntity)e).InVehicle = true;
+                    long planeid = dr.ReadLong();
+                    Entity plane = TheClient.TheRegion.GetEntity(planeid);
+                    if (!(plane is ModelEntity))
+                    {
+                        dr.Close();
+                        return false;
+                    }
+                    ModelEntity planemod = (ModelEntity)plane;
+                    planemod.TurnIntoPlane((PlayerEntity)e);
+                    dr.Close();
+                    return true;
+                }
+                // TODO: other CharacterEntity's
                 dr.Close();
                 return true;
             }

@@ -51,6 +51,7 @@ namespace Voxalia.ServerGame.EntitySystem
             HandleWheels();
         }
 
+        // TODO: Network speeds!
         public float FastStrength
         {
             get
@@ -86,7 +87,7 @@ namespace Voxalia.ServerGame.EntitySystem
             base.Tick();
         }
 
-        public class PlaneMotionConstraint : SingleEntityConstraint // TODO: network!
+        public class PlaneMotionConstraint : SingleEntityConstraint
         {
             PlaneEntity Plane;
             
@@ -124,7 +125,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     entity.ApplyLinearImpulse(ref force);
                 }
                 entity.ApplyImpulse(forward * 5 + entity.Position, up * Plane.ForwBack * entity.Mass * 2.5f * Delta);
-                entity.ApplyImpulse(side * 5 + entity.Position, up * Plane.RightLeft * entity.Mass * 3f * Delta);
+                entity.ApplyImpulse(side * 5 + entity.Position, up * -Plane.RightLeft * entity.Mass * 3f * Delta);
                 entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.IRight ? 1 : 0) + (Plane.ILeft ? -1 : 0)) * entity.Mass * 3f * Delta);
                 // Apply air drag
                 Entity.ModifyLinearDamping(0.5f); // TODO: arbitrary constant
@@ -153,8 +154,8 @@ namespace Voxalia.ServerGame.EntitySystem
             IRight = character.ItemRight;
             ForwBack = character.YMove;
             RightLeft = character.XMove;
-            Fast = character.Sprint;
-            Slow = character.Walk;
+            Fast = character.Sprint && !character.Walk;
+            Slow = character.Walk && !character.Sprint;
         }
     }
 }

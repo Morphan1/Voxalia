@@ -59,6 +59,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             DataWriter dw = new DataWriter(ds);
             dw.WriteLong(character.EID);
             dw.WriteByte(1);
+            dw.WriteLong(vehicle.EID);
             dw.Flush();
             Data = ds.ToArray();
             dw.Close();
@@ -70,6 +71,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             DataWriter dw = new DataWriter(ds);
             dw.WriteLong(character.EID);
             dw.WriteByte(2);
+            dw.WriteLong(vehicle.EID);
             dw.Flush();
             Data = ds.ToArray();
             dw.Close();
