@@ -51,7 +51,7 @@ namespace Voxalia.ServerGame.EntitySystem
             HandleWheels();
         }
 
-        // TODO: Network speeds!
+        // TODO: Customizable and networked speeds!
         public float FastStrength
         {
             get

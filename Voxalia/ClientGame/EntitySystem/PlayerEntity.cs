@@ -127,6 +127,10 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
+            if (InVehicle)
+            {
+                return;
+            }
             // TODO: big solid entities!
             double now = TheRegion.GlobalTickTimeLocal;
             if (TheClient.CVars.n_movemode.ValueI == 2)
