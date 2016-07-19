@@ -33,6 +33,9 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool ILeft = false;
         public bool IRight = false;
 
+        public bool Sprint = false;
+        public bool Walk = false;
+
         public float ForwBack = 0;
         public float RightLeft = 0;
 
@@ -63,18 +66,13 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
-            Motion.FlyUp = ILeft && !IRight;
-            Motion.FlyHover = !IRight;
             base.Tick();
         }
 
         public class HelicopterMotionConstraint : SingleEntityConstraint // TODO: network!
         {
             HelicopterEntity Helicopter;
-
-            public bool FlyUp;
-            public bool FlyHover;
-
+            
             public HelicopterMotionConstraint(HelicopterEntity heli)
             {
                 Helicopter = heli;
@@ -89,28 +87,31 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 // Collect the helicopter's relative "up" vector
                 Vector3 up = Quaternion.Transform(Vector3.UnitZ, Entity.Orientation);
-                if (FlyUp)
+                if (Helicopter.Sprint && !Helicopter.Walk)
                 {
                     // Apply our maximum upward strength.
                     Vector3 upvel = up * Helicopter.LiftStrength * Delta;
                     Entity.ApplyLinearImpulse(ref upvel);
                 }
-                else if (FlyHover)
+                else if (Helicopter.Walk && !Helicopter.Sprint)
+                {
+                    // Apply the minimum lift strength allowed to sortof just fall downward.
+                    Vector3 upvel = up * Helicopter.FallStrength * Delta;
+                    Entity.ApplyLinearImpulse(ref upvel);
+                }
+                else // FlyHover
                 {
                     // Apply the amount of force necessary to counteract downward force, within a limit.
                     // POTENTIAL: Adjust according to orientation?
                     Vector3 upvel = up * Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass) * Delta;
                     Entity.ApplyLinearImpulse(ref upvel);
                 }
-                else // FlyDown
-                {
-                    // Apply the minimum lift strength allowed to sortof just fall downward.
-                    Vector3 upvel = up * Helicopter.FallStrength * Delta;
-                    Entity.ApplyLinearImpulse(ref upvel);
-                }
                 // Rotate slightly to move in a direction.
                 // At the same time, fight against existing rotation.
                 Vector3 VecUp = new Vector3(Helicopter.ForwBack * 0.25f, Helicopter.RightLeft * 0.25f, 1);
+                // TODO: Simplify yawrel calculation.
+                Quaternion yawrel = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)(Utilities.MatrixToAngles(Matrix.CreateFromQuaternion(Entity.Orientation)).Yaw * Utilities.PI180));
+                VecUp = Quaternion.Transform(VecUp, yawrel);
                 VecUp.Normalize();
                 Vector3 axis = Vector3.Cross(VecUp, up);
                 float len = axis.Length();
@@ -124,6 +125,13 @@ namespace Voxalia.ServerGame.EntitySystem
                         torque *= Entity.Mass * Delta * 30;
                         Entity.ApplyAngularImpulse(ref torque);
                     }
+                }
+                // Spin in place
+                float rotation = (Helicopter.ILeft ? -1f : 0f) + (Helicopter.IRight ? 1f : 0f);
+                if (rotation * rotation > 0f)
+                {
+                    Vector3 rot = new Vector3(0, 0, rotation * Delta * Entity.Mass);
+                    Entity.ApplyAngularImpulse(ref rot);
                 }
                 // Apply air drag
                 Entity.ModifyLinearDamping(0.3f); // TODO: arbitrary constant
@@ -151,6 +159,8 @@ namespace Voxalia.ServerGame.EntitySystem
             IRight = character.ItemRight;
             ForwBack = character.YMove;
             RightLeft = character.XMove;
+            Sprint = character.Sprint;
+            Walk = character.Walk;
         }
     }
 }
