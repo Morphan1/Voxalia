@@ -10,7 +10,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             UsageType = NetUsageType.ENTITIES;
             ID = ServerToClientPacket.ADD_JOINT;
             int len = 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 4;
-            // TODO: joint registry or somethin'
+            // TODO: joint registry or something
             if (joint is JointBallSocket)
             {
                 Data = new byte[len + 12];
@@ -104,6 +104,11 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 Data = new byte[len];
                 Data[0] = 13;
+            }
+            else if (joint is JointNoCollide)
+            {
+                Data = new byte[len];
+                Data[0] = 14;
             }
             Utilities.LongToBytes(joint.One.EID).CopyTo(Data, 1);
             Utilities.LongToBytes(joint.Two.EID).CopyTo(Data, 1 + 8);

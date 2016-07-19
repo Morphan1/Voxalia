@@ -192,6 +192,7 @@
     <Compile Include="ClientGame\JointSystem\ConstWheelStepUp.cs" />
     <Compile Include="ClientGame\JointSystem\JointFlyingDisc.cs" />
     <Compile Include="ClientGame\JointSystem\JointLAxisLimit.cs" />
+    <Compile Include="ClientGame\JointSystem\JointNoCollide.cs" />
     <Compile Include="ClientGame\JointSystem\JointSwivelHinge.cs" />
     <Compile Include="ClientGame\JointSystem\JointVehicleMotor.cs" />
     <Compile Include="ClientGame\JointSystem\JointTwist.cs" />

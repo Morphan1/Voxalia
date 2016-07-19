@@ -178,6 +178,7 @@
     <Compile Include="ServerGame\JointSystem\JointFlyingDisc.cs" />
     <Compile Include="ServerGame\JointSystem\JointForceWeld.cs" />
     <Compile Include="ServerGame\JointSystem\JointLAxisLimit.cs" />
+    <Compile Include="ServerGame\JointSystem\JointNoCollide.cs" />
     <Compile Include="ServerGame\JointSystem\JointSwivelHinge.cs" />
     <Compile Include="ServerGame\JointSystem\JointVehicleMotor.cs" />
     <Compile Include="ServerGame\JointSystem\JointPushPull.cs" />

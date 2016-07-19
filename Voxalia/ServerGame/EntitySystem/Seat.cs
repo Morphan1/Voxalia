@@ -10,12 +10,18 @@ namespace Voxalia.ServerGame.EntitySystem
     public class Seat
     {
         public PhysicsEntity SeatHolder;
+
         public Location PositionOffset;
+
         public PhysicsEntity Sitter = null;
-        public Location OldPosition = Location.Zero; // TODO: Track orientation too!
-        
-        private JointSlider js = null;
-        private JointBallSocket jbs = null;
+
+        public Location OldPosition = Location.Zero; // TODO: Track orientation too! Offset matrix/transformation?
+
+        public JointSlider js = null;
+
+        public JointBallSocket jbs = null;
+
+        public JointNoCollide jnc = null;
 
         public Seat(PhysicsEntity seatHolder, Location posOffset)
         {
@@ -48,8 +54,10 @@ namespace Voxalia.ServerGame.EntitySystem
             float len = (float)PositionOffset.Length();
             js = new JointSlider(SeatHolder, sitter, PositionOffset / len);
             jbs = new JointBallSocket(SeatHolder, sitter, sitter.GetPosition());
+            jnc = new JointNoCollide(SeatHolder, sitter);
             SeatHolder.TheRegion.AddJoint(js);
             SeatHolder.TheRegion.AddJoint(jbs);
+            SeatHolder.TheRegion.AddJoint(jnc);
             if (SeatHolder is VehicleEntity && sitter is PlayerEntity)
             {
                 ((VehicleEntity)SeatHolder).Accepted((PlayerEntity)sitter);
@@ -65,8 +73,10 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             SeatHolder.TheRegion.DestroyJoint(js);
             SeatHolder.TheRegion.DestroyJoint(jbs);
+            SeatHolder.TheRegion.DestroyJoint(jnc);
             js = null;
             jbs = null;
+            jnc = null;
             if (Sitter is PlayerEntity)
             {
                 ((PlayerEntity)Sitter).Teleport(OldPosition + SeatHolder.GetPosition());
