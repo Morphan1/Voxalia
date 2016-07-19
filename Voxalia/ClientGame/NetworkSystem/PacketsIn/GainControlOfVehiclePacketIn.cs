@@ -56,6 +56,13 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 1)
             {
+                // TODO: helicopters!
+                dr.Close();
+                return true;
+            }
+            else if (type == 2)
+            {
+                // TODO: planes!
                 dr.Close();
                 return true;
             }

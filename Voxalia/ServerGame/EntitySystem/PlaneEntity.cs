@@ -55,7 +55,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             get
             {
-                return GetMass() * 30f;
+                return GetMass() * 25f;
             }
         }
 
@@ -82,6 +82,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override void Tick()
         {
+            // TODO: Raise/lower landing gear if player hits stance button!
             base.Tick();
         }
 
@@ -101,9 +102,11 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     return; // Don't fly when there's nobody driving this!
                 }
+                // TODO: Special case for motion on land: only push forward if W key is pressed? Or maybe apply that rule in general?
                 // Collect the plane's relative vectors
                 Vector3 forward = Quaternion.Transform(Vector3.UnitY, Entity.Orientation);
                 Vector3 side = Quaternion.Transform(Vector3.UnitX, Entity.Orientation);
+                Vector3 up = Quaternion.Transform(Vector3.UnitZ, Entity.Orientation);
                 // Engines!
                 if (Plane.Fast)
                 {
@@ -120,11 +123,12 @@ namespace Voxalia.ServerGame.EntitySystem
                     Vector3 force = forward * Plane.RegularStrength * Delta;
                     entity.ApplyLinearImpulse(ref force);
                 }
-                entity.ApplyImpulse(forward * 5 + entity.Position, new Vector3(0, 0, Plane.ForwBack) * entity.Mass * 2.5f * Delta);
-                entity.ApplyImpulse(side * 5 + entity.Position, new Vector3(0, 0, Plane.RightLeft) * entity.Mass * 3f * Delta);
-                entity.ApplyImpulse(forward * 5 + entity.Position, new Vector3((Plane.IRight ? 1 : 0) + (Plane.ILeft ? -1 : 0), 0, 0) * entity.Mass * 3f * Delta);
+                entity.ApplyImpulse(forward * 5 + entity.Position, up * Plane.ForwBack * entity.Mass * 2.5f * Delta);
+                entity.ApplyImpulse(side * 5 + entity.Position, up * Plane.RightLeft * entity.Mass * 3f * Delta);
+                entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.IRight ? 1 : 0) + (Plane.ILeft ? -1 : 0)) * entity.Mass * 3f * Delta);
                 // Apply air drag
                 Entity.ModifyLinearDamping(0.5f); // TODO: arbitrary constant
+                Entity.ModifyAngularDamping(0.8f); // TODO: arbitrary constant
                 Entity.ModifyAngularDamping(0.8f); // TODO: arbitrary constant
                 // Ensure we're active if flying!
                 Entity.ActivityInformation.Activate();

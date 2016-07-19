@@ -69,7 +69,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);
             dw.WriteLong(character.EID);
-            dw.WriteByte(1);
+            dw.WriteByte(2);
             dw.Flush();
             Data = ds.ToArray();
             dw.Close();
