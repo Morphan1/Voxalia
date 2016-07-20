@@ -696,7 +696,7 @@ namespace Voxalia.ClientGame.WorldSystem
             Joints.Add(joint);
             joint.One.Joints.Add(joint);
             joint.Two.Joints.Add(joint);
-            joint.Enabled = true;
+            joint.Enable();
             if (joint is BaseJoint)
             {
                 BaseJoint pjoint = (BaseJoint)joint;
@@ -713,7 +713,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             joint.One.Joints.Remove(joint);
             joint.Two.Joints.Remove(joint);
-            joint.Enabled = false;
+            joint.Disable();
             if (joint is BaseJoint)
             {
                 BaseJoint pjoint = (BaseJoint)joint;

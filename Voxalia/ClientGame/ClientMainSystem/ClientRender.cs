@@ -472,7 +472,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 else
                 {
-                    CollisionResult cr = TheRegion.Collision.RayTrace(PlayerEyePosition, PlayerEyePosition - forwardVec * 2, Player.IgnoreThis);
+                    CollisionResult cr = TheRegion.Collision.RayTrace(PlayerEyePosition, PlayerEyePosition - forwardVec * Player.ViewBackMod(), IgnorePlayer);
                     if (cr.Hit)
                     {
                         CameraPos = cr.Position + cr.Normal * 0.05;

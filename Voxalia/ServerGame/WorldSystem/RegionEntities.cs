@@ -50,7 +50,7 @@ namespace Voxalia.ServerGame.WorldSystem
             joint.One.Joints.Add(joint);
             joint.Two.Joints.Add(joint);
             joint.JID = jID++;
-            joint.Enabled = true;
+            joint.Enable();
             if (joint is BaseJoint)
             {
                 BaseJoint pjoint = (BaseJoint)joint;
@@ -65,7 +65,7 @@ namespace Voxalia.ServerGame.WorldSystem
             Joints.Remove(joint);
             joint.One.Joints.Remove(joint);
             joint.Two.Joints.Remove(joint);
-            joint.Enabled = false;
+            joint.Disable();
             if (joint is BaseJoint)
             {
                 BaseJoint pjoint = (BaseJoint)joint;

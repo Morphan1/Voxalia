@@ -67,7 +67,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 if (e is PlayerEntity)
                 {
-                    ((PlayerEntity)e).InVehicle = true;
                     long planeid = dr.ReadLong();
                     Entity plane = TheClient.TheRegion.GetEntity(planeid);
                     if (!(plane is ModelEntity))
@@ -75,6 +74,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                         dr.Close();
                         return false;
                     }
+                    ((PlayerEntity)e).InVehicle = true;
+                    ((PlayerEntity)e).Vehicle = plane;
                     ModelEntity planemod = (ModelEntity)plane;
                     planemod.TurnIntoPlane((PlayerEntity)e);
                     dr.Close();

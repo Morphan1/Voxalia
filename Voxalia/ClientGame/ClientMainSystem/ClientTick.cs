@@ -16,6 +16,7 @@ using BEPUphysics;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using Voxalia.ClientGame.NetworkSystem;
+using Voxalia.ClientGame.EntitySystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -213,7 +214,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
                 }
-                PlayerEyePosition = Player.GetEyePosition();
+                PlayerEyePosition = Player.GetCameraPosition();
                 RayCastResult rcr;
                 Location forw = Player.ForwardVector();
                 bool h = TheRegion.SpecialCaseRayTrace(PlayerEyePosition, forw, 100, MaterialSolidity.ANY, IgnorePlayer, out rcr);
@@ -241,9 +242,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         bool IgnorePlayer(BEPUphysics.BroadPhaseEntries.BroadPhaseEntry entry)
         {
-            if (entry is EntityCollidable && ((EntityCollidable)entry).Entity.Tag == Player)
+            if (entry is EntityCollidable)
             {
-                return false;
+                Entity e = (Entity)((EntityCollidable)entry).Entity.Tag;
+                if (e == Player || e == Player.Vehicle)
+                {
+                    return false;
+                }
             }
             return TheRegion.Collision.ShouldCollide(entry);
         }

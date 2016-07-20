@@ -26,6 +26,7 @@ using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.JointSystem;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using BEPUphysics.Constraints.SolverGroups;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -238,6 +239,8 @@ namespace Voxalia.ClientGame.EntitySystem
         long cPacketID = 0;
 
         public bool InVehicle = false;
+
+        public Entity Vehicle = null;
 
         public void AddUIS()
         {
@@ -684,6 +687,8 @@ namespace Voxalia.ClientGame.EntitySystem
             }
         }
 
+        public JointWeld Welded = null;
+
         public CharacterController NMTWOCBody = null;
 
         public override void SpawnBody()
@@ -726,19 +731,43 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public static OpenTK.Matrix4 PlayerAngleMat = OpenTK.Matrix4.CreateRotationZ((float)(270 * Utilities.PI180));
 
+        public override Location GetWeldSpot()
+        {
+            if (Welded != null && Welded.Enabled)
+            {
+                RigidTransform relative;
+                RigidTransform start;
+                if (Welded.Two == this)
+                {
+                    start = new RigidTransform(Welded.Ent1.Body.Position, Welded.Ent1.Body.Orientation);
+                    RigidTransform.Invert(ref Welded.Relative, out relative);
+                }
+                else
+                {
+                    start = new RigidTransform(Welded.Ent2.Body.Position, Welded.Ent2.Body.Orientation);
+                    relative = Welded.Relative;
+                }
+                RigidTransform res;
+                RigidTransform.Multiply(ref start, ref relative, out res);
+                return new Location(res.Position);
+            }
+            return GetPosition();
+        }
+
         public override void Render()
         {
+            Location renderrelpos = GetWeldSpot();
             TheClient.SetEnts();
             // TODO: Merge with base.Render() as much as possible!
             if (TheClient.CVars.n_debugmovement.ValueB)
             {
-                TheClient.Rendering.RenderLine(ServerLocation, GetPosition());
+                TheClient.Rendering.RenderLine(ServerLocation, renderrelpos);
                 TheClient.Rendering.RenderLineBox(ServerLocation + new Location(-0.2), ServerLocation + new Location(0.2));
             }
             OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(1.5f)
                 * OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
                 * PlayerAngleMat
-                * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
+                * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(renderrelpos));
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
             model.CustomAnimationAdjustments = new Dictionary<string, OpenTK.Matrix4>(SavedAdjustmentsOTK);
@@ -757,7 +786,7 @@ namespace Voxalia.ClientGame.EntitySystem
             bool hasjp = HasJetpack();
             if (!hasjp && tAnim != null && mod != null)
             {
-                mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
+                mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(renderrelpos));
                 GL.UniformMatrix4(2, false, ref mat);
                 Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>(SavedAdjustments);
                 Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, ((float)(Direction.Pitch / 2f * Utilities.PI180) % 360f)));
@@ -779,7 +808,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 // TODO: Abstractify!
                 Model jetp = GetHeldItem().Mod;
-                mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
+                mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(renderrelpos));
                 GL.UniformMatrix4(2, false, ref mat);
                 Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
                 Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, ((float)(Direction.Pitch / 2f * Utilities.PI180) % 360f)));
@@ -800,8 +829,23 @@ namespace Voxalia.ClientGame.EntitySystem
             if (IsTyping)
             {
                 TheClient.Textures.GetTexture("ui/game/typing").Bind(); // TODO: store!
-                TheClient.Rendering.RenderBillboard(GetPosition() + new Location(0, 0, 4), new Location(2), TheClient.CameraPos);
+                TheClient.Rendering.RenderBillboard(renderrelpos + new Location(0, 0, 4), new Location(2), TheClient.CameraPos);
             }
+        }
+
+        public float ViewBackMod()
+        {
+            return (InVehicle && Vehicle != null) ? 7 : 2;
+        }
+
+        public Location GetCameraPosition()
+        {
+            if (!InVehicle || Vehicle == null || TheClient.CVars.g_firstperson.ValueB)
+            {
+                return GetEyePosition();
+            }
+            Location vpos = Vehicle.GetPosition();
+            return vpos;
         }
     }
 

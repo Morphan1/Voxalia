@@ -259,9 +259,15 @@ namespace Voxalia.ClientGame.EntitySystem
             return OpenTK.Matrix4.Identity;
         }
 
+        public virtual Location GetWeldSpot()
+        {
+            return GetPosition();
+        }
+
         public Location GetEyePosition()
         {
-            Location start = GetPosition() + new Location(0, 0, CBHHeight * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8 : 1.5));
+            Location renderrelpos = GetWeldSpot();
+            Location start = renderrelpos + new Location(0, 0, CBHHeight * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8 : 1.5));
             if (tAnim != null)
             {
                 SingleAnimationNode head = tAnim.GetNode("special06.r");
@@ -271,7 +277,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Matrix m4 = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
                     * head.GetBoneTotalMatrix(0, adjs) * (rotforw * Matrix.CreateTranslation(new Vector3(0, 0, 0.2f)));
                 m4.Transpose();
-                Location end = GetPosition() + new Location(m4.Translation) * 1.5f;
+                Location end = renderrelpos + new Location(m4.Translation) * 1.5f;
                 start.Z = end.Z; // FUTURE: Maybe handle player rotation?
                 double len = (end - start).Length();
                 Location normdir = (end - start) / len;
