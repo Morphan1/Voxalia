@@ -26,10 +26,21 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     PhysicsEntity e = (PhysicsEntity)TheClient.TheRegion.Entities[i];
                     if (e.EID == eID)
                     {
-                        e.SetPosition(pos);
-                        e.SetVelocity(vel);
-                        e.SetOrientation(ang);
-                        e.SetAngularVelocity(angvel);
+                        if (e is ModelEntity && ((ModelEntity)e).PlanePilot == TheClient.Player)
+                        {
+                            float lerp = TheClient.CVars.n_ourvehiclelerp.ValueF;
+                            e.SetPosition(e.GetPosition() + (pos - e.GetPosition()) * lerp);
+                            e.SetVelocity(e.GetVelocity() + (vel - e.GetVelocity()) * lerp);
+                            e.SetAngularVelocity(e.GetAngularVelocity() + (angvel - e.GetAngularVelocity()) * lerp);
+                            e.SetOrientation(BEPUutilities.Quaternion.Slerp(e.GetOrientation(), ang, lerp));
+                        }
+                        else
+                        {
+                            e.SetPosition(pos);
+                            e.SetVelocity(vel);
+                            e.SetOrientation(ang);
+                            e.SetAngularVelocity(angvel);
+                        }
                         if (e.Body != null && e.Body.ActivityInformation != null && e.Body.ActivityInformation.IsActive && !active) // TODO: Why are the first two checks needed?
                         {
                             if (e.Body.ActivityInformation.SimulationIsland != null) // TODO: Why is this needed?

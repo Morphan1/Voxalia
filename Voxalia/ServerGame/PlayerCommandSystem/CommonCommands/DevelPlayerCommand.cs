@@ -52,6 +52,14 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 ve.SetPosition(entry.Player.GetEyePosition() + entry.Player.ForwardVector() * 5);
                 entry.Player.TheRegion.SpawnEntity(ve);
             }
+            else if (arg0 == "shortRange")
+            {
+                entry.Player.ViewRadiusInChunks = 3;
+                entry.Player.ViewRadExtra2 = 0;
+                entry.Player.ViewRadExtra2Height = 0;
+                entry.Player.ViewRadExtra5 = 0;
+                entry.Player.ViewRadExtra5Height = 0;
+            }
             else if (arg0 == "fly")
             {
                 if (entry.Player.IsFlying)
