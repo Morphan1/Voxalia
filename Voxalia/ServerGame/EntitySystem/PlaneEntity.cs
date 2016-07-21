@@ -35,8 +35,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool ILeft = false;
         public bool IRight = false;
 
-        public bool Fast = false;
-        public bool Slow = false;
+        public float FastOrSlow = 0f;
 
         public float ForwBack = 0;
         public float RightLeft = 0;
@@ -72,7 +71,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             get
             {
-                return GetMass() * -5f;
+                return GetMass() * 12f;
             }
         }
 
@@ -109,21 +108,8 @@ namespace Voxalia.ServerGame.EntitySystem
                 Vector3 side = Quaternion.Transform(Vector3.UnitX, Entity.Orientation);
                 Vector3 up = Quaternion.Transform(Vector3.UnitZ, Entity.Orientation);
                 // Engines!
-                if (Plane.Fast)
-                {
-                    Vector3 force = forward * Plane.FastStrength * Delta;
-                    entity.ApplyLinearImpulse(ref force);
-                }
-                else if (Plane.Slow)
-                {
-                    Vector3 force = forward * Plane.SlowStrength * Delta;
-                    entity.ApplyLinearImpulse(ref force);
-                }
-                else // FlyNormal
-                {
-                    Vector3 force = forward * Plane.RegularStrength * Delta;
-                    entity.ApplyLinearImpulse(ref force);
-                }
+                Vector3 force = forward * (Plane.RegularStrength + (Plane.FastOrSlow < 0 ? Plane.SlowStrength : Plane.FastStrength) * Plane.FastOrSlow) * Delta;
+                entity.ApplyLinearImpulse(ref force);
                 entity.ApplyImpulse(forward * 5 + entity.Position, up * Plane.ForwBack * entity.Mass * 2.5f * Delta);
                 entity.ApplyImpulse(side * 5 + entity.Position, up * -Plane.RightLeft * entity.Mass * 3f * Delta);
                 entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.IRight ? 1 : 0) + (Plane.ILeft ? -1 : 0)) * entity.Mass * 3f * Delta);
@@ -154,8 +140,7 @@ namespace Voxalia.ServerGame.EntitySystem
             IRight = character.ItemRight;
             ForwBack = character.YMove;
             RightLeft = character.XMove;
-            Fast = character.Sprint && !character.Walk;
-            Slow = character.Walk && !character.Sprint;
+            FastOrSlow = character.SprintOrWalk;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 8 + 12 + 12 + 2 + 4 + 4 + 1 + 4 + 4)
+            if (data.Length != 8 + 12 + 12 + 2 + 4 + 4 + 1 + 4 + 4 + 4)
             {
                 SysConsole.Output(OutputType.WARNING, "Invalid length for PlayerUpdatePacketIn!");
                 return false;
@@ -25,6 +25,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             byte st = data[8 + 12 + 12 + 2 + 4 + 4];
             float xm = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 12 + 12 + 2 + 4 + 4 + 1, 4));
             float ym = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 12 + 12 + 2 + 4 + 4 + 1 + 4, 4));
+            float sow = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 12 + 12 + 2 + 4 + 4 + 1 + 4 + 4, 4));
             Stance stance = Stance.Standing;
             if (st == 1)
             {
@@ -45,6 +46,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                         e.CBody.StanceManager.DesiredStance = stance;
                         e.XMove = xm;
                         e.YMove = ym;
+                        e.SprintOrWalk = sow;
                         return true;
                     }
                 }

@@ -33,8 +33,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool ILeft = false;
         public bool IRight = false;
 
-        public bool Sprint = false;
-        public bool Walk = false;
+        public float SprintOrWalk = 0f;
 
         public float ForwBack = 0;
         public float RightLeft = 0;
@@ -88,25 +87,12 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 // Collect the helicopter's relative "up" vector
                 Vector3 up = Quaternion.Transform(Vector3.UnitZ, Entity.Orientation);
-                if (Helicopter.Sprint && !Helicopter.Walk)
-                {
-                    // Apply our maximum upward strength.
-                    Vector3 upvel = up * Helicopter.LiftStrength * Delta;
-                    Entity.ApplyLinearImpulse(ref upvel);
-                }
-                else if (Helicopter.Walk && !Helicopter.Sprint)
-                {
-                    // Apply the minimum lift strength allowed to sortof just fall downward.
-                    Vector3 upvel = up * Helicopter.FallStrength * Delta;
-                    Entity.ApplyLinearImpulse(ref upvel);
-                }
-                else // FlyHover
-                {
-                    // Apply the amount of force necessary to counteract downward force, within a limit.
-                    // POTENTIAL: Adjust according to orientation?
-                    Vector3 upvel = up * Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass) * Delta;
-                    Entity.ApplyLinearImpulse(ref upvel);
-                }
+                // Apply the amount of force necessary to counteract downward force, within a limit.
+                // POTENTIAL: Adjust according to orientation?
+                float uspeed = Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass);
+                uspeed += (Helicopter.LiftStrength - uspeed) * Helicopter.SprintOrWalk; // TODO: Fix this logic!
+                Vector3 upvel = up * uspeed * Delta;
+                Entity.ApplyLinearImpulse(ref upvel);
                 // Rotate slightly to move in a direction.
                 // At the same time, fight against existing rotation.
                 Vector3 VecUp = new Vector3(Helicopter.RightLeft * 0.2f, Helicopter.ForwBack * -0.2f, 1);
@@ -164,8 +150,7 @@ namespace Voxalia.ServerGame.EntitySystem
             IRight = character.ItemRight;
             ForwBack = character.YMove;
             RightLeft = character.XMove;
-            Sprint = character.Sprint;
-            Walk = character.Walk;
+            SprintOrWalk = character.SprintOrWalk;
         }
     }
 }

@@ -13,8 +13,8 @@ namespace Voxalia.ClientGame.UISystem
         {
         }
 
-        // TODO: Sprint/walk buttons! (Bumper thingies?)
-
+        public static float SprintOrWalk;
+        
         public static double TotalDirectionX;
 
         public static double TotalDirectionY;
@@ -61,6 +61,7 @@ namespace Voxalia.ClientGame.UISystem
             DPadRight = false;
             UseKey = false;
             ReloadKey = false;
+            SprintOrWalk = 0f;
             for (int i = 0; i < 4; i++)
             {
                 GamePadCapabilities cap = GamePad.GetCapabilities(i);
@@ -82,6 +83,14 @@ namespace Voxalia.ClientGame.UISystem
                     if (cap.HasLeftYThumbStick)
                     {
                         TotalMovementY += state.ThumbSticks.Left.Y;
+                    }
+                    if (cap.HasLeftTrigger)
+                    {
+                        SprintOrWalk -= state.Triggers.Left;
+                    }
+                    if (cap.HasRightTrigger)
+                    {
+                        SprintOrWalk += state.Triggers.Right;
                     }
                     if (cap.HasAButton && state.Buttons.A == ButtonState.Pressed)
                     {
@@ -144,6 +153,14 @@ namespace Voxalia.ClientGame.UISystem
             if (TotalDirectionY > 1)
             {
                 TotalDirectionY = 1;
+            }
+            if (SprintOrWalk > 1)
+            {
+                SprintOrWalk = 1;
+            }
+            if (SprintOrWalk < -1)
+            {
+                SprintOrWalk = -1;
             }
             if (Math.Abs(TotalDirectionX) < 0.05f)
             {

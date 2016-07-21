@@ -102,9 +102,7 @@ namespace Voxalia.Shared
         ITEMLEFT = 32,
         ITEMRIGHT = 64,
         ITEMUP = 128,
-        ITEMDOWN = 256,
-        SPRINT = 512,
-        WALK = 1024
+        ITEMDOWN = 256
     }
     
     public enum ChunkReachability : byte

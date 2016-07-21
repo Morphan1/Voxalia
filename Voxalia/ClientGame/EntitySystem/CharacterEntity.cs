@@ -112,6 +112,8 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public float YMove = 0;
 
+        public float SprintOrWalk = 0f;
+
         public List<JointVehicleMotor> DrivingMotors = new List<JointVehicleMotor>();
 
         public List<JointVehicleMotor> SteeringMotors = new List<JointVehicleMotor>();
@@ -120,7 +122,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             foreach (JointVehicleMotor motor in DrivingMotors)
             {
-                motor.Motor.Settings.VelocityMotor.GoalVelocity = YMove * 100;
+                motor.Motor.Settings.VelocityMotor.GoalVelocity = YMove * 100; // TODO: Sprint/Walk mods?
             }
             foreach (JointVehicleMotor motor in SteeringMotors)
             {
@@ -405,6 +407,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Location gravity = Character.GetGravity();
                 glen = gravity.Length();
                 gravity /= glen;
+                // TODO: Sprint/Walk mods?
                 gravity += Utilities.RotateVector(new Location(Character.YMove, -Character.XMove, 0), Character.Direction.Yaw * Utilities.PI180);
                 return gravity.ToBVector(); // TODO: Maybe normalize this?
             }
@@ -461,6 +464,5 @@ namespace Voxalia.ClientGame.EntitySystem
         }
 
         public JetpackMotionConstraint Jetpack = null;
-
     }
 }

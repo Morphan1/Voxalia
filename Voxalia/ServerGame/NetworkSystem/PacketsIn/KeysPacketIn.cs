@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 8 + 2 + 4 + 4 + 4 + 4 + 12 + 12)
+            if (data.Length != 8 + 2 + 4 + 4 + 4 + 4 + 12 + 12 + 4)
             {
                 return false;
             }
@@ -33,6 +33,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             int s = 8 + 2 + 4 + 4 + 4 + 4;
             Location pos = Location.FromBytes(data, s);
             Location vel = Location.FromBytes(data, s + 12);
+            float sow = Utilities.BytesToFloat(Utilities.BytesPartial(data, s + 12 + 12, 4));
             Vector2 tmove = new Vector2(x, y);
             if (tmove.LengthSquared() > 1f)
             {
@@ -53,9 +54,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             Player.ItemRight = iright;
             Player.ItemUp = iup;
             Player.ItemDown = idown;
-            Player.Sprint = val.HasFlag(KeysPacketData.SPRINT);
-            Player.Walk = val.HasFlag(KeysPacketData.WALK);
             Player.LastKPI = Player.TheRegion.GlobalTickTime;
+            Player.SprintOrWalk = sow;
             if (Player.Flags.HasFlag(YourStatusFlags.NO_ROTATE))
             {
                 Player.AttemptedDirectionChange.Yaw += yaw;

@@ -64,7 +64,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             get
             {
-                return GetMass() * -5f;
+                return GetMass() * 12f;
             }
         }
 
@@ -94,21 +94,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 BEPUutilities.Vector3 side = BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitX, Entity.Orientation);
                 BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitZ, Entity.Orientation);
                 // Engines!
-                if (Plane.PlanePilot.Sprint && !Plane.PlanePilot.Walk)
-                {
-                    BEPUutilities.Vector3 force = forward * Plane.PlaneFastStrength * Delta;
-                    entity.ApplyLinearImpulse(ref force);
-                }
-                else if (Plane.PlanePilot.Walk && !Plane.PlanePilot.Sprint)
-                {
-                    BEPUutilities.Vector3 force = forward * Plane.PlaneSlowStrength * Delta;
-                    entity.ApplyLinearImpulse(ref force);
-                }
-                else // FlyNormal
-                {
-                    BEPUutilities.Vector3 force = forward * Plane.PlaneRegularStrength * Delta;
-                    entity.ApplyLinearImpulse(ref force);
-                }
+                BEPUutilities.Vector3 force = forward * (Plane.PlaneRegularStrength + (Plane.PlanePilot.SprintOrWalk < 0 ? Plane.PlaneSlowStrength : Plane.PlaneFastStrength) * Plane.PlanePilot.SprintOrWalk) * Delta;
+                entity.ApplyLinearImpulse(ref force);
                 entity.ApplyImpulse(forward * 5 + entity.Position, up * Plane.PlanePilot.YMove * entity.Mass * 2.5f * Delta);
                 entity.ApplyImpulse(side * 5 + entity.Position, up * -Plane.PlanePilot.XMove * entity.Mass * 3f * Delta);
                 entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.PlanePilot.ItemRight ? 1 : 0) + (Plane.PlanePilot.ItemLeft ? -1 : 0)) * entity.Mass * 3f * Delta);
@@ -183,25 +170,12 @@ namespace Voxalia.ClientGame.EntitySystem
                 }
                 // Collect the helicopter's relative "up" vector
                 BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitZ, Entity.Orientation);
-                if (Helicopter.HeloPilot.Sprint && !Helicopter.HeloPilot.Walk)
-                {
-                    // Apply our maximum upward strength.
-                    BEPUutilities.Vector3 upvel = up * Helicopter.LiftStrength * Delta;
-                    Entity.ApplyLinearImpulse(ref upvel);
-                }
-                else if (Helicopter.HeloPilot.Walk && !Helicopter.HeloPilot.Sprint)
-                {
-                    // Apply the minimum lift strength allowed to sortof just fall downward.
-                    BEPUutilities.Vector3 upvel = up * Helicopter.FallStrength * Delta;
-                    Entity.ApplyLinearImpulse(ref upvel);
-                }
-                else // FlyHover
-                {
-                    // Apply the amount of force necessary to counteract downward force, within a limit.
-                    // POTENTIAL: Adjust according to orientation?
-                    BEPUutilities.Vector3 upvel = up * Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass) * Delta;
-                    Entity.ApplyLinearImpulse(ref upvel);
-                }
+                // Apply the amount of force necessary to counteract downward force, within a limit.
+                // POTENTIAL: Adjust according to orientation?
+                float uspeed = Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass);
+                uspeed += (Helicopter.LiftStrength - uspeed) * Helicopter.HeloPilot.SprintOrWalk; // TODO: Fix this logic!
+                BEPUutilities.Vector3 upvel = up * uspeed * Delta;
+                Entity.ApplyLinearImpulse(ref upvel);
                 // Rotate slightly to move in a direction.
                 // At the same time, fight against existing rotation.
                 BEPUutilities.Vector3 VecUp = new BEPUutilities.Vector3(Helicopter.HeloPilot.XMove * 0.2f, Helicopter.HeloPilot.YMove * -0.2f, 1);

@@ -23,6 +23,8 @@ namespace Voxalia.ClientGame.EntitySystem
         {
         }
 
+        // TODO: Proper tracked motion?
+
         public override void SpawnBody()
         {
             base.SpawnBody();

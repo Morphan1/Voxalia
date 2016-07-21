@@ -60,9 +60,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool ItemDown = false;
 
-        public bool Sprint = false;
-
-        public bool Walk = false;
+        public float SprintOrWalk = 0f;
 
         /// <summary>
         /// The direction the character is currently facing, as Yaw/Pitch.
@@ -263,14 +261,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 pup = false;
             }
             float speedmod = new Vector2(XMove, YMove).Length() * 2;
-            if (Walk)
-            {
-                speedmod *= 0.5f;
-            }
-            if (!Sprint)
-            {
-                speedmod *= 0.5f;
-            }
+            speedmod *= (1f + SprintOrWalk * 0.5f);
             if (ItemDoSpeedMod)
             {
                 speedmod *= ItemSpeedMod;
