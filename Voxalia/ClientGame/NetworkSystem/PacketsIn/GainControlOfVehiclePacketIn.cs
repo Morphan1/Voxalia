@@ -59,7 +59,23 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 1)
             {
-                // TODO: helicopters!
+                if (e is PlayerEntity)
+                {
+                    long heloid = dr.ReadLong();
+                    Entity helo = TheClient.TheRegion.GetEntity(heloid);
+                    if (!(helo is ModelEntity))
+                    {
+                        dr.Close();
+                        return false;
+                    }
+                    ((PlayerEntity)e).InVehicle = true;
+                    ((PlayerEntity)e).Vehicle = helo;
+                    ModelEntity helomod = (ModelEntity)helo;
+                    helomod.TurnIntoHelicopter((PlayerEntity)e);
+                    dr.Close();
+                    return true;
+                }
+                // TODO: other CharacterEntity's
                 dr.Close();
                 return true;
             }

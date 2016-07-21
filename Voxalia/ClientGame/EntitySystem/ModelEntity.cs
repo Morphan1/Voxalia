@@ -37,7 +37,7 @@ namespace Voxalia.ClientGame.EntitySystem
             mod = model_in;
         }
 
-        public void TurnIntoPlane(PlayerEntity pilot)
+        public void TurnIntoPlane(PlayerEntity pilot) // TODO: Character!
         {
             PlanePilot = pilot;
             Plane = new PlaneMotionConstraint(this);
@@ -70,7 +70,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public PlaneMotionConstraint Plane = null;
 
-        public PlayerEntity PlanePilot = null;
+        public PlayerEntity PlanePilot = null; // TODO: Character!
 
         public class PlaneMotionConstraint : SingleEntityConstraint
         {
@@ -136,6 +136,121 @@ namespace Voxalia.ClientGame.EntitySystem
         public void NoLongerAPlane() // TODO: Use me!
         {
 
+        }
+
+        public float LiftStrength
+        {
+            get
+            {
+                return GetMass() * 20f;
+            }
+        }
+
+        public float FallStrength
+        {
+            get
+            {
+                return GetMass() * 9f;
+            }
+        }
+
+        public void TurnIntoHelicopter(PlayerEntity pilot) // TODO: Character!
+        {
+            HeloPilot = pilot;
+            Helo = new HelicopterMotionConstraint(this);
+            TheRegion.PhysicsWorld.Add(Helo);
+        }
+
+        public HelicopterMotionConstraint Helo = null;
+
+        public PlayerEntity HeloPilot = null; // TODO: Character!
+
+        public class HelicopterMotionConstraint : SingleEntityConstraint
+        {
+            ModelEntity Helicopter;
+
+            public HelicopterMotionConstraint(ModelEntity heli)
+            {
+                Helicopter = heli;
+                Entity = heli.Body;
+            }
+
+            public override void ExclusiveUpdate()
+            {
+                if (Helicopter.HeloPilot == null)
+                {
+                    return; // Don't fly when there's nobody driving this!
+                }
+                // Collect the helicopter's relative "up" vector
+                BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitZ, Entity.Orientation);
+                if (Helicopter.HeloPilot.Sprint && !Helicopter.HeloPilot.Walk)
+                {
+                    // Apply our maximum upward strength.
+                    BEPUutilities.Vector3 upvel = up * Helicopter.LiftStrength * Delta;
+                    Entity.ApplyLinearImpulse(ref upvel);
+                }
+                else if (Helicopter.HeloPilot.Walk && !Helicopter.HeloPilot.Sprint)
+                {
+                    // Apply the minimum lift strength allowed to sortof just fall downward.
+                    BEPUutilities.Vector3 upvel = up * Helicopter.FallStrength * Delta;
+                    Entity.ApplyLinearImpulse(ref upvel);
+                }
+                else // FlyHover
+                {
+                    // Apply the amount of force necessary to counteract downward force, within a limit.
+                    // POTENTIAL: Adjust according to orientation?
+                    BEPUutilities.Vector3 upvel = up * Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass) * Delta;
+                    Entity.ApplyLinearImpulse(ref upvel);
+                }
+                // Rotate slightly to move in a direction.
+                // At the same time, fight against existing rotation.
+                BEPUutilities.Vector3 VecUp = new BEPUutilities.Vector3(Helicopter.HeloPilot.XMove * 0.2f, Helicopter.HeloPilot.YMove * -0.2f, 1);
+                // TODO: Simplify yawrel calculation.
+                float tyaw = (float)(Utilities.MatrixToAngles(Matrix.CreateFromQuaternion(Entity.Orientation)).Z * Utilities.PI180);
+                BEPUutilities.Quaternion yawrel = BEPUutilities.Quaternion.CreateFromAxisAngle(BEPUutilities.Vector3.UnitZ, tyaw);
+                VecUp = BEPUutilities.Quaternion.Transform(VecUp, yawrel);
+                VecUp.Normalize();
+                VecUp.Y = -VecUp.Y;
+                BEPUutilities.Vector3 axis = BEPUutilities.Vector3.Cross(VecUp, up);
+                float len = axis.Length();
+                if (len > 0)
+                {
+                    axis /= len;
+                    float angle = (float)Math.Asin(len);
+                    if (!float.IsNaN(angle))
+                    {
+                        float avel = BEPUutilities.Vector3.Dot(Entity.AngularVelocity, axis);
+                        BEPUutilities.Vector3 torque = axis * ((-angle) - 0.3f * avel);
+                        torque *= Entity.Mass * Delta * 30;
+                        Entity.ApplyAngularImpulse(ref torque);
+                    }
+                }
+                // Spin in place
+                float rotation = (Helicopter.HeloPilot.ItemRight ? -1f : 0f) + (Helicopter.HeloPilot.ItemLeft ? 1f : 0f);
+                if (rotation * rotation > 0f)
+                {
+                    BEPUutilities.Vector3 rot = new BEPUutilities.Vector3(0, 0, rotation * 15f * Delta * Entity.Mass);
+                    Entity.ApplyAngularImpulse(ref rot);
+                }
+                // Apply air drag
+                Entity.ModifyLinearDamping(0.3f); // TODO: arbitrary constant
+                Entity.ModifyAngularDamping(0.3f); // TODO: arbitrary constant
+                Entity.ModifyAngularDamping(0.3f); // TODO: arbitrary constant
+                // Ensure we're active if flying!
+                Entity.ActivityInformation.Activate();
+            }
+
+            public override float SolveIteration()
+            {
+                return 0; // Do nothing
+            }
+
+            float Delta;
+
+            public override void Update(float dt)
+            {
+                Delta = dt;
+            }
         }
 
         public override void Tick()

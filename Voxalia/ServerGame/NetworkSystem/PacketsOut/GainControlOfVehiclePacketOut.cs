@@ -26,6 +26,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 Setup(character, (PlaneEntity)vehicle);
             }
+            // TODO: Boats!
             else
             {
                 throw new NotImplementedException();
@@ -37,7 +38,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);
             dw.WriteLong(character.EID);
-            dw.WriteByte(0);
+            dw.WriteByte(0); // TODO: Enum?
             dw.WriteInt(vehicle.DrivingMotors.Count);
             dw.WriteInt(vehicle.SteeringMotors.Count);
             for (int i = 0; i < vehicle.DrivingMotors.Count; i++)
@@ -58,7 +59,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);
             dw.WriteLong(character.EID);
-            dw.WriteByte(1);
+            dw.WriteByte(1); // TODO: Enum?
             dw.WriteLong(vehicle.EID);
             dw.Flush();
             Data = ds.ToArray();
@@ -70,7 +71,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             DataStream ds = new DataStream();
             DataWriter dw = new DataWriter(ds);
             dw.WriteLong(character.EID);
-            dw.WriteByte(2);
+            dw.WriteByte(2); // TODO: Enum?
             dw.WriteLong(vehicle.EID);
             dw.Flush();
             Data = ds.ToArray();

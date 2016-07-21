@@ -45,7 +45,8 @@ namespace Voxalia.ServerGame.EntitySystem
             Motion = new HelicopterMotionConstraint(this);
             TheRegion.PhysicsWorld.Add(Motion);
         }
-
+        
+        // TODO: Customizable, networked!
         public float LiftStrength
         {
             get
@@ -69,7 +70,7 @@ namespace Voxalia.ServerGame.EntitySystem
             base.Tick();
         }
 
-        public class HelicopterMotionConstraint : SingleEntityConstraint // TODO: network!
+        public class HelicopterMotionConstraint : SingleEntityConstraint
         {
             HelicopterEntity Helicopter;
             
@@ -108,15 +109,18 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 // Rotate slightly to move in a direction.
                 // At the same time, fight against existing rotation.
-                Vector3 VecUp = new Vector3(Helicopter.ForwBack * 0.25f, Helicopter.RightLeft * 0.25f, 1);
+                Vector3 VecUp = new Vector3(Helicopter.RightLeft * 0.2f, Helicopter.ForwBack * -0.2f, 1);
                 // TODO: Simplify yawrel calculation.
-                Quaternion yawrel = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)(Utilities.MatrixToAngles(Matrix.CreateFromQuaternion(Entity.Orientation)).Yaw * Utilities.PI180));
+                float tyaw = (float)(Utilities.MatrixToAngles(Matrix.CreateFromQuaternion(Entity.Orientation)).Z * Utilities.PI180);
+                Quaternion yawrel = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, tyaw);
                 VecUp = Quaternion.Transform(VecUp, yawrel);
+                VecUp.Y = -VecUp.Y;
                 VecUp.Normalize();
                 Vector3 axis = Vector3.Cross(VecUp, up);
                 float len = axis.Length();
                 if (len > 0)
                 {
+                    axis /= len;
                     float angle = (float)Math.Asin(len);
                     if (!float.IsNaN(angle))
                     {
@@ -127,14 +131,15 @@ namespace Voxalia.ServerGame.EntitySystem
                     }
                 }
                 // Spin in place
-                float rotation = (Helicopter.ILeft ? -1f : 0f) + (Helicopter.IRight ? 1f : 0f);
+                float rotation = (Helicopter.IRight ? -1f : 0f) + (Helicopter.ILeft ? 1f : 0f);
                 if (rotation * rotation > 0f)
                 {
-                    Vector3 rot = new Vector3(0, 0, rotation * Delta * Entity.Mass);
+                    Vector3 rot = new Vector3(0, 0, rotation * 15f * Delta * Entity.Mass);
                     Entity.ApplyAngularImpulse(ref rot);
                 }
                 // Apply air drag
                 Entity.ModifyLinearDamping(0.3f); // TODO: arbitrary constant
+                Entity.ModifyAngularDamping(0.3f); // TODO: arbitrary constant
                 Entity.ModifyAngularDamping(0.3f); // TODO: arbitrary constant
                 // Ensure we're active if flying!
                 Entity.ActivityInformation.Activate();
