@@ -510,9 +510,9 @@ namespace Voxalia.ClientGame.EntitySystem
                 AltClick = false;
                 PGPSecondary = false;
             }
-            if (GamePadHandler.DPadLeft)
+            if (GamePadHandler.ChangeLeft)
             {
-                if (!PGPDPadLeft)
+                if (!PGPDPadLeft) // TODO: Holdable?
                 {
                     PGPDPadLeft = true;
                     TheClient.Commands.ExecuteCommands("itemprev"); // TODO: Less lazy!
@@ -522,9 +522,9 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 PGPDPadLeft = false;
             }
-            if (GamePadHandler.DPadRight)
+            if (GamePadHandler.ChangeRight)
             {
-                if (!PGPDPadRight)
+                if (!PGPDPadRight) // TODO: Holdable?
                 {
                     PGPDPadRight = true;
                     TheClient.Commands.ExecuteCommands("itemnext"); // TODO: Less lazy!

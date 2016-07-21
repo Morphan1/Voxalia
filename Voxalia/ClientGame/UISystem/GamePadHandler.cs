@@ -29,8 +29,9 @@ namespace Voxalia.ClientGame.UISystem
 
         public static bool SecondaryKey;
         
-        public static bool DPadLeft;
-        public static bool DPadRight;
+        public static bool ChangeLeft;
+
+        public static bool ChangeRight;
 
         public static bool UseKey;
 
@@ -57,8 +58,8 @@ namespace Voxalia.ClientGame.UISystem
             ItemRight = false;
             ItemUp = false;
             ItemDown = false;
-            DPadLeft = false;
-            DPadRight = false;
+            ChangeLeft = false;
+            ChangeRight = false;
             UseKey = false;
             ReloadKey = false;
             SprintOrWalk = 0f;
@@ -94,7 +95,11 @@ namespace Voxalia.ClientGame.UISystem
                     }
                     if (cap.HasAButton && state.Buttons.A == ButtonState.Pressed)
                     {
-                        ReloadKey = true;
+                        ChangeLeft = true;
+                    }
+                    if (cap.HasBButton && state.Buttons.B == ButtonState.Pressed)
+                    {
+                        ChangeRight = true;
                     }
                     if (cap.HasXButton && state.Buttons.X == ButtonState.Pressed)
                     {
@@ -102,11 +107,7 @@ namespace Voxalia.ClientGame.UISystem
                     }
                     if (cap.HasYButton && state.Buttons.Y == ButtonState.Pressed)
                     {
-                        ItemLeft = true;
-                    }
-                    if (cap.HasBButton && state.Buttons.B == ButtonState.Pressed)
-                    {
-                        ItemRight = true;
+                        ReloadKey = true;
                     }
                     if (cap.HasLeftShoulderButton && state.Buttons.LeftShoulder == ButtonState.Pressed)
                     {
@@ -126,11 +127,11 @@ namespace Voxalia.ClientGame.UISystem
                     }
                     if (cap.HasDPadLeftButton && state.DPad.Left == ButtonState.Pressed)
                     {
-                        DPadLeft  = true;
+                        ItemLeft = true;
                     }
                     if (cap.HasDPadRightButton && state.DPad.Right == ButtonState.Pressed)
                     {
-                        DPadRight = true;
+                        ItemRight = true;
                     }
                     if (cap.HasLeftStickButton && state.Buttons.LeftStick == ButtonState.Pressed)
                     {
