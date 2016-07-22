@@ -60,7 +60,7 @@ namespace Voxalia.ServerGame.EntitySystem
             SeatHolder.TheRegion.AddJoint(jnc);
             if (SeatHolder is VehicleEntity && sitter is PlayerEntity)
             {
-                ((VehicleEntity)SeatHolder).Accepted((PlayerEntity)sitter);
+                ((VehicleEntity)SeatHolder).Accepted((PlayerEntity)sitter, this);
             }
             return true;
         }
@@ -70,6 +70,10 @@ namespace Voxalia.ServerGame.EntitySystem
             if (js == null)
             {
                 return;
+            }
+            if (SeatHolder is VehicleEntity && Sitter != null && Sitter is PlayerEntity)
+            {
+                ((VehicleEntity)SeatHolder).SeatKicked((PlayerEntity)Sitter, this);
             }
             SeatHolder.TheRegion.DestroyJoint(js);
             SeatHolder.TheRegion.DestroyJoint(jbs);

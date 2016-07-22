@@ -453,6 +453,10 @@ namespace Voxalia.ClientGame.NetworkSystem
                         packet = new LODModelPacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
+                    case ServerToClientPacket.LOSE_CONTROL_OF_VEHICLE:
+                        packet = new LoseControlOfVehiclePacketIn();
+                        usage = NetUsageType.ENTITIES;
+                        break;
                     default:
                         throw new Exception("Invalid packet ID: " + packetID);
                 }

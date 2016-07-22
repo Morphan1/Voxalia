@@ -23,6 +23,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             EntityFlag flag = (EntityFlag)data[8];
             float value = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 1, 4));
+            // TODO: Registry -> byte -> Func<Entity, float>
             switch (flag)
             {
                 case EntityFlag.FLYING:

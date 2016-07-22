@@ -9,8 +9,6 @@ using Voxalia.ClientGame.JointSystem;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
-    // TODO: LoseControlOfVehiclePacket!
-
     public class GainControlOfVehiclePacketIn: AbstractPacketIn
     {
         public override bool ParseBytesAndExecute(byte[] data)

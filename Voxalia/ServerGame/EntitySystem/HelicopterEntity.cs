@@ -162,9 +162,9 @@ namespace Voxalia.ServerGame.EntitySystem
             SprintOrWalk = character.SprintOrWalk;
         }
 
-        public override void Accepted(CharacterEntity character)
+        public override void Accepted(CharacterEntity character, Seat seat)
         {
-            base.Accepted(character);
+            base.Accepted(character, seat);
             // TODO: Track players entering/exiting view!
             FlagEntityPacketOut fepo = new FlagEntityPacketOut(this, EntityFlag.HELO_TILT_MOD, TiltMod);
             TheRegion.SendToVisible(lPos, fepo);

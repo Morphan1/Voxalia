@@ -179,6 +179,7 @@ namespace Voxalia.Shared
         SET_STATUS = 37,
         HIGHLIGHT = 38,
         PLAY_SOUND = 39,
-        LOD_MODEL = 40
+        LOD_MODEL = 40,
+        LOSE_CONTROL_OF_VEHICLE = 41
     }
 }

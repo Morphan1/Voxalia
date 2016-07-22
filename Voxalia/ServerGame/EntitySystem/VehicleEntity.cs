@@ -62,11 +62,17 @@ namespace Voxalia.ServerGame.EntitySystem
             // Do nothing.
         }
 
-        public virtual void Accepted(CharacterEntity character)
+        public virtual void Accepted(CharacterEntity character, Seat seat)
         {
             GainControlOfVehiclePacketOut gcovpo = new GainControlOfVehiclePacketOut(character, this);
             TheRegion.SendToVisible(lPos, gcovpo);
             // TODO: handle players coming into/out-of view of the vehicle + driver!
+        }
+
+        public virtual void SeatKicked(CharacterEntity character, Seat seat)
+        {
+            LoseControlOfVehiclePacketOut gcovpo = new LoseControlOfVehiclePacketOut(character, this);
+            TheRegion.SendToVisible(lPos, gcovpo);
         }
 
         public abstract void HandleInput(CharacterEntity character);

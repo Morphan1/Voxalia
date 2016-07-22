@@ -18,7 +18,7 @@ namespace Voxalia.Shared
         /// A static random object for all non-determistic objects to use.
         /// </summary>
         public static Random UtilRandom = new Random();
-
+        
         public static ushort BytesToUshort(byte[] bytes)
         {
             return BitConverter.ToUInt16(bytes, 0);
