@@ -52,6 +52,13 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 ve.SetPosition(entry.Player.GetEyePosition() + entry.Player.ForwardVector() * 5);
                 entry.Player.TheRegion.SpawnEntity(ve);
             }
+            else if (arg0 == "heloTilt" && entry.InputArguments.Count > 1)
+            {
+                if (entry.Player.CurrentSeat != null && entry.Player.CurrentSeat.SeatHolder is HelicopterEntity)
+                {
+                    ((HelicopterEntity)entry.Player.CurrentSeat.SeatHolder).TiltMod = Utilities.StringToFloat(entry.InputArguments[1]);
+                }
+            }
             else if (arg0 == "shortRange")
             {
                 entry.Player.ViewRadiusInChunks = 3;

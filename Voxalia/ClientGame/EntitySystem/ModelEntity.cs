@@ -101,8 +101,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.PlanePilot.ItemRight ? 1 : 0) + (Plane.PlanePilot.ItemLeft ? -1 : 0)) * entity.Mass * 3f * Delta);
                 // Apply air drag
                 Entity.ModifyLinearDamping(0.5f); // TODO: arbitrary constant
-                Entity.ModifyAngularDamping(0.8f); // TODO: arbitrary constant
-                Entity.ModifyAngularDamping(0.8f); // TODO: arbitrary constant
+                Entity.ModifyAngularDamping(0.95f); // TODO: arbitrary constant
                 // Ensure we're active if flying!
                 Entity.ActivityInformation.Activate();
             }
@@ -152,6 +151,8 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public PlayerEntity HeloPilot = null; // TODO: Character!
 
+        public float HeloTiltMod = 1f;
+
         public class HelicopterMotionConstraint : SingleEntityConstraint
         {
             ModelEntity Helicopter;
@@ -173,12 +174,19 @@ namespace Voxalia.ClientGame.EntitySystem
                 // Apply the amount of force necessary to counteract downward force, within a limit.
                 // POTENTIAL: Adjust according to orientation?
                 float uspeed = Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass);
-                uspeed += (Helicopter.LiftStrength - uspeed) * Helicopter.HeloPilot.SprintOrWalk; // TODO: Fix this logic!
+                if (uspeed < 0f)
+                {
+                    uspeed += (uspeed - Helicopter.FallStrength) * Helicopter.HeloPilot.SprintOrWalk;
+                }
+                else
+                {
+                    uspeed += (Helicopter.LiftStrength - uspeed) * Helicopter.HeloPilot.SprintOrWalk;
+                }
                 BEPUutilities.Vector3 upvel = up * uspeed * Delta;
                 Entity.ApplyLinearImpulse(ref upvel);
                 // Rotate slightly to move in a direction.
                 // At the same time, fight against existing rotation.
-                BEPUutilities.Vector3 VecUp = new BEPUutilities.Vector3(Helicopter.HeloPilot.XMove * 0.2f, Helicopter.HeloPilot.YMove * -0.2f, 1);
+                BEPUutilities.Vector3 VecUp = new BEPUutilities.Vector3(Helicopter.HeloPilot.XMove * 0.2f * Helicopter.HeloTiltMod, Helicopter.HeloPilot.YMove * -0.2f * Helicopter.HeloTiltMod, 1);
                 // TODO: Simplify yawrel calculation.
                 float tyaw = (float)(Utilities.MatrixToAngles(Matrix.CreateFromQuaternion(Entity.Orientation)).Z * Utilities.PI180);
                 BEPUutilities.Quaternion yawrel = BEPUutilities.Quaternion.CreateFromAxisAngle(BEPUutilities.Vector3.UnitZ, tyaw);
@@ -208,8 +216,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 }
                 // Apply air drag
                 Entity.ModifyLinearDamping(0.3f); // TODO: arbitrary constant
-                Entity.ModifyAngularDamping(0.3f); // TODO: arbitrary constant
-                Entity.ModifyAngularDamping(0.3f); // TODO: arbitrary constant
+                Entity.ModifyAngularDamping(0.6f); // TODO: arbitrary constant
                 // Ensure we're active if flying!
                 Entity.ActivityInformation.Activate();
             }

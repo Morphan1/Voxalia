@@ -62,16 +62,10 @@ namespace Voxalia.ServerGame.EntitySystem
             // Do nothing.
         }
 
-        public void Accepted(CharacterEntity character)
+        public virtual void Accepted(CharacterEntity character)
         {
             GainControlOfVehiclePacketOut gcovpo = new GainControlOfVehiclePacketOut(character, this);
-            foreach (PlayerEntity plent in TheRegion.Players)
-            {
-                if (plent.ShouldSeePosition(GetPosition()))
-                {
-                    plent.Network.SendPacket(gcovpo);
-                }
-            }
+            TheRegion.SendToVisible(lPos, gcovpo);
             // TODO: handle players coming into/out-of view of the vehicle + driver!
         }
 

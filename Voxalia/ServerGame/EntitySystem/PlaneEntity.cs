@@ -115,8 +115,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.IRight ? 1 : 0) + (Plane.ILeft ? -1 : 0)) * entity.Mass * 3f * Delta);
                 // Apply air drag
                 Entity.ModifyLinearDamping(0.5f); // TODO: arbitrary constant
-                Entity.ModifyAngularDamping(0.8f); // TODO: arbitrary constant
-                Entity.ModifyAngularDamping(0.8f); // TODO: arbitrary constant
+                Entity.ModifyAngularDamping(0.95f); // TODO: arbitrary constant
                 // Ensure we're active if flying!
                 Entity.ActivityInformation.Activate();
             }

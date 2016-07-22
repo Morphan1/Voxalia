@@ -8,6 +8,7 @@ using Voxalia.ServerGame.WorldSystem;
 using BEPUutilities;
 using BEPUphysics.Constraints;
 using BEPUphysics.Constraints.SingleEntity;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -37,6 +38,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public float ForwBack = 0;
         public float RightLeft = 0;
+
+        public float TiltMod = 1f;
 
         public override void SpawnBody()
         {
@@ -90,12 +93,19 @@ namespace Voxalia.ServerGame.EntitySystem
                 // Apply the amount of force necessary to counteract downward force, within a limit.
                 // POTENTIAL: Adjust according to orientation?
                 float uspeed = Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass);
-                uspeed += (Helicopter.LiftStrength - uspeed) * Helicopter.SprintOrWalk; // TODO: Fix this logic!
+                if (uspeed < 0f)
+                {
+                    uspeed += (uspeed - Helicopter.FallStrength) * Helicopter.SprintOrWalk;
+                }
+                else
+                {
+                    uspeed += (Helicopter.LiftStrength - uspeed) * Helicopter.SprintOrWalk;
+                }
                 Vector3 upvel = up * uspeed * Delta;
                 Entity.ApplyLinearImpulse(ref upvel);
                 // Rotate slightly to move in a direction.
                 // At the same time, fight against existing rotation.
-                Vector3 VecUp = new Vector3(Helicopter.RightLeft * 0.2f, Helicopter.ForwBack * -0.2f, 1);
+                Vector3 VecUp = new Vector3(Helicopter.RightLeft * 0.2f * Helicopter.TiltMod, Helicopter.ForwBack * -0.2f * Helicopter.TiltMod, 1);
                 // TODO: Simplify yawrel calculation.
                 float tyaw = (float)(Utilities.MatrixToAngles(Matrix.CreateFromQuaternion(Entity.Orientation)).Z * Utilities.PI180);
                 Quaternion yawrel = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, tyaw);
@@ -125,8 +135,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 // Apply air drag
                 Entity.ModifyLinearDamping(0.3f); // TODO: arbitrary constant
-                Entity.ModifyAngularDamping(0.3f); // TODO: arbitrary constant
-                Entity.ModifyAngularDamping(0.3f); // TODO: arbitrary constant
+                Entity.ModifyAngularDamping(0.6f); // TODO: arbitrary constant
                 // Ensure we're active if flying!
                 Entity.ActivityInformation.Activate();
             }
@@ -151,6 +160,14 @@ namespace Voxalia.ServerGame.EntitySystem
             ForwBack = character.YMove;
             RightLeft = character.XMove;
             SprintOrWalk = character.SprintOrWalk;
+        }
+
+        public override void Accepted(CharacterEntity character)
+        {
+            base.Accepted(character);
+            // TODO: Track players entering/exiting view!
+            FlagEntityPacketOut fepo = new FlagEntityPacketOut(this, EntityFlag.HELO_TILT_MOD, TiltMod);
+            TheRegion.SendToVisible(lPos, fepo);
         }
     }
 }

@@ -52,7 +52,8 @@ namespace Voxalia.Shared
     {
         FLYING = 0,
         MASS = 1,
-        HAS_FUEL = 2
+        HAS_FUEL = 2,
+        HELO_TILT_MOD = 3
     }
 
     public enum DefaultSound : byte

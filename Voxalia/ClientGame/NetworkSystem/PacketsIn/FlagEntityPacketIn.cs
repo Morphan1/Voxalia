@@ -76,6 +76,16 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                         throw new Exception("Flagged non-charcter entity with a specific mass!");
                     }
                     break;
+                case EntityFlag.HELO_TILT_MOD:
+                    if (e is ModelEntity)
+                    {
+                        ((ModelEntity)e).HeloTiltMod = value;
+                    }
+                    else
+                    {
+                        throw new Exception("Flagged non-model entity with a specific helo tilt mod!");
+                    }
+                    break;
                 default:
                     throw new Exception("Unknown flag!");
             }
