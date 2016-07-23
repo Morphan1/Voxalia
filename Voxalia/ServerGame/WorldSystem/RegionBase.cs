@@ -141,50 +141,7 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             CFGEdited = true;
         }
-
-        public void LoadRegion(Location min, Location max, bool announce = true)
-        {
-            Vector3i minc = ChunkLocFor(min);
-            Vector3i maxc = ChunkLocFor(max);
-            Object locker = new Object();
-            int c = 0;
-            int done = 0;
-            for (int x = minc.X; x <= maxc.X; x++)
-            {
-                for (int y = minc.Y; y <= maxc.Y; y++)
-                {
-                    for (int z = minc.Z; z <= maxc.Z; z++)
-                    {
-                        LoadChunk_Background_Startup(new Vector3i(x, y, z), (o) => { lock (locker) { done++; } }, LoadTimeScheduler);
-                        c++;
-                    }
-                }
-            }
-            bool cont = true;
-            double time = 0;
-            while (cont)
-            {
-                LoadTimeScheduler.RunAllSyncTasks(0.016);
-                lock (locker)
-                {
-                    cont = done < c;
-                    time += 0.016;
-                    if (time > 1)
-                    {
-                        time -= 1;
-                        SysConsole.Output(OutputType.INFO, "Loaded " + done + "/" + c + " chunks so far!");
-                    }
-                }
-                Thread.Sleep(16);
-            }
-            LoadTimeScheduler.RunAllSyncTasks(0.016);
-            TheServer.Schedule.RunAllSyncTasks(0.016);
-            if (announce)
-            {
-                SysConsole.Output(OutputType.INIT, "Initially loaded " + c + " chunks...");
-            }
-        }
-
+        
         public int Seed;
 
         public int Seed2;

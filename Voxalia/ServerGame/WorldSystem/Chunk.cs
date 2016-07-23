@@ -132,6 +132,11 @@ namespace Voxalia.ServerGame.WorldSystem
                 OwningRegion.SpawnEntity(e);
             }
             entsToSpawn.Clear();
+            foreach (SyncScheduleItem s in fixesToRun)
+            {
+                s.MyAction.Invoke();
+            }
+            fixesToRun.Clear();
             if (Flags.HasFlag(ChunkFlags.ISCUSTOM))
             {
                 return;
@@ -375,7 +380,9 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        List<Entity> entsToSpawn = new List<Entity>();
+        public List<Entity> entsToSpawn = new List<Entity>();
+
+        public List<SyncScheduleItem> fixesToRun = new List<SyncScheduleItem>();
         
         public void LoadFromSaveData(ChunkDetails det, ChunkDetails ents)
         {

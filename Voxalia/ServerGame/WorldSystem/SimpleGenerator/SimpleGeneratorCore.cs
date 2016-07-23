@@ -302,25 +302,18 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         }
                     }
                     // Special case: trees.
-                    // TODO: Separate entity generation?
                     if (hheight > 0 && top >= 0 && top < Chunk.CHUNK_SIZE)
                     {
                         Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000)); // TODO: Improve!
                         if (spotr.Next(65) == 1) // TODO: Efficiency! // TODO: Biome based chance!
                         {
-                            chunk.OwningRegion.TheServer.Schedule.ScheduleSyncTask(() =>
-                            {
-                                // TODO: Different plant per biome!
-                                chunk.OwningRegion.SpawnSmallPlant("tallgrass", new Location(cx + 0.5f, cy + 0.5f, hheight));
-                            });
+                            // TODO: Different plants per biome!
+                            chunk.OwningRegion.SpawnSmallPlant("tallgrass", new Location(cx + 0.5f, cy + 0.5f, hheight), chunk);
                         }
                         if (spotr.Next(300) == 1) // TODO: Efficiency! // TODO: Biome based chance!
                         {
-                            chunk.OwningRegion.TheServer.Schedule.ScheduleSyncTask(() =>
-                            {
-                                // TODO: Different trees per biome!
-                                chunk.OwningRegion.SpawnTree("oak01", new Location(cx + 0.5f, cy + 0.5f, hheight));
-                            });
+                            // TODO: Different trees per biome!
+                            chunk.OwningRegion.SpawnTree("oak01", new Location(cx + 0.5f, cy + 0.5f, hheight), chunk);
                         }
                     }
                 }

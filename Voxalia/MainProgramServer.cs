@@ -14,7 +14,7 @@ namespace Voxalia
     /// <summary>
     /// Central program entry point.
     /// </summary>
-    class ManProgram
+    class MainProgramServer
     {
         /// <summary>
         /// A handle for the console window.
