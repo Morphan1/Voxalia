@@ -707,7 +707,7 @@ namespace Voxalia.ServerGame.EntitySystem
                             if (!seen.Contains(nt) && !toSee.Contains(nt))
                             {
                                 bool val = false;
-                                Chunk ch = TheRegion.LoadChunk(t);
+                                Chunk ch = TheRegion.GetChunk(t);
                                 if (ch == null)
                                 {
                                     val = true;
