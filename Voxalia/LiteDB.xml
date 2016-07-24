@@ -74,11 +74,6 @@
             Returns the last/max field using a linq expression
             </summary>
         </member>
-        <member name="M:LiteDB.LiteCollection`1.SetAutoId(`0)">
-            <summary>
-            Set new Id in entity class if entity needs one
-            </summary>
-        </member>
         <member name="M:LiteDB.LiteCollection`1.Stats">
             <summary>
             Get collection stats
@@ -213,6 +208,16 @@
             The LiteDB database. Used for create a LiteDB instance and use all storage resoures. It's the database connection
             </summary>
         </member>
+        <member name="M:LiteDB.LiteDatabase.Run(System.String)">
+            <summary>
+            Run a command shell
+            </summary>
+        </member>
+        <member name="M:LiteDB.LiteDatabase.Run(System.String,LiteDB.BsonValue[])">
+            <summary>
+            Run a command shell formating $0, $1 to JSON string args item index
+            </summary>
+        </member>
         <member name="M:LiteDB.LiteDatabase.GetCollection``1(System.String)">
             <summary>
             Get a collection using a entity class as strong typed document. If collection does not exits, create a new one.
@@ -245,34 +250,9 @@
             Rename a collection. Returns false if oldName does not exists or newName already exists
             </summary>
         </member>
-        <member name="M:LiteDB.LiteDatabase.OnVersionUpdate(System.Int32)">
+        <member name="M:LiteDB.LiteDatabase.BeginTrans">
             <summary>
-            Virtual method for update database when a new version (from coneection string) was setted
-            </summary>
-        </member>
-        <member name="M:LiteDB.LiteDatabase.UpdateDbVersion(System.UInt16)">
-            <summary>
-            Loop in all registered versions and apply all that needs. Update dbversion
-            </summary>
-        </member>
-        <member name="F:LiteDB.LiteDatabase._mapperCache">
-            <summary>
-            Use mapper cache
-            </summary>
-        </member>
-        <member name="M:LiteDB.LiteDatabase.OnModelCreating(LiteDB.BsonMapper)">
-            <summary>
-            Use this method to override and apply rules to map your entities to BsonDocument
-            </summary>
-        </member>
-        <member name="M:LiteDB.LiteDatabase.Run(System.String)">
-            <summary>
-            Run a command shell
-            </summary>
-        </member>
-        <member name="M:LiteDB.LiteDatabase.Run(System.String,LiteDB.BsonValue[])">
-            <summary>
-            Run a command shell formating $0, $1 to JSON string args item index
+            Begin a exclusive read/write transaction
             </summary>
         </member>
         <member name="M:LiteDB.LiteDatabase.Shrink">
@@ -290,7 +270,12 @@
             Convert a BsonDocument to a class object using BsonMapper rules
             </summary>
         </member>
-        <member name="M:LiteDB.LiteDatabase.ToDocument(System.Object)">
+        <member name="M:LiteDB.LiteDatabase.ToDocument``1(``0)">
+            <summary>
+            Convert an entity class instance into a BsonDocument using BsonMapper rules
+            </summary>
+        </member>
+        <member name="M:LiteDB.LiteDatabase.ToDocument(System.Type,System.Object)">
             <summary>
             Convert an entity class instance into a BsonDocument using BsonMapper rules
             </summary>
@@ -300,25 +285,99 @@
             Returns a special collection for storage files/stream inside datafile
             </summary>
         </member>
-        <member name="M:LiteDB.LiteDatabase.#ctor(System.String)">
+        <member name="P:LiteDB.LiteDatabase.Log">
+            <summary>
+            Get logger class instance
+            </summary>
+        </member>
+        <member name="P:LiteDB.LiteDatabase.Mapper">
+            <summary>
+            Get current instance of BsonMapper used in this database instance (can be BsonMapper.Global)
+            </summary>
+        </member>
+        <member name="M:LiteDB.LiteDatabase.#ctor(System.String,LiteDB.BsonMapper)">
             <summary>
             Starts LiteDB database using a connection string for filesystem database
             </summary>
         </member>
-        <member name="M:LiteDB.LiteDatabase.#ctor(System.IO.Stream,System.UInt16)">
+        <member name="M:LiteDB.LiteDatabase.#ctor(LiteDB.IDiskService,LiteDB.BsonMapper)">
+            <summary>
+            Starts LiteDB database using a custom IDiskService
+            </summary>
+        </member>
+        <member name="M:LiteDB.LiteDatabase.#ctor(System.IO.Stream,LiteDB.BsonMapper)">
             <summary>
             Initialize database using any read/write Stream (like MemoryStream)
             </summary>
         </member>
-        <member name="M:LiteDB.LiteDatabase.#ctor(LiteDB.IDiskService,System.UInt16)">
+        <member name="P:LiteDB.LiteDatabase.DbVersion">
             <summary>
-            Starts LiteDB database using full parameters
+            Get/Set database version
+            </summary>
+        </member>
+        <member name="T:LiteDB.EncryptedDiskService">
+            <summary>
+            Encrypted implementation of FileDiskService
+            Header page is not encrypted to simple checks (contains SHA1 hash password for validate)
+            Uses AES - Rijndael implementation for symmetric encrypt. There is not password change
+            </summary>
+        </member>
+        <member name="M:LiteDB.EncryptedDiskService.ReadPage(System.UInt32)">
+            <summary>
+            Override read page decrypting data from disk
+            </summary>
+        </member>
+        <member name="M:LiteDB.EncryptedDiskService.WritePage(System.UInt32,System.Byte[])">
+            <summary>
+            Override write page to write encrypted data
+            </summary>
+        </member>
+        <member name="M:LiteDB.Platform.LitePlatformFullDotNet.#ctor">
+            <summary>
+            Default constructor. Will put all files in the application directory unless otherwise specified
+            </summary>
+        </member>
+        <member name="M:LiteDB.Platform.LitePlatformFullDotNet.#ctor(System.String)">
+            <summary>
+            Constructor which accepts a default directory for all files. 
+            Default directory can be overridden by specifying a full path when opening the database.
+            </summary>
+            <param name="defaultPath">Default path where files will be placed.</param>
+        </member>
+        <member name="T:LiteDB.Platform.RijndaelEncryption">
+            <summary>
+            Simple Rijndael wrapper to encrypt data pages (based in http://stackoverflow.com/questions/165808/simple-two-way-encryption-for-c-sharp)
+            </summary>
+        </member>
+        <member name="M:LiteDB.Platform.RijndaelEncryption.Encrypt(System.Byte[])">
+            <summary>
+            Encrypt byte array returning new encrypted byte array with same length of original array (PAGE_SIZE)
+            </summary>
+        </member>
+        <member name="M:LiteDB.Platform.RijndaelEncryption.Decrypt(System.Byte[])">
+            <summary>
+            Decrypt and byte array returning a new byte array
+            </summary>
+        </member>
+        <member name="M:LiteDB.Platform.RijndaelEncryption.HashSHA1(System.String)">
+            <summary>
+            Hash a password using SHA1 just to verify password
             </summary>
         </member>
         <member name="T:LiteDB.DbEngine">
             <summary>
             A internal class that take care of all engine data structure access - it´s basic implementation of a NoSql database
             Its isolated from complete solution - works on low level only
+            </summary>
+        </member>
+        <member name="M:LiteDB.DbEngine.ReadDbVersion">
+            <summary>
+            Read DbVersion variable from header page
+            </summary>
+        </member>
+        <member name="M:LiteDB.DbEngine.WriteDbVersion(System.UInt16)">
+            <summary>
+            Write DbVersion variable in header page
             </summary>
         </member>
         <member name="M:LiteDB.DbEngine.Shrink">
@@ -339,16 +398,6 @@
         <member name="M:LiteDB.DbEngine.Stats(System.String)">
             <summary>
             Get stats from a collection
-            </summary>
-        </member>
-        <member name="M:LiteDB.DbEngine.GetDbParam">
-            <summary>
-            Get database schema version
-            </summary>
-        </member>
-        <member name="M:LiteDB.DbEngine.SetParam(LiteDB.DbParams)">
-            <summary>
-            Set a new dbversion
             </summary>
         </member>
         <member name="M:LiteDB.DbEngine.Delete(System.String,LiteDB.Query)">
@@ -426,31 +475,84 @@
             Get the collection page only when nedded. Gets from pager always to garantee that wil be the last (in case of clear cache will get a new one - pageID never changes)
             </summary>
         </member>
-        <member name="M:LiteDB.DbEngine.Transaction``1(System.String,System.Boolean,System.Func{LiteDB.CollectionPage,``0})">
+        <member name="M:LiteDB.DbEngine.BeginTrans">
             <summary>
-            Encapsulate all transaction commands in same data structure
+            Starts a new write exclusive transaction
             </summary>
         </member>
-        <member name="T:LiteDB.EncryptedDiskService">
+        <member name="M:LiteDB.DbEngine.Commit">
             <summary>
-            Encrypted implementation of FileDiskService
-            Header page is not encrypted to simple checks (contains SHA1 hash password for validate)
-            Uses SimpleAES - Rijndael implementation for symmetric encrypt. There is not password change
+            Commit current transactions
             </summary>
         </member>
-        <member name="M:LiteDB.EncryptedDiskService.CreateNew">
+        <member name="M:LiteDB.DbEngine.Rollback">
             <summary>
-            Create new database - empty header with password
+            Rollback all open transactions
             </summary>
         </member>
-        <member name="M:LiteDB.EncryptedDiskService.ReadPage(System.UInt32)">
+        <member name="M:LiteDB.DbEngine.ReadTransaction``1(System.String,System.Func{LiteDB.CollectionPage,``0})">
             <summary>
-            Override read page decrypting data from disk
+            Encapsulate a read only transaction
             </summary>
         </member>
-        <member name="M:LiteDB.EncryptedDiskService.WritePage(System.UInt32,System.Byte[])">
+        <member name="M:LiteDB.DbEngine.WriteTransaction``1(System.String,System.Boolean,System.Func{LiteDB.CollectionPage,``0})">
             <summary>
-            Override write page to write encrypted data
+            Encapsulate read/write transaction
+            </summary>
+        </member>
+        <member name="T:LiteDB.FileDiskService">
+            <summary>
+            Implement NTFS File disk
+            </summary>
+        </member>
+        <member name="F:LiteDB.FileDiskService.PAGE_TYPE_POSITION">
+            <summary>
+            Position, on page, about page type
+            </summary>
+        </member>
+        <member name="M:LiteDB.FileDiskService.Initialize">
+            <summary>
+            Open datafile - returns true if new
+            </summary>
+        </member>
+        <member name="M:LiteDB.FileDiskService.CreateNew">
+            <summary>
+            Create new database - just create empty header page
+            </summary>
+        </member>
+        <member name="M:LiteDB.FileDiskService.CreateHeaderPage">
+            <summary>
+            To be override in Encripted disk
+            </summary>
+        </member>
+        <member name="M:LiteDB.FileDiskService.Open(System.Boolean)">
+            <summary>
+            Open datafile if not opened
+            </summary>
+        </member>
+        <member name="M:LiteDB.FileDiskService.Close">
+            <summary>
+            Close datafile
+            </summary>
+        </member>
+        <member name="M:LiteDB.FileDiskService.ReadPage(System.UInt32)">
+            <summary>
+            Read page bytes from disk
+            </summary>
+        </member>
+        <member name="M:LiteDB.FileDiskService.WritePage(System.UInt32,System.Byte[])">
+            <summary>
+            Persist single page bytes to disk
+            </summary>
+        </member>
+        <member name="M:LiteDB.FileDiskService.SetLength(System.Int64)">
+            <summary>
+            Set datafile length
+            </summary>
+        </member>
+        <member name="M:LiteDB.FileDiskService.TryExec(System.Action)">
+            <summary>
+            Try run an operation over datafile - keep tring if locked
             </summary>
         </member>
         <member name="T:LiteDB.StreamDiskService">
@@ -468,19 +570,14 @@
             Create new database - just create empty header page
             </summary>
         </member>
-        <member name="M:LiteDB.StreamDiskService.Lock">
+        <member name="M:LiteDB.StreamDiskService.Open(System.Boolean)">
             <summary>
-            Lock stream
+            Open in shared read mode
             </summary>
         </member>
-        <member name="M:LiteDB.StreamDiskService.Unlock">
+        <member name="M:LiteDB.StreamDiskService.Close">
             <summary>
-            Release lock
-            </summary>
-        </member>
-        <member name="M:LiteDB.StreamDiskService.GetChangeID">
-            <summary>
-            Read first 2 bytes from datafile - contains changeID (avoid to read all header page)
+            Close datafile
             </summary>
         </member>
         <member name="M:LiteDB.StreamDiskService.ReadPage(System.UInt32)">
@@ -511,21 +608,6 @@
         <member name="M:LiteDB.EmptyPage.UpdateItemCount">
             <summary>
             Update freebytes + items count
-            </summary>
-        </member>
-        <member name="T:LiteDB.DbParams">
-            <summary>
-            DbParams is 200 bytes data stored in header page and used to setup variables to database
-            </summary>
-        </member>
-        <member name="F:LiteDB.DbParams.DbVersion">
-            <summary>
-            Database user version [2 bytes]
-            </summary>
-        </member>
-        <member name="F:LiteDB.DbParams.Password">
-            <summary>
-            Password hash in SHA1 [20 bytes]
             </summary>
         </member>
         <member name="T:LiteDB.QueryEmpty">
@@ -581,6 +663,16 @@
         <member name="M:LiteDB.BsonWriter.WriteDocument(LiteDB.ByteWriter,LiteDB.BsonDocument)">
             <summary>
             Write a bson document
+            </summary>
+        </member>
+        <member name="P:LiteDB.AutoId.IsEmpty">
+            <summary>
+            Function to test if type is empty
+            </summary>
+        </member>
+        <member name="P:LiteDB.AutoId.NewId">
+            <summary>
+            Function that implements how generate a new Id for this type
             </summary>
         </member>
         <member name="T:LiteDB.EntityBuilder`1">
@@ -849,14 +941,14 @@
             Open file stream to read from database
             </summary>
         </member>
-        <member name="M:LiteDB.LiteFileInfo.SaveAs(System.String,System.Boolean)">
-            <summary>
-            Save file content to a external file
-            </summary>
-        </member>
         <member name="M:LiteDB.LiteFileInfo.CopyTo(System.IO.Stream)">
             <summary>
             Copy file content to another stream
+            </summary>
+        </member>
+        <member name="M:LiteDB.LiteFileInfo.SaveAs(System.String,System.Boolean)">
+            <summary>
+            Save file content to a external file
             </summary>
         </member>
         <member name="T:LiteDB.LiteFileStorage">
@@ -1194,9 +1286,29 @@
             Convert EmptyString to Null
             </summary>
         </member>
+        <member name="F:LiteDB.BsonMapper._autoId">
+            <summary>
+            Map for autoId type based functions
+            </summary>
+        </member>
+        <member name="F:LiteDB.BsonMapper.Global">
+            <summary>
+            Global instance used when no BsonMapper are passed in LiteDatabase ctor
+            </summary>
+        </member>
         <member name="M:LiteDB.BsonMapper.RegisterType``1(System.Func{``0,LiteDB.BsonValue},System.Func{LiteDB.BsonValue,``0})">
             <summary>
             Register a custom type serializer/deserialize function
+            </summary>
+        </member>
+        <member name="M:LiteDB.BsonMapper.RegisterAutoId``1(System.Func{``0,System.Boolean},System.Func{LiteDB.LiteCollection{LiteDB.BsonDocument},``0})">
+            <summary>
+            Register a custom Auto Id generator function for a type
+            </summary>
+        </member>
+        <member name="M:LiteDB.BsonMapper.SetAutoId(System.Object,LiteDB.LiteCollection{LiteDB.BsonDocument})">
+            <summary>
+            Set new Id in entity class if entity needs one
             </summary>
         </member>
         <member name="M:LiteDB.BsonMapper.Entity``1">
@@ -1803,69 +1915,24 @@
             When a page is already on a list it's more efficient just move comparing with sinblings
             </summary>
         </member>
-        <member name="F:LiteDB.FileDiskService.PAGE_TYPE_POSITION">
-            <summary>
-            Position, on page, about page type
-            </summary>
-        </member>
-        <member name="M:LiteDB.FileDiskService.Initialize">
-            <summary>
-            Open datafile - returns true if new
-            </summary>
-        </member>
-        <member name="M:LiteDB.FileDiskService.CreateNew">
-            <summary>
-            Create new database - just create empty header page
-            </summary>
-        </member>
-        <member name="M:LiteDB.FileDiskService.Lock">
-            <summary>
-            Lock datafile agains other process read/write
-            </summary>
-        </member>
-        <member name="M:LiteDB.FileDiskService.Unlock">
-            <summary>
-            Release lock
-            </summary>
-        </member>
-        <member name="M:LiteDB.FileDiskService.GetChangeID">
-            <summary>
-            Read first 2 bytes from datafile - contains changeID (avoid to read all header page)
-            </summary>
-        </member>
-        <member name="M:LiteDB.FileDiskService.ReadPage(System.UInt32)">
-            <summary>
-            Read page bytes from disk
-            </summary>
-        </member>
-        <member name="M:LiteDB.FileDiskService.WritePage(System.UInt32,System.Byte[])">
-            <summary>
-            Persist single page bytes to disk
-            </summary>
-        </member>
-        <member name="M:LiteDB.FileDiskService.SetLength(System.Int64)">
-            <summary>
-            Set datafile length
-            </summary>
-        </member>
-        <member name="M:LiteDB.FileDiskService.TryExec(System.Action)">
-            <summary>
-            Try run an operation over datafile - keep tring if locked
-            </summary>
-        </member>
         <member name="T:LiteDB.TransactionService">
             <summary>
             Manage all transaction and garantee concurrency and recovery
             </summary>
         </member>
-        <member name="M:LiteDB.TransactionService.Begin">
+        <member name="M:LiteDB.TransactionService.Begin(System.Boolean)">
             <summary>
             Starts a new transaction - lock database to garantee that only one processes is in a transaction
             </summary>
         </member>
-        <member name="M:LiteDB.TransactionService.Commit">
+        <member name="M:LiteDB.TransactionService.Complete(LiteDB.LiteTransaction)">
             <summary>
-            Commit the transaction - increese
+            Complete transaction commit dirty pages and closing data file
+            </summary>
+        </member>
+        <member name="M:LiteDB.TransactionService.Complete">
+            <summary>
+            Complete transaction using top transaction
             </summary>
         </member>
         <member name="M:LiteDB.TransactionService.Save">
@@ -1873,10 +1940,14 @@
             Save all dirty pages to disk - do not touch on lock disk
             </summary>
         </member>
-        <member name="M:LiteDB.TransactionService.AvoidDirtyRead">
+        <member name="M:LiteDB.TransactionService.Abort">
             <summary>
-            This method must be called before read/write operation to avoid dirty reads.
-            It's occurs when my cache contains pages that was changed in another process
+            Stop transaction, discard journal file and close database
+            </summary>
+        </member>
+        <member name="T:LiteDB.LazyLoad`1">
+            <summary>
+            LazyLoad class for .NET 3.5
             </summary>
         </member>
         <member name="T:LiteDB.IndexNotFoundException">
@@ -2015,9 +2086,14 @@
             Last created page - Used when there is no free page inside file
             </summary>
         </member>
-        <member name="P:LiteDB.HeaderPage.DbParams">
+        <member name="F:LiteDB.HeaderPage.DbVersion">
             <summary>
-            Database parameters stored in header page - Use 200 bytes fixed
+            Database user version [2 bytes]
+            </summary>
+        </member>
+        <member name="F:LiteDB.HeaderPage.Password">
+            <summary>
+            Password hash in SHA1 [20 bytes]
             </summary>
         </member>
         <member name="P:LiteDB.HeaderPage.CollectionPages">
@@ -2069,26 +2145,6 @@
         <member name="M:LiteDB.Logger.Write(System.Byte,System.String,System.Object[])">
             <summary>
             Write log text to output using inside a component (statics const of Logger)
-            </summary>
-        </member>
-        <member name="T:LiteDB.SimpleAES">
-            <summary>
-            Simple Rijndael wrapper to encrypt data pages (based in http://stackoverflow.com/questions/165808/simple-two-way-encryption-for-c-sharp)
-            </summary>
-        </member>
-        <member name="M:LiteDB.SimpleAES.Encrypt(System.Byte[])">
-            <summary>
-            Encrypt byte array returning new encrypted byte array with same length of original array (PAGE_SIZE)
-            </summary>
-        </member>
-        <member name="M:LiteDB.SimpleAES.Decrypt(System.Byte[])">
-            <summary>
-            Decrypt and byte array returning a new byte array
-            </summary>
-        </member>
-        <member name="M:LiteDB.SimpleAES.HashSHA1(System.String)">
-            <summary>
-            Hash a password using SHA1 just to verify password
             </summary>
         </member>
         <member name="T:LiteDB.StringScanner">
