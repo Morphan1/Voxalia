@@ -24,6 +24,8 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public int ZWidth = 0;
 
+        public Location scale = Location.One;
+
         public BlockInternal[] Blocks = null;
 
         public BGETraceMode TraceMode = BGETraceMode.CONVEX;
@@ -49,8 +51,8 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 Shape = CalculateHullShape(out shapeOffs);
             }
+            SysConsole.Output(OutputType.INFO, "Shape offs : " + shapeOffs + " vs " + sOffs);
             shapeOffs = sOffs;
-            SetPosition(GetPosition());
         }
 
         public override void SpawnBody()
@@ -136,7 +138,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 return;
             }
             TheClient.SetVox();
-            OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(shapeOffs)) * GetTransformationMatrix();
+            OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(ClientUtilities.Convert(scale)) * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(shapeOffs)) * GetTransformationMatrix();
             GL.UniformMatrix4(2, false, ref mat);
             TheClient.Rendering.SetColor(Color);
             vbo.Render(false);

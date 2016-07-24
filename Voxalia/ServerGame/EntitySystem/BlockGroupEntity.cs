@@ -26,6 +26,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public BlockInternal[] Blocks;
 
+        public Location scale = Location.One;
+
         public Location shapeOffs;
 
         public Location Origin;

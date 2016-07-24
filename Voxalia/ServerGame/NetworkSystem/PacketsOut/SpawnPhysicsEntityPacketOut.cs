@@ -19,7 +19,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             }
             // TODO: LOL PLS CLEAN
             Data = new byte[4 + 12 + 12 + 16 + 12 + 8 + 4 + 12 + 1 + 
-                (e is GlowstickEntity ? 4: (e is BlockGroupEntity ? bge.Blocks.Length * 4 + 1 + 4 + 12 :(e is BlockItemEntity ? 5: (e is ModelEntity ? 4 + 1: (e is StaticBlockEntity ? 4: 0))))) + 4 + 1];
+                (e is GlowstickEntity ? 4: (e is BlockGroupEntity ? bge.Blocks.Length * 4 + 1 + 4 + 12 + 12 :(e is BlockItemEntity ? 5: (e is ModelEntity ? 4 + 1: (e is StaticBlockEntity ? 4: 0))))) + 4 + 1];
             Utilities.FloatToBytes(e.GetMass()).CopyTo(Data, 0);
             e.GetPosition().ToBytes().CopyTo(Data, 4);
             e.GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
@@ -82,6 +82,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 Data[start + bge.Blocks.Length * 4] = (byte)bge.TraceMode;
                 Utilities.IntToBytes(bge.Color.ToArgb()).CopyTo(Data, start + bge.Blocks.Length * 4 + 1);
                 bge.shapeOffs.ToBytes().CopyTo(Data, start + bge.Blocks.Length * 4 + 1 + 4);
+                bge.scale.ToBytes().CopyTo(Data, start + bge.Blocks.Length * 4 + 1 + 4 + 12);
             }
             else if (e is GlowstickEntity)
             {

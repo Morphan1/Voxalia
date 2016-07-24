@@ -23,7 +23,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
         {
             if (entry.InputArguments.Count < 1)
             {
-                entry.Player.Network.SendMessage("/blockship <convex/perfect>");
+                entry.Player.Network.SendMessage("/blockship <convex/perfect> [scale]");
                 return;
             }
             BGETraceMode tm = BGETraceMode.CONVEX;
@@ -54,6 +54,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                 blocksin[(int)(block.Key.Z - zsub) * ywidth * xwidth + (int)(block.Key.Y - ysub) * xwidth + (int)(block.Key.X - xsub)] = block.Value;
             }
             BlockGroupEntity bge = new BlockGroupEntity(extent.Min, tm, entry.Player.TheRegion, blocksin, xwidth, ywidth, zwidth);
+            bge.scale = entry.InputArguments.Count < 2 ? Location.One : Location.FromString(entry.InputArguments[1]);
             entry.Player.TheRegion.SpawnEntity(bge);
         }
 

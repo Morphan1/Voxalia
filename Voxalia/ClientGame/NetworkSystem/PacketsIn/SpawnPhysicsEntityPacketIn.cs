@@ -64,6 +64,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 BGETraceMode tm = (BGETraceMode)data[start + bi.Length * 4];
                 BlockGroupEntity bge = new BlockGroupEntity(TheClient.TheRegion, tm, bi, xwidth, ywidth, zwidth, Location.FromBytes(data, start + bi.Length * 4 + 1 + 4));
                 bge.Color = System.Drawing.Color.FromArgb(Utilities.BytesToInt(Utilities.BytesPartial(data, start + bi.Length * 4 + 1, 4)));
+                bge.scale = Location.FromBytes(data, start + bi.Length * 4 + 1 + 4 + 12);
+                SysConsole.Output(OutputType.INFO, "Scaled to " + bge.scale);
                 ce = bge;
             }
             else if (type == 5)
