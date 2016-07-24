@@ -93,6 +93,7 @@ namespace Voxalia.ServerGame.WorldSystem
             PhysicsWorld.TimeStepSettings.MaximumTimeStepsPerFrame = 10;
             PhysicsWorld.ForceUpdater.Gravity = new Vector3(0, 0, -9.8f * 3f / 2f);
             PhysicsWorld.DuringForcesUpdateables.Add(new LiquidVolume(this));
+            PhysicsWorld.TimeStepSettings.TimeStepDuration = 1f / TheServer.CVars.g_fps.ValueF;
             Collision = new CollisionUtil(PhysicsWorld);
             string folder = "saves/" + Name;
             Program.Files.CreateDirectory(folder);
