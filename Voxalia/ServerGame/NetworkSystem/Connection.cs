@@ -125,7 +125,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                 data["formtype"] = "confirm";
                 data["username"] = username;
                 data["session"] = key;
-                byte[] response = wb.UploadValues("http://frenetic.xyz/account/microconfirm", "POST", data);
+                byte[] response = wb.UploadValues(Program.GlobalServerAddress + "account/microconfirm", "POST", data);
                 string resp = FileHandler.encoding.GetString(response).Trim(' ', '\n', '\r', '\t');
                 string rip = PrimarySocket.RemoteEndPoint.ToString();
                 if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))

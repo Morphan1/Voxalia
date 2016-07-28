@@ -9,9 +9,11 @@ namespace Voxalia.Shared
 {
     public class Program
     {
-        public static string GameName = "Voxalia";
+        public const string GameName = "Voxalia";
 
-        public static string GameVersion = "0.0.9";
+        public const string GameVersion = "0.0.9";
+
+        public const string GlobalServerAddress = "https://frenetic.xyz/";
 
         public static FileHandler Files;
 
