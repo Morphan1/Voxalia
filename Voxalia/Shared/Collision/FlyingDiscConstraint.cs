@@ -48,7 +48,7 @@ namespace Voxalia.Shared.Collision
             Vector3 up = Quaternion.Transform(Vector3.UnitZ, Entity.Orientation);
             float projectedZVel = Vector3.Dot(entity.LinearVelocity + entity.Gravity ?? entity.Space.ForceUpdater.Gravity, up);
             float velLen = 1f - ((1f / Math.Max(entity.LinearVelocity.LengthSquared(), 1f)));
-            cForce = up * (projectedZVel * -velLen * dt * 0.75f);
+            cForce = up * (projectedZVel * -velLen * dt * 0.75f); // TODO: Arbitrary constant!
         }
     }
 }

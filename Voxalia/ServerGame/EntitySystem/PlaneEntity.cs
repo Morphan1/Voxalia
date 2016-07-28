@@ -55,7 +55,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             get
             {
-                return GetMass() * 25f;
+                return GetMass() * 18f;
             }
         }
 
@@ -63,7 +63,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             get
             {
-                return GetMass() * 7f;
+                return GetMass() * 5f;
             }
         }
 
@@ -71,7 +71,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             get
             {
-                return GetMass() * 12f;
+                return GetMass() * 8f;
             }
         }
 
@@ -114,8 +114,8 @@ namespace Voxalia.ServerGame.EntitySystem
                 entity.ApplyImpulse(side * 5 + entity.Position, up * -Plane.RightLeft * entity.Mass * 3f * Delta);
                 entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.IRight ? 1 : 0) + (Plane.ILeft ? -1 : 0)) * entity.Mass * 3f * Delta);
                 // Apply air drag
-                Entity.ModifyLinearDamping(0.5f); // TODO: arbitrary constant
-                Entity.ModifyAngularDamping(0.95f); // TODO: arbitrary constant
+                Entity.ModifyLinearDamping(0.2f); // TODO: arbitrary constant
+                Entity.ModifyAngularDamping(0.7f); // TODO: arbitrary constant
                 // Ensure we're active if flying!
                 Entity.ActivityInformation.Activate();
             }
