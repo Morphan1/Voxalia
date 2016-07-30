@@ -210,7 +210,7 @@ namespace Voxalia.ServerGame.ItemSystem
         public string ToEscapedString()
         {
             return TagParser.Escape(Name) + "[secondary=" + (SecondaryName == null ? "" : EscapeTagBase.Escape(SecondaryName)) + ";display=" + EscapeTagBase.Escape(DisplayName) + ";count=" + Count
-                + ";weight=" + Weight + ";volume=" + Volume
+                + ";weight=" + Weight + ";volume=" + Volume + ";temperature=" + Temperature
                 + ";description=" + EscapeTagBase.Escape(Description) + ";texture=" + EscapeTagBase.Escape(GetTextureName()) + ";model=" + EscapeTagBase.Escape(GetModelName()) + ";bound=" + (IsBound ? "true": "false")
                 + ";drawcolor=" + new ColorTag(DrawColor).ToString() + ";datum=" + Datum + ";shared=" + SharedStr() + ";local=" + EscapedLocalStr() + "]";
         }
@@ -270,6 +270,7 @@ namespace Voxalia.ServerGame.ItemSystem
             float weight = 1;
             float volume = 1;
             int datum = 0;
+            float temperature = 0;
             System.Drawing.Color color = System.Drawing.Color.White;
             foreach (KeyValuePair<string, string> pair in pairs)
             {
@@ -310,6 +311,9 @@ namespace Voxalia.ServerGame.ItemSystem
                     case "volume":
                         volume = Utilities.StringToFloat(tval);
                         break;
+                    case "temperature":
+                        temperature = Utilities.StringToFloat(tval);
+                        break;
                     case "shared":
                         shared = tval;
                         break;
@@ -324,6 +328,7 @@ namespace Voxalia.ServerGame.ItemSystem
             item.Weight = weight;
             item.Volume = volume;
             item.Datum = datum;
+            item.Temperature = temperature;
             pairs = SplitUpPairs(shared.Substring(1, shared.Length - 2));
             foreach (KeyValuePair<string, string> pair in pairs)
             {

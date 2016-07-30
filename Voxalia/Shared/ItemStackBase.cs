@@ -62,6 +62,11 @@ namespace Voxalia.Shared
         /// </summary>
         public float Weight = 1;
 
+        /// <summary>
+        /// What temperature (F) this item is at.
+        /// </summary>
+        public float Temperature = 70;
+
         public abstract string GetTextureName();
 
         public abstract void SetTextureName(string name);
@@ -78,6 +83,7 @@ namespace Voxalia.Shared
             dw.WriteInt(Datum);
             dw.WriteFloat(Weight);
             dw.WriteFloat(Volume);
+            dw.WriteFloat(Temperature);
             dw.WriteInt(DrawColor.ToArgb());
             dw.WriteFullString(Name);
             dw.WriteFullString(SecondaryName == null ? "" : SecondaryName);
@@ -144,6 +150,7 @@ namespace Voxalia.Shared
             Datum = dr.ReadInt();
             Weight = dr.ReadFloat();
             Volume = dr.ReadFloat();
+            Temperature = dr.ReadFloat();
             DrawColor = System.Drawing.Color.FromArgb(dr.ReadInt());
             SetName(dr.ReadFullString());
             string secondary_name = dr.ReadFullString();
@@ -204,7 +211,7 @@ namespace Voxalia.Shared
         public override string ToString()
         {
             return Name + "[secondary=" + (SecondaryName == null ? "{NULL}" : SecondaryName) + ";display=" + DisplayName + ";count=" + Count
-                + ";description=" + Description + ";texture=" + GetTextureName() + ";model=" + GetModelName() + ";weight=" + Weight + ";volume=" + Volume
+                + ";description=" + Description + ";texture=" + GetTextureName() + ";model=" + GetModelName() + ";weight=" + Weight + ";volume=" + Volume + ";temperature=" + Temperature
                 + ";drawcolor=" + DrawColor.R / 255f + "," + DrawColor.G / 255f + "," + DrawColor.B / 255f + "," + DrawColor.A / 255f + ";datum=" + Datum + ";shared=" + SharedStr() + "]";
             // TODO: Shared color tag?
         }
