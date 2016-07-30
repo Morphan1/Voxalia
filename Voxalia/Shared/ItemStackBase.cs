@@ -67,6 +67,21 @@ namespace Voxalia.Shared
         /// </summary>
         public float Temperature = 70;
 
+        /// <summary>
+        /// The temperature (C) this item is at.
+        /// </summary>
+        public float TemperatureC
+        {
+            get
+            {
+                return (Temperature - 32f) * (5f / 9f);
+            }
+            set
+            {
+                Temperature = (value * (9f / 5f)) + 32f;
+            }
+        }
+
         public abstract string GetTextureName();
 
         public abstract void SetTextureName(string name);
