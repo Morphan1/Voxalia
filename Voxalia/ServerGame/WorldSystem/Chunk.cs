@@ -74,19 +74,23 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Material LODBlock(int x, int y, int z, int lod)
         {
-            // TODO: Prefer maximum opaqueness.
             int xs = x * lod;
             int ys = y * lod;
             int zs = z * lod;
+            Material mat = Material.AIR;
             for (int tz = lod - 1; tz >= 0; tz--)
             {
                 Material c = GetBlockAt(xs, ys, zs + tz).Material;
-                if (c != Material.AIR)
+                if (c.IsOpaque())
                 {
                     return c;
                 }
+                else if (c != Material.AIR)
+                {
+                    mat = c;
+                }
             }
-            return Material.AIR;
+            return mat;
         }
         
         /// <summary>
