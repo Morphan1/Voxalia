@@ -1,5 +1,5 @@
 type: block
-icon: blocks/solid/ore/copper_ore_sparse
+icon: render_block:copper_ore_sparse
 display: Sparse Copper Ore
 description: Acceptable amount of coppers!
 color: 1,1,1

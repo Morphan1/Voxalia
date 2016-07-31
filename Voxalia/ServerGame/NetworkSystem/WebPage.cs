@@ -53,7 +53,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                 {
                     continue;
                 }
-                string[] dat = headbits[i].SplitFast(':', 2);
+                string[] dat = headbits[i].SplitFast(':', 1);
                 if (dat.Length != 2)
                 {
                     continue;

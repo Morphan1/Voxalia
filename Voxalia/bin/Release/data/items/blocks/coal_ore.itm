@@ -1,5 +1,5 @@
 type: block
-icon: blocks/solid/ore/coal_ore
+icon: render_block:coal_ore
 display: Coal Ore
 description: Fresh from Santa!
 color: 1,1,1

@@ -1,5 +1,5 @@
 type: block
-icon: blocks/solid/metals/steel_solid
+icon: render_block:steel_solid
 display: Solid Steel
 description: *Very* solid!
 color: 1,1,1

@@ -91,7 +91,7 @@ namespace Voxalia.Shared
                     {
                         continue;
                     }
-                    string[] opt = split[i].SplitFast('=', 2);
+                    string[] opt = split[i].SplitFast('=', 1);
                     switch (opt[0].ToLowerFast())
                     {
                         case "name":

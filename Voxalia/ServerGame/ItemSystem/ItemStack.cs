@@ -233,7 +233,7 @@ namespace Voxalia.ServerGame.ItemSystem
                 if (input[i] == ';')
                 {
                     string valt = input.Substring(start, i - start);
-                    string[] splitt = valt.SplitFast('=', 2);
+                    string[] splitt = valt.SplitFast('=', 1);
                     if (splitt.Length < 2)
                     {
                         continue;
@@ -243,7 +243,7 @@ namespace Voxalia.ServerGame.ItemSystem
                 }
             }
             string valx = input.Substring(start);
-            string[] splitx = valx.SplitFast('=', 2);
+            string[] splitx = valx.SplitFast('=', 1);
             if (splitx.Length < 2)
             {
                 return toret;

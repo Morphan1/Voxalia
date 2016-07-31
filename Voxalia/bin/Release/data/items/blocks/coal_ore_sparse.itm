@@ -1,5 +1,5 @@
 type: block
-icon: blocks/solid/ore/coal_ore_sparse
+icon: render_block:coal_ore_sparse
 display: Sparse Coal Ore
 description: For when children are just slightly bad!
 color: 1,1,1

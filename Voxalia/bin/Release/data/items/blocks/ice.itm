@@ -1,5 +1,5 @@
 type: block
-icon: blocks/solid/natural/ice
+icon: render_block:ice
 display: Ice
 description: Frozen water!
 color: 1,1,1

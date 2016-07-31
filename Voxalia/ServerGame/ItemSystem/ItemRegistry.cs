@@ -82,7 +82,7 @@ namespace Voxalia.ServerGame.ItemSystem
                     {
                         continue;
                     }
-                    string[] dat = line.SplitFast(':', 2);
+                    string[] dat = line.SplitFast(':', 1);
                     string dat_type = dat[0].Trim().ToLowerFast();
                     string dat_val = dat[1].Trim();
                     switch (dat_type)

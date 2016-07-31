@@ -280,7 +280,7 @@ namespace Voxalia.ClientGame.UISystem
                     {
                         if (KeyState.KeyboardString.Contains('\n'))
                         {
-                            string[] lines = KeyState.KeyboardString.SplitFast('\n', 2);
+                            string[] lines = KeyState.KeyboardString.SplitFast('\n', 1);
                             TypingText = TypingText.Insert(TypingCursor, Utilities.CleanStringInput(lines[0])) + "\n" + Utilities.CleanStringInput(lines[1]);
                         }
                         else

@@ -1,5 +1,5 @@
 type: block
-icon: blocks/solid/natural/sandstone
+icon: render_block:sandstone
 display: Sandstone
 description: Somewhat solid!
 color: 1,1,1

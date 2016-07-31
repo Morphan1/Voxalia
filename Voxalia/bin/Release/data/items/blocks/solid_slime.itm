@@ -1,5 +1,5 @@
 type: block
-icon: blocks/liquid/slipgoo
+icon: render_block:solid_slime
 display: Solid Slime
 description: Slippery!
 color: 1,1,1

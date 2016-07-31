@@ -1,5 +1,5 @@
 type: block
-icon: blocks/liquid/water
+icon: render_block:water
 display: Water
 description: Liquid water!
 color: 1,1,1

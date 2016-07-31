@@ -1,5 +1,5 @@
 type: block
-icon: blocks/solid/special/db_exc
+icon: render_block:debug
 display: Debug Block
 description: Not buggy!
 color: 1,1,1

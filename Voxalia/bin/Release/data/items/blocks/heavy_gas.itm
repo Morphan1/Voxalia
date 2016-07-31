@@ -1,5 +1,5 @@
 type: block
-icon: blocks/liquid/heavy_gas
+icon: render_block:heavy_gas
 display: Heavy Gas
 description: Heavy and gaseous!
 color: 1,1,1

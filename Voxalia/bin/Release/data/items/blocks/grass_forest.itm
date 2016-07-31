@@ -1,5 +1,5 @@
 type: block
-icon: blocks/solid/natural/grass_forest_side
+icon: render_block:grass_forest
 display: Forest Grass
 description: Grassy!
 color: 1,1,1

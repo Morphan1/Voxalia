@@ -1,5 +1,5 @@
 type: block
-icon: blocks/liquid/dirty_water
+icon: render_block:dirty_water
 display: Dirty Water
 description: Dirty water, gross!
 color: 1,1,1

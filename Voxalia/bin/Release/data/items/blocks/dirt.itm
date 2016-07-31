@@ -1,5 +1,5 @@
 type: block
-icon: blocks/solid/natural/dirt
+icon: render_block:dirt
 display: Dirt
 description: Dirty!
 color: 1,1,1

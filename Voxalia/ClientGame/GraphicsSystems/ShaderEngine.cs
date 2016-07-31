@@ -94,7 +94,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             try
             {
-                string[] dat1 = filename.SplitFast('#', 2);
+                string[] dat1 = filename.SplitFast('#', 1);
                 string[] vars = new string[0];
                 if (dat1.Length == 2)
                 {

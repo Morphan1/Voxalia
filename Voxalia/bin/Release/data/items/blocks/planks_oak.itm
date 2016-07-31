@@ -1,5 +1,5 @@
 type: block
-icon: blocks/solid/natural/wood_planks
+icon: render_block:planks_oak
 display: Oak Wood Planks
 description: Handcrafted!
 color: 1,1,1

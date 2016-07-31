@@ -1,5 +1,5 @@
 type: block
-icon: blocks/transparent/leaves_basic1
+icon: render_block:leaves_oak_solid
 display: Oak Leaves (Solid)
 description: Transparent in parts!
 color: 1,1,1

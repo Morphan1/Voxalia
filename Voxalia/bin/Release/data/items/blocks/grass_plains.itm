@@ -1,5 +1,5 @@
 type: block
-icon: blocks/solid/natural/grass_plains_side
+icon: render_block:grass_plains
 display: Plains Grass
 description: Light and grassy!
 color: 1,1,1

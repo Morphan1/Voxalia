@@ -1334,6 +1334,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                             GL.UniformMatrix4(8, false, ref matxyz);
                             GL.UniformMatrix4(9, false, ref matabc);
                             Render3D(false);
+                            Render2D(true);
                         }
                     }
                 }
@@ -1370,6 +1371,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     GL.UniformMatrix4(2, false, ref ident);
                 }
                 Render3D(false);
+                Render2D(true);
             }
         }
 
