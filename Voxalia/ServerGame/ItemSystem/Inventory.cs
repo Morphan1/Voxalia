@@ -60,11 +60,13 @@ namespace Voxalia.ServerGame.ItemSystem
                     item2.Description == item.Description &&
                     item2.DrawColor == item.DrawColor &&
                     item2.Image == item.Image &&
+                    item2.Volume == item.Volume &&
+                    item2.Weight == item.Weight &&
                     item2.Model == item.Model &&
                     ItemAttrsMatch(item2, item) &&
                     ItemSharedAttrsMatch(item2, item) &&
                     item2.IsBound == item.IsBound;
-            // NOTE: Intentionally don't check the count here.
+            // NOTE: Intentionally don't check the count or temperature here.
         }
 
         public static bool ItemAttrsMatch(ItemStack i1, ItemStack i2)
@@ -123,6 +125,7 @@ namespace Voxalia.ServerGame.ItemSystem
             {
                 if (ItemsMatch(item, Items[i]))
                 {
+                    Items[i].Temperature = (item.Temperature * item.Count) + (Items[i].Temperature * item.Count) / (item.Count + Items[i].Count);
                     Items[i].Count += item.Count;
                     return Items[i];
                 }

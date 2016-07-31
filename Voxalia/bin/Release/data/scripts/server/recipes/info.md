@@ -32,7 +32,7 @@ addrecipe type|display <{item[stick].with_count[5]}>
 
 Valid options for the first argument:
 - Strict: Exact match - every value must match!
-- List|Of|Items: all the specified values are required, plus the count always. Accepted:
+- List|Of|Items: all the specified values are required, plus the count always. (Never temperature!) Accepted:
 	- Type: The primary item type
 	- Secondary: The secondary item type
 	- Texture: The item texture
@@ -44,3 +44,5 @@ Valid options for the first argument:
 	- Color: The item's draw color
 	- Datum: The item datum
 	- Bound: Whether the item is bound
+	- Weight: The weight of the item
+	- Volume: The volume of the item

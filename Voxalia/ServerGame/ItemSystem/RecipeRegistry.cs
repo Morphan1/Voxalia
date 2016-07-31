@@ -57,7 +57,7 @@ namespace Voxalia.ServerGame.ItemSystem
             if (modeinput.ListEntries.Count == 1 && modeinput.ListEntries[0].ToString().ToLowerFast() == "strict")
             {
                 return RecipeMode.BOUND | RecipeMode.COLOR | RecipeMode.DATUM | RecipeMode.DESCRIPTION | RecipeMode.DISPLAY | RecipeMode.LOCAL
-                    | RecipeMode.MODEL | RecipeMode.SECONDARY | RecipeMode.SHARED | RecipeMode.TEXTURE | RecipeMode.TYPE;
+                    | RecipeMode.MODEL | RecipeMode.SECONDARY | RecipeMode.SHARED | RecipeMode.TEXTURE | RecipeMode.TYPE | RecipeMode.WEIGHT | RecipeMode.VOLUME;
             }
             RecipeMode mode = 0;
             foreach (TemplateObject obj in modeinput.ListEntries)
@@ -133,6 +133,14 @@ namespace Voxalia.ServerGame.ItemSystem
                 {
                     thisone = false;
                 }
+                else if (mode.HasFlag(RecipeMode.WEIGHT) && requirement.Weight != input[i].Weight)
+                {
+                    thisone = false;
+                }
+                else if (mode.HasFlag(RecipeMode.VOLUME) && requirement.Volume != input[i].Volume)
+                {
+                    thisone = false;
+                }
                 else if (thisone)
                 {
                     used = i;
@@ -172,6 +180,8 @@ namespace Voxalia.ServerGame.ItemSystem
         DESCRIPTION = 128,
         COLOR = 256,
         DATUM = 512,
-        BOUND = 1024
+        BOUND = 1024,
+        WEIGHT = 2048,
+        VOLUME = 4096
     }
 }
