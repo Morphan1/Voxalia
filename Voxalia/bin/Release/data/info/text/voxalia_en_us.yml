@@ -84,3 +84,23 @@ items:
             minigun:
                 display: Minigun
                 description: It shoots ^bvery^B rapid-fire bullets!
+
+hints:
+    # Each line of this section defines a hint that may be showed to the player.
+    common:
+    # Exclamations
+    - The chat system supports ^b^1c^2o^3l^4o^5r^6s^7!^8!^9!
+    - Be careful not too carry redundant items, they usually are redundant!
+    - This game was developed by a team that includes people of various nature!
+    - The audio included in this game contains over 5 unique sound effects. Way over that number, in fact!
+    - Artwork for this game was contributed by over ten trillion separate atoms that went together to form artists!
+    - This game is protected against lasers! (WARNING: DO NOT POINT LASERS DIRECTLY AT THIS GAME!)
+    # Questions
+    - This game includes a dance button! Have you found it?
+    # Statements
+    - You move slower when carrying more items.
+    - Some items are hard to acquire. If you get any, keep them safe.
+    - This game supports flying around in circles a little while.
+    - This game is partially unicode compatible.
+    - This game was written in C# using OpenGL for graphics and BEPU as a physics engine.
+    - This game will automatically port forward for you - or at least try to.
