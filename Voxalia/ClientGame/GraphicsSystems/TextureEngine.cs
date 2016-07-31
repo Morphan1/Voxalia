@@ -91,6 +91,18 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public double cTime = 0;
 
+        public Texture GetExistingTexture(string texturename)
+        {
+            for (int i = 0; i < LoadedTextures.Count; i++)
+            {
+                if (LoadedTextures[i].Name == texturename)
+                {
+                    return LoadedTextures[i];
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Gets the texture object for a specific texture name.
         /// </summary>
@@ -248,10 +260,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="bmp">The bitmap to use.</param>
         public void LockBitmapToTexture(Bitmap bmp, bool linear)
         {
-            BitmapData bmp_data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height),
-                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bmp_data.Width, bmp_data.Height, 0,
-                OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, bmp_data.Scan0);
+            BitmapData bmp_data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bmp_data.Width, bmp_data.Height, 0, OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, bmp_data.Scan0);
             bmp.UnlockBits(bmp_data);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, linear ? (int)TextureMinFilter.Linear : (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, linear ? (int)TextureMagFilter.Linear : (int)TextureMagFilter.Nearest);

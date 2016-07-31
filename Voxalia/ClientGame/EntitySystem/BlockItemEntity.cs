@@ -20,15 +20,17 @@ namespace Voxalia.ClientGame.EntitySystem
         public Material Mat;
         public byte Dat;
         public byte Paint;
+        public BlockDamage Damage;
         public double soundmaxrate = 0.2;
 
-        public BlockItemEntity(Region tregion, Material tmat, byte dat, byte tpaint, BlockDamage damage)
+        public BlockItemEntity(Region tregion, Material tmat, byte dat, byte tpaint, BlockDamage tdamage)
             : base(tregion, false, true)
         {
             Mat = tmat;
             Dat = dat;
             Paint = tpaint;
-            Shape = BlockShapeRegistry.BSD[dat].GetShape(damage, out Offset);
+            Damage = tdamage;
+            Shape = BlockShapeRegistry.BSD[dat].GetShape(Damage, out Offset);
             SetMass(5);
         }
 
@@ -36,7 +38,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public VBO vbo = null;
 
-        public override void SpawnBody()
+        public void GenVBO()
         {
             vbo = new VBO();
             List<BEPUutilities.Vector3> vecs = BlockShapeRegistry.BSD[Dat].GetVertices(new BEPUutilities.Vector3(0, 0, 0), false, false, false, false, false, false);
@@ -81,6 +83,11 @@ namespace Voxalia.ClientGame.EntitySystem
                 }
             }
             vbo.GenerateVBO();
+        }
+
+        public override void SpawnBody()
+        {
+            GenVBO();
             base.SpawnBody();
             Body.CollisionInformation.Events.ContactCreated += Events_ContactCreated; // TODO: Perhaps better more direct event?
         }
@@ -148,7 +155,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             base.DestroyBody();
         }
-
+        
         public override void Render()
         {
             TheClient.SetVox();

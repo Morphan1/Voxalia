@@ -322,6 +322,10 @@ namespace Voxalia.ClientGame.EntitySystem
         /// <returns>.</returns>
         public OpenTK.Matrix4 GetTransformationMatrix()
         {
+            if (Body == null)
+            {
+                return ClientUtilities.Convert(WorldTransform);
+            }
             return ClientUtilities.Convert(Body.WorldTransform);
         }
 
