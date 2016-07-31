@@ -366,8 +366,12 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         ents = ChunkManager.GetChunkEntities((int)chunk.WorldPosition.X, (int)chunk.WorldPosition.Y, (int)chunk.WorldPosition.Z);
                     }
-                    if (dat != null && ents != null)
+                    if (dat != null)
                     {
+                        if (ents == null)
+                        {
+                            ents = new ChunkDetails() { X = dat.X, Y = dat.Y, Z = dat.Z, Version = dat.Version, Flags = dat.Flags, Reachables = null, Blocks = new byte[0] };
+                        }
                         chunk.LoadFromSaveData(dat, ents);
                         if (!chunk.Flags.HasFlag(ChunkFlags.ISCUSTOM))
                         {

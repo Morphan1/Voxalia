@@ -33,7 +33,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool SecureMovement = true;
 
-        public YAMLConfiguration Permissions = null;
+        public YAMLConfiguration Permissions = new YAMLConfiguration("");
         
         public void LoadFromYAML(YAMLConfiguration config)
         {
