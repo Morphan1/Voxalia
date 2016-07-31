@@ -70,6 +70,49 @@ namespace Voxalia.Shared
             return info;
         }
 
+        public List<string> HandleList(List<string> infolist, string[] pathAndVars)
+        {
+            for (int i = 0; i < infolist.Count; i++)
+            {
+                infolist[i] = Handle(infolist[i], pathAndVars);
+            }
+            return infolist;
+        }
+
+        public List<string> GetTextList(params string[] pathAndVars)
+        {
+            if (pathAndVars.Length < 2)
+            {
+                return GetTextList("voxalia", "common.languages.badinput");
+            }
+            string category = pathAndVars[0].ToLowerFast();
+            string defPath = pathAndVars[1].ToLowerFast();
+            YAMLConfiguration lang = GetLangDoc(category);
+            YAMLConfiguration langen = GetLangDoc(category, "en_us", EnglishDocuments);
+            List<string> str = null;
+            if (lang != null)
+            {
+                str = lang.ReadStringList(defPath);
+                if (str != null)
+                {
+                    return HandleList(str, pathAndVars);
+                }
+            }
+            if (langen != null)
+            {
+                str = langen.ReadStringList(defPath);
+                if (str != null)
+                {
+                    return HandleList(str, pathAndVars);
+                }
+            }
+            if (defPath == badkey)
+            {
+                return new List<string>() { "((Invalid key!))" };
+            }
+            return GetTextList("voxalia", badkey);
+        }
+
         public string GetText(params string[] pathAndVars)
         {
             if (pathAndVars.Length < 2)

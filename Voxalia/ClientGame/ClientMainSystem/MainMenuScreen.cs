@@ -1,4 +1,6 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using System;
+using System.Collections.Generic;
+using OpenTK.Graphics.OpenGL4;
 using System.Linq;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.UISystem;
@@ -32,6 +34,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }, () => quit.GetX(), () => sp.GetY() - sp.GetHeight(), font);
             Menus.Add(mp);
             Backg = TheClient.Textures.GetTexture("ui/menus/menuback");
+            List<string> hints = TheClient.Languages.GetTextList("voxalia", "hints.common");
+            UILabel label = new UILabel("^0^e^7" + hints[Utilities.UtilRandom.Next(hints.Count)], () => 0,
+                () => TheClient.Window.Height - TheClient.Fonts.Standard.Height * 3, TheClient.FontSets.Standard, () => TheClient.Window.Width);
+            Menus.Add(label);
         }
 
         public override void Tick()

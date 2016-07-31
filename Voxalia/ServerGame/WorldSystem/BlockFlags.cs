@@ -131,7 +131,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         if (f3)
                         {
-                            return FillType.WATER;
+                            return FillType.SALT_WATER;
                         }
                         else
                         {
@@ -182,7 +182,7 @@ namespace Voxalia.ServerGame.WorldSystem
     public enum FillType : byte
     {
         NONE = 0,
-        WATER = 1,
+        SALT_WATER = 1,
         BAD_WATER = 2,
         OIL = 3,
         LAVA = 4,
