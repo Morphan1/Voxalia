@@ -493,10 +493,13 @@ namespace Voxalia.ClientGame.WorldSystem
             Vector3i start = ChunkLocFor(TheClient.CameraPos);
             HashSet<Vector3i> seen = new HashSet<Vector3i>();
             Queue<Vector3i> toSee = new Queue<Vector3i>();
+            HashSet<Vector3i> toSeeSet = new HashSet<Vector3i>();
             toSee.Enqueue(start);
+            toSeeSet.Add(start);
             while (toSee.Count > 0)
             {
                 Vector3i cur = toSee.Dequeue();
+                toSeeSet.Remove(cur);
                 if ((Math.Abs(cur.X - start.X) > MaxRenderDistanceChunks)
                     || (Math.Abs(cur.Y - start.Y) > MaxRenderDistanceChunks)
                     || (Math.Abs(cur.Z - start.Z) > MaxRenderDistanceChunks))
@@ -513,7 +516,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 for (int i = 0; i < MoveDirs.Length; i++)
                 {
                     Vector3i t = cur + MoveDirs[i];
-                    if (!seen.Contains(t) && !toSee.Contains(t))
+                    if (!seen.Contains(t) && !toSeeSet.Contains(t))
                     {
                         //toSee.Enqueue(t);
                         for (int j = 0; j < MoveDirs.Length; j++)
@@ -523,7 +526,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                 continue;
                             }
                             Vector3i nt = cur + MoveDirs[j];
-                            if (!seen.Contains(nt) && !toSee.Contains(nt))
+                            if (!seen.Contains(nt) && !toSeeSet.Contains(nt))
                             {
                                 bool val = false;
                                 Chunk ch = GetChunk(t);
@@ -676,6 +679,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(min, min + new BEPUutilities.Vector3(Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE)))
                                     {
                                         toSee.Enqueue(nt);
+                                        toSeeSet.Add(nt);
                                     }
                                     else
                                     {
