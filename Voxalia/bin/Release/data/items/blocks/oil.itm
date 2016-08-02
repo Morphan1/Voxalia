@@ -1,5 +1,5 @@
 type: block
-icon: render_block:oil
+icon: render_block:self
 display: Oil
 description: Liquid oil!
 color: 1,1,1

@@ -25,7 +25,7 @@ namespace Voxalia.ServerGame.ItemSystem
         public ItemRegistry(Server tserver)
         {
             TheServer = tserver;
-            Air = new ItemStack("air", TheServer, 0, "clear", "Air", "Empty air", System.Drawing.Color.White, "none", true);
+            Air = new ItemStack("air", TheServer, 0, "clear", "Air", "Empty air", System.Drawing.Color.White, "none", true, 0);
             BaseItems.Add("air", Air);
         }
 
@@ -142,9 +142,9 @@ namespace Voxalia.ServerGame.ItemSystem
                 {
                     res_description = "^[lang=voxalia|items." + tname.Replace("/", ".") + ".description]";
                 }
-                ItemStack it = new ItemStack(res_type, res_subtype, TheServer, 1, res_icon, res_display, res_description, ColorTag.For(res_color).Internal, res_model, res_bound.ToLower() == "true")
+                ItemStack it = new ItemStack(res_type, res_subtype, TheServer, 1, res_icon, res_display, res_description, ColorTag.For(res_color).Internal, res_model,
+                    res_bound.ToLower() == "true", Utilities.StringToInt(res_datum))
                 {
-                    Datum = Utilities.StringToInt(res_datum),
                     Weight = Utilities.StringToFloat(res_weight),
                     Volume = Utilities.StringToFloat(res_volume)
                 };

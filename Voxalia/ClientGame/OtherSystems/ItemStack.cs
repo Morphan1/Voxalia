@@ -34,6 +34,8 @@ namespace Voxalia.ClientGame.OtherSystems
 
         public BlockItemEntity RenderedBlock = null;
 
+        public ModelEntity RenderedModel = null;
+
         public System.Drawing.Color GetColor()
         {
             return DrawColor;
@@ -50,12 +52,33 @@ namespace Voxalia.ClientGame.OtherSystems
                 if (name.Contains(":") && name.Before(":").ToLowerFast() == "render_block")
                 {
                     string[] blockDataToRender = name.After(":").SplitFast(',');
-                    Material mat = MaterialHelpers.FromNameOrNumber(blockDataToRender[0]);
-                    byte data = (byte)(blockDataToRender.Length < 2 ? 0 : Utilities.StringToInt(blockDataToRender[1]));
-                    byte paint = (byte)(blockDataToRender.Length < 3 ? 0 : Colors.ForName(blockDataToRender[2]));
-                    BlockDamage damage = blockDataToRender.Length < 4 ? BlockDamage.NONE : (BlockDamage)Enum.Parse(typeof(BlockDamage), blockDataToRender[3], true);
-                    RenderedBlock = new BlockItemEntity(TheClient.TheRegion, mat, data, paint, damage);
-                    RenderedBlock.GenVBO();
+                    if (blockDataToRender[0] == "self")
+                    {
+                        BlockInternal bi = BlockInternal.FromItemDatum(Datum);
+                        RenderedBlock = new BlockItemEntity(TheClient.TheRegion, bi.Material, bi.BlockData, bi.BlockPaint, bi.Damage);
+                        RenderedBlock.GenVBO();
+                    }
+                    else
+                    {
+                        Material mat = MaterialHelpers.FromNameOrNumber(blockDataToRender[0]);
+                        byte data = (byte)(blockDataToRender.Length < 2 ? 0 : Utilities.StringToInt(blockDataToRender[1]));
+                        byte paint = (byte)(blockDataToRender.Length < 3 ? 0 : Colors.ForName(blockDataToRender[2]));
+                        BlockDamage damage = blockDataToRender.Length < 4 ? BlockDamage.NONE : (BlockDamage)Enum.Parse(typeof(BlockDamage), blockDataToRender[3], true);
+                        RenderedBlock = new BlockItemEntity(TheClient.TheRegion, mat, data, paint, damage);
+                        RenderedBlock.GenVBO();
+                    }
+                    Tex = null;
+                }
+                if (name.Contains(":") && name.Before(":").ToLowerFast() == "render_model")
+                {
+                    string model = name.After(":");
+                    if (model.ToLowerFast() == "self")
+                    {
+                        model = GetModelName();
+                    }
+                    RenderedModel = new ModelEntity(model, TheClient.TheRegion);
+                    RenderedModel.Visible = true;
+                    RenderedModel.PreHandleSpawn();
                     Tex = null;
                 }
                 else
@@ -70,6 +93,10 @@ namespace Voxalia.ClientGame.OtherSystems
             if (RenderedBlock != null)
             {
                 return "render_block:" + RenderedBlock.Mat + "," + RenderedBlock.Dat + "," + RenderedBlock.Paint + "," + RenderedBlock.Damage;
+            }
+            if (RenderedModel != null)
+            {
+                return "render_model:" + RenderedModel.model.Name;
             }
             return Tex == null ? null: Tex.Name;
         }
@@ -98,12 +125,24 @@ namespace Voxalia.ClientGame.OtherSystems
         {
             if (RenderedBlock != null)
             {
-                RenderedBlock.WorldTransform = BEPUutilities.Matrix.Identity;
                 RenderedBlock.WorldTransform = BEPUutilities.Matrix.CreateScale(size.ToBVector())
                     * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitZ, rot)
                     * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitX, (float)(Math.PI * 0.25))
                     * BEPUutilities.Matrix.CreateTranslation(pos.ToBVector());
                 RenderedBlock.Render();
+            }
+            if (RenderedModel != null)
+            {
+                BEPUutilities.RigidTransform rt = BEPUutilities.RigidTransform.Identity;
+                BEPUutilities.BoundingBox bb;
+                RenderedModel.Shape.GetBoundingBox(ref rt, out bb);
+                BEPUutilities.Vector3 scale = BEPUutilities.Vector3.Max(bb.Max, -bb.Min);
+                float len = scale.Length();
+                RenderedModel.WorldTransform = BEPUutilities.Matrix.CreateScale(size.ToBVector() * len)
+                    * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitZ, rot)
+                    * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitX, (float)(Math.PI * 0.25))
+                    * BEPUutilities.Matrix.CreateTranslation(pos.ToBVector());
+                RenderedModel.RenderSimpler();
             }
         }
 

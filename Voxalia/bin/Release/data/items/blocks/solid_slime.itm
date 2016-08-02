@@ -1,5 +1,5 @@
 type: block
-icon: render_block:solid_slime
+icon: render_block:self
 display: Solid Slime
 description: Slippery!
 color: 1,1,1

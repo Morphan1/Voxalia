@@ -1,5 +1,5 @@
 type: block
-icon: render_block:hellstone
+icon: render_block:self
 display: Hellstone
 description: Forged in the fires.
 color: 1,1,1

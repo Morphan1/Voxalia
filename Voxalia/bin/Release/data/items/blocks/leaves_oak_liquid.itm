@@ -1,5 +1,5 @@
 type: block
-icon: render_block:leaves_oak_liquid
+icon: render_block:self
 display: Oak Leaves (Liquid)
 description: Spreads!
 color: 1,1,1

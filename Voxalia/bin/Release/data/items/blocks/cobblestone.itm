@@ -1,5 +1,5 @@
 type: block
-icon: render_block:cobblestone
+icon: render_block:self
 display: Cobblestone
 description: Ideal for roads!
 color: 1,1,1

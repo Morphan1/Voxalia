@@ -1,5 +1,5 @@
 type: block
-icon: render_block:sandstone
+icon: render_block:self
 display: Sandstone
 description: Somewhat solid!
 color: 1,1,1

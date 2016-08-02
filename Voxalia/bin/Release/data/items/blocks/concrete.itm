@@ -1,5 +1,5 @@
 type: block
-icon: render_block:concrete
+icon: render_block:self
 display: Concrete
 description: Solid!
 color: 1,1,1

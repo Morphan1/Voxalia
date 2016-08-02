@@ -1,5 +1,5 @@
 type: block
-icon: render_block:sand
+icon: render_block:self
 display: Sand
 description: Literally, it's sand!
 color: 1,1,1

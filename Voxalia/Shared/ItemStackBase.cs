@@ -146,16 +146,16 @@ namespace Voxalia.Shared
             Name = name;
         }
 
-        public void Load(string name, string secondary_name, int count, string tex, string display, string descrip, System.Drawing.Color color, string model)
+        public void Load(string name, string secondary_name, int count, string tex, string display, string descrip, System.Drawing.Color color, string model, int datum)
         {
             SetName(name);
             SecondaryName = secondary_name;
             Count = count;
             DisplayName = display;
             Description = descrip;
-            SetTextureName(tex);
             SetModelName(model);
-            Datum = 0;
+            Datum = datum;
+            SetTextureName(tex);
             DrawColor = color;
         }
 
@@ -172,8 +172,9 @@ namespace Voxalia.Shared
             SecondaryName = secondary_name.Length == 0 ? null : secondary_name;
             DisplayName = dr.ReadFullString();
             Description = dr.ReadFullString();
-            SetTextureName(dr.ReadFullString());
+            string tex = dr.ReadFullString();
             SetModelName(dr.ReadFullString());
+            SetTextureName(tex);
             int attribs = dr.ReadInt();
             for (int i = 0; i < attribs; i++)
             {

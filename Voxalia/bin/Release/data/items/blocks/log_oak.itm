@@ -1,5 +1,5 @@
 type: block
-icon: render_block:log_oak
+icon: render_block:self
 display: Oak Wood Log
 description: Makes a rather woody sound, doe'n'it?!
 color: 1,1,1

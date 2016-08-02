@@ -21,10 +21,10 @@ namespace Voxalia.ServerGame.ItemSystem
         public Server TheServer;
 
         public ItemStack(string name, string secondary_name, Server tserver, int count, string tex, string display, string descrip,
-            System.Drawing.Color color, string model, bool bound, params KeyValuePair<string, TemplateObject>[] attrs)
+            System.Drawing.Color color, string model, bool bound, int datum, params KeyValuePair<string, TemplateObject>[] attrs)
         {
             TheServer = tserver;
-            Load(name, secondary_name, count, tex, display, descrip, color, model);
+            Load(name, secondary_name, count, tex, display, descrip, color, model, datum);
             IsBound = bound;
             if (attrs != null)
             {
@@ -36,8 +36,8 @@ namespace Voxalia.ServerGame.ItemSystem
         }
 
         public ItemStack(string name, Server tserver, int count, string tex, string display, string descrip, System.Drawing.Color color,
-            string model, bool bound, params KeyValuePair<string, TemplateObject>[] attrs)
-            : this(name, null, tserver, count, tex, display, descrip, color, model, bound, attrs)
+            string model, bool bound, int datum, params KeyValuePair<string, TemplateObject>[] attrs)
+            : this(name, null, tserver, count, tex, display, descrip, color, model, bound, datum, attrs)
         {
         }
 
@@ -324,10 +324,9 @@ namespace Voxalia.ServerGame.ItemSystem
                         break; // Ignore errors as much as possible here.
                 }
             }
-            ItemStack item = new ItemStack(name, secname, tserver, count, tex, display, descrip, color, model, bound);
+            ItemStack item = new ItemStack(name, secname, tserver, count, tex, display, descrip, color, model, bound, datum);
             item.Weight = weight;
             item.Volume = volume;
-            item.Datum = datum;
             item.Temperature = temperature;
             pairs = SplitUpPairs(shared.Substring(1, shared.Length - 2));
             foreach (KeyValuePair<string, string> pair in pairs)

@@ -1,5 +1,5 @@
 type: block
-icon: render_block:debug
+icon: render_block:self
 display: Debug Block
 description: Not buggy!
 color: 1,1,1

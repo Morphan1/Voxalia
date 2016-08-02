@@ -1,5 +1,5 @@
 type: block
-icon: render_block:glass_window
+icon: render_block:self
 display: Glass Window
 description: See-through!
 color: 1,1,1

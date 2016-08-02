@@ -1,5 +1,5 @@
 type: block
-icon: render_block:snow_solid
+icon: render_block:self
 display: Snow (Solid)
 description: Cold!
 color: 1,1,1

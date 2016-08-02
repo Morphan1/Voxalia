@@ -1661,6 +1661,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.BindTexture(TextureTarget.Texture2DArray, 0);
                 s_shadow = s_shadow.Bind();
             }
+            if (FixPersp != Matrix4.Identity)
+            {
+                GL.UniformMatrix4(1, false, ref FixPersp);
+            }
         }
 
         public double RainCylPos = 0;

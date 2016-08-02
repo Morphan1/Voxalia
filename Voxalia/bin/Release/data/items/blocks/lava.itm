@@ -1,5 +1,5 @@
 type: block
-icon: render_block:lava
+icon: render_block:self
 display: Lava
 description: May cause burning sensation!
 color: 1,1,1

@@ -1,5 +1,5 @@
 type: block
-icon: render_block:liquid_slime
+icon: render_block:self
 display: Liquid Slime
 description: Don't get stuck in it!
 color: 1,1,1

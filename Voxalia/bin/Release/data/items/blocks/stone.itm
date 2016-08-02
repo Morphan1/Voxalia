@@ -1,5 +1,5 @@
 type: block
-icon: render_block:stone
+icon: render_block:self
 display: Stone
 description: Gets things stoned!
 color: 1,1,1

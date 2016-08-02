@@ -1,5 +1,5 @@
 type: block
-icon: render_block:copper_ore
+icon: render_block:self
 display: Copper Ore
 description: Darn coppers!
 color: 1,1,1

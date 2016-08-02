@@ -143,13 +143,13 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 string arg1 = entry.InputArguments[1];
                 entry.Player.Items.GiveItem(new ItemStack("structureselector", arg1, entry.Player.TheServer, 1, "items/admin/structure_selector",
-                    "Structure Selector", "Selects and creates a '" + arg1 + "' structure!", System.Drawing.Color.White, "items/admin/structure_selector", false));
+                    "Structure Selector", "Selects and creates a '" + arg1 + "' structure!", System.Drawing.Color.White, "items/admin/structure_selector", false, 0));
             }
             else if (arg0 == "structureCreate" && entry.InputArguments.Count > 1)
             {
                 string arg1 = entry.InputArguments[1];
                 entry.Player.Items.GiveItem(new ItemStack("structurecreate", arg1, entry.Player.TheServer, 1, "items/admin/structure_create",
-                    "Structure Creator", "Creates a '" + arg1 + "' structure!", System.Drawing.Color.White, "items/admin/structure_create", false));
+                    "Structure Creator", "Creates a '" + arg1 + "' structure!", System.Drawing.Color.White, "items/admin/structure_create", false, 0));
             }
             else if (arg0 == "musicBlock" && entry.InputArguments.Count > 3)
             {
@@ -157,7 +157,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 float arg2 = Utilities.StringToFloat(entry.InputArguments[2]);
                 float arg3 = Utilities.StringToFloat(entry.InputArguments[3]);
                 entry.Player.Items.GiveItem(new ItemStack("customblock", entry.Player.TheServer, 1, "items/custom_blocks/music_block",
-                    "Music Block", "Plays music!", System.Drawing.Color.White, "items/custom_blocks/music_block", false,
+                    "Music Block", "Plays music!", System.Drawing.Color.White, "items/custom_blocks/music_block", false, 0,
                     new KeyValuePair<string, TemplateObject>("music_type", new IntegerTag(arg1)),
                     new KeyValuePair<string, TemplateObject>("music_volume", new NumberTag(arg2)),
                     new KeyValuePair<string, TemplateObject>("music_pitch", new NumberTag(arg3)))
@@ -169,7 +169,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 string arg1 = entry.InputArguments[1];
                 entry.Player.Items.GiveItem(new ItemStack("structurepaste", arg1, entry.Player.TheServer, 1, "items/admin/structure_paste",
-                    "Structor Paster", "Pastes a ;" + arg1 + "; structure!", System.Drawing.Color.White, "items/admin/structure_paste", false));
+                    "Structor Paster", "Pastes a ;" + arg1 + "; structure!", System.Drawing.Color.White, "items/admin/structure_paste", false, 0));
             }
             else if (arg0 == "testPerm" && entry.InputArguments.Count > 1)
             {

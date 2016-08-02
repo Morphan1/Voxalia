@@ -14,7 +14,7 @@ using BEPUphysics.Constraints.SingleEntity;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
-    class ModelEntity: PhysicsEntity
+    public class ModelEntity: PhysicsEntity
     {
         public Model model;
 
@@ -244,14 +244,9 @@ namespace Voxalia.ClientGame.EntitySystem
             base.Tick();
         }
 
-        public override void SpawnBody()
+        public void PreHandleSpawn()
         {
             model = TheClient.Models.GetModel(mod);
-            if (model == null || model.Original == null) // TODO: model should return a cube when all else fails?
-            {
-                // TODO: Make it safe to -> TheRegion.DespawnEntity(this); ?
-                return;
-            }
             model.LoadSkin(TheClient.Textures);
             int ignoreme;
             if (mode == ModelCollisionMode.PRECISE)
@@ -292,6 +287,11 @@ namespace Voxalia.ClientGame.EntitySystem
                 Offset = Location.Zero;
                 Shape = new SphereShape((float)size * (float)scale.X);
             }
+        }
+
+        public override void SpawnBody()
+        {
+            PreHandleSpawn();
             base.SpawnBody();
             if (mode == ModelCollisionMode.PRECISE)
             {
@@ -320,6 +320,22 @@ namespace Voxalia.ClientGame.EntitySystem
                     if (tvec.Z > ModelMax.Z) { ModelMax.Z = tvec.Z; }
                 }
             }
+        }
+
+        public void RenderSimpler()
+        {
+            if (!Visible || model.Meshes.Count == 0)
+            {
+                return;
+            }
+            TheClient.SetEnts();
+            Matrix4 mat = GetTransformationMatrix();
+            GL.UniformMatrix4(2, false, ref mat);
+            if (model.Meshes[0].vbo.Tex == null)
+            {
+                TheClient.Textures.White.Bind();
+            }
+            model.Draw(); // TODO: Animation?
         }
 
         public override void Render()

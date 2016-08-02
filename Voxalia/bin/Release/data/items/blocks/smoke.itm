@@ -1,5 +1,5 @@
 type: block
-icon: render_block:smoke
+icon: render_block:self
 display: Smoke
 description: Gaseous!
 color: 1,1,1

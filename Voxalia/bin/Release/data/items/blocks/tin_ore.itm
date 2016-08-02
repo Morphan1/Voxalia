@@ -1,5 +1,5 @@
 type: block
-icon: render_block:tin_ore
+icon: render_block:self
 display: Tin Ore
 description: Tinny!
 color: 1,1,1

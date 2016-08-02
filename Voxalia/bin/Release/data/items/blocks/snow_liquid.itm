@@ -1,5 +1,5 @@
 type: block
-icon: render_block:snow_liquid
+icon: render_block:self
 display: Snow (Liquid)
 description: Cold and movable!
 color: 1,1,1

@@ -1,5 +1,5 @@
 type: block
-icon: render_block:steel_plate
+icon: render_block:self
 display: Plated Steel
 description: Plated for extra strength!
 color: 1,1,1

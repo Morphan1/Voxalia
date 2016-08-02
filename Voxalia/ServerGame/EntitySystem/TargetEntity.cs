@@ -23,7 +23,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Items = new EntityInventory(tregion, this);
             // TODO: Better way to gather item details!
             Items.GiveItem(TheServer.Items.GetItem("weapons/rifles/m4"));
-            Items.GiveItem(new ItemStack("bullet", "rifle_ammo", TheServer, 1000, "items/weapons/ammo/rifle_round_ico", "Assault Rifle Ammo", "Very rapid!", System.Drawing.Color.White, "items/weapons/ammo/rifle_round", false));
+            Items.GiveItem(new ItemStack("bullet", "rifle_ammo", TheServer, 1000, "items/weapons/ammo/rifle_round_ico", "Assault Rifle Ammo", "Very rapid!", System.Drawing.Color.White, "items/weapons/ammo/rifle_round", false, 0));
             Items.cItem = 1;
             Items.Items[0].Info.PrepItem(this, Items.Items[0]);
         }
