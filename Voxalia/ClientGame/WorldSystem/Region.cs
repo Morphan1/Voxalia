@@ -518,7 +518,6 @@ namespace Voxalia.ClientGame.WorldSystem
                     Vector3i t = cur + MoveDirs[i];
                     if (!seen.Contains(t) && !toSeeSet.Contains(t))
                     {
-                        //toSee.Enqueue(t);
                         for (int j = 0; j < MoveDirs.Length; j++)
                         {
                             if (BEPUutilities.Vector3.Dot(MoveDirs[j].ToVector3(), (TheClient.CameraTarget - TheClient.CameraPos).ToBVector()) < -0.8f) // TODO: Wut?
@@ -528,163 +527,16 @@ namespace Voxalia.ClientGame.WorldSystem
                             Vector3i nt = cur + MoveDirs[j];
                             if (!seen.Contains(nt) && !toSeeSet.Contains(nt))
                             {
-                                bool val = false;
                                 Chunk ch = GetChunk(t);
-                                if (ch == null)
+                                BEPUutilities.Vector3 min = nt.ToVector3() * Chunk.CHUNK_SIZE;
+                                if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(min, min + new BEPUutilities.Vector3(Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE)))
                                 {
-                                    val = true;
+                                    toSee.Enqueue(nt);
+                                    toSeeSet.Add(nt);
                                 }
-                                // TODO: Oh, come on!
-                                else if (MoveDirs[i].X == -1)
+                                else
                                 {
-                                    if (MoveDirs[j].X == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.XP_XM];
-                                    }
-                                    else if (MoveDirs[j].Y == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.XP_YM];
-                                    }
-                                    else if (MoveDirs[j].Y == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.XP_YP];
-                                    }
-                                    else if (MoveDirs[j].Z == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZM_XP];
-                                    }
-                                    else if (MoveDirs[j].Z == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZP_XP];
-                                    }
-                                }
-                                else if (MoveDirs[i].X == 1)
-                                {
-                                    if (MoveDirs[j].X == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.XP_XM];
-                                    }
-                                    else if (MoveDirs[j].Y == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.XM_YM];
-                                    }
-                                    else if (MoveDirs[j].Y == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.XM_YP];
-                                    }
-                                    else if (MoveDirs[j].Z == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZM_XM];
-                                    }
-                                    else if (MoveDirs[j].Z == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZP_XM];
-                                    }
-                                }
-                                else if (MoveDirs[i].Y == -1)
-                                {
-                                    if (MoveDirs[j].Y == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.YP_YM];
-                                    }
-                                    else if (MoveDirs[j].X == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.XM_YP];
-                                    }
-                                    else if (MoveDirs[j].X == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.XP_YP];
-                                    }
-                                    else if (MoveDirs[j].Z == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZM_YP];
-                                    }
-                                    else if (MoveDirs[j].Z == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZP_YP];
-                                    }
-                                }
-                                else if (MoveDirs[i].Y == 1)
-                                {
-                                    if (MoveDirs[j].Y == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.YP_YM];
-                                    }
-                                    else if (MoveDirs[j].X == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.XM_YP];
-                                    }
-                                    else if (MoveDirs[j].X == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.XP_YP];
-                                    }
-                                    else if (MoveDirs[j].Z == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZM_YP];
-                                    }
-                                    else if (MoveDirs[j].Z == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZP_YP];
-                                    }
-                                }
-                                else if (MoveDirs[i].Z == -1)
-                                {
-                                    if (MoveDirs[j].Z == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZP_ZM];
-                                    }
-                                    else if (MoveDirs[j].X == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZP_XM];
-                                    }
-                                    else if (MoveDirs[j].X == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZP_XP];
-                                    }
-                                    else if (MoveDirs[j].Y == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZP_YM];
-                                    }
-                                    else if (MoveDirs[j].Y == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZP_YP];
-                                    }
-                                }
-                                else if (MoveDirs[i].Z == 1)
-                                {
-                                    if (MoveDirs[j].Z == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZP_ZM];
-                                    }
-                                    else if (MoveDirs[j].X == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZM_XM];
-                                    }
-                                    else if (MoveDirs[j].X == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZM_XP];
-                                    }
-                                    else if (MoveDirs[j].Y == -1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZM_YM];
-                                    }
-                                    else if (MoveDirs[j].Y == 1)
-                                    {
-                                        val = ch.Reachability[(int)ChunkReachability.ZM_YP];
-                                    }
-                                }
-                                if (val)
-                                {
-                                    BEPUutilities.Vector3 min = nt.ToVector3() * Chunk.CHUNK_SIZE;
-                                    if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(min, min + new BEPUutilities.Vector3(Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE)))
-                                    {
-                                        toSee.Enqueue(nt);
-                                        toSeeSet.Add(nt);
-                                    }
-                                    else
-                                    {
-                                        seen.Add(nt);
-                                    }
+                                    seen.Add(nt);
                                 }
                             }
                         }
