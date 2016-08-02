@@ -313,6 +313,11 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 entry.Player.TheRegion.SetBlockMaterial(posBlock, bi);
                 entry.Player.Network.SendMessage("Block " + posBlock + " which is a " + bi.Material + " set ShareTex mode to " + temp + " yields " + bi.BlockShareTex);
             }
+            else if (arg0 == "webPass" && entry.InputArguments.Count > 1)
+            {
+                entry.Player.PlayerConfig.Set("web.passcode", Utilities.HashQuick(entry.Player.Name.ToLowerFast(), entry.InputArguments[1]));
+                entry.Player.Network.SendMessage("Set.");
+            }
             else
             {
                 ShowUsage(entry);

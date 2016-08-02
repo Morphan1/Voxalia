@@ -232,6 +232,48 @@ namespace Voxalia.ServerGame.NetworkSystem
                     }
                 }
             }
+            else if (pageLow.StartsWith("/log_view"))
+            {
+                string[] dat = pageLow.Substring("/log_view/".Length).SplitFast('/');
+                string username = dat[0];
+                string passcode = dat.Length < 2 ? "" : dat[1];
+                bool valid = false;
+                StringBuilder content = new StringBuilder();
+                content.Append("<!doctype html>\n<html>\n<head>\n<title>Voxalia Log View</title>\n</head>\n<body>\n");
+                lock (TheServer.TickLock)
+                {
+                    YAMLConfiguration cfg = TheServer.GetPlayerConfig(username);
+                    valid = cfg != null
+                        && cfg.ReadString("web.is_admin", "false").ToLowerFast() == "true"
+                        && cfg.ReadString("web.passcode", "") == Utilities.HashQuick(username.ToLowerFast(), passcode);
+                }
+                if (valid)
+                {
+                    content.Append("Logs follow:\n<pre><code>\n");
+                    lock (TheServer.RecentMessagesLock)
+                    {
+                        foreach (string str in TheServer.RecentMessages)
+                        {
+                            foreach (string substr in str.SplitFast('\n'))
+                            {
+                                string trimmedsubstr = substr.Trim();
+                                if (trimmedsubstr.Length > 0)
+                                {
+                                    content.Append(trimmedsubstr.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;")).Append("\n");
+                                }
+                            }
+                        }
+                    }
+                    content.Append("\n</code></pre>");
+                }
+                else
+                {
+                    content.Append("Not a valid login!");
+                }
+                content.Append("\n</body>\n</html>\n");
+                http_response_content = FileHandler.encoding.GetBytes(content.ToString());
+                return;
+            }
             Do404();
         }
 

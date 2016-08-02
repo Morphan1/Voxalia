@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Voxalia.Shared;
 using System.Diagnostics;
@@ -186,12 +187,59 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         public YAMLConfiguration Config;
 
+        public List<string> RecentMessages = new List<string>();
+
+        public Object RecentMessagesLock = new Object();
+
+        public void OnConsoleWritten(object sender, ConsoleWrittenEventArgs args)
+        {
+            lock (RecentMessagesLock)
+            {
+                RecentMessages.Add(args.Text.Replace("^B", args.BColor));
+                if (RecentMessages.Count > 500)
+                {
+                    RecentMessages.RemoveRange(0, 100);
+                }
+            }
+        }
+
+        public YAMLConfiguration GetPlayerConfig(string username)
+        {
+            if (username.Length == 0)
+            {
+                return null;
+            }
+            lock (TickLock)
+            {
+                PlayerEntity pl = GetPlayerFor(username);
+                if (pl != null)
+                {
+                    return pl.PlayerConfig;
+                }
+                YAMLConfiguration PlayerConfig = null;
+                string nl = username.ToLower();
+                string fn = "server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr";
+                if (Program.Files.Exists(fn))
+                {
+                    string dat = Program.Files.ReadText(fn);
+                    if (dat != null)
+                    {
+                        PlayerConfig = new YAMLConfiguration(dat);
+                    }
+                }
+                return PlayerConfig;
+            }
+        }
+
+        public Object TickLock = new Object();
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
         public void StartUp(Action loaded = null)
         {
             CurThread = Thread.CurrentThread;
+            SysConsole.Written += OnConsoleWritten;
             SysConsole.Output(OutputType.INIT, "Launching as new server, this is " + (this == Central ? "" : "NOT ") + "the Central server.");
             SysConsole.Output(OutputType.INIT, "Loading console input handler...");
             ConsoleHandler.Init();
@@ -287,7 +335,10 @@ namespace Voxalia.ServerGame.ServerMainSystem
                             ShutDown(shutdownCallback);
                             return;
                         }
-                        Tick(TargetDelta);
+                        lock (TickLock)
+                        {
+                            Tick(TargetDelta);
+                        }
                         TotalDelta -= TargetDelta;
                     }
                     // The tick is done, stop measuring it

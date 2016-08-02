@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using FreneticScript;
 using BEPUutilities;
+using System.Security.Cryptography;
 
 namespace Voxalia.Shared
 {
@@ -18,6 +19,19 @@ namespace Voxalia.Shared
         /// A static random object for all non-determistic objects to use.
         /// </summary>
         public static Random UtilRandom = new Random();
+
+        public static SHA512Managed sha512 = new SHA512Managed();
+
+        public const string salt1 = "aB123!";
+
+        public const string salt2 = "--=123Tt=--";
+
+        public const string salt3 = "^&()xyZ";
+
+        public static string HashQuick(string username, string password)
+        {
+            return Convert.ToBase64String(sha512.ComputeHash(encoding.GetBytes(salt1 + username + salt2 + password + salt3)));
+        }
         
         public static ushort BytesToUshort(byte[] bytes)
         {

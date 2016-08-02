@@ -129,6 +129,8 @@ namespace Voxalia.Shared
             Write(text + "\n", bcolor);
         }
 
+        public static EventHandler<ConsoleWrittenEventArgs> Written;
+
         /// <summary>
         /// Writes some colored text to the system console.
         /// </summary>
@@ -137,6 +139,10 @@ namespace Voxalia.Shared
         {
             lock (ConsoleLock)
             {
+                if (Written != null)
+                {
+                    Written(null, new ConsoleWrittenEventArgs() { Text = text, BColor = bcolor });
+                }
                 Waiting.Add(new KeyValuePair<string, string>(bcolor, text));
             }
         }
@@ -271,6 +277,13 @@ namespace Voxalia.Shared
             "INFO",
             "DEBUG",
         };
+    }
+
+    public class ConsoleWrittenEventArgs : EventArgs
+    {
+        public string Text;
+
+        public string BColor;
     }
 
     /// <summary>
