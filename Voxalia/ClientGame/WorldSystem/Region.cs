@@ -672,8 +672,8 @@ namespace Voxalia.ClientGame.WorldSystem
                                 }
                                 if (val)
                                 {
-                                    Location min = nt.ToLocation() * Chunk.CHUNK_SIZE;
-                                    if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(min, min + new Location(Chunk.CHUNK_SIZE)))
+                                    BEPUutilities.Vector3 min = nt.ToVector3() * Chunk.CHUNK_SIZE;
+                                    if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(min, min + new BEPUutilities.Vector3(Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE)))
                                     {
                                         toSee.Enqueue(nt);
                                     }

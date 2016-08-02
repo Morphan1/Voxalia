@@ -574,7 +574,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     LightsC = 0;
                     for (int i = 0; i < Lights.Count; i++)
                     {
-                        if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                        if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos.ToBVector(), Lights[i].MaxDistance))
                         {
                             if (Lights[i] is SkyLight || (Lights[i].EyePos - CameraPos).LengthSquared() < CVars.r_lightmaxdistance.ValueD * CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
                             {
@@ -765,7 +765,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     for (int i = 0; i < Lights.Count; i++)
                     {
-                        if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                        if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos.ToBVector(), Lights[i].MaxDistance))
                         {
                             s_other.Bind();
                             double d1 = (Lights[i].EyePos - CameraPos).LengthSquared();
@@ -1231,7 +1231,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 RenderLights = true;
                 for (int i = 0; i < Lights.Count; i++)
                 {
-                    if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                    if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos.ToBVector(), Lights[i].MaxDistance))
                     {
                         for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                         {
@@ -1241,7 +1241,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 for (int i = 0; i < Lights.Count; i++)
                 {
-                    if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos, Lights[i].MaxDistance))
+                    if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos.ToBVector(), Lights[i].MaxDistance))
                     {
                         for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using Voxalia.Shared;
 using FreneticScript;
+using BEPUutilities;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -12,49 +13,50 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// The normal of the plane.
         /// </summary>
-        public Location Normal;
+        public Vector3 Normal;
 
         /// <summary>
         /// The first corner.
         /// </summary>
-        public Location vec1;
+        public Vector3 vec1;
 
         /// <summary>
         /// The second corner.
         /// </summary>
-        public Location vec2;
+        public Vector3 vec2;
 
         /// <summary>
         /// The third corner.
         /// </summary>
-        public Location vec3;
+        public Vector3 vec3;
 
         /// <summary>
         /// The distance from the origin.
         /// </summary>
-        public double D;
+        public float D;
 
-        public Plane(Location v1, Location v2, Location v3)
+        public Plane(Vector3 v1, Vector3 v2, Vector3 v3)
         {
             vec1 = v1;
             vec2 = v2;
             vec3 = v3;
-            Normal = (v2 - v1).CrossProduct(v3 - v1).Normalize();
-            D = -(Normal.Dot(vec1));
+            Normal = Vector3.Cross((v2 - v1), (v3 - v1));
+            Normal.Normalize();
+            D = -Vector3.Dot(Normal, vec1);
         }
 
-        public Plane(Location v1, Location v2, Location v3, Location _normal)
+        public Plane(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 _normal)
         {
             vec1 = v1;
             vec2 = v2;
             vec3 = v3;
             Normal = _normal;
-            D = -(Normal.Dot(vec1));
+            D = -Vector3.Dot(Normal, vec1);
         }
 
-        public Plane(Location _normal, float _d)
+        public Plane(Vector3 _normal, float _d)
         {
-            double fact = 1 / _normal.Length();
+            float fact = 1f / _normal.Length();
             Normal = _normal * fact;
             D = _d * fact;
         }
@@ -65,15 +67,15 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="start">The start of the line.</param>
         /// <param name="end">The end of the line.</param>
         /// <returns>A location of the hit, or NaN if none.</returns>
-        public Location IntersectLine(Location start, Location end)
+        public Vector3 IntersectLine(Vector3 start, Vector3 end)
         {
-            Location ba = end - start;
-            double nDotA = Normal.Dot(start);
-            double nDotBA = Normal.Dot(ba);
-            double t = -(nDotA + D) / (nDotBA);
+            Vector3 ba = end - start;
+            float nDotA = Vector3.Dot(Normal, start);
+            float nDotBA = Vector3.Dot(Normal, ba);
+            float t = -(nDotA + D) / (nDotBA);
             if (t < 0) // || t > 1
             {
-                return Location.NaN;
+                return new Vector3(float.NaN, float.NaN, float.NaN);
             }
             return start + t * ba;
         }
@@ -88,9 +90,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns>The distance.</returns>
-        public double Distance(Location point)
+        public float Distance(Vector3 point)
         {
-            return Normal.Dot(point) + D;
+            return Vector3.Dot(Normal, point) + D;
         }
 
         /// <summary>
@@ -102,17 +104,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="Mins">The mins of the box.</param>
         /// <param name="Maxs">The maxes of the box.</param>
         /// <returns>-1, 0, or 1.</returns>
-        public int SignToPlane(Location Mins, Location Maxs)
+        public int SignToPlane(Vector3 Mins, Vector3 Maxs)
         {
-            Location[] locs = new Location[8];
-            locs[0] = new Location(Mins.X, Mins.Y, Mins.Z);
-            locs[1] = new Location(Mins.X, Mins.Y, Maxs.Z);
-            locs[2] = new Location(Mins.X, Maxs.Y, Mins.Z);
-            locs[3] = new Location(Mins.X, Maxs.Y, Maxs.Z);
-            locs[4] = new Location(Maxs.X, Mins.Y, Mins.Z);
-            locs[5] = new Location(Maxs.X, Mins.Y, Maxs.Z);
-            locs[6] = new Location(Maxs.X, Maxs.Y, Mins.Z);
-            locs[7] = new Location(Maxs.X, Maxs.Y, Maxs.Z);
+            Vector3[] locs = new Vector3[8];
+            locs[0] = new Vector3(Mins.X, Mins.Y, Mins.Z);
+            locs[1] = new Vector3(Mins.X, Mins.Y, Maxs.Z);
+            locs[2] = new Vector3(Mins.X, Maxs.Y, Mins.Z);
+            locs[3] = new Vector3(Mins.X, Maxs.Y, Maxs.Z);
+            locs[4] = new Vector3(Maxs.X, Mins.Y, Mins.Z);
+            locs[5] = new Vector3(Maxs.X, Mins.Y, Maxs.Z);
+            locs[6] = new Vector3(Maxs.X, Maxs.Y, Mins.Z);
+            locs[7] = new Vector3(Maxs.X, Maxs.Y, Maxs.Z);
             int psign = Math.Sign(Distance(locs[0]));
             for (int i = 1; i < locs.Length; i++)
             {
@@ -123,20 +125,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             return psign;
         }
-
-        /// <summary>
-        /// Converts the plane to a 36-byte array for transmission.
-        /// </summary>
-        /// <returns>A byte array.</returns>
-        public byte[] ToBytes()
-        {
-            byte[] toret = new byte[36];
-            vec1.ToBytes().CopyTo(toret, 0);
-            vec2.ToBytes().CopyTo(toret, 12);
-            vec3.ToBytes().CopyTo(toret, 24);
-            return toret;
-        }
-
+        
         public override string ToString()
         {
             return "[" + vec1.ToString() + "/" + vec2.ToString() + "/" + vec3.ToString() + "]";
@@ -154,17 +143,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 return null;
             }
-            return new Plane(Location.FromString(data[0]), Location.FromString(data[1]), Location.FromString(data[2]));
-        }
-
-        /// <summary>
-        /// Converts a byte array to a plane.
-        /// </summary>
-        /// <param name="input">The byte array.</param>
-        /// <returns>A plane.</returns>
-        public static Plane FromBytes(byte[] input)
-        {
-            return new Plane(Location.FromBytes(input, 0), Location.FromBytes(input, 12), Location.FromBytes(input, 24));
+            return new Plane(Location.FromString(data[0]).ToBVector(), Location.FromString(data[1]).ToBVector(), Location.FromString(data[2]).ToBVector());
         }
     }
 }
