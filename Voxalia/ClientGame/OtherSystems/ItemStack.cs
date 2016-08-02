@@ -125,13 +125,13 @@ namespace Voxalia.ClientGame.OtherSystems
         {
             if (RenderedBlock != null)
             {
-                RenderedBlock.WorldTransform = BEPUutilities.Matrix.CreateScale(size.ToBVector())
+                RenderedBlock.WorldTransform = BEPUutilities.Matrix.CreateScale(size.ToBVector() * 0.70f)
                     * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitZ, rot)
                     * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitX, (float)(Math.PI * 0.25))
                     * BEPUutilities.Matrix.CreateTranslation(pos.ToBVector());
                 RenderedBlock.Render();
             }
-            if (RenderedModel != null)
+            else if (RenderedModel != null)
             {
                 BEPUutilities.RigidTransform rt = BEPUutilities.RigidTransform.Identity;
                 BEPUutilities.BoundingBox bb;

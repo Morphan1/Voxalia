@@ -2090,7 +2090,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             if (sub3d)
             {
-                item.Render3D(pos + new Location(size * 0.5f), (float)GlobalTickTimeLocal * 0.5f, new Location(size * 0.5f));
+                item.Render3D(pos + new Location(size * 0.5f), (float)GlobalTickTimeLocal * 0.5f, new Location(size * 0.75));
                 return;
             }
             ItemFrame.Bind();
