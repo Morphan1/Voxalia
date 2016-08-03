@@ -1964,7 +1964,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         + ", Tick: " + TickSpikeTime.ToString(timeformat) + ", Finish: " + FinishSpikeTime.ToString(timeformat)
                         + "\nChunks loaded: " + TheRegion.LoadedChunks.Count + ", Chunks rendering currently: " + TheRegion.RenderingNow.Count + ", chunks waiting: " + TheRegion.NeedsRendering.Count + ", Entities loaded: " + TheRegion.Entities.Count
                         + "\nPosition: " + Player.GetPosition().ToBasicString() + ", velocity: " + Player.GetVelocity().ToBasicString() + ", direction: " + Player.Direction.ToBasicString(),
-                        Window.Width - 10), new Location(0, 0, 0));
+                        Window.Width - 10), new Location(0, 0, 0), Window.Height, 1, false, "^r^!^e^7");
                 }
                 int center = Window.Width / 2;
                 if (RenderExtraItems > 0)

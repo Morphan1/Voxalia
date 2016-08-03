@@ -125,14 +125,19 @@ namespace Voxalia.ClientGame.OtherSystems
         {
             if (RenderedBlock != null)
             {
+                TheClient.SetVox();
+                TheClient.Rendering.SetMinimumLight(0.9f);
                 RenderedBlock.WorldTransform = BEPUutilities.Matrix.CreateScale(size.ToBVector() * 0.70f)
                     * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitZ, rot)
                     * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitX, (float)(Math.PI * 0.25))
                     * BEPUutilities.Matrix.CreateTranslation(pos.ToBVector());
                 RenderedBlock.Render();
+                TheClient.Rendering.SetMinimumLight(0f);
             }
             else if (RenderedModel != null)
             {
+                TheClient.SetEnts();
+                TheClient.Rendering.SetMinimumLight(0.9f);
                 BEPUutilities.RigidTransform rt = BEPUutilities.RigidTransform.Identity;
                 BEPUutilities.BoundingBox bb;
                 RenderedModel.Shape.GetBoundingBox(ref rt, out bb);
@@ -143,6 +148,7 @@ namespace Voxalia.ClientGame.OtherSystems
                     * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitX, (float)(Math.PI * 0.25))
                     * BEPUutilities.Matrix.CreateTranslation(pos.ToBVector());
                 RenderedModel.RenderSimpler();
+                TheClient.Rendering.SetMinimumLight(0f);
             }
         }
 
