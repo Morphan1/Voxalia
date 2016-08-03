@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Voxalia.Shared;
 using Voxalia.Shared.Files;
 using FreneticScript;
+using Voxalia.ServerGame.ServerMainSystem;
 
 namespace Voxalia.ServerGame.OtherSystems
 {
@@ -11,6 +12,13 @@ namespace Voxalia.ServerGame.OtherSystems
         public Dictionary<string, Model> Models = new Dictionary<string, Model>();
 
         public ModelHandler handler = new ModelHandler();
+
+        public Server TheServer;
+
+        public ModelEngine(Server tserver)
+        {
+            TheServer = tserver;
+        }
 
         public Model GetModel(string name)
         {
@@ -37,9 +45,9 @@ namespace Voxalia.ServerGame.OtherSystems
             string n = "models/" + name + ".vmd";
             try
             {
-                if (Program.Files.Exists(n))
+                if (TheServer.Files.Exists(n))
                 {
-                    byte[] dat = Program.Files.ReadBytes(n);
+                    byte[] dat = TheServer.Files.ReadBytes(n);
                     Model3D scene = handler.LoadModel(dat);
                     return new Model() { Name = name, Original = scene };
                 }

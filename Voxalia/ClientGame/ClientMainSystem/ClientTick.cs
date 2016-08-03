@@ -152,7 +152,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 lock (saveLock)
                 {
-                    Program.Files.WriteText("clientdefaultsettings.cfg", HSaveStr + CSaveStr + BSaveStr);
+                    Files.WriteText("clientdefaultsettings.cfg", HSaveStr + CSaveStr + BSaveStr);
                 }
             }
             catch (Exception ex)

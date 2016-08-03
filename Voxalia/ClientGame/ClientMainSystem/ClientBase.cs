@@ -17,6 +17,7 @@ using Voxalia.ServerGame.ServerMainSystem;
 using System.Threading;
 using System.Drawing;
 using FreneticScript;
+using Voxalia.Shared.Files;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -45,6 +46,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// TODO: Use/transmit this value!
         /// </summary>
         public int ViewRadius = 3;
+
+        /// <summary>
+        /// Clientside file handler.
+        /// </summary>
+        public FileHandler Files = new FileHandler();
 
         /// <summary>
         /// Starts up a new client.
@@ -92,17 +98,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// </summary>
         public void StartUp(string args)
         {
+            Files.Init();
             SysConsole.Output(OutputType.INIT, "Launching as new client, this is " + (this == Central ? "" : "NOT ") + "the Central client.");
             SysConsole.Output(OutputType.INIT, "Loading command system...");
             Commands = new ClientCommands();
             Commands.Init(new ClientOutputter(this), this);
             SysConsole.Output(OutputType.INIT, "Loading CVar system...");
             CVars = new ClientCVar();
-            CVars.Init(Commands.Output);
+            CVars.Init(this, Commands.Output);
             SysConsole.Output(OutputType.INIT, "Loading default settings...");
-            if (Program.Files.Exists("clientdefaultsettings.cfg"))
+            if (Files.Exists("clientdefaultsettings.cfg"))
             {
-                string contents = Program.Files.ReadText("clientdefaultsettings.cfg");
+                string contents = Files.ReadText("clientdefaultsettings.cfg");
                 Commands.ExecuteCommands(contents);
             }
             Commands.ExecuteCommands(args);
@@ -234,7 +241,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Loading textures...");
             PreInitRendering();
             Textures = new TextureEngine();
-            Textures.InitTextureSystem();
+            Textures.InitTextureSystem(this);
             ItemFrame = Textures.GetTexture("ui/hud/item_frame");
             TBlock = new TextureBlock();
             TBlock.Generate(this, CVars, Textures);
@@ -252,17 +259,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 SysConsole.Output(OutputType.INIT, "Disabling good graphics (Appears to be Intel: '" + GLVendor + "')");
                 Shaders.MCM_GOOD_GRAPHICS = false;
             }
-            Shaders.InitShaderSystem();
+            Shaders.InitShaderSystem(this);
             SysConsole.Output(OutputType.INIT, "Loading fonts...");
             Fonts = new GLFontEngine(Shaders);
-            Fonts.Init();
+            Fonts.Init(this);
             FontSets = new FontSetEngine(Fonts);
-            FontSets.Init();
+            FontSets.Init(this);
             SysConsole.Output(OutputType.INIT, "Loading animation engine...");
             Animations = new AnimationEngine();
             SysConsole.Output(OutputType.INIT, "Loading model engine...");
             Models = new ModelEngine();
-            Models.Init(Animations);
+            Models.Init(Animations, this);
             SysConsole.Output(OutputType.INIT, "Loading rendering helper...");
             Rendering = new Renderer(Textures, Shaders);
             Rendering.Init();

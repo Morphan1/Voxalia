@@ -7,6 +7,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared.Files;
 using System.Linq;
+using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -25,11 +26,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public Model Sphere;
 
+        public Client TheClient;
+
         /// <summary>
         /// Prepares the model system.
         /// </summary>
-        public void Init(AnimationEngine engine)
+        public void Init(AnimationEngine engine, Client tclient)
         {
+            TheClient = tclient;
             AnimEngine = engine;
             Handler = new ModelHandler();
             LoadedModels = new List<Model>();
@@ -50,14 +54,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
             try
             {
                 filename = FileHandler.CleanFileName(filename);
-                if (!Program.Files.Exists("models/" + filename + ".vmd"))
+                if (!TheClient.Files.Exists("models/" + filename + ".vmd"))
                 {
                     SysConsole.Output(OutputType.WARNING, "Cannot load model, file '" +
                         TextStyle.Color_Standout + "models/" + filename + ".vmd" + TextStyle.Color_Warning +
                         "' does not exist.");
                     return null;
                 }
-                return FromBytes(filename, Program.Files.ReadBytes("models/" + filename + ".vmd"));
+                return FromBytes(filename, TheClient.Files.ReadBytes("models/" + filename + ".vmd"));
             }
             catch (Exception ex)
             {
@@ -470,9 +474,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 return;
             }
             Skinned = true;
-            if (Program.Files.Exists("models/" + Name + ".skin"))
+            if (Engine.TheClient.Files.Exists("models/" + Name + ".skin"))
             {
-                string[] data = Program.Files.ReadText("models/" + Name + ".skin").SplitFast('\n');
+                string[] data = Engine.TheClient.Files.ReadText("models/" + Name + ".skin").SplitFast('\n');
                 foreach (string datum in data)
                 {
                     if (datum.Length > 0)

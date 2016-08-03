@@ -14,6 +14,7 @@ using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.PluginSystem;
 using FreneticScript.CommandSystem;
 using FreneticScript;
+using Voxalia.Shared.Files;
 
 namespace Voxalia.ServerGame.ServerMainSystem
 {
@@ -28,6 +29,11 @@ namespace Voxalia.ServerGame.ServerMainSystem
         public static Server Central = null;
 
         public readonly int Port;
+
+        /// <summary>
+        /// Serverside file handler.
+        /// </summary>
+        public FileHandler Files = new FileHandler();
 
         /// <summary>
         /// Starts up a new server.
@@ -51,6 +57,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         public Server(int port)
         {
+            Files.Init();
             Port = port;
         }
 
@@ -219,9 +226,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 YAMLConfiguration PlayerConfig = null;
                 string nl = username.ToLower();
                 string fn = "server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr";
-                if (Program.Files.Exists(fn))
+                if (Files.Exists(fn))
                 {
-                    string dat = Program.Files.ReadText(fn);
+                    string dat = Files.ReadText(fn);
                     if (dat != null)
                     {
                         PlayerConfig = new YAMLConfiguration(dat);
@@ -249,12 +256,12 @@ namespace Voxalia.ServerGame.ServerMainSystem
             Commands.Init(new ServerOutputter(this), this);
             SysConsole.Output(OutputType.INIT, "Loading CVar engine...");
             CVars = new ServerCVar();
-            CVars.Init(Commands.Output);
+            CVars.Init(this, Commands.Output);
             SysConsole.Output(OutputType.INIT, "Loading default settings...");
-            Config = new YAMLConfiguration(Program.Files.ReadText("server_config.yml"));
-            if (Program.Files.Exists("serverdefaultsettings.cfg"))
+            Config = new YAMLConfiguration(Files.ReadText("server_config.yml"));
+            if (Files.Exists("serverdefaultsettings.cfg"))
             {
-                string contents = Program.Files.ReadText("serverdefaultsettings.cfg");
+                string contents = Files.ReadText("serverdefaultsettings.cfg");
                 Commands.ExecuteCommands(contents);
             }
             SysConsole.Output(OutputType.INIT, "Loading player command engine...");
@@ -264,7 +271,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             Items = new ItemRegistry(this);
             Recipes = new RecipeRegistry() { TheServer = this };
             SysConsole.Output(OutputType.INIT, "Loading model handler...");
-            Models = new ModelEngine();
+            Models = new ModelEngine(this);
             SysConsole.Output(OutputType.INIT, "Loading animation handler...");
             Animations = new AnimationEngine();
             SysConsole.Output(OutputType.INIT, "Preparing networking...");
@@ -286,7 +293,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             }
             SysConsole.Output(OutputType.INIT, "Preparing block image system...");
             BlockImages = new BlockImageManager();
-            BlockImages.Init();
+            BlockImages.Init(this);
             SysConsole.Output(OutputType.INIT, "Ticking...");
             // Tick
             double TARGETFPS = 40d;

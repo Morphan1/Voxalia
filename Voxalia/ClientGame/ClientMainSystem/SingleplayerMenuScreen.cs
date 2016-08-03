@@ -22,7 +22,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 TheClient.ShowMainMenu();
             }, 10, TheClient.Window.Height - 100, 350, 70, TheClient.FontSets.SlightlyBigger));
             float start = 150;
-            List<string> found = Program.Files.ListFolders("saves");
+            List<string> found = TheClient.Files.ListFolders("saves");
             foreach (string str in found)
             {
                 if (str.LastIndexOf('/') == "/saves/".Length - 1)

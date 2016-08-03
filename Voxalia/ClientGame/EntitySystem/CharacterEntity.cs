@@ -65,17 +65,17 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             if (mode == 0)
             {
-                hAnim = TheClient.Animations.GetAnimation(anim);
+                hAnim = TheClient.Animations.GetAnimation(anim, TheClient.Files);
                 aHTime = 0;
             }
             else if (mode == 1)
             {
-                tAnim = TheClient.Animations.GetAnimation(anim);
+                tAnim = TheClient.Animations.GetAnimation(anim, TheClient.Files);
                 aTTime = 0;
             }
             else
             {
-                lAnim = TheClient.Animations.GetAnimation(anim);
+                lAnim = TheClient.Animations.GetAnimation(anim, TheClient.Files);
                 aLTime = 0;
             }
         }

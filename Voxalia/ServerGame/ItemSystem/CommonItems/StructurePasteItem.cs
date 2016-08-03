@@ -49,11 +49,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 player.Pasting = null;
             }
             player.PastingDist = 5;
-            if (!Program.Files.Exists("structures/" + item.SecondaryName + ".str")) // TODO: structure helper engine
+            if (!entity.TheServer.Files.Exists("structures/" + item.SecondaryName + ".str")) // TODO: structure helper engine
             {
                 throw new Exception("File does not exist!"); // TODO: Handle better.
             }
-            Structure structure = new Structure(Program.Files.ReadBytes("structures/" + item.SecondaryName + ".str"));
+            Structure structure = new Structure(entity.TheServer.Files.ReadBytes("structures/" + item.SecondaryName + ".str"));
             player.Pasting = structure.ToBGE(player.TheRegion, player.GetPosition());
             player.TheRegion.SpawnEntity(player.Pasting);
         }
@@ -178,11 +178,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             try
             {
-                if (!Program.Files.Exists("structures/" + item.SecondaryName + ".str")) // TODO: structure helper engine
+                if (!entity.TheServer.Files.Exists("structures/" + item.SecondaryName + ".str")) // TODO: structure helper engine
                 {
                     throw new Exception("File does not exist!"); // TODO: Handle better.
                 }
-                Structure structure = new Structure(Program.Files.ReadBytes("structures/" + item.SecondaryName + ".str"));
+                Structure structure = new Structure(entity.TheServer.Files.ReadBytes("structures/" + item.SecondaryName + ".str"));
                 int ang = (player.Pasting != null ? player.Pasting.Angle : 0);
                 structure.Paste(player.TheRegion, pasteloc, ang);
                 player.Network.SendMessage("^2Pasted structure at " + pasteloc + ", with offset of " + structure.Origin.X + "," + structure.Origin.Y + "," + structure.Origin.Z + " at angle " + ang);

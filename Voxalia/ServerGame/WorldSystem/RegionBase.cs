@@ -96,11 +96,11 @@ namespace Voxalia.ServerGame.WorldSystem
             PhysicsWorld.TimeStepSettings.TimeStepDuration = 1f / TheServer.CVars.g_fps.ValueF;
             Collision = new CollisionUtil(PhysicsWorld);
             string folder = "saves/" + Name;
-            Program.Files.CreateDirectory(folder);
+            TheServer.Files.CreateDirectory(folder);
             string fname = folder + "/region.yml";
-            if (Program.Files.Exists(fname))
+            if (TheServer.Files.Exists(fname))
             {
-                Config = new YAMLConfiguration(Program.Files.ReadText(fname));
+                Config = new YAMLConfiguration(TheServer.Files.ReadText(fname));
             }
             else
             {
@@ -192,7 +192,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 string cfg = Config.SaveToString();
                 TheServer.Schedule.StartASyncTask(() =>
                 {
-                    Program.Files.WriteText("saves/" + Name + "/region.yml", cfg);
+                    TheServer.Files.WriteText("saves/" + Name + "/region.yml", cfg);
                 });
             }
         }

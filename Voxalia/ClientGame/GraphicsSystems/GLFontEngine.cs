@@ -8,6 +8,7 @@ using System.Drawing.Imaging;
 using Voxalia.Shared;
 using FreneticScript;
 using System.Linq;
+using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -30,11 +31,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         public List<GLFont> Fonts;
 
+        public Client TheClient;
+
         /// <summary>
         /// Prepares the font system.
         /// </summary>
-        public void Init()
+        public void Init(Client tclient)
         {
+            TheClient = tclient;
             if (Fonts != null)
             {
                 for (int i = 0; i < Fonts.Count; i++)
@@ -106,9 +110,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             textfile = "";
             string[] datas;
-            if (Program.Files.Exists("info/characters.dat"))
+            if (TheClient.Files.Exists("info/characters.dat"))
             {
-                datas = Program.Files.ReadText("info/characters.dat").Replace("\r", "").SplitFast('\n');
+                datas = TheClient.Files.ReadText("info/characters.dat").Replace("\r", "").SplitFast('\n');
             }
             else
             {

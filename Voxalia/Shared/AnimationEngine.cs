@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BEPUutilities;
+using Voxalia.Shared.Files;
 using FreneticScript;
 
 namespace Voxalia.Shared
@@ -38,7 +39,7 @@ namespace Voxalia.Shared
 
         public Dictionary<string, SingleAnimation> Animations;
 
-        public SingleAnimation GetAnimation(string name)
+        public SingleAnimation GetAnimation(string name, FileHandler Files)
         {
             string namelow = name.ToLowerFast();
             SingleAnimation sa;
@@ -48,7 +49,7 @@ namespace Voxalia.Shared
             }
             try
             {
-                sa = LoadAnimation(namelow);
+                sa = LoadAnimation(namelow, Files);
                 Animations.Add(sa.Name, sa);
                 return sa;
             }
@@ -62,13 +63,13 @@ namespace Voxalia.Shared
         }
 
 
-        SingleAnimation LoadAnimation(string name)
+        SingleAnimation LoadAnimation(string name, FileHandler Files)
         {
-            if (Program.Files.Exists("animations/" + name + ".anim"))
+            if (Files.Exists("animations/" + name + ".anim"))
             {
                 SingleAnimation created = new SingleAnimation();
                 created.Name = name;
-                string[] data = Program.Files.ReadText("animations/" + name + ".anim").SplitFast('\n');
+                string[] data = Files.ReadText("animations/" + name + ".anim").SplitFast('\n');
                 int entr = 0;
                 for (int i = 0; i < data.Length; i++)
                 {

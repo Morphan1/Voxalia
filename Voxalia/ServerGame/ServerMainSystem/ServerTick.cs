@@ -125,7 +125,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
         {
             try
             {
-                Program.Files.WriteText("serverdefaultsettings.cfg", SaveStr);
+                Files.WriteText("serverdefaultsettings.cfg", SaveStr);
             }
             catch (Exception ex)
             {

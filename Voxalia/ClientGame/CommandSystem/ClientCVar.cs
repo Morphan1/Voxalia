@@ -2,6 +2,7 @@
 using FreneticScript.CommandSystem;
 using Voxalia.Shared.Files;
 using Voxalia.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.CommandSystem
 {
@@ -46,12 +47,12 @@ namespace Voxalia.ClientGame.CommandSystem
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
         /// </summary>
-        public void Init(Outputter output)
+        public void Init(Client tclient, Outputter output)
         {
             system = new CVarSystem(output);
 
             // System CVars
-            s_filepath = Register("s_filepath", Program.Files.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly, "The current system environment filepath (The directory of /data).");
+            s_filepath = Register("s_filepath", tclient.Files.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly, "The current system environment filepath (The directory of /data)."); // TODO: Tag!
             s_glversion = Register("s_glversion", "UNKNOWN", CVarFlag.Textual | CVarFlag.ReadOnly, "What version of OpenGL is in use.");
             s_glrenderer = Register("s_glrenderer", "UNKNOWN", CVarFlag.Textual | CVarFlag.ReadOnly, "What renderer for OpenGL is in use.");
             s_glvendor = Register("s_glvendor", "UNKNOWN", CVarFlag.Textual | CVarFlag.ReadOnly, "What graphics card vendor made the device being used for rendering.");

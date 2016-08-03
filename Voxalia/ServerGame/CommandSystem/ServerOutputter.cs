@@ -46,17 +46,17 @@ namespace Voxalia.ServerGame.CommandSystem
 
         public override string ReadTextFile(string name)
         {
-            return Program.Files.ReadText("scripts/server/" + name);
+            return TheServer.Files.ReadText("scripts/server/" + name);
         }
 
         public override byte[] ReadDataFile(string name)
         {
-            return Program.Files.ReadBytes("script_data/server/" + name);
+            return TheServer.Files.ReadBytes("script_data/server/" + name);
         }
 
         public override void WriteDataFile(string name, byte[] data)
         {
-            Program.Files.WriteBytes("script_data/server/" + name, data);
+            TheServer.Files.WriteBytes("script_data/server/" + name, data);
         }
 
         public override void Reload()

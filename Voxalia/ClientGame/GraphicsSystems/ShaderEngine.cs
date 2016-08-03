@@ -4,6 +4,7 @@ using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared;
 using FreneticScript;
 using Voxalia.Shared.Files;
+using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -25,11 +26,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         public Shader TextCleanerShader;
 
+        public Client TheClient;
+
         /// <summary>
         /// Starts or restarts the shader system.
         /// </summary>
-        public void InitShaderSystem()
+        public void InitShaderSystem(Client tclient)
         {
+            TheClient = tclient;
             // Reset shader list
             LoadedShaders = new List<Shader>();
             // Pregenerate a few needed shader
@@ -101,22 +105,22 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     vars = dat1[1].SplitFast(',');
                 }
                 filename = FileHandler.CleanFileName(dat1[0]);
-                if (!Program.Files.Exists("shaders/" + filename + ".vs"))
+                if (!TheClient.Files.Exists("shaders/" + filename + ".vs"))
                 {
                     SysConsole.Output(OutputType.ERROR, "Cannot load shader, file '" +
                         TextStyle.Color_Standout + "shaders/" + filename + ".vs" + TextStyle.Color_Error +
                         "' does not exist.");
                     return null;
                 }
-                if (!Program.Files.Exists("shaders/" + filename + ".fs"))
+                if (!TheClient.Files.Exists("shaders/" + filename + ".fs"))
                 {
                     SysConsole.Output(OutputType.ERROR, "Cannot load shader, file '" +
                         TextStyle.Color_Standout + "shaders/" + filename + ".fs" + TextStyle.Color_Error +
                         "' does not exist.");
                     return null;
                 }
-                string VS = Program.Files.ReadText("shaders/" + filename + ".vs");
-                string FS = Program.Files.ReadText("shaders/" + filename + ".fs");
+                string VS = TheClient.Files.ReadText("shaders/" + filename + ".vs");
+                string FS = TheClient.Files.ReadText("shaders/" + filename + ".fs");
                 return CreateShader(VS, FS, filename, vars);
             }
             catch (Exception ex)

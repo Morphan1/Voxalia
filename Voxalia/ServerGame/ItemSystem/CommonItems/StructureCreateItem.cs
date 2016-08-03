@@ -46,11 +46,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                         {
                             Structure structure = new Structure(player.TheRegion, block, 20); // TODO: 20 -> Item Attribute?
                             int c = 0;
-                            while (Program.Files.Exists("structures/" + item.SecondaryName + c + ".str"))
+                            while (entity.TheServer.Files.Exists("structures/" + item.SecondaryName + c + ".str"))
                             {
                                 c++;
                             }
-                            Program.Files.WriteBytes("structures/" + item.SecondaryName + c + ".str", structure.ToBytes());
+                            entity.TheServer.Files.WriteBytes("structures/" + item.SecondaryName + c + ".str", structure.ToBytes());
                             player.Network.SendMessage("^2Saved structure as " + item.SecondaryName + c);
                             // TODO: Click sound!
                             player.LastBlockBreak = player.TheRegion.GlobalTickTime;

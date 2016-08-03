@@ -30,11 +30,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         public List<FontSet> Fonts = new List<FontSet>();
 
+        public Client TheClient;
+
         /// <summary>
         /// Prepares the FontSet system.
         /// </summary>
-        public void Init()
+        public void Init(Client tclient)
         {
+            TheClient = tclient;
             Standard = new FontSet("standard", this);
             Standard.Load(GLFonts.Standard.Name, GLFonts.Standard.Size);
             Fonts.Add(Standard);
@@ -304,7 +307,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                             {
                                                 string langinfo = sbl.After("lang=");
                                                 string[] subdats = csplit(langinfo).ToArray();
-                                                ttext = Client.Central.Languages.GetText(subdats);
+                                                ttext = Client.Central.Languages.GetText(Engine.TheClient.Files, subdats);
                                                 highl = false;
                                             }
                                             else if (sbl == "lb")
@@ -661,7 +664,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                         {
                                             string langinfo = sbl.After("lang=");
                                             string[] subdats = csplit(langinfo).ToArray();
-                                            ttext = Client.Central.Languages.GetText(subdats);
+                                            ttext = Client.Central.Languages.GetText(Engine.TheClient.Files, subdats);
                                             highl = false;
                                         }
                                         else if (sbl == "lb")

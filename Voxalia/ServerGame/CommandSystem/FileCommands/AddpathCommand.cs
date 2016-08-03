@@ -12,6 +12,8 @@ namespace Voxalia.ServerGame.CommandSystem.FileCommands
     {
         public Server TheServer;
 
+        // TDOO: ClearPaths command
+
         public AddpathCommand(Server tserver)
         {
             TheServer = tserver;
@@ -27,7 +29,7 @@ namespace Voxalia.ServerGame.CommandSystem.FileCommands
                 ShowUsage(queue, entry);
                 return;
             }
-            Program.Files.LoadDir(entry.GetArgument(queue, 0));
+            TheServer.Files.LoadDir(entry.GetArgument(queue, 0));
             entry.Good(queue, "Added path.");
         }
     }

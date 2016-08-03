@@ -54,14 +54,14 @@ namespace Voxalia.ServerGame.ItemSystem
         {
             string tname = name.ToLowerFast();
             string fname = "items/" + tname + ".itm";
-            if (!Program.Files.Exists(fname))
+            if (!TheServer.Files.Exists(fname))
             {
                 SysConsole.Output(OutputType.WARNING, "Tried to load non-existent item: " + name);
                 return null;
             }
             try
             {
-                string fdata = Program.Files.ReadText(fname);
+                string fdata = TheServer.Files.ReadText(fname);
                 string[] split = fdata.Replace('\r', '\n').SplitFast('\n');
                 string res_type = "";
                 string res_icon = "";

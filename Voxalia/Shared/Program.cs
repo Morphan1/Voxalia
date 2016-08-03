@@ -14,12 +14,12 @@ namespace Voxalia.Shared
         public const string GameVersion = "0.0.9";
 
         public const string GlobalServerAddress = "https://frenetic.xyz/";
-
-        public static FileHandler Files;
-
+        
         public static void Init()
         {
-            MaterialHelpers.Populate(Files);
+            FileHandler files = new FileHandler();
+            files.Init();
+            MaterialHelpers.Populate(files); // TODO: Non-static material helper data!
             FullChunkObject.RegisterMe();
         }
     }

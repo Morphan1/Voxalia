@@ -44,13 +44,13 @@ namespace Voxalia.ServerGame.WorldSystem
         public void Init(Region tregion)
         {
             TheRegion = tregion;
-            Database = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/chunks.ldb");
+            Database = new LiteDatabase("filename=" + TheRegion.TheServer.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/chunks.ldb");
             DBChunks = Database.GetCollection<BsonDocument>("chunks");
-            LODsDatabase = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/lod_chunks.ldb");
+            LODsDatabase = new LiteDatabase("filename=" + TheRegion.TheServer.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/lod_chunks.ldb");
             DBLODs = LODsDatabase.GetCollection<BsonDocument>("lodchunks");
-            EntsDatabase = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/ents.ldb");
+            EntsDatabase = new LiteDatabase("filename=" + TheRegion.TheServer.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/ents.ldb");
             DBEnts = EntsDatabase.GetCollection<BsonDocument>("ents");
-            ImageDatabase = new LiteDatabase("filename=" + Program.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/images.ldb");
+            ImageDatabase = new LiteDatabase("filename=" + TheRegion.TheServer.Files.BaseDirectory + "/saves/" + TheRegion.Name + "/images.ldb");
             DBImages = ImageDatabase.GetCollection<BsonDocument>("images");
             DBMaxes = ImageDatabase.GetCollection<BsonDocument>("maxes");
             DBImages2 = ImageDatabase.GetCollection<BsonDocument>("images_angle");

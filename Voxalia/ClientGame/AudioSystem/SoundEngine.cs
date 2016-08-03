@@ -210,7 +210,7 @@ namespace Voxalia.ClientGame.AudioSystem
             try
             {
                 string newname = "sounds/" + name + ".ogg";
-                if (!Program.Files.Exists(newname))
+                if (!TheClient.Files.Exists(newname))
                 {
                     return null;
                 }
@@ -219,7 +219,7 @@ namespace Voxalia.ClientGame.AudioSystem
                 tsfx.Internal = -1;
                 TheClient.Schedule.StartASyncTask(() =>
                 {
-                    SoundEffect ts = LoadVorbisSound(Program.Files.ReadToStream(newname), name);
+                    SoundEffect ts = LoadVorbisSound(TheClient.Files.ReadToStream(newname), name);
                     lock (tsfx)
                     {
                         tsfx.Internal = ts.Internal;

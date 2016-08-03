@@ -7,6 +7,7 @@ using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared;
 using FreneticScript;
 using Voxalia.Shared.Files;
+using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -53,11 +54,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         public Graphics GenericGraphicsObject = null;
 
+        public Client TheClient;
+
         /// <summary>
         /// Starts or restarts the texture system.
         /// </summary>
-        public void InitTextureSystem()
+        public void InitTextureSystem(Client tclient)
         {
+            TheClient = tclient;
             // Create a generic graphics object for later use
             EmptyBitmap = new Bitmap(1, 1);
             GenericGraphicsObject = Graphics.FromImage(EmptyBitmap);
@@ -154,14 +158,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
             try
             {
                 filename = FileHandler.CleanFileName(filename);
-                if (!Program.Files.Exists("textures/" + filename + ".png"))
+                if (!TheClient.Files.Exists("textures/" + filename + ".png"))
                 {
                     SysConsole.Output(OutputType.ERROR, "Cannot load texture, file '" +
                         TextStyle.Color_Standout + "textures/" + filename + ".png" + TextStyle.Color_Error +
                         "' does not exist.");
                     return null;
                 }
-                Bitmap bmp = new Bitmap(Program.Files.ReadToStream("textures/" + filename + ".png"));
+                Bitmap bmp = new Bitmap(TheClient.Files.ReadToStream("textures/" + filename + ".png"));
                 if (!AcceptableWidths.Contains(bmp.Width) || !AcceptableWidths.Contains(bmp.Height))
                 {
                     SysConsole.Output(OutputType.ERROR, "Cannot load texture, file '" +
@@ -206,14 +210,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 // TODO: store!
                 filename = FileHandler.CleanFileName(filename);
-                if (!Program.Files.Exists("textures/" + filename + ".png"))
+                if (!TheClient.Files.Exists("textures/" + filename + ".png"))
                 {
                     SysConsole.Output(OutputType.ERROR, "Cannot load texture, file '" +
                         TextStyle.Color_Standout + "textures/" + filename + ".png" + TextStyle.Color_Error +
                         "' does not exist.");
                     return;
                 }
-                Bitmap bmp = new Bitmap(Program.Files.ReadToStream("textures/" + filename + ".png"));
+                Bitmap bmp = new Bitmap(TheClient.Files.ReadToStream("textures/" + filename + ".png"));
                 Bitmap bmp2 = new Bitmap(bmp, new Size(twidth, twidth));
                 LockBitmapToTexture(bmp2, depth);
                 bmp2.Dispose();

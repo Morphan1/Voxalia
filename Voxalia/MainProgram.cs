@@ -41,8 +41,6 @@ namespace Voxalia
             }
             try
             {
-                Program.Files = new FileHandler();
-                Program.Files.Init();
                 Program.Init();
                 if (args.Length > 0 && args[0] == "server")
                 {

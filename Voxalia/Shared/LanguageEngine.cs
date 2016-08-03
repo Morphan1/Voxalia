@@ -22,7 +22,7 @@ namespace Voxalia.Shared
             LanguageDocuments.Clear();
         }
 
-        public YAMLConfiguration GetLangDoc(string id, string lang = null, Dictionary<string, YAMLConfiguration> confs = null)
+        public YAMLConfiguration GetLangDoc(string id, FileHandler Files, string lang = null, Dictionary<string, YAMLConfiguration> confs = null)
         {
             if (lang == null)
             {
@@ -39,11 +39,11 @@ namespace Voxalia.Shared
                 return doc;
             }
             string path = "info/text/" + idlow + "_" + lang + ".yml";
-            if (Program.Files.Exists(path))
+            if (Files.Exists(path))
             {
                 try
                 {
-                    string dat = Program.Files.ReadText(path);
+                    string dat = Files.ReadText(path);
                     doc = new YAMLConfiguration(dat);
                     LanguageDocuments[idlow] = doc;
                     return doc;
@@ -79,16 +79,16 @@ namespace Voxalia.Shared
             return infolist;
         }
 
-        public List<string> GetTextList(params string[] pathAndVars)
+        public List<string> GetTextList(FileHandler Files, params string[] pathAndVars)
         {
             if (pathAndVars.Length < 2)
             {
-                return GetTextList("voxalia", "common.languages.badinput");
+                return GetTextList(Files, "voxalia", "common.languages.badinput");
             }
             string category = pathAndVars[0].ToLowerFast();
             string defPath = pathAndVars[1].ToLowerFast();
-            YAMLConfiguration lang = GetLangDoc(category);
-            YAMLConfiguration langen = GetLangDoc(category, "en_us", EnglishDocuments);
+            YAMLConfiguration lang = GetLangDoc(category, Files);
+            YAMLConfiguration langen = GetLangDoc(category, Files, "en_us", EnglishDocuments);
             List<string> str = null;
             if (lang != null)
             {
@@ -110,19 +110,19 @@ namespace Voxalia.Shared
             {
                 return new List<string>() { "((Invalid key!))" };
             }
-            return GetTextList("voxalia", badkey);
+            return GetTextList(Files, "voxalia", badkey);
         }
 
-        public string GetText(params string[] pathAndVars)
+        public string GetText(FileHandler Files, params string[] pathAndVars)
         {
             if (pathAndVars.Length < 2)
             {
-                return GetText("voxalia", "common.languages.badinput");
+                return GetText(Files, "voxalia", "common.languages.badinput");
             }
             string category = pathAndVars[0].ToLowerFast();
             string defPath = pathAndVars[1].ToLowerFast();
-            YAMLConfiguration lang = GetLangDoc(category);
-            YAMLConfiguration langen = GetLangDoc(category, "en_us", EnglishDocuments);
+            YAMLConfiguration lang = GetLangDoc(category, Files);
+            YAMLConfiguration langen = GetLangDoc(category, Files, "en_us", EnglishDocuments);
             string str = null;
             if (lang != null)
             {
@@ -144,7 +144,7 @@ namespace Voxalia.Shared
             {
                 return "((Invalid key!))";
             }
-            return GetText("voxalia", badkey);
+            return GetText(Files, "voxalia", badkey);
         }
     }
 }

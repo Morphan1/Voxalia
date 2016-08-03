@@ -2,6 +2,7 @@
 using FreneticScript.CommandSystem;
 using Voxalia.Shared.Files;
 using Voxalia.Shared;
+using Voxalia.ServerGame.ServerMainSystem;
 
 namespace Voxalia.ServerGame.CommandSystem
 {
@@ -30,12 +31,12 @@ namespace Voxalia.ServerGame.CommandSystem
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
         /// </summary>
-        public void Init(Outputter output)
+        public void Init(Server tserver, Outputter output)
         {
             system = new CVarSystem(output);
 
             // System CVars
-            s_filepath = Register("s_filepath", Program.Files.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly, "The current system environment filepath (The directory of /data)."); // TODO: Scrap this! Tags!
+            s_filepath = Register("s_filepath", tserver.Files.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly, "The current system environment filepath (The directory of /data)."); // TODO: Scrap this! Tags!
             s_debug = Register("s_debug", "true", CVarFlag.Boolean, "Whether to output debug information.");
             // Game CVars
             g_timescale = Register("g_timescale", "1", CVarFlag.Numeric, "The current game time scaling value.");

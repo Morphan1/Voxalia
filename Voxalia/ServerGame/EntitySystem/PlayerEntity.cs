@@ -244,7 +244,7 @@ namespace Voxalia.ServerGame.EntitySystem
             string nl = Name.ToLower();
             string fn = "server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr";
             SaveToYAML(PlayerConfig);
-            Program.Files.WriteText(fn, PlayerConfig.SaveToString());
+            TheServer.Files.WriteText(fn, PlayerConfig.SaveToString());
         }
 
         /// <summary>
@@ -309,9 +309,9 @@ namespace Voxalia.ServerGame.EntitySystem
             CGroup = CollisionUtil.Player;
             string nl = Name.ToLower();
             string fn = "server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr";
-            if (Program.Files.Exists(fn))
+            if (TheServer.Files.Exists(fn))
             {
-                string dat = Program.Files.ReadText(fn);
+                string dat = TheServer.Files.ReadText(fn);
                 if (dat != null)
                 {
                     PlayerConfig = new YAMLConfiguration(dat);
@@ -333,7 +333,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     return;
                 }
-                hAnim = TheServer.Animations.GetAnimation(anim);
+                hAnim = TheServer.Animations.GetAnimation(anim, TheServer.Files);
             }
             else if (mode == 1)
             {
@@ -341,7 +341,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     return;
                 }
-                tAnim = TheServer.Animations.GetAnimation(anim);
+                tAnim = TheServer.Animations.GetAnimation(anim, TheServer.Files);
             }
             else
             {
@@ -349,7 +349,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     return;
                 }
-                lAnim = TheServer.Animations.GetAnimation(anim);
+                lAnim = TheServer.Animations.GetAnimation(anim, TheServer.Files);
             }
             TheRegion.SendToAll(new AnimationPacketOut(this, anim, mode));
         }

@@ -74,7 +74,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
             // TODO: Use normal.a!
-            string[] datums = Program.Files.ReadText("info/textures.dat").SplitFast('\n');
+            string[] datums = TheClient.Files.ReadText("info/textures.dat").SplitFast('\n');
             // TODO: Separate files for each texture detail!
             List<MaterialTextureInfo> texs = new List<MaterialTextureInfo>(datums.Length);
             IntTexs = new string[MaterialHelpers.TextureCount];

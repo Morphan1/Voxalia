@@ -35,9 +35,6 @@ namespace Voxalia
             SysConsole.Init();
             try
             {
-                Program.Files = new FileHandler();
-                Program.Files.Init();
-                Program.Init();
                 Server.Init(args);
             }
             catch (Exception ex)

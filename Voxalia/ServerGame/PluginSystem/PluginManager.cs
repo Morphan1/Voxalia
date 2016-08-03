@@ -18,7 +18,7 @@ namespace Voxalia.ServerGame.PluginSystem
         public PluginManager(Server tserver)
         {
             TheServer = tserver;
-            Loader = new PluginLoader();
+            Loader = new PluginLoader(tserver);
             Plugins = new List<ServerPlugin>();
         }
 

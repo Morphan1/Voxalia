@@ -12,6 +12,7 @@ using Voxalia.Shared.Files;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.WorldSystem;
 using FreneticScript;
+using Voxalia.ServerGame.ServerMainSystem;
 using BEPUutilities;
 
 namespace Voxalia.ServerGame.OtherSystems
@@ -299,10 +300,10 @@ namespace Voxalia.ServerGame.OtherSystems
             tregion.ChunkManager.WriteImage((int)chunkCoords.X, (int)chunkCoords.Y, (int)chunkCoords.Z, ds.ToArray());
         }
 
-        public void Init()
+        public void Init(Server tserver)
         {
             MaterialImages = new MaterialImage[MaterialHelpers.TextureCount];
-            string[] texs = Program.Files.ReadText("info/textures.dat").SplitFast('\n');
+            string[] texs = tserver.Files.ReadText("info/textures.dat").SplitFast('\n');
             for (int i = 0; i < texs.Length; i++)
             {
                 if (texs[i].StartsWith("#") || texs[i].Length <= 1)
@@ -322,7 +323,7 @@ namespace Voxalia.ServerGame.OtherSystems
                 string actualtexture = "textures/" + dat[1].Before(",").Before("&").Before("$").Before("@")+ ".png";
                 try
                 {
-                    Bitmap bmp1 = new Bitmap(Program.Files.ReadToStream(actualtexture));
+                    Bitmap bmp1 = new Bitmap(tserver.Files.ReadToStream(actualtexture));
                     Bitmap bmp2 = new Bitmap(bmp1, new Size(TexWidth, TexWidth));
                     bmp1.Dispose();
                     MaterialImage img = new MaterialImage();

@@ -58,17 +58,17 @@ namespace Voxalia.ClientGame.CommandSystem
 
         public override string ReadTextFile(string name)
         {
-            return Program.Files.ReadText("scripts/client/" + name);
+            return TheClient.Files.ReadText("scripts/client/" + name);
         }
 
         public override byte[] ReadDataFile(string name)
         {
-            return Program.Files.ReadBytes("script_data/client/" + name);
+            return TheClient.Files.ReadBytes("script_data/client/" + name);
         }
 
         public override void WriteDataFile(string name, byte[] data)
         {
-            Program.Files.WriteBytes("script_data/client/" + name, data);
+            TheClient.Files.WriteBytes("script_data/client/" + name, data);
         }
 
         public override void Reload()
