@@ -241,6 +241,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
                 }
                 timer.Start();
+                ErrorCode ec = GL.GetError();
+                if (ec != ErrorCode.NoError)
+                {
+                    SysConsole.Output(OutputType.ERROR, "OpenGL error: " + ec);
+                }
                 Window.SwapBuffers();
                 timer.Stop();
                 FinishTime = (double)timer.ElapsedMilliseconds / 1000f;

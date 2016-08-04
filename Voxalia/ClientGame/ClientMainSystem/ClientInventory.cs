@@ -7,8 +7,10 @@ using Voxalia.ClientGame.UISystem.MenuSystem;
 using Voxalia.ClientGame.GraphicsSystems;
 using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL4;
 using FreneticScript;
 using Voxalia.ClientGame.OtherSystems;
+using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -24,6 +26,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public UIMenu CInvMenu = null;
 
+        public View3D MainItemView = new View3D();
+
         UITextLink InventoryExitButton()
         {
             return new UITextLink(null, "Exit", "^0^e^7Exit", "^7^e^0Exit", () =>
@@ -32,9 +36,25 @@ namespace Voxalia.ClientGame.ClientMainSystem
             },
             () => Window.Width - FontSets.SlightlyBigger.MeasureFancyText("Exit") - 20, () => Window.Height - FontSets.SlightlyBigger.font_default.Height - 20, FontSets.SlightlyBigger);
         }
+        
+        public void RenderMainItem(View3D view)
+        {
+            if (InvCurrent != null)
+            {
+                InvCurrent.Render3D(Location.Zero, (float)GlobalTickTimeLocal * 0.5f, new Location(3));
+            }
+        }
+
+        public void FixInvRender()
+        {
+            MainItemView.Render3D = RenderMainItem;
+            MainItemView.GenerateFBO();
+            MainItemView.Generate(this, Window.Width, Window.Height);
+        }
 
         public void InitInventory()
         {
+            FixInvRender();
             CInvMenu = null;
             InventoryMenu = new UIMenu(this);
             UILabel inv_inventory = new UILabel("^(Inventory", () => 20, () => 20, FontSets.SlightlyBigger);
@@ -106,9 +126,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             InventoryMenu.Add(UI_Inv_Detail);
         }
 
+        ItemStack InvCurrent = null;
+
         public void InventorySelectItem(int slot)
         {
             ItemStack item = GetItemForSlot(slot);
+            InvCurrent = item;
             UI_Inv_Displayname.Text = "^B" + item.DisplayName;
             UI_Inv_Description.Text = "^r^7" + item.Name + (item.SecondaryName != null && item.SecondaryName.Length > 0 ? " [" + item.SecondaryName + "]" : "") + "\n>^B" + item.Description;
             UI_Inv_Detail.Text = "^BCount: " + item.Count + ", ColorCode: " + item.DrawColor + ", Texture: " + (item.Tex != null ? item.Tex.Name: "{NULL}")
@@ -146,11 +169,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
         }
 
+        Location Forw = new Location(1, 0, -1).Normalize();
+
         public void TickInvMenu()
         {
             if (CInvMenu != null)
             {
                 CInvMenu.TickAll();
+                MainItemView.CameraPos = -Forw * 10;
+                MainItemView.ForwardVec = Forw;
+                View3D temp = MainWorldView;
+                MainWorldView = MainItemView;
+                MainItemView.Render();
+                MainWorldView = temp;
             }
         }
 
@@ -186,9 +217,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 return;
             }
-            Textures.White.Bind();
             Rendering.SetColor(new Vector4(0.5f, 0.5f, 0.5f, 0.7f));
+            Textures.White.Bind();
             Rendering.RenderRectangle(0, 0, Window.Width, Window.Height);
+            Rendering.SetColor(Vector4.One);
+            GL.BindTexture(TextureTarget.Texture2D, MainItemView.CurrentFBOTexture);
+            Rendering.RenderRectangle(0, 0, Window.Width, Window.Height);
+            Textures.White.Bind();
             CInvMenu.RenderAll(gDelta);
         }
     }

@@ -114,29 +114,31 @@ namespace Voxalia.ClientGame.GraphicsSystems
             if (CurrentFBO != 0)
             {
                 GL.DeleteFramebuffer(CurrentFBO);
-                GL.DeleteTexture(CurrentFBO);
+                GL.DeleteTexture(CurrentFBOTexture);
                 GL.DeleteTexture(CurrentFBODepth);
             }
-            CurrentFBO = GL.GenFramebuffer();
+            GL.ActiveTexture(TextureUnit.Texture0);
             CurrentFBOTexture = GL.GenTexture();
-            CurrentFBODepth = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, CurrentFBOTexture);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba32f, Width, Height, 0, PixelFormat.Rgba, PixelType.Float, IntPtr.Zero);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            CurrentFBODepth = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, CurrentFBODepth);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32, Width, Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            CurrentFBO = GL.GenFramebuffer();
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, CurrentFBO);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, CurrentFBOTexture, 0);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, CurrentFBODepth, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.BindTexture(TextureTarget.Texture2D, 0);
+            SysConsole.Output(OutputType.INFO, "Generate: " + CurrentFBO + ", " + CurrentFBOTexture + ", " + CurrentFBODepth);
         }
 
         int transp_fbo_main = 0;
@@ -284,16 +286,19 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public int LightsC = 0;
 
+        public float[] ClearColor = new float[] { 0f, 1f, 1f, 0f };
+
         public void Render()
         {
             Stopwatch timer = new Stopwatch();
             try
             {
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, CurrentFBO);
                 StandardBlend();
-                RenderTextures = true;
-                GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1f, 0f, 1f, 1f });
-                GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
                 GL.Enable(EnableCap.DepthTest);
+                RenderTextures = true;
+                GL.ClearBuffer(ClearBuffer.Color, 0, ClearColor);
+                GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
                 Location cameraBasePos;
                 Location cameraAdjust;
                 cameraBasePos = CameraPos;
@@ -301,7 +306,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 SetViewport();
                 CameraTarget = CameraPos + ForwardVec;
                 Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
-                    (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
+                    (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
                 Location bx = TheClient.CVars.r_3d_enable.ValueB ? (CameraPos + cameraAdjust) : CameraPos;
                 Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + ForwardVec), ClientUtilities.Convert(CameraUp));
                 combined = view * proj;
@@ -347,6 +352,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     GL.DepthMask(false);
                     Render3D(this);
                     GL.DepthMask(true);
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                     return;
                 }
                 if (TheClient.shouldRedrawShadows && TheClient.CVars.r_shadows.ValueB && ShadowingAllowed)
@@ -671,12 +677,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.Enable(EnableCap.DepthTest);
                 GL.BlendFunc(1, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
                 GL.DrawBuffer(DrawBufferMode.Back);
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, CurrentFBO);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, RS4P.fbo); // TODO: is this line and line below needed?
                 GL.BlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, ClearBufferMask.DepthBufferBit, BlitFramebufferFilter.Nearest);
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, fbo_godray_main);
                 GL.BlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Nearest);
-                GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
+                GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, CurrentFBO);
                 Matrix4 def = Matrix4.Identity;
                 GL.Enable(EnableCap.CullFace);
                 if (PostFirstRender != null)
@@ -886,7 +892,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     lightc = 1;
                 }
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, CurrentFBO);
                 GL.DrawBuffer(DrawBufferMode.Back);
                 StandardBlend();
                 FBOid = FBOID.NONE;
@@ -918,6 +924,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.DepthMask(true);
                 GL.Enable(EnableCap.DepthTest);
                 GL.Enable(EnableCap.CullFace);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 timer.Stop();
                 LightsTime = (double)timer.ElapsedMilliseconds / 1000f;
                 if (LightsTime > LightsSpikeTime)

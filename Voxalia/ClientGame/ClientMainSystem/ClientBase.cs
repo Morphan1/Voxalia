@@ -574,6 +574,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             GL.Viewport(0, 0, Window.Width, Window.Height);
             MainWorldView.Generate(this, Window.Width, Window.Height);
+            FixInvRender();
         }
     }
 }
