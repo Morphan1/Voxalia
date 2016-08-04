@@ -123,19 +123,22 @@ namespace Voxalia.ClientGame.OtherSystems
 
         public void Render3D(Location pos, float rot, Location size)
         {
+            BEPUutilities.Matrix rot1 = BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitZ, rot)
+                * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitX, (float)(Math.PI * 0.25));
             if (RenderedBlock != null)
             {
+                TheClient.isVox = false;
                 TheClient.SetVox();
                 TheClient.Rendering.SetMinimumLight(0.9f);
                 RenderedBlock.WorldTransform = BEPUutilities.Matrix.CreateScale(size.ToBVector() * 0.70f)
-                    * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitZ, rot)
-                    * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitX, (float)(Math.PI * 0.25))
+                    * rot1
                     * BEPUutilities.Matrix.CreateTranslation(pos.ToBVector());
                 RenderedBlock.Render();
                 TheClient.Rendering.SetMinimumLight(0f);
             }
             else if (RenderedModel != null)
             {
+                TheClient.isVox = true;
                 TheClient.SetEnts();
                 TheClient.Rendering.SetMinimumLight(0.9f);
                 BEPUutilities.RigidTransform rt = BEPUutilities.RigidTransform.Identity;
@@ -144,8 +147,7 @@ namespace Voxalia.ClientGame.OtherSystems
                 BEPUutilities.Vector3 scale = BEPUutilities.Vector3.Max(bb.Max, -bb.Min);
                 float len = scale.Length();
                 RenderedModel.WorldTransform = BEPUutilities.Matrix.CreateScale(size.ToBVector() * len)
-                    * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitZ, rot)
-                    * BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3.UnitX, (float)(Math.PI * 0.25))
+                    * rot1
                     * BEPUutilities.Matrix.CreateTranslation(pos.ToBVector());
                 RenderedModel.RenderSimpler();
                 TheClient.Rendering.SetMinimumLight(0f);

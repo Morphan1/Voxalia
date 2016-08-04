@@ -241,11 +241,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
                 }
                 timer.Start();
-                ErrorCode ec = GL.GetError();
-                if (ec != ErrorCode.NoError)
-                {
-                    SysConsole.Output(OutputType.ERROR, "OpenGL error: " + ec);
-                }
+                MainWorldView.CheckError("Finish");
                 Window.SwapBuffers();
                 timer.Stop();
                 FinishTime = (double)timer.ElapsedMilliseconds / 1000f;
@@ -442,7 +438,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.UniformMatrix4(1, false, ref Ortho);
         }
 
-        bool isVox = false;
+        public bool isVox = false;
 
         public void SetVox()
         {
@@ -1013,7 +1009,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     }
                 }
             }
-            RenderInvMenu();
+            if (!sub3d)
+            {
+                RenderInvMenu();
+            }
             if (sub3d)
             {
                 FixPersp = Matrix4.Identity;
@@ -1037,6 +1036,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             FontSets.Standard.DrawColoredText(dir, new Location(northOnScreen, Window.Height - (32 + 28), 0));
         }
 
+        public bool IsOrtho = false;
+
         /// <summary>
         /// Renders an item on the 2D screen.
         /// </summary>
@@ -1047,7 +1048,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             if (sub3d)
             {
+                IsOrtho = true;
                 item.Render3D(pos + new Location(size * 0.5f), (float)GlobalTickTimeLocal * 0.5f, new Location(size * 0.75));
+                IsOrtho = false;
                 return;
             }
             ItemFrame.Bind();

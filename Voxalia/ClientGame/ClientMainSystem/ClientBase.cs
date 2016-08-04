@@ -552,7 +552,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             CVars.r_width.Set(Window.ClientSize.Width.ToString());
             CVars.r_height.Set(Window.ClientSize.Height.ToString());
-            windowupdatehandle();
+            Schedule.ScheduleSyncTask(windowupdatehandle);
         }
 
         public void UpdateWindow()
@@ -567,7 +567,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             Window.ClientSize = new Size(CVars.r_width.ValueI, CVars.r_height.ValueI);
             Window.WindowState = CVars.r_fullscreen.ValueB ? WindowState.Fullscreen : WindowState.Normal;
-            windowupdatehandle();
+            Schedule.ScheduleSyncTask(windowupdatehandle);
         }
 
         void windowupdatehandle()

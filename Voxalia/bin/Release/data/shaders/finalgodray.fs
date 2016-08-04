@@ -303,6 +303,10 @@ float IsEdge(in vec2 coords)
 void main()
 {
 	vec4 light_color = getColor(f_texcoord);
+	if (light_color.w == 0.0)
+	{
+		discard;
+	}
 	// TODO: Toonify option per-pixel?
 #if MCM_TOONIFY
     vec3 vHSV = RGBtoHSV(light_color.r, light_color.g, light_color.b);
@@ -311,7 +315,7 @@ void main()
     vHSV.z = nearestLevel(vHSV.z, 2);
     float edg = IsEdge(f_texcoord);
     vec3 vRGB = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : HSVtoRGB(vHSV.x, vHSV.y, vHSV.z);
-    light_color = vec4(vRGB.x, vRGB.y, vRGB.z, 1.0);
+    light_color = vec4(vRGB.x, vRGB.y, vRGB.z, light_color.w);
 #endif
 #if MCM_GOOD_GRAPHICS
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
@@ -342,11 +346,11 @@ void main()
 	}
 	if (texture(bwtex, f_texcoord).w > 0.01)
 	{
-		color = vec4(desaturate(color.xyz), 1.0);
+		color = vec4(desaturate(color.xyz), color.w);
 		godray = vec4(desaturate(godray.xyz), godray.w);
 	}
 #else
-	color = vec4(light_color.xyz, 1.0);
+	color = light_color;
 	godray = vec4(0.0);
 #endif
 }

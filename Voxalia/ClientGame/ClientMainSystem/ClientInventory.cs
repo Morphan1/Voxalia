@@ -11,6 +11,7 @@ using OpenTK.Graphics.OpenGL4;
 using FreneticScript;
 using Voxalia.ClientGame.OtherSystems;
 using Voxalia.Shared;
+using Voxalia.ClientGame.GraphicsSystems.LightingSystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -41,13 +42,24 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             if (InvCurrent != null)
             {
-                InvCurrent.Render3D(Location.Zero, (float)GlobalTickTimeLocal * 0.5f, new Location(3));
+                InvCurrent.Render3D(Location.Zero, (float)GlobalTickTimeLocal * 0.5f, new Location(6));
             }
         }
 
         public void FixInvRender()
         {
             MainItemView.Render3D = RenderMainItem;
+            foreach (LightObject light in MainItemView.Lights)
+            {
+                foreach (Light li in light.InternalLights)
+                {
+                    li.Destroy();
+                }
+            }
+            MainItemView.Lights.Clear();
+            MainItemView.RenderClearAlpha = 0f;
+            SkyLight tlight = new SkyLight(new Location(0, 0, 10), 256, 64, Location.One, new Location(0, -1, -1).Normalize(), 64);
+            MainItemView.Lights.Add(tlight);
             MainItemView.GenerateFBO();
             MainItemView.Generate(this, Window.Width, Window.Height);
         }
@@ -169,7 +181,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
         }
 
-        Location Forw = new Location(1, 0, -1).Normalize();
+        Location Forw = new Location(0, 0, -1);
 
         public void TickInvMenu()
         {
@@ -178,10 +190,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 CInvMenu.TickAll();
                 MainItemView.CameraPos = -Forw * 10;
                 MainItemView.ForwardVec = Forw;
+                MainItemView.CameraUp = Location.UnitY;
                 View3D temp = MainWorldView;
                 MainWorldView = MainItemView;
                 MainItemView.Render();
                 MainWorldView = temp;
+                MainItemView.CheckError("ItemRender");
             }
         }
 
@@ -217,6 +231,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 return;
             }
+            Shaders.ColorMultShader.Bind();
             Rendering.SetColor(new Vector4(0.5f, 0.5f, 0.5f, 0.7f));
             Textures.White.Bind();
             Rendering.RenderRectangle(0, 0, Window.Width, Window.Height);
