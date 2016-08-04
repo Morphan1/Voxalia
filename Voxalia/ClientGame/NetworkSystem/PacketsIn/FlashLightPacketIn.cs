@@ -17,7 +17,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             if (sl != null)
             {
                 sl.Destroy();
-                TheClient.Lights.Remove(sl);
+                TheClient.MainWorldView.Lights.Remove(sl);
             }
         }
 
@@ -46,7 +46,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     sl.Reposition(ent.GetPosition());
                     ((CharacterEntity)ent).Flashlight = sl;
                 }
-                TheClient.Lights.Add(sl);
+                TheClient.MainWorldView.Lights.Add(sl);
             }
             return true;
         }

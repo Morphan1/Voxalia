@@ -115,7 +115,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                     break;
                 case ParticleEffectType.SQUARE:
                     {
-                        TheClient.Rendering.RenderBillboard(start, End(this), TheClient.CameraPos);
+                        TheClient.Rendering.RenderBillboard(start, End(this), TheClient.MainWorldView.CameraPos);
                     }
                     break;
                 default:

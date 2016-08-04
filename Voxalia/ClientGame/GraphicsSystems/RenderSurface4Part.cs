@@ -120,7 +120,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public void Unbind()
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-            GL.Viewport(0, 0, Client.Central.vpw, Client.Central.vph); // TODO: Pass Client Reference
+            GL.Viewport(0, 0, Client.Central.MainWorldView.Width, Client.Central.MainWorldView.Height);
             GL.DrawBuffer(DrawBufferMode.Back);
         }
     }

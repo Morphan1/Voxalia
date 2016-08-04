@@ -325,7 +325,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void onGodrayColorChanged(object obj, EventArgs e)
         {
-            godrayCol = Location.FromString(CVars.r_godray_color.Value);
+            MainWorldView.godrayCol = Location.FromString(CVars.r_godray_color.Value);
         }
 
         /// <summary>
@@ -572,10 +572,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         void windowupdatehandle()
         {
-            SetViewport();
-            generateTranspHelpers();
-            destroyLightHelpers();
-            generateLightHelpers();
+            GL.Viewport(0, 0, Window.Width, Window.Height);
+            MainWorldView.Generate(this, Window.Width, Window.Height);
         }
     }
 }

@@ -285,7 +285,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public void SetColor(Vector4 col)
         {
-            if (!Client.Central.RenderingShadows)
+            if (!Client.Central.MainWorldView.RenderingShadows)
             {
                 GL.Uniform4(3, ref col);
             }
@@ -298,7 +298,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         
         public void SetMinimumLight(float min)
         {
-            if (Client.Central.RenderLights) // TODO: Pass client reference!
+            if (Client.Central.MainWorldView.RenderLights) // TODO: Pass client reference!
             {
                 GL.Uniform1(5, min);
             }

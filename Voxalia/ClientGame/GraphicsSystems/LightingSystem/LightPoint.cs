@@ -27,8 +27,6 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
             GL.Viewport(0, 0, texsize, texsize);
-            Client.Central.vpw = texsize; // TODO: pass client reference!
-            Client.Central.vph = texsize; // TODO: pass client reference!
             SetProj();
             GL.DrawBuffer(DBM);
             GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1.0f });

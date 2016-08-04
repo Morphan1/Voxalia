@@ -19,25 +19,25 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Location SunLightDef = Location.One;
 
-       // public Location PlanetLightDef = new Location(0.75, 0.3, 0) * 0.25f;
+        // public Location PlanetLightDef = new Location(0.75, 0.3, 0) * 0.25f;
 
         public void BuildWorld()
         {
             if (TheSun != null)
             {
                 TheSun.Destroy();
-                Lights.Remove(TheSun);
-    //            ThePlanet.Destroy();
-     //           Lights.Remove(ThePlanet);
+                MainWorldView.Lights.Remove(TheSun);
+                // ThePlanet.Destroy();
+                // MainWorldView.Lights.Remove(ThePlanet);
             }
             // TODO: DESTROY OLD REGION!
             // TODO: Radius -> max view rad * 2
             // TODO: Size -> max view rad * 2 + 30 * 2
             TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, Chunk.CHUNK_SIZE * 30, SunLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35);
             // TODO: Separate planet quality CVar?
-     //       ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 2, Chunk.CHUNK_SIZE * 30, PlanetLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35);
-            Lights.Add(TheSun);
-       //     Lights.Add(ThePlanet);
+            //  ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 2, Chunk.CHUNK_SIZE * 30, PlanetLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35);
+            MainWorldView.Lights.Add(TheSun);
+            // MainWorldView.Lights.Add(ThePlanet);
             TheRegion = new Region();
             TheRegion.TheClient = this;
             TheRegion.BuildWorld();
@@ -99,16 +99,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     rel = Math.Max(Math.Min(rel, 1f), 0f);
                     float rel2 = Math.Max(Math.Min(rel * 1.5f, 1f), 0f);
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(TheSun.InternalLights[0].color.X * rel2, TheSun.InternalLights[0].color.Y * rel, TheSun.InternalLights[0].color.Z * rel);
-                    DesaturationAmount = (1f - rel) * 0.75f;
-                    ambient = BaseAmbient * ((1f - rel) * 0.5f + 0.5f);
+                    MainWorldView.DesaturationAmount = (1f - rel) * 0.75f;
+                    MainWorldView.ambient = BaseAmbient * ((1f - rel) * 0.5f + 0.5f);
                     sl_min = 0.2f - (1f - rel) * (0.2f - 0.05f);
                     sl_max = 0.8f - (1f - rel) * (0.8f - 0.15f);
                 }
                 else if (SunAngle.Pitch >= 10)
                 {
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
-                    DesaturationAmount = 0.75f;
-                    ambient = BaseAmbient * 0.5f;
+                    MainWorldView.DesaturationAmount = 0.75f;
+                    MainWorldView.ambient = BaseAmbient * 0.5f;
                     sl_min = 0.05f;
                     sl_max = 0.15f;
                 }
@@ -116,8 +116,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     sl_min = 0.2f;
                     sl_max = 0.8f;
-                    DesaturationAmount = 0f;
-                    ambient = BaseAmbient;
+                    MainWorldView.DesaturationAmount = 0f;
+                    MainWorldView.ambient = BaseAmbient;
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(1, 1, 1);
                 }
                 rTicks = 0;

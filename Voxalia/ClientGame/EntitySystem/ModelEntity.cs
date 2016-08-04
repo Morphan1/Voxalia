@@ -350,7 +350,7 @@ namespace Voxalia.ClientGame.EntitySystem
             BEPUutilities.Vector3 bmax;
             RigidTransform.Transform(ref ModelMin, ref rt, out bmin);
             RigidTransform.Transform(ref ModelMax, ref rt, out bmax);
-            if (TheClient.CFrust != null && !TheClient.CFrust.ContainsBox(bmin, bmax))
+            if (TheClient.MainWorldView.CFrust != null && !TheClient.MainWorldView.CFrust.ContainsBox(bmin, bmax))
             {
                 return;
             }

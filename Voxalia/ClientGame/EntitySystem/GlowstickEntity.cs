@@ -28,14 +28,14 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public override void Render()
         {
-            if (TheClient.FBOid == FBOID.MAIN)
+            if (TheClient.MainWorldView.FBOid == FBOID.MAIN)
             {
                 GL.Uniform4(7, new Vector4(GColor.R, GColor.B, GColor.B, 1f));
             }
             TheClient.Rendering.SetMinimumLight(1);
             base.Render();
             TheClient.Rendering.SetMinimumLight(0);
-            if (TheClient.FBOid == FBOID.MAIN)
+            if (TheClient.MainWorldView.FBOid == FBOID.MAIN)
             {
                 GL.Uniform4(7, new Vector4(0f, 0f, 0f, 0f));
             }
@@ -50,13 +50,13 @@ namespace Voxalia.ClientGame.EntitySystem
         public override void SpawnBody()
         {
             light = new PointLight(GetPosition(), 64, 15, new Location(GColor.R, GColor.G, GColor.B));
-            TheClient.Lights.Add(light);
+            TheClient.MainWorldView.Lights.Add(light);
             base.SpawnBody();
         }
 
         public override void DestroyBody()
         {
-            TheClient.Lights.Remove(light);
+            TheClient.MainWorldView.Lights.Remove(light);
             light.Destroy();
             base.DestroyBody();
         }

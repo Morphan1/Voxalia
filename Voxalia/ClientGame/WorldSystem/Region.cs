@@ -17,6 +17,7 @@ using Voxalia.Shared.Collision;
 using System.Diagnostics;
 using Priority_Queue;
 using FreneticScript;
+using Voxalia.ClientGame.GraphicsSystems;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -452,12 +453,13 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             /*foreach (Chunk chunk in LoadedChunks.Values)
             {
-                if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(chunk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE, chunk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE)))
+                if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(chunk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE,
+                chunk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(Chunk.CHUNK_SIZE)))
                 {
                     chunk.Render();
                 }
             }*/
-            if (TheClient.FBOid == FBOID.MAIN || TheClient.FBOid == FBOID.NONE || TheClient.FBOid == FBOID.FORWARD_SOLID)
+            if (TheClient.MainWorldView.FBOid == FBOID.MAIN || TheClient.MainWorldView.FBOid == FBOID.NONE || TheClient.MainWorldView.FBOid == FBOID.FORWARD_SOLID)
             {
                 chToRender.Clear();
                 ChunkMarchAndDraw();
@@ -490,7 +492,7 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void ChunkMarchAndDraw()
         {
-            Vector3i start = ChunkLocFor(TheClient.CameraPos);
+            Vector3i start = ChunkLocFor(TheClient.MainWorldView.CameraPos);
             HashSet<Vector3i> seen = new HashSet<Vector3i>();
             Queue<Vector3i> toSee = new Queue<Vector3i>();
             HashSet<Vector3i> toSeeSet = new HashSet<Vector3i>();
@@ -520,7 +522,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     {
                         for (int j = 0; j < MoveDirs.Length; j++)
                         {
-                            if (BEPUutilities.Vector3.Dot(MoveDirs[j].ToVector3(), (TheClient.CameraTarget - TheClient.CameraPos).ToBVector()) < -0.8f) // TODO: Wut?
+                            if (BEPUutilities.Vector3.Dot(MoveDirs[j].ToVector3(), (TheClient.MainWorldView.CameraTarget - TheClient.MainWorldView.CameraPos).ToBVector()) < -0.8f) // TODO: Wut?
                             {
                                 continue;
                             }
@@ -529,7 +531,7 @@ namespace Voxalia.ClientGame.WorldSystem
                             {
                                 Chunk ch = GetChunk(t);
                                 BEPUutilities.Vector3 min = nt.ToVector3() * Chunk.CHUNK_SIZE;
-                                if (TheClient.CFrust == null || TheClient.CFrust.ContainsBox(min, min + new BEPUutilities.Vector3(Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE)))
+                                if (TheClient.MainWorldView.CFrust == null || TheClient.MainWorldView.CFrust.ContainsBox(min, min + new BEPUutilities.Vector3(Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE)))
                                 {
                                     toSee.Enqueue(nt);
                                     toSeeSet.Add(nt);
@@ -723,7 +725,7 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 if (!NeedsRendering.Contains(ch.WorldPosition))
                 {
-                    NeedsRendering.Enqueue(ch.WorldPosition, (ch.WorldPosition.ToLocation() - TheClient.CameraPos).LengthSquared());
+                    NeedsRendering.Enqueue(ch.WorldPosition, (ch.WorldPosition.ToLocation() - TheClient.MainWorldView.CameraPos).LengthSquared());
                 }
             }
         }

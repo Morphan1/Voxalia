@@ -772,7 +772,7 @@ namespace Voxalia.ClientGame.EntitySystem
             model.CustomAnimationAdjustments = new Dictionary<string, OpenTK.Matrix4>(SavedAdjustmentsOTK);
             // TODO: safe (no-collision) rotation check?
             model.CustomAnimationAdjustments["spine04"] = GetAdjustmentOTK("spine04") * OpenTK.Matrix4.CreateRotationX(-(float)(Direction.Pitch / 2f * Utilities.PI180));
-            if (!TheClient.RenderingShadows && TheClient.CVars.g_firstperson.ValueB)
+            if (!TheClient.MainWorldView.RenderingShadows && TheClient.CVars.g_firstperson.ValueB)
             {
                 model.CustomAnimationAdjustments["neck01"] = GetAdjustmentOTK("neck01") * OpenTK.Matrix4.CreateRotationX(-(float)(160f * Utilities.PI180));
             }
@@ -828,7 +828,7 @@ namespace Voxalia.ClientGame.EntitySystem
             if (IsTyping)
             {
                 TheClient.Textures.GetTexture("ui/game/typing").Bind(); // TODO: store!
-                TheClient.Rendering.RenderBillboard(renderrelpos + new Location(0, 0, 4), new Location(2), TheClient.CameraPos);
+                TheClient.Rendering.RenderBillboard(renderrelpos + new Location(0, 0, 4), new Location(2), TheClient.MainWorldView.CameraPos);
             }
         }
 

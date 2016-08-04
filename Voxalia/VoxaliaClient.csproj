@@ -186,6 +186,7 @@
     <Compile Include="ClientGame\GraphicsSystems\TextureEngine.cs" />
     <Compile Include="ClientGame\GraphicsSystems\TextVBO.cs" />
     <Compile Include="ClientGame\GraphicsSystems\VBO.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\View3D.cs" />
     <Compile Include="ClientGame\JointSystem\BaseFJoint.cs" />
     <Compile Include="ClientGame\JointSystem\BaseJoint.cs" />
     <Compile Include="ClientGame\JointSystem\ConnectorBeam.cs" />

@@ -131,10 +131,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 Schedule.StartASyncTask(SaveCFG);
             }
-            ShadowSpikeTime = 0;
+            MainWorldView.ShadowSpikeTime = 0;
             TickSpikeTime = 0;
-            FBOSpikeTime = 0;
-            LightsSpikeTime = 0;
+            MainWorldView.FBOSpikeTime = 0;
+            MainWorldView.LightsSpikeTime = 0;
             FinishSpikeTime = 0;
             TWODSpikeTime = 0;
             for (int i = 0; i < (int)NetUsageType.COUNT; i++)
@@ -203,7 +203,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Commands.Tick();
                     TickWorld(Delta);
                     TickInvMenu();
-                    Sounds.Update(CameraPos, CameraTarget - CameraPos, CameraUp, Player.GetVelocity(), Window.Focused);
+                    Sounds.Update(MainWorldView.CameraPos, MainWorldView.CameraTarget - MainWorldView.CameraPos, MainWorldView.CameraUp, Player.GetVelocity(), Window.Focused);
                     CScreen.Tick();
                     Schedule.RunAllSyncTasks(0);
                     Player.PostTick();

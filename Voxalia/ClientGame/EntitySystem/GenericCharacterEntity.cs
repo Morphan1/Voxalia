@@ -48,7 +48,7 @@ namespace Voxalia.ClientGame.EntitySystem
             if (IsTyping)
             {
                 TheClient.Textures.GetTexture("ui/game/typing").Bind(); // TODO: store!
-                TheClient.Rendering.RenderBillboard(GetPosition() + new Location(0, 0, 4), new Location(2), TheClient.CameraPos);
+                TheClient.Rendering.RenderBillboard(GetPosition() + new Location(0, 0, 4), new Location(2), TheClient.MainWorldView.CameraPos);
             }
         }
     }
