@@ -846,6 +846,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
+                Render2D(true);
             }
         }
 
@@ -871,31 +872,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         }
 
         public bool RenderTextures = true;
-
-        public void Render3DWires()
-        {
-            bool rt = RenderTextures;
-            RenderTextures = false;
-            Shaders.ColorMultShader.Bind();
-            GL.Disable(EnableCap.DepthTest);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-            Textures.White.Bind();
-            GL.Enable(EnableCap.CullFace);
-            for (int i = 0; i < TheRegion.Entities.Count; i++)
-            {
-                Rendering.SetColor(TheRegion.Entities[i].WireColor);
-                TheRegion.Entities[i].Render();
-            }
-            Rendering.SetColor(Color4.White);
-            TheRegion.Render();
-            // TODO: Render joints?
-            GL.Enable(EnableCap.DepthTest);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-            GL.LineWidth(1);
-            Rendering.SetColor(Color4.White);
-            RenderTextures = rt;
-        }
-
+        
         public double RenderExtraItems = 0;
 
         const string timeformat = "#.000";
