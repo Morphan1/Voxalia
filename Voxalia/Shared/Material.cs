@@ -46,10 +46,11 @@ namespace Voxalia.Shared
         COBBLESTONE = 33,
         HELLSTONE = 34,
         LAVA = 35,
+        DIRTY_WATER_FLOWING = 36,
         /// <summary>
         /// How many materials there are by default. Only for use with direct handling of this enumeration (shouldn't happen often.)
         /// </summary>
-        NUM_DEFAULT = 36,
+        NUM_DEFAULT = 37,
         /// <summary>
         /// How many materials there theoretically can be.
         /// </summary>
@@ -153,6 +154,9 @@ namespace Voxalia.Shared
                             break;
                         case "solidifiesinto":
                             inf.SolidifiesInto = (Material)Enum.Parse(typeof(Material), opt[1].ToUpperInvariant());
+                            break;
+                        case "bigspreadsas":
+                            inf.BigSpreadsAs = (Material)Enum.Parse(typeof(Material), opt[1].ToUpperInvariant());
                             break;
                         case "texture_top":
                             inf.TID[(int)MaterialSide.TOP] = ParseTID(opt[1]);
@@ -319,6 +323,11 @@ namespace Voxalia.Shared
         public static Material GetBreaksInto(this Material mat)
         {
             return ALL_MATS[(int)mat].BreaksInto;
+        }
+        
+        public static Material GetBigSpreadsAs(this Material mat)
+        {
+            return ALL_MATS[(int)mat].BigSpreadsAs;
         }
 
         public static Material GetSolidifiesInto(this Material mat)
@@ -579,5 +588,7 @@ namespace Voxalia.Shared
         /// How far this block should emit light.
         /// </summary>
         public float LightEmitRange = 0;
+
+        public Material BigSpreadsAs = Material.AIR;
     }
 }

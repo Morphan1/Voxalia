@@ -1,4 +1,4 @@
-Name=Dirty_Water
+Name=Dirty_Water_Flowing
 Sound=LIQUID
 Solidity=LIQUID
 Opaque=false
@@ -6,7 +6,6 @@ FogColor=0,0.5,0.25
 Hardness=5
 BreakTime=0.2
 Spreads=true
-BigSpreadsAs=Dirty_Water_Flowing
 LightDamage=0.35
 SpeedMod=0.3
 Breaker=NON_BREAKABLE
