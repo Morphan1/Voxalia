@@ -34,6 +34,20 @@ namespace Voxalia.ServerGame.EntitySystem
             Gravity = new Location(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
         }
 
+        public override float GetScaleEstimate()
+        {
+            if (ScaleEst < 0)
+            {
+                if (Body == null)
+                {
+                    return 1;
+                }
+                BoundingBox bb = Body.CollisionInformation.BoundingBox;
+                ScaleEst = Vector3.Max(bb.Max, -bb.Min).Length();
+            }
+            return ScaleEst;
+        }
+
         public override long GetRAMUsage()
         {
             return base.GetRAMUsage() + 200;
@@ -106,6 +120,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public double netdeltat = 0;
 
         public Location lPos = Location.NaN;
+
+        public float ScaleEst = -1;
 
         public void PreTick()
         {

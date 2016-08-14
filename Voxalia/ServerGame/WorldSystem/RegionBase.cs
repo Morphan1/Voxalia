@@ -209,7 +209,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 return;
             }
-            physBoost = 0.1;
+            physBoost = defPhysBoost;
             physThisTick = 0;
             opsat += Delta;
             while (opsat > 1.0)

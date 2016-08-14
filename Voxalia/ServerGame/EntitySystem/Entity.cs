@@ -27,6 +27,11 @@ namespace Voxalia.ServerGame.EntitySystem
             return 8 + 8 + JointTargetID.Length * 2 + (Seats == null ? 8 : Seats.Count * 8) + 8;
         }
 
+        public virtual float GetScaleEstimate()
+        {
+            return 1;
+        }
+
         public bool NetworkMe = true; // TODO: Readonly? Toggler method?
 
         /// <summary>

@@ -232,7 +232,7 @@ namespace Voxalia.ServerGame.WorldSystem
             float rx = rad * rad;
             foreach (Entity e in Entities)
             {
-                if ((e.GetPosition() - pos).LengthSquared() <= rx)
+                if ((e.GetPosition() - pos).LengthSquared() <= rx + e.GetScaleEstimate())
                 {
                     es.Add(e);
                 }
