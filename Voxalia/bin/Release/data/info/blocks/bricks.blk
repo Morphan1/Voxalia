@@ -1,0 +1,6 @@
+Name=Bricks
+SpeedMod=1.2
+Sound=STONE
+Hardness=25
+BreakTime=3
+Breaker=PICKAXE

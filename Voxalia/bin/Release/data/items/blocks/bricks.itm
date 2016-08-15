@@ -1,0 +1,10 @@
+type: block
+icon: render_block:self
+display: Bricks
+description: Solid when dry!
+color: 1,1,1
+model: block
+bound: false
+datum: 37
+weight: 3.5
+volume: 1

@@ -47,10 +47,11 @@ namespace Voxalia.Shared
         HELLSTONE = 34,
         LAVA = 35,
         DIRTY_WATER_FLOWING = 36,
+        BRICKS = 37,
         /// <summary>
         /// How many materials there are by default. Only for use with direct handling of this enumeration (shouldn't happen often.)
         /// </summary>
-        NUM_DEFAULT = 37,
+        NUM_DEFAULT = 38,
         /// <summary>
         /// How many materials there theoretically can be.
         /// </summary>
