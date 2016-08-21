@@ -27,6 +27,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             FOV = fov;
             maxrange = max_range;
             color = col;
+            // TODO: Don't generate shadow texture data when not rendering shadows!
             // FBO
             fbo_main = GL.GenFramebuffer();
             // Build the texture

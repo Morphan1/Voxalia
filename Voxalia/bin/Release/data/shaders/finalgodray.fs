@@ -35,6 +35,10 @@ layout (location = 23) uniform float MAX_DEPTH = 1000.0;
 layout (location = 24) uniform float WIDTH = 1280.0;
 layout (location = 25) uniform float HEIGHT = 720.0;
 layout (location = 26) uniform float time = 0.0;
+layout (location = 27) uniform float exposure = 1.0;
+
+const float HDR_Mod = 5.0;
+const float HDR_Div = (1.0 / HDR_Mod);
 
 layout (location = 0) out vec4 color;
 layout (location = 1) out vec4 godray;
@@ -99,11 +103,11 @@ vec3 desaturate(in vec3 c)
 
 vec4 getColorInt(in vec2 pos)
 {
-	vec4 shadow_light_color = texture(shtex, pos);
+	vec4 shadow_light_color = texture(shtex, pos) * HDR_Div * exposure;
 	vec4 colortex_color = texture(colortex, pos);
 	vec4 renderhint = texture(renderhinttex, pos);
 	//vec3 sub = vec3(1.0 - renderhint.y);
-	return regularize(vec4(ambient + vec3(renderhint.z), 0.0) * colortex_color + (shadow_light_color /* - vec4(sub, 0.0)*/ ));
+	return regularize(vec4(ambient + vec3(renderhint.z), 0.0) * exposure * colortex_color + (shadow_light_color /* - vec4(sub, 0.0)*/ ));
 }
 
 vec4 getColor(in vec2 pos)

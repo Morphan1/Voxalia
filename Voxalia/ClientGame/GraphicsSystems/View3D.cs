@@ -73,6 +73,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.DeleteFramebuffer(fbo_godray_main);
                 GL.DeleteTexture(fbo_godray_texture);
                 GL.DeleteTexture(fbo_godray_texture2);
+                GL.DeleteFramebuffer(fbo_hdr);
+                GL.DeleteTexture(fbo_hdr_tex);
             }
             RS4P = new RenderSurface4Part(Width, Height, TheClient.Rendering);
             // FBO
@@ -105,6 +107,22 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_godray_main);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, fbo_godray_texture, 0);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment1, TextureTarget.Texture2D, fbo_godray_texture2, 0);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+            // HDR - 1x1 "how bright is the screen" texture.
+            GL.ActiveTexture(TextureUnit.Texture0);
+            fbo_hdr_tex = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, fbo_hdr_tex);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.R32f, 1, 1, 0, PixelFormat.Red, PixelType.Float, IntPtr.Zero);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureCompareMode, (int)TextureCompareMode.CompareRefToTexture);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureCompareFunc, (int)DepthFunction.Lequal);
+            fbo_hdr = GL.GenFramebuffer();
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_hdr);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, fbo_hdr_tex, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
@@ -140,6 +158,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
+        int fbo_hdr;
+        int fbo_hdr_tex;
+        
         int transp_fbo_main = 0;
         int transp_fbo_texture = 0;
         int transp_fbo_depthtex = 0;
@@ -300,6 +321,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         }
 
         public float RenderClearAlpha = 1f;
+
+        public float MainEXP = 1.0f;
 
         public void Render()
         {
@@ -626,6 +649,63 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                 }
                 CheckError("AfterLighting");
+                if (TheClient.CVars.r_hdr.ValueB)
+                {
+                    TheClient.s_hdr_measure.Bind();
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_hdr);
+                    GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
+                    Matrix4 idtemp = Matrix4.Identity;
+                    GL.UniformMatrix4(1, false, ref mat);
+                    GL.UniformMatrix4(2, false, ref idtemp);
+                    GL.Uniform1(6, (float)Width);
+                    GL.Uniform1(7, (float)Height);
+                    //GL.ActiveTexture(TextureUnit.Texture1);
+                    //GL.BindTexture(TextureTarget.Texture2D, RS4P.RenderhintTexture);
+                    GL.ActiveTexture(TextureUnit.Texture0);
+                    GL.BindTexture(TextureTarget.Texture2D, fbo_texture);
+                    GL.Disable(EnableCap.CullFace);
+                    GL.Disable(EnableCap.DepthTest);
+                    CheckError("BeforeHDRMeasurePass");
+                    GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1.0f });
+                    GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.Zero);
+                    TheClient.Rendering.RenderRectangle(-1, -1, 10, 10);
+                    CheckError("AfterHDRMeasurePass");
+                    StandardBlend();
+                    float[] rd = new float[1];
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                    CheckError("HDRMID_1");
+                    GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, fbo_hdr);
+                    CheckError("HDRMID_2");
+                    GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
+                    CheckError("HDRMID_3");
+                    GL.ReadPixels(0, 0, 1, 1, PixelFormat.Red, PixelType.Float, rd);
+                    CheckError("HDRMID_4");
+                    GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
+                    CheckError("HDRMID_5");
+                    GL.ReadBuffer(ReadBufferMode.None);
+                    float exp = rd[0];
+                    exp = Math.Max(Math.Min(exp, 10f), 0.1f);
+                    exp = 1.0f / exp;
+                    float stepUp = (float)TheClient.gDelta * 0.5f;
+                    float stepDown = stepUp * 2.0f;
+                    if  (exp > MainEXP + stepUp)
+                    {
+                        MainEXP += stepUp;
+                    }
+                    else if (exp < MainEXP - stepDown)
+                    {
+                        MainEXP -= stepDown;
+                    }
+                    else
+                    {
+                        MainEXP = exp;
+                    }
+                    CheckError("AfterHDRRead");
+                }
+                else
+                {
+                    MainEXP = 1.0f;
+                }
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_godray_main);
                 if (TheClient.CVars.r_toonify.ValueB)
                 {
@@ -668,6 +748,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.Uniform1(24, (float)Width);
                 GL.Uniform1(25, (float)Height);
                 GL.Uniform1(26, (float)TheClient.GlobalTickTimeLocal);
+                GL.Uniform1(27, (float)MainEXP);
                 GL.UniformMatrix4(22, false, ref combined);
                 GL.ActiveTexture(TextureUnit.Texture6);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.bwtexture);

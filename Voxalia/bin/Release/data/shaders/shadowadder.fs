@@ -26,6 +26,8 @@ layout (location = 11) uniform float light_type = 0.0;
 layout (location = 12) uniform float tex_size = 0.001;
 layout (location = 13) uniform float depth_jump = 0.5;
 
+const float HDR_Mod = 5.0;
+
 out vec4 color;
 
 void main()
@@ -52,8 +54,8 @@ void main()
 		}
 	}
 	vec3 L = light_path / light_length;
-	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), (200.0 / 1000.0f /* RENDERHINT.Y : SPECULAR POWER */ ) * 1000.0) * specular_albedo * renderhint.x);
+	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0) * HDR_Mod;
+	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), (200.0 / 1000.0f /* RENDERHINT.Y : SPECULAR POWER */ ) * 1000.0) * specular_albedo * renderhint.x) * HDR_Mod;
 	if (should_sqrt >= 1.0)
 	{
 		f_spos.x = sign(f_spos.x) * sqrt(abs(f_spos.x));

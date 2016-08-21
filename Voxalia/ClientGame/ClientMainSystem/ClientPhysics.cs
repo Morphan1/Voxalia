@@ -11,13 +11,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
     public partial class Client
     {
         public SkyLight TheSun = null;
+        
+        // TODO: Enable planetary light minus shadows?
 
     //    public SkyLight ThePlanet = null;
 
         // Note: the client only has one region loaded at any given time.
         public Region TheRegion = null;
 
-        public Location SunLightDef = Location.One;
+        public const float SunLightMod = 1.5f;
+
+        public Location SunLightDef = Location.One * SunLightMod;
 
         // public Location PlanetLightDef = new Location(0.75, 0.3, 0) * 0.25f;
 
