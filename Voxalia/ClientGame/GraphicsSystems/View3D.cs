@@ -580,7 +580,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.Disable(EnableCap.CullFace);
                 GL.Disable(EnableCap.DepthTest);
                 TranspBlend();
-                float flare_val = 2.0f;
+                float flare_val = 3f; // TODO: WHY???
                 if (TheClient.CVars.r_lighting.ValueB)
                 {
                     for (int i = 0; i < Lights.Count; i++)
@@ -660,9 +660,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
                         GL.ReadBuffer(ReadBufferMode.None);
                         float exp = FindExp(rd);
-                        flare_val = 1f + exp; // TODO: More logical calculation here?
-                        exp = Math.Max(Math.Min(exp, 2f), 0.33f);
+                        exp = Math.Max(Math.Min(exp, 2.0f), 0.33f);
                         exp = 1.0f / exp;
+                        flare_val += exp * 4f;
                         float stepUp = (float)TheClient.gDelta * 0.05f;
                         float stepDown = stepUp * 5.0f;
                         if (exp > MainEXP + stepUp)
