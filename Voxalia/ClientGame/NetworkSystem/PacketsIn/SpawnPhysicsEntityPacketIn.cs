@@ -3,6 +3,7 @@ using Voxalia.ClientGame.EntitySystem;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.Shared.Collision;
 using Voxalia.ClientGame.OtherSystems;
+using Voxalia.ClientGame.WorldSystem;
 
 namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 {
@@ -88,8 +89,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 SysConsole.Output(OutputType.WARNING, "Unknown physent type " + type);
                 return false;
             }
-            float bounce = Utilities.BytesToFloat(Utilities.BytesPartial(data, data.Length - 5, 4));
-            bool Visible = (data[data.Length - 1] & 1) == 1;
+            float bounce = Utilities.BytesToFloat(Utilities.BytesPartial(data, data.Length - (4 + 1 + 1), 4));
+            byte flags = data[data.Length - 2];
+            bool Visible = (flags & 1) == 1;
+            bool genShadow = (flags & 2) == 2;
             int solidity = (data[data.Length - 1] & (2 | 4 | 8 | 16));
             if (solidity == 2)
             {
@@ -120,6 +123,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 ce.CGroup = CollisionUtil.Character;
             }
             ce.Visible = Visible;
+            ce.GenBlockShadows = genShadow;
             ce.SetMass(mass);
             ce.SetPosition(pos);
             ce.SetVelocity(vel);
@@ -129,6 +133,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             ce.SetFriction(fric);
             ce.SetBounciness(bounce);
             TheClient.TheRegion.SpawnEntity(ce);
+            if (ce.GenBlockShadows)
+            {
+                Chunk ch = TheClient.TheRegion.GetChunk(TheClient.TheRegion.ChunkLocFor(pos));
+                if (ch != null)
+                {
+                    ch.CreateVBO();
+                }
+            }
             return true;
         }
     }

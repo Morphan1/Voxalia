@@ -125,7 +125,7 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public override Entity Create(Region tregion, byte[] input)
         {
-            int plen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1;
+            int plen = PhysicsEntity.PhysByteLen;
             byte mode = input[plen];
             int namelen = Utilities.BytesToInt(Utilities.BytesPartial(input, plen + 1, 4));
             string name = Utilities.encoding.GetString(input, plen + 1 + 4, namelen);

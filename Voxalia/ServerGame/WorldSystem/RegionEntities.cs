@@ -333,6 +333,7 @@ namespace Voxalia.ServerGame.WorldSystem
             me.SetOrientation(orient);
             me.SetPosition(pos);
             me.CanLOD = true;
+            me.GenBlockShadow = true;
             Action res = () =>
             {
                 SpawnEntity(me);

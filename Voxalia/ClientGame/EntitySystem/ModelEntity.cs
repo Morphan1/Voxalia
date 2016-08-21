@@ -320,6 +320,14 @@ namespace Voxalia.ClientGame.EntitySystem
                     if (tvec.Z > ModelMax.Z) { ModelMax.Z = tvec.Z; }
                 }
             }
+            if (GenBlockShadows)
+            {
+                BoxShape bs = new BoxShape(ModelMax.X - ModelMin.X, ModelMax.Y - ModelMin.Y, ModelMax.Z - ModelMin.Z);
+                ShadowCastShape = bs.GetCollidableInstance();
+                ShadowCastShape.LocalPosition = (ModelMax + ModelMin) * 0.5f + Body.Position;
+                RigidTransform def = RigidTransform.Identity;
+                ShadowCastShape.UpdateBoundingBoxForTransform(ref def);
+            }
         }
 
         public void RenderSimpler()

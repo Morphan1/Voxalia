@@ -41,6 +41,10 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public List<Entity> ShadowCasters = new List<Entity>();
 
+        public List<PhysicsEntity> GenShadowCasters = new List<PhysicsEntity>();
+
+        public Object GenShadowCastersLock = new Object();
+
         public AABB[] Highlights = new AABB[0];
 
         /// <summary>
@@ -217,7 +221,15 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             if (e is PhysicsEntity)
             {
-                ((PhysicsEntity)e).SpawnBody();
+                PhysicsEntity pe = e as PhysicsEntity;
+                pe.SpawnBody();
+                if (pe.GenBlockShadows)
+                {
+                    lock (GenShadowCastersLock)
+                    {
+                        GenShadowCasters.Add(pe);
+                    }
+                }
             }
             else if (e is PrimitiveEntity)
             {
@@ -238,10 +250,18 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             if (e is PhysicsEntity)
             {
-                ((PhysicsEntity)e).DestroyBody();
-                for (int i = 0; i < ((PhysicsEntity)e).Joints.Count; i++)
+                PhysicsEntity pe = e as PhysicsEntity;
+                pe.DestroyBody();
+                for (int i = 0; i < pe.Joints.Count; i++)
                 {
-                    DestroyJoint(((PhysicsEntity)e).Joints[i]);
+                    DestroyJoint(pe.Joints[i]);
+                }
+                if (pe.GenBlockShadows)
+                {
+                    lock (GenShadowCastersLock)
+                    {
+                        GenShadowCasters.Remove(pe);
+                    }
                 }
             }
             else if (e is PrimitiveEntity)
@@ -661,6 +681,34 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 ZP++;
                 z = 0;
+            }
+            if (light > 0)
+            {
+                Ray ray = new Ray(pos.ToBVector(), new BEPUutilities.Vector3(0, 0, 1));
+                RayHit rh;
+                lock (GenShadowCastersLock)
+                {
+                    for (int i = 0; i < GenShadowCasters.Count; i++)
+                    {
+                        PhysicsEntity pe = GenShadowCasters[i];
+                        if (pe.GenBlockShadows)
+                        {
+                            if (pe.Body.CollisionInformation.RayCast(ray, 500, out rh))
+                            {
+                                light = 0;
+                                break;
+                            }
+                            if (pe.ShadowCastShape.RayCast(ray, 500, out rh))
+                            {
+                                light -= 0.3f;
+                                if (light <= 0)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
             return Math.Max(norm.Dot(SunLightPathNegative), 0.5) * new Location(light) * SkyLightMod;
         }

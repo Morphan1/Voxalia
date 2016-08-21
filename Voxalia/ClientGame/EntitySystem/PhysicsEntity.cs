@@ -2,6 +2,7 @@
 using BEPUutilities;
 using BEPUphysics.CollisionShapes;
 using Voxalia.ClientGame.JointSystem;
+using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.CollisionRuleManagement;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.CollisionShapes.ConvexShapes;
@@ -45,6 +46,8 @@ namespace Voxalia.ClientGame.EntitySystem
         /// The gravity power of this entity.
         /// </summary>
         internal Location Gravity;
+
+        public bool GenBlockShadows = false;
 
         /// <summary>
         /// Whether this entity can rotate. Only updated at SpawnBody().
@@ -121,7 +124,11 @@ namespace Voxalia.ClientGame.EntitySystem
                     TheRegion.PhysicsWorld.Add(joint.CurrentJoint);
                 }
             }
+            ShadowCastShape = Shape.GetCollidableInstance();
         }
+
+        public EntityCollidable ShadowCastShape;
+
         /// <summary>
         /// Destroys the body, removing it from the physics world.
         /// </summary>

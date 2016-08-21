@@ -109,7 +109,7 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public override Entity Create(Region tregion, byte[] input)
         {
-            int plen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1;
+            int plen = PhysicsEntity.PhysByteLen;
             ushort tmat = Utilities.BytesToUshort(Utilities.BytesPartial(input, plen, 2));
             byte tdat = input[plen + 2];
             byte tpaint = input[plen + 3];

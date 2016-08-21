@@ -98,7 +98,7 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public override Entity Create(Region tregion, byte[] input)
         {
-            int plen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1;
+            int plen = PhysicsEntity.PhysByteLen;
             int colo = Utilities.BytesToInt(Utilities.BytesPartial(input, plen, 4));
             byte effecttype = input[plen + 4];
             int smokeleft = Utilities.BytesToInt(Utilities.BytesPartial(input, plen + 4 + 1, 4));

@@ -23,6 +23,8 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public bool TransmitMe = true;
 
+        public bool GenBlockShadow = false;
+
         /// <summary>
         /// Construct the physics entity.
         /// Sets its gravity to the world default and collisiongroup to Solid.
@@ -600,6 +602,8 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        public const int PhysByteLen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1 + 1;
+
         /// <summary>
         /// Gets the binary save data for a generic physics entity, used as part of the save procedure for a physics entity.
         /// Returns 76 bytes currently.
@@ -607,7 +611,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <returns>The binary data.</returns>
         public byte[] GetPhysicsBytes()
         {
-            byte[] bytes = new byte[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1];
+            byte[] bytes = new byte[PhysByteLen];
             GetPosition().ToBytes().CopyTo(bytes, 0);
             GetVelocity().ToBytes().CopyTo(bytes, 12);
             GetAngularVelocity().ToBytes().CopyTo(bytes, 12 + 12);
@@ -639,6 +643,8 @@ namespace Voxalia.ServerGame.EntitySystem
                 cg = 4;
             }
             bytes[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4] = cg;
+            byte flags = (byte)((Visible ? 1 : 0) | (GenBlockShadow ? 2 : 0) | (TransmitMe ? 128 : 0));
+            bytes[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1] = flags;
             return bytes;
         }
 
@@ -648,7 +654,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <param name="data">The save data.</param>
         public void ApplyBytes(byte[] data)
         {
-            if (data.Length < 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1)
+            if (data.Length < PhysByteLen)
             {
                 throw new Exception("Invalid binary physics entity data!");
             }
@@ -687,6 +693,10 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 CGroup = CollisionUtil.Water;
             }
+            byte flags = data[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1];
+            Visible = (flags & 1) == 1;
+            GenBlockShadow = (flags & 2) == 2;
+            TransmitMe = (flags & 128) == 128;
         }
     }
 }
