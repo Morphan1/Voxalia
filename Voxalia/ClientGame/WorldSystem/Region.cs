@@ -682,7 +682,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 ZP++;
                 z = 0;
             }
-            if (light > 0)
+            if (light > 0 && TheClient.CVars.r_treeshadows.ValueB)
             {
                 Ray ray = new Ray(pos.ToBVector(), new BEPUutilities.Vector3(0, 0, 1));
                 RayHit rh;
