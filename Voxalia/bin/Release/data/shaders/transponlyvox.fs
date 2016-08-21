@@ -64,7 +64,14 @@ void main()
 	}
 	else if (f.tcol.w == 0.0 && f.tcol.x > 0.3 && f.tcol.x < 0.7 && f.tcol.y > 0.3 && f.tcol.y < 0.7 && f.tcol.z > 0.3 && f.tcol.z < 0.7)
 	{
-		tcolor *= texture(tex, vec3(f.texcoord.xy, 0));
+		if (f.tcol.z > 0.51)
+		{
+			tcolor.xyz = vec3(1.0) - tcolor.xyz;
+		}
+		else
+		{
+			tcolor *= texture(tex, vec3(f.texcoord.xy, 0));
+		}
 	}
 	else
 	{
