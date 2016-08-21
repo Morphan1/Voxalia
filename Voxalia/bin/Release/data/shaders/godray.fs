@@ -19,14 +19,19 @@ const float LEN_JUMP = 0.02;
 void main()
 {
 	vec4 grinp = vec4(0.0);
+	float exp_inv = 1.0 / exposure;
+	float m_w = MAX_WIDTH * exposure;
 	for (float l = 0.0; l < 1.0; l += LEN_JUMP)
 	{
-		for (float w = -MAX_WIDTH; w < MAX_WIDTH; w += WIDTH_JUMP)
+		for (float w = -m_w; w < m_w; w += WIDTH_JUMP)
 		{
 			vec4 gr_col = texture(godraytex, vec2(f_texcoord.x + w, l)) + texture(godraytex, vec2(l, f_texcoord.y + w));
-			float mod = (0.5 - abs(l - 0.5)) * 2.0;
-			float wmod = (MAX_WIDTH - abs(w)) * INV_MAX_WIDTH;
-			grinp += gr_col * (mod * mod * wmod * wmod * wmod * wmod);
+			if (gr_col.w > 0.0)
+			{
+				float mod = (0.5 - abs(l - 0.5)) * 2.0;
+				float wmod = (MAX_WIDTH - abs(w)) * INV_MAX_WIDTH;
+				grinp += gr_col * pow(mod * mod * wmod * wmod, exp_inv);
+			}
 		}
 	}
 	color = grinp;
