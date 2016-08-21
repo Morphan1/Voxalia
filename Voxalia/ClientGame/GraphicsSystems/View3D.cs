@@ -39,9 +39,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public int Height;
 
         public Material Headmat = Material.AIR;
-
-        public Vector3 SunLoc = new Vector3(float.NaN, float.NaN, float.NaN);
-
+        
         public Client TheClient;
 
         int fbo_texture;
@@ -582,6 +580,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.Disable(EnableCap.CullFace);
                 GL.Disable(EnableCap.DepthTest);
                 TranspBlend();
+                float flare_val = 2.0f;
                 if (TheClient.CVars.r_lighting.ValueB)
                 {
                     for (int i = 0; i < Lights.Count; i++)
@@ -661,6 +660,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
                         GL.ReadBuffer(ReadBufferMode.None);
                         float exp = FindExp(rd);
+                        flare_val = 1f + exp; // TODO: More logical calculation here?
                         exp = Math.Max(Math.Min(exp, 2f), 0.33f);
                         exp = 1.0f / exp;
                         float stepUp = (float)TheClient.gDelta * 0.05f;
@@ -701,27 +701,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.DrawBuffers(2, new DrawBuffersEnum[] { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1 });
                 GL.Uniform3(5, ClientUtilities.Convert(TheClient.CVars.r_lighting.ValueB ? Location.Zero : Location.One));
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0f, 0f, 0f, 0f });
-                GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 1f, 1f, 1f, 0f });
+                GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 0f, 0f, 0f, 0f });
                 GL.BlendFuncSeparate(1, BlendingFactorSrc.SrcColor, BlendingFactorDest.Zero, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.Zero);
                 GL.Uniform1(19, DesaturationAmount);
                 GL.Uniform3(8, ClientUtilities.Convert(TheClient.CameraFinalTarget));
                 GL.Uniform1(9, TheClient.CVars.r_dof_strength.ValueF);
-                Vector3 lPos = SunLoc;
-                bool hasSun = float.IsNaN(SunLoc.X) || float.IsNaN(SunLoc.Y) || float.IsNaN(SunLoc.Z);
-                if (!hasSun)
-                {
-                    lPos = Vector3.UnitZ;
-                }
-                Vector4 t = Vector4.Transform(new Vector4(lPos, 1f), combined);
-                Vector2 lp1 = t.Xy / t.W;
-                Vector2 lightPos = lp1 * 0.5f + new Vector2(0.5f);
-                float lplenadj = (1f - Math.Min(lp1.Length, 1f)) * (0.99f - 0.6f) + 0.6f;
-                GL.Uniform2(10, ref lightPos);
-                GL.Uniform1(11, TheClient.CVars.r_godray_samples.ValueI);
-                GL.Uniform1(12, TheClient.CVars.r_godray_wexposure.ValueF);
-                GL.Uniform1(13, TheClient.CVars.r_godray_decay.ValueF);
-                GL.Uniform1(14, TheClient.CVars.r_godray_density.ValueF * lplenadj);
-                GL.Uniform3(15, ClientUtilities.Convert(godrayCol));
                 GL.Uniform1(16, TheClient.CVars.r_znear.ValueF);
                 GL.Uniform1(17, TheClient.CVars.r_zfar.ValueF);
                 GL.Uniform4(18, new Vector4(ClientUtilities.Convert(Headmat.GetFogColor()), Headmat.GetFogAlpha()));
@@ -732,6 +716,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.Uniform1(25, (float)Height);
                 GL.Uniform1(26, (float)TheClient.GlobalTickTimeLocal);
                 GL.Uniform1(27, (float)MainEXP);
+                GL.Uniform1(28, flare_val);
                 GL.UniformMatrix4(22, false, ref combined);
                 GL.ActiveTexture(TextureUnit.Texture6);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.bwtexture);

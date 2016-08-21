@@ -315,7 +315,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 sortEntities();
                 Particles.Sort();
-                MainWorldView.SunLoc = GetSunLocation();
                 MainWorldView.Headmat = TheRegion.GetBlockMaterial(MainWorldView.CameraPos);
                 MainWorldView.Render();
             }

@@ -18,12 +18,7 @@ layout (location = 5) uniform vec3 ambient = vec3(0.0, 0.0, 0.0);
 // ...
 layout (location = 8) uniform vec3 cameraTargetPos = vec3(0.0, 0.0, 0.0);
 layout (location = 9) uniform float cameraTargetDepth = 0.01;
-layout (location = 10) uniform vec2 lightPos = vec2(0.5);
-layout (location = 11) uniform int numSamples = 75;
-layout (location = 12) uniform float wexposure = 0.0034 * 5.65;
-layout (location = 13) uniform float decay = 1.0;
-layout (location = 14) uniform float density = 0.84;
-layout (location = 15) uniform vec3 grcolor = vec3(1.0);
+// ...
 layout (location = 16) uniform float znear = 0.1;
 layout (location = 17) uniform float zfar = 1000.0;
 layout (location = 18) uniform vec4 fogCol = vec4(0.0);
@@ -36,6 +31,7 @@ layout (location = 24) uniform float WIDTH = 1280.0;
 layout (location = 25) uniform float HEIGHT = 720.0;
 layout (location = 26) uniform float time = 0.0;
 layout (location = 27) uniform float exposure = 1.0;
+layout (location = 28) uniform float flare_val = 2.0;
 
 const float HDR_Mod = 5.0;
 const float HDR_Div = (1.0 / HDR_Mod);
@@ -78,22 +74,6 @@ vec4 regularize(in vec4 input_r) // TODO: Is this working the best it can?
 		return input_r;
 	}
 	return vec4(input_r.xyz / max(max(input_r.x, input_r.y), input_r.z), input_r.w);
-}
-
-vec4 getGodRay()
-{
-	vec4 c = vec4(0.0);
-	vec2 tcd = vec2(f_texcoord - lightPos);
-	tcd *= density / float(numSamples);
-	float illuminationDecay = 1.0;
-	vec2 tc = f_texcoord;
-	for (int i = 0; i < numSamples; i++)
-	{
-		tc -= tcd;
-		c += texture2D(bwtex, tc) * illuminationDecay;
-		illuminationDecay *= decay;
-	}
-	return c * wexposure;
 }
 
 vec3 desaturate(in vec3 c)
@@ -323,14 +303,13 @@ void main()
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
 	vec3 renderhint2 = texture(renderhint2tex, f_texcoord).xyz;
 	float dist = texture(depthtex, f_texcoord).r;
-	godray = getGodRay() * vec4(grcolor, 1.0);
-	color = vec4(mix(light_color.xyz, fogCol.xyz, 1.0 - exp(-dist * fogCol.w)), 1.0);
+	light_color = vec4(mix(light_color.xyz, fogCol.xyz, 1.0 - exp(-dist * fogCol.w)), 1.0);
 	if (dot(renderhint2, renderhint2) > 0.99)
 	{
 		vec3 viewDir = texture(positiontex, f_texcoord).xyz - eye_position;
 		vec3 refr = refract(normalize(viewDir), normalize(renderhint2), 0.75);
 		vec4 refrCol = getColor(f_texcoord + refr.xy * 0.1);
-		color = color * 0.5 + refrCol * 0.5;
+		light_color = light_color * 0.5 + refrCol * 0.5;
 	}
 	else if (renderhint2.y > 0.01)
 	{
@@ -343,16 +322,24 @@ void main()
 		vec4 SSR = raytrace(reflectionVector.xyz / reflectionVector.w, currDepth);
 		if (SSR.w > 0.0)
 		{
-			color = color * (1.0 - renderhint2.y) + SSR * renderhint2.y;
+			light_color = light_color * (1.0 - renderhint2.y) + SSR * renderhint2.y;
 		}
 	}
 	if (texture(bwtex, f_texcoord).w > 0.01)
 	{
-		color = vec4(desaturate(color.xyz), color.w);
-		godray = vec4(desaturate(godray.xyz), godray.w);
+		light_color = vec4(desaturate(light_color.xyz), light_color.w);
 	}
-#else
-	color = light_color;
-	godray = vec4(0.0);
 #endif
+	vec4 basecol = texture(shtex, f_texcoord) * HDR_Div * texture(colortex, f_texcoord);
+	float val = max(max(basecol.x, basecol.y), basecol.z);
+	if (val > flare_val)
+	{
+		float mod = min(val - flare_val, 1.0);
+		godray = vec4(basecol.xyz, mod * mod * basecol.w);
+	}
+	else
+	{
+		godray = vec4(0.0);
+	}
+	color = light_color;
 }
