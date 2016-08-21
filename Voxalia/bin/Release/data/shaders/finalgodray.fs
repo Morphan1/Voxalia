@@ -105,7 +105,7 @@ vec4 getColorInt(in vec2 pos)
 {
 	vec4 shadow_light_color = texture(shtex, pos) * HDR_Div * exposure;
 	vec4 colortex_color = texture(colortex, pos);
-	return regularize(vec4(ambient, 0.0) * exposure * colortex_color + shadow_light_color);
+	return regularize(vec4(ambient, 0.0) * colortex_color + shadow_light_color);
 }
 
 vec4 getColor(in vec2 pos)

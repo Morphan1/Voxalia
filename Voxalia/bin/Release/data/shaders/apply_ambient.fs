@@ -7,11 +7,13 @@ layout (location = 0) in vec2 f_texcoord;
 
 layout (location = 5) uniform vec3 ambient = vec3(0.05, 0.05, 0.05);
 
+const float HDR_Mod = 5.0;
+
 out vec4 color;
 
 void main()
 {
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
 	vec4 colortex_color = texture(diffusetex, f_texcoord);
-	color = vec4(ambient + vec3(renderhint.z), 1.0) * colortex_color;
+	color = vec4(ambient + vec3(renderhint.z), 1.0) * colortex_color * HDR_Mod;
 }

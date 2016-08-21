@@ -313,7 +313,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             float total = 0f;
             for (int i = 0; i < inp.Length; i += 4)
             {
-                total += inp[i] + inp[i + 1] + inp[i + 2];
+                total += Math.Max(Math.Max(inp[i], inp[i + 1]), inp[i + 2]);
             }
             return total / (float)(inp.Length / 4);
         }
