@@ -99,7 +99,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_transponlyvoxlitsh_ll = Shaders.GetShader("transponlyvox" + def + ",MCM_LIT,MCM_SHADOWS,MCM_LL");
             s_ll_clearer = Shaders.GetShader("clearer" + def);
             s_ll_fpass = Shaders.GetShader("fpass" + def);
-            s_hdr_measure = Shaders.GetShader("measure_bright" + def);
             // TODO: Better place for models?
             RainCyl = Models.GetModel("raincyl");
             RainCyl.LoadSkin(Textures);
@@ -174,7 +173,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_transponlyvoxlitsh_ll;
         public Shader s_ll_clearer;
         public Shader s_ll_fpass;
-        public Shader s_hdr_measure;
         
         public void sortEntities() // TODO: Maybe reverse ent order first, then this, to counteract existing reversal?
         {

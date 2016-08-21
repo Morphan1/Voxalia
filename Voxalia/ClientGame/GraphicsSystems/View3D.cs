@@ -109,22 +109,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment1, TextureTarget.Texture2D, fbo_godray_texture2, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.BindTexture(TextureTarget.Texture2D, 0);
-            // HDR - 1x1 "how bright is the screen" texture.
-            GL.ActiveTexture(TextureUnit.Texture0);
-            fbo_hdr_tex = GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, fbo_hdr_tex);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.R32f, 1, 1, 0, PixelFormat.Red, PixelType.Float, IntPtr.Zero);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureCompareMode, (int)TextureCompareMode.CompareRefToTexture);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureCompareFunc, (int)DepthFunction.Lequal);
-            fbo_hdr = GL.GenFramebuffer();
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_hdr);
-            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, fbo_hdr_tex, 0);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-            GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
         public void GenerateFBO()
@@ -323,6 +307,16 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public float RenderClearAlpha = 1f;
 
         public float MainEXP = 1.0f;
+
+        public float FindExp(float[] inp) // TODO: Offload this to the GPU (computer shader probably, or layers of rendering...)
+        {
+            float total = 0f;
+            for (int i = 0; i < inp.Length; i += 4)
+            {
+                total += inp[i] + inp[i + 1] + inp[i + 2];
+            }
+            return total / (float)(inp.Length / 4);
+        }
 
         public void Render()
         {
@@ -651,42 +645,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 CheckError("AfterLighting");
                 if (TheClient.CVars.r_hdr.ValueB)
                 {
-                    TheClient.s_hdr_measure.Bind();
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_hdr);
-                    GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
-                    Matrix4 idtemp = Matrix4.Identity;
-                    GL.UniformMatrix4(1, false, ref mat);
-                    GL.UniformMatrix4(2, false, ref idtemp);
-                    GL.Uniform1(6, (float)Width);
-                    GL.Uniform1(7, (float)Height);
-                    //GL.ActiveTexture(TextureUnit.Texture1);
-                    //GL.BindTexture(TextureTarget.Texture2D, RS4P.RenderhintTexture);
-                    GL.ActiveTexture(TextureUnit.Texture0);
-                    GL.BindTexture(TextureTarget.Texture2D, fbo_texture);
-                    GL.Disable(EnableCap.CullFace);
-                    GL.Disable(EnableCap.DepthTest);
-                    CheckError("BeforeHDRMeasurePass");
-                    GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1.0f });
-                    GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.Zero);
-                    TheClient.Rendering.RenderRectangle(-1, -1, 10, 10);
-                    CheckError("AfterHDRMeasurePass");
-                    StandardBlend();
-                    float[] rd = new float[1];
+                    float[] rd = new float[Width * Height];
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-                    CheckError("HDRMID_1");
-                    GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, fbo_hdr);
-                    CheckError("HDRMID_2");
+                    GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, fbo_main);
                     GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
-                    CheckError("HDRMID_3");
-                    GL.ReadPixels(0, 0, 1, 1, PixelFormat.Red, PixelType.Float, rd);
-                    CheckError("HDRMID_4");
+                    GL.ReadPixels(0, 0, Width, Height, PixelFormat.Red, PixelType.Float, rd);
                     GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
-                    CheckError("HDRMID_5");
                     GL.ReadBuffer(ReadBufferMode.None);
-                    float exp = rd[0];
-                    exp = Math.Max(Math.Min(exp, 10f), 0.1f);
-                    exp = 1.0f / exp;
-                    float stepUp = (float)TheClient.gDelta * 0.5f;
+                    float exp = FindExp(rd);
+                    exp = Math.Max(Math.Min(exp, 1.5f), 0.75f);
+                    //exp = 1.0f / exp;
+                    float stepUp = (float)TheClient.gDelta * 0.15f;
                     float stepDown = stepUp * 2.0f;
                     if  (exp > MainEXP + stepUp)
                     {
