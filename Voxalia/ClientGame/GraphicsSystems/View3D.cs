@@ -664,7 +664,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         exp = Math.Max(Math.Min(exp, 2f), 0.33f);
                         exp = 1.0f / exp;
                         float stepUp = (float)TheClient.gDelta * 0.05f;
-                        float stepDown = stepUp * 7.0f;
+                        float stepDown = stepUp * 5.0f;
                         if (exp > MainEXP + stepUp)
                         {
                             MainEXP += stepUp;
@@ -989,6 +989,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     TheClient.s_godray = TheClient.s_godray.Bind();
                     GL.UniformMatrix4(1, false, ref mat);
                     GL.UniformMatrix4(2, false, ref matident);
+                    GL.Uniform1(6, MainEXP);
                     TranspBlend();
                     TheClient.Rendering.RenderRectangle(-1, -1, 1, 1);
                     StandardBlend();
