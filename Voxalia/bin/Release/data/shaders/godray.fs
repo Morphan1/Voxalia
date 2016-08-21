@@ -12,7 +12,7 @@ const float MAX_WIDTH = 0.025;
 
 const float INV_MAX_WIDTH = 1.0 / MAX_WIDTH;
 
-const float WIDTH_JUMP = 0.005;
+const float WIDTH_JUMP = 0.0025;
 
 const float LEN_JUMP = 0.02;
 
