@@ -641,40 +641,54 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             }
                         }
                     }
-                }
-                CheckError("AfterLighting");
-                if (TheClient.CVars.r_hdr.ValueB)
-                {
-                    float[] rd = new float[Width * Height];
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-                    GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, fbo_main);
-                    GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
-                    GL.ReadPixels(0, 0, Width, Height, PixelFormat.Red, PixelType.Float, rd);
-                    GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
-                    GL.ReadBuffer(ReadBufferMode.None);
-                    float exp = FindExp(rd);
-                    exp = Math.Max(Math.Min(exp, 1.5f), 0.75f);
-                    //exp = 1.0f / exp;
-                    float stepUp = (float)TheClient.gDelta * 0.15f;
-                    float stepDown = stepUp * 2.0f;
-                    if  (exp > MainEXP + stepUp)
+                    TheClient.s_applyambient = TheClient.s_applyambient.Bind();
+                    GL.ActiveTexture(TextureUnit.Texture1);
+                    GL.BindTexture(TextureTarget.Texture2D, RS4P.RenderhintTexture);
+                    GL.ActiveTexture(TextureUnit.Texture0);
+                    GL.BindTexture(TextureTarget.Texture2D, RS4P.DiffuseTexture);
+                    GL.UniformMatrix4(1, false, ref mat);
+                    GL.UniformMatrix4(2, false, ref matident);
+                    GL.Uniform3(5, ClientUtilities.Convert(ambient));
+                    TheClient.Rendering.RenderRectangle(-1, -1, 1, 1);
+                    CheckError("AfterLighting");
+                    if (TheClient.CVars.r_hdr.ValueB)
                     {
-                        MainEXP += stepUp;
-                    }
-                    else if (exp < MainEXP - stepDown)
-                    {
-                        MainEXP -= stepDown;
+                        float[] rd = new float[Width * Height];
+                        GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                        GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, fbo_main);
+                        GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
+                        GL.ReadPixels(0, 0, Width, Height, PixelFormat.Red, PixelType.Float, rd);
+                        GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
+                        GL.ReadBuffer(ReadBufferMode.None);
+                        float exp = FindExp(rd);
+                        exp = Math.Max(Math.Min(exp, 2f), 0.33f);
+                        exp = 1.0f / exp;
+                        float stepUp = (float)TheClient.gDelta * 0.05f;
+                        float stepDown = stepUp * 7.0f;
+                        if (exp > MainEXP + stepUp)
+                        {
+                            MainEXP += stepUp;
+                        }
+                        else if (exp < MainEXP - stepDown)
+                        {
+                            MainEXP -= stepDown;
+                        }
+                        else
+                        {
+                            MainEXP = exp;
+                        }
+                        CheckError("AfterHDRRead");
                     }
                     else
                     {
-                        MainEXP = exp;
+                        MainEXP = 1.0f;
                     }
-                    CheckError("AfterHDRRead");
                 }
                 else
                 {
                     MainEXP = 1.0f;
                 }
+                CheckError("AfterAllLightCode");
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_godray_main);
                 if (TheClient.CVars.r_toonify.ValueB)
                 {
@@ -685,11 +699,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     TheClient.s_finalgodray = TheClient.s_finalgodray.Bind();
                 }
                 GL.DrawBuffers(2, new DrawBuffersEnum[] { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1 });
+                GL.Uniform3(5, ClientUtilities.Convert(TheClient.CVars.r_lighting.ValueB ? Location.Zero : Location.One));
                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0f, 0f, 0f, 0f });
                 GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 1f, 1f, 1f, 0f });
                 GL.BlendFuncSeparate(1, BlendingFactorSrc.SrcColor, BlendingFactorDest.Zero, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.Zero);
                 GL.Uniform1(19, DesaturationAmount);
-                GL.Uniform3(5, ClientUtilities.Convert(TheClient.CVars.r_lighting.ValueB ? ambient : new Location(1, 1, 1)));
                 GL.Uniform3(8, ClientUtilities.Convert(TheClient.CameraFinalTarget));
                 GL.Uniform1(9, TheClient.CVars.r_dof_strength.ValueF);
                 Vector3 lPos = SunLoc;

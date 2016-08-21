@@ -20,6 +20,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Region TheRegion = null;
 
         public const float SunLightMod = 1.5f;
+        public const float SunLightModDirect = 3f;
 
         public Location SunLightDef = Location.One * SunLightMod;
 

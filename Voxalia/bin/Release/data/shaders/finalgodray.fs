@@ -14,7 +14,7 @@ layout (binding = 7) uniform sampler2D renderhint2tex;
 
 layout (location = 0) in vec2 f_texcoord;
 
-layout (location = 5) uniform vec3 ambient = vec3(0.05, 0.05, 0.05);
+layout (location = 5) uniform vec3 ambient = vec3(0.0, 0.0, 0.0);
 // ...
 layout (location = 8) uniform vec3 cameraTargetPos = vec3(0.0, 0.0, 0.0);
 layout (location = 9) uniform float cameraTargetDepth = 0.01;
@@ -105,9 +105,7 @@ vec4 getColorInt(in vec2 pos)
 {
 	vec4 shadow_light_color = texture(shtex, pos) * HDR_Div * exposure;
 	vec4 colortex_color = texture(colortex, pos);
-	vec4 renderhint = texture(renderhinttex, pos);
-	//vec3 sub = vec3(1.0 - renderhint.y);
-	return regularize(vec4(ambient + vec3(renderhint.z), 0.0) * exposure * colortex_color + (shadow_light_color /* - vec4(sub, 0.0)*/ ));
+	return regularize(vec4(ambient, 0.0) * exposure * colortex_color + shadow_light_color);
 }
 
 vec4 getColor(in vec2 pos)

@@ -99,6 +99,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_transponlyvoxlitsh_ll = Shaders.GetShader("transponlyvox" + def + ",MCM_LIT,MCM_SHADOWS,MCM_LL");
             s_ll_clearer = Shaders.GetShader("clearer" + def);
             s_ll_fpass = Shaders.GetShader("fpass" + def);
+            s_applyambient = Shaders.GetShader("apply_ambient" + def);
             // TODO: Better place for models?
             RainCyl = Models.GetModel("raincyl");
             RainCyl.LoadSkin(Textures);
@@ -173,6 +174,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_transponlyvoxlitsh_ll;
         public Shader s_ll_clearer;
         public Shader s_ll_fpass;
+        public Shader s_applyambient;
         
         public void sortEntities() // TODO: Maybe reverse ent order first, then this, to counteract existing reversal?
         {
@@ -404,7 +406,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 GL.Uniform4(7, Color4.White);
             }
-            Rendering.SetColor(new Vector4(ClientUtilities.Convert(MainWorldView.godrayCol * SunLightMod), 1));
+            Rendering.SetColor(new Vector4(ClientUtilities.Convert(MainWorldView.godrayCol * SunLightModDirect), 1));
             Textures.GetTexture("skies/sun").Bind(); // TODO: Store var!
             Matrix4 rot = Matrix4.CreateTranslation(-150f, -150f, 0f)
                 * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
@@ -916,7 +918,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         + ", FBO: " + MainWorldView.FBOSpikeTime.ToString(timeformat) + ", Lights: " + MainWorldView.LightsSpikeTime.ToString(timeformat) + ", 2D: " + TWODSpikeTime.ToString(timeformat)
                         + ", Tick: " + TickSpikeTime.ToString(timeformat) + ", Finish: " + FinishSpikeTime.ToString(timeformat)
                         + "\nChunks loaded: " + TheRegion.LoadedChunks.Count + ", Chunks rendering currently: " + TheRegion.RenderingNow.Count + ", chunks waiting: " + TheRegion.NeedsRendering.Count + ", Entities loaded: " + TheRegion.Entities.Count
-                        + "\nPosition: " + Player.GetPosition().ToBasicString() + ", velocity: " + Player.GetVelocity().ToBasicString() + ", direction: " + Player.Direction.ToBasicString(),
+                        + "\nPosition: " + Player.GetPosition().ToBasicString() + ", velocity: " + Player.GetVelocity().ToBasicString() + ", direction: " + Player.Direction.ToBasicString()
+                        + "\nExposure: " + MainWorldView.MainEXP,
                         Window.Width - 10), new Location(0, 0, 0), Window.Height, 1, false, "^r^!^e^7");
                 }
                 int center = Window.Width / 2;
