@@ -104,10 +104,10 @@ namespace Voxalia.ClientGame.CommandSystem
             r_3d_enable = Register("r_3d_enable", "false", CVarFlag.Boolean, "Whether to use 3D side-by-side rendering mode.");
             r_fast = Register("r_fast", "false", CVarFlag.Boolean, "Whether to use 'fast' rendering mode.");
             r_chunksatonce = Register("r_chunksatonce", "20", CVarFlag.Numeric, "How many chunks can render at once.");
-            r_chunkoverrender = Register("r_chunkoverrender", "true", CVarFlag.Boolean, "Whether to render chunks more often for quality's sake, at risk of performance.");
+            r_chunkoverrender = Register("r_chunkoverrender", "false", CVarFlag.Boolean, "Whether to render chunks more often for quality's sake, at risk of performance.");
             r_transpll = Register("r_transpll", "false", CVarFlag.Boolean, "Whether to use GPU linked lists when rendering transparent objects.");
             r_noblockshapes = Register("r_noblockshapes", "false", CVarFlag.Boolean, "Whether block shapes are disabled or not.");
-            r_treeshadows = Register("r_treeshadows", "false", CVarFlag.Boolean, "Whether trees cast shadows.");
+            r_treeshadows = Register("r_treeshadows", "true", CVarFlag.Boolean, "Whether trees cast shadows.");
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric, "What volume the music should be.");
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");
