@@ -41,6 +41,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public int Height;
 
         public Material Headmat = Material.AIR;
+
+        public Location SunLoc = Location.NaN;
         
         public Client TheClient;
 
@@ -992,12 +994,38 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 CheckError("PreGR");
                 if (TheClient.CVars.r_godrays.ValueB) // TODO: Local disable? Non-primary views probably don't need godrays...
                 {
+                    // TODO: 3d stuff for GodRays.
+                    GL.ActiveTexture(TextureUnit.Texture1);
+                    GL.BindTexture(TextureTarget.Texture2D, RS4P.DepthTexture);
+                    GL.ActiveTexture(TextureUnit.Texture0);
                     GL.BindTexture(TextureTarget.Texture2D, fbo_godray_texture2);
                     TheClient.s_godray = TheClient.s_godray.Bind();
                     GL.UniformMatrix4(1, false, ref mat);
                     GL.UniformMatrix4(2, false, ref matident);
                     GL.Uniform1(6, MainEXP);
                     GL.Uniform1(7, Width / (float)Height);
+                    if (SunLoc.IsNaN())
+                    {
+                        GL.Uniform2(8, new Vector2(-10f, -10f));
+                    }
+                    else
+                    {
+                        Vector4 v = Vector4.Transform(new Vector4(ClientUtilities.Convert(SunLoc), 1f), combined);
+                        if (v.Z / v.W > 1.0f || v.Z / v.W < 0.0f)
+                        {
+                            GL.Uniform2(8, new Vector2(-10f, -10f));
+                        }
+                        else
+                        {
+                            Vector2 lp1 = (v.Xy / v.W) * 0.5f + new Vector2(0.5f);
+                            GL.Uniform2(8, ref lp1);
+                            float lplenadj = (1f - Math.Min(lp1.Length, 1f)) * (0.99f - 0.6f) + 0.6f;
+                            GL.Uniform1(12, 0.84f * lplenadj);
+                        }
+                    }
+                    GL.Uniform1(14, TheClient.CVars.r_znear.ValueF);
+                    GL.Uniform1(15, TheClient.CVars.r_zfar.ValueF);
+                    GL.Uniform1(16, TheClient.dist); // TODO: Local controlled variable.
                     TranspBlend();
                     TheClient.Rendering.RenderRectangle(-1, -1, 1, 1);
                     StandardBlend();

@@ -317,6 +317,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 sortEntities();
                 Particles.Sort();
                 MainWorldView.Headmat = TheRegion.GetBlockMaterial(MainWorldView.CameraPos);
+                MainWorldView.SunLoc = GetSunLocation();
                 MainWorldView.Render();
             }
             catch (Exception ex)
@@ -355,11 +356,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
         }
 
         float dist2 = 1900; // TODO: (View rad + 2) * CHUNK_SIZE ? Or base off ZFAR?
-        float dist = 1700;
+        public float dist = 1700;
         
-        public Vector3 GetSunLocation()
+        public Location GetSunLocation()
         {
-            return ClientUtilities.Convert(MainWorldView.CameraPos + TheSun.Direction * -(dist * 0.96f));
+            return MainWorldView.CameraPos + TheSun.Direction * -(dist * 0.96f);
         }
 
         public void RenderSkybox()
@@ -440,7 +441,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (MainWorldView.FBOid == FBOID.MAIN)
             {
                 s_fbov = s_fbov.Bind();
-                GL.Uniform4(7, Color4.Black);
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.TextureID);
                 GL.ActiveTexture(TextureUnit.Texture2);
                 GL.BindTexture(TextureTarget.Texture2DArray, TBlock.NormalTextureID);
@@ -553,7 +553,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 s_fbo = s_fbo.Bind();
-                GL.Uniform4(7, Color4.Black);
             }
             else if (MainWorldView.FBOid == FBOID.REFRACT)
             {
@@ -636,10 +635,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void Render3D(View3D view)
         {
-            if (MainWorldView.FBOid == FBOID.MAIN)
-            {
-                GL.Uniform4(7, Color4.Black);
-            }
             GL.Enable(EnableCap.CullFace);
             if (view.ShadowsOnly)
             {

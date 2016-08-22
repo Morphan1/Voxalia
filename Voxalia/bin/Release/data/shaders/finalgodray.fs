@@ -40,7 +40,7 @@ layout (location = 1) out vec4 godray;
 
 float linearizeDepth(in float rinput)
 {
-	return (2 * MIN_DEPTH) / (MAX_DEPTH + MIN_DEPTH - rinput * (MAX_DEPTH - MIN_DEPTH));
+	return (2.0 * MIN_DEPTH) / (MAX_DEPTH + MIN_DEPTH - rinput * (MAX_DEPTH - MIN_DEPTH));
 }
 
 vec4 raytrace(in vec3 reflectionVector, in float startDepth)
@@ -53,7 +53,7 @@ vec4 raytrace(in vec3 reflectionVector, in float startDepth)
 	{
 		sampledPosition = sampledPosition + reflectionVector.xy;
 		currentDepth = currentDepth + reflectionVector.z * startDepth;
-		float sampledDepth = linearizeDepth(texture(depthtex, sampledPosition).r);
+		float sampledDepth = linearizeDepth(texture(depthtex, sampledPosition).x);
 		if(currentDepth > sampledDepth)
 		{
 			float delta = currentDepth - sampledDepth;
