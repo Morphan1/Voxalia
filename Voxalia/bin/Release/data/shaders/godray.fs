@@ -8,30 +8,31 @@ layout (location = 0) in vec2 f_texcoord;
 
 out vec4 color;
 
-const float MAX_WIDTH = 0.025;
+const float PI = 3.1415926;
 
-const float INV_MAX_WIDTH = 1.0 / MAX_WIDTH;
+const float PI_TWO = PI * 2.0;
 
-const float WIDTH_JUMP = 0.0025;
-
-const float LEN_JUMP = 0.02;
+vec4 regularize(in vec4 input_r) // TODO: Is this working the best it can?
+{
+	if (input_r.x <= 1.0 && input_r.y <= 1.0 && input_r.z <= 1.0)
+	{
+		return input_r;
+	}
+	return vec4(input_r.xyz / max(max(input_r.x, input_r.y), input_r.z), input_r.w);
+}
 
 void main()
 {
+	float fmax = 0.3 * exposure;
 	vec4 grinp = vec4(0.0);
-	float exp_inv = 1.0 / exposure;
-	float m_w = MAX_WIDTH * exposure;
-	for (float l = 0.0; l < 1.0; l += LEN_JUMP)
+	for (float l = 0.025; l < fmax; l += 0.025)
 	{
-		for (float w = -m_w; w < m_w; w += WIDTH_JUMP)
+		float adder = 0.025 / l;
+		float multip = (fmax - l) / fmax;
+		for (float a = 0.0; a < PI_TWO; a += adder)
 		{
-			vec4 gr_col = texture(godraytex, vec2(f_texcoord.x + w, l)) + texture(godraytex, vec2(l, f_texcoord.y + w));
-			if (gr_col.w > 0.0)
-			{
-				float mod = (0.5 - abs(l - 0.5)) * 2.0;
-				float wmod = (MAX_WIDTH - abs(w)) * INV_MAX_WIDTH;
-				grinp += gr_col * pow(mod * mod * wmod * wmod, exp_inv);
-			}
+			vec4 gr_col = texture(godraytex, vec2(f_texcoord.x + cos(a) * l, f_texcoord.y + sin(a) * l)) * multip;
+			grinp += gr_col;
 		}
 	}
 	color = grinp;

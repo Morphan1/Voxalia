@@ -33,9 +33,8 @@ namespace Voxalia.ClientGame.CommandSystem
             r_lightmaxdistance, r_fallbacklighting,
             r_shadowquality_flashlight, r_shadowquality_max, r_shadowblur, r_shadowquality_sun, r_shadowpace, r_shadows,
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth, r_toonify, r_transplighting, r_transpshadows,
-            r_godrays, r_godray_samples, r_godray_wexposure, r_godray_decay, r_godray_density, r_godray_color,
             r_3d_enable, r_fast, r_chunksatonce, r_chunkoverrender, r_transpll, r_noblockshapes, r_treeshadows,
-            r_hdr, r_extrasuns;
+            r_godrays, r_hdr, r_extrasuns;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect, a_echovolume;
@@ -90,15 +89,8 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadows = Register("r_shadows", "false", CVarFlag.Boolean, "Whether to render shadows at all.");
             r_good_graphics = Register("r_good_graphics", "true", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use 'good' graphics."); // TODO: Callback to auto-set
             r_skybox = Register("r_skybox", "default", CVarFlag.ServerControl | CVarFlag.Textual, "What skybox to use.");
-            r_lensflare = Register("r_lensflare", "true", CVarFlag.Boolean, "Whether to render a lens flare from the sun.");
             r_blocktexturelinear = Register("r_blocktexturelinear", "true", CVarFlag.Boolean | CVarFlag.Delayed, "Whether block textures are to use a linear blur or nearest-pixel mode.");
             r_blocktexturewidth = Register("r_blocktexturewidth", "128", CVarFlag.Numeric | CVarFlag.Delayed, "What texture width (pixels) block textures should use.");
-            r_godrays = Register("r_godrays", "true", CVarFlag.Boolean, "Whether to render GodRays (rays of light from the sun."); // TODO: Validate?
-            r_godray_samples = Register("r_godray_samples", "75", CVarFlag.Numeric, "How many samples to use when generating GodRays."); // TODO: Validate?
-            r_godray_wexposure = Register("r_godray_wexposure", (0.003f * 5.65f).ToString(), CVarFlag.Numeric, "What weighted exposure value to use when generating GodRays."); // TODO: Validate?
-            r_godray_decay = Register("r_godray_decay", "1.01", CVarFlag.Numeric, "What decay value to use when generating GodRays."); // TODO: Validate?
-            r_godray_density = Register("r_godray_density", "1.0", CVarFlag.Numeric, "What density value to use when generating GodRays."); // TODO: Validate?
-            r_godray_color = Register("r_godray_color", "1,1,1", CVarFlag.Textual, "What color to use for GodRays.");
             r_toonify = Register("r_toonify", "false", CVarFlag.Boolean, "Whether to use a 'toonify' post-processing effect.");
             r_transplighting = Register("r_transplighting", "true", CVarFlag.Boolean, "Whether transparent objects should be lit properly (otherwise, fullbright).");
             r_transpshadows = Register("r_transpshadows", "false", CVarFlag.Boolean, "Whether transparent objects should be lit using HD shadows (Requires r_shadows true).");
@@ -109,6 +101,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_transpll = Register("r_transpll", "false", CVarFlag.Boolean, "Whether to use GPU linked lists when rendering transparent objects.");
             r_noblockshapes = Register("r_noblockshapes", "false", CVarFlag.Boolean, "Whether block shapes are disabled or not.");
             r_treeshadows = Register("r_treeshadows", "true", CVarFlag.Boolean, "Whether trees cast shadows.");
+            r_godrays = Register("r_godrays", "true", CVarFlag.Boolean, "Whether to render GodRays (rays of light from the sun."); // TODO: Validate?
             r_hdr = Register("r_hdr", "true", CVarFlag.Boolean, "Whether to render with high dynamic range adjustments enabled.");
             r_extrasuns = Register("r_extrasuns", "true", CVarFlag.Boolean, "Whether to include additional solar light sources alongside the main sun light."); // TODO: Callback to auto-set
             // Audio CVars

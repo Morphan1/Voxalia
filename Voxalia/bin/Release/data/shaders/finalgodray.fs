@@ -9,8 +9,7 @@ layout (binding = 2) uniform sampler2D normaltex;
 layout (binding = 3) uniform sampler2D depthtex;
 layout (binding = 4) uniform sampler2D shtex;
 layout (binding = 5) uniform sampler2D renderhinttex;
-layout (binding = 6) uniform sampler2D bwtex;
-layout (binding = 7) uniform sampler2D renderhint2tex;
+layout (binding = 6) uniform sampler2D renderhint2tex;
 
 layout (location = 0) in vec2 f_texcoord;
 
@@ -325,10 +324,7 @@ void main()
 			light_color = light_color * (1.0 - renderhint2.y) + SSR * renderhint2.y;
 		}
 	}
-	if (texture(bwtex, f_texcoord).w > 0.01)
-	{
-		light_color = vec4(desaturate(light_color.xyz), light_color.w);
-	}
+	light_color = vec4(desaturate(light_color.xyz), light_color.w);
 #endif
 	vec4 basecol = texture(shtex, f_texcoord) * HDR_Div * texture(colortex, f_texcoord);
 	float val = max(max(basecol.x, basecol.y), basecol.z);

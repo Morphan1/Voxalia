@@ -10,7 +10,6 @@ layout (location = 3) uniform vec4 v_color = vec4(1.0);
 // ...
 layout (location = 5) uniform float minimum_light = 0.0;
 // ...
-layout (location = 7) uniform vec4 bw_color = vec4(0.0, 0.0, 0.0, 1.0);
 layout (location = 8) uniform vec2 light_clamp = vec2(0.0, 1.0);
 
 in struct vox_out
@@ -28,8 +27,7 @@ layout (location = 0) out vec4 color;
 layout (location = 1) out vec4 position;
 layout (location = 2) out vec4 normal;
 layout (location = 3) out vec4 renderhint;
-layout (location = 4) out vec4 bw;
-layout (location = 5) out vec4 renderhint2;
+layout (location = 4) out vec4 renderhint2;
 
 void main()
 {
@@ -127,5 +125,4 @@ void main()
 	color = vec4(color.xyz * blighting, color.w);
 	renderhint = vec4(spec, rhBlur, light_min, 1.0);
 	renderhint2 = vec4(0.0, refl, 0.0, 1.0);
-    bw = bw_color;
 }

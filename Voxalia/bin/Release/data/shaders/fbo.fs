@@ -12,7 +12,6 @@ layout (binding = 1) uniform sampler2D normal_tex;
 // ...
 layout (location = 5) uniform float minimum_light = 0.0;
 // ...
-layout (location = 7) uniform vec4 bw_color = vec4(0.0, 0.0, 0.0, 1.0);
 layout (location = 9) uniform float refract_eta = 0.0;
 
 in struct vox_out
@@ -27,8 +26,7 @@ layout (location = 0) out vec4 color;
 layout (location = 1) out vec4 position;
 layout (location = 2) out vec4 normal;
 layout (location = 3) out vec4 renderhint;
-layout (location = 4) out vec4 bw;
-layout (location = 5) out vec4 renderhint2;
+layout (location = 4) out vec4 renderhint2;
 
 void main()
 {
@@ -69,5 +67,4 @@ void main()
 	normal = vec4(normalize(f.tbn * norms), 1.0);
 	renderhint = vec4(specular_strength, 0.0 /* TODO: LIGHT? */, minimum_light, 1.0);
 	renderhint2 = vec4(0.0, reflection_amt, 0.0, 1.0);
-    bw = vec4(bw_color.xyz, color.w);
 }

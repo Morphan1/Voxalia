@@ -249,9 +249,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public Location ambient;
 
         public float DesaturationAmount = 0f;
-
-        public Location godrayCol = Location.One;
-
+        
         void SetViewport()
         {
             GL.Viewport(0, 0, Width, Height);
@@ -727,10 +725,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.Uniform1(27, (float)MainEXP);
                 GL.Uniform1(28, flare_val);
                 GL.UniformMatrix4(22, false, ref combined);
-                GL.ActiveTexture(TextureUnit.Texture6);
-                GL.BindTexture(TextureTarget.Texture2D, RS4P.bwtexture);
                 GL.ActiveTexture(TextureUnit.Texture4);
                 GL.BindTexture(TextureTarget.Texture2D, fbo_texture);
+                GL.ActiveTexture(TextureUnit.Texture7);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+                GL.ActiveTexture(TextureUnit.Texture6);
+                GL.BindTexture(TextureTarget.Texture2D, RS4P.Rh2Texture);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.DiffuseTexture);
                 GL.UniformMatrix4(1, false, ref mat);
@@ -738,8 +738,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 CheckError("FirstRenderToBasePassPre");
                 TheClient.Rendering.RenderRectangle(-1, -1, 1, 1);
                 CheckError("FirstRenderToBasePassComplete");
-                GL.ActiveTexture(TextureUnit.Texture7);
-                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture6);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture5);
