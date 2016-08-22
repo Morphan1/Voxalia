@@ -4,6 +4,7 @@ using BEPUutilities;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.NetworkSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -26,9 +27,9 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.BULLET;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            // Does not save!
+            // Does not save.
             return null;
         }
 

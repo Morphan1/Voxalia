@@ -11,6 +11,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.NetworkSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared.Collision;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -81,7 +82,7 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.BLOCK_GROUP;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
             // TODO: Save properly!
             return null;

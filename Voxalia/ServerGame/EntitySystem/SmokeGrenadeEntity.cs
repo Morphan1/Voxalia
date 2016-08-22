@@ -8,6 +8,7 @@ using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
 using FreneticScript.TagHandlers.Objects;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -29,17 +30,16 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.SMOKE_GRENADE;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            byte[] bbytes = GetPhysicsBytes();
-            byte[] res = new byte[bbytes.Length + 4 + 1 + 4];
-            bbytes.CopyTo(res, 0);
-            Utilities.IntToBytes(col.ToArgb()).CopyTo(res, bbytes.Length);
-            res[bbytes.Length + 4] = (byte)SmokeType;
-            Utilities.IntToBytes(SmokeLeft).CopyTo(res, bbytes.Length + 4 + 1);
-            return res;
+            BsonDocument doc = new BsonDocument();
+            AddPhysicsData(doc);
+            doc["sg_color"] = col.ToArgb();
+            doc["sg_smokeleft"] = SmokeLeft;
+            doc["sg_type"] = SmokeType.ToString();
+            return doc;
         }
-
+        
         public int SmokeLeft;
 
         public double timer = 0;
@@ -96,15 +96,12 @@ namespace Voxalia.ServerGame.EntitySystem
 
     public class SmokeGrenadeEntityConstructor : EntityConstructor
     {
-        public override Entity Create(Region tregion, byte[] input)
+        public override Entity Create(Region tregion, BsonDocument doc)
         {
-            int plen = PhysicsEntity.PhysByteLen;
-            int colo = Utilities.BytesToInt(Utilities.BytesPartial(input, plen, 4));
-            byte effecttype = input[plen + 4];
-            int smokeleft = Utilities.BytesToInt(Utilities.BytesPartial(input, plen + 4 + 1, 4));
-            SmokeGrenadeEntity grenade = new SmokeGrenadeEntity(System.Drawing.Color.FromArgb(colo), tregion, (ParticleEffectNetType)effecttype);
-            grenade.SmokeLeft = smokeleft;
-            grenade.ApplyBytes(input);
+            ParticleEffectNetType efftype = (ParticleEffectNetType)Enum.Parse(typeof(ParticleEffectNetType), doc["sg_type"].AsString);
+            SmokeGrenadeEntity grenade = new SmokeGrenadeEntity(System.Drawing.Color.FromArgb(doc["sg_color"].AsInt32), tregion, efftype);
+            grenade.SmokeLeft = doc["sg_smokeleft"].AsInt32;
+            grenade.ApplyPhysicsData(doc);
             return grenade;
         }
     }

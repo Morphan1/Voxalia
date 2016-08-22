@@ -8,6 +8,7 @@ using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
 using FreneticScript.TagHandlers.Objects;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -23,12 +24,12 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.EXPLOSIVE_GRENADE;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            // Do not save
+            // Does not save.
             return null;
         }
-        
+
         public double timer = 0.0;
 
         public double boomtime = 5.0;

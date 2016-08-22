@@ -6,6 +6,7 @@ using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.JointSystem;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -20,12 +21,12 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.VEHICLE_PART;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            // TODO: Save properly!
+            // TODO: Save *IF* detached from owner vehicle!
             return null;
         }
-
+        
         public VehiclePartEntity(Region tregion, string model, bool is_wheel)
             : base(model, tregion)
         {

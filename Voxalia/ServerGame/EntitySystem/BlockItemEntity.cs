@@ -4,6 +4,7 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared.Collision;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -27,18 +28,15 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.BLOCK_ITEM;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            byte[] bbytes = GetPhysicsBytes();
-            byte[] res = new byte[bbytes.Length + 4];
-            bbytes.CopyTo(res, 0);
-            Utilities.UshortToBytes(Original.BlockMaterial).CopyTo(res, bbytes.Length);
-            res[bbytes.Length + 2] = Original.BlockData;
-            res[bbytes.Length + 3] = Original.BlockPaint;
-            return res;
+            BsonDocument doc = new BsonDocument();
+            AddPhysicsData(doc);
+            doc["bie_bi"] = Original.GetItemDatum();
+            return doc;
         }
-
-        // TODO: If settled (deactivated) for too long (minutes?), or loaded in via chunkload, revert to a block form, or destroy if that's not possible
+        
+        // TODO: If settled (deactivated) for too long (minutes?), or loaded in via chunkload, revert to a block form, or destroy (or perhaps make a 'ghost') if that's not possible
 
         /// <summary>
         /// Gets the itemstack this block represents.
@@ -107,14 +105,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
     public class BlockItemEntityConstructor: EntityConstructor
     {
-        public override Entity Create(Region tregion, byte[] input)
+        public override Entity Create(Region tregion, BsonDocument doc)
         {
-            int plen = PhysicsEntity.PhysByteLen;
-            ushort tmat = Utilities.BytesToUshort(Utilities.BytesPartial(input, plen, 2));
-            byte tdat = input[plen + 2];
-            byte tpaint = input[plen + 3];
-            BlockItemEntity ent = new BlockItemEntity(tregion, new BlockInternal(tmat, tdat, tpaint, 0), Location.Zero);
-            ent.ApplyBytes(input);
+            BlockItemEntity ent = new BlockItemEntity(tregion, BlockInternal.FromItemDatum(doc["bie_bi"].AsInt32), Location.Zero);
+            ent.ApplyPhysicsData(doc);
             return ent;
         }
     }

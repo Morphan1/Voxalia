@@ -7,6 +7,7 @@ using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.OtherSystems;
 using Voxalia.ServerGame.NetworkSystem;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -28,17 +29,14 @@ namespace Voxalia.ServerGame.EntitySystem
             return null;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            byte[] modelname = Utilities.encoding.GetBytes(model);
-            byte[] bbytes = GetPhysicsBytes();
-            byte[] res = new byte[bbytes.Length + 1 + 4 + modelname.Length + 1];
-            bbytes.CopyTo(res, 0);
-            res[bbytes.Length] = (byte)mode;
-            Utilities.IntToBytes(modelname.Length).CopyTo(res, bbytes.Length + 1);
-            modelname.CopyTo(res, bbytes.Length + 1 + 4);
-            res[bbytes.Length + 1 + 4 + modelname.Length] = (byte)(CanLOD ? 1 : 0);
-            return res;
+            BsonDocument doc = new BsonDocument();
+            AddPhysicsData(doc);
+            doc["mod_name"] = model;
+            doc["mod_mode"] = mode.ToString();
+            doc["mod_lod"] = CanLOD;
+            return doc;
         }
 
         public string model;
@@ -123,16 +121,12 @@ namespace Voxalia.ServerGame.EntitySystem
 
     public class ModelEntityConstructor : EntityConstructor
     {
-        public override Entity Create(Region tregion, byte[] input)
+        public override Entity Create(Region tregion, BsonDocument doc)
         {
-            int plen = PhysicsEntity.PhysByteLen;
-            byte mode = input[plen];
-            int namelen = Utilities.BytesToInt(Utilities.BytesPartial(input, plen + 1, 4));
-            string name = Utilities.encoding.GetString(input, plen + 1 + 4, namelen);
-            ModelEntity ent = new ModelEntity(name, tregion);
-            ent.mode = (ModelCollisionMode)mode;
-            ent.CanLOD = input[plen + 1 + 4 + namelen] == 1;
-            ent.ApplyBytes(input);
+            ModelEntity ent = new ModelEntity(doc["mod_name"].AsString, tregion);
+            ent.mode = (ModelCollisionMode)Enum.Parse(typeof(ModelCollisionMode), doc["mod_mode"].AsString);
+            ent.CanLOD = doc["mod_lod"].AsBoolean;
+            ent.ApplyPhysicsData(doc);
             return ent;
         }
     }

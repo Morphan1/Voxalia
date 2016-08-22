@@ -6,6 +6,7 @@ using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -37,9 +38,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public double NextAttack = 0;
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            return null; // TODO: Save/load
+            // TODO: Save properly!
+            return null;
         }
 
         public override void Tick()

@@ -5,6 +5,7 @@ using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.WorldSystem;
 using BEPUphysics.CollisionRuleManagement;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -38,12 +39,13 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.ARROW;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            // Does not save!
+            // TODO: Maybe save as an item drop?
+            // Does not save.
             return null;
         }
-
+        
         public float Damage = 1;
         public float DamageTimesVelocity = 1;
 

@@ -6,6 +6,7 @@ using Voxalia.ServerGame.WorldSystem;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -24,24 +25,21 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.GLOWSTICK;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            byte[] bbytes = GetPhysicsBytes();
-            byte[] res = new byte[bbytes.Length + 4];
-            bbytes.CopyTo(res, 0);
-            Utilities.IntToBytes(Color.ToArgb()).CopyTo(res, bbytes.Length);
-            return res;
+            BsonDocument doc = new BsonDocument();
+            AddPhysicsData(doc);
+            doc["gs_color"] = Color.ToArgb();
+            return doc;
         }
     }
 
     public class GlowstickEntityConstructor : EntityConstructor
     {
-        public override Entity Create(Region tregion, byte[] input)
+        public override Entity Create(Region tregion, BsonDocument doc)
         {
-            int plen = PhysicsEntity.PhysByteLen;
-            int colo = Utilities.BytesToInt(Utilities.BytesPartial(input, plen, 4));
-            GlowstickEntity glowstick = new GlowstickEntity(System.Drawing.Color.FromArgb(colo), tregion);
-            glowstick.ApplyBytes(input);
+            GlowstickEntity glowstick = new GlowstickEntity(System.Drawing.Color.FromArgb(doc["gs_color"].AsInt32), tregion);
+            glowstick.ApplyPhysicsData(doc);
             return glowstick;
         }
     }

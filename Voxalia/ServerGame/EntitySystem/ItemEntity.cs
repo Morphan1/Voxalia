@@ -3,6 +3,7 @@ using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -23,17 +24,14 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.ITEM;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            byte[] bbytes = GetPhysicsBytes();
-            byte[] item = Stack.ServerBytes();
-            byte[] res = new byte[bbytes.Length + 4 + item.Length];
-            bbytes.CopyTo(res, 0);
-            Utilities.IntToBytes(item.Length).CopyTo(res, bbytes.Length);
-            item.CopyTo(res, bbytes.Length + 4);
-            return res;
+            BsonDocument doc = new BsonDocument();
+            AddPhysicsData(doc);
+            doc["it_stack"] = Stack.ServerBytes();
+            return doc;
         }
-
+        
         public void StartUse(Entity user)
         {
             if (!Removed)
@@ -55,13 +53,11 @@ namespace Voxalia.ServerGame.EntitySystem
 
     public class ItemEntityConstructor : EntityConstructor
     {
-        public override Entity Create(Region tregion, byte[] input)
+        public override Entity Create(Region tregion, BsonDocument doc)
         {
-            int plen = PhysicsEntity.PhysByteLen;
-            int stacklen = Utilities.BytesToInt(Utilities.BytesPartial(input, plen, 4));
-            ItemStack stack = new ItemStack(Utilities.BytesPartial(input, plen + 4, stacklen), tregion.TheServer);
+            ItemStack stack = new ItemStack(doc["it_stack"].AsBinary, tregion.TheServer);
             ItemEntity ent = new ItemEntity(stack, tregion);
-            ent.ApplyBytes(input);
+            ent.ApplyPhysicsData(doc);
             return ent;
         }
     }

@@ -8,6 +8,7 @@ using BEPUphysics.Constraints.TwoEntity.JointLimits;
 using BEPUphysics.Constraints.TwoEntity.Motors;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using FreneticScript;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -23,7 +24,7 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.CAR;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
             // TODO: Save properly!
             return null;

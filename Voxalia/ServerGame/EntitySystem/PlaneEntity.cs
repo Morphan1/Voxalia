@@ -10,6 +10,7 @@ using BEPUutilities;
 using BEPUphysics.Constraints;
 using BEPUphysics.Constraints.SingleEntity;
 using Voxalia.ServerGame.JointSystem;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -26,7 +27,7 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.HELICOPTER;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
             // TODO: Save properly!
             return null;

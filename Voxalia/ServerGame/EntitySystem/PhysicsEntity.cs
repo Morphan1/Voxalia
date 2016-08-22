@@ -13,6 +13,7 @@ using BEPUphysics;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.ServerGame.NetworkSystem;
 using System.Threading;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -601,32 +602,29 @@ namespace Voxalia.ServerGame.EntitySystem
                 LVel += force / Mass;
             }
         }
-
-        public const int PhysByteLen = 12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1 + 1;
-
-        /// <summary>
-        /// Gets the binary save data for a generic physics entity, used as part of the save procedure for a physics entity.
-        /// Returns 76 bytes currently.
-        /// </summary>
-        /// <returns>The binary data.</returns>
-        public byte[] GetPhysicsBytes()
+        
+        public void AddPhysicsData(BsonDocument doc)
         {
-            byte[] bytes = new byte[PhysByteLen];
-            GetPosition().ToBytes().CopyTo(bytes, 0);
-            GetVelocity().ToBytes().CopyTo(bytes, 12);
-            GetAngularVelocity().ToBytes().CopyTo(bytes, 12 + 12);
+            doc["ph_pos"] = GetPosition().ToBytes();
+            doc["ph_vel"] = GetVelocity().ToBytes();
+            doc["ph_avel"] = GetAngularVelocity().ToBytes();
+            // TODO: Quat-to-bytes system!
             Quaternion quat = GetOrientation();
-            Utilities.FloatToBytes(quat.X).CopyTo(bytes, 12 + 12 + 12);
-            Utilities.FloatToBytes(quat.Y).CopyTo(bytes, 12 + 12 + 12 + 4);
-            Utilities.FloatToBytes(quat.Z).CopyTo(bytes, 12 + 12 + 12 + 4 + 4);
-            Utilities.FloatToBytes(quat.W).CopyTo(bytes, 12 + 12 + 12 + 4 + 4 + 4);
-            int p = 12 + 12 + 12 + 4 + 4 + 4 + 4;
-            GetGravity().ToBytes().CopyTo(bytes, p);
-            Utilities.FloatToBytes(GetBounciness()).CopyTo(bytes, p + 12);
-            Utilities.FloatToBytes(GetFriction()).CopyTo(bytes, p + 12 + 4);
-            Utilities.FloatToBytes(GetMass()).CopyTo(bytes, p + 12 + 4 + 4);
-            byte cg = 0;
-            if (CGroup == CollisionUtil.Solid)
+            doc["ph_ang_x"] = (double)quat.X;
+            doc["ph_ang_y"] = (double)quat.Y;
+            doc["ph_ang_z"] = (double)quat.Z;
+            doc["ph_ang_w"] = (double)quat.W;
+            doc["ph_grav"] = GetGravity().ToBytes();
+            doc["ph_bounce"] = (double)GetBounciness();
+            doc["ph_frict"] = (double)GetFriction();
+            doc["ph_mass"] = (double)GetMass();
+            // TODO: Separate method for CG.
+            int cg = 0;
+            if (CGroup == CollisionUtil.NonSolid)
+            {
+                cg = 0;
+            }
+            else if (CGroup == CollisionUtil.Solid)
             {
                 cg = 1;
             }
@@ -642,61 +640,82 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 cg = 4;
             }
-            bytes[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4] = cg;
-            byte flags = (byte)((Visible ? 1 : 0) | (GenBlockShadow ? 2 : 0) | (TransmitMe ? 128 : 0));
-            bytes[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1] = flags;
-            return bytes;
+            doc["ph_cg"] = cg;
+            // TODO: Actual flag enum
+            int flags = (Visible ? 1 : 0) | (GenBlockShadow ? 2 : 0) | (TransmitMe ? 128 : 0);
+            doc["ph_flag"] = flags;
         }
 
-        /// <summary>
-        /// Applies binary save data to this entity.
-        /// </summary>
-        /// <param name="data">The save data.</param>
-        public void ApplyBytes(byte[] data)
+        public void ApplyPhysicsData(BsonDocument doc)
         {
-            if (data.Length < PhysByteLen)
+            if (doc.ContainsKey("ph_pos"))
             {
-                throw new Exception("Invalid binary physics entity data!");
+                SetPosition(Location.FromBytes(doc["ph_pos"].AsBinary, 0));
             }
-            SetPosition(Location.FromBytes(data, 0));
-            SetVelocity(Location.FromBytes(data, 12));
-            SetAngularVelocity(Location.FromBytes(data, 12 + 12));
-            Quaternion quat = new Quaternion();
-            quat.X = Utilities.BytesToFloat(Utilities.BytesPartial(data, 12 + 12 + 12, 4));
-            quat.Y = Utilities.BytesToFloat(Utilities.BytesPartial(data, 12 + 12 + 12 + 4, 4));
-            quat.Z = Utilities.BytesToFloat(Utilities.BytesPartial(data, 12 + 12 + 12 + 4 + 4, 4));
-            quat.W = Utilities.BytesToFloat(Utilities.BytesPartial(data, 12 + 12 + 12 + 4 + 4 + 4, 4));
-            SetOrientation(quat);
-            int p = 12 + 12 + 12 + 4 + 4 + 4 + 4;
-            SetGravity(Location.FromBytes(data, p));
-            SetBounciness(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12, 4)));
-            SetFriction(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12 + 4, 4)));
-            SetMass(Utilities.BytesToFloat(Utilities.BytesPartial(data, p + 12 + 4 + 4, 4)));
-            byte cg = data[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4];
-            if (cg == 0)
+            if (doc.ContainsKey("ph_vel"))
             {
-                CGroup = CollisionUtil.NonSolid;
+                SetVelocity(Location.FromBytes(doc["ph_vel"].AsBinary, 0));
             }
-            else if (cg == 1)
+            if (doc.ContainsKey("ph_avel"))
             {
-                CGroup = CollisionUtil.Solid;
+                SetAngularVelocity(Location.FromBytes(doc["ph_avel"].AsBinary, 0));
             }
-            else if (cg == 2)
+            if (doc.ContainsKey("ph_ang_x") && doc.ContainsKey("ph_ang_y") && doc.ContainsKey("ph_ang_z") && doc.ContainsKey("ph_ang_w"))
             {
-                CGroup = CollisionUtil.Player;
+                float ax = (float)doc["ph_ang_x"].AsDouble;
+                float ay = (float)doc["ph_ang_y"].AsDouble;
+                float az = (float)doc["ph_ang_z"].AsDouble;
+                float aw = (float)doc["ph_ang_w"].AsDouble;
+                SetOrientation(new Quaternion(ax, ay, az, aw));
             }
-            else if (cg == 3)
+            if (doc.ContainsKey("ph_grav"))
             {
-                CGroup = CollisionUtil.Item;
+                SetGravity(Location.FromBytes(doc["ph_grav"].AsBinary, 0));
             }
-            else
+            if (doc.ContainsKey("ph_bounce"))
             {
-                CGroup = CollisionUtil.Water;
+                SetBounciness((float)doc["ph_bounce"].AsDouble);
             }
-            byte flags = data[12 + 12 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 1];
-            Visible = (flags & 1) == 1;
-            GenBlockShadow = (flags & 2) == 2;
-            TransmitMe = (flags & 128) == 128;
+            if (doc.ContainsKey("ph_frict"))
+            {
+                SetFriction((float)doc["ph_frict"].AsDouble);
+            }
+            if (doc.ContainsKey("ph_mass"))
+            {
+                SetMass((float)doc["ph_mass"].AsDouble);
+            }
+            if (doc.ContainsKey("ph_cg"))
+            {
+                int cg = doc["ph_cg"].AsInt32;
+                if (cg == 0)
+                {
+                    CGroup = CollisionUtil.NonSolid;
+                }
+                else if (cg == 1)
+                {
+                    CGroup = CollisionUtil.Solid;
+                }
+                else if (cg == 2)
+                {
+                    CGroup = CollisionUtil.Player;
+                }
+                else if (cg == 3)
+                {
+                    CGroup = CollisionUtil.Item;
+                }
+                else // cg == 4
+                {
+                    CGroup = CollisionUtil.Water;
+                }
+            }
+            if (doc.ContainsKey("ph_flag"))
+            {
+                int flags = doc["ph_flag"].AsInt32;
+                Visible = (flags & 1) == 1;
+                GenBlockShadow = (flags & 2) == 2;
+                TransmitMe = (flags & 128) == 128;
+
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ using Voxalia.Shared.Collision;
 using BEPUphysics.Character;
 using FreneticScript;
 using FreneticScript.TagHandlers.Objects;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -125,8 +126,8 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             return EntityType.PLAYER;
         }
-
-        public override byte[] GetSaveBytes()
+        
+        public override BsonDocument GetSaveData()
         {
             // Does not save through entity system!
             return null;

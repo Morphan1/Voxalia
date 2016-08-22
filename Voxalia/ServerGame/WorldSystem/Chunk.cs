@@ -8,6 +8,7 @@ using Voxalia.Shared.Files;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.EntitySystem;
 using System.Threading;
+using LiteDB;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -175,26 +176,24 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        public byte[] GetEntitySaveData()
+        public BsonDocument GetEntitySaveData()
         {
-            using (DataStream ds = new DataStream())
+            BsonDocument full = new BsonDocument();
+            List<BsonValue> ents = new List<BsonValue>();
+            for (int i = 0; i < OwningRegion.Entities.Count; i++)
             {
-                DataWriter dw = new DataWriter(ds);
-                for (int i = 0; i < OwningRegion.Entities.Count; i++)
+                if (OwningRegion.Entities[i].CanSave && Contains(OwningRegion.Entities[i].GetPosition()))
                 {
-                    if (OwningRegion.Entities[i].CanSave && Contains(OwningRegion.Entities[i].GetPosition()))
+                    BsonDocument dat = OwningRegion.Entities[i].GetSaveData();
+                    if (dat != null)
                     {
-                        byte[] dat = OwningRegion.Entities[i].GetSaveBytes();
-                        if (dat != null)
-                        {
-                            dw.WriteInt((int)OwningRegion.Entities[i].GetEntityType());
-                            dw.WriteFullBytes(dat);
-                        }
+                        dat["ENTITY_TYPE"] = OwningRegion.Entities[i].GetEntityType().ToString();
+                        ents.Add(dat);
                     }
                 }
-                dw.Flush();
-                return ds.ToArray();
             }
+            full["list"] = ents;
+            return full;
         }
 
         void clearentities()
@@ -241,7 +240,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             if (LastEdited == -1)
             {
-                byte[] ents = GetEntitySaveData();
+                BsonDocument ents = GetEntitySaveData();
                 OwningRegion.TheServer.Schedule.StartASyncTask(() =>
                 {
                     SaveToFileE(ents);
@@ -271,7 +270,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 return;
             }
             LastEdited = -1;
-            byte[] ents = GetEntitySaveData();
+            BsonDocument ents = GetEntitySaveData();
             byte[] blks = GetChunkSaveData();
             OwningRegion.TheServer.Schedule.StartASyncTask(() =>
             {
@@ -363,7 +362,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        void SaveToFileE(byte[] ents)
+        void SaveToFileE(BsonDocument ents)
         {
             try
             {
@@ -372,7 +371,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 det.X = (int)WorldPosition.X;
                 det.Y = (int)WorldPosition.Y;
                 det.Z = (int)WorldPosition.Z;
-                det.Blocks = ents;
+                det.Blocks = BsonSerializer.Serialize(ents);
                 lock (GetLocker())
                 {
                     OwningRegion.ChunkManager.WriteChunkEntities(det);
@@ -406,24 +405,22 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 Reachability[i] = det.Reachables[i] == 1;
             }
-            if (ents.Blocks.Length > 0)
+            BsonDocument bsd = BsonSerializer.Deserialize(ents.Blocks);
+            if (bsd.ContainsKey("list"))
             {
-                using (DataStream eds = new DataStream(ents.Blocks))
+                List<BsonValue> docs = bsd["list"];
+                for (int i = 0; i < docs.Count; i++)
                 {
-                    DataReader edr = new DataReader(eds);
-                    while (edr.BaseStream.Length - eds.Position > 7)
+                    BsonDocument ent = (BsonDocument)docs[i];
+                    EntityType etype = (EntityType)Enum.Parse(typeof(EntityType), ent["ENTITY_TYPE"].AsString);
+                    try
                     {
-                        int EType = edr.ReadInt();
-                        byte[] dat = edr.ReadFullBytes();
-                        try
-                        {
-                            entsToSpawn.Add(OwningRegion.ConstructorFor((EntityType)EType).Create(OwningRegion, dat));
-                        }
-                        catch (Exception ex)
-                        {
-                            Utilities.CheckException(ex);
-                            SysConsole.Output("Spawning an entity of type " + EType, ex);
-                        }
+                        entsToSpawn.Add(OwningRegion.ConstructorFor(etype).Create(OwningRegion, ent));
+                    }
+                    catch (Exception ex)
+                    {
+                        Utilities.CheckException(ex);
+                        SysConsole.Output("Spawning an entity of type " + etype, ex);
                     }
                 }
             }

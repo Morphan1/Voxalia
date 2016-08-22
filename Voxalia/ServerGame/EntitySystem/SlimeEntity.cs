@@ -10,6 +10,7 @@ using BEPUphysics.NarrowPhaseSystems.Pairs;
 using BEPUphysics.CollisionTests;
 using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared.Collision;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -119,9 +120,9 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public double TargetPlayers = 0;
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            // TODO: Save/load!
+            // TODO: Save properly!
             return null;
         }
 

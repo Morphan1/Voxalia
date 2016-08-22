@@ -5,6 +5,7 @@ using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.NetworkSystem;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -24,7 +25,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public virtual long GetRAMUsage()
         {
-            return 8 + 8 + JointTargetID.Length * 2 + (Seats == null ? 8 : Seats.Count * 8) + 8;
+            return 8 + 8 + (Seats == null ? 8 : Seats.Count * 8) + 8;
         }
 
         public virtual float GetScaleEstimate()
@@ -43,12 +44,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// The unique ID for this entity.
         /// </summary>
         public long EID = 0;
-
-        /// <summary>
-        /// The ID used to identify this entity to joints.
-        /// </summary>
-        public string JointTargetID = "none";
-
+        
         /// <summary>
         /// Whether this entity should tick.
         /// </summary>
@@ -98,7 +94,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public abstract EntityType GetEntityType();
 
-        public abstract byte[] GetSaveBytes();
+        public abstract BsonDocument GetSaveData();
 
         public abstract void PotentialActivate();
 
@@ -117,6 +113,6 @@ namespace Voxalia.ServerGame.EntitySystem
 
     public abstract class EntityConstructor
     {
-        public abstract Entity Create(Region tregion, byte[] input);
+        public abstract Entity Create(Region tregion, BsonDocument input);
     }
 }

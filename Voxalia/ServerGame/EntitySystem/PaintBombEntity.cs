@@ -8,6 +8,7 @@ using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.Shared;
 using Voxalia.ServerGame.ItemSystem;
 using FreneticScript.TagHandlers.Objects;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -26,12 +27,12 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.PAINT_BOMB;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            // Do not save
+            // Does not save.
             return null;
         }
-
+        
         public override void SpawnBody()
         {
             base.SpawnBody();

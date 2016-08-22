@@ -8,12 +8,15 @@ using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.WorldSystem;
 using FreneticScript.TagHandlers.Objects;
 using BEPUutilities;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
     class MusicBlockEntity : ModelEntity, EntityUseable, EntityDamageable
     {
         public ItemStack Original;
+
+        // TODO: Heal with time?
 
         public MusicBlockEntity(Region tregion, ItemStack orig, Location pos)
             : base("mapobjects/customblocks/musicblock", tregion)
@@ -27,8 +30,6 @@ namespace Voxalia.ServerGame.EntitySystem
         public override void SpawnBody()
         {
             base.SpawnBody();
-            //SetPosition(GetPosition() + offset);
-            //ForceNetwork();
         }
 
         public override EntityType GetEntityType()
@@ -36,18 +37,16 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.MUSIC_BLOCK;
         }
 
-        public override byte[] GetSaveBytes()
+        public override BsonDocument GetSaveData()
         {
-            byte[] itdat = Original.ServerBytes();
-            byte[] n = new byte[itdat.Length + 4 + 12 + 4 + 4];
-            Utilities.IntToBytes(itdat.Length).CopyTo(n, 0);
-            itdat.CopyTo(n, 4);
-            GetPosition().ToBytes().CopyTo(n, 4 + itdat.Length);
-            Utilities.FloatToBytes(GetMaxHealth()).CopyTo(n, 4 + itdat.Length + 12);
-            Utilities.FloatToBytes(GetHealth()).CopyTo(n, 4 + itdat.Length + 12 + 4);
-            return n;
+            BsonDocument doc = new BsonDocument();
+            AddPhysicsData(doc);
+            doc["mb_item"] = Original.ServerBytes();
+            doc["mb_health"] = (double)GetHealth();
+            doc["mb_maxhealth"] = (double)GetMaxHealth();
+            return doc;
         }
-
+        
         public void StartUse(Entity user)
         {
             if (!Removed)
@@ -84,6 +83,7 @@ namespace Voxalia.ServerGame.EntitySystem
             if (health < 0)
             {
                 RemoveMe();
+                // TODO: Break into a grabbable item?
             }
         }
 
@@ -104,16 +104,12 @@ namespace Voxalia.ServerGame.EntitySystem
 
     public class MusicBlockEntityConstructor : EntityConstructor
     {
-        public override Entity Create(Region tregion, byte[] input)
+        public override Entity Create(Region tregion, BsonDocument doc)
         {
-            int len = Utilities.BytesToInt(Utilities.BytesPartial(input, 0, 4));
-            byte[] itm = new byte[len];
-            Array.Copy(input, 4, itm, 0, len);
-            ItemStack it = new ItemStack(itm, tregion.TheServer);
-            Location pos = Location.FromBytes(input, 4 + len);
-            MusicBlockEntity mbe = new MusicBlockEntity(tregion, it, pos);
-            mbe.SetMaxHealth(Utilities.BytesToFloat(Utilities.BytesPartial(input, 4 + len + 12, 4)));
-            mbe.SetHealth(Utilities.BytesToFloat(Utilities.BytesPartial(input, 4 + len + 12 + 4, 4)));
+            ItemStack it = new ItemStack(doc["mb_item"].AsBinary, tregion.TheServer);
+            MusicBlockEntity mbe = new MusicBlockEntity(tregion, it, Location.Zero);
+            mbe.SetMaxHealth((float)doc["mb_maxhealth"].AsDouble);
+            mbe.SetHealth((float)doc["mb_health"].AsDouble);
             return mbe;
         }
     }
