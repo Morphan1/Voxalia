@@ -3,14 +3,11 @@
 layout (binding = 0) uniform sampler2D godraytex;
 
 layout (location = 6) uniform float exposure = 1.0;
+layout (location = 7) uniform float aspect = 1.0;
 
 layout (location = 0) in vec2 f_texcoord;
 
 out vec4 color;
-
-const float PI = 3.1415926;
-
-const float PI_TWO = PI * 2.0;
 
 vec4 regularize(in vec4 input_r) // TODO: Is this working the best it can?
 {
@@ -21,19 +18,20 @@ vec4 regularize(in vec4 input_r) // TODO: Is this working the best it can?
 	return vec4(input_r.xyz / max(max(input_r.x, input_r.y), input_r.z), input_r.w);
 }
 
+// TODO: Calculate old godrays in here too?
+
 void main()
 {
-	float fmax = 0.3 * exposure;
+	float fmax = 0.25 * exposure;
+	float fmax_inv = 1.0 / fmax;
 	vec4 grinp = vec4(0.0);
-	for (float l = 0.025; l < fmax; l += 0.025)
+	for (float l = -fmax; l < fmax; l += 0.005)
 	{
-		float adder = 0.025 / l;
-		float multip = (fmax - l) / fmax;
-		for (float a = 0.0; a < PI_TWO; a += adder)
-		{
-			vec4 gr_col = texture(godraytex, vec2(f_texcoord.x + cos(a) * l, f_texcoord.y + sin(a) * l)) * multip;
-			grinp += gr_col;
-		}
+		float mult = (fmax - abs(l)) * fmax_inv;
+		grinp += texture(godraytex, vec2(f_texcoord.x, f_texcoord.y + l * aspect)) * mult;
+		grinp += texture(godraytex, vec2(f_texcoord.x + l, f_texcoord.y)) * mult;
+		grinp += texture(godraytex, vec2(f_texcoord.x + l, f_texcoord.y + l * aspect)) * mult;
+		grinp += texture(godraytex, vec2(f_texcoord.x + l, f_texcoord.y - l * aspect)) * mult;
 	}
-	color = grinp;
+	color = regularize(grinp);
 }

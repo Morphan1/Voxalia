@@ -990,13 +990,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1f });
                 GL.Disable(EnableCap.DepthTest);
                 CheckError("PreGR");
-                if (TheClient.CVars.r_godrays.ValueB)
+                if (TheClient.CVars.r_godrays.ValueB) // TODO: Local disable? Non-primary views probably don't need godrays...
                 {
                     GL.BindTexture(TextureTarget.Texture2D, fbo_godray_texture2);
                     TheClient.s_godray = TheClient.s_godray.Bind();
                     GL.UniformMatrix4(1, false, ref mat);
                     GL.UniformMatrix4(2, false, ref matident);
                     GL.Uniform1(6, MainEXP);
+                    GL.Uniform1(7, Width / (float)Height);
                     TranspBlend();
                     TheClient.Rendering.RenderRectangle(-1, -1, 1, 1);
                     StandardBlend();
