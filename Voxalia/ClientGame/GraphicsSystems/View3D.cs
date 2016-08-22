@@ -24,6 +24,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public bool ShadowingAllowed = false;
 
+        public bool TranspShadows = false;
+
         public FBOID FBOid = FBOID.NONE;
 
         public int CurrentFBO = 0;
@@ -392,7 +394,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     TheClient.s_shadow = TheClient.s_shadow.Bind();
                     VBO.BonesIdentity();
                     RenderingShadows = true;
+                    ShadowsOnly = true;
                     LightsC = 0;
+                    Location campos = CameraPos;
                     for (int i = 0; i < Lights.Count; i++)
                     {
                         if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos.ToBVector(), Lights[i].MaxDistance))
@@ -411,6 +415,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                     {
                                         CFrust = new Frustum(Lights[i].InternalLights[x].GetMatrix());
                                     }
+                                    CameraPos = ClientUtilities.Convert(Lights[i].InternalLights[x].eye);
                                     TheClient.s_shadowvox = TheClient.s_shadowvox.Bind();
                                     Matrix4 tident = Matrix4.Identity;
                                     GL.UniformMatrix4(2, false, ref tident);
@@ -423,6 +428,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                     {
                                         GL.Uniform1(3, 0.0f);
                                     }
+                                    GL.Uniform1(4, Lights[i].InternalLights[x].transp ? 1.0f : 0.0f);
                                     FBOid = FBOID.SHADOWS;
                                     TheClient.s_shadow = TheClient.s_shadow.Bind();
                                     GL.UniformMatrix4(2, false, ref tident);
@@ -434,7 +440,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                     {
                                         GL.Uniform1(3, 0.0f);
                                     }
+                                    GL.Uniform1(4, Lights[i].InternalLights[x].transp ? 1.0f : 0.0f);
                                     Lights[i].InternalLights[x].Attach();
+                                    TranspShadows = Lights[i].InternalLights[x].transp;
                                     // TODO: Render settings
                                     Render3D(this);
                                     FBOid = FBOID.NONE;
@@ -443,6 +451,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             }
                         }
                     }
+                    CameraPos = campos;
+                    RenderingShadows = false;
+                    ShadowsOnly = false;
                     timer.Stop();
                     ShadowTime = (double)timer.ElapsedMilliseconds / 1000f;
                     if (ShadowTime > ShadowSpikeTime)
@@ -564,8 +575,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.PositionTexture);
                 GL.ActiveTexture(TextureUnit.Texture2);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.NormalsTexture);
-                GL.ActiveTexture(TextureUnit.Texture3);
-                GL.BindTexture(TextureTarget.Texture2D, RS4P.DepthTexture);
                 GL.ActiveTexture(TextureUnit.Texture5);
                 GL.BindTexture(TextureTarget.Texture2D, RS4P.RenderhintTexture);
                 GL.ActiveTexture(TextureUnit.Texture6);

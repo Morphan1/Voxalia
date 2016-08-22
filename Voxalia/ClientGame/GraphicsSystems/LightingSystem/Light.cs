@@ -18,6 +18,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
         public int fbo_texture;
         public int fbo_depthtex;
         public bool NeedsUpdate = true;
+        public bool transp = false;
 
         public void Create(int tsize, Vector3 pos, Vector3 targ, float fov, float max_range, Vector3 col)
         {

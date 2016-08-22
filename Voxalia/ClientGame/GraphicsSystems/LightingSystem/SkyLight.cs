@@ -16,7 +16,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 
         float Width;
 
-        public SkyLight(Location pos, int tsize, float radius, Location col, Location dir, float size)
+        public SkyLight(Location pos, int tsize, float radius, Location col, Location dir, float size, bool transp)
         {
             EyePos = pos;
             Texsize = tsize;
@@ -32,6 +32,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             {
                 InternalLights[0].up = new Vector3(0, 0, 1);
             }
+            InternalLights[0].transp = transp;
             Direction = dir;
             InternalLights[0].Create(Texsize, ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + dir), Width, Radius, ClientUtilities.Convert(Color));
             MaxDistance = radius;

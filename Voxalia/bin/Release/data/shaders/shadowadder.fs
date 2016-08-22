@@ -5,7 +5,7 @@
 
 layout (binding = 1) uniform sampler2D positiontex;
 layout (binding = 2) uniform sampler2D normaltex;
-layout (binding = 3) uniform sampler2D depthtex;
+// ...
 layout (binding = 4) uniform sampler2DShadow tex;
 layout (binding = 5) uniform sampler2D renderhinttex;
 layout (binding = 6) uniform sampler2D diffusetex;
@@ -56,7 +56,7 @@ void main()
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0) * HDR_Mod;
 	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), (200.0 / 1000.0f /* RENDERHINT.Y : SPECULAR POWER */ ) * 1000.0) * specular_albedo * renderhint.x) * HDR_Mod;
-	if (should_sqrt >= 1.0)
+	if (should_sqrt > 0.5)
 	{
 		f_spos.x = sign(f_spos.x) * sqrt(abs(f_spos.x));
 		f_spos.y = sign(f_spos.y) * sqrt(abs(f_spos.y));

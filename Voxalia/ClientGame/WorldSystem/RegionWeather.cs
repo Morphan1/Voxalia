@@ -28,10 +28,11 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void RenderClouds()
         {
+            TheClient.SetEnts();
             TheClient.Textures.GetTexture("effects/clouds/cloud1").Bind(); // TODO: Cache!
             foreach (Cloud cloud in Clouds)
             {
-                if (TheClient.MainWorldView.CFrust.ContainsSphere(cloud.Position.ToBVector(), 7))
+                if (TheClient.MainWorldView.CFrust == null || TheClient.MainWorldView.CFrust.ContainsSphere(cloud.Position.ToBVector(), 7))
                 {
                     for (int i = 0; i < cloud.Points.Count; i++)
                     {

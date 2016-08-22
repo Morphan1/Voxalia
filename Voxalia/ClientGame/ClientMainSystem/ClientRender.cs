@@ -42,6 +42,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             ShadersCheck();
             generateMapHelpers();
+            MainWorldView.ShadowingAllowed = true;
             MainWorldView.Render3D = Render3D;
             MainWorldView.PostFirstRender = ReverseEntitiesOrder;
             MainWorldView.LLActive = CVars.r_transpll.ValueB; // TODO: CVar edit call back
@@ -658,24 +659,28 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     TheRegion.ShadowCasters[i].Render();
                 }
+                if (view.TranspShadows)
+                {
+                    TheRegion.RenderClouds();
+                }
             }
             else
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
                 Textures.NormalDef.Bind();
                 GL.ActiveTexture(TextureUnit.Texture0);
-                if (MainWorldView.FBOid == FBOID.MAIN)
+                if (view.FBOid == FBOID.MAIN)
                 {
                     s_fbot.Bind();
                     RenderSkybox();
                     s_fbo.Bind();
                 }
-                if (MainWorldView.FBOid == FBOID.FORWARD_SOLID || MainWorldView.FBOid == FBOID.FORWARD_TRANSP)
+                if (view.FBOid == FBOID.FORWARD_SOLID || view.FBOid == FBOID.FORWARD_TRANSP)
                 {
                     RenderSkybox(); // TODO: s_fbot equivalent for forward renderer?
                 }
-                if (MainWorldView.FBOid == FBOID.TRANSP_UNLIT || MainWorldView.FBOid == FBOID.TRANSP_LIT || MainWorldView.FBOid == FBOID.TRANSP_SHADOWS
-                    || MainWorldView.FBOid == FBOID.FORWARD_SOLID || MainWorldView.FBOid == FBOID.FORWARD_TRANSP)
+                if (view.FBOid == FBOID.TRANSP_UNLIT || view.FBOid == FBOID.TRANSP_LIT || view.FBOid == FBOID.TRANSP_SHADOWS
+                    || view.FBOid == FBOID.FORWARD_SOLID || view.FBOid == FBOID.FORWARD_TRANSP)
                 {
                     Rendering.SetMinimumLight(1);
                     TheRegion.RenderClouds();

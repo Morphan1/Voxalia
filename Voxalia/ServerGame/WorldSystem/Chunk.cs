@@ -405,22 +405,25 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 Reachability[i] = det.Reachables[i] == 1;
             }
-            BsonDocument bsd = BsonSerializer.Deserialize(ents.Blocks);
-            if (bsd.ContainsKey("list"))
+            if (ents.Blocks != null)
             {
-                List<BsonValue> docs = bsd["list"];
-                for (int i = 0; i < docs.Count; i++)
+                BsonDocument bsd = BsonSerializer.Deserialize(ents.Blocks);
+                if (bsd.ContainsKey("list"))
                 {
-                    BsonDocument ent = (BsonDocument)docs[i];
-                    EntityType etype = (EntityType)Enum.Parse(typeof(EntityType), ent["ENTITY_TYPE"].AsString);
-                    try
+                    List<BsonValue> docs = bsd["list"];
+                    for (int i = 0; i < docs.Count; i++)
                     {
-                        entsToSpawn.Add(OwningRegion.ConstructorFor(etype).Create(OwningRegion, ent));
-                    }
-                    catch (Exception ex)
-                    {
-                        Utilities.CheckException(ex);
-                        SysConsole.Output("Spawning an entity of type " + etype, ex);
+                        BsonDocument ent = (BsonDocument)docs[i];
+                        EntityType etype = (EntityType)Enum.Parse(typeof(EntityType), ent["ENTITY_TYPE"].AsString);
+                        try
+                        {
+                            entsToSpawn.Add(OwningRegion.ConstructorFor(etype).Create(OwningRegion, ent));
+                        }
+                        catch (Exception ex)
+                        {
+                            Utilities.CheckException(ex);
+                            SysConsole.Output("Spawning an entity of type " + etype, ex);
+                        }
                     }
                 }
             }

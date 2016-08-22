@@ -12,19 +12,20 @@ namespace Voxalia.ClientGame.ClientMainSystem
     {
         public SkyLight TheSun = null;
         
-        // TODO: Enable planetary light minus shadows?
+        public SkyLight ThePlanet = null;
 
-    //    public SkyLight ThePlanet = null;
+        public SkyLight TheSunClouds = null;
 
         // Note: the client only has one region loaded at any given time.
         public Region TheRegion = null;
 
         public const float SunLightMod = 1.5f;
-        public const float SunLightModDirect = 3f;
+        public const float SunLightModDirect = 3.0f;
 
-        public Location SunLightDef = Location.One * SunLightMod;
+        public Location SunLightDef = Location.One * SunLightMod * 0.5f;
+        public Location CloudSunLightDef = Location.One * SunLightMod * 0.5f;
 
-        // public Location PlanetLightDef = new Location(0.75, 0.3, 0) * 0.25f;
+        public Location PlanetLightDef = new Location(0.75, 0.3, 0) * 0.25f;
 
         public void BuildWorld()
         {
@@ -32,17 +33,30 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 TheSun.Destroy();
                 MainWorldView.Lights.Remove(TheSun);
-                // ThePlanet.Destroy();
-                // MainWorldView.Lights.Remove(ThePlanet);
+            }
+            if (ThePlanet != null)
+            {
+                ThePlanet.Destroy();
+                MainWorldView.Lights.Remove(ThePlanet);
+                TheSunClouds.Destroy();
+                MainWorldView.Lights.Remove(TheSunClouds);
+                ThePlanet = null;
+                TheSunClouds = null;
             }
             // TODO: DESTROY OLD REGION!
             // TODO: Radius -> max view rad * 2
             // TODO: Size -> max view rad * 2 + 30 * 2
-            TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, Chunk.CHUNK_SIZE * 30, SunLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35);
-            // TODO: Separate planet quality CVar?
-            //  ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 2, Chunk.CHUNK_SIZE * 30, PlanetLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35);
+            TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, Chunk.CHUNK_SIZE * 30, SunLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35, false);
             MainWorldView.Lights.Add(TheSun);
-            // MainWorldView.Lights.Add(ThePlanet);
+            if (CVars.r_extrasuns.ValueB)
+            {
+                // TODO: Separate cloud quality CVar?
+                TheSunClouds = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 4, Chunk.CHUNK_SIZE * 30, CloudSunLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35, true);
+                MainWorldView.Lights.Add(TheSunClouds);
+                // TODO: Separate planet quality CVar?
+                ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 4, Chunk.CHUNK_SIZE * 30, PlanetLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35, false);
+                MainWorldView.Lights.Add(ThePlanet);
+            }
             TheRegion = new Region();
             TheRegion.TheClient = this;
             TheRegion.BuildWorld();
@@ -72,7 +86,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 // TODO: Z+ -> max view rad + 30
                 TheSun.Direction = Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch);
+                TheSunClouds.Direction = Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch);
                 TheSun.Reposition(Player.GetPosition().GetBlockLocation() - TheSun.Direction * 30 * 6);
+                TheSunClouds.Reposition(Player.GetPosition().GetBlockLocation() - TheSun.Direction * 30 * 6);
                 PlanetDir = Utilities.ForwardVector_Deg(PlanetAngle.Yaw, PlanetAngle.Pitch);
                 //        ThePlanet.Direction = pdir;
                 //        ThePlanet.Reposition(Player.GetPosition().GetBlockLocation() - ThePlanet.Direction * 30 * 6);
@@ -85,12 +101,27 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     TheSun.InternalLights[0].color = new OpenTK.Vector3((float)Math.Min(SunLightDef.X * (PlanetSunDist / 15), 1),
                         (float)Math.Min(SunLightDef.Y * (PlanetSunDist / 20), 1), (float)Math.Min(SunLightDef.Z * (PlanetSunDist / 60), 1));
-       //             ThePlanet.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
+                    if (TheSunClouds != null)
+                    {
+                        TheSunClouds.InternalLights[0].color = new OpenTK.Vector3((float)Math.Min(CloudSunLightDef.X * (PlanetSunDist / 15), 1),
+                            (float)Math.Min(CloudSunLightDef.Y * (PlanetSunDist / 20), 1), (float)Math.Min(CloudSunLightDef.Z * (PlanetSunDist / 60), 1));
+                    }
+                    if (ThePlanet != null)
+                    {
+                        ThePlanet.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
+                    }
                 }
                 else
                 {
                     TheSun.InternalLights[0].color = ClientUtilities.Convert(SunLightDef);
-           //         ThePlanet.InternalLights[0].color = ClientUtilities.Convert(PlanetLightDef * Math.Min((PlanetSunDist / 180f), 1f));
+                    if (TheSunClouds != null)
+                    {
+                        TheSunClouds.InternalLights[0].color = ClientUtilities.Convert(CloudSunLightDef);
+                    }
+                    if (ThePlanet != null)
+                    {
+                        ThePlanet.InternalLights[0].color = ClientUtilities.Convert(PlanetLightDef * Math.Min((PlanetSunDist / 180f), 1f));
+                    }
                 }
                 PlanetLight = PlanetSunDist / 180f;
                 if (SunAngle.Pitch < 10 && SunAngle.Pitch > -30)
@@ -104,6 +135,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     rel = Math.Max(Math.Min(rel, 1f), 0f);
                     float rel2 = Math.Max(Math.Min(rel * 1.5f, 1f), 0f);
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(TheSun.InternalLights[0].color.X * rel2, TheSun.InternalLights[0].color.Y * rel, TheSun.InternalLights[0].color.Z * rel);
+                    if (TheSunClouds != null)
+                    {
+                        TheSunClouds.InternalLights[0].color = new OpenTK.Vector3(TheSunClouds.InternalLights[0].color.X * rel2, TheSunClouds.InternalLights[0].color.Y * rel, TheSunClouds.InternalLights[0].color.Z * rel);
+                    }
                     MainWorldView.DesaturationAmount = (1f - rel) * 0.75f;
                     MainWorldView.ambient = BaseAmbient * ((1f - rel) * 0.5f + 0.5f);
                     sl_min = 0.2f - (1f - rel) * (0.2f - 0.05f);
@@ -112,6 +147,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 else if (SunAngle.Pitch >= 10)
                 {
                     TheSun.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
+                    if (TheSunClouds != null)
+                    {
+                        TheSunClouds.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
+                    }
                     MainWorldView.DesaturationAmount = 0.75f;
                     MainWorldView.ambient = BaseAmbient * 0.5f;
                     sl_min = 0.05f;
@@ -123,7 +162,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     sl_max = 0.8f;
                     MainWorldView.DesaturationAmount = 0f;
                     MainWorldView.ambient = BaseAmbient;
-                    TheSun.InternalLights[0].color = new OpenTK.Vector3(1, 1, 1);
+                    TheSun.InternalLights[0].color = ClientUtilities.Convert(SunLightDef);
+                    if (TheSunClouds != null)
+                    {
+                        TheSunClouds.InternalLights[0].color = ClientUtilities.Convert(CloudSunLightDef);
+                    }
                 }
                 rTicks = 0;
                 shouldRedrawShadows = true;

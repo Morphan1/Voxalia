@@ -3,7 +3,7 @@
 
 layout (binding = 1) uniform sampler2D positiontex;
 layout (binding = 2) uniform sampler2D normaltex;
-layout (binding = 3) uniform sampler2D depthtex;
+// ...
 layout (binding = 5) uniform sampler2D renderhinttex;
 layout (binding = 6) uniform sampler2D diffusetex;
 layout (binding = 7) uniform sampler2D renderhint2tex;

@@ -58,7 +58,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             MainItemView.Lights.Clear();
             MainItemView.RenderClearAlpha = 0f;
-            SkyLight tlight = new SkyLight(new Location(0, 0, 10), 256, 64, Location.One, new Location(0, -1, -1).Normalize(), 64);
+            SkyLight tlight = new SkyLight(new Location(0, 0, 10), 256, 64, Location.One, new Location(0, -1, -1).Normalize(), 64, false);
             MainItemView.Lights.Add(tlight);
             MainItemView.GenerateFBO();
             MainItemView.Generate(this, Window.Width, Window.Height);
