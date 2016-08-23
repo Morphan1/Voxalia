@@ -703,19 +703,18 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             if (light > 0 && TheClient.CVars.r_treeshadows.ValueB)
             {
-                Ray ray = new Ray(pos.ToBVector(), new BEPUutilities.Vector3(0, 0, 1));
-                RayHit rh;
+                BoundingBox bb = new BoundingBox(pos.ToBVector(), (pos + new Location(1, 1, 500)).ToBVector());
                 for (int i = 0; i < GenShadowCasters.Length; i++)
                 {
                     PhysicsEntity pe = GenShadowCasters[i];
                     if (pe.GenBlockShadows)
                     {
-                        if (pe.Body.CollisionInformation.RayCast(ray, 500, out rh))
+                        if (pe.Body.CollisionInformation.BoundingBox.Intersects(bb))
                         {
                             light = 0;
                             break;
                         }
-                        if (pe.ShadowCastShape.RayCast(ray, 500, out rh))
+                        if (pe.ShadowCastShape.BoundingBox.Intersects(bb))
                         {
                             light -= 0.3f;
                             if (light <= 0)
