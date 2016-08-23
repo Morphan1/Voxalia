@@ -85,11 +85,9 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 spreadAs = cmat;
             }
-            SysConsole.Output(OutputType.INFO, "Spreading " + block);
             byte cpaint = c.BlockPaint;
             if (c.BlockData > 5 || c.Damage != BlockDamage.NONE)
             {
-                SysConsole.Output(OutputType.INFO, "Bad data!");
                 PhysicsSetBlock(block, cmat, 0, cpaint, BlockDamage.NONE);
                 return;
             }
@@ -98,7 +96,6 @@ namespace Voxalia.ServerGame.WorldSystem
             Material below_mat = below.Material;
             if (below_mat == Material.AIR)
             {
-                SysConsole.Output(OutputType.INFO, "Spread down: air!");
                 PhysicsSetBlock(block_below, spreadAs, 0, cpaint, BlockDamage.NONE);
                 return;
             }
@@ -107,7 +104,6 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (below.BlockData != 0)
                 {
-                    SysConsole.Output(OutputType.INFO, "Spread down: not air!");
                     PhysicsSetBlock(block_below, below_mat, 0, cpaint, BlockDamage.NONE);
                 }
                 return;
@@ -131,7 +127,6 @@ namespace Voxalia.ServerGame.WorldSystem
             Material tmat = tc.Material;
             if (tmat == Material.AIR)
             {
-                SysConsole.Output(OutputType.INFO, "Spread side: air!");
                 PhysicsSetBlock(two, spreadAs, (byte)(c.BlockData + 1), cpaint, BlockDamage.NONE);
                 return;
             }
@@ -140,7 +135,6 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (tc.BlockData > c.BlockData + 1)
                 {
-                    SysConsole.Output(OutputType.INFO, "Spread side: not-air!");
                     PhysicsSetBlock(two, tmat, (byte)(c.BlockData + 1), cpaint, BlockDamage.NONE);
                 }
                 return;
