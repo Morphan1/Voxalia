@@ -569,7 +569,6 @@ namespace Voxalia.ClientGame.WorldSystem
                             Vector3i nt = cur + MoveDirs[j];
                             if (!seen.Contains(nt) && !toSeeSet.Contains(nt))
                             {
-                                Chunk ch = GetChunk(t);
                                 BEPUutilities.Vector3 min = nt.ToVector3() * Chunk.CHUNK_SIZE;
                                 if (TheClient.MainWorldView.CFrust == null || TheClient.MainWorldView.CFrust.ContainsBox(min, min + new BEPUutilities.Vector3(Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE)))
                                 {

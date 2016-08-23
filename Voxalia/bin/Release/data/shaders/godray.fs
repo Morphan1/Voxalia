@@ -6,7 +6,7 @@ layout (binding = 1) uniform sampler2D depthtex;
 layout (location = 6) uniform float exposure = 1.0;
 layout (location = 7) uniform float aspect = 1.0;
 layout (location = 8) uniform vec2 sunloc = vec2(-10.0, -10.0);
-layout (location = 9) uniform int numSamples = 75;
+layout (location = 9) uniform int numSamples = 35;
 layout (location = 10) uniform float wexposure = 0.0034 * 5.65;
 layout (location = 11) uniform float decay = 1.0;
 layout (location = 12) uniform float density = 0.84;
@@ -17,12 +17,12 @@ layout (location = 16) uniform float SKY_DIST = 1700.0;
 
 layout (location = 0) in vec2 f_texcoord;
 
+out vec4 color;
+
 float linearizeDepth(in float rinput)
 {
 	return (2.0 * MIN_DEPTH) / (MAX_DEPTH + MIN_DEPTH - rinput * (MAX_DEPTH - MIN_DEPTH));
 }
-
-out vec4 color;
 
 vec4 regularize(in vec4 input_r) // TODO: Is this working the best it can?
 {
@@ -35,17 +35,16 @@ vec4 regularize(in vec4 input_r) // TODO: Is this working the best it can?
 
 void main()
 {
-	float fmax = 0.25 * exposure;
-	float fmax_inv = 1.0 / fmax;
 	vec4 grinp = vec4(0.0);
-	for (float l = -fmax; l < fmax; l += 0.005)
+	float fsize = 0.2 * exposure;
+	for (float fx = -fsize; fx <= fsize; fx += 0.02)
 	{
-		float mult = (fmax - abs(l)) * fmax_inv;
-		grinp += texture(godraytex, vec2(f_texcoord.x, f_texcoord.y + l * aspect)) * mult;
-		grinp += texture(godraytex, vec2(f_texcoord.x + l, f_texcoord.y)) * mult;
-		grinp += texture(godraytex, vec2(f_texcoord.x + l, f_texcoord.y + l * aspect)) * mult;
-		grinp += texture(godraytex, vec2(f_texcoord.x + l, f_texcoord.y - l * aspect)) * mult;
+		for (float fy = -fsize; fy <= fsize; fy += 0.02)
+		{
+			grinp += texture(godraytex, f_texcoord + vec2(fx * fx * sign(fx), fy * fy * sign(fy))) * (fx * fx + fy * fy);
+		}
 	}
+	// End bloom, begin godrays
 	vec4 c = vec4(0.0);
 	vec2 tcd = vec2(f_texcoord - sunloc);
 	tcd *= (density * exposure) / float(numSamples);
@@ -74,5 +73,6 @@ void main()
 		}
 		illuminationDecay *= decay;
 	}
+	// End godrays
 	color = regularize(grinp + c * vec4(grcolor, 1.0) * wexposure);
 }

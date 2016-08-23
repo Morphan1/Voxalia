@@ -267,9 +267,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public string Name = null;
 
         public Server TheServer = null;
-
-        Scheduler LoadTimeScheduler = new Scheduler();
-
+        
         /// <summary>
         /// Does not return until fully unloaded.
         /// </summary>

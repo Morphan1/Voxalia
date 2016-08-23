@@ -93,7 +93,6 @@ namespace Voxalia.ServerGame.WorldSystem
                 PhysicsSetBlock(block, cmat, 0, cpaint, BlockDamage.NONE);
                 return;
             }
-            BlockInternal above = GetBlockInternal(block + new Location(0, 0, 1));
             Location block_below = block + new Location(0, 0, -1);
             BlockInternal below = GetBlockInternal(block_below);
             Material below_mat = below.Material;
