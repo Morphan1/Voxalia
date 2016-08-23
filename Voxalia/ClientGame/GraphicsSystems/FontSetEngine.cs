@@ -196,6 +196,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             int utrans = (int)(255 * transmod);
             float X = (float)Position.X;
             float Y = (float)Position.Y;
+            Color bccolor = Color.FromArgb(0, 0, 0, 0);
+            Color ccolor = bccolor;
             if (font == null)
             {
                 font = font_default;
@@ -260,7 +262,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                     RenderBaseText(X + point.X, Y + point.Y, drawme, font, ecolor, etrans, flip);
                                 }
                             }
-                            RenderBaseText(X, Y, drawme, font, color, trans, flip, pseudo, random, jello, obfu);
+                            RenderBaseText(X, Y, drawme, font, color, trans, flip, pseudo, random, jello, obfu, ccolor);
                             if (strike)
                             {
                                 DrawRectangle(X, Y + (font.Height / 2), width, 2, font, ColorFor(scolor, strans));
@@ -310,6 +312,24 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                                 ttext = Client.Central.Languages.GetText(Engine.TheClient.Files, subdats);
                                                 highl = false;
                                             }
+                                            else if (sbl.StartsWith("color="))
+                                            {
+                                                string[] coldat = sbl.After("color=").SplitFast(',');
+                                                if (coldat.Length == 4)
+                                                {
+                                                    int r = Utilities.StringToInt(coldat[0]);
+                                                    int g = Utilities.StringToInt(coldat[1]);
+                                                    int b = Utilities.StringToInt(coldat[2]);
+                                                    int a = Utilities.StringToInt(coldat[3]);
+                                                    ccolor = Color.FromArgb((byte)a, (byte)r, (byte)g, (byte)b);
+                                                    ttext = "";
+                                                    highl = false;
+                                                }
+                                                else
+                                                {
+                                                    ttext = "^[" + sb.ToString();
+                                                }
+                                            }
                                             else if (sbl == "lb")
                                             {
                                                 ttext = "[";
@@ -344,28 +364,28 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                         start = x + 1;
                                     }
                                     break;
-                                case '1': color = 1; break;
-                                case '!': color = 11; break;
-                                case '2': color = 2; break;
-                                case '@': color = 12; break;
-                                case '3': color = 3; break;
-                                case '#': color = 13; break;
-                                case '4': color = 4; break;
-                                case '$': color = 14; break;
-                                case '5': color = 5; break;
-                                case '%': color = 15; break;
-                                case '6': color = 6; break;
-                                case '-': color = 16; break;
-                                case '7': color = 7; break;
-                                case '&': color = 17; break;
-                                case '8': color = 8; break;
-                                case '*': color = 18; break;
-                                case '9': color = 9; break;
-                                case '(': color = 19; break;
-                                case '0': color = 0; break;
-                                case ')': color = 20; break;
-                                case 'a': color = 10; break;
-                                case 'A': color = 21; break;
+                                case '1': color = 1; ccolor = bccolor;  break;
+                                case '!': color = 11; ccolor = bccolor; break;
+                                case '2': color = 2; ccolor = bccolor; break;
+                                case '@': color = 12; ccolor = bccolor; break;
+                                case '3': color = 3; ccolor = bccolor; break;
+                                case '#': color = 13; ccolor = bccolor; break;
+                                case '4': color = 4; ccolor = bccolor; break;
+                                case '$': color = 14; ccolor = bccolor; break;
+                                case '5': color = 5; ccolor = bccolor; break;
+                                case '%': color = 15; ccolor = bccolor; break;
+                                case '6': color = 6; ccolor = bccolor; break;
+                                case '-': color = 16; ccolor = bccolor; break;
+                                case '7': color = 7; ccolor = bccolor; break;
+                                case '&': color = 17; ccolor = bccolor; break;
+                                case '8': color = 8; ccolor = bccolor; break;
+                                case '*': color = 18; ccolor = bccolor; break;
+                                case '9': color = 9; ccolor = bccolor; break;
+                                case '(': color = 19; ccolor = bccolor; break;
+                                case '0': color = 0; ccolor = bccolor; break;
+                                case ')': color = 20; ccolor = bccolor; break;
+                                case 'a': color = 10; ccolor = bccolor; break;
+                                case 'A': color = 21; ccolor = bccolor; break;
                                 case 'i':
                                     {
                                         italic = true;
@@ -510,7 +530,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="obfu">Whether to randomize letters.</param>
         /// <returns>The length of the rendered text in pixels.</returns>
         public float RenderBaseText(float X, float Y, string text, GLFont font, int color,
-            int trans = 255, bool flip = false, bool pseudo = false, bool random = false, bool jello = false, bool obfu = false)
+            int trans = 255, bool flip = false, bool pseudo = false, bool random = false, bool jello = false, bool obfu = false, Color ccolor = default(Color))
         {
             if (obfu || pseudo || random || jello)
             {
@@ -520,13 +540,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     char chr = text[z];
                     // int col = color;
                     Color tcol = ColorFor(color, trans);
-                    if (pseudo)
-                    {
-                        tcol = ColorFor((chr % (colors.Length - 1)) + 1, trans);
-                    }
                     if (random)
                     {
                         tcol = ColorFor(Utilities.UtilRandom.Next(colors.Length), trans);
+                    }
+                    else if (pseudo)
+                    {
+                        tcol = ColorFor((chr % (colors.Length - 1)) + 1, trans);
+                    }
+                    else if (ccolor.A > 0)
+                    {
+                        tcol = ccolor;
                     }
                     if (obfu)
                     {
@@ -546,7 +570,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             else
             {
-                Color tcol = ColorFor(color, trans);
+                Color tcol = ccolor.A > 0 ? ccolor : ColorFor(color, trans);
                 return font.DrawString(text, X, Y, new Vector4((float)tcol.R / 255f, (float)tcol.G / 255f, (float)tcol.B / 255f, (float)tcol.A / 255f), VBO, flip);
             }
         }
@@ -665,6 +689,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                             string langinfo = sbl.After("lang=");
                                             string[] subdats = csplit(langinfo).ToArray();
                                             ttext = Client.Central.Languages.GetText(Engine.TheClient.Files, subdats);
+                                            highl = false;
+                                        }
+                                        else if (sbl.StartsWith("color="))
+                                        {
+                                            ttext = "";
                                             highl = false;
                                         }
                                         else if (sbl == "lb")
