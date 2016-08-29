@@ -137,6 +137,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             MainWorldView.LightsSpikeTime = 0;
             FinishSpikeTime = 0;
             TWODSpikeTime = 0;
+            TotalSpikeTime = 0;
             for (int i = 0; i < (int)NetUsageType.COUNT; i++)
             {
                 Network.UsagesLastSecond[i] = Network.UsagesThisSecond[i];

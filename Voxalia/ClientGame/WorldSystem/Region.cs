@@ -502,7 +502,22 @@ namespace Voxalia.ClientGame.WorldSystem
             if (TheClient.MainWorldView.FBOid == FBOID.MAIN || TheClient.MainWorldView.FBOid == FBOID.NONE || TheClient.MainWorldView.FBOid == FBOID.FORWARD_SOLID)
             {
                 chToRender.Clear();
-                ChunkMarchAndDraw();
+                if (TheClient.CVars.r_chunkmarch.ValueB)
+                {
+                    ChunkMarchAndDraw();
+                }
+                else
+                {
+                    foreach (Chunk ch in LoadedChunks.Values)
+                    {
+                        BEPUutilities.Vector3 min = ch.WorldPosition.ToVector3() * Chunk.CHUNK_SIZE;
+                        if (TheClient.MainWorldView.CFrust == null || TheClient.MainWorldView.CFrust.ContainsBox(min, min + new BEPUutilities.Vector3(Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE)))
+                        {
+                            ch.Render();
+                            chToRender.Add(ch);
+                        }
+                    }
+                }
             }
             else
             {

@@ -61,9 +61,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public double ShadowTime;
         public double FBOTime;
         public double LightsTime;
+        public double TotalTime;
+
         public double ShadowSpikeTime;
         public double FBOSpikeTime;
         public double LightsSpikeTime;
+        public double TotalSpikeTime;
 
         public void GenerateLightHelpers()
         {
@@ -196,6 +199,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             // TODO: Regeneratable, on window resize in particular.
             if (LLActive)
             {
+                // TODO: If was active, delete old data
                 GenTexture();
                 GenBuffer(1, false);
                 GenBuffer(2, true);
@@ -319,22 +323,32 @@ namespace Voxalia.ClientGame.GraphicsSystems
             return total / (float)(inp.Length / 4);
         }
 
+        public bool FastOnly = false;
+
         public void Render()
         {
             try
             {
                 RenderPass_Setup();
-                if (TheClient.CVars.r_fast.ValueB) // TODO: Local option for this.
+                if (FastOnly || TheClient.CVars.r_fast.ValueB)
                 {
                     RenderPass_FAST();
                     return;
                 }
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
                 if (TheClient.CVars.r_shadows.ValueB)
                 {
                     RenderPass_Shadows();
                 }
                 RenderPass_GBuffer();
                 RenderPass_Lights();
+                timer.Stop();
+                TotalTime = (double)timer.ElapsedMilliseconds / 1000f;
+                if (TotalTime > TotalSpikeTime)
+                {
+                    TotalSpikeTime = TotalTime;
+                }
             }
             catch (Exception ex)
             {
@@ -372,8 +386,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Location bx = TheClient.CVars.r_3d_enable.ValueB ? (CameraPos + cameraAdjust) : CameraPos;
             Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + ForwardVec), ClientUtilities.Convert(CameraUp));
             PrimaryMatrix = view * proj;
-            Matrix4 view2 = Matrix4.LookAt(ClientUtilities.Convert(CameraPos - cameraAdjust), ClientUtilities.Convert(CameraPos - cameraAdjust + ForwardVec), ClientUtilities.Convert(CameraUp));
-            PrimaryMatrix_OffsetFor3D = view2 * proj;
+            if (TheClient.CVars.r_3d_enable.ValueB)
+            {
+                Matrix4 view2 = Matrix4.LookAt(ClientUtilities.Convert(CameraPos - cameraAdjust), ClientUtilities.Convert(CameraPos - cameraAdjust + ForwardVec), ClientUtilities.Convert(CameraUp));
+                PrimaryMatrix_OffsetFor3D = view2 * proj;
+            }
             camFrust = new Frustum(PrimaryMatrix);
             cf2 = new Frustum(PrimaryMatrix_OffsetFor3D);
             CheckError("AfterSetup");

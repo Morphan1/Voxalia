@@ -67,7 +67,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void ShadersCheck()
         {
-            string def = CVars.r_good_graphics.ValueB ? "#MCM_GOOD_GRAPHICS" : "";
+            string def = CVars.r_good_graphics.ValueB ? "#MCM_GOOD_GRAPHICS" : "#";
             s_shadow = Shaders.GetShader("shadow" + def);
             s_shadowvox = Shaders.GetShader("shadowvox" + def);
             s_fbo = Shaders.GetShader("fbo" + def);
@@ -259,14 +259,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public double TickTime;
         public double FinishTime;
         public double TWODTime;
+        public double TotalTime;
         public double TickSpikeTime;
         public double FinishSpikeTime;
         public double TWODSpikeTime;
-        
+        public double TotalSpikeTime;
+
         public double mapLastRendered = 0;
 
         public void renderGame()
         {
+            Stopwatch totalt = new Stopwatch();
+            totalt.Start();
             try
             {
                 MainWorldView.ForwardVec = Player.ForwardVector();
@@ -352,6 +356,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             catch (Exception ex)
             {
                 SysConsole.Output("Rendering (2D)", ex);
+            }
+            totalt.Stop();
+            TotalTime = (double)totalt.ElapsedMilliseconds / 1000f;
+            if (TotalTime > TotalSpikeTime)
+            {
+                TotalSpikeTime = TotalTime;
             }
         }
 
@@ -900,10 +910,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         + "\nHeld Item: " + GetItemForSlot(QuickBarPos).ToString()
                         + "\nTimes -> Phyiscs: " + TheRegion.PhysTime.ToString(timeformat) + ", Shadows: " + MainWorldView.ShadowTime.ToString(timeformat)
                         + ", FBO: " + MainWorldView.FBOTime.ToString(timeformat) + ", Lights: " + MainWorldView.LightsTime.ToString(timeformat) + ", 2D: " + TWODTime.ToString(timeformat)
-                        + ", Tick: " + TickTime.ToString(timeformat) + ", Finish: " + FinishTime.ToString(timeformat)
+                        + ", Tick: " + TickTime.ToString(timeformat) + ", Finish: " + FinishTime.ToString(timeformat) + ", Total: " + TotalTime.ToString(timeformat)
                         + "\nSpike Times -> Shadows: " + MainWorldView.ShadowSpikeTime.ToString(timeformat)
                         + ", FBO: " + MainWorldView.FBOSpikeTime.ToString(timeformat) + ", Lights: " + MainWorldView.LightsSpikeTime.ToString(timeformat) + ", 2D: " + TWODSpikeTime.ToString(timeformat)
-                        + ", Tick: " + TickSpikeTime.ToString(timeformat) + ", Finish: " + FinishSpikeTime.ToString(timeformat)
+                        + ", Tick: " + TickSpikeTime.ToString(timeformat) + ", Finish: " + FinishSpikeTime.ToString(timeformat) + ", Total: " + TotalSpikeTime.ToString(timeformat)
                         + "\nChunks loaded: " + TheRegion.LoadedChunks.Count + ", Chunks rendering currently: " + TheRegion.RenderingNow.Count + ", chunks waiting: " + TheRegion.NeedsRendering.Count + ", Entities loaded: " + TheRegion.Entities.Count
                         + "\nPosition: " + Player.GetPosition().ToBasicString() + ", velocity: " + Player.GetVelocity().ToBasicString() + ", direction: " + Player.Direction.ToBasicString()
                         + "\nExposure: " + MainWorldView.MainEXP,
