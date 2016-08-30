@@ -458,7 +458,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos.ToBVector(), Lights[i].MaxDistance))
                     {
-                        if (Lights[i] is SkyLight || (Lights[i].EyePos - CameraPos).LengthSquared() <
+                        if (Lights[i] is SkyLight || Lights[i].EyePos.DistanceSquared(CameraPos) <
                             TheClient.CVars.r_lightmaxdistance.ValueD * TheClient.CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
                         {
                             LightsC++;

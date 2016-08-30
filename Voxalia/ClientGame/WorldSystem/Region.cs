@@ -803,7 +803,7 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 if (!NeedsRendering.Contains(ch.WorldPosition))
                 {
-                    NeedsRendering.Enqueue(ch.WorldPosition, (ch.WorldPosition.ToLocation() - TheClient.MainWorldView.CameraPos).LengthSquared());
+                    NeedsRendering.Enqueue(ch.WorldPosition, ch.WorldPosition.ToLocation().DistanceSquared(TheClient.MainWorldView.CameraPos));
                 }
             }
         }

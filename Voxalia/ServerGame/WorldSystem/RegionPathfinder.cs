@@ -18,6 +18,10 @@ namespace Voxalia.ServerGame.WorldSystem
             endloc = endloc.GetBlockLocation() + new Location(0.5, 0.5, 1.0);
             double mrsq = maxRadius * maxRadius;
             double gosq = goaldist * goaldist;
+            if (startloc.DistanceSquared(endloc) > mrsq)
+            {
+                return null;
+            }
             PathFindNode start = new PathFindNode() { Internal = startloc, F = 0, G = 0 };
             PathFindNode end = new PathFindNode() { Internal = endloc, F = 0, G = 0 };
             SimplePriorityQueue<PathFindNode> open = new SimplePriorityQueue<PathFindNode>();
@@ -29,7 +33,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 PathFindNode next = open.Dequeue();
                 openset.Remove(next.Internal);
-                if ((end.Internal - next.Internal).LengthSquared() < gosq)
+                if (next.Internal.DistanceSquared(end.Internal) < gosq)
                 {
                     return Reconstruct(next);
                 }
@@ -41,7 +45,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         continue;
                     }
-                    if ((neighb - startloc).LengthSquared() > mrsq)
+                    if (startloc.DistanceSquared(neighb) > mrsq)
                     {
                         continue;
                     }
@@ -97,9 +101,12 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public static Location[] Neighbors = new Location[] { Location.UnitX, Location.UnitY, Location.UnitZ, -Location.UnitX, -Location.UnitY, -Location.UnitZ };
 
+        /// <summary>
+        /// Goes through a square root, yikes!
+        /// </summary>
         public double Distance(PathFindNode other)
         {
-            return (Internal - other.Internal).Length();
+            return Internal.Distance(other.Internal);
         }
 
         public int CompareTo(PathFindNode other)

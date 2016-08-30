@@ -1,12 +1,14 @@
 ﻿using System;
 using FreneticScript;
+using System.Runtime.InteropServices;
 
 namespace Voxalia.Shared
 {
     /// <summary>
     /// Represents a 3D location, using 3 double-precision floating-point coordinates.
+    /// Occupies 24 bytes, calculated as 8 * 3, as it has 3 fields (X, Y, Z) each occupying 8 bytes (a double).
     /// </summary>
-    // TODO: StructLayout for precision?
+    [StructLayout(LayoutKind.Explicit)]
     public struct Location : IEquatable<Location>
     {
         /// <summary>
@@ -42,16 +44,19 @@ namespace Voxalia.Shared
         /// <summary>
         /// The X coordinate of this location.
         /// </summary>
+        [FieldOffset(0)]
         public double X;
 
         /// <summary>
         /// The Y coordinate of this location.
         /// </summary>
+        [FieldOffset(8)]
         public double Y;
 
         /// <summary>
         /// The Z coordinate of this location.
         /// </summary>
+        [FieldOffset(16)]
         public double Z;
 
         /// <summary>
@@ -193,6 +198,30 @@ namespace Voxalia.Shared
         }
 
         /// <summary>
+        /// Returns the full linear distance of the vector location to another vector location, squared for efficiency.
+        /// </summary>
+        /// <returns>The squared distance.</returns>
+        public double DistanceSquared(Location two)
+        {
+            double x1 = X - two.X;
+            double y1 = Y - two.Y;
+            double z1 = Z - two.Z;
+            return x1 * x1 + y1 * y1 + z1 * z1;
+        }
+
+        /// <summary>
+        /// Returns the full linear distance of the vector location to another vector location, which goes through a square-root operation (inefficient).
+        /// </summary>
+        /// <returns>The square-rooted distance.</returns>
+        public double Distance(Location two)
+        {
+            double x1 = X - two.X;
+            double y1 = Y - two.Y;
+            double z1 = Z - two.Z;
+            return Math.Sqrt(x1 * x1 + y1 * y1 + z1 * z1);
+        }
+
+        /// <summary>
         /// Returns the full linear length of the vector location, squared for efficiency.
         /// </summary>
         /// <returns>The squared length.</returns>
@@ -207,7 +236,7 @@ namespace Voxalia.Shared
         /// <returns>The square-rooted length.</returns>
         public double Length()
         {
-            return (float)Math.Sqrt(X * X + Y * Y + Z * Z);
+            return Math.Sqrt(X * X + Y * Y + Z * Z);
         }
 
         /// <summary>
@@ -460,17 +489,59 @@ namespace Voxalia.Shared
         }
         
         /// <summary>
-        /// Gets the location of the block this location is within.
+        /// Gets the location of the block this location is within. (Round-down all values).
         /// </summary>
         /// <returns>The block location.</returns>
         public Location GetBlockLocation()
         {
             return new Location(Math.Floor(X), Math.Floor(Y), Math.Floor(Z));
         }
-        
+
+        /// <summary>
+        /// Gets the location of the next block corner up from this location. (Round-up all values).
+        /// </summary>
+        /// <returns>The block location.</returns>
         public Location GetUpperBlockBorder()
         {
             return new Location(Math.Ceiling(X), Math.Ceiling(Y), Math.Ceiling(Z));
+        }
+
+        /// <summary>
+        /// Returns the bigger valued coordinates for each of X, Y, and Z. Essentially, applies Math.Max to each coordinate.
+        /// </summary>
+        /// <param name="two">The second Location vector.</param>
+        /// <returns>The bigger valued coordinates.</returns>
+        public Location Max(Location two)
+        {
+            return new Location(Math.Max(X, two.X), Math.Max(Y, two.Y), Math.Max(Z, two.Z));
+        }
+
+        /// <summary>
+        /// Returns the smaller valued coordinates for each of X, Y, and Z. Essentially, applies Math.Min to each coordinate.
+        /// </summary>
+        /// <param name="two">The second Location vector.</param>
+        /// <returns>The smaller valued coordinates.</returns>
+        public Location Min(Location two)
+        {
+            return new Location(Math.Min(X, two.X), Math.Min(Y, two.Y), Math.Min(Z, two.Z));
+        }
+
+        /// <summary>
+        /// Returns the biggest coordinate in this location (biggest of X, Y, or Z).
+        /// </summary>
+        /// <returns>The biggest coordinate.</returns>
+        public double BiggestValue()
+        {
+            return Math.Max(Math.Max(X, Y), Z);
+        }
+
+        /// <summary>
+        /// Returns the samallest coordinate in this location (samallest of X, Y, or Z).
+        /// </summary>
+        /// <returns>The samallest coordinate.</returns>
+        public double SmallestValue()
+        {
+            return Math.Max(Math.Max(X, Y), Z);
         }
     }
 }

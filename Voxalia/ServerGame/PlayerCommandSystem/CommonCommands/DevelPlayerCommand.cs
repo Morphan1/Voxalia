@@ -221,7 +221,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 Location forw = entry.Player.ForwardVector();
                 Location goal;
                 RayCastResult rcr;
-                if (entry.Player.TheRegion.SpecialCaseRayTrace(eye, forw, 50, MaterialSolidity.FULLSOLID, entry.Player.IgnorePlayers, out rcr))
+                if (entry.Player.TheRegion.SpecialCaseRayTrace(eye, forw, 150, MaterialSolidity.FULLSOLID, entry.Player.IgnorePlayers, out rcr))
                 {
                     goal = new Location(rcr.HitData.Location);
                 }
@@ -233,7 +233,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 {
                     Stopwatch sw = new Stopwatch();
                     sw.Start();
-                    List<Location> locs = entry.Player.TheRegion.FindPath(entry.Player.GetPosition(), goal, 50 * 2, 1.5f, true);
+                    List<Location> locs = entry.Player.TheRegion.FindPath(entry.Player.GetPosition(), goal, 75, 1.5f, true);
                     sw.Stop();
                     entry.Player.TheServer.Schedule.ScheduleSyncTask(() =>
                     {

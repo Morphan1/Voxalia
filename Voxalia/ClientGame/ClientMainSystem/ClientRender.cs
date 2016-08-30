@@ -179,7 +179,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         
         public void sortEntities() // TODO: Maybe reverse ent order first, then this, to counteract existing reversal?
         {
-            TheRegion.Entities = TheRegion.Entities.OrderBy(o => (o.GetPosition() - MainWorldView.CameraPos).LengthSquared()).ToList();
+            TheRegion.Entities = TheRegion.Entities.OrderBy(o => (o.GetPosition().DistanceSquared(MainWorldView.CameraPos))).ToList();
         }
 
         public void ReverseEntitiesOrder()

@@ -53,6 +53,11 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                     return;
                 }
             }
+            float rel = TTL / O_TTL;
+            if (rel > 1 || rel <= 0)
+            {
+                return;
+            }
             texture.Bind();
             Location start = Start(this);
             Location ligl = TheClient.TheRegion.GetLightAmount(start, Location.UnitZ);
@@ -62,7 +67,6 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             light.Z = (float)Math.Max(light.Z, MinLight.Z);
             Vector4 scolor = new Vector4((float)Color.X * light.X, (float)Color.Y * light.Y, (float)Color.Z * light.Z, Alpha * light.W);
             Vector4 scolor2 = new Vector4((float)Color2.X * light.X, (float)Color2.Y * light.Y, (float)Color2.Z * light.Z, Alpha * light.W);
-            float rel = TTL / O_TTL;
             TheClient.Rendering.SetColor(scolor * rel + scolor2 * (1 - rel));
             switch (Type)
             {

@@ -67,7 +67,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     continue;
                 }
-                if ((loc - startOfTrace).LengthSquared() > maxradsq)
+                if (loc.DistanceSquared(startOfTrace) > maxradsq)
                 {
                     throw new Exception("Escaped radius!");
                 }
