@@ -10,6 +10,7 @@ using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.OtherSystems;
 using System.Drawing;
 using System.Drawing.Imaging;
+using FreneticDataSyntax;
 
 namespace Voxalia.ServerGame.NetworkSystem
 {
@@ -242,10 +243,10 @@ namespace Voxalia.ServerGame.NetworkSystem
                 content.Append("<!doctype html>\n<html>\n<head>\n<title>Voxalia Log View</title>\n</head>\n<body>\n");
                 lock (TheServer.TickLock)
                 {
-                    YAMLConfiguration cfg = TheServer.GetPlayerConfig(username);
+                    FDSSection cfg = TheServer.GetPlayerConfig(username);
                     valid = cfg != null
-                        && cfg.ReadString("web.is_admin", "false").ToLowerFast() == "true"
-                        && cfg.ReadString("web.passcode", "") == Utilities.HashQuick(username.ToLowerFast(), passcode);
+                        && cfg.GetString("web.is_admin", "false").ToLowerFast() == "true"
+                        && cfg.GetString("web.passcode", "") == Utilities.HashQuick(username.ToLowerFast(), passcode);
                 }
                 if (valid)
                 {

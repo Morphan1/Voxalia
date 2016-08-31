@@ -17,6 +17,7 @@ using BEPUphysics.Character;
 using FreneticScript;
 using FreneticScript.TagHandlers.Objects;
 using LiteDB;
+using FreneticDataSyntax;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -34,23 +35,23 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool SecureMovement = true;
 
-        public YAMLConfiguration Permissions = new YAMLConfiguration("");
+        public FDSSection Permissions = new FDSSection();
         
-        public void LoadFromYAML(YAMLConfiguration config)
+        public void LoadFromYAML(FDSSection config)
         {
-            string region = config.ReadString("region", null);
+            string region = config.GetString("region", null);
             if (region != null) // TODO: && TheServer.IsLoadedRegion(region)
             {
                 // TODO: Set region!
             }
-            if (!Enum.TryParse(config.ReadString("gamemode", "SURVIVOR"), out Mode))
+            if (!Enum.TryParse(config.GetString("gamemode", "SURVIVOR"), out Mode))
             {
                 SysConsole.Output(OutputType.WARNING, "Invalid gamemode for " + Name + ", reverting to SURVIVOR!");
                 Mode = GameMode.SURVIVOR;
             }
-            SetMaxHealth(config.ReadFloat("maxhealth", 100));
-            SetHealth(config.ReadFloat("health", 100));
-            if (config.ReadString("flying", "false").ToLowerFast() == "true") // TODO: ReadBoolean?
+            SetMaxHealth(config.GetFloat("maxhealth", 100).Value);
+            SetHealth(config.GetFloat("health", 100).Value);
+            if (config.GetString("flying", "false").ToLowerFast() == "true") // TODO: ReadBoolean?
             {
                 Fly();
                 Network.SendPacket(new FlagEntityPacketOut(this, EntityFlag.FLYING, 1));
@@ -60,22 +61,22 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 Unfly();
             }
-            SetVelocity(Location.FromString(config.ReadString("velocity", "0,0,0")));
-            Teleport(Location.FromString(config.ReadString("position", TheRegion.SpawnPoint.ToString())));
-            SecureMovement = config.ReadString("secure_movement", "true").ToLowerFast() == "true"; // TODO: ReadBoolean?
-            if (config.HasKey(null, "permissions"))
+            SetVelocity(Location.FromString(config.GetString("velocity", "0,0,0")));
+            Teleport(Location.FromString(config.GetString("position", TheRegion.SpawnPoint.ToString())));
+            SecureMovement = config.GetString("secure_movement", "true").ToLowerFast() == "true"; // TODO: ReadBoolean?
+            if (config.HasKey("permissions"))
             {
-                Permissions = config.GetConfigurationSection("permissions");
+                Permissions = config.GetSection("permissions");
             }
             if (Permissions == null)
             {
-                Permissions = new YAMLConfiguration("");
+                Permissions = new FDSSection();
             }
             IsFirstJoin = false;
             SpawnedTime = TheRegion.GlobalTickTime;
         }
 
-        public void SaveToYAML(YAMLConfiguration config)
+        public void SaveToYAML(FDSSection config)
         {
             config.Set("gamemode", Mode.ToString());
             config.Set("maxhealth", GetMaxHealth());
@@ -88,11 +89,11 @@ namespace Voxalia.ServerGame.EntitySystem
             for (int i = 0; i < (int)NetUsageType.COUNT; i++)
             {
                 string path = "stats.net_usage." + ((NetUsageType)i).ToString().ToLowerFast();
-                config.Set(path, config.ReadLong(path, 0) + UsagesTotal[i]);
+                config.Set(path, config.GetLong(path, 0).Value + UsagesTotal[i]);
             }
             const string timePath = "stats.general.time_seconds";
-            config.Set(timePath, config.ReadDouble(timePath, 0) + (TheRegion.GlobalTickTime - SpawnedTime));
-            config.Set("permissions", Permissions.Data);
+            config.Set(timePath, config.GetDouble(timePath, 0).Value + (TheRegion.GlobalTickTime - SpawnedTime));
+            config.Set("permissions", Permissions);
             // TODO: Other stats!
             // TODO: CBody settings? Mass? ...?
             // TODO: Inventory!
@@ -100,7 +101,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool HasSpecificPermissionNodeInternal(string node)
         {
-            return Permissions.ReadString(node, "false").ToLowerFast() == "true";
+            return Permissions.GetString(node, "false").ToLowerFast() == "true";
         }
 
         public bool HasPermissionInternal(params string[] path)
@@ -210,7 +211,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public Location LoadRelPos;
         public Location LoadRelDir;
 
-        public YAMLConfiguration PlayerConfig = null;
+        public FDSSection PlayerConfig = null;
         
         /// <summary>
         /// Kicks the player from the server with a specified message.
@@ -312,16 +313,18 @@ namespace Voxalia.ServerGame.EntitySystem
             string fn = "server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr";
             if (TheServer.Files.Exists(fn))
             {
+                // TODO: Journaling read
+                // TODO: Use ServerBase.GetPlayerConfig() ?
                 string dat = TheServer.Files.ReadText(fn);
                 if (dat != null)
                 {
-                    PlayerConfig = new YAMLConfiguration(dat);
+                    PlayerConfig = new FDSSection(dat);
                     LoadFromYAML(PlayerConfig);
                 }
             }
             if (PlayerConfig == null)
             {
-                PlayerConfig = new YAMLConfiguration("");
+                PlayerConfig = new FDSSection();
                 SaveToYAML(PlayerConfig);
             }
         }

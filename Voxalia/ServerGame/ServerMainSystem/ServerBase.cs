@@ -15,6 +15,7 @@ using Voxalia.ServerGame.PluginSystem;
 using FreneticScript.CommandSystem;
 using FreneticScript;
 using Voxalia.Shared.Files;
+using FreneticDataSyntax;
 
 namespace Voxalia.ServerGame.ServerMainSystem
 {
@@ -192,7 +193,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         public PluginManager Plugins;
 
-        public YAMLConfiguration Config;
+        public FDSSection Config;
 
         public List<string> RecentMessages = new List<string>();
 
@@ -210,7 +211,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             }
         }
 
-        public YAMLConfiguration GetPlayerConfig(string username)
+        public FDSSection GetPlayerConfig(string username)
         {
             if (username.Length == 0)
             {
@@ -223,15 +224,16 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 {
                     return pl.PlayerConfig;
                 }
-                YAMLConfiguration PlayerConfig = null;
+                FDSSection PlayerConfig = null;
                 string nl = username.ToLower();
+                // TODO: Journaling read
                 string fn = "server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr";
                 if (Files.Exists(fn))
                 {
                     string dat = Files.ReadText(fn);
                     if (dat != null)
                     {
-                        PlayerConfig = new YAMLConfiguration(dat);
+                        PlayerConfig = new FDSSection(dat);
                     }
                 }
                 return PlayerConfig;
@@ -258,7 +260,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             CVars = new ServerCVar();
             CVars.Init(this, Commands.Output);
             SysConsole.Output(OutputType.INIT, "Loading default settings...");
-            Config = new YAMLConfiguration(Files.ReadText("server_config.yml"));
+            Config = new FDSSection(Files.ReadText("server_config.fds"));
             if (Files.Exists("serverdefaultsettings.cfg"))
             {
                 string contents = Files.ReadText("serverdefaultsettings.cfg");
@@ -283,7 +285,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Loading scripts...");
             AutorunScripts();
             SysConsole.Output(OutputType.INIT, "Building initial world(s)...");
-            foreach (string str in Config.ReadStringList("server.regions"))
+            foreach (string str in Config.GetStringList("server.regions") ?? new List<string>())
             {
                 LoadRegion(str.ToLowerFast());
             }

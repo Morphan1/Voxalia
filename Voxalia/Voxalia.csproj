@@ -66,6 +66,9 @@
     <Reference Include="csvorbis">
       <HintPath>csvorbis.dll</HintPath>
     </Reference>
+    <Reference Include="FreneticDataSyntax">
+      <HintPath>.\FreneticDataSyntax.dll</HintPath>
+    </Reference>
     <Reference Include="FreneticScript">
       <HintPath>FreneticScript.dll</HintPath>
     </Reference>
@@ -84,9 +87,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="YamlDotNet">
-      <HintPath>YamlDotNet.dll</HintPath>
-    </Reference>
     <Reference Include="OpenTK">
       <HintPath>OpenTK.dll</HintPath>
     </Reference>

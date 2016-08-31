@@ -5,14 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Voxalia.Shared.Files;
 using FreneticScript;
+using FreneticDataSyntax;
 
 namespace Voxalia.Shared
 {
     public class LanguageEngine
     {
-        public Dictionary<string, YAMLConfiguration> EnglishDocuments = new Dictionary<string, YAMLConfiguration>();
+        public Dictionary<string, FDSSection> EnglishDocuments = new Dictionary<string, FDSSection>();
 
-        public Dictionary<string, YAMLConfiguration> LanguageDocuments = new Dictionary<string, YAMLConfiguration>();
+        public Dictionary<string, FDSSection> LanguageDocuments = new Dictionary<string, FDSSection>();
 
         public string CurrentLanguage = "en_us";
 
@@ -22,7 +23,7 @@ namespace Voxalia.Shared
             LanguageDocuments.Clear();
         }
 
-        public YAMLConfiguration GetLangDoc(string id, FileHandler Files, string lang = null, Dictionary<string, YAMLConfiguration> confs = null)
+        public FDSSection GetLangDoc(string id, FileHandler Files, string lang = null, Dictionary<string, FDSSection> confs = null)
         {
             if (lang == null)
             {
@@ -33,7 +34,7 @@ namespace Voxalia.Shared
                 confs = LanguageDocuments;
             }
             string idlow = id.ToLowerFast();
-            YAMLConfiguration doc;
+            FDSSection doc;
             if (LanguageDocuments.TryGetValue(idlow, out doc))
             {
                 return doc;
@@ -44,7 +45,7 @@ namespace Voxalia.Shared
                 try
                 {
                     string dat = Files.ReadText(path);
-                    doc = new YAMLConfiguration(dat);
+                    doc = new FDSSection(dat);
                     LanguageDocuments[idlow] = doc;
                     return doc;
                 }
@@ -87,12 +88,12 @@ namespace Voxalia.Shared
             }
             string category = pathAndVars[0].ToLowerFast();
             string defPath = pathAndVars[1].ToLowerFast();
-            YAMLConfiguration lang = GetLangDoc(category, Files);
-            YAMLConfiguration langen = GetLangDoc(category, Files, "en_us", EnglishDocuments);
+            FDSSection lang = GetLangDoc(category, Files);
+            FDSSection langen = GetLangDoc(category, Files, "en_us", EnglishDocuments);
             List<string> str = null;
             if (lang != null)
             {
-                str = lang.ReadStringList(defPath);
+                str = lang.GetStringList(defPath);
                 if (str != null)
                 {
                     return HandleList(str, pathAndVars);
@@ -100,7 +101,7 @@ namespace Voxalia.Shared
             }
             if (langen != null)
             {
-                str = langen.ReadStringList(defPath);
+                str = langen.GetStringList(defPath);
                 if (str != null)
                 {
                     return HandleList(str, pathAndVars);
@@ -121,12 +122,12 @@ namespace Voxalia.Shared
             }
             string category = pathAndVars[0].ToLowerFast();
             string defPath = pathAndVars[1].ToLowerFast();
-            YAMLConfiguration lang = GetLangDoc(category, Files);
-            YAMLConfiguration langen = GetLangDoc(category, Files, "en_us", EnglishDocuments);
+            FDSSection lang = GetLangDoc(category, Files);
+            FDSSection langen = GetLangDoc(category, Files, "en_us", EnglishDocuments);
             string str = null;
             if (lang != null)
             {
-                str = lang.ReadString(defPath, null);
+                str = lang.GetString(defPath, null);
                 if (str != null)
                 {
                     return Handle(str, pathAndVars);
@@ -134,7 +135,7 @@ namespace Voxalia.Shared
             }
             if (langen != null)
             {
-                str = langen.ReadString(defPath, null);
+                str = langen.GetString(defPath, null);
                 if (str != null)
                 {
                     return Handle(str, pathAndVars);

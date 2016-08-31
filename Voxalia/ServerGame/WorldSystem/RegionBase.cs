@@ -21,6 +21,7 @@ using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.ItemSystem.CommonItems;
 using FreneticScript;
+using FreneticDataSyntax;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -65,7 +66,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public int MaxViewRadiusInChunks = 4;
 
-        public YAMLConfiguration Config;
+        public FDSSection Config;
 
         Thread MainThread;
 
@@ -78,6 +79,10 @@ namespace Voxalia.ServerGame.WorldSystem
                 throw new Exception("Called a critical method on the wrong thread!");
             }
         }
+
+        public const int DefaultSeed = 100;
+
+        public const string DefaultSpawnPoint = "0,0,50";
 
         public void BuildWorld()
         {
@@ -97,23 +102,23 @@ namespace Voxalia.ServerGame.WorldSystem
             Collision = new CollisionUtil(PhysicsWorld);
             string folder = "saves/" + Name;
             TheServer.Files.CreateDirectory(folder);
-            string fname = folder + "/region.yml";
+            // TODO: Journaling read
+            string fname = folder + "/region.fds";
             if (TheServer.Files.Exists(fname))
             {
-                Config = new YAMLConfiguration(TheServer.Files.ReadText(fname));
+                Config = new FDSSection(TheServer.Files.ReadText(fname));
             }
             else
             {
-                Config = new YAMLConfiguration("");
+                Config = new FDSSection();
             }
-            Config.Changed += configChanged;
             Config.Set("general.IMPORTANT_NOTE", "Edit this configuration at your own risk!");
             Config.Set("general.name", Name);
             Config.Default("general.seed", Utilities.UtilRandom.Next(SeedMax) - SeedMax / 2);
             Config.Default("general.spawnpoint", new Location(0, 0, 50).ToString());
             CFGEdited = true;
-            Seed = Config.ReadInt("general.seed", 100);
-            SpawnPoint = Location.FromString(Config.ReadString("general.spawnpoint", "0,0,50"));
+            Seed = Config.GetInt("general.seed", DefaultSeed).Value;
+            SpawnPoint = Location.FromString(Config.GetString("general.spawnpoint", DefaultSpawnPoint));
             Random seedGen = new Random(Seed);// TODO: Own random method that doesn't depend on C# impl!
             Seed2 = (seedGen.Next(SeedMax) - SeedMax / 2);
             Seed3 = (seedGen.Next(SeedMax) - SeedMax / 2);
@@ -192,10 +197,16 @@ namespace Voxalia.ServerGame.WorldSystem
                 string cfg = Config.SaveToString();
                 TheServer.Schedule.StartASyncTask(() =>
                 {
-                    TheServer.Files.WriteText("saves/" + Name + "/region.yml", cfg);
+                    // TODO: Journaling save.
+                    lock (SaveRegionCFGLock)
+                    {
+                        TheServer.Files.WriteText("saves/" + Name + "/region.fds", cfg);
+                    }
                 });
             }
         }
+
+        Object SaveRegionCFGLock = new Object();
 
         public double UnloadLimit = 10;
 

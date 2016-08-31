@@ -84,9 +84,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="YamlDotNet">
-      <HintPath>YamlDotNet.dll</HintPath>
-    </Reference>
     <Reference Include="LiteDB">
       <HintPath>LiteDB.dll</HintPath>
     </Reference>
