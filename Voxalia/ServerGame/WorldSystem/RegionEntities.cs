@@ -326,7 +326,7 @@ namespace Voxalia.ServerGame.WorldSystem
             /*RayCastResult rcr;
             bool h = SpecialCaseRayTrace(pos, -Location.UnitZ, 50, MaterialSolidity.FULLSOLID, IgnoreEntities, out rcr);
             me.SetPosition(h ? new Location(rcr.HitData.Location) : pos);*/
-            Vector3 treealign = new Vector3(0, 1, 0);
+            Vector3 treealign = new Vector3(0, 0, 1);
             Vector3 norm = /*h ? rcr.HitData.Normal : */new Vector3(0, 0, 1);
             Quaternion orient;
             Quaternion.GetQuaternionBetweenNormalizedVectors(ref treealign, ref norm, out orient);

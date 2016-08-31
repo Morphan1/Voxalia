@@ -310,10 +310,10 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             // TODO: Different plants per biome!
                             chunk.OwningRegion.SpawnSmallPlant("tallgrass", new Location(cx + 0.5f, cy + 0.5f, hheight), chunk);
                         }
-                        if (spotr.Next(300) == 1) // TODO: Efficiency! // TODO: Biome based chance!
+                        else if (spotr.Next(300) == 1) // TODO: Efficiency! // TODO: Biome based chance!
                         {
                             // TODO: Different trees per biome!
-                            chunk.OwningRegion.SpawnTree("oak01", new Location(cx + 0.5f, cy + 0.5f, hheight), chunk);
+                            chunk.OwningRegion.SpawnTree("treevox01", new Location(cx + 0.5f, cy + 0.5f, hheight), chunk);
                         }
                     }
                 }
