@@ -43,8 +43,10 @@ namespace Voxalia.ServerGame.OtherSystems
 
         public void RenderChunk(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)
         {
+#if TIMINGS
             Stopwatch sw = new Stopwatch();
             sw.Start();
+#endif
             if (tregion.TheServer.CVars.g_renderblocks.ValueB)
             {
                 RenderChunkInternal(tregion, chunkCoords, chunk);
@@ -53,8 +55,10 @@ namespace Voxalia.ServerGame.OtherSystems
             {
                 RenderChunkInternalAngle(tregion, chunkCoords, chunk);
             }
+#if TIMINGS
             sw.Stop();
             Timings_General += sw.ElapsedTicks / (double)Stopwatch.Frequency;
+#endif
         }
 
         public byte[] Combine(List<byte[]> originals, bool angle)

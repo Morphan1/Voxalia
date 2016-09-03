@@ -34,11 +34,16 @@ namespace Voxalia.Shared
     {
         public static float Generate(float x, float y) // TODO: Take doubles?
         {
+            x = System.Math.Abs(x);
+            y = System.Math.Abs(y);
             return (SimplexNoiseInternal.Generate(x, y) + 1f) * 0.5f;
         }
 
         public static float Generate(float x, float y, float z) // TODO: Take doubles?
         {
+            x = System.Math.Abs(x);
+            y = System.Math.Abs(y);
+            z = System.Math.Abs(z);
             return (SimplexNoiseInternal.Generate(x, y, z) + 1f) * 0.5f;
         }
     }
@@ -83,8 +88,6 @@ namespace Voxalia.Shared
         /// <returns>.</returns>
         public static float Generate(float x, float y)
         {
-            x = System.Math.Abs(x); y = System.Math.Abs(y); // mcmonkey - allow negative coordinates... poorly.
-
             const float F2 = 0.366025403f; // F2 = 0.5*(sqrt(3.0)-1.0)
             const float G2 = 0.211324865f; // G2 = (3.0-Math.sqrt(3.0))/6.0
 
@@ -155,8 +158,6 @@ namespace Voxalia.Shared
 
         public static float Generate(float x, float y, float z)
         {
-            x = System.Math.Abs(x); y = System.Math.Abs(y); z = System.Math.Abs(z); // mcmonkey - allow negative coordinates... poorly.
-
             // Simple skewing factors for the 3D case
             const float F3 = 0.333333333f;
             const float G3 = 0.166666667f;
