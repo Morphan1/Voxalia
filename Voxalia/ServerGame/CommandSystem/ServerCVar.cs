@@ -20,7 +20,7 @@ namespace Voxalia.ServerGame.CommandSystem
         public CVar s_filepath, s_debug;
 
         // Game CVars
-        public CVar g_timescale, g_fps, g_maxheight, g_minheight, g_maxdist;
+        public CVar g_timescale, g_fps, g_maxheight, g_minheight, g_maxdist, g_renderblocks;
 
         // Network CVars
         public CVar n_verifyip, n_rendersides, n_chunkspertick;
@@ -44,9 +44,10 @@ namespace Voxalia.ServerGame.CommandSystem
             g_maxheight = Register("g_maxheight", "5000", CVarFlag.Numeric, "What the highest possible Z coordinate should be (for building)."); // TODO: Also per-world?
             g_minheight = Register("g_minheight", "-5000", CVarFlag.Numeric, "What the lowest possible Z coordinate should be (for building)."); // TODO: Also per-world?
             g_maxdist = Register("g_maxdist", "50000", CVarFlag.Numeric, "How far on the X or Y axis a player may travel from the origin."); // TODO: Also per-world?
+            g_renderblocks = Register("g_renderblocks", "false", CVarFlag.Boolean, "Whether to render blocks for mapping purposes."); // TODO: Also per-world?
             // Network CVars
             n_verifyip = Register("n_verifyip", "true", CVarFlag.Boolean, "Whether to verify connecting users' IP addresses with the global server. Disable this to allow LAN connections.");
-            n_rendersides = Register("n_rendersides", "false", CVarFlag.Boolean, "Whether to render the side-on map view for the linked webpage.");
+            n_rendersides = Register("n_rendersides", "false", CVarFlag.Boolean, "Whether to render the side-on map view for the linked webpage."); // TODO: Also per-world?
             n_chunkspertick = Register("n_chunkspertick", "5", CVarFlag.Numeric, "How many chunks can be sent in a single server tick, per player.");
             // Text CVars
             t_translateurls = Register("t_translateurls", "true", CVarFlag.Boolean, "Whether to automatically translate URLs posted in chat.");

@@ -66,6 +66,10 @@
     <Reference Include="csvorbis">
       <HintPath>csvorbis.dll</HintPath>
     </Reference>
+    <Reference Include="FreneticDataSyntax, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\FreneticDataSyntax.dll</HintPath>
+    </Reference>
     <Reference Include="FreneticScript">
       <HintPath>FreneticScript.dll</HintPath>
     </Reference>
@@ -205,9 +209,7 @@
     <Compile Include="ClientGame\NetworkSystem\AbstractPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\AbstractPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\NetStringManager.cs" />
-    <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ClientGame\NetworkSystem\NetworkBase.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddCloudPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddJointPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\AddToCloudPacketIn.cs" />

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Voxalia.Shared;
 using Voxalia.Shared.Collision;
 
@@ -63,6 +65,26 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             }
         }
 
+        public override void ClearTimings()
+        {
+            Timings_Height = 0;
+            Timings_Chunk = 0;
+            Timings_Entities = 0;
+        }
+
+        public double Timings_Height = 0;
+        public double Timings_Chunk = 0;
+        public double Timings_Entities = 0;
+
+        public override List<Tuple<string, double>> GetTimings()
+        {
+            List<Tuple<string, double>> res = new List<Tuple<string, double>>();
+            res.Add(new Tuple<string, double>("Height", Timings_Height));
+            res.Add(new Tuple<string, double>("Chunk", Timings_Chunk));
+            res.Add(new Tuple<string, double>("Entities", Timings_Entities));
+            return res;
+        }
+
         public bool CanBeSolid(int seed3, int seed4, int seed5, int x, int y, int z, SimpleBiome biome)
         {
             float val = SimplexNoise.Generate((float)seed3 + (x / SolidityMapSize), (float)seed4 + (y / SolidityMapSize), (float)seed5 + (z / SolidityMapSize));
@@ -91,23 +113,33 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
 
         public override float GetHeight(int Seed, int seed2, int seed3, int seed4, int seed5, float x, float y, float z, out Biome biome)
         {
-            if (z < -50 || z > 50)
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            try
             {
-                float valx = GetHeightQuick(Seed, seed2, x, y);
-                biome = Biomes.BiomeFor(seed2, seed3, seed4, x, y, z, valx);
-                return valx;
+                if (z < -50 || z > 50)
+                {
+                    float valx = GetHeightQuick(Seed, seed2, x, y);
+                    biome = Biomes.BiomeFor(seed2, seed3, seed4, x, y, z, valx);
+                    return valx;
+                }
+                float valBasic = GetHeightQuick(Seed, seed2, x, y);
+                Biome b = Biomes.BiomeFor(seed2, seed3, seed4, x, y, z, valBasic);
+                float total = valBasic * ((SimpleBiome)b).HeightMod();
+                foreach (Vector3i vecer in Rels)
+                {
+                    float valt = GetHeightQuick(Seed, seed2, x + vecer.X * relmod, y + vecer.Y * relmod);
+                    Biome bt = Biomes.BiomeFor(seed2, seed3, seed4, x + vecer.X * relmod, y + vecer.Y * relmod, z, valt);
+                    total += valt * ((SimpleBiome)bt).HeightMod();
+                }
+                biome = b;
+                return total / (Rels.Length + 1);
             }
-            float valBasic = GetHeightQuick(Seed, seed2, x, y);
-            Biome b = Biomes.BiomeFor(seed2, seed3, seed4, x, y, z, valBasic);
-            float total = valBasic * ((SimpleBiome)b).HeightMod();
-            foreach (Vector3i vecer in Rels)
+            finally
             {
-                float valt = GetHeightQuick(Seed, seed2, x + vecer.X * relmod, y + vecer.Y * relmod);
-                Biome bt = Biomes.BiomeFor(seed2, seed3, seed4, x + vecer.X * relmod, y + vecer.Y * relmod, z, valt);
-                total += valt * ((SimpleBiome)bt).HeightMod();
+                sw.Stop();
+                Timings_Height += sw.ElapsedTicks / (double)Stopwatch.Frequency;
             }
-            biome = b;
-            return total / (Rels.Length + 1);
         }
         
         void SpecialSetBlockAt(Chunk chunk, int X, int Y, int Z, BlockInternal bi)
@@ -143,6 +175,15 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         public int MaxNonAirHeight = 2;
 
         public override void Populate(int Seed, int seed2, int seed3, int seed4, int seed5, Chunk chunk)
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            PopulateInternal(Seed, seed2, seed3, seed4, seed5, chunk);
+            sw.Stop();
+            Timings_Chunk += sw.ElapsedTicks / (double)Stopwatch.Frequency;
+        }
+
+        private void PopulateInternal(int Seed, int seed2, int seed3, int seed4, int seed5, Chunk chunk)
         {
             if (chunk.WorldPosition.Z > MaxNonAirHeight)
             {
@@ -304,6 +345,8 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     // Special case: trees.
                     if (hheight > 0 && top >= 0 && top < Chunk.CHUNK_SIZE)
                     {
+                        Stopwatch sw = new Stopwatch();
+                        sw.Start();
                         Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000)); // TODO: Improve!
                         if (spotr.Next(65) == 1) // TODO: Efficiency! // TODO: Biome based chance!
                         {
@@ -315,6 +358,8 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             // TODO: Different trees per biome!
                             chunk.OwningRegion.SpawnTree("treevox01", new Location(cx + 0.5f, cy + 0.5f, hheight), chunk);
                         }
+                        sw.Stop();
+                        Timings_Entities += sw.ElapsedTicks / (double)Stopwatch.Frequency;
                     }
                 }
             }

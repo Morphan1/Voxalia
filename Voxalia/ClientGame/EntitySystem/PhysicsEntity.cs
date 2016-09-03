@@ -125,9 +125,12 @@ namespace Voxalia.ClientGame.EntitySystem
                 }
             }
             ShadowCastShape = Shape.GetCollidableInstance();
+            ShadowMainDupe = Shape.GetCollidableInstance();
         }
 
         public EntityCollidable ShadowCastShape;
+
+        public EntityCollidable ShadowMainDupe;
 
         /// <summary>
         /// Destroys the body, removing it from the physics world.

@@ -318,6 +318,27 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 entry.Player.PlayerConfig.Set("web.passcode", Utilities.HashQuick(entry.Player.Name.ToLowerFast(), entry.InputArguments[1]));
                 entry.Player.Network.SendMessage("Set.");
             }
+            else if (arg0 == "chunkTimes")
+            {
+                foreach (Tuple<string, double> time in entry.Player.TheRegion.Generator.GetTimings())
+                {
+                    entry.Player.Network.SendMessage("--> " + time.Item1 + ": " + time.Item2);
+                }
+                entry.Player.Network.SendMessage("--> [Image]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_General);
+                entry.Player.Network.SendMessage("--> [Image/A]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_A);
+                entry.Player.Network.SendMessage("--> [Image/B]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_B);
+                entry.Player.Network.SendMessage("--> [Image/C]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_C);
+                entry.Player.Network.SendMessage("--> [Image/D]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_D);
+                if (entry.InputArguments.Count > 1 && entry.InputArguments[1] == "clear")
+                {
+                    entry.Player.TheRegion.Generator.ClearTimings();
+                    entry.Player.TheRegion.TheServer.BlockImages.Timings_General = 0;
+                    entry.Player.TheRegion.TheServer.BlockImages.Timings_A = 0;
+                    entry.Player.TheRegion.TheServer.BlockImages.Timings_B = 0;
+                    entry.Player.TheRegion.TheServer.BlockImages.Timings_C = 0;
+                    entry.Player.TheRegion.TheServer.BlockImages.Timings_D = 0;
+                }
+            }
             else
             {
                 ShowUsage(entry);

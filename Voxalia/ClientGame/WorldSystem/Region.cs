@@ -42,9 +42,7 @@ namespace Voxalia.ClientGame.WorldSystem
         public List<Entity> ShadowCasters = new List<Entity>();
 
         public PhysicsEntity[] GenShadowCasters = new PhysicsEntity[0];
-
-        public Object GenShadowCastersLock = new Object();
-
+        
         public AABB[] Highlights = new AABB[0];
 
         /// <summary>
@@ -259,28 +257,24 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 if (pe.GenBlockShadows)
                 {
-                    lock (GenShadowCastersLock)
+                    PhysicsEntity[] neo = new PhysicsEntity[GenShadowCasters.Length - 1];
+                    int x = 0;
+                    bool valid = true;
+                    for (int i = 0; i < GenShadowCasters.Length; i++)
                     {
-                        // TODO: Effic?
-                        PhysicsEntity[] neo = new PhysicsEntity[GenShadowCasters.Length - 1];
-                        int x = 0;
-                        bool valid = true;
-                        for (int i = 0; i < GenShadowCasters.Length; i++)
+                        if (GenShadowCasters[i] != pe)
                         {
-                            if (GenShadowCasters[i] != pe)
+                            neo[x++] = GenShadowCasters[i];
+                            if (x == GenShadowCasters.Length)
                             {
-                                neo[x++] = GenShadowCasters[i];
-                                if (x == GenShadowCasters.Length)
-                                {
-                                    valid = false;
-                                    return;
-                                }
+                                valid = false;
+                                return;
                             }
                         }
-                        if (valid)
-                        {
-                            GenShadowCasters = neo;
-                        }
+                    }
+                    if (valid)
+                    {
+                        GenShadowCasters = neo;
                     }
                 }
             }
@@ -719,22 +713,29 @@ namespace Voxalia.ClientGame.WorldSystem
             if (light > 0 && TheClient.CVars.r_treeshadows.ValueB)
             {
                 BoundingBox bb = new BoundingBox(pos.ToBVector(), (pos + new Location(1, 1, 500)).ToBVector());
-                for (int i = 0; i < GenShadowCasters.Length; i++)
+                if (GenShadowCasters != null)
                 {
-                    PhysicsEntity pe = GenShadowCasters[i];
-                    if (pe.GenBlockShadows)
+                    for (int i = 0; i < GenShadowCasters.Length; i++)
                     {
-                        if (pe.Body.CollisionInformation.BoundingBox.Intersects(bb))
+                        PhysicsEntity pe = GenShadowCasters[i];
+                        if (pe == null) // Shouldn't happen.
                         {
-                            light = 0;
-                            break;
+                            continue;
                         }
-                        if (pe.ShadowCastShape.BoundingBox.Intersects(bb))
+                        if (pe.GenBlockShadows)
                         {
-                            light -= 0.3f;
-                            if (light <= 0)
+                            if (pe.ShadowMainDupe.BoundingBox.Intersects(bb))
                             {
+                                light = 0;
                                 break;
+                            }
+                            if (pe.ShadowCastShape.BoundingBox.Intersects(bb))
+                            {
+                                light -= 0.3f;
+                                if (light <= 0)
+                                {
+                                    break;
+                                }
                             }
                         }
                     }

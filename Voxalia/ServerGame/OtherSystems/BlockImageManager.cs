@@ -35,13 +35,26 @@ namespace Voxalia.ServerGame.OtherSystems
 
         static readonly Color Transp = Color.FromArgb(0, 0, 0, 0);
 
+        public double Timings_General = 0; // TODO: Per-region var?
+        public double Timings_A = 0; // TODO: Per-region var?
+        public double Timings_B = 0; // TODO: Per-region var?
+        public double Timings_C = 0; // TODO: Per-region var?
+        public double Timings_D = 0; // TODO: Per-region var?
+
         public void RenderChunk(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)
         {
-            RenderChunkInternal(tregion, chunkCoords, chunk);
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            if (tregion.TheServer.CVars.g_renderblocks.ValueB)
+            {
+                RenderChunkInternal(tregion, chunkCoords, chunk);
+            }
             if (tregion.TheServer.CVars.n_rendersides.ValueB)
             {
                 RenderChunkInternalAngle(tregion, chunkCoords, chunk);
             }
+            sw.Stop();
+            Timings_General += sw.ElapsedTicks / (double)Stopwatch.Frequency;
         }
 
         public byte[] Combine(List<byte[]> originals, bool angle)
@@ -230,6 +243,8 @@ namespace Voxalia.ServerGame.OtherSystems
 
         void RenderChunkInternal(WorldSystem.Region tregion, Vector3i chunkCoords, Chunk chunk)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             MaterialImage bmp = new MaterialImage() { Colors = new Color[BmpSize, BmpSize] };
             for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
             {
@@ -271,6 +286,10 @@ namespace Voxalia.ServerGame.OtherSystems
                     }
                 }
             }
+            sw.Stop();
+            Timings_A += sw.ElapsedTicks / (double)Stopwatch.Frequency;
+            sw.Reset();
+            sw.Start();
             Bitmap tbmp = new Bitmap(BmpSize2, BmpSize2);
             BitmapData bdat = tbmp.LockBits(new Rectangle(0, 0, tbmp.Width, tbmp.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
             int stride = bdat.Stride;
@@ -290,14 +309,24 @@ namespace Voxalia.ServerGame.OtherSystems
                     }
                 }
             }
+            sw.Stop();
+            Timings_B += sw.ElapsedTicks / (double)Stopwatch.Frequency;
+            sw.Reset();
+            sw.Start();
             DataStream ds = new DataStream();
             tbmp.Save(ds, ImageFormat.Png);
-            lock (OneAtATimePlease) // NOTE: We can make this grab off an array of locks to reduce load a little.
+            sw.Stop();
+            Timings_C += sw.ElapsedTicks / (double)Stopwatch.Frequency;
+            sw.Reset();
+            sw.Start();
+            lock (OneAtATimePlease) // NOTE: We can probably make this grab off an array of locks to reduce load a little.
             {
                 KeyValuePair<int, int> maxes = tregion.ChunkManager.GetMaxes((int)chunkCoords.X, (int)chunkCoords.Y);
                 tregion.ChunkManager.SetMaxes((int)chunkCoords.X, (int)chunkCoords.Y, Math.Min(maxes.Key, (int)chunkCoords.Z), Math.Max(maxes.Value, (int)chunkCoords.Z));
             }
             tregion.ChunkManager.WriteImage((int)chunkCoords.X, (int)chunkCoords.Y, (int)chunkCoords.Z, ds.ToArray());
+            sw.Stop();
+            Timings_D += sw.ElapsedTicks / (double)Stopwatch.Frequency;
         }
 
         public void Init(Server tserver)
