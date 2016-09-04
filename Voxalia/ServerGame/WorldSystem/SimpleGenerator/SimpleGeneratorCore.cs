@@ -374,7 +374,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         else if (spotr.Next(300) == 1) // TODO: Efficiency! // TODO: Biome based chance!
                         {
                             // TODO: Different trees per biome!
-                            chunk.OwningRegion.SpawnTree("treevox01", new Location(cx + 0.5f, cy + 0.5f, hheight), chunk);
+                            chunk.OwningRegion.SpawnTree("treevox0" + (Utilities.UtilRandom.Next(2) + 1), new Location(cx + 0.5f, cy + 0.5f, hheight), chunk);
                         }
 #if TIMINGS
                         sw.Stop();

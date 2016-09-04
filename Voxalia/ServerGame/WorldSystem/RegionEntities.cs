@@ -330,6 +330,7 @@ namespace Voxalia.ServerGame.WorldSystem
             Vector3 norm = /*h ? rcr.HitData.Normal : */new Vector3(0, 0, 1);
             Quaternion orient;
             Quaternion.GetQuaternionBetweenNormalizedVectors(ref treealign, ref norm, out orient);
+            orient *= Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)(Utilities.UtilRandom.NextDouble() * Math.PI * 2));
             me.SetOrientation(orient);
             me.SetPosition(pos);
             me.CanLOD = true;
