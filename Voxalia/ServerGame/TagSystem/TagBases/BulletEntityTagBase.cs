@@ -35,15 +35,10 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             string input = data.GetModifier(0).ToLowerFast();
             if (long.TryParse(input, out eid))
             {
-                foreach (Region r in TheServer.LoadedRegions)
+                Entity e = TheServer.GetEntity(eid);
+                if (e != null && e is BulletEntity)
                 {
-                    foreach (Entity e in r.Entities)
-                    {
-                        if (e.EID == eid && e is BulletEntity)
-                        {
-                            return new BulletEntityTag((BulletEntity)e).Handle(data.Shrink());
-                        }
-                    }
+                    return new BulletEntityTag((BulletEntity)e).Handle(data.Shrink());
                 }
             }
             data.Error("Invalid bullet entity '" + TagParser.Escape(input) + "'!");

@@ -35,15 +35,10 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             string input = data.GetModifier(0).ToLowerFast();
             if (long.TryParse(input, out eid))
             {
-                foreach (Region r in TheServer.LoadedRegions)
+                Entity e = TheServer.GetEntity(eid);
+                if (e != null && e is GrenadeEntity)
                 {
-                    foreach (Entity e in r.Entities)
-                    {
-                        if (e.EID == eid && e is GrenadeEntity)
-                        {
-                            return new GrenadeEntityTag((GrenadeEntity)e).Handle(data.Shrink());
-                        }
-                    }
+                    return new GrenadeEntityTag((GrenadeEntity)e).Handle(data.Shrink());
                 }
             }
             data.Error("Invalid grenade entity '" + TagParser.Escape(input) + "'!");

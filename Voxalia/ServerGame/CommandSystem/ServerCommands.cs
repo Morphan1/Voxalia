@@ -78,7 +78,7 @@ namespace Voxalia.ServerGame.CommandSystem
             CommandSystem.TagSystem.Register(new PrimitiveEntityTagBase(TheServer));
             CommandSystem.TagSystem.Register(new RecipeResultTagBase(TheServer));
             CommandSystem.TagSystem.Register(new RecipeTagBase(TheServer));
-            CommandSystem.TagSystem.Register(new RegionTagBase(TheServer));
+            CommandSystem.TagSystem.Register(new WorldTagBase(TheServer));
             CommandSystem.TagSystem.Register(new ServerTagBase(TheServer));
             CommandSystem.TagSystem.Register(new SmokeGrenadeEntityTagBase(TheServer));
             CommandSystem.TagSystem.Register(new VehicleEntityTagBase(TheServer));

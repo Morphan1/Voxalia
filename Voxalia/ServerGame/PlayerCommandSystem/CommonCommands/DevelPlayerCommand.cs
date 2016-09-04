@@ -127,16 +127,16 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 Biome biome;
                 Location posBlock = entry.Player.GetPosition().GetBlockLocation();
-                float h = entry.Player.TheRegion.Generator.GetHeight(entry.Player.TheRegion.Seed, entry.Player.TheRegion.Seed2, entry.Player.TheRegion.Seed3,
-                    entry.Player.TheRegion.Seed4, entry.Player.TheRegion.Seed5, (float)posBlock.X, (float)posBlock.Y, (float)posBlock.Z, out biome);
+                float h = entry.Player.TheRegion.Generator.GetHeight(entry.Player.TheRegion.TheWorld.Seed, entry.Player.TheRegion.TheWorld.Seed2, entry.Player.TheRegion.TheWorld.Seed3,
+                    entry.Player.TheRegion.TheWorld.Seed4, entry.Player.TheRegion.TheWorld.Seed5, (float)posBlock.X, (float)posBlock.Y, (float)posBlock.Z, out biome);
                 BlockInternal bi = entry.Player.TheRegion.GetBlockInternal_NoLoad((entry.Player.GetPosition() + new Location(0, 0, -0.05f)).GetBlockLocation());
                 entry.Player.Network.SendMessage("Mat: " + bi.Material + ", data: " + ((int)bi.BlockData) + ", locDat: " + ((int)bi.BlockLocalData)
                     + ", Damage: " + bi.Damage + ", Paint: " + bi.BlockPaint
                     + ", xp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXP() + ", xm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXM()
                     + ", yp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYP() + ", ym: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYM()
                     + ", zp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesTOP() + ", zm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesBOTTOM());
-                float temp = entry.Player.TheRegion.BiomeGen.GetTemperature(entry.Player.TheRegion.Seed2, entry.Player.TheRegion.Seed3, (float)posBlock.X, (float)posBlock.Y);
-                float down = entry.Player.TheRegion.BiomeGen.GetDownfallRate(entry.Player.TheRegion.Seed3, entry.Player.TheRegion.Seed4, (float)posBlock.X, (float)posBlock.Y);
+                float temp = entry.Player.TheRegion.BiomeGen.GetTemperature(entry.Player.TheRegion.TheWorld.Seed2, entry.Player.TheRegion.TheWorld.Seed3, (float)posBlock.X, (float)posBlock.Y);
+                float down = entry.Player.TheRegion.BiomeGen.GetDownfallRate(entry.Player.TheRegion.TheWorld.Seed3, entry.Player.TheRegion.TheWorld.Seed4, (float)posBlock.X, (float)posBlock.Y);
                 entry.Player.Network.SendMessage("Height: " + h + ", temperature: " + temp + ", downfallrate: " + down + ", biome yield: " + biome.GetName());
             }
             else if (arg0 == "structureSelect" && entry.InputArguments.Count > 1)
@@ -205,7 +205,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                     sw.Start();
                     List<Location> locs = entry.Player.TheRegion.FindPath(entry.Player.GetPosition(), entry.Player.GetPosition() + new Location(dist, 0, 0), dist * 2, 1.5f, true);
                     sw.Stop();
-                    entry.Player.TheServer.Schedule.ScheduleSyncTask(() =>
+                    entry.Player.TheRegion.TheWorld.Schedule.ScheduleSyncTask(() =>
                     {
                         if (locs != null)
                         {
@@ -235,7 +235,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                     sw.Start();
                     List<Location> locs = entry.Player.TheRegion.FindPath(entry.Player.GetPosition(), goal, 75, 1.5f, true);
                     sw.Stop();
-                    entry.Player.TheServer.Schedule.ScheduleSyncTask(() =>
+                    entry.Player.TheRegion.TheWorld.Schedule.ScheduleSyncTask(() =>
                     {
                         if (locs != null)
                         {

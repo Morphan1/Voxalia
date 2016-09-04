@@ -39,7 +39,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             {
                 // <--[tagbase]
                 // @Name ServerTag.online_players
-                // @Group General Information
+                // @Group Entities
                 // @ReturnType ListTag
                 // @Returns a list of all online players.
                 // @Example .online_players could return "Fortifier|mcmonkey".
@@ -54,24 +54,24 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                         return players.Handle(data.Shrink());
                     }
                 // <--[tagbase]
-                // @Name ServerTag.loaded_regions
-                // @Group General Information
+                // @Name ServerTag.loaded_worlds
+                // @Group World
                 // @ReturnType ListTag
-                // @Returns a list of all loaded regions.
-                // @Example .loaded_regions could return "default|bob".
+                // @Returns a list of all loaded worlds.
+                // @Example .loaded_worlds could return "default|bob".
                 // -->
-                case "loaded_regions":
+                case "loaded_worlds":
                     {
-                        ListTag regions = new ListTag();
-                        foreach (Region r in TheServer.LoadedRegions)
+                        ListTag worlds = new ListTag();
+                        foreach (World w in TheServer.LoadedWorlds)
                         {
-                            regions.ListEntries.Add(new RegionTag(r));
+                            worlds.ListEntries.Add(new WorldTag(w));
                         }
-                        return regions.Handle(data.Shrink());
+                        return worlds.Handle(data.Shrink());
                     }
                 // <--[tagbase]
                 // @Name ServerTag.loaded_recipes
-                // @Group General Information
+                // @Group Items
                 // @ReturnType ListTag
                 // @Returns a list of all loaded recipes.
                 // -->
@@ -86,7 +86,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                     }
                 // <--[tagbase]
                 // @Name ServerTag.can_craft_from[<ListTag>]
-                // @Group General Information
+                // @Group Items
                 // @ReturnType ListTag
                 // @Returns a list of all loaded recipes that can be crafted from the given input.
                 // @Example .can_craft_from[blocks/grass_forest] could return "1&pipeblocks/grass_forest|".
@@ -109,7 +109,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                     }
                 // <--[tagbase]
                 // @Name ServerTag.match_player[<TextTag>]
-                // @Group General Information
+                // @Group Entities
                 // @ReturnType PlayerTag
                 // @Returns the player whose name best matches the input.
                 // @Example .match_player[Fort] out of a group of "Fortifier", "Fort", and "Forty" would return "Fort".

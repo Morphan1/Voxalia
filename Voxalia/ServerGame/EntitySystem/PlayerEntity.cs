@@ -39,30 +39,30 @@ namespace Voxalia.ServerGame.EntitySystem
         
         public void LoadFromYAML(FDSSection config)
         {
-            string region = config.GetString("region", null);
-            if (region != null) // TODO: && TheServer.IsLoadedRegion(region)
+            string world = config.GetString("world", null);
+            if (world != null) // TODO: && worldIsValidAndLoaded
             {
-                // TODO: Set region!
+                // TODO: Set world, region!
             }
             if (!Enum.TryParse(config.GetString("gamemode", "SURVIVOR"), out Mode))
             {
                 SysConsole.Output(OutputType.WARNING, "Invalid gamemode for " + Name + ", reverting to SURVIVOR!");
                 Mode = GameMode.SURVIVOR;
             }
-            SetMaxHealth(config.GetFloat("maxhealth", 100).Value);
-            SetHealth(config.GetFloat("health", 100).Value);
+            base.SetMaxHealth(config.GetFloat("maxhealth", 100).Value);
+            base.SetHealth(config.GetFloat("health", 100).Value);
             if (config.GetString("flying", "false").ToLowerFast() == "true") // TODO: ReadBoolean?
             {
-                Fly();
-                Network.SendPacket(new FlagEntityPacketOut(this, EntityFlag.FLYING, 1));
-                Network.SendPacket(new FlagEntityPacketOut(this, EntityFlag.MASS, 0));
+                base.Fly();
+                //Network.SendPacket(new FlagEntityPacketOut(this, EntityFlag.FLYING, 1));
+                //Network.SendPacket(new FlagEntityPacketOut(this, EntityFlag.MASS, 0));
             }
             else
             {
-                Unfly();
+                base.Unfly();
             }
             SetVelocity(Location.FromString(config.GetString("velocity", "0,0,0")));
-            Teleport(Location.FromString(config.GetString("position", TheRegion.SpawnPoint.ToString())));
+            SetPosition(Location.FromString(config.GetString("position", TheRegion.TheWorld.SpawnPoint.ToString())));
             SecureMovement = config.GetString("secure_movement", "true").ToLowerFast() == "true"; // TODO: ReadBoolean?
             if (config.HasKey("permissions"))
             {
@@ -85,7 +85,8 @@ namespace Voxalia.ServerGame.EntitySystem
             config.Set("velocity", GetVelocity().ToString());
             config.Set("position", GetPosition().ToString());
             config.Set("secure_movement", SecureMovement ? "true" : "false"); // TODO: Boolean safety
-            config.Set("region", TheRegion.Name);
+            config.Set("world", TheRegion.TheWorld.Name);
+            config.Set("region", TheRegion.Position.ToLocation().ToString());
             for (int i = 0; i < (int)NetUsageType.COUNT; i++)
             {
                 string path = "stats.net_usage." + ((NetUsageType)i).ToString().ToLowerFast();
@@ -269,8 +270,12 @@ namespace Voxalia.ServerGame.EntitySystem
             Network = conn;
             SetMass(tmass);
             CanRotate = false;
-            SetPosition(TheRegion.SpawnPoint);
+            SetPosition(TheRegion.TheWorld.SpawnPoint);
             Items = new PlayerInventory(this);
+        }
+
+        public void InitPlayer()
+        {
             // TODO: Convert all these to item files!
             Items.GiveItem(new ItemStack("open_hand", TheServer, 1, "items/common/open_hand_ico", "Open Hand", "Grab things!", Color.White, "items/common/hand", true, 0));
             Items.GiveItem(new ItemStack("fist", TheServer, 1, "items/common/fist_ico", "Fist", "Hit things!", Color.White, "items/common/fist", true, 0));
@@ -1168,7 +1173,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public override void Die()
         {
             SetHealth(MaxHealth);
-            Teleport(TheRegion.SpawnPoint);
+            Teleport(TheRegion.TheWorld.SpawnPoint);
         }
 
         public BlockGroupEntity Pasting = null;

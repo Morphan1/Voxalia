@@ -90,6 +90,8 @@ namespace Voxalia.ServerGame.NetworkSystem
 
         public void GetPage()
         {
+            // TODO: FIX ME!
+#if PAGE_MAGIC
             string pageLow = http_request_page.ToLowerFast();
             if (pageLow.StartsWith("/map/region/"))
             {
@@ -275,6 +277,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                 http_response_content = FileHandler.encoding.GetBytes(content.ToString());
                 return;
             }
+#endif
             Do404();
         }
 

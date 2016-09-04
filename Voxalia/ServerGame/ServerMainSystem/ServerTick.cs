@@ -133,7 +133,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             }
         }
 
-        double pts;
+        //double pts;
 
         public double Delta;
 
@@ -155,7 +155,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
         public void Tick(double delta)
         {
             tpsc++;
-            Delta = delta * CVars.g_timescale.ValueD;
+            Delta = delta;// * CVars.g_timescale.ValueD;
             try
             {
                 Stopwatch sw = new Stopwatch();
@@ -166,18 +166,19 @@ namespace Voxalia.ServerGame.ServerMainSystem
                     opsat -= 1.0;
                     OncePerSecondActions();
                 }
-                if (CVars.g_timescale.ValueD != pts) // TODO: Make this CVar per-world
+                // TODO: Re-implement!
+                /*if (CVars.g_timescale.ValueD != pts) // TODO: Make this CVar per-world
                 {
                     for (int i = 0; i < LoadedRegions.Count; i++)
                     {
                         LoadedRegions[i].SendToAll(new CVarSetPacketOut(CVars.g_timescale, this));
                     }
-                }
-                pts = CVars.g_timescale.ValueD;
+                }*/
+                //pts = CVars.g_timescale.ValueD;
                 Networking.Tick(Delta); // TODO: Asynchronize network ticking
                 ConsoleHandler.CheckInput(); // TODO: Asynchronize command ticking
                 Commands.Tick(Delta); // TODO: Asynchronize command ticking
-                TickWorlds(Delta); // TODO: Asynchronize world ticking
+                //TickWorlds(Delta);
                 Stopwatch schedw = new Stopwatch();
                 schedw.Start();
                 Schedule.RunAllSyncTasks(Delta);

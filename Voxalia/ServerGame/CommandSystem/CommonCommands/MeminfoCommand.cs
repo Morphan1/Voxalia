@@ -34,21 +34,24 @@ namespace Voxalia.ServerGame.CommandSystem.CommonCommands
             long cht = 0;
             long entt = 0;
             int n = 0;
-            foreach (Region region in TheServer.LoadedRegions)
+            foreach (World world in TheServer.LoadedWorlds)
             {
-                n++;
-                string reg_rn = Utilities.Pad(Utilities.Pad(n.ToString(), '0', 2) + ")" + TagParser.Escape(region.Name), ' ', rn.Length, false);
-                long chunk = Chunk.RAM_USAGE * region.LoadedChunks.Count;
-                string reg_cr = Utilities.Pad(Utilities.FormatNumber(chunk), ' ', cr.Length, false);
-                long ent = 0;
-                foreach (Entity e in region.Entities)
+                foreach (Region region in world.LoadedRegions.Values)
                 {
-                    ent += e.GetRAMUsage();
+                    n++;
+                    string reg_rn = Utilities.Pad(Utilities.Pad(n.ToString(), '0', 2) + ")" + TagParser.Escape(world.Name) + "/" + region.Position.ToString(), ' ', rn.Length, false);
+                    long chunk = Chunk.RAM_USAGE * region.LoadedChunks.Count;
+                    string reg_cr = Utilities.Pad(Utilities.FormatNumber(chunk), ' ', cr.Length, false);
+                    long ent = 0;
+                    foreach (Entity e in region.Entities)
+                    {
+                        ent += e.GetRAMUsage();
+                    }
+                    string reg_er = Utilities.Pad(Utilities.FormatNumber(ent), ' ', er.Length, false);
+                    entry.Info(queue, "[<{text_color.emphasis}>" + reg_rn + "<{text_color.base}>] [<{text_color.emphasis}>" + reg_cr + "<{text_color.base}>] [<{text_color.emphasis}>" + reg_er + "<{text_color.base}>]");
+                    cht += chunk;
+                    entt += ent;
                 }
-                string reg_er = Utilities.Pad(Utilities.FormatNumber(ent), ' ', er.Length, false);
-                entry.Info(queue, "[<{text_color.emphasis}>" + reg_rn + "<{text_color.base}>] [<{text_color.emphasis}>" + reg_cr + "<{text_color.base}>] [<{text_color.emphasis}>" + reg_er + "<{text_color.base}>]");
-                cht += chunk;
-                entt += ent;
             }
             entry.Info(queue, "Totals -> Chunks (Semi-accurate): <{text_color.emphasis}>" + Utilities.FormatNumber(cht) + "<{text_color.base}>, Entities (Estimated): <{text_color.emphasis}>" + Utilities.FormatNumber(entt)
                 + "<{text_color.base}>, actual usage: <{text_color.emphasis}>" + Utilities.FormatNumber(GC.GetTotalMemory(false)) + "<{text_color.base}>.");

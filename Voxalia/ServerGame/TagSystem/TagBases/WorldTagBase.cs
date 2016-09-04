@@ -13,33 +13,33 @@ using FreneticScript;
 
 namespace Voxalia.ServerGame.TagSystem.TagBases
 {
-    class RegionTagBase : TemplateTagBase
+    class WorldTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base region[<RegionTag>]
+        // @Base world[<WorldTag>]
         // @Group World
         // @ReturnType RegionTag
         // @Returns the region with the given name.
         // -->
         Server TheServer;
 
-        public RegionTagBase(Server tserver)
+        public WorldTagBase(Server tserver)
         {
-            Name = "region";
+            Name = "world";
             TheServer = tserver;
         }
 
         public override TemplateObject Handle(TagData data)
         {
             string rname = data.GetModifier(0).ToLowerFast();
-            foreach (Region r in TheServer.LoadedRegions)
+            foreach (World w in TheServer.LoadedWorlds)
             {
-                if (r.Name.ToLowerFast() == rname)
+                if (w.Name.ToLowerFast() == rname)
                 {
-                    return new RegionTag(r).Handle(data.Shrink());
+                    return new WorldTag(w).Handle(data.Shrink());
                 }
             }
-            data.Error("Invalid region '" + TagParser.Escape(rname) + "'!");
+            data.Error("Invalid world '" + TagParser.Escape(rname) + "'!");
             return new NullTag();
         }
     }

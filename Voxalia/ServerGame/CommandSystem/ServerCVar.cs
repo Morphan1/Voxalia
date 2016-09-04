@@ -20,7 +20,7 @@ namespace Voxalia.ServerGame.CommandSystem
         public CVar s_filepath, s_debug;
 
         // Game CVars
-        public CVar g_timescale, g_fps, g_maxheight, g_minheight, g_maxdist, g_renderblocks;
+        public CVar g_fps, g_maxheight, g_minheight, g_maxdist, g_renderblocks;
 
         // Network CVars
         public CVar n_verifyip, n_rendersides, n_chunkspertick;
@@ -39,7 +39,7 @@ namespace Voxalia.ServerGame.CommandSystem
             s_filepath = Register("s_filepath", tserver.Files.BaseDirectory, CVarFlag.Textual | CVarFlag.ReadOnly, "The current system environment filepath (The directory of /data)."); // TODO: Scrap this! Tags!
             s_debug = Register("s_debug", "true", CVarFlag.Boolean, "Whether to output debug information.");
             // Game CVars
-            g_timescale = Register("g_timescale", "1", CVarFlag.Numeric, "The current game time scaling value.");
+            //g_timescale = Register("g_timescale", "1", CVarFlag.Numeric, "The current game time scaling value.");
             g_fps = Register("g_fps", "30", CVarFlag.Numeric, "What framerate to use.");
             g_maxheight = Register("g_maxheight", "5000", CVarFlag.Numeric, "What the highest possible Z coordinate should be (for building)."); // TODO: Also per-world?
             g_minheight = Register("g_minheight", "-5000", CVarFlag.Numeric, "What the lowest possible Z coordinate should be (for building)."); // TODO: Also per-world?

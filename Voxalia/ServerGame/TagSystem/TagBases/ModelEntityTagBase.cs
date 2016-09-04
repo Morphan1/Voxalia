@@ -35,15 +35,10 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             string input = data.GetModifier(0).ToLowerFast();
             if (long.TryParse(input, out eid))
             {
-                foreach (Region r in TheServer.LoadedRegions)
+                Entity e = TheServer.GetEntity(eid);
+                if (e != null && e is ModelEntity)
                 {
-                    foreach (Entity e in r.Entities)
-                    {
-                        if (e.EID == eid && e is ModelEntity)
-                        {
-                            return new ModelEntityTag((ModelEntity)e).Handle(data.Shrink());
-                        }
-                    }
+                    return new ModelEntityTag((ModelEntity)e).Handle(data.Shrink());
                 }
             }
             data.Error("Invalid model entity '" + TagParser.Escape(input) + "'!");

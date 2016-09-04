@@ -142,16 +142,17 @@ namespace Voxalia.ServerGame.ServerMainSystem
             ShuttingDown = true;
             SysConsole.Output(OutputType.INFO, "[Shutdown] Starting to close server...");
             Schedule.Tasks.Clear();
-            foreach (Region region in LoadedRegions)
+            foreach (PlayerEntity player in Players)
             {
-                foreach (PlayerEntity player in region.Players)
-                {
-                    player.Kick("Server shutting down.");
-                }
-                SysConsole.Output(OutputType.INFO, "[Shutdown] Unloading world: " + region.Name);
-                region.UnloadFully();
+                player.Kick("Server shutting down.");
             }
-            LoadedRegions.Clear();
+            foreach (World world in LoadedWorlds)
+            {
+                // TODO: Thread-safer shutdown sequence!
+                SysConsole.Output(OutputType.INFO, "[Shutdown] Unloading world: " + world.Name);
+                world.UnloadFully();
+            }
+            LoadedWorlds.Clear();
             SysConsole.Output(OutputType.INFO, "[Shutdown] Clearing plugins...");
             Plugins.UnloadPlugins();
             SysConsole.Output(OutputType.INFO, "[Shutdown] Closing server...");
@@ -168,9 +169,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 CurThread.Abort();
             }
             ShuttingDown = true;
-            foreach (Region reg in LoadedRegions)
+            foreach (World world in LoadedWorlds)
             {
-                reg.FinalShutdown();
+                world.FinalShutdown();
             }
             ConsoleHandler.Close();
             if (shutdownCallback != null)
@@ -285,9 +286,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
             SysConsole.Output(OutputType.INIT, "Loading scripts...");
             AutorunScripts();
             SysConsole.Output(OutputType.INIT, "Building initial world(s)...");
-            foreach (string str in Config.GetStringList("server.regions") ?? new List<string>())
+            foreach (string str in Config.GetStringList("server.worlds") ?? new List<string>())
             {
-                LoadRegion(str.ToLowerFast());
+                LoadWorld(str.ToLowerFast());
             }
             if (loaded != null)
             {
@@ -298,7 +299,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             BlockImages.Init(this);
             SysConsole.Output(OutputType.INIT, "Ticking...");
             // Tick
-            double TARGETFPS = 40d;
+            double TARGETFPS = 30d;
             Stopwatch Counter = new Stopwatch();
             Stopwatch DeltaCounter = new Stopwatch();
             DeltaCounter.Start();

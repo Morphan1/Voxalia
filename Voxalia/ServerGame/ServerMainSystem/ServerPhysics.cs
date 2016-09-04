@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Voxalia.ServerGame.WorldSystem;
 using FreneticScript;
+using Voxalia.ServerGame.EntitySystem;
 
 namespace Voxalia.ServerGame.ServerMainSystem
 {
@@ -9,72 +10,61 @@ namespace Voxalia.ServerGame.ServerMainSystem
     public partial class Server
     {
         // TODO: Dictionary?
-        public List<Region> LoadedRegions = new List<Region>();
+        public List<World> LoadedWorlds = new List<World>();
 
         /// <summary>
         /// Fired when a region is going to be loaded; can be cancelled.
-        /// For purely listening to a region load after the fact, use <see cref="OnRegionLoadPostEvent"/>.
+        /// For purely listening to a region load after the fact, use <see cref="OnWorldLoadPostEvent"/>.
         /// TODO: Move to an event helper!
         /// </summary>
-        public FreneticScriptEventHandler<RegionLoadPreEventArgs> OnRegionLoadPreEvent = new FreneticScriptEventHandler<RegionLoadPreEventArgs>();
+        public FreneticScriptEventHandler<WorldLoadPreEventArgs> OnWorldLoadPreEvent = new FreneticScriptEventHandler<WorldLoadPreEventArgs>();
 
         /// <summary>
         /// Fired when a region is loaded and is going to be added; can be cancelled.
-        /// For purely listening to a region load after the fact, use <see cref="OnRegionLoadPostEvent"/>.
+        /// For purely listening to a region load after the fact, use <see cref="OnWorldLoadPostEvent"/>.
         /// TODO: Move to an event helper!
         /// </summary>
-        public FreneticScriptEventHandler<RegionLoadEventArgs> OnRegionLoadEvent = new FreneticScriptEventHandler<RegionLoadEventArgs>();
+        public FreneticScriptEventHandler<WorldLoadEventArgs> OnWorldLoadEvent = new FreneticScriptEventHandler<WorldLoadEventArgs>();
 
         /// <summary>
         /// Fired when a region has been loaded; is purely informative.
-        /// For cancelling a region load, use <see cref="OnRegionLoadPreEvent"/>.
+        /// For cancelling a region load, use <see cref="OnWorldLoadPreEvent"/>.
         /// TODO: Move to an event helper!
         /// </summary>
-        public FreneticScriptEventHandler<RegionLoadPostEventArgs> OnRegionLoadPostEvent = new FreneticScriptEventHandler<RegionLoadPostEventArgs>();
+        public FreneticScriptEventHandler<WorldLoadPostEventArgs> OnWorldLoadPostEvent = new FreneticScriptEventHandler<WorldLoadPostEventArgs>();
 
-        public Region LoadRegion(string name)
+        public World LoadWorld(string name)
         {
             string nl = name.ToLowerFast();
-            for (int i = 0; i < LoadedRegions.Count; i++)
+            for (int i = 0; i < LoadedWorlds.Count; i++)
             {
-                if (LoadedRegions[i].Name == nl)
+                if (LoadedWorlds[i].Name == nl)
                 {
-                    return LoadedRegions[i];
+                    return LoadedWorlds[i];
                 }
             }
-            RegionLoadPreEventArgs e = new RegionLoadPreEventArgs() { RegionName = name };
-            OnRegionLoadPreEvent.Fire(e);
+            WorldLoadPreEventArgs e = new WorldLoadPreEventArgs() { WorldName = name };
+            OnWorldLoadPreEvent.Fire(e);
             if (e.Cancelled)
             {
                 return null;
             }
-            Region region = new Region();
-            region.Name = nl;
-            region.TheServer = this;
-            region.BuildWorld();
-            RegionLoadEventArgs e2 = new RegionLoadEventArgs() { TheRegion = region };
-            OnRegionLoadEvent.Fire(e2);
+            World world = new World();
+            world.Name = nl;
+            world.TheServer = this;
+            WorldLoadEventArgs e2 = new WorldLoadEventArgs() { TheWorld = world };
+            OnWorldLoadEvent.Fire(e2);
             if (e.Cancelled)
             {
-                region.UnloadFully();
+                world.UnloadFully();
                 return null;
             }
-            LoadedRegions.Add(region);
-            OnRegionLoadPostEvent.Fire(new RegionLoadPostEventArgs() { TheRegion = region });
-            return region;
+            LoadedWorlds.Add(world);
+            OnWorldLoadPostEvent.Fire(new WorldLoadPostEventArgs() { TheWorld = world });
+            world.Start();
+            return world;
         }
-
-        /// <summary>
-        /// Ticks the physics world.
-        /// </summary>
-        public void TickWorlds(double delta)
-        {
-            for (int i = 0; i < LoadedRegions.Count; i++)
-            {
-                LoadedRegions[i].Tick(delta);
-            }
-        }
-
+        
         long cID = 1; // TODO: Save/load value!
 
         Object CIDLock = new Object();
@@ -98,24 +88,42 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 return CloudID++;
             }
         }
+
+        public Entity GetEntity(long eid)
+        {
+            foreach (World world in LoadedWorlds)
+            {
+                foreach (Region region in world.LoadedRegions.Values)
+                {
+                    foreach (Entity ent in region.Entities)
+                    {
+                        if (ent.EID == eid)
+                        {
+                            return ent;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
     }
 
-    public class RegionLoadEventArgs : EventArgs
+    public class WorldLoadEventArgs : EventArgs
     {
         public bool Cancelled = false;
 
-        public Region TheRegion = null;
+        public World TheWorld = null;
     }
 
-    public class RegionLoadPreEventArgs : EventArgs
+    public class WorldLoadPreEventArgs : EventArgs
     {
         public bool Cancelled = false;
 
-        public string RegionName = null;
+        public string WorldName = null;
     }
 
-    public class RegionLoadPostEventArgs : EventArgs
+    public class WorldLoadPostEventArgs : EventArgs
     {
-        public Region TheRegion = null;
+        public World TheWorld = null;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Net;
+using System.Linq;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -234,10 +235,13 @@ namespace Voxalia.ServerGame.NetworkSystem
                         }
                         packet.Chunk = PE.ChunkNetwork == this;
                         packet.Player = PE;
-                        if (!packet.ParseBytesAndExecute(data))
+                        PE.TheRegion.TheWorld.Schedule.ScheduleSyncTask(() =>
                         {
-                            throw new Exception("Imperfect packet data for " + packetID);
-                        }
+                            if (!packet.ParseBytesAndExecute(data))
+                            {
+                                throw new Exception("Imperfect packet data for " + packetID);
+                            }
+                        });
                     }
                 }
                 else
@@ -306,17 +310,21 @@ namespace Voxalia.ServerGame.NetworkSystem
                                 try
                                 {
                                     CheckWebSession(name, key);
-                                    TheServer.Schedule.ScheduleSyncTask(() =>
+                                    TheServer.LoadedWorlds[0].Schedule.ScheduleSyncTask(() =>
                                     {
                                         // TODO: Additional details?
-                                        PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
-                                        PlayerEntity player = new PlayerEntity(TheServer.LoadedRegions[0], this, name);
+                                        // TODO: Choose a world smarter.
+                                        PlayerEntity player = new PlayerEntity(TheServer.LoadedWorlds[0].LoadedRegions.Values.First(), this, name);
                                         player.SessionKey = key;
                                         PE = player;
                                         player.Host = host;
                                         player.Port = port;
                                         player.IP = PrimarySocket.RemoteEndPoint.ToString();
-                                        TheServer.PlayersWaiting.Add(player);
+                                        TheServer.Schedule.ScheduleSyncTask(() =>
+                                        {
+                                            TheServer.PlayersWaiting.Add(player);
+                                            PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
+                                        });
                                         GotBase = true;
                                         recdsofar = 0;
                                         trying = false;
@@ -362,33 +370,41 @@ namespace Voxalia.ServerGame.NetworkSystem
                             {
                                 throw new Exception("Invalid connection - unreasonable username!");
                             }
-                            PlayerEntity player = null;
-                            for (int i = 0; i < TheServer.PlayersWaiting.Count; i++)
+                            TheServer.Schedule.ScheduleSyncTask(() =>
                             {
-                                if (TheServer.PlayersWaiting[i].Name == name && TheServer.PlayersWaiting[i].Host == host &&
-                                    TheServer.PlayersWaiting[i].Port == port && TheServer.PlayersWaiting[i].SessionKey == key)
+                                PlayerEntity player = null;
+                                for (int i = 0; i < TheServer.PlayersWaiting.Count; i++)
                                 {
-                                    player = TheServer.PlayersWaiting[i];
-                                    TheServer.PlayersWaiting.RemoveAt(i);
-                                    break;
+                                    if (TheServer.PlayersWaiting[i].Name == name && TheServer.PlayersWaiting[i].Host == host &&
+                                        TheServer.PlayersWaiting[i].Port == port && TheServer.PlayersWaiting[i].SessionKey == key)
+                                    {
+                                        player = TheServer.PlayersWaiting[i];
+                                        TheServer.PlayersWaiting.RemoveAt(i);
+                                        break;
+                                    }
                                 }
-                            }
-                            if (player == null)
-                            {
-                                throw new Exception("Can't find player for VOXc_!");
-                            }
-                            PE = player;
-                            player.ChunkNetwork = this;
-                            PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
-                            player.TheRegion.SpawnEntity(player);
-                            player.LastPingByte = 0;
-                            player.LastCPingByte = 0;
-                            PrimarySocket.SendBufferSize *= 10;
-                            SendPacket(new PingPacketOut(0));
-                            player.Network.SendPacket(new PingPacketOut(0));
-                            player.SendStatus();
-                            GotBase = true;
-                            recdsofar = 0;
+                                if (player == null)
+                                {
+                                    throw new Exception("Can't find player for VOXc_!");
+                                }
+                                PE = player;
+                                player.ChunkNetwork = this;
+                                PrimarySocket.Send(FileHandler.encoding.GetBytes("ACCEPT\n"));
+                                // TODO: What if the world disappears during connect sequence?
+                                player.LastPingByte = 0;
+                                player.LastCPingByte = 0;
+                                PrimarySocket.SendBufferSize *= 10;
+                                SendPacket(new PingPacketOut(0));
+                                player.Network.SendPacket(new PingPacketOut(0));
+                                player.SendStatus();
+                                GotBase = true;
+                                recdsofar = 0;
+                                player.TheRegion.TheWorld.Schedule.ScheduleSyncTask(() =>
+                                {
+                                    player.InitPlayer();
+                                    player.TheRegion.SpawnEntity(player);
+                                });
+                            });
                         }
                     }
                     else

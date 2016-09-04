@@ -66,8 +66,6 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public int MaxViewRadiusInChunks = 4;
 
-        public FDSSection Config;
-
         Thread MainThread;
 
         int MainThreadID;
@@ -79,10 +77,6 @@ namespace Voxalia.ServerGame.WorldSystem
                 throw new Exception("Called a critical method on the wrong thread!");
             }
         }
-
-        public const int DefaultSeed = 100;
-
-        public const string DefaultSpawnPoint = "0,0,50";
 
         public void BuildWorld()
         {
@@ -100,30 +94,6 @@ namespace Voxalia.ServerGame.WorldSystem
             PhysicsWorld.DuringForcesUpdateables.Add(new LiquidVolume(this));
             PhysicsWorld.TimeStepSettings.TimeStepDuration = 1f / TheServer.CVars.g_fps.ValueF;
             Collision = new CollisionUtil(PhysicsWorld);
-            string folder = "saves/" + Name;
-            TheServer.Files.CreateDirectory(folder);
-            // TODO: Journaling read
-            string fname = folder + "/region.fds";
-            if (TheServer.Files.Exists(fname))
-            {
-                Config = new FDSSection(TheServer.Files.ReadText(fname));
-            }
-            else
-            {
-                Config = new FDSSection();
-            }
-            Config.Set("general.IMPORTANT_NOTE", "Edit this configuration at your own risk!");
-            Config.Set("general.name", Name);
-            Config.Default("general.seed", Utilities.UtilRandom.Next(SeedMax) - SeedMax / 2);
-            Config.Default("general.spawnpoint", new Location(0, 0, 50).ToString());
-            CFGEdited = true;
-            Seed = Config.GetInt("general.seed", DefaultSeed).Value;
-            SpawnPoint = Location.FromString(Config.GetString("general.spawnpoint", DefaultSpawnPoint));
-            Random seedGen = new Random(Seed);// TODO: Own random method that doesn't depend on C# impl!
-            Seed2 = (seedGen.Next(SeedMax) - SeedMax / 2);
-            Seed3 = (seedGen.Next(SeedMax) - SeedMax / 2);
-            Seed4 = (seedGen.Next(SeedMax) - SeedMax / 2);
-            Seed5 = (seedGen.Next(SeedMax) - SeedMax / 2);
             EntityConstructors.Add(EntityType.ITEM, new ItemEntityConstructor());
             EntityConstructors.Add(EntityType.BLOCK_ITEM, new BlockItemEntityConstructor());
             EntityConstructors.Add(EntityType.GLOWSTICK, new GlowstickEntityConstructor());
@@ -136,27 +106,6 @@ namespace Voxalia.ServerGame.WorldSystem
             //TheServer.Schedule.RunAllSyncTasks(0.016); // TODO: Separate per-region scheduler // Also don't freeze the entire server/region just because we're waiting on chunks >.>
             //SysConsole.Output(OutputType.INIT, "Finished building chunks! Now have " + LoadedChunks.Count + " chunks!");
         }
-
-        public Location SpawnPoint;
-
-        const int SeedMax = ushort.MaxValue;
-
-        bool CFGEdited = false;
-
-        void configChanged(int prio, EventArgs e)
-        {
-            CFGEdited = true;
-        }
-        
-        public int Seed;
-
-        public int Seed2;
-
-        public int Seed3;
-
-        public int Seed4;
-
-        public int Seed5;
         
         void OncePerSecondActions()
         {
@@ -192,21 +141,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 LoadedChunks.Remove(loc);
             }
-            if (CFGEdited)
-            {
-                string cfg = Config.SaveToString();
-                TheServer.Schedule.StartASyncTask(() =>
-                {
-                    // TODO: Journaling save.
-                    lock (SaveRegionCFGLock)
-                    {
-                        TheServer.Files.WriteText("saves/" + Name + "/region.fds", cfg);
-                    }
-                });
-            }
         }
-
-        Object SaveRegionCFGLock = new Object();
 
         public double UnloadLimit = 10;
 
@@ -274,10 +209,12 @@ namespace Voxalia.ServerGame.WorldSystem
             TheServer.EntityTimeC += sw.Elapsed.TotalMilliseconds;
             TheServer.EntityTimes++;
         }
-
-        public string Name = null;
-
+        
         public Server TheServer = null;
+
+        public World TheWorld = null;
+
+        public Vector2i Position = new Vector2i(0, 0);
         
         /// <summary>
         /// Does not return until fully unloaded.
@@ -322,7 +259,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     z = 0;
                 }
                 Thread.Sleep(16);
-                TheServer.Schedule.RunAllSyncTasks(0.016);
+                TheWorld.Schedule.RunAllSyncTasks(0.016);
             }
             OncePerSecondActions();
             FinalShutdown();

@@ -35,15 +35,10 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             string input = data.GetModifier(0).ToLowerFast();
             if (long.TryParse(input, out eid))
             {
-                foreach (Region r in TheServer.LoadedRegions)
+                Entity e = TheServer.GetEntity(eid);
+                if (e != null && e is PrimitiveEntity)
                 {
-                    foreach (Entity e in r.Entities)
-                    {
-                        if (e.EID == eid && e is PrimitiveEntity)
-                        {
-                            return new PrimitiveEntityTag((PrimitiveEntity)e).Handle(data.Shrink());
-                        }
-                    }
+                    return new PrimitiveEntityTag((PrimitiveEntity)e).Handle(data.Shrink());
                 }
             }
             data.Error("Invalid primitive entity '" + TagParser.Escape(input) + "'!");

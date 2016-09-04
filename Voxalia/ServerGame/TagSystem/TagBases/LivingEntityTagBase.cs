@@ -35,15 +35,10 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
             string input = data.GetModifier(0).ToLowerFast();
             if (long.TryParse(input, out eid))
             {
-                foreach (Region r in TheServer.LoadedRegions)
+                Entity e = TheServer.GetEntity(eid);
+                if (e != null && e is LivingEntity)
                 {
-                    foreach (Entity e in r.Entities)
-                    {
-                        if (e.EID == eid && e is LivingEntity)
-                        {
-                            return new LivingEntityTag((LivingEntity)e).Handle(data.Shrink());
-                        }
-                    }
+                    return new LivingEntityTag((LivingEntity)e).Handle(data.Shrink());
                 }
             }
             else
@@ -52,7 +47,7 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
                 {
                     if (p.Name.ToLowerFast() == input)
                     {
-                        return new LivingEntityTag((LivingEntity)p).Handle(data.Shrink());
+                        return new LivingEntityTag(p).Handle(data.Shrink());
                     }
                 }
             }

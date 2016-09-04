@@ -240,13 +240,13 @@ namespace Voxalia.ServerGame.WorldSystem
             if (chunk.Flags.HasFlag(ChunkFlags.ISCUSTOM))
             {
                 chunk.Flags &= ~ChunkFlags.ISCUSTOM;
-                chunk.LoadSchedule = TheServer.Schedule.StartASyncTask(() =>
+                chunk.LoadSchedule = TheWorld.Schedule.StartASyncTask(() =>
                 {
                     chunk.UnloadTimer = 0;
                     PopulateChunk(chunk, false, false, true);
                     chunk.UnloadTimer = 0;
                     chunk.LoadSchedule = null;
-                    TheServer.Schedule.ScheduleSyncTask(() =>
+                    TheWorld.Schedule.ScheduleSyncTask(() =>
                     {
                         chunk.UnloadTimer = 0;
                         chunk.AddToWorld();
@@ -261,13 +261,13 @@ namespace Voxalia.ServerGame.WorldSystem
                 ChunkManager.ClearChunkDetails(chunk.WorldPosition);
                 SysConsole.Output(OutputType.ERROR, "non-custom chunk was still loading when grabbed: " + chunk.WorldPosition);
             }
-            chunk.LoadSchedule = TheServer.Schedule.StartASyncTask(() =>
+            chunk.LoadSchedule = TheWorld.Schedule.StartASyncTask(() =>
             {
                 chunk.UnloadTimer = 0;
                 PopulateChunk(chunk, true, false, true);
                 chunk.UnloadTimer = 0;
                 chunk.LoadSchedule = null;
-                TheServer.Schedule.ScheduleSyncTask(() =>
+                TheWorld.Schedule.ScheduleSyncTask(() =>
                 {
                     chunk.UnloadTimer = 0;
                     chunk.AddToWorld();
@@ -283,13 +283,13 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (chunk.LoadSchedule != null)
                 {
-                    TheServer.Schedule.StartASyncTask(() =>
+                    TheWorld.Schedule.StartASyncTask(() =>
                     {
                         while (chunk.LoadSchedule != null)
                         {
                             Thread.Sleep(1); // TODO: Handle loading a loading chunk more cleanly.
                         }
-                        TheServer.Schedule.ScheduleSyncTask(() =>
+                        TheWorld.Schedule.ScheduleSyncTask(() =>
                         {
                             HandleChunkBGOne(chunk, callback);
                         });
@@ -305,12 +305,12 @@ namespace Voxalia.ServerGame.WorldSystem
             chunk.WorldPosition = cpos;
             LoadedChunks.Add(cpos, chunk);
             chunk.UnloadTimer = 0;
-            chunk.LoadSchedule = TheServer.Schedule.StartASyncTask(() =>
+            chunk.LoadSchedule = TheWorld.Schedule.StartASyncTask(() =>
             {
                 chunk.UnloadTimer = 0;
                 PopulateChunk(chunk, true, false, true);
                 chunk.LoadSchedule = null;
-                TheServer.Schedule.ScheduleSyncTask(() =>
+                TheWorld.Schedule.ScheduleSyncTask(() =>
                 {
                     chunk.UnloadTimer = 0;
                     chunk.AddToWorld();
@@ -393,7 +393,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             try
             {
-                Generator.Populate(Seed, Seed2, Seed3, Seed4, Seed5, chunk);
+                Generator.Populate(TheWorld.Seed, TheWorld.Seed2, TheWorld.Seed3, TheWorld.Seed4, TheWorld.Seed5, chunk);
                 chunk.LastEdited = GlobalTickTime;
                 chunk.Flags &= ~(ChunkFlags.POPULATING | ChunkFlags.ISCUSTOM);
                 chunk.ChunkDetect();

@@ -276,7 +276,7 @@
     <Compile Include="ServerGame\TagSystem\TagBases\PhysicsEntityTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\PlayerTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\PrimitiveEntityTagBase.cs" />
-    <Compile Include="ServerGame\TagSystem\TagBases\RegionTagBase.cs" />
+    <Compile Include="ServerGame\TagSystem\TagBases\WorldTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\ServerTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\SmokeGrenadeEntityTagBase.cs" />
     <Compile Include="ServerGame\TagSystem\TagBases\VehicleEntityTagBase.cs" />
@@ -300,7 +300,7 @@
     <Compile Include="ServerGame\TagSystem\TagObjects\PrimitiveEntityTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\RecipeResultTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\RecipeTag.cs" />
-    <Compile Include="ServerGame\TagSystem\TagObjects\RegionTag.cs" />
+    <Compile Include="ServerGame\TagSystem\TagObjects\WorldTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\SmokeGrenadeEntityTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\VehicleEntityTag.cs" />
     <Compile Include="ServerGame\TagSystem\TagObjects\VehiclePartEntityTag.cs" />
@@ -347,6 +347,7 @@
     <Compile Include="ServerGame\ServerMainSystem\ServerBase.cs" />
     <Compile Include="ServerGame\ServerMainSystem\ServerTick.cs" />
     <Compile Include="ServerGame\WorldSystem\Structure.cs" />
+    <Compile Include="ServerGame\WorldSystem\World.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

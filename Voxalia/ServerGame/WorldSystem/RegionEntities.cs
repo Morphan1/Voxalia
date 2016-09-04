@@ -125,7 +125,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 }
                 ((PlayerEntity)e).SpawnBody();
                 ((PlayerEntity)e).Network.SendPacket(new YourEIDPacketOut(e.EID));
-                ((PlayerEntity)e).Network.SendPacket(new CVarSetPacketOut(TheServer.CVars.g_timescale, TheServer));
+                //((PlayerEntity)e).Network.SendPacket(new CVarSetPacketOut(TheServer.CVars.g_timescale, TheServer));
                 ((PlayerEntity)e).SetAnimation("human/stand/idle01", 0);
                 ((PlayerEntity)e).SetAnimation("human/stand/idle01", 1);
                 ((PlayerEntity)e).SetAnimation("human/stand/idle01", 2);
@@ -314,7 +314,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             else
             {
-                chunk.fixesToRun.Add(TheServer.Schedule.GetSyncTask(res));
+                chunk.fixesToRun.Add(TheWorld.Schedule.GetSyncTask(res));
             }
         }
 
@@ -346,7 +346,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             else
             {
-                chunk.fixesToRun.Add(TheServer.Schedule.GetSyncTask(res));
+                chunk.fixesToRun.Add(TheWorld.Schedule.GetSyncTask(res));
             }
         }
     }

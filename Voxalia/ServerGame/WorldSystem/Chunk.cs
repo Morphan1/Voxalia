@@ -124,7 +124,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void ChunkDetect()
         {
-            chunkAccessDetection = chunkAccessDetection == null ? OwningRegion.TheServer.Schedule.StartASyncTask(DetectChunkAccess) : chunkAccessDetection.ReplaceOrFollowWith(OwningRegion.TheServer.Schedule.AddASyncTask(DetectChunkAccess));
+            chunkAccessDetection = chunkAccessDetection == null ? OwningRegion.TheWorld.Schedule.StartASyncTask(DetectChunkAccess) : chunkAccessDetection.ReplaceOrFollowWith(OwningRegion.TheWorld.Schedule.AddASyncTask(DetectChunkAccess));
         }
         
         /// <summary>
