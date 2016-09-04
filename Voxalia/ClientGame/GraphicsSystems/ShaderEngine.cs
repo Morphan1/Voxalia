@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared;
@@ -152,6 +153,35 @@ namespace Voxalia.ClientGame.GraphicsSystems
             return generic;
         }
 
+        public string Includes(string str)
+        {
+            if (!str.Contains("#include"))
+            {
+                return str;
+            }
+            StringBuilder fsb = new StringBuilder();
+            string[] dat = str.Split('\n');
+            for (int i = 0; i < dat.Length; i++)
+            {
+                if (dat[i].StartsWith("#include "))
+                {
+                    string name = "shaders/" + dat[i].Substring("#include ".Length);
+                    if (!TheClient.Files.Exists(name))
+                    {
+                        throw new Exception("File " + name + " does not exist, but was included by a shader!");
+                    }
+                    string included = TheClient.Files.ReadText(name);
+                    fsb.Append(included);
+                }
+                else
+                {
+                    fsb.Append(dat[i]);
+                }
+                fsb.Append('\n');
+            }
+            return fsb.ToString();
+        }
+
         /// <summary>
         /// Compiles a VertexShader and FragmentShader to a usable shader program.
         /// </summary>
@@ -169,6 +199,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     FS = FS.Replace("#define " + vars[i] + " 0", "#define " + vars[i] + " 1");
                 }
             }
+            VS = Includes(VS);
+            FS = Includes(FS);
             int VertexObject = GL.CreateShader(ShaderType.VertexShader);
             GL.ShaderSource(VertexObject, VS);
             GL.CompileShader(VertexObject);

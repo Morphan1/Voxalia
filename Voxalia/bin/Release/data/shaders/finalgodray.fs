@@ -3,47 +3,50 @@
 #define MCM_GOOD_GRAPHICS 0
 #define MCM_TOONIFY 0
 
-layout (binding = 0) uniform sampler2D colortex;
-layout (binding = 1) uniform sampler2D positiontex;
-layout (binding = 2) uniform sampler2D normaltex;
-layout (binding = 3) uniform sampler2D depthtex;
-layout (binding = 4) uniform sampler2D shtex;
-layout (binding = 5) uniform sampler2D renderhinttex;
-layout (binding = 6) uniform sampler2D renderhint2tex;
+layout (binding = 0) uniform sampler2D colortex; // Color G-Buffer Texture
+layout (binding = 1) uniform sampler2D positiontex; // Positions G-Buffer Texture
+layout (binding = 2) uniform sampler2D normaltex; // Normals G-Buffer Texture
+layout (binding = 3) uniform sampler2D depthtex; // Depth G-Buffer Texture
+layout (binding = 4) uniform sampler2D lighttex; // Lighting value from light passes
+layout (binding = 5) uniform sampler2D renderhinttex; // Rendering hint data (not used here)
+layout (binding = 6) uniform sampler2D renderhint2tex; // More rendering hint data (Refract normal, or reflection value)
 
-layout (location = 0) in vec2 f_texcoord;
+layout (location = 0) in vec2 f_texcoord; // The input texture coordinate (from the VS data).
 
-layout (location = 5) uniform vec3 ambient = vec3(0.0, 0.0, 0.0);
 // ...
-layout (location = 8) uniform vec3 cameraTargetPos = vec3(0.0, 0.0, 0.0);
-layout (location = 9) uniform float cameraTargetDepth = 0.01;
+layout (location = 5) uniform vec3 ambient = vec3(0.0, 0.0, 0.0); // Ambient light to apply. Zero with lighting on, One otherwise.
 // ...
-layout (location = 16) uniform float znear = 0.1;
-layout (location = 17) uniform float zfar = 1000.0;
-layout (location = 18) uniform vec4 fogCol = vec4(0.0);
-layout (location = 19) uniform float desaturationAmount = 1.0;
-layout (location = 20) uniform vec3 eye_position = vec3(0.0);
-layout (location = 22) uniform mat4 proj_mat = mat4(1.0);
-layout (location = 24) uniform float WIDTH = 1280.0;
-layout (location = 25) uniform float HEIGHT = 720.0;
-layout (location = 26) uniform float time = 0.0;
-layout (location = 27) uniform float exposure = 1.0;
-layout (location = 28) uniform float flare_val = 2.0;
+layout (location = 8) uniform vec3 cameraTargetPos = vec3(0.0, 0.0, 0.0); // What position the camera is targeting in the world (ray traced).
+layout (location = 9) uniform float cameraTargetDepth = 0.01; // How far away the camera target position is from the camera. (Useful for DOF effects).
+// ...
+layout (location = 16) uniform float znear = 0.1; // The Z-Near value of the 3D projection.
+layout (location = 17) uniform float zfar = 1000.0; // The Z-Far value of the 3D projection.
+layout (location = 18) uniform vec4 fogCol = vec4(0.0); // What color any fog to apply is. For no fog, the alpha value will be zero.
+layout (location = 19) uniform float desaturationAmount = 0.0; // How much to desaturation the view by. 1.0 = fully desaturated.
+layout (location = 20) uniform vec3 eye_position = vec3(0.0); // What position the eye of the 3D camera view is at in the world.
+layout (location = 21) uniform vec3 desaturationColor = vec3(0.95, 0.77, 0.55); // What color to desaturate too. Default is an orange-ish color.
+layout (location = 22) uniform mat4 proj_mat = mat4(1.0); // The full 3D projection matrix.
+// ...
+layout (location = 24) uniform float width = 1280.0; // How wide the screen is.
+layout (location = 25) uniform float height = 720.0; // How tall the screen is.
+layout (location = 26) uniform float time = 0.0; // A timer value, in seconds. Simply used for things that move.
+layout (location = 27) uniform float exposure = 1.0; // The current view exposure. Modifies the lighting strength to seemingly adjust the player's eye to different lighting levels (HDR).
+layout (location = 28) uniform float flare_val = 2.0; // The minimum brightness of lighting to add to the bloom texture. Values added to this will be flared in a later render step.
 
-const float HDR_Mod = 5.0;
-const float HDR_Div = (1.0 / HDR_Mod);
+const float HDR_Mod = 5.0; // How much to multiply all lights by to ensure lighting colors are quality.
+const float HDR_Div = (1.0 / HDR_Mod); // The inverse of HDR_Mod, for quick calculation.
 
-layout (location = 0) out vec4 color;
-layout (location = 1) out vec4 godray;
+layout (location = 0) out vec4 color; // The color to be rendered to screen.
+layout (location = 1) out vec4 bloom; // The color of any bloom our pixel may produce, or zero if none.
 
-float linearizeDepth(in float rinput)
+float linearizeDepth(in float rinput) // Convert standard depth (stretched) to a linear distance (still from 0.0 to 1.0).
 {
 	return (2.0 * znear) / (zfar + znear - rinput * (zfar - znear));
 }
 
-vec4 raytrace(in vec3 reflectionVector, in float startDepth)
+vec4 raytrace(in vec3 reflectionVector, in float startDepth) // Trace a ray across the screen, for reflection purposes.
 {
-	float stepSize = 0.01; //rayStepSize;
+	float stepSize = 0.01;
 	reflectionVector = normalize(reflectionVector) * stepSize;
 	vec2 sampledPosition = f_texcoord;
 	float currentDepth = startDepth;
@@ -64,226 +67,53 @@ vec4 raytrace(in vec3 reflectionVector, in float startDepth)
 	return vec4(0.0);
 }
 
-vec4 regularize(in vec4 input_r) // TODO: Is this working the best it can?
+vec4 regularize(in vec4 input_r) // Limit the brightness of R/G/B values to 1.0 - the highest value is shrink to 1.0 and the rest scaled by the same value.
 {
-	if (input_r.x <= 1.0 && input_r.y <= 1.0 && input_r.z <= 1.0)
+	 // TODO: Is this working the best it can?
+	if (input_r.x <= 1.0 && input_r.y <= 1.0 && input_r.z <= 1.0) // If all values are less than or equal to 1.0, we don't need to limit brightness.
 	{
 		return input_r;
 	}
-	return vec4(input_r.xyz / max(max(input_r.x, input_r.y), input_r.z), input_r.w);
+	return vec4(input_r.xyz / max(max(input_r.x, input_r.y), input_r.z), input_r.w); // Otherwise, limit everything but the alpha.
 }
 
-vec3 desaturate(in vec3 c)
+vec3 desaturate(in vec3 c) // Desaturates color to be closer to the specified desaturationColor uniform.
 {
-	return mix(c, vec3(0.95, 0.77, 0.55) * dot(c, vec3(1.0)), desaturationAmount);
+	return c * (1.0 - desaturationAmount) + desaturationColor * dot(c, vec3(1.0)) * desaturationAmount; // Roughly equivalent to a mix call. (Mix doesn't work well on all cards for some reason.)
 }
 
-vec4 getColorInt(in vec2 pos)
+vec4 getColorInt(in vec2 pos) // Grab the color of a pixel, after lighting. Regularized.
 {
-	vec4 shadow_light_color = texture(shtex, pos) * HDR_Div * exposure;
-	vec4 colortex_color = texture(colortex, pos);
-	return regularize(vec4(ambient, 0.0) * colortex_color + shadow_light_color);
+	vec4 light_color = texture(lighttex, pos) * HDR_Div * exposure; // The light color, brought into standard range then multiplied by exposure.
+	vec4 colortex_color = dot(ambient, ambient) > 0.0 ? vec4(ambient, 0.0) * texture(colortex, pos) : vec4(0.0); // The primary color of the object without lighting, multiplied by ambient (only if there IS ambient).
+	// Possible optimization: delete colortex_color from existence in the code (#if directive) if ambient is going to be zero (IE whenever lighting is on!)
+	return regularize(colortex_color + light_color); // Return the lit color data.
 }
 
-vec4 getColor(in vec2 pos)
+vec4 getColor(in vec2 pos) // Grab the color of a pixel, after lighting AND blurring.
 {
 	vec4 renderhint = texture(renderhinttex, pos);
-	if (renderhint.y > 0.01)
+	if (renderhint.y > 0.01) // If blurring is enabled.
 	{
-		// TODO: Better variation to the blur effect.
+		// TODO: Better variation to the blur effect?
 		vec2 psx = normalize(pos - vec2(0.5 + cos(time + renderhint.y), 0.5 + sin(time + renderhint.y))) * 0.02;
 		return getColorInt(pos + psx);
 	}
-	return getColorInt(pos);
+	return getColorInt(pos); // Just use the other function for getting the actual color data.
 }
 
-#define FXAA_SPAN_MAX 8.0
-#define FXAA_REDUCE_MUL (1.0 / 8.0)
-#define FXAA_REDUCE_MIN (1.0 / 128.0)
-
-vec3 fxaaColor()
-{
-	float x_adj = 1.0 / WIDTH;
-	float y_adj = 1.0 / HEIGHT;
-	vec3 light_color = getColor(f_texcoord).xyz;
-	vec3 light_colorxpyp = getColor(vec2(f_texcoord.x + x_adj, f_texcoord.y + y_adj)).xyz;
-	vec3 light_colorxpym = getColor(vec2(f_texcoord.x + x_adj, f_texcoord.y - y_adj)).xyz;
-	vec3 light_colorxmym = getColor(vec2(f_texcoord.x - x_adj, f_texcoord.y - y_adj)).xyz;
-	vec3 light_colorxmyp = getColor(vec2(f_texcoord.x - x_adj, f_texcoord.y + y_adj)).xyz;
-	vec3 lumaOr = vec3(0.299, 0.587, 0.114);
-	float lumaxpyp = dot(light_colorxpyp, lumaOr);
-	float lumaxpym = dot(light_colorxpym, lumaOr);
-	float lumaxmym = dot(light_colorxmym, lumaOr);
-	float lumaxmyp = dot(light_colorxmyp, lumaOr);
-	float luma  = dot(light_color,  lumaOr);
-	float lumaMin = min(luma, min(min(lumaxpyp, lumaxpym), min(lumaxmym, lumaxmyp)));
-	float lumaMax = max(luma, max(max(lumaxpyp, lumaxpym), max(lumaxmym, lumaxmyp)));
-	vec2 dir = vec2(-((lumaxpyp + lumaxpym) - (lumaxmym + lumaxmyp)), (lumaxpyp + lumaxmym) - (lumaxpym + lumaxmyp));
-	float dirReduce = max((lumaxpyp + lumaxpym + lumaxmym + lumaxmyp) * (0.25 * FXAA_REDUCE_MUL), FXAA_REDUCE_MIN);
-	float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
-	dir = min(vec2( FXAA_SPAN_MAX,  FXAA_SPAN_MAX), max(vec2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX), dir * rcpDirMin));
-	dir.x /= WIDTH;
-	dir.y /= HEIGHT;
-	vec3 rgbA = 0.5 * (getColor(f_texcoord + dir * (1.0 / 3.0 - 0.5)).xyz + getColor(f_texcoord + dir * (2.0 / 3.0 - 0.5)).xyz);
-	vec3 rgbB = rgbA * 0.5 + 0.25 * (getColor(f_texcoord + dir * (-0.5)).xyz + getColor(f_texcoord + dir * 0.5).xyz);
-	float lumaB = dot(rgbB, lumaOr);
-	if((lumaB < lumaMin) || (lumaB > lumaMax))
-	{
-		return rgbA;
-	}
-	else
-	{
-		return rgbB;
-	}
-}
-
-const float edge_thres = 0.2;
-const float edge_thres2 = 5.0;
-
-#define HueLevCount 7
-#define SatLevCount 11
-#define ValLevCount 4
-const float[HueLevCount] HueLevels = float[] (0.0, 60.0, 120.0, 180.0, 240.0, 300.0, 360.0);
-const float[SatLevCount] SatLevels = float[] (0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0);
-const float[ValLevCount] ValLevels = float[] (0.0, 0.33, 0.66, 1.0);
-
-vec3 RGBtoHSV(in float r, in float g, in float b)
-{
-	float minv = min(min(r, g), b);
-	float maxv = max(max(r, g), b);
-	vec3 res;
-	res.z = maxv;
-	float delta = maxv - minv;
-	if( maxv != 0.0 )
-	{
-		res.y = delta / maxv;
-	}
-	else
-	{
-		res.y = 0.0;
-		res.x = -1.0;
-		return res;
-	}
-	if(r == maxv)
-	{
-		res.x = (g - b) / delta;
-	}
-	else if(g == maxv)
-	{
-		res.x = 2.0 + (b - r) / delta;
-	}
-	else
-	{
-		res.x = 4.0 + (r - g) / delta;
-	}
-	res.x = res.x * 60.0;
-	if(res.x < 0.0)
-	{
-      res.x = res.x + 360.0;
-	}
-	return res;
-}
-
-vec3 HSVtoRGB(in float h, in float s, in float v)
-{
-	if(s == 0.0)
-	{
-		return vec3(v, v, v);
-	}
-	float ht = h / 60.0;
-	float i = floor(ht);
-	float f = ht - i;
-	float p = v * (1.0 - s);
-	float q = v * (1.0 - s * f);
-	float t = v * ( 1.0 - s * (1.0 - f));
-	switch(int(i))
-	{
-		case 0:
-			return vec3(v, t, p);
-		case 1:
-			return vec3(q, v, p);
-		case 2:
-			return vec3(p, v, t);
-		case 3:
-			return vec3(p, q, v);
-		case 4:
-			return vec3(t, p, v);
-		default:
-			return vec3(v, p, q);
-	}
-}
-
-float nearestLevel(in float col, in int mode)
-{
-	int levCount;
-	if (mode == 0)
-	{
-		levCount = HueLevCount;
-	}
-	else if (mode == 1)
-	{
-		levCount = SatLevCount;
-	}
-	else
-	{
-		levCount = ValLevCount;
-	}
-	for (int i = 0; i < levCount - 1; i++)
-	{
-		if (mode == 0)
-		{
-			if (col >= HueLevels[i] && col <= HueLevels[i + 1])
-			{
-				return HueLevels[i + 1];
-			}
-		}
-		else if (mode == 1)
-		{
-			if (col >= SatLevels[i] && col <= SatLevels[i + 1])
-			{
-				return SatLevels[i + 1];
-			}
-		}
-		else
-		{
-			if (col >= ValLevels[i] && col <= ValLevels[i + 1])
-			{
-				return ValLevels[i + 1];
-			}
-		}
-	}
-	return 0;
-}
-
-float avg_intensity(in vec4 pix) 
-{
-	return (pix.r + pix.g + pix.b) / 3.0;
-}
-
-float IsEdge(in vec2 coords)
-{
-	float dxtex = 1.0 / WIDTH;
-	float dytex = 1.0 / HEIGHT;
-	float pix[9];
-	int k = -1;
-	float delta;
-	for (int x = -1; x < 2; x++)
-	{
-		for(int y = -1; y < 2; y++)
-		{
-			k++;
-			pix[k] = avg_intensity(getColor(coords + vec2(float(x) * dxtex, float(y) * dytex)));
-		}
-	}
-	delta = (abs(pix[1] - pix[7])+ abs(pix[5] - pix[3]) + abs(pix[0] - pix[8])+ abs(pix[2] - pix[6])) / 4.0;
-  return clamp(edge_thres2 * delta, 0.0, 1.0);
-}
-
-void main()
-{
-	vec4 light_color = getColor(f_texcoord);
-	// TODO: Toonify option per-pixel?
+// If TOONIFY is enabled, this section will contain all the toonify helper methods.
 #if MCM_TOONIFY
+#include include_toonify.inc
+#endif
+
+void main() // The central entry point of the shader. Handles everything!
+{
+	// Grab the basic color of our pixel.
+	vec4 light_color = getColor(f_texcoord);
+	// This section applies toonify if it is enabled generally.
+#if MCM_TOONIFY
+	// TODO: Toonify option per pixel: block paint?
     vec3 vHSV = RGBtoHSV(light_color.r, light_color.g, light_color.b);
     vHSV.x = nearestLevel(vHSV.x, 0);
     vHSV.y = nearestLevel(vHSV.y, 1);
@@ -293,23 +123,25 @@ void main()
     light_color = vec4(vRGB.x, vRGB.y, vRGB.z, light_color.w);
 	// TODO: Maybe just return here?
 #endif
+	// Fancy effects are only available to quality graphics cards. Cut out quick if one's not available.
 #if MCM_GOOD_GRAPHICS
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
 	vec3 renderhint2 = texture(renderhint2tex, f_texcoord).xyz;
-	float dist = linearizeDepth(texture(depthtex, f_texcoord).r);
+	float dist = linearizeDepth(texture(depthtex, f_texcoord).r); // This is useful for both fog and reflection, so grab it here.
 	// TODO: Fix fog!
 	/*
-	float fogMod = -dist * fogCol.w;
+	float fogMod = -dist * fogCol.w; // exp( ) ? Original code had exp() and no linearize on the dist value. But that stopped working, and I don't know why.
 	light_color = vec4(light_color.xyz * (1.0 - fogMod) + fogCol.xyz * fogMod, 1.0);
 	*/
-	if (dot(renderhint2, renderhint2) > 0.99)
+	if (dot(renderhint2, renderhint2) > 0.99) // Apply refraction if set. This is set by having a strong renderhint2 value that has a length-squared of at least 1.0!
 	{
 		vec3 viewDir = texture(positiontex, f_texcoord).xyz - eye_position;
 		vec3 refr = refract(normalize(viewDir), normalize(renderhint2), 0.75);
 		vec4 refrCol = getColor(f_texcoord + refr.xy * 0.1);
-		light_color = light_color * 0.5 + refrCol * 0.5;
+		// TODO: Maybe apply a dynamic mixing value here, rather than static 0.5?
+		light_color = light_color * 0.5 + refrCol * 0.5; // Color is half base value, and half refracted value.
 	}
-	else if (renderhint2.y > 0.01)
+	else if (renderhint2.y > 0.01) // Apply (screen-space) reflection if set. This is set by having a renderhint2 blue value greater than zero but less than one.
 	{
 		vec4 norm = texture(normaltex, f_texcoord);
 		vec3 normal = normalize(norm.xyz);
@@ -320,21 +152,22 @@ void main()
 		vec4 SSR = raytrace(reflectionVector.xyz / reflectionVector.w, currDepth);
 		if (SSR.w > 0.0)
 		{
-			light_color = light_color * (1.0 - renderhint2.y) + SSR * renderhint2.y;
+			light_color = light_color * (1.0 - renderhint2.y) + SSR * renderhint2.y; // If we found a reflection, apply it at the strength specified.
 		}
 	}
-	light_color = vec4(desaturate(light_color.xyz), light_color.w);
+	light_color = vec4(desaturate(light_color.xyz), light_color.w); // Desaturate whatever color we've ended up with.
 #endif
-	vec4 basecol = texture(shtex, f_texcoord) * HDR_Div * texture(colortex, f_texcoord);
-	float val = max(max(basecol.x, basecol.y), basecol.z);
-	if (val > flare_val)
+	// HDR/bloom is available to all!
+	vec4 basecol = texture(lighttex, f_texcoord) * HDR_Div * texture(colortex, f_texcoord); // The base pixel color is our current pixel's color, without regularization.
+	float val = max(max(basecol.x, basecol.y), basecol.z); // The brightest component of the base pixel color.
+	if (val > flare_val) // If it's brighter than the bloom barrier...
 	{
-		float mod = min(val - flare_val, 1.0);
-		godray = vec4(basecol.xyz, mod * mod * basecol.w);
+		float mod = min(val - flare_val, 1.0); // Find out how much brighter it is...
+		bloom = vec4(basecol.xyz, mod * mod * basecol.w); // And tell the next shader to bloom at that strength (squared) and color!
 	}
 	else
 	{
-		godray = vec4(0.0);
+		bloom = vec4(0.0); // If it's not brighter, just a zero.
 	}
-	color = light_color;
+	color = light_color; // Finally, 'return' (assign the base color value).
 }

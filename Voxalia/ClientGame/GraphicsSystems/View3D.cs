@@ -259,6 +259,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public float DesaturationAmount = 0f;
 
+        public Vector3 DesaturationColor = new Vector3(0.95f, 0.77f, 0.55f);
+
         void SetViewport()
         {
             GL.Viewport(0, 0, Width, Height);
@@ -816,13 +818,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0f, 0f, 0f, 0f });
             GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 0f, 0f, 0f, 0f });
             GL.BlendFuncSeparate(1, BlendingFactorSrc.SrcColor, BlendingFactorDest.Zero, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.Zero);
-            GL.Uniform1(19, DesaturationAmount);
             GL.Uniform3(8, ClientUtilities.Convert(TheClient.CameraFinalTarget));
             GL.Uniform1(9, TheClient.CVars.r_dof_strength.ValueF);
             GL.Uniform1(16, TheClient.CVars.r_znear.ValueF);
             GL.Uniform1(17, TheClient.CVars.r_zfar.ValueF);
             GL.Uniform4(18, new Vector4(ClientUtilities.Convert(Headmat.GetFogColor()), Headmat.GetFogAlpha()));
+            GL.Uniform1(19, DesaturationAmount);
             GL.Uniform3(20, ClientUtilities.Convert(CameraPos));
+            GL.Uniform3(21, DesaturationColor);
             GL.Uniform1(24, (float)Width);
             GL.Uniform1(25, (float)Height);
             GL.Uniform1(26, (float)TheClient.GlobalTickTimeLocal);
