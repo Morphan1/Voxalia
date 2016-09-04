@@ -75,7 +75,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_fbov = Shaders.GetShader("fbo_vox" + def);
             s_fbo_refract = Shaders.GetShader("fbo" + def + ",MCM_REFRACT");
             s_fbov_refract = Shaders.GetShader("fbo_vox" + def + ",MCM_REFRACT");
-            s_shadowadder = Shaders.GetShader("shadowadder" + def);
+            s_shadowadder = Shaders.GetShader("lightadder" + def + ",MCM_SHADOWS");
             s_lightadder = Shaders.GetShader("lightadder" + def);
             s_transponly = Shaders.GetShader("transponly" + def);
             s_transponlyvox = Shaders.GetShader("transponlyvox" + def);
