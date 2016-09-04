@@ -2,6 +2,7 @@ Name=Oil
 Sound=LIQUID
 Solidity=LIQUID
 FogColor=0,0,0
+FogAlpha=0.1
 Hardness=5
 BreakTime=0.2
 Spreads=true

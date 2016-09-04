@@ -23,9 +23,7 @@ layout (location = 17) uniform float zfar = 1000.0;
 layout (location = 18) uniform vec4 fogCol = vec4(0.0);
 layout (location = 19) uniform float desaturationAmount = 1.0;
 layout (location = 20) uniform vec3 eye_position = vec3(0.0);
-layout (location = 21) uniform float MIN_DEPTH = 1.0;
 layout (location = 22) uniform mat4 proj_mat = mat4(1.0);
-layout (location = 23) uniform float MAX_DEPTH = 1000.0;
 layout (location = 24) uniform float WIDTH = 1280.0;
 layout (location = 25) uniform float HEIGHT = 720.0;
 layout (location = 26) uniform float time = 0.0;
@@ -40,7 +38,7 @@ layout (location = 1) out vec4 godray;
 
 float linearizeDepth(in float rinput)
 {
-	return (2.0 * MIN_DEPTH) / (MAX_DEPTH + MIN_DEPTH - rinput * (MAX_DEPTH - MIN_DEPTH));
+	return (2.0 * znear) / (zfar + znear - rinput * (zfar - znear));
 }
 
 vec4 raytrace(in vec3 reflectionVector, in float startDepth)
@@ -284,10 +282,6 @@ float IsEdge(in vec2 coords)
 void main()
 {
 	vec4 light_color = getColor(f_texcoord);
-	if (light_color.w == 0.0)
-	{
-		discard;
-	}
 	// TODO: Toonify option per-pixel?
 #if MCM_TOONIFY
     vec3 vHSV = RGBtoHSV(light_color.r, light_color.g, light_color.b);
@@ -297,12 +291,17 @@ void main()
     float edg = IsEdge(f_texcoord);
     vec3 vRGB = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : HSVtoRGB(vHSV.x, vHSV.y, vHSV.z);
     light_color = vec4(vRGB.x, vRGB.y, vRGB.z, light_color.w);
+	// TODO: Maybe just return here?
 #endif
 #if MCM_GOOD_GRAPHICS
 	vec4 renderhint = texture(renderhinttex, f_texcoord);
 	vec3 renderhint2 = texture(renderhint2tex, f_texcoord).xyz;
-	float dist = texture(depthtex, f_texcoord).r;
-	light_color = vec4(mix(light_color.xyz, fogCol.xyz, 1.0 - exp(-dist * fogCol.w)), 1.0);
+	float dist = linearizeDepth(texture(depthtex, f_texcoord).r);
+	// TODO: Fix fog!
+	/*
+	float fogMod = -dist * fogCol.w;
+	light_color = vec4(light_color.xyz * (1.0 - fogMod) + fogCol.xyz * fogMod, 1.0);
+	*/
 	if (dot(renderhint2, renderhint2) > 0.99)
 	{
 		vec3 viewDir = texture(positiontex, f_texcoord).xyz - eye_position;
@@ -314,7 +313,7 @@ void main()
 	{
 		vec4 norm = texture(normaltex, f_texcoord);
 		vec3 normal = normalize(norm.xyz);
-		float currDepth = linearizeDepth(texture(depthtex, f_texcoord).r);
+		float currDepth = dist;
 		vec3 pos = texture(positiontex, f_texcoord).xyz;
 		vec3 eyePosition = normalize(eye_position - pos);
 		vec4 reflectionVector = proj_mat * reflect(vec4(eyePosition, 0.0), vec4(normal, 0.0));

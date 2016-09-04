@@ -823,8 +823,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.Uniform1(17, TheClient.CVars.r_zfar.ValueF);
             GL.Uniform4(18, new Vector4(ClientUtilities.Convert(Headmat.GetFogColor()), Headmat.GetFogAlpha()));
             GL.Uniform3(20, ClientUtilities.Convert(CameraPos));
-            GL.Uniform1(21, TheClient.CVars.r_znear.ValueF);
-            GL.Uniform1(23, TheClient.CVars.r_zfar.ValueF);
             GL.Uniform1(24, (float)Width);
             GL.Uniform1(25, (float)Height);
             GL.Uniform1(26, (float)TheClient.GlobalTickTimeLocal);

@@ -11,6 +11,8 @@ namespace Voxalia.Shared
     [StructLayout(LayoutKind.Explicit)]
     public struct Location : IEquatable<Location>
     {
+        // TODO: Use floats to simplify and accelerate this class?
+
         /// <summary>
         /// A Location of (0, 0, 0).
         /// </summary>

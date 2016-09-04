@@ -3,6 +3,7 @@ Sound=LIQUID
 Solidity=LIQUID
 Opaque=false
 FogColor=0,0.5,0.25
+FogAlpha=0.5
 Hardness=5
 BreakTime=0.2
 Spreads=true

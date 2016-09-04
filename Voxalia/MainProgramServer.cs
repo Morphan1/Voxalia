@@ -33,6 +33,7 @@ namespace Voxalia
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
             SysConsole.Init();
+            Program.Init();
             try
             {
                 Server.Init(args);

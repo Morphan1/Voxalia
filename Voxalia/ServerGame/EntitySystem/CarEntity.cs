@@ -15,7 +15,7 @@ namespace Voxalia.ServerGame.EntitySystem
     public class CarEntity: VehicleEntity
     {
         public CarEntity(string vehicle, Region tregion)
-            : base("vehicles/" + vehicle + "_base", tregion)
+            : base(vehicle, tregion)
         {
         }
 
