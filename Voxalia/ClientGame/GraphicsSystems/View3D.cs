@@ -660,8 +660,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BindTexture(TextureTarget.Texture2D, RS4P.RenderhintTexture);
             GL.ActiveTexture(TextureUnit.Texture6);
             GL.BindTexture(TextureTarget.Texture2D, RS4P.DiffuseTexture);
-            GL.ActiveTexture(TextureUnit.Texture7);
-            GL.BindTexture(TextureTarget.Texture2D, RS4P.Rh2Texture);
             s_other.Bind();
             GL.UniformMatrix4(1, false, ref SimpleOrthoMatrix);
             GL.UniformMatrix4(2, false, ref IdentityMatrix);
