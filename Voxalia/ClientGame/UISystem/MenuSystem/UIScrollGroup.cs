@@ -16,13 +16,13 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public Func<int> Y;
 
-        public int MaxWidth;
+        public Func<int> MaxWidth;
 
         public Func<int> Height;
 
         public int Scroll = 0;
 
-        public UIScrollGroup(Func<int> x, Func<int> y, int maxwidth, Func<int> height)
+        public UIScrollGroup(Func<int> x, Func<int> y, Func<int> maxwidth, Func<int> height)
         {
             X = x;
             Y = y;
@@ -51,7 +51,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
             int tx = X();
             int ty = Y();
-            return x >= tx && x <= tx + MaxWidth && y >= ty && y <= ty + Height();
+            return x >= tx && x <= tx + MaxWidth() && y >= ty && y <= ty + Height();
         }
 
         public override void Init()
@@ -148,11 +148,12 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             int x = X() + xoff;
             int y = Y() + yoff;
             int h = Height();
+            int w = MaxWidth();
             Menus.TheClient.Rendering.SetColor(new Vector4(0f, 0.5f, 0.5f, 0.3f));
-            Menus.TheClient.Rendering.RenderRectangle(x, y, x + MaxWidth, y + h);
+            Menus.TheClient.Rendering.RenderRectangle(x, y, x + w, y + h);
             Menus.TheClient.Rendering.SetColor(new Vector4(1f));
             GL.Enable(EnableCap.ScissorTest);
-            GL.Scissor(x, Menus.TheClient.Window.Height - (y + h), MaxWidth, h);
+            GL.Scissor(x, Menus.TheClient.Window.Height - (y + h), w, h);
             // TODO: Adust everything by scroll amount!
             for (int i = 0; i < MenuItems.Count; i++)
             {

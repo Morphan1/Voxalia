@@ -278,6 +278,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             onVsyncChanged(CVars.r_vsync, null);
             SysConsole.Output(OutputType.INIT, "Loading UI Console...");
             UIConsole.InitConsole();
+            InitChatSystem();
             SysConsole.Output(OutputType.INIT, "Preparing rendering engine...");
             InitRendering();
             SysConsole.Output(OutputType.INIT, "Loading particle effect engine...");
@@ -357,85 +358,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CScreen = TheMainMenuScreen;
             CScreen.SwitchTo();
         }
-
-        /*
-        /// <summary>
-        /// For use by ProcessChunks() alone.
-        /// </summary>
-        byte pMode = 0;
-
-        Object chtlock = new Object();
-
-        /// <summary>
-        /// Loads all unloaded but waiting chunks.
-        /// ASync.
-        /// </summary>
-        public void ProcessChunks()
-        {
-            if (pMode != 0)
-            {
-                return;
-            }
-            lock (chtlock)
-            {
-                pMode = 1; // TODO: lock something before doing this?
-            }
-            Schedule.StartASyncTask(() =>
-            {
-                while (true)
-                {
-                    Thread.Sleep(16);
-                    lock (chtlock)
-                    {
-                        if (pMode == 2)
-                        {
-                            break;
-                        }
-                    }
-                    Schedule.ScheduleSyncTask(() =>
-                    {
-                        bool ready = true;
-                        foreach (Chunk chunk in TheRegion.LoadedChunks.Values)
-                        {
-                            if (!chunk.PRED)
-                            {
-                                ready = false;
-                                break;
-                            }
-                        }
-                        if (ready)
-                        {
-                            lock (chtlock)
-                            {
-                                pMode = 2;
-                            }
-                        }
-                    });
-                }
-                Schedule.ScheduleSyncTask(() =>
-                {
-                    int c = 0;
-                    foreach (Chunk chunk in TheRegion.LoadedChunks.Values)
-                    {
-                        if (!chunk.PROCESSED)
-                        {
-                            c++;
-                            // TODO: chunk.CalculateLighting() ?
-                            // TODO: Surroundings ?
-                            Schedule.ScheduleSyncTask(() => { chunk.AddToWorld(); });
-                            Schedule.ScheduleSyncTask(() => { chunk.CreateVBO(); });
-                            chunk.PROCESSED = true;
-                        }
-                    }
-                    lock (chtlock)
-                    {
-                        pMode = 0;
-                    }
-                });
-            });
-        }
-        */
-
+        
         /// <summary>
         /// The "Game" screen.
         /// </summary>
@@ -568,6 +491,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.Viewport(0, 0, Window.Width, Window.Height);
             MainWorldView.Generate(this, Window.Width, Window.Height);
             FixInvRender();
+        }
+
+        public void FixMouse()
+        {
+            if (CInvMenu != null || !Window.Focused || UIConsole.Open || ChatVisible)
+            {
+                MouseHandler.ReleaseMouse();
+            }
+            else
+            {
+                MouseHandler.CaptureMouse();
+            }
         }
     }
 }

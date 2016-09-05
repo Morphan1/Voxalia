@@ -83,8 +83,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             InventoryMenu.Add(inv_builderitems);
             InventoryMenu.Add(InventoryExitButton());
             Func<int> height = () => (int)(inv_inventory.GetY() + inv_inventory.GetHeight() + 20 + FontSets.Standard.font_default.Height + 20);
-            UI_Inv_Items = new UIScrollGroup(() => 20, height, ItemsListSize, () => Window.Height - height() - 20);
-            UI_Inv_Filter = new UITextBox("", "Item Filter", () => 20, () => (int)(inv_inventory.GetY() + inv_inventory.GetHeight() + 20), 200, FontSets.Standard);
+            UI_Inv_Items = new UIScrollGroup(() => 20, height, () => ItemsListSize, () => Window.Height - height() - 20);
+            UI_Inv_Filter = new UITextBox("", "Item Filter", () => 20, () => (int)(inv_inventory.GetY() + inv_inventory.GetHeight() + 20), () => 200, FontSets.Standard);
             UI_Inv_Filter.TextModified += (o, e) => UpdateInventoryMenu();
             InventoryMenu.Add(UI_Inv_Items);
             InventoryMenu.Add(UI_Inv_Filter);
@@ -203,26 +203,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             return CInvMenu != null;
         }
-
-        bool invmousewascaptured = false;
-
+        
         public void ShowInventory()
         {
             CInvMenu = InventoryMenu;
-            invmousewascaptured = MouseHandler.MouseCaptured;
-            if (invmousewascaptured)
-            {
-                MouseHandler.ReleaseMouse();
-            }
+            FixMouse();
         }
 
         public void HideInventory()
         {
             CInvMenu = null;
-            if (invmousewascaptured)
-            {
-                MouseHandler.CaptureMouse();
-            }
+            FixMouse();
         }
 
         public void RenderInvMenu()

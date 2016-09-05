@@ -10,7 +10,9 @@ namespace Voxalia.ClientGame.UISystem
 {
     /// <summary>
     /// Handles the interactive user text console.
-    /// TODO: Make non-static
+    /// TODO: Make non-static.
+    /// TODO: Support channels.
+    /// TODO: Maybe rewrite entirely!?
     /// </summary>
     public class UIConsole
     {

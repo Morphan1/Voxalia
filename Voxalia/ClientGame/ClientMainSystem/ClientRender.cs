@@ -882,11 +882,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
         const string pingformat = "000";
 
         public Matrix4 FixPersp = Matrix4.Identity;
-        
+
+        public int UIBottomHeight = (itemScale * 2 + bottomup) + itemScale * 2;
+
+        const int itemScale = 48;
+
+        const int bottomup = 32 + 32;
+
         public void Render2D(bool sub3d)
         {
-            const int itemScale = 48;
-            const int bottomup = 32 + 32;
             if (sub3d)
             {
                 //GL.Disable(EnableCap.DepthTest);
@@ -1012,6 +1016,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (!sub3d)
             {
                 RenderInvMenu();
+                RenderChatSystem();
             }
             if (sub3d)
             {

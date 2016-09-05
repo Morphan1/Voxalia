@@ -76,6 +76,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void OncePerSecondActions()
         {
+            FixMouse();
             gFPS = gTicks;
             gTicks = 0;
             bool edited = false;
@@ -143,7 +144,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Network.UsagesLastSecond[i] = Network.UsagesThisSecond[i];
                 Network.UsagesThisSecond[i] = 0;
             }
-    }
+        }
 
         Object saveLock = new Object();
 
@@ -203,6 +204,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     UIConsole.Tick();
                     Commands.Tick();
                     TickWorld(Delta);
+                    TickChatSystem();
                     TickInvMenu();
                     Sounds.Update(MainWorldView.CameraPos, MainWorldView.CameraTarget - MainWorldView.CameraPos, MainWorldView.CameraUp, Player.GetVelocity(), Window.Focused);
                     CScreen.Tick();

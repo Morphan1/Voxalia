@@ -55,6 +55,7 @@ namespace Voxalia.ClientGame.CommandSystem
             CommandSystem.RegisterCommand(new RightwardCommand(TheClient));
             CommandSystem.RegisterCommand(new SecondaryCommand(TheClient));
             CommandSystem.RegisterCommand(new SprintCommand(TheClient));
+            CommandSystem.RegisterCommand(new TalkCommand(TheClient));
             CommandSystem.RegisterCommand(new UnbindCommand(TheClient));
             CommandSystem.RegisterCommand(new UpwardCommand(TheClient));
             CommandSystem.RegisterCommand(new UseCommand(TheClient));

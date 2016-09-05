@@ -261,6 +261,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\PingPacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\PleaseRedefinePacketOut.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsOut\SetStatusPacketOut.cs" />
+    <Compile Include="ClientGame\OtherSystems\ChatMessage.cs" />
     <Compile Include="ClientGame\OtherSystems\ClientUtilities.cs" />
     <Compile Include="ClientGame\OtherSystems\ItemStack.cs" />
     <Compile Include="ClientGame\UISystem\GamePadHandler.cs" />

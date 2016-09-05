@@ -190,6 +190,7 @@ namespace Voxalia.Shared
         BROADCAST = 2,
         COMMAND_RESPONSE = 3,
         DEBUG_INFO = 4,
-        IMPORTANT = 5
+        IMPORTANT = 5,
+        COUNT = 6
     }
 }

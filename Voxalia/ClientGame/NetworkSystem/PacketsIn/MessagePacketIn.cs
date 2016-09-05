@@ -13,8 +13,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             {
                 return false;
             }
-            // TODO: Use this: TextChannel tc = (TextChannel)data[0];
-            UIConsole.WriteLine(FileHandler.encoding.GetString(data, 1, data.Length - 1));
+            TextChannel tc = (TextChannel)data[0];
+            TheClient.WriteMessage(tc, FileHandler.encoding.GetString(data, 1, data.Length - 1));
             return true;
         }
     }
