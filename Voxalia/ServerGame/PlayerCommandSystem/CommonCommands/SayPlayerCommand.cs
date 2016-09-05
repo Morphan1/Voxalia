@@ -14,7 +14,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
         {
             if (entry.InputArguments.Count < 1)
             {
-                entry.Player.Network.SendMessage("^r^1/say ^5<message>"); // TODO: ShowUsage
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "^r^1/say ^5<message>"); // TODO: ShowUsage
                 return;
             }
             string message = entry.AllArguments();

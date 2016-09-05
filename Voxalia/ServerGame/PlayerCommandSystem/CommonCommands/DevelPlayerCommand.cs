@@ -72,17 +72,17 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 if (entry.Player.IsFlying)
                 {
                     entry.Player.Unfly();
-                    entry.Player.Network.SendMessage("Unflying!");
+                    entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Unflying!");
                 }
                 else
                 {
                     entry.Player.Fly();
-                    entry.Player.Network.SendMessage("Flying!");
+                    entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Flying!");
                 }
             }
             else if (arg0 == "playerDebug")
             {
-                entry.Player.Network.SendMessage("YOU: " + entry.Player.Name + ", tractionForce: " + entry.Player.CBody.TractionForce
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "YOU: " + entry.Player.Name + ", tractionForce: " + entry.Player.CBody.TractionForce
                      + ", mass: " + entry.Player.CBody.Body.Mass + ", radius: " + entry.Player.CBody.BodyRadius + ", hasSupport: " + entry.Player.CBody.SupportFinder.HasSupport
                      + ", hasTraction: " + entry.Player.CBody.SupportFinder.HasTraction + ", isAFK: " + entry.Player.IsAFK + ", timeAFK: " + entry.Player.TimeAFK);
             }
@@ -112,7 +112,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             else if (arg0 == "secureMovement")
             {
                 entry.Player.SecureMovement = !entry.Player.SecureMovement;
-                entry.Player.Network.SendLanguageData("voxalia", "commands.player.devel.secure_movement", entry.Player.Network.GetLanguageData("voxalia", "common." + (entry.Player.SecureMovement ? "true" : "false")));
+                entry.Player.SendLanguageData(TextChannel.COMMAND_RESPONSE, "voxalia", "commands.player.devel.secure_movement", entry.Player.Network.GetLanguageData("voxalia", "common." + (entry.Player.SecureMovement ? "true" : "false")));
                 if (entry.Player.SecureMovement)
                 {
                     entry.Player.Flags &= ~YourStatusFlags.INSECURE_MOVEMENT;
@@ -130,14 +130,14 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 float h = entry.Player.TheRegion.Generator.GetHeight(entry.Player.TheRegion.TheWorld.Seed, entry.Player.TheRegion.TheWorld.Seed2, entry.Player.TheRegion.TheWorld.Seed3,
                     entry.Player.TheRegion.TheWorld.Seed4, entry.Player.TheRegion.TheWorld.Seed5, (float)posBlock.X, (float)posBlock.Y, (float)posBlock.Z, out biome);
                 BlockInternal bi = entry.Player.TheRegion.GetBlockInternal_NoLoad((entry.Player.GetPosition() + new Location(0, 0, -0.05f)).GetBlockLocation());
-                entry.Player.Network.SendMessage("Mat: " + bi.Material + ", data: " + ((int)bi.BlockData) + ", locDat: " + ((int)bi.BlockLocalData)
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Mat: " + bi.Material + ", data: " + ((int)bi.BlockData) + ", locDat: " + ((int)bi.BlockLocalData)
                     + ", Damage: " + bi.Damage + ", Paint: " + bi.BlockPaint
                     + ", xp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXP() + ", xm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXM()
                     + ", yp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYP() + ", ym: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYM()
                     + ", zp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesTOP() + ", zm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesBOTTOM());
                 float temp = entry.Player.TheRegion.BiomeGen.GetTemperature(entry.Player.TheRegion.TheWorld.Seed2, entry.Player.TheRegion.TheWorld.Seed3, (float)posBlock.X, (float)posBlock.Y);
                 float down = entry.Player.TheRegion.BiomeGen.GetDownfallRate(entry.Player.TheRegion.TheWorld.Seed3, entry.Player.TheRegion.TheWorld.Seed4, (float)posBlock.X, (float)posBlock.Y);
-                entry.Player.Network.SendMessage("Height: " + h + ", temperature: " + temp + ", downfallrate: " + down + ", biome yield: " + biome.GetName());
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Height: " + h + ", temperature: " + temp + ", downfallrate: " + down + ", biome yield: " + biome.GetName());
             }
             else if (arg0 == "structureSelect" && entry.InputArguments.Count > 1)
             {
@@ -173,7 +173,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             }
             else if (arg0 == "testPerm" && entry.InputArguments.Count > 1)
             {
-                entry.Player.Network.SendMessage("Testing " + entry.InputArguments[1] + ": " + entry.Player.HasPermission(entry.InputArguments[1]));
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Testing " + entry.InputArguments[1] + ": " + entry.Player.HasPermission(entry.InputArguments[1]));
             }
             else if (arg0 == "spawnSmallPlant" && entry.InputArguments.Count > 1)
             {
@@ -211,7 +211,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                         {
                             entry.Player.Network.SendPacket(new PathPacketOut(locs));
                         }
-                        entry.Player.Network.SendMessage("Took " + sw.ElapsedMilliseconds + "ms, passed: " + (locs != null));
+                        entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Took " + sw.ElapsedMilliseconds + "ms, passed: " + (locs != null));
                     });
                 });
             }
@@ -241,7 +241,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                         {
                             entry.Player.Network.SendPacket(new PathPacketOut(locs));
                         }
-                        entry.Player.Network.SendMessage("Took " + sw.ElapsedMilliseconds + "ms, passed: " + (locs != null));
+                        entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Took " + sw.ElapsedMilliseconds + "ms, passed: " + (locs != null));
                     });
                 });
             }
@@ -260,11 +260,11 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             else if (arg0 == "loadPos")
             {
                 entry.Player.UpdateLoadPos = !entry.Player.UpdateLoadPos;
-                entry.Player.Network.SendMessage("Now: " + (entry.Player.UpdateLoadPos ? "true" : "false"));
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Now: " + (entry.Player.UpdateLoadPos ? "true" : "false"));
             }
             else if (arg0 == "tickRate")
             {
-                entry.Player.Network.SendMessage("Intended tick rate: " + entry.Player.TheServer.CVars.g_fps.ValueI + ", actual tick rate (last second): " + entry.Player.TheServer.TPS);
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Intended tick rate: " + entry.Player.TheServer.CVars.g_fps.ValueI + ", actual tick rate (last second): " + entry.Player.TheServer.TPS);
             }
             else if (arg0 == "paintBrush" && entry.InputArguments.Count > 1)
             {
@@ -301,7 +301,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 }
                 else
                 {
-                    entry.Player.Network.SendMessage("/devel <subcommand> [ values ... ]");
+                    entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "/devel <subcommand> [ values ... ]");
                 }
             }
             else if (arg0 == "blockShare" && entry.InputArguments.Count > 1)
@@ -311,24 +311,24 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 bool temp = entry.InputArguments[1].ToLowerFast() == "true";
                 bi.BlockShareTex = temp;
                 entry.Player.TheRegion.SetBlockMaterial(posBlock, bi);
-                entry.Player.Network.SendMessage("Block " + posBlock + " which is a " + bi.Material + " set ShareTex mode to " + temp + " yields " + bi.BlockShareTex);
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Block " + posBlock + " which is a " + bi.Material + " set ShareTex mode to " + temp + " yields " + bi.BlockShareTex);
             }
             else if (arg0 == "webPass" && entry.InputArguments.Count > 1)
             {
                 entry.Player.PlayerConfig.Set("web.passcode", Utilities.HashQuick(entry.Player.Name.ToLowerFast(), entry.InputArguments[1]));
-                entry.Player.Network.SendMessage("Set.");
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Set.");
             }
             else if (arg0 == "chunkTimes")
             {
                 foreach (Tuple<string, double> time in entry.Player.TheRegion.Generator.GetTimings())
                 {
-                    entry.Player.Network.SendMessage("--> " + time.Item1 + ": " + time.Item2);
+                    entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "--> " + time.Item1 + ": " + time.Item2);
                 }
-                entry.Player.Network.SendMessage("--> [Image]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_General);
-                entry.Player.Network.SendMessage("--> [Image/A]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_A);
-                entry.Player.Network.SendMessage("--> [Image/B]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_B);
-                entry.Player.Network.SendMessage("--> [Image/C]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_C);
-                entry.Player.Network.SendMessage("--> [Image/D]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_D);
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "--> [Image]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_General);
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "--> [Image/A]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_A);
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "--> [Image/B]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_B);
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "--> [Image/C]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_C);
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "--> [Image/D]: " + entry.Player.TheRegion.TheServer.BlockImages.Timings_D);
                 if (entry.InputArguments.Count > 1 && entry.InputArguments[1] == "clear")
                 {
                     entry.Player.TheRegion.Generator.ClearTimings();

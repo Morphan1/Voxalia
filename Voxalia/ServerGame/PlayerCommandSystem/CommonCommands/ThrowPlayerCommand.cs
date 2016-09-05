@@ -31,7 +31,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                         return;
                     }
                 }
-                entry.Player.Network.SendMessage("^1Can't throw this."); // TODO: Language, entry.output, etc.
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "^1Can't throw this."); // TODO: Language, entry.output, etc.
                 return;
             }
             ItemStack item = stack.Duplicate();

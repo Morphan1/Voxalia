@@ -15,14 +15,14 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
         {
             if (entry.InputArguments.Count < 2)
             {
-                entry.Player.Network.SendMessage("/blockflood <material> <max radius>");
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "/blockflood <material> <max radius>");
                 return;
             }
             Material chosenMat = MaterialHelpers.FromNameOrNumber(entry.InputArguments[0]);
             float maxRad = Utilities.StringToFloat(entry.InputArguments[1]);
             if (maxRad > 50) // TODO: Config!
             {
-                entry.Player.Network.SendMessage("Maximum radius is 50!");
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Maximum radius is 50!");
                 return;
             }
             Location start = entry.Player.GetPosition().GetBlockLocation() + new Location(0, 0, 1);

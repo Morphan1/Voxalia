@@ -182,4 +182,14 @@ namespace Voxalia.Shared
         LOD_MODEL = 40,
         LOSE_CONTROL_OF_VEHICLE = 41
     }
+
+    public enum TextChannel : byte
+    {
+        UNSPECIFIED = 0,
+        CHAT = 1,
+        BROADCAST = 2,
+        COMMAND_RESPONSE = 3,
+        DEBUG_INFO = 4,
+        IMPORTANT = 5
+    }
 }

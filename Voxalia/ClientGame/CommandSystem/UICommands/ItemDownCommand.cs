@@ -19,7 +19,7 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
         {
             if (entry.Marker == 0)
             {
-                entry.Bad(queue, "Must use +, -, or !");
+                queue.HandleError(entry, "Must use +, -, or !");
             }
             else if (entry.Marker == 1)
             {

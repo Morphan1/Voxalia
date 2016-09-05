@@ -55,7 +55,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             }
             for (int i = 0; i < Players.Count; i++)
             {
-                Players[i].Network.SendMessage(message);
+                Players[i].SendMessage(TextChannel.CHAT, message);
             }
             SysConsole.Output(OutputType.INFO, "[Chat] " + message, bcolor);
         }
@@ -64,7 +64,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
         {
             for (int i = 0; i < Players.Count; i++)
             {
-                Players[i].Network.SendMessage(message);
+                Players[i].SendMessage(TextChannel.BROADCAST, message);
             }
             SysConsole.Output(OutputType.INFO, "[Broadcast] " + message, bcolor);
         }

@@ -67,6 +67,7 @@ namespace Voxalia.ServerGame.WorldSystem
                         float submod = 0.125f;
                         // TODO: Tracing accuracy!
                         Vector3 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * e.Mass * dt * modifier * submod;
+                        // TODO: Don't apply smaller logic this if scale is big!
                         for (float x2 = 0.25f; x2 < 1; x2 += 0.5f)
                         {
                             for (float y2 = 0.25f; y2 < 1; y2 += 0.5f)

@@ -36,6 +36,16 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool SecureMovement = true;
 
         public FDSSection Permissions = new FDSSection();
+
+        public void SendLanguageData(TextChannel channel, params string[] message)
+        {
+            Network.SendLanguageData(channel, message);
+        }
+
+        public void SendMessage(TextChannel channel, string message)
+        {
+            Network.SendMessage(channel, message);
+        }
         
         public void LoadFromYAML(FDSSection config)
         {
@@ -231,7 +241,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             if (Network.Alive)
             {
-                Network.SendMessage("Kicking you: " + message);
+                SendMessage(TextChannel.IMPORTANT, "Kicking you: " + message);
                 Network.Alive = false;
                 Network.PrimarySocket.Close(5);
             }
@@ -431,14 +441,14 @@ namespace Voxalia.ServerGame.EntitySystem
         public void MarkAFK()
         {
             IsAFK = true;
-            TheServer.SendToAll(new MessagePacketOut("^r^7#" + Name + "^r^7 is now AFK!")); // TODO: Message configurable, localized...
+            TheServer.Broadcast("^r^7#" + Name + "^r^7 is now AFK!"); // TODO: Message configurable, localized...
             // TODO: SetStatus to all visible!
         }
 
         public void UnmarkAFK()
         {
             IsAFK = false;
-            TheServer.SendToAll(new MessagePacketOut("^r^7#" + Name + "^r^7 is no longer AFK!")); // TODO: Message configurable, localized...
+            TheServer.Broadcast("^r^7#" + Name + "^r^7 is no longer AFK!"); // TODO: Message configurable, localized...
             // TODO: SetStatus to all visible!
         }
 

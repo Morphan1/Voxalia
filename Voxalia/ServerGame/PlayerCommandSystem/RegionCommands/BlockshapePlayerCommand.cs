@@ -14,7 +14,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
         {
             if (entry.InputArguments.Count < 1)
             {
-                entry.Player.Network.SendMessage("/blockshape <data> [color]"); // TODO: Color as separate command!
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "/blockshape <data> [color]"); // TODO: Color as separate command!
                 return;
             }
             byte dat = (byte)Utilities.StringToInt(entry.InputArguments[0]);
@@ -32,11 +32,11 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                 if (mat != Material.AIR)
                 {
                     entry.Player.TheRegion.SetBlockMaterial(block, mat, dat, col);
-                    entry.Player.Network.SendMessage("Set.");
+                    entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Set.");
                     return;
                 }
             }
-            entry.Player.Network.SendMessage("Failed to set: couldn't hit a block!");
+            entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE,"Failed to set: couldn't hit a block!");
         }
     }
 }

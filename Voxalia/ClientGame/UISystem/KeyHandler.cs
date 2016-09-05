@@ -62,6 +62,9 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.G, "throw");
             BindKey(Key.R, "weaponreload");
             BindKey(Key.T, "talk");
+            BindKey(Key.Y, "talk");
+            BindKey(Key.Enter, "talk");
+            BindKey(Key.Slash, "talk /");
             BindKey(Key.I, "inventory");
             BindKey(Key.V, "devel fly");
             BindKey(Key.Escape, "quit");

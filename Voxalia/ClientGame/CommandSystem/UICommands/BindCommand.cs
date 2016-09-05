@@ -32,7 +32,7 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
                 CommandScript cs = KeyHandler.GetBind(k);
                 if (cs == null)
                 {
-                    entry.Bad(queue, "That key is not bound, or does not exist.");
+                    queue.HandleError(entry, "That key is not bound, or does not exist.");
                 }
                 else
                 {

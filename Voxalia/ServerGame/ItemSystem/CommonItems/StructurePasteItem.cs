@@ -185,14 +185,14 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 Structure structure = new Structure(entity.TheServer.Files.ReadBytes("structures/" + item.SecondaryName + ".str"));
                 int ang = (player.Pasting != null ? player.Pasting.Angle : 0);
                 structure.Paste(player.TheRegion, pasteloc, ang);
-                player.Network.SendMessage("^2Pasted structure at " + pasteloc + ", with offset of " + structure.Origin.X + "," + structure.Origin.Y + "," + structure.Origin.Z + " at angle " + ang);
+                player.SendMessage(TextChannel.COMMAND_RESPONSE, "^2Pasted structure at " + pasteloc + ", with offset of " + structure.Origin.X + "," + structure.Origin.Y + "," + structure.Origin.Z + " at angle " + ang);
                 // TODO: Pasting sound of some form! And particles!
                 player.LastBlockBreak = player.TheRegion.GlobalTickTime;
             }
             catch (Exception ex)
             {
                 Utilities.CheckException(ex);
-                player.Network.SendMessage("^1Failed to paste structure: " + ex.Message);
+                player.SendMessage(TextChannel.COMMAND_RESPONSE, "^1Failed to paste structure: " + ex.Message);
             }
         }
     }

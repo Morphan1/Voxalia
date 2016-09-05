@@ -1,5 +1,7 @@
-﻿using Voxalia.ServerGame.ItemSystem;
+﻿using System;
+using Voxalia.ServerGame.ItemSystem;
 using Voxalia.ServerGame.ItemSystem.CommonItems;
+using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
@@ -24,7 +26,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             }
             else
             {
-                entry.Player.Network.SendMessage("You can't reload that."); // TODO: Language, etc.
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "You can't reload that."); // TODO: Language, etc.
             }
         }
     }

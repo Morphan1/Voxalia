@@ -60,7 +60,7 @@ namespace Voxalia.ServerGame.WorldSystem
             SysConsole.Output(OutputType.INFO, "[Broadcast] " + message);
             for (int i = 0; i < Players.Count; i++)
             {
-                Players[i].Network.SendMessage(message);
+                Players[i].SendMessage(TextChannel.BROADCAST, message);
             }
         }
 

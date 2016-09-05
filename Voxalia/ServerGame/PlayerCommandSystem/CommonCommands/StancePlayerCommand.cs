@@ -17,7 +17,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
         {
             if (entry.InputArguments.Count < 1)
             {
-                entry.Player.Network.SendMessage("^r^1/stance <stance>"); // TODO: ShowUsage
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "^r^1/stance <stance>"); // TODO: ShowUsage
                 return;
             }
             string stance = entry.InputArguments[0].ToLowerFast();
@@ -32,7 +32,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             }
             else
             {
-                entry.Player.Network.SendMessage("^r^1Unknown stance input."); // TODO: Languaging
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "^r^1Unknown stance input."); // TODO: Languaging
             }
         }
     }

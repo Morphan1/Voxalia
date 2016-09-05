@@ -72,14 +72,14 @@ namespace Voxalia.ServerGame.NetworkSystem
             return sb.ToString();
         }
 
-        public void SendLanguageData(params string[] message)
+        public void SendLanguageData(TextChannel channel, params string[] message)
         {
-            SendMessage(GetLanguageData(message));
+            SendMessage(channel, GetLanguageData(message));
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(TextChannel channel, string message)
         {
-            SendPacket(new MessagePacketOut(message));
+            SendPacket(new MessagePacketOut(channel, message));
         }
 
         public void SendPacket(AbstractPacketOut packet)

@@ -130,14 +130,14 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     c++;
                 }
                 player.TheServer.Files.WriteBytes("structures/" + item.SecondaryName + c + ".str", structure.ToBytes());
-                player.Network.SendMessage("^2Saved structure as " + item.SecondaryName + c);
+                player.SendMessage(TextChannel.DEBUG_INFO, "^2Saved structure as " + item.SecondaryName + c);
                 // TODO: Click sound!
                 player.LastBlockBreak = player.TheRegion.GlobalTickTime;
             }
             catch (Exception ex)
             {
                 Utilities.CheckException(ex);
-                player.Network.SendMessage("^1Failed to create structure: " + ex.Message);
+                player.SendMessage(TextChannel.DEBUG_INFO, "^1Failed to create structure: " + ex.Message);
             }
         }
 

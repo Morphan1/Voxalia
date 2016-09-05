@@ -102,6 +102,7 @@
     <Compile Include="ClientGame\AudioSystem\SoundEffect.cs" />
     <Compile Include="ClientGame\AudioSystem\SoundEngine.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientBase.cs" />
+    <Compile Include="ClientGame\ClientMainSystem\ClientChat.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientInventory.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientPhysics.cs" />
     <Compile Include="ClientGame\ClientMainSystem\ClientRender.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="ClientGame\CommandSystem\UICommands\ItemUpCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\ItemRightCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\ItemLeftCommand.cs" />
+    <Compile Include="ClientGame\CommandSystem\UICommands\TalkCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\UseCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\BackwardCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\UICommands\AttackCommand.cs" />

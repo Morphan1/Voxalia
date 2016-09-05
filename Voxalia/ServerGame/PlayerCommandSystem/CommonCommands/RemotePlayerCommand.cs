@@ -5,6 +5,7 @@ using System.Text;
 using FreneticScript;
 using FreneticScript.CommandSystem;
 using Voxalia.ServerGame.TagSystem.TagObjects;
+using Voxalia.Shared;
 
 namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
 {
@@ -21,7 +22,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
         {
             if (entry.InputArguments.Count <= 0)
             {
-                entry.Player.Network.SendMessage("/remote <commands>");
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "/remote <commands>");
                 return;
             }
             CommandQueue queue = CommandScript.SeparateCommands("command_line", entry.AllArguments(),
@@ -40,7 +41,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                         bcolor = "^r^3";
                         break;
                 }
-                entry.Player.Network.SendMessage(entry.Player.TheServer.Commands.CommandSystem.TagSystem.ParseTagsFromText(message, bcolor,
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, entry.Player.TheServer.Commands.CommandSystem.TagSystem.ParseTagsFromText(message, bcolor,
                     queue.CommandStack.Peek().Variables, DebugMode.FULL, (o) => { /* DO NOTHING */ }, true));
             };
             queue.Execute();

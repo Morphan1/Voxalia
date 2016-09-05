@@ -23,7 +23,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
         {
             if (entry.InputArguments.Count < 1)
             {
-                entry.Player.Network.SendMessage("/blockship <convex/perfect> [scale]");
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "/blockship <convex/perfect> [scale]");
                 return;
             }
             BGETraceMode tm = BGETraceMode.CONVEX;
@@ -37,7 +37,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
             AABB extent = new AABB() { Min = start, Max = start };
             if (!FloodFrom(entry.Player.TheRegion, start, blocks, maxRad, extent) || blocks.Count == 0)
             {
-                entry.Player.Network.SendMessage("Invalid flood-search!");
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Invalid flood-search!");
                 return;
             }
             Location size = extent.Max - extent.Min;

@@ -52,7 +52,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem
             // TODO: Fire command event
             if (entry.Command == null)
             {
-                entry.Player.Network.SendMessage("Unknown command."); // TODO: Noise mode // TODO: Language
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Unknown command."); // TODO: Noise mode // TODO: Language
             }
             else
             {

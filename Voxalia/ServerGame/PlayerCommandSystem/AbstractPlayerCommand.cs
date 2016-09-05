@@ -1,4 +1,7 @@
-﻿namespace Voxalia.ServerGame.PlayerCommandSystem
+﻿using System;
+using Voxalia.Shared;
+
+namespace Voxalia.ServerGame.PlayerCommandSystem
 {
     public abstract class AbstractPlayerCommand
     {
@@ -8,8 +11,8 @@
 
         public void ShowUsage(string textcat, PlayerCommandEntry entry)
         {
-            entry.Player.Network.SendLanguageData(textcat, "commands.player." + Name + ".description");
-            entry.Player.Network.SendLanguageData(textcat, "commands.player." + Name + ".usage");
+            entry.Player.SendLanguageData(TextChannel.COMMAND_RESPONSE, textcat, "commands.player." + Name + ".description");
+            entry.Player.SendLanguageData(TextChannel.COMMAND_RESPONSE, textcat, "commands.player." + Name + ".usage");
         }
 
         public void ShowUsage(PlayerCommandEntry entry)
