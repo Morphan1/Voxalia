@@ -6,8 +6,8 @@
 layout (binding = 1) uniform sampler2D positiontex; // The G-Buffer positions texture.
 layout (binding = 2) uniform sampler2D normaltex; // The G-Buffer normals texture.
 // ...
-layout (binding = 4) uniform sampler2DShadow shadowtex; // The shadow map for the current light.
-layout (binding = 5) uniform sampler2D renderhinttex; // Rendering hint texture (x is specular strength).
+layout (binding = 4) uniform sampler2DArrayShadow shadowtex; // The shadow map for the current light.
+layout (binding = 5) uniform sampler2D renderhinttex; // Rendering hint texture (x is specular strength, z is ambient light strength).
 layout (binding = 6) uniform sampler2D diffusetex; // The diffuse texture (G-Buffer colors).
 
 in struct vox_out // Represents data from the VS file.
@@ -15,9 +15,14 @@ in struct vox_out // Represents data from the VS file.
 	vec2 texcoord; // The texture coordinate.
 } f; // It's named "f".
 
+const int LIGHTS_MAX = 10;
+
 layout (location = 3) uniform float depth_jump = 0.5; // How much to jump around when calculating shadow coordinates.
-layout (location = 4) uniform mat4 shadow_matrix; // The matrix of the light source.
-layout (location = 5) uniform mat4 light_data; // Data for the current light.
+layout (location = 4) uniform vec3 ambient = vec3(0.05); // How much ambient light to apply.
+// ...
+layout (location = 9) uniform float lights_used = 0.0; // How many lights are present.
+layout (location = 10) uniform mat4 shadow_matrix_array[LIGHTS_MAX]; // The matrix of the light source.
+layout (location = 20) uniform mat4 light_data_array[LIGHTS_MAX]; // Data for the current light.
 
 const float HDR_Mod = 5.0; // The HDR modifier: multiply all lights by this constant to improve accuracy of colors.
 
@@ -25,7 +30,18 @@ out vec4 color; // The color to add to the lighting texture
 
 void main() // Let's put all code in main, why not...
 {
-	color = vec4(0.0);
+	vec3 res_color = vec3(0.0);
+	// Gather all the texture information.
+	vec3 normal = texture(normaltex, f.texcoord).xyz;
+	vec3 position = texture(positiontex, f.texcoord).xyz;
+	vec3 renderhint = texture(renderhinttex, f.texcoord).xyz;
+	vec3 diffuset = texture(diffusetex, f.texcoord).xyz;
+	// Loop over lights
+	int count = int(lights_used);
+	for (int i = 0; i < count; i++)
+	{
+	mat4 light_data = light_data_array[i];
+	mat4 shadow_matrix = shadow_matrix_array[i];
 	// Light data.
 	vec3 light_pos = vec3(light_data[0][0], light_data[0][1], light_data[0][2]); // The position of the light source.
 	float diffuse_albedo = light_data[0][3]; // The diffuse albedo of this light (diffuse light is multiplied directly by this).
@@ -36,11 +52,7 @@ void main() // Let's put all code in main, why not...
 	vec3 eye_pos = vec3(light_data[2][2], light_data[2][3], light_data[3][0]); // The position of the camera eye.
 	float light_type = light_data[3][1]; // What type of light this is: 0 is standard (point, sky, etc.), 1 is conical (spot light).
 	float tex_size = light_data[3][2]; // If shadows are enabled, this is the inverse of the texture size of the shadow map.
-	// Gather all the texture information.
-	vec3 normal = texture(normaltex, f.texcoord).xyz;
-	vec3 position = texture(positiontex, f.texcoord).xyz;
-	vec4 renderhint = texture(renderhinttex, f.texcoord);
-	vec4 diffuset = texture(diffusetex, f.texcoord);
+	// float unused = light_data[3][3];
 	vec4 f_spos = shadow_matrix * vec4(position, 1.0); // Calculate the position of the light relative to the view.
 	f_spos /= f_spos.w; // Standard perspective divide.
 	vec3 N = normalize(-normal); // Normalize the normal, just in case
@@ -54,7 +66,7 @@ void main() // Let's put all code in main, why not...
 	}
 	if (atten <= 0.0) // If light is really weak...
 	{
-		discard; // Forget this light, move on already!
+		continue; // Forget this light, move on already!
 	}
 	if (should_sqrt > 0.5) // If square-root trick is enabled (generally this'll be 1.0)
 	{
@@ -66,7 +78,7 @@ void main() // Let's put all code in main, why not...
 		|| fs.y < 0.0 || fs.y > 1.0
 		|| fs.z < 0.0 || fs.z > 1.0) // If any coordinate is outside view range...
 	{
-		discard; // We can't light it! Discard straight away!
+		continue; // We can't light it! Discard straight away!
 	}
 	// This block only runs if shadows are enabled.
 #if MCM_SHADOWS
@@ -94,23 +106,26 @@ void main() // Let's put all code in main, why not...
 				offz = -0.000001; // Force it to the threshold value to reduce errors.
 			}
 			offz -= 0.001; // Set it a bit farther regardless to reduce bad shadows.
-			depth += textureProj(shadowtex, fs + vec4(x * jump, y * jump, offz, 0.0)); // Get a 1 or 0 depth value for the current pixel. 0 means don't light, 1 means light.
+			depth += texture(shadowtex, vec4(fs.x + x * jump, fs.y + y * jump, float(i), fs.z + offz)); // Get a 1 or 0 depth value for the current pixel. 0 means don't light, 1 means light.
 			depth_count++; // Can probably use math to generate this number rather than constantly incrementing a counter.
 		}
 	}
 	depth = depth / depth_count; // Average up the 0 and 1 light values to produce gray near the edges of shadows. Soft shadows, hooray!
 #else
-	float depth = textureProj(shadowtex, fs - vec4(0.0, 0.0, 0.0001, 0.0)); // If we have a bad graphics card, just quickly get a 0 or 1 depth value. This will be pixelated (hard) shadows!
+	float depth = texture(shadowtex, vec4(fs.x, fs.y, float(i), fs.z - 0.00001)); // If we have a bad graphics card, just quickly get a 0 or 1 depth value. This will be pixelated (hard) shadows!
 #endif
 	if (depth <= 0.0)
 	{
-		discard; // If we're a fully shadowed pixel, don't add any light!
+		continue; // If we're a fully shadowed pixel, don't add any light!
 	}
 #else
 	const float depth = 1.0; // If shadows are off, depth is a constant 1.0!
 #endif
 	vec3 L = light_path / light_length; // Get the light's movement direction as a vector
-	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * vec3(diffuse_albedo), 1.0) * HDR_Mod; // Find out how much diffuse light to apply
+	vec3 diffuse = max(dot(N, -L), 0.0) * vec3(diffuse_albedo) * HDR_Mod; // Find out how much diffuse light to apply
 	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), (200.0 / 1000.0) * 1000.0) * specular_albedo * renderhint.x) * HDR_Mod; // Find out how much specular light to apply.
-	color += vec4(((vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * diffuset) + (vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, diffuset.w); // Put it all together now.
+	res_color += (vec3(depth, depth, depth) * atten * (diffuse * light_color) * diffuset) + (min(specular, 1.0) * light_color * atten * depth); // Put it all together now.
+	}
+	res_color += (ambient + vec3(renderhint.z)) * HDR_Mod * diffuset; // Add ambient light
+	color = vec4(res_color, 1.0 + lights_used); // I don't know why this became necessary.
 }

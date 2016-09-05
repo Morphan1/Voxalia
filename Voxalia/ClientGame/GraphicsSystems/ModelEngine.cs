@@ -327,8 +327,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         void SetBones(Matrix4[] mats)
         {
-            int bones = 200;
-            float[] set = new float[bones * 16];
+            float[] set = new float[mats.Length * 16];
             for (int i = 0; i < mats.Length; i++)
             {
                 for (int x = 0; x < 4; x++)
@@ -339,17 +338,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                 }
             }
-            for (int i = mats.Length; i < bones; i++)
-            {
-                for (int x = 0; x < 4; x++)
-                {
-                    for (int y = 0; y < 4; y++)
-                    {
-                        set[i * 16 + x * 4 + y] = Matrix4.Identity[x, y];
-                    }
-                }
-            }
-            GL.UniformMatrix4(11, bones, false, set);
+            GL.UniformMatrix4(11, mats.Length, false, set);
         }
         
         public Dictionary<string, Matrix4> CustomAnimationAdjustments = new Dictionary<string, Matrix4>();
@@ -458,10 +447,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     SetBones(mats);
                 }
                 Meshes[i].Draw();
-            }
-            if (any)
-            {
-                VBO.BonesIdentity();
             }
         }
 
