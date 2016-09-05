@@ -123,7 +123,7 @@ float avg_intensity(in vec4 pix)
 	return (pix.r + pix.g + pix.b) / 3.0;
 }
 
-float IsEdge(in vec2 coords)
+float IsEdge(in vec2 coords, in float exposure)
 {
 	float dxtex = 1.0 / width;
 	float dytex = 1.0 / height;
@@ -135,7 +135,7 @@ float IsEdge(in vec2 coords)
 		for(int y = -1; y < 2; y++)
 		{
 			k++;
-			pix[k] = avg_intensity(getColor(coords + vec2(float(x) * dxtex, float(y) * dytex)));
+			pix[k] = avg_intensity(getColor(coords + vec2(float(x) * dxtex, float(y) * dytex), exposure)); // TODO: Can we simplify this getColor?
 		}
 	}
 	delta = (abs(pix[1] - pix[7])+ abs(pix[5] - pix[3]) + abs(pix[0] - pix[8])+ abs(pix[2] - pix[6])) / 4.0;

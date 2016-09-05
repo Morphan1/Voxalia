@@ -35,7 +35,7 @@ void main() // Let's put all code in main, why not...
 	vec3 normal = texture(normaltex, f.texcoord).xyz;
 	vec3 position = texture(positiontex, f.texcoord).xyz;
 	vec3 renderhint = texture(renderhinttex, f.texcoord).xyz;
-	vec3 diffuset = texture(diffusetex, f.texcoord).xyz;
+	vec4 diffuset = texture(diffusetex, f.texcoord);
 	// Loop over lights
 	int count = int(lights_used);
 	for (int i = 0; i < count; i++)
@@ -124,8 +124,8 @@ void main() // Let's put all code in main, why not...
 	vec3 L = light_path / light_length; // Get the light's movement direction as a vector
 	vec3 diffuse = max(dot(N, -L), 0.0) * vec3(diffuse_albedo) * HDR_Mod; // Find out how much diffuse light to apply
 	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), (200.0 / 1000.0) * 1000.0) * specular_albedo * renderhint.x) * HDR_Mod; // Find out how much specular light to apply.
-	res_color += (vec3(depth, depth, depth) * atten * (diffuse * light_color) * diffuset) + (min(specular, 1.0) * light_color * atten * depth); // Put it all together now.
+	res_color += (vec3(depth, depth, depth) * atten * (diffuse * light_color) * diffuset.xyz) + (min(specular, 1.0) * light_color * atten * depth); // Put it all together now.
 	}
-	res_color += (ambient + vec3(renderhint.z)) * HDR_Mod * diffuset; // Add ambient light
-	color = vec4(res_color, 1.0 + lights_used); // I don't know why this became necessary.
+	res_color += (ambient + vec3(renderhint.z)) * HDR_Mod * diffuset.xyz; // Add ambient light
+	color = vec4(res_color, diffuset.w + lights_used); // I don't know why this became necessary.
 }

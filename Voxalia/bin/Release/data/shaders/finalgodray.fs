@@ -9,14 +9,19 @@ layout (binding = 1) uniform sampler2D positiontex; // Positions G-Buffer Textur
 layout (binding = 2) uniform sampler2D normaltex; // Normals G-Buffer Texture
 layout (binding = 3) uniform sampler2D depthtex; // Depth G-Buffer Texture
 layout (binding = 4) uniform sampler2D lighttex; // Lighting value from light passes
-layout (binding = 5) uniform sampler2D renderhinttex; // Rendering hint data (not used here)
+layout (binding = 5) uniform sampler2D renderhinttex; // Rendering hint data (y = blur)
 layout (binding = 6) uniform sampler2D renderhint2tex; // More rendering hint data (Refract normal, or reflection value)
+layout (binding = 7) uniform sampler2D hdrtex; // HDR pass output.
+
+const float SPREAD = 4.0;
 
 layout (location = 0) in vec2 f_texcoord; // The input texture coordinate (from the VS data).
 
 // ...
 layout (location = 8) uniform vec3 cameraTargetPos = vec3(0.0, 0.0, 0.0); // What position the camera is targeting in the world (ray traced).
 layout (location = 9) uniform float cameraTargetDepth = 0.01; // How far away the camera target position is from the camera. (Useful for DOF effects).
+layout (location = 10) uniform float hdrOldExp = 1.0; // The previous frame's HDR exposure.
+layout (location = 11) uniform float delta = 0.05; // The current frame's delta.
 // ...
 layout (location = 16) uniform float znear = 0.1; // The Z-Near value of the 3D projection.
 layout (location = 17) uniform float zfar = 1000.0; // The Z-Far value of the 3D projection.
@@ -29,8 +34,6 @@ layout (location = 22) uniform mat4 proj_mat = mat4(1.0); // The full 3D project
 layout (location = 24) uniform float width = 1280.0; // How wide the screen is.
 layout (location = 25) uniform float height = 720.0; // How tall the screen is.
 layout (location = 26) uniform float time = 0.0; // A timer value, in seconds. Simply used for things that move.
-layout (location = 27) uniform float exposure = 1.0; // The current view exposure. Modifies the lighting strength to seemingly adjust the player's eye to different lighting levels (HDR).
-layout (location = 28) uniform float flare_val = 2.0; // The minimum brightness of lighting to add to the bloom texture. Values added to this will be flared in a later render step.
 
 const float HDR_Mod = 5.0; // How much to multiply all lights by to ensure lighting colors are quality.
 const float HDR_Div = (1.0 / HDR_Mod); // The inverse of HDR_Mod, for quick calculation.
@@ -81,7 +84,32 @@ vec3 desaturate(in vec3 c) // Desaturates color to be closer to the specified de
 	return c * (1.0 - desaturationAmount) + desaturationColor * dot(c, vec3(1.0)) * desaturationAmount; // Roughly equivalent to a mix call. (Mix doesn't work well on all cards for some reason.)
 }
 
-vec4 getColorInt(in vec2 pos) // Grab the color of a pixel, after lighting. Regularized.
+vec2 getHDRValue()
+{
+	float tc = 0f;
+	for (float x = 0; x < SPREAD; x++)
+	{
+		for (float y = 0; y < SPREAD; y++)
+		{
+			tc = max(tc, texture(hdrtex, vec2(x, y)).x);
+		}
+	}
+	float exp = 1.0 / max(min(tc, 2.0), 0.33);
+	float flare = 3.0 + exp * 4.0;
+	float stepUp = delta * 0.05;
+	float stepDown = stepUp * 5.0;
+	if (exp > hdrOldExp + stepUp)
+	{
+		exp = hdrOldExp + stepUp;
+	}
+	else if (exp < hdrOldExp - stepDown)
+	{
+		exp = hdrOldExp - stepDown;
+	}
+	return vec2(exp, flare);
+}
+
+vec4 getColorInt(in vec2 pos, in float exposure) // Grab the color of a pixel, after lighting. Regularized.
 {
 #if MCM_LIGHTS
 	return regularize(texture(lighttex, pos) * HDR_Div * exposure); // The light color, brought into standard range then multiplied by exposure.
@@ -90,16 +118,16 @@ vec4 getColorInt(in vec2 pos) // Grab the color of a pixel, after lighting. Regu
 #endif
 }
 
-vec4 getColor(in vec2 pos) // Grab the color of a pixel, after lighting AND blurring.
+vec4 getColor(in vec2 pos, in float exposure) // Grab the color of a pixel, after lighting AND blurring.
 {
 	vec4 renderhint = texture(renderhinttex, pos);
 	if (renderhint.y > 0.01) // If blurring is enabled.
 	{
 		// TODO: Better variation to the blur effect?
 		vec2 psx = normalize(pos - vec2(0.5 + cos(time + renderhint.y), 0.5 + sin(time + renderhint.y))) * 0.02;
-		return getColorInt(pos + psx);
+		return getColorInt(pos + psx, exposure);
 	}
-	return getColorInt(pos); // Just use the other function for getting the actual color data.
+	return getColorInt(pos, exposure); // Just use the other function for getting the actual color data.
 }
 
 // If TOONIFY is enabled, this section will contain all the toonify helper methods.
@@ -109,23 +137,24 @@ vec4 getColor(in vec2 pos) // Grab the color of a pixel, after lighting AND blur
 
 void main() // The central entry point of the shader. Handles everything!
 {
+	vec2 hdr_data = getHDRValue();
 	// Grab the basic color of our pixel.
-	vec4 light_color = getColor(f_texcoord);
+	vec4 light_color = vec4(getColor(f_texcoord, hdr_data.x).xyz, 1.0);
 	// This section applies toonify if it is enabled generally.
 #if MCM_TOONIFY
 	// TODO: Toonify option per pixel: block paint?
-    vec3 vHSV = RGBtoHSV(light_color.r, light_color.g, light_color.b);
+    vec3 vHSV = RGBtoHSV(light_color.x, light_color.y, light_color.z);
     vHSV.x = nearestLevel(vHSV.x, 0);
     vHSV.y = nearestLevel(vHSV.y, 1);
     vHSV.z = nearestLevel(vHSV.z, 2);
-    float edg = IsEdge(f_texcoord);
+    float edg = IsEdge(f_texcoord, hdr_data.x);
     vec3 vRGB = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : HSVtoRGB(vHSV.x, vHSV.y, vHSV.z);
     light_color = vec4(vRGB.x, vRGB.y, vRGB.z, light_color.w);
 	// TODO: Maybe just return here?
 #endif
 	// Fancy effects are only available to quality graphics cards. Cut out quick if one's not available.
 #if MCM_GOOD_GRAPHICS
-	vec4 renderhint = texture(renderhinttex, f_texcoord);
+	//vec4 renderhint = texture(renderhinttex, f_texcoord);
 	vec3 renderhint2 = texture(renderhint2tex, f_texcoord).xyz;
 	float dist = linearizeDepth(texture(depthtex, f_texcoord).r); // This is useful for both fog and reflection, so grab it here.
 	// TODO: Fix fog!
@@ -137,7 +166,7 @@ void main() // The central entry point of the shader. Handles everything!
 	{
 		vec3 viewDir = texture(positiontex, f_texcoord).xyz - eye_position;
 		vec3 refr = refract(normalize(viewDir), normalize(renderhint2), 0.75);
-		vec4 refrCol = getColor(f_texcoord + refr.xy * 0.1);
+		vec4 refrCol = getColor(f_texcoord + refr.xy * 0.1, hdr_data.x);
 		// TODO: Maybe apply a dynamic mixing value here, rather than static 0.5?
 		light_color = light_color * 0.5 + refrCol * 0.5; // Color is half base value, and half refracted value.
 	}
@@ -159,10 +188,10 @@ void main() // The central entry point of the shader. Handles everything!
 #endif
 #if MCM_LIGHTS
 	// HDR/bloom is available to all!
-	vec4 basecol = texture(lighttex, f_texcoord) * HDR_Div; // The base pixel color is our current pixel's color, without regularization.
+	vec3 basecol = texture(lighttex, f_texcoord).xyz * HDR_Div; // The base pixel color is our current pixel's color, without regularization.
 	float val = max(max(basecol.x, basecol.y), basecol.z); // The brightest component of the base pixel color.
-	float mod = min(max(val - flare_val, 0.0), 1.0);
-	bloom = vec4(basecol.xyz, mod * mod * basecol.w);
+	float mod = min(max(val - hdr_data.y, 0.0), 1.0);
+	bloom = vec4(basecol, mod * mod);
 #else
 	bloom = vec4(0.0);
 #endif

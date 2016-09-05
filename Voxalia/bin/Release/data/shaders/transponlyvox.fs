@@ -103,6 +103,7 @@ void main()
 	color = vec4(color.xyz * blighting, color.w);
 	vec4 bambient = (vec4(light_details[3][0], light_details[3][1], light_details[3][2], 1.0) + vec4(light_min, light_min, light_min, 0.0)) / lightc;
 	vec3 eye_pos = vec3(light_details2[0][0], light_details2[0][1], light_details2[0][2]);
+	float exposure = light_details2[2][0];
 	vec3 light_pos = vec3(light_details2[1][0], light_details2[1][1], light_details2[1][2]);
 	vec4 x_spos = shadow_matrix * f.position;
 	vec3 N = normalize(-(f.tbn * norms));
@@ -184,7 +185,7 @@ void main()
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f.position.xyz - eye_pos)), 0.0), 128.0) * specular_albedo * spec);
 	color = vec4((bambient * color + (vec4(1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
-		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten)).xyz, color.w);
+		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten)).xyz * exposure, color.w);
 #endif
 #endif
 #if MCM_GOOD_GRAPHICS

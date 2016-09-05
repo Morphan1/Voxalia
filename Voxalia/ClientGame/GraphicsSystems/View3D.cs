@@ -68,6 +68,43 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public double LightsSpikeTime;
         public double TotalSpikeTime;
 
+        public void FinalHDRGrab()
+        {
+            if (TheClient.CVars.r_hdr.ValueB)
+            {
+                float[] rd = new float[HDR_SPREAD * HDR_SPREAD];
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, hdrfbo);
+                GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
+                GL.ReadPixels(0, 0, HDR_SPREAD, HDR_SPREAD, PixelFormat.Red, PixelType.Float, rd);
+                GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
+                GL.ReadBuffer(ReadBufferMode.None);
+                float exp = FindExp(rd);
+                exp = Math.Max(Math.Min(exp, 2.0f), 0.33f);
+                exp = 1.0f / exp;
+                float stepUp = (float)TheClient.gDelta * 0.05f;
+                float stepDown = stepUp * 5.0f;
+                if (exp > MainEXP + stepUp)
+                {
+                    MainEXP += stepUp;
+                }
+                else if (exp < MainEXP - stepDown)
+                {
+                    MainEXP -= stepDown;
+                }
+                else
+                {
+                    MainEXP = exp;
+                }
+            }
+            else
+            {
+                MainEXP = 0.75f;
+            }
+        }
+
+        const int HDR_SPREAD = 4;
+
         public void GenerateLightHelpers()
         {
             if (RS4P != null)
@@ -81,8 +118,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.DeleteFramebuffer(fbo_godray_main);
                 GL.DeleteTexture(fbo_godray_texture);
                 GL.DeleteTexture(fbo_godray_texture2);
-                GL.DeleteFramebuffer(fbo_hdr);
-                GL.DeleteTexture(fbo_hdr_tex);
+                GL.DeleteFramebuffer(hdrfbo);
+                GL.DeleteTexture(hdrtex);
             }
             RS4P = new RenderSurface4Part(Width, Height, TheClient.Rendering);
             // FBO
@@ -97,6 +134,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, fbo_texture, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            // Godray FBO
             fbo_godray_texture = GL.GenTexture();
             fbo_godray_texture2 = GL.GenTexture();
             fbo_godray_main = GL.GenFramebuffer();
@@ -117,7 +155,22 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment1, TextureTarget.Texture2D, fbo_godray_texture2, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.BindTexture(TextureTarget.Texture2D, 0);
+            // HDR FBO
+            hdrtex = GL.GenTexture();
+            hdrfbo = GL.GenFramebuffer();
+            GL.BindTexture(TextureTarget.Texture2D, hdrtex);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.R32f, HDR_SPREAD, HDR_SPREAD, 0, PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, hdrfbo);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, hdrtex, 0);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
+
+        int hdrfbo;
+        int hdrtex;
 
         public void GenerateFBO()
         {
@@ -149,10 +202,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
-
-        int fbo_hdr;
-        int fbo_hdr_tex;
-
+        
         int transp_fbo_main = 0;
         int transp_fbo_texture = 0;
         int transp_fbo_depthtex = 0;
@@ -315,14 +365,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public float MainEXP = 1.0f;
         
-        public float FindExp(float[] inp) // TODO: Offload this to the GPU? (computer shader probably, or layers of rendering...)
+        public float FindExp(float[] inp)
         {
             float total = 0f;
-            for (int i = 0; i < inp.Length; i += 4)
+            for (int i = 0; i < inp.Length; i++)
             {
-                total += Math.Max(Math.Max(inp[i], inp[i + 1]), inp[i + 2]);
+                total += inp[i];
             }
-            return total / (float)(inp.Length / 4);
+            return total / (float)inp.Length;
         }
 
         public bool FastOnly = false;
@@ -345,6 +395,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 }
                 RenderPass_GBuffer();
                 RenderPass_Lights();
+                FinalHDRGrab();
                 timer.Stop();
                 TotalTime = (double)timer.ElapsedMilliseconds / 1000f;
                 if (TotalTime > TotalSpikeTime)
@@ -741,8 +792,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             else
             {
-                MainEXP = 1.0f;
-                flare_val = 3f;
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2D, hdrtex);
+                float[] data = new float[HDR_SPREAD * HDR_SPREAD];
+                for (int i = 0; i < data.Length; i++)
+                {
+                    data[i] = 1f;
+                }
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.R32f, HDR_SPREAD, HDR_SPREAD, 0, PixelFormat.Red, PixelType.Float, data);
             }
             CheckError("AfterAllLightCode");
             RenderPass_LightsToBase();
@@ -757,9 +814,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             timer.Reset();
             CheckError("AtEnd");
         }
-
-        float flare_val = 3f; // TODO: Why 3f?
-
+        
         /// <summary>
         /// Calculates the brightness value for High Dynamic Range rendering.
         /// </summary>
@@ -767,37 +822,30 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             if (TheClient.CVars.r_lighting.ValueB && TheClient.CVars.r_hdr.ValueB)
             {
-                float[] rd = new float[Width * Height];
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-                GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, fbo_main);
-                GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
-                GL.ReadPixels(0, 0, Width, Height, PixelFormat.Red, PixelType.Float, rd);
-                GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
-                GL.ReadBuffer(ReadBufferMode.None);
-                float exp = FindExp(rd);
-                exp = Math.Max(Math.Min(exp, 2.0f), 0.33f);
-                exp = 1.0f / exp;
-                flare_val += exp * 4f;
-                float stepUp = (float)TheClient.gDelta * 0.05f;
-                float stepDown = stepUp * 5.0f;
-                if (exp > MainEXP + stepUp)
-                {
-                    MainEXP += stepUp;
-                }
-                else if (exp < MainEXP - stepDown)
-                {
-                    MainEXP -= stepDown;
-                }
-                else
-                {
-                    MainEXP = exp;
-                }
+                TheClient.s_hdrpass.Bind();
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.Disable(EnableCap.CullFace);
+                GL.Disable(EnableCap.DepthTest);
+                GL.BindTexture(TextureTarget.Texture2D, fbo_texture);
+                GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.Zero);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, hdrfbo);
+                GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
+                GL.UniformMatrix4(1, false, ref SimpleOrthoMatrix);
+                GL.UniformMatrix4(2, false, ref IdentityMatrix);
+                GL.Uniform2(4, new Vector2(Width, Height));
+                TheClient.Rendering.RenderRectangle(-1, -1, 1, 1);
                 CheckError("AfterHDRRead");
             }
             else
             {
-                MainEXP = 1.0f;
-                flare_val = 3f;
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2D, hdrtex);
+                float[] data = new float[HDR_SPREAD * HDR_SPREAD];
+                for (int i = 0; i < data.Length; i++)
+                {
+                    data[i] = 1f;
+                }
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.R32f, HDR_SPREAD, HDR_SPREAD, 0, PixelFormat.Red, PixelType.Float, data);
             }
         }
 
@@ -832,6 +880,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BlendFuncSeparate(1, BlendingFactorSrc.SrcColor, BlendingFactorDest.Zero, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.Zero);
             GL.Uniform3(8, ClientUtilities.Convert(TheClient.CameraFinalTarget));
             GL.Uniform1(9, TheClient.CVars.r_dof_strength.ValueF);
+            GL.Uniform1(10, MainEXP);
             GL.Uniform1(16, TheClient.CVars.r_znear.ValueF);
             GL.Uniform1(17, TheClient.CVars.r_zfar.ValueF);
             GL.Uniform4(18, new Vector4(ClientUtilities.Convert(Headmat.GetFogColor()), Headmat.GetFogAlpha()));
@@ -841,13 +890,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.Uniform1(24, (float)Width);
             GL.Uniform1(25, (float)Height);
             GL.Uniform1(26, (float)TheClient.GlobalTickTimeLocal);
-            GL.Uniform1(27, (float)MainEXP);
-            GL.Uniform1(28, flare_val);
             GL.UniformMatrix4(22, false, ref PrimaryMatrix);
             GL.ActiveTexture(TextureUnit.Texture4);
             GL.BindTexture(TextureTarget.Texture2D, fbo_texture);
             GL.ActiveTexture(TextureUnit.Texture7);
-            GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.BindTexture(TextureTarget.Texture2D, hdrtex);
             GL.ActiveTexture(TextureUnit.Texture6);
             GL.BindTexture(TextureTarget.Texture2D, RS4P.Rh2Texture);
             GL.ActiveTexture(TextureUnit.Texture0);
@@ -1316,6 +1363,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             matabc[1, 1] = (float)Lights[i].EyePos.Y;
                             matabc[1, 2] = (float)Lights[i].EyePos.Z;
                             matabc[1, 3] = (float)Height;
+                            matabc[2, 0] = MainEXP;
                             CheckError("MidRenderTranspDetails1");
                             GL.UniformMatrix4(9, false, ref matabc);
                             if (TheClient.CVars.r_transpshadows.ValueB && TheClient.CVars.r_shadows.ValueB)
