@@ -646,7 +646,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 s_other = TheClient.s_shadowadder;
                 s_other.Bind();
-                GL.Uniform1(13, TheClient.CVars.r_shadowblur.ValueF);
+                GL.Uniform1(3, TheClient.CVars.r_shadowblur.ValueF);
             }
             else
             {
@@ -663,7 +663,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             s_other.Bind();
             GL.UniformMatrix4(1, false, ref SimpleOrthoMatrix);
             GL.UniformMatrix4(2, false, ref IdentityMatrix);
-            GL.Uniform3(10, ClientUtilities.Convert(CameraPos));
             GL.Disable(EnableCap.CullFace);
             GL.Disable(EnableCap.DepthTest);
             TranspBlend();
@@ -687,7 +686,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         }
                         if (maxrangemult > 0)
                         {
-                            GL.Uniform1(11, Lights[i] is SpotLight ? 1f : 0f);
                             for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                             {
                                 if (Lights[i].InternalLights[x].color.LengthSquared <= 0.01)
@@ -700,25 +698,22 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                     GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
                                 }
                                 Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
-                                GL.UniformMatrix4(3, false, ref smat);
-                                GL.Uniform3(4, ref Lights[i].InternalLights[x].eye);
+                                GL.UniformMatrix4(4, false, ref smat);
+                                Vector3 eyep = Lights[i].InternalLights[x].eye;
                                 Vector3 col = Lights[i].InternalLights[x].color * (float)maxrangemult;
-                                GL.Uniform3(8, ref col);
-                                if (Lights[i].InternalLights[x] is LightOrtho)
-                                {
-                                    GL.Uniform1(9, LightMaximum);
-                                    GL.Uniform1(7, 1.0f);
-                                }
-                                else
-                                {
-                                    float range = Lights[i].InternalLights[0].maxrange;
-                                    GL.Uniform1(9, range <= 0 ? LightMaximum : range);
-                                    GL.Uniform1(7, 0.0f);
-                                }
-                                if (TheClient.CVars.r_shadows.ValueB)
-                                {
-                                    GL.Uniform1(12, 1f / Lights[i].InternalLights[x].texsize);
-                                }
+                                Matrix4 light_data = new Matrix4(
+                                    eyep.X, eyep.Y, eyep.Z, // light_pos
+                                    0.7f, // diffuse_albedo
+                                    0.7f, // specular_albedo
+                                    Lights[i].InternalLights[x] is LightOrtho ? 1.0f : 0.0f, // should_sqrt
+                                    col.X, col.Y, col.Z, // light_color
+                                    Lights[i].InternalLights[x] is LightOrtho ? LightMaximum : (Lights[i].InternalLights[0].maxrange <= 0 ? LightMaximum : Lights[i].InternalLights[0].maxrange), // light_radius
+                                    (float)CameraPos.X, (float)CameraPos.Y, (float)CameraPos.Z, // eye_pos
+                                    Lights[i] is SpotLight ? 1.0f : 0.0f, // light_type
+                                    1f / Lights[i].InternalLights[x].texsize, // tex_size
+                                    0.0f // Unused.
+                                    );
+                                GL.UniformMatrix4(5, false, ref light_data);
                                 TheClient.Rendering.RenderRectangle(-1, -1, 1, 1);
                                 GL.ActiveTexture(TextureUnit.Texture0);
                                 GL.BindTexture(TextureTarget.Texture2D, 0);

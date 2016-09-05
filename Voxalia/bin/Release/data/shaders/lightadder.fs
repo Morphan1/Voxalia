@@ -15,17 +15,9 @@ in struct vox_out // Represents data from the VS file.
 	vec2 texcoord; // The texture coordinate.
 } f; // It's named "f".
 
-layout (location = 3) uniform mat4 shadow_matrix; // The matrix of the light source.
-layout (location = 4) uniform vec3 light_pos = vec3(5.0, 5.0, 5.0); // The position of the light source.
-layout (location = 5) uniform vec3 diffuse_albedo = vec3(0.7, 0.7, 0.7); // The diffuse albedo of this light (diffuse light is multiplied directly by this).
-layout (location = 6) uniform float specular_albedo = 0.7; // The specular albedo (specular power is multiplied directly by this).
-layout (location = 7) uniform float should_sqrt = 0.0; // 0 to not use square-root trick, 1 to use it (see implementation for details).
-layout (location = 8) uniform vec3 light_color = vec3(1.0, 1.0, 1.0); // The color of the light.
-layout (location = 9) uniform float light_radius = 30.0; // The maximum radius of the light.
-layout (location = 10) uniform vec3 eye_pos = vec3(0.0, 0.0, 0.0); // The position of the camera eye.
-layout (location = 11) uniform float light_type = 0.0; // What type of light this is: 0 is standard (point, sky, etc.), 1 is conical (spot light).
-layout (location = 12) uniform float tex_size = 0.001; // If shadows are enabled, this is the inverse of the texture size of the shadow map.
-layout (location = 13) uniform float depth_jump = 0.5; // How much to jump around when calculating shadow coordinates.
+layout (location = 3) uniform float depth_jump = 0.5; // How much to jump around when calculating shadow coordinates.
+layout (location = 4) uniform mat4 shadow_matrix; // The matrix of the light source.
+layout (location = 5) uniform mat4 light_data; // Data for the current light.
 
 const float HDR_Mod = 5.0; // The HDR modifier: multiply all lights by this constant to improve accuracy of colors.
 
@@ -33,6 +25,17 @@ out vec4 color; // The color to add to the lighting texture
 
 void main() // Let's put all code in main, why not...
 {
+	color = vec4(0.0);
+	// Light data.
+	vec3 light_pos = vec3(light_data[0][0], light_data[0][1], light_data[0][2]); // The position of the light source.
+	float diffuse_albedo = light_data[0][3]; // The diffuse albedo of this light (diffuse light is multiplied directly by this).
+	float specular_albedo = light_data[1][0]; // The specular albedo (specular power is multiplied directly by this).
+	float should_sqrt = light_data[1][1]; // 0 to not use square-root trick, 1 to use it (see implementation for details).
+	vec3 light_color = vec3(light_data[1][2], light_data[1][3], light_data[2][0]); // The color of the light.
+	float light_radius = light_data[2][1]; // The maximum radius of the light.
+	vec3 eye_pos = vec3(light_data[2][2], light_data[2][3], light_data[3][0]); // The position of the camera eye.
+	float light_type = light_data[3][1]; // What type of light this is: 0 is standard (point, sky, etc.), 1 is conical (spot light).
+	float tex_size = light_data[3][2]; // If shadows are enabled, this is the inverse of the texture size of the shadow map.
 	// Gather all the texture information.
 	vec3 normal = texture(normaltex, f.texcoord).xyz;
 	vec3 position = texture(positiontex, f.texcoord).xyz;
@@ -107,7 +110,7 @@ void main() // Let's put all code in main, why not...
 	const float depth = 1.0; // If shadows are off, depth is a constant 1.0!
 #endif
 	vec3 L = light_path / light_length; // Get the light's movement direction as a vector
-	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0) * HDR_Mod; // Find out how much diffuse light to apply
+	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * vec3(diffuse_albedo), 1.0) * HDR_Mod; // Find out how much diffuse light to apply
 	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), (200.0 / 1000.0) * 1000.0) * specular_albedo * renderhint.x) * HDR_Mod; // Find out how much specular light to apply.
-	color = vec4(((vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * diffuset) + (vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, diffuset.w); // Put it all together now.
+	color += vec4(((vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * diffuset) + (vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, diffuset.w); // Put it all together now.
 }
