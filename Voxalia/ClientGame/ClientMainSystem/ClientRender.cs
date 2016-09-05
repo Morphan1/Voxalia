@@ -88,6 +88,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_transpadder = Shaders.GetShader("transpadder" + def);
             s_finalgodray = Shaders.GetShader("finalgodray" + def);
             s_finalgodray_toonify = Shaders.GetShader("finalgodray" + def + ",MCM_TOONIFY");
+            s_finalgodray_lights = Shaders.GetShader("finalgodray" + def + ",MCM_LIGHTS");
+            s_finalgodray_lights_toonify = Shaders.GetShader("finalgodray" + def + ",MCM_LIGHTS,MCM_TOONIFY");
             s_forw = Shaders.GetShader("forward" + def);
             s_forw_vox = Shaders.GetShader("forward" + def + ",MCM_VOX");
             s_forw_trans = Shaders.GetShader("forward" + def + ",MCM_TRANSP");
@@ -145,7 +147,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Shader s_shadow;
         public Shader s_finalgodray;
+        public Shader s_finalgodray_lights;
         public Shader s_finalgodray_toonify;
+        public Shader s_finalgodray_lights_toonify;
         public Shader s_fbo;
         public Shader s_fbov;
         public Shader s_fbot;

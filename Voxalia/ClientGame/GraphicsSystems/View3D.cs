@@ -764,7 +764,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         public void RenderPass_HDR()
         {
-            if (TheClient.CVars.r_hdr.ValueB)
+            if (TheClient.CVars.r_lighting.ValueB && TheClient.CVars.r_hdr.ValueB)
             {
                 float[] rd = new float[Width * Height];
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
@@ -803,16 +803,29 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public void RenderPass_LightsToBase()
         {
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_godray_main);
-            if (TheClient.CVars.r_toonify.ValueB)
+            if (TheClient.CVars.r_lighting.ValueB)
             {
-                TheClient.s_finalgodray_toonify = TheClient.s_finalgodray_toonify.Bind();
+                if (TheClient.CVars.r_toonify.ValueB)
+                {
+                    TheClient.s_finalgodray_lights_toonify = TheClient.s_finalgodray_lights_toonify.Bind();
+                }
+                else
+                {
+                    TheClient.s_finalgodray_lights = TheClient.s_finalgodray_lights.Bind();
+                }
             }
             else
             {
-                TheClient.s_finalgodray = TheClient.s_finalgodray.Bind();
+                if (TheClient.CVars.r_toonify.ValueB)
+                {
+                    TheClient.s_finalgodray_toonify = TheClient.s_finalgodray_toonify.Bind();
+                }
+                else
+                {
+                    TheClient.s_finalgodray = TheClient.s_finalgodray.Bind();
+                }
             }
             GL.DrawBuffers(2, new DrawBuffersEnum[] { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1 });
-            GL.Uniform3(5, ClientUtilities.Convert(TheClient.CVars.r_lighting.ValueB ? Location.Zero : Location.One));
             GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0f, 0f, 0f, 0f });
             GL.ClearBuffer(ClearBuffer.Color, 1, new float[] { 0f, 0f, 0f, 0f });
             GL.BlendFuncSeparate(1, BlendingFactorSrc.SrcColor, BlendingFactorDest.Zero, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.Zero);

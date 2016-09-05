@@ -2,6 +2,7 @@
 
 #define MCM_GOOD_GRAPHICS 0
 #define MCM_TOONIFY 0
+#define MCM_LIGHTS 0
 
 layout (binding = 0) uniform sampler2D colortex; // Color G-Buffer Texture
 layout (binding = 1) uniform sampler2D positiontex; // Positions G-Buffer Texture
@@ -13,8 +14,6 @@ layout (binding = 6) uniform sampler2D renderhint2tex; // More rendering hint da
 
 layout (location = 0) in vec2 f_texcoord; // The input texture coordinate (from the VS data).
 
-// ...
-layout (location = 5) uniform vec3 ambient = vec3(0.0, 0.0, 0.0); // Ambient light to apply. Zero with lighting on, One otherwise.
 // ...
 layout (location = 8) uniform vec3 cameraTargetPos = vec3(0.0, 0.0, 0.0); // What position the camera is targeting in the world (ray traced).
 layout (location = 9) uniform float cameraTargetDepth = 0.01; // How far away the camera target position is from the camera. (Useful for DOF effects).
@@ -84,10 +83,11 @@ vec3 desaturate(in vec3 c) // Desaturates color to be closer to the specified de
 
 vec4 getColorInt(in vec2 pos) // Grab the color of a pixel, after lighting. Regularized.
 {
-	vec4 light_color = texture(lighttex, pos) * HDR_Div * exposure; // The light color, brought into standard range then multiplied by exposure.
-	vec4 colortex_color = dot(ambient, ambient) > 0.0 ? vec4(ambient, 0.0) * texture(colortex, pos) : vec4(0.0); // The primary color of the object without lighting, multiplied by ambient (only if there IS ambient).
-	// Possible optimization: delete colortex_color from existence in the code (#if directive) if ambient is going to be zero (IE whenever lighting is on!)
-	return regularize(colortex_color + light_color); // Return the lit color data.
+#if MCM_LIGHTS
+	return regularize(texture(lighttex, pos) * HDR_Div * exposure); // The light color, brought into standard range then multiplied by exposure.
+#else
+	return texture(colortex, pos); // The primary color of the object without lighting.
+#endif
 }
 
 vec4 getColor(in vec2 pos) // Grab the color of a pixel, after lighting AND blurring.
@@ -157,17 +157,14 @@ void main() // The central entry point of the shader. Handles everything!
 	}
 	light_color = vec4(desaturate(light_color.xyz), light_color.w); // Desaturate whatever color we've ended up with.
 #endif
+#if MCM_LIGHTS
 	// HDR/bloom is available to all!
-	vec4 basecol = texture(lighttex, f_texcoord) * HDR_Div * texture(colortex, f_texcoord); // The base pixel color is our current pixel's color, without regularization.
+	vec4 basecol = texture(lighttex, f_texcoord) * HDR_Div; // The base pixel color is our current pixel's color, without regularization.
 	float val = max(max(basecol.x, basecol.y), basecol.z); // The brightest component of the base pixel color.
-	if (val > flare_val) // If it's brighter than the bloom barrier...
-	{
-		float mod = min(val - flare_val, 1.0); // Find out how much brighter it is...
-		bloom = vec4(basecol.xyz, mod * mod * basecol.w); // And tell the next shader to bloom at that strength (squared) and color!
-	}
-	else
-	{
-		bloom = vec4(0.0); // If it's not brighter, just a zero.
-	}
+	float mod = min(max(val - flare_val, 0.0), 1.0);
+	bloom = vec4(basecol.xyz, mod * mod * basecol.w);
+#else
+	bloom = vec4(0.0);
+#endif
 	color = light_color; // Finally, 'return' (assign the base color value).
 }
