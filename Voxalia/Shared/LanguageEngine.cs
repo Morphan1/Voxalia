@@ -39,7 +39,7 @@ namespace Voxalia.Shared
             {
                 return doc;
             }
-            string path = "info/text/" + idlow + "_" + lang + ".yml";
+            string path = "info/text/" + idlow + "_" + lang + ".fds";
             if (Files.Exists(path))
             {
                 try

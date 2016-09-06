@@ -6,8 +6,6 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 {
     public class SpotLight: LightObject
     {
-        int Texsize;
-
         float Radius;
 
         Location Color;
@@ -16,10 +14,9 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 
         float Width;
 
-        public SpotLight(Location pos, int tsize, float radius, Location col, Location dir, float size)
+        public SpotLight(Location pos, float radius, Location col, Location dir, float size)
         {
             EyePos = pos;
-            Texsize = tsize;
             Radius = radius;
             Color = col;
             Width = size;
@@ -33,7 +30,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
                 InternalLights[0].up = new Vector3(0, 0, 1);
             }
             Direction = dir;
-            InternalLights[0].Create(Texsize, ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + dir), Width, Radius, ClientUtilities.Convert(Color));
+            InternalLights[0].Create(ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + dir), Width, Radius, ClientUtilities.Convert(Color));
             MaxDistance = radius;
         }
 

@@ -6,8 +6,6 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 {
     public class SkyLight: LightObject
     {
-        int Texsize;
-
         float Radius;
 
         Location Color;
@@ -16,10 +14,9 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 
         float Width;
 
-        public SkyLight(Location pos, int tsize, float radius, Location col, Location dir, float size, bool transp)
+        public SkyLight(Location pos, float radius, Location col, Location dir, float size, bool transp)
         {
             EyePos = pos;
-            Texsize = tsize;
             Radius = radius;
             Color = col;
             Width = size;
@@ -34,7 +31,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             }
             InternalLights[0].transp = transp;
             Direction = dir;
-            InternalLights[0].Create(Texsize, ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + dir), Width, Radius, ClientUtilities.Convert(Color));
+            InternalLights[0].Create(ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + dir), Width, Radius, ClientUtilities.Convert(Color));
             MaxDistance = radius;
         }
 

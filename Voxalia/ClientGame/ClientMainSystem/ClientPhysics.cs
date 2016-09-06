@@ -46,15 +46,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
             // TODO: DESTROY OLD REGION!
             // TODO: Radius -> max view rad * 2
             // TODO: Size -> max view rad * 2 + 30 * 2
-            TheSun = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI, Chunk.CHUNK_SIZE * 30, SunLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35, false);
+            TheSun = new SkyLight(Location.Zero, Chunk.CHUNK_SIZE * 30, SunLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35, false);
             MainWorldView.Lights.Add(TheSun);
             if (CVars.r_extrasuns.ValueB)
             {
                 // TODO: Separate cloud quality CVar?
-                TheSunClouds = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 4, Chunk.CHUNK_SIZE * 30, CloudSunLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35, true);
+                TheSunClouds = new SkyLight(Location.Zero, Chunk.CHUNK_SIZE * 30, CloudSunLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35, true);
                 MainWorldView.Lights.Add(TheSunClouds);
                 // TODO: Separate planet quality CVar?
-                ThePlanet = new SkyLight(Location.Zero, CVars.r_shadowquality_sun.ValueI / 4, Chunk.CHUNK_SIZE * 30, PlanetLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35, false);
+                ThePlanet = new SkyLight(Location.Zero, Chunk.CHUNK_SIZE * 30, PlanetLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35, false);
                 MainWorldView.Lights.Add(ThePlanet);
             }
             TheRegion = new Region();
@@ -86,12 +86,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 // TODO: Z+ -> max view rad + 30
                 TheSun.Direction = Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch);
-                TheSunClouds.Direction = Utilities.ForwardVector_Deg(SunAngle.Yaw, SunAngle.Pitch);
                 TheSun.Reposition(Player.GetPosition().GetBlockLocation() - TheSun.Direction * 30 * 6);
-                TheSunClouds.Reposition(Player.GetPosition().GetBlockLocation() - TheSun.Direction * 30 * 6);
+                if (TheSunClouds != null)
+                {
+                    TheSunClouds.Direction = TheSun.Direction;
+                    TheSunClouds.Reposition(TheSun.EyePos);
+                }
                 PlanetDir = Utilities.ForwardVector_Deg(PlanetAngle.Yaw, PlanetAngle.Pitch);
-                //        ThePlanet.Direction = pdir;
-                //        ThePlanet.Reposition(Player.GetPosition().GetBlockLocation() - ThePlanet.Direction * 30 * 6);
+                if (ThePlanet != null)
+                {
+                    ThePlanet.Direction = PlanetDir;
+                    TheSunClouds.Reposition(Player.GetPosition().GetBlockLocation() - ThePlanet.Direction * 30 * 6);
+                }
                 Quaternion diff;
                 Vector3 tsd = TheSun.Direction.ToBVector();
                 Vector3 tpd = PlanetDir.ToBVector();

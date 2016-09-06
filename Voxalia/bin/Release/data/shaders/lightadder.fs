@@ -6,7 +6,7 @@
 layout (binding = 1) uniform sampler2D positiontex; // The G-Buffer positions texture.
 layout (binding = 2) uniform sampler2D normaltex; // The G-Buffer normals texture.
 // ...
-layout (binding = 4) uniform sampler2DArrayShadow shadowtex; // The shadow map for the current light.
+layout (binding = 4) uniform sampler2DArray shadowtex; // The shadow map for the current light.
 layout (binding = 5) uniform sampler2D renderhinttex; // Rendering hint texture (x is specular strength, z is ambient light strength).
 layout (binding = 6) uniform sampler2D diffusetex; // The diffuse texture (G-Buffer colors).
 
@@ -31,6 +31,7 @@ out vec4 color; // The color to add to the lighting texture
 void main() // Let's put all code in main, why not...
 {
 	vec3 res_color = vec3(0.0);
+	float aff = 0.0;
 	// Gather all the texture information.
 	vec3 normal = texture(normaltex, f.texcoord).xyz;
 	vec3 position = texture(positiontex, f.texcoord).xyz;
@@ -68,12 +69,12 @@ void main() // Let's put all code in main, why not...
 	{
 		continue; // Forget this light, move on already!
 	}
-	if (should_sqrt > 0.5) // If square-root trick is enabled (generally this'll be 1.0)
+	if (should_sqrt >= 0.5) // If square-root trick is enabled (generally this'll be 1.0 or 0.0)
 	{
 		f_spos.x = sign(f_spos.x) * sqrt(abs(f_spos.x)); // Square-root the relative position while preserving the sign. Shadow creation buffer also did this.
 		f_spos.y = sign(f_spos.y) * sqrt(abs(f_spos.y)); // This section means that coordinates near the center of the light view will have more pixels per area available than coordinates far from the center.
 	}
-	vec4 fs = vec4(f_spos.xyz / 2.0 + vec3(0.5, 0.5, 0.5), 1.0); // Create a variable representing the proper screen/texture coordinate of the shadow view (ranging from 0 to 1 instead of -1 to 1!).
+	vec3 fs = f_spos.xyz * 0.5 + vec3(0.5, 0.5, 0.5); // Create a variable representing the proper screen/texture coordinate of the shadow view (ranging from 0 to 1 instead of -1 to 1).
 	if (fs.x < 0.0 || fs.x > 1.0
 		|| fs.y < 0.0 || fs.y > 1.0
 		|| fs.z < 0.0 || fs.z > 1.0) // If any coordinate is outside view range...
@@ -86,8 +87,8 @@ void main() // Let's put all code in main, why not...
 #if MCM_GOOD_GRAPHICS
 	// This area is some calculus-ish stuff based upon NVidia sample code (naturally, it seems to run poorly on AMD cards. Good area to recode/optimize!)
 	// It's used to take the shadow map coordinates, and gets a safe Z-modifier value (See below).
-	vec3 duvdist_dx = dFdx(fs.xyz);
-	vec3 duvdist_dy = dFdy(fs.xyz);
+	vec3 duvdist_dx = dFdx(fs);
+	vec3 duvdist_dy = dFdy(fs);
 	vec2 dz_duv = vec2(duvdist_dy.y * duvdist_dx.z - duvdist_dx.y * duvdist_dy.z, duvdist_dx.x * duvdist_dy.z - duvdist_dy.x * duvdist_dx.z);
 	float tlen = (duvdist_dx.x * duvdist_dy.y) - (duvdist_dx.y * duvdist_dy.x);
 	dz_duv /= tlen;
@@ -106,13 +107,15 @@ void main() // Let's put all code in main, why not...
 				offz = -0.000001; // Force it to the threshold value to reduce errors.
 			}
 			offz -= 0.001; // Set it a bit farther regardless to reduce bad shadows.
-			depth += texture(shadowtex, vec4(fs.x + x * jump, fs.y + y * jump, float(i), fs.z + offz)); // Get a 1 or 0 depth value for the current pixel. 0 means don't light, 1 means light.
+			float rd = texture(shadowtex, vec3(fs.x + x * jump, fs.y + y * jump, float(i))).r; // Calculate the depth of the pixel.
+			depth += (rd >= (fs.z + offz) ? 1.0 : 0.0); // Get a 1 or 0 depth value for the current pixel. 0 means don't light, 1 means light.
 			depth_count++; // Can probably use math to generate this number rather than constantly incrementing a counter.
 		}
 	}
 	depth = depth / depth_count; // Average up the 0 and 1 light values to produce gray near the edges of shadows. Soft shadows, hooray!
 #else
-	float depth = texture(shadowtex, vec4(fs.x, fs.y, float(i), fs.z - 0.00001)); // If we have a bad graphics card, just quickly get a 0 or 1 depth value. This will be pixelated (hard) shadows!
+	float rd = texture(shadowtex, vec3(fs.x, fs.y, float(i))).r; // Calculate the depth of the pixel.
+	float depth = (rd >= (fs.z - 0.1) ? 1.0 : 0.0); // If we have a bad graphics card, just quickly get a 0 or 1 depth value. This will be pixelated (hard) shadows!
 #endif
 	if (depth <= 0.0)
 	{
@@ -125,7 +128,8 @@ void main() // Let's put all code in main, why not...
 	vec3 diffuse = max(dot(N, -L), 0.0) * vec3(diffuse_albedo) * HDR_Mod; // Find out how much diffuse light to apply
 	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), (200.0 / 1000.0) * 1000.0) * specular_albedo * renderhint.x) * HDR_Mod; // Find out how much specular light to apply.
 	res_color += (vec3(depth, depth, depth) * atten * (diffuse * light_color) * diffuset.xyz) + (min(specular, 1.0) * light_color * atten * depth); // Put it all together now.
+	aff += 1.0;
 	}
-	res_color += (ambient + vec3(renderhint.z)) * HDR_Mod * diffuset.xyz; // Add ambient light
-	color = vec4(res_color, diffuset.w + lights_used); // I don't know why this became necessary.
+	res_color += (ambient + vec3(renderhint.z)) * HDR_Mod * diffuset.xyz; // Add ambient light.
+	color = vec4(res_color, diffuset.w + aff + renderhint.z); // I don't know why alpha value this became necessary.
 }

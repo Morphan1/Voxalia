@@ -8,7 +8,7 @@ layout (location = 0) in vec4 f_pos;
 layout (location = 1) in vec3 f_texcoord;
 layout (location = 2) in vec4 f_color;
 
-out float color;
+layout (location = 0) out float color;
 
 void main()
 {

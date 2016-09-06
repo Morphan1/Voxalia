@@ -16,8 +16,9 @@ layout (location = 2) out vec4 f_color;
 void main()
 {
 	f_pos = projection * model_matrix * vec4(position, 1.0);
+	f_pos /= f_pos.w;
 	f_texcoord = texcoords;
-	if (should_sqrt >= 1.0)
+	if (should_sqrt >= 0.5)
 	{
 		f_pos.x = sign(f_pos.x) * sqrt(abs(f_pos.x));
 		f_pos.y = sign(f_pos.y) * sqrt(abs(f_pos.y));

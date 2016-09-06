@@ -39,7 +39,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             Destroy(ent);
             if (enabled)
             {
-                SpotLight sl = new SpotLight(ent.GetPosition(), TheClient.CVars.r_shadowquality_flashlight.ValueI, distance, color, Location.UnitX, 45);
+                SpotLight sl = new SpotLight(ent.GetPosition(), distance, color, Location.UnitX, 45);
                 if (ent is CharacterEntity)
                 {
                     sl.Direction = ((CharacterEntity)ent).ForwardVector();

@@ -43,6 +43,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             ShadersCheck();
             generateMapHelpers();
             MainWorldView.ShadowingAllowed = true;
+            MainWorldView.ShadowTexSize = () => CVars.r_shadowquality.ValueI;
             MainWorldView.Render3D = Render3D;
             MainWorldView.PostFirstRender = ReverseEntitiesOrder;
             MainWorldView.LLActive = CVars.r_transpll.ValueB; // TODO: CVar edit call back
