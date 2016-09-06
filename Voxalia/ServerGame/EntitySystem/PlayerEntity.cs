@@ -201,11 +201,11 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public int ViewRadiusInChunks = 4;
 
-        public int ViewRadExtra2 = 2;
+        public int ViewRadExtra2 = 3;
 
         public int ViewRadExtra2Height = 3;
 
-        public int ViewRadExtra5 = 3;
+        public int ViewRadExtra5 = 15;
 
         public int ViewRadExtra5Height = 4;
         
@@ -649,6 +649,7 @@ namespace Voxalia.ServerGame.EntitySystem
         
         void ChunkMarchAndSend()
         {
+            // TODO: is this the most efficient it can be?
             int maxChunks = TheServer.CVars.n_chunkspertick.ValueI;
             int chunksFound = 0;
             if (LoadRelPos.IsNaN() || LoadRelDir.IsNaN() || LoadRelDir.LengthSquared() < 0.1f)
@@ -1072,7 +1073,8 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             if (!ChunksAwareOf.ContainsKey(cworldPos) || ChunksAwareOf[cworldPos].LOD > posMult) // TODO: Efficiency - TryGetValue?
             {
-                bool async = chi == null && (cworldPos.ToLocation() * Chunk.CHUNK_SIZE - LoadRelPos).LengthSquared() > (Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 2 * 2);
+                double dist = (cworldPos.ToLocation() * Chunk.CHUNK_SIZE - LoadRelPos).LengthSquared();
+                bool async = chi == null && dist > (Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 2 * 2);
                 if (async)
                 {
                     TheRegion.LoadChunk_Background(cworldPos, (chn) =>

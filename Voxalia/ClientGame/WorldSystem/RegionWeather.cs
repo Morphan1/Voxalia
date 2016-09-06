@@ -28,13 +28,17 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void RenderClouds()
         {
+            if (!TheClient.CVars.r_clouds.ValueB)
+            {
+                return;
+            }
             TheClient.SetEnts();
             TheClient.Textures.GetTexture("effects/clouds/cloud1").Bind(); // TODO: Cache!
             foreach (Cloud cloud in Clouds)
             {
                 if (TheClient.MainWorldView.CFrust == null || TheClient.MainWorldView.CFrust.ContainsSphere(cloud.Position.ToBVector(), 7))
                 {
-                    for (int i = 0; i < cloud.Points.Count; i++)
+                    for (int i = 0; i < cloud.Points.Count; i++) // TODO: Optimize!
                     {
                         TheClient.Rendering.RenderBillboard(cloud.Points[i] + cloud.Position, new Location(cloud.Sizes[i]), TheClient.MainWorldView.CameraPos);
                     }
