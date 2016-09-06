@@ -201,13 +201,13 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public int ViewRadiusInChunks = 4;
 
-        public int ViewRadExtra2 = 3;
+        public int ViewRadExtra2 = 2;
 
-        public int ViewRadExtra2Height = 3;
+        public int ViewRadExtra2Height = 2;
 
-        public int ViewRadExtra5 = 15;
+        public int ViewRadExtra5 = 4;
 
-        public int ViewRadExtra5Height = 4;
+        public int ViewRadExtra5Height = 3;
         
         public int BestLOD = 1;
 

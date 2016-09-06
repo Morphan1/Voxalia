@@ -48,7 +48,7 @@ namespace Voxalia.ServerGame.CommandSystem
             // Network CVars
             n_verifyip = Register("n_verifyip", "true", CVarFlag.Boolean, "Whether to verify connecting users' IP addresses with the global server. Disable this to allow LAN connections.");
             n_rendersides = Register("n_rendersides", "false", CVarFlag.Boolean, "Whether to render the side-on map view for the linked webpage."); // TODO: Also per-world?
-            n_chunkspertick = Register("n_chunkspertick", "5", CVarFlag.Numeric, "How many chunks can be sent in a single server tick, per player.");
+            n_chunkspertick = Register("n_chunkspertick", "15", CVarFlag.Numeric, "How many chunks can be sent in a single server tick, per player.");
             // Text CVars
             t_translateurls = Register("t_translateurls", "true", CVarFlag.Boolean, "Whether to automatically translate URLs posted in chat.");
             t_blockurls = Register("t_blockurls", "false", CVarFlag.Boolean, "Whether to block URLs as input to chat.");
