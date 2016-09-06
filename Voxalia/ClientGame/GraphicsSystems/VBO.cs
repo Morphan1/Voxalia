@@ -271,7 +271,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             if (Vertices == null && verts == null)
             {
-                SysConsole.Output(OutputType.ERROR, "Failed to render VBO, null vertices!");
+                SysConsole.Output(OutputType.ERROR, "Failed to update VBO, null vertices!");
                 return;
             }
             Vector3[] vecs = verts == null ? Vertices.ToArray() : verts;
@@ -312,10 +312,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _THWVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(thws.Length * Vector4.SizeInBytes), thws, BufferMode);
             }
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             // Index buffer
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IndexVBO);
             GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(inds.Length * sizeof(uint)), inds, BufferMode);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
         }
 
         public void GenerateOrUpdate()
@@ -332,7 +333,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public BufferUsageHint BufferMode = BufferUsageHint.StaticDraw;
 
-        public Vector3[] TangentsFor(Vector3[] vecs, Vector3[] norms, Vector3[] texs)
+        public static Vector3[] TangentsFor(Vector3[] vecs, Vector3[] norms, Vector3[] texs)
         {
             Vector3[] tangs = new Vector3[vecs.Length];
             if (vecs.Length != norms.Length || texs.Length != vecs.Length || (vecs.Length % 3) != 0)
@@ -351,6 +352,35 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 Vector3 t1 = texs[i];
                 Vector3 dt1 = texs[i + 1] - t1;
                 Vector3 dt2 = texs[i + 2] - t1;
+                Vector3 tangent = (dv1 * dt2.Y - dv2 * dt1.Y) / (dt1.X * dt2.Y - dt1.Y * dt2.X);
+                Vector3 normal = norms[i];
+                tangent = (tangent - normal * Vector3.Dot(normal, tangent)).Normalized(); // TODO: Necessity of this correction?
+                tangs[i] = tangent;
+                tangs[i + 1] = tangent;
+                tangs[i + 2] = tangent;
+            }
+            return tangs;
+        }
+
+        public static Vector3[] TangentsFor(Vector3[] vecs, Vector3[] norms, Vector2[] texs)
+        {
+            Vector3[] tangs = new Vector3[vecs.Length];
+            if (vecs.Length != norms.Length || texs.Length != vecs.Length || (vecs.Length % 3) != 0)
+            {
+                for (int i = 0; i < tangs.Length; i++)
+                {
+                    tangs[i] = new Vector3(0, 0, 0);
+                }
+                return tangs;
+            }
+            for (int i = 0; i < vecs.Length; i += 3)
+            {
+                Vector3 v1 = vecs[i];
+                Vector3 dv1 = vecs[i + 1] - v1;
+                Vector3 dv2 = vecs[i + 2] - v1;
+                Vector2 t1 = texs[i];
+                Vector2 dt1 = texs[i + 1] - t1;
+                Vector2 dt2 = texs[i + 2] - t1;
                 Vector3 tangent = (dv1 * dt2.Y - dv2 * dt1.Y) / (dt1.X * dt2.Y - dt1.Y * dt2.X);
                 Vector3 normal = norms[i];
                 tangent = (tangent - normal * Vector3.Dot(normal, tangent)).Normalized(); // TODO: Necessity of this correction?

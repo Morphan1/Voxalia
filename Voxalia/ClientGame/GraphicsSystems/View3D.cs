@@ -681,7 +681,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         Matrix4 SimpleOrthoMatrix = Matrix4.CreateOrthographicOffCenter(-1, 1, -1, 1, -1, 1);
 
-        Frustum camFrust;
+        public Frustum camFrust;
 
         const int LIGHTS_MAX = 10;
 
