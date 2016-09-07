@@ -82,7 +82,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
                 GL.ReadBuffer(ReadBufferMode.None);
                 float exp = FindExp(rd);
-                exp = Math.Max(Math.Min(exp, 2.0f), 0.33f);
+                exp = Math.Max(Math.Min(exp, 3.0f), 0.33f);
                 exp = 1.0f / exp;
                 float stepUp = (float)TheClient.gDelta * 0.05f;
                 float stepDown = stepUp * 5.0f;
@@ -841,6 +841,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 TheClient.Rendering.RenderRectangle(-1, -1, 1, 1);
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
+                StandardBlend();
                 CheckError("AfterLighting");
                 RenderPass_HDR();
             }

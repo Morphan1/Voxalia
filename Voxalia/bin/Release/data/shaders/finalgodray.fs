@@ -94,7 +94,7 @@ vec2 getHDRValue()
 			tc = max(tc, texture(hdrtex, vec2(x, y)).x);
 		}
 	}
-	float exp = 1.0 / max(min(tc, 2.0), 0.33);
+	float exp = 1.0 / max(min(tc, 3.0), 0.33);
 	float flare = 3.0 + exp * 4.0;
 	float stepUp = delta * 0.05;
 	float stepDown = stepUp * 5.0;
@@ -137,9 +137,8 @@ vec4 getColor(in vec2 pos, in float exposure) // Grab the color of a pixel, afte
 
 void main() // The central entry point of the shader. Handles everything!
 {
-	vec2 hdr_data = getHDRValue();
-	// Grab the basic color of our pixel.
-	vec4 light_color = vec4(getColor(f_texcoord, hdr_data.x).xyz, 1.0);
+	vec2 hdr_data = getHDRValue(); // Grab HDR values.
+	vec4 light_color = vec4(getColor(f_texcoord, hdr_data.x).xyz, 1.0); // Grab the basic color of our pixel.
 	// This section applies toonify if it is enabled generally.
 #if MCM_TOONIFY
 	// TODO: Toonify option per pixel: block paint?

@@ -32,7 +32,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             float distance = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 1, 4));
             Location color = Location.FromBytes(data, 8 + 1 + 4);
             Entity ent = TheClient.TheRegion.GetEntity(EID);
-            if (ent == null || !(ent is PlayerEntity || ent is CharacterEntity))
+            if (ent == null || !(ent is CharacterEntity))
             {
                 return false;
             }
@@ -40,12 +40,9 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             if (enabled)
             {
                 SpotLight sl = new SpotLight(ent.GetPosition(), distance, color, Location.UnitX, 45);
-                if (ent is CharacterEntity)
-                {
-                    sl.Direction = ((CharacterEntity)ent).ForwardVector();
-                    sl.Reposition(ent.GetPosition());
-                    ((CharacterEntity)ent).Flashlight = sl;
-                }
+                sl.Direction = ((CharacterEntity)ent).ForwardVector();
+                sl.Reposition(ent.GetPosition());
+                ((CharacterEntity)ent).Flashlight = sl;
                 TheClient.MainWorldView.Lights.Add(sl);
             }
             return true;

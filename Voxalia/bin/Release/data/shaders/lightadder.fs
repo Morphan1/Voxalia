@@ -55,13 +55,13 @@ void main() // Let's put all code in main, why not...
 	float tex_size = light_data[3][2]; // If shadows are enabled, this is the inverse of the texture size of the shadow map.
 	// float unused = light_data[3][3];
 	vec4 f_spos = shadow_matrix * vec4(position, 1.0); // Calculate the position of the light relative to the view.
-	//f_spos /= f_spos.w; // Standard perspective divide.
+	f_spos /= f_spos.w; // Standard perspective divide.
 	vec3 N = normalize(-normal); // Normalize the normal, just in case
 	vec3 light_path = light_pos - position; // What path a light ray has to travel down in theory to get from the source to the current pixel.
 	float light_length = length(light_path); // How far the light is from this pixel.
 	float d = light_length / light_radius; // How far the pixel is from the end of the light.
 	float atten = clamp(1.0 - (d * d), 0.0, 1.0); // How weak the light is here, based purely on distance so far.
-	if (light_type == 1.0) // If this is a conical (spot light)...
+	if (light_type >= 0.5) // If this is a conical (spot light)...
 	{
 		atten *= 1.0 - (f_spos.x * f_spos.x + f_spos.y * f_spos.y); // Weaken the light based on how far towards the edge of the cone/circle it is. Bright in the center, dark in the corners.
 	}
@@ -74,7 +74,7 @@ void main() // Let's put all code in main, why not...
 		f_spos.x = sign(f_spos.x) * sqrt(abs(f_spos.x)); // Square-root the relative position while preserving the sign. Shadow creation buffer also did this.
 		f_spos.y = sign(f_spos.y) * sqrt(abs(f_spos.y)); // This section means that coordinates near the center of the light view will have more pixels per area available than coordinates far from the center.
 	}
-	vec3 fs = f_spos.xyz / f_spos.w * 0.5 + vec3(0.5, 0.5, 0.5); // Create a variable representing the proper screen/texture coordinate of the shadow view (ranging from 0 to 1 instead of -1 to 1).
+	vec3 fs = f_spos.xyz * 0.5 + vec3(0.5, 0.5, 0.5); // Create a variable representing the proper screen/texture coordinate of the shadow view (ranging from 0 to 1 instead of -1 to 1).
 	if (fs.x < 0.0 || fs.x > 1.0
 		|| fs.y < 0.0 || fs.y > 1.0
 		|| fs.z < 0.0 || fs.z > 1.0) // If any coordinate is outside view range...
@@ -128,7 +128,7 @@ void main() // Let's put all code in main, why not...
 	vec3 diffuse = max(dot(N, -L), 0.0) * vec3(diffuse_albedo) * HDR_Mod; // Find out how much diffuse light to apply
 	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), (200.0 / 1000.0) * 1000.0) * specular_albedo * renderhint.x) * HDR_Mod; // Find out how much specular light to apply.
 	res_color += (vec3(depth, depth, depth) * atten * (diffuse * light_color) * diffuset.xyz) + (min(specular, 1.0) * light_color * atten * depth); // Put it all together now.
-	aff += 1.0;
+	aff += atten;
 	}
 	res_color += (ambient + vec3(renderhint.z)) * HDR_Mod * diffuset.xyz; // Add ambient light.
 	color = vec4(res_color, diffuset.w + aff + renderhint.z); // I don't know why alpha value this became necessary.
