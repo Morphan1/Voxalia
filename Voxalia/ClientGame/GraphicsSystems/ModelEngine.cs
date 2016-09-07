@@ -520,6 +520,16 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 SysConsole.Output(OutputType.WARNING, "Can't find models/" + Name + ".skin!");
             }
         }
+
+        public long GetVRAMUsage()
+        {
+            long ret = 0;
+            foreach (ModelMesh mesh in Meshes)
+            {
+                ret += mesh.vbo.GetVRAMUsage();
+            }
+            return ret;
+        }
     }
 
     public class ModelBone

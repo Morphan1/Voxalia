@@ -44,6 +44,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public List<Vector4> THVs;
         public List<Vector4> THWs;
 
+        public long LastVRAM = 0;
+
+        public long GetVRAMUsage()
+        {
+            return LastVRAM;
+        }
+
         public void CleanLists()
         {
             Vertices = null;
@@ -274,6 +281,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 SysConsole.Output(OutputType.ERROR, "Failed to update VBO, null vertices!");
                 return;
             }
+            LastVRAM = 0;
             Vector3[] vecs = verts == null ? Vertices.ToArray() : verts;
             uint[] inds = indices == null ? Indices.ToArray() : indices;
             Vector3[] norms = normals == null ? Normals.ToArray() : normals;
@@ -287,35 +295,44 @@ namespace Voxalia.ClientGame.GraphicsSystems
             // Vertex buffer
             GL.BindBuffer(BufferTarget.ArrayBuffer, _VertexVBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vecs.Length * Vector3.SizeInBytes), vecs, BufferMode);
+            LastVRAM += vecs.Length * Vector3.SizeInBytes;
             // Normal buffer
             GL.BindBuffer(BufferTarget.ArrayBuffer, _NormalVBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(norms.Length * Vector3.SizeInBytes), norms, BufferMode);
+            LastVRAM += norms.Length * Vector3.SizeInBytes;
             // TexCoord buffer
             GL.BindBuffer(BufferTarget.ArrayBuffer, _TexCoordVBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(texs.Length * Vector3.SizeInBytes), texs, BufferMode);
+            LastVRAM += texs.Length * Vector3.SizeInBytes;
             // Tangent buffer
             GL.BindBuffer(BufferTarget.ArrayBuffer, _TangentVBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(tangs.Length * Vector3.SizeInBytes), tangs, BufferMode);
+            LastVRAM += tangs.Length * Vector3.SizeInBytes;
             // Color buffer
             if (cols != null)
             {
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _ColorVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(cols.Length * Vector4.SizeInBytes), cols, BufferMode);
+                LastVRAM += cols.Length * Vector4.SizeInBytes;
             }
             // TCOL buffer
             if (tcols != null)
             {
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _TCOLVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(tcols.Length * Vector4.SizeInBytes), tcols, BufferMode);
+                LastVRAM += tcols.Length * Vector4.SizeInBytes;
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _THVVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(thvs.Length * Vector4.SizeInBytes), thvs, BufferMode);
+                LastVRAM += thvs.Length * Vector4.SizeInBytes;
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _THWVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(thws.Length * Vector4.SizeInBytes), thws, BufferMode);
+                LastVRAM += thws.Length * Vector4.SizeInBytes;
             }
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             // Index buffer
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IndexVBO);
             GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(inds.Length * sizeof(uint)), inds, BufferMode);
+            LastVRAM += inds.Length * sizeof(uint);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
         }
 
@@ -408,6 +425,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 return;
             }
+            LastVRAM = 0;
             uint[] inds = indices == null ? Indices.ToArray() : indices;
             Vector3[] norms = normals == null ? Normals.ToArray() : normals;
             Vector3[] texs = texts == null ? TexCoords.ToArray() : texts;
@@ -442,17 +460,21 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.GenBuffers(1, out _VertexVBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _VertexVBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vecs.Length * Vector3.SizeInBytes), vecs, BufferMode);
+            LastVRAM += vecs.Length * Vector3.SizeInBytes;
             // Normal buffer
             GL.GenBuffers(1, out _NormalVBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _NormalVBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(norms.Length * Vector3.SizeInBytes), norms, BufferMode);
+            LastVRAM += norms.Length * Vector3.SizeInBytes;
             // TexCoord buffer
             GL.GenBuffers(1, out _TexCoordVBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _TexCoordVBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(texs.Length * Vector3.SizeInBytes), texs, BufferMode);
+            LastVRAM += texs.Length * Vector3.SizeInBytes;
             GL.GenBuffers(1, out _TangentVBO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _TangentVBO);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(tangs.Length * Vector3.SizeInBytes), tangs, BufferMode);
+            LastVRAM += tangs.Length * Vector3.SizeInBytes;
             // Color buffer
             if (cols != null)
             {
@@ -460,6 +482,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenBuffers(1, out _ColorVBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _ColorVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(cols.Length * Vector4.SizeInBytes), cols, BufferMode);
+                LastVRAM += cols.Length * Vector4.SizeInBytes;
             }
             // TCOL buffer
             if (tcols != null)
@@ -468,12 +491,15 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenBuffers(1, out _TCOLVBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _TCOLVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(tcols.Length * Vector4.SizeInBytes), tcols, BufferMode);
+                LastVRAM += tcols.Length * Vector4.SizeInBytes;
                 GL.GenBuffers(1, out _THVVBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _THVVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(thvs.Length * Vector4.SizeInBytes), thvs, BufferMode);
+                LastVRAM += thvs.Length * Vector4.SizeInBytes;
                 GL.GenBuffers(1, out _THWVBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _THWVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(thws.Length * Vector4.SizeInBytes), thws, BufferMode);
+                LastVRAM += thws.Length * Vector4.SizeInBytes;
             }
             // Weight buffer
             if (weights != null)
@@ -481,6 +507,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenBuffers(1, out _BoneWeightVBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeightVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(weights.Length * Vector4.SizeInBytes), weights, BufferMode);
+                LastVRAM += weights.Length * Vector4.SizeInBytes;
             }
             // ID buffer
             if (ids != null)
@@ -488,6 +515,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenBuffers(1, out _BoneIDVBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneIDVBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(ids.Length * Vector4.SizeInBytes), ids, BufferMode);
+                LastVRAM += ids.Length * Vector4.SizeInBytes;
             }
             // Weight2 buffer
             if (weights2 != null)
@@ -495,6 +523,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenBuffers(1, out _BoneWeight2VBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneWeight2VBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(weights2.Length * Vector4.SizeInBytes), weights2, BufferMode);
+                LastVRAM += weights2.Length * Vector4.SizeInBytes;
             }
             // ID2 buffer
             if (ids2 != null)
@@ -502,12 +531,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.GenBuffers(1, out _BoneID2VBO);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _BoneID2VBO);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(ids2.Length * Vector4.SizeInBytes), ids2, BufferMode);
+                LastVRAM += ids2.Length * Vector4.SizeInBytes;
             }
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             // Index buffer
             GL.GenBuffers(1, out _IndexVBO);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IndexVBO);
             GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(inds.Length * sizeof(uint)), inds, BufferMode);
+            LastVRAM += inds.Length * sizeof(uint);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             // VAO
             GL.GenVertexArrays(1, out _VAO);

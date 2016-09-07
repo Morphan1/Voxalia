@@ -26,6 +26,39 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public Stack<ChunkRenderHelper> RenderHelpers = new Stack<ChunkRenderHelper>(200);
 
+        public List<Tuple<string, long>> CalculateVRAMUsage()
+        {
+            List<Tuple<string, long>> toret = new List<Tuple<string, long>>();
+            long modelc = 0;
+            foreach (Model model in Models.LoadedModels)
+            {
+                modelc += model.GetVRAMUsage();
+            }
+            toret.Add(new Tuple<string, long>("Models", modelc));
+            long texturec = 0;
+            foreach (Texture texture in Textures.LoadedTextures)
+            {
+                texturec += texture.Width * texture.Height * 4;
+            }
+            toret.Add(new Tuple<string, long>("Textures", texturec));
+            long blocktexturec = TBlock.TWidth * TBlock.TWidth * 4 * 3;
+            for (int i = 0; i < TBlock.Anims.Count; i++)
+            {
+                blocktexturec += TBlock.TWidth * TBlock.TWidth * 4 * TBlock.Anims[i].FBOs.Length;
+            }
+            toret.Add(new Tuple<string, long>("BlockTextures", blocktexturec));
+            long chunkc = 0;
+            foreach (Chunk chunk in TheRegion.LoadedChunks.Values)
+            {
+                if (chunk._VBO != null)
+                {
+                    chunkc += chunk._VBO.GetVRAMUsage();
+                }
+            }
+            toret.Add(new Tuple<string, long>("chunks", chunkc));
+            return toret;
+        }
+
         void PreInitRendering()
         {
             GL.Viewport(0, 0, Window.Width, Window.Height);

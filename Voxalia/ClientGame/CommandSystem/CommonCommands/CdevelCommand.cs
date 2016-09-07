@@ -66,6 +66,17 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                         end:
                         break;
                     }
+                case "vramUsage":
+                    {
+                        long c = 0;
+                        foreach (Tuple<string, long> val in TheClient.CalculateVRAMUsage())
+                        {
+                            entry.Good(queue, "-> " + val.Item1 + ": " + val.Item2 + " (" + (val.Item2 / 1024 / 1024) + "MB)");
+                            c += val.Item2;
+                        }
+                        entry.Good(queue, "-> Total: " + c + " (" + (c / 1024 / 1024) + "MB)");
+                        break;
+                    }
                 default:
                     ShowUsage(queue, entry);
                     break;
