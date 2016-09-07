@@ -73,7 +73,6 @@ namespace Voxalia.ServerGame.EntitySystem
             dr.WriteFloat(quat.Y);
             dr.WriteFloat(quat.Z);
             dr.WriteFloat(quat.W);
-            dr.WriteLong(EID);
             dr.WriteFloat(GetMass());
             dr.WriteFloat(CBAirForce);
             dr.WriteFloat(CBAirSpeed);

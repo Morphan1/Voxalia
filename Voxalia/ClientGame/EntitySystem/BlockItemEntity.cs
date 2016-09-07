@@ -164,4 +164,18 @@ namespace Voxalia.ClientGame.EntitySystem
             vbo.Render(false);
         }
     }
+
+    public class BlockItemEntityConstructor : EntityTypeConstructor
+    {
+        public override Entity Create(Region tregion, byte[] data)
+        {
+            Material mat = (Material)Utilities.BytesToUshort(Utilities.BytesPartial(data, PhysicsEntity.PhysicsNetworkDataLength, 2));
+            byte dat = data[PhysicsEntity.PhysicsNetworkDataLength + 2];
+            byte tpa = data[PhysicsEntity.PhysicsNetworkDataLength + 3];
+            byte damage = data[PhysicsEntity.PhysicsNetworkDataLength + 4];
+            BlockItemEntity bie = new BlockItemEntity(tregion, mat, dat, tpa, (BlockDamage)damage);
+            bie.ApplyPhysicsNetworkData(data);
+            return bie;
+        }
+    }
 }

@@ -63,4 +63,15 @@ namespace Voxalia.ClientGame.EntitySystem
             base.DestroyBody();
         }
     }
+
+    public class GlowstickEntityConstructor : EntityTypeConstructor
+    {
+        public override Entity Create(Region tregion, byte[] data)
+        {
+            int col = Utilities.BytesToInt(Utilities.BytesPartial(data, PhysicsEntity.PhysicsNetworkDataLength, 4));
+            GlowstickEntity ge = new GlowstickEntity(tregion, col);
+            ge.ApplyPhysicsNetworkData(data);
+            return ge;
+        }
+    }
 }

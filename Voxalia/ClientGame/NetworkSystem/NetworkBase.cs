@@ -297,6 +297,10 @@ namespace Voxalia.ClientGame.NetworkSystem
                         packet = new YourPositionPacketIn();
                         usage = NetUsageType.PLAYERS;
                         break;
+                    case ServerToClientPacket.SPAWN_ENTITY:
+                        packet = new SpawnEntityPacketIn();
+                        usage = NetUsageType.ENTITIES;
+                        break;
                     case ServerToClientPacket.PHYSICS_ENTITY_UPDATE:
                         packet = new PhysicsEntityUpdatePacketIn();
                         usage = NetUsageType.ENTITIES;

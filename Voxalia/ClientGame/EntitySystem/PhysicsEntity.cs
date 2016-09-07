@@ -375,5 +375,56 @@ namespace Voxalia.ClientGame.EntitySystem
                 WorldTransform = Matrix.CreateFromQuaternion(rot) * Matrix.CreateTranslation(WorldTransform.Translation);
             }
         }
+
+        public const int PhysicsNetworkDataLength = 4 + 12 + 12 + 16 + 12 + 4 + 4 + 1 + 1;
+
+        public bool ApplyPhysicsNetworkData(byte[] dat)
+        {
+            if (dat.Length < PhysicsNetworkDataLength)
+            {
+                return false;
+            }
+            SetMass(Utilities.BytesToFloat(Utilities.BytesPartial(dat, 0, 4)));
+            SetPosition(Location.FromBytes(dat, 4));
+            SetVelocity(Location.FromBytes(dat, 4 + 12));
+            SetOrientation(Utilities.BytesToQuaternion(dat, 4 + 12 + 12));
+            SetAngularVelocity(Location.FromBytes(dat, 4 + 12 + 12 + 16));
+            SetFriction(Utilities.BytesToFloat(Utilities.BytesPartial(dat, 4 + 12 + 12 + 16 + 12, 4)));
+            SetBounciness(Utilities.BytesToFloat(Utilities.BytesPartial(dat, 4 + 12 + 12 + 16 + 12 + 4, 4)));
+            // TODO: Proper flags thingy here?
+            byte fl = dat[4 + 12 + 12 + 16 + 12 + 4 + 4];
+            Visible = (fl & 1) == 1;
+            GenBlockShadows = (fl & 2) == 2;
+            byte cg = dat[4 + 12 + 12 + 16 + 12 + 4 + 4 + 1];
+            if (cg == 2)
+            {
+                CGroup = CollisionUtil.Solid;
+            }
+            else if (cg == 4)
+            {
+                CGroup = CollisionUtil.NonSolid;
+            }
+            else if (cg == (2 | 4))
+            {
+                CGroup = CollisionUtil.Item;
+            }
+            else if (cg == 8)
+            {
+                CGroup = CollisionUtil.Player;
+            }
+            else if (cg == (2 | 8))
+            {
+                CGroup = CollisionUtil.Water;
+            }
+            else if (cg == (2 | 4 | 8))
+            {
+                CGroup = CollisionUtil.WorldSolid;
+            }
+            else // if (cg == 16)
+            {
+                CGroup = CollisionUtil.Player;
+            }
+            return true;
+        }
     }
 }

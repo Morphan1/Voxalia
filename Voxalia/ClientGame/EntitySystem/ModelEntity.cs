@@ -373,4 +373,17 @@ namespace Voxalia.ClientGame.EntitySystem
             model.Draw(); // TODO: Animation?
         }
     }
+
+    public class ModelEntityConstructor : EntityTypeConstructor
+    {
+        public override Entity Create(Region tregion, byte[] data)
+        {
+            ModelEntity me = new ModelEntity(tregion.TheClient.Network.Strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, PhysicsEntity.PhysicsNetworkDataLength, 4))), tregion);
+            me.ApplyPhysicsNetworkData(data);
+            byte moder = data[PhysicsEntity.PhysicsNetworkDataLength + 4];
+            me.mode = (ModelCollisionMode)moder;
+            me.scale = Location.FromBytes(data, PhysicsEntity.PhysicsNetworkDataLength + 4 + 1);
+            return me;
+        }
+    }
 }

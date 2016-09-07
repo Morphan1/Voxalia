@@ -257,4 +257,27 @@ namespace Voxalia.ClientGame.EntitySystem
             vbo.GenerateVBO();
         }
     }
+
+    public class BlockGroupEntityConstructor : EntityTypeConstructor
+    {
+        public override Entity Create(Region tregion, byte[] data)
+        {
+            int xwidth = (int)Utilities.BytesToInt(Utilities.BytesPartial(data, PhysicsEntity.PhysicsNetworkDataLength, 4));
+            int ywidth = (int)Utilities.BytesToInt(Utilities.BytesPartial(data, PhysicsEntity.PhysicsNetworkDataLength + 4, 4));
+            int zwidth = (int)Utilities.BytesToInt(Utilities.BytesPartial(data, PhysicsEntity.PhysicsNetworkDataLength + 4 + 4, 4));
+            BlockInternal[] bi = new BlockInternal[xwidth * ywidth * zwidth];
+            for (int i = 0; i < bi.Length; i++)
+            {
+                bi[i]._BlockMaterialInternal = Utilities.BytesToUshort(Utilities.BytesPartial(data, PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + i * 2, 2));
+                bi[i].BlockData = data[PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 2 + i];
+                bi[i].BlockPaint = data[PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 3 + i];
+            }
+            BGETraceMode tm = (BGETraceMode)data[PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 4];
+            BlockGroupEntity bge = new BlockGroupEntity(tregion, tm, bi, xwidth, ywidth, zwidth, Location.FromBytes(data, PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 4 + 1 + 4));
+            bge.Color = System.Drawing.Color.FromArgb(Utilities.BytesToInt(Utilities.BytesPartial(data, PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 4 + 1, 4)));
+            bge.scale = Location.FromBytes(data, PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 4 + 1 + 4 + 12);
+            bge.ApplyPhysicsNetworkData(data);
+            return bge;
+        }
+    }
 }

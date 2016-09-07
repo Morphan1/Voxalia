@@ -244,6 +244,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetHeldItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetStatusPacketIn.cs" />
+    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SunAnglePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\TeleportPacketIn.cs" />

@@ -70,4 +70,9 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public abstract void SetPosition(Location pos);
     }
+
+    public abstract class EntityTypeConstructor
+    {
+        public abstract Entity Create(Region tregion, byte[] e);
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Voxalia.Shared;
 using OpenTK;
 using OpenTK.Input;
@@ -232,6 +233,23 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// </summary>
         public string GLRenderer;
 
+        public Dictionary<NetworkEntityType, EntityTypeConstructor> EntityConstructors = new Dictionary<NetworkEntityType, EntityTypeConstructor>();
+
+        public void RegisterDefaultEntityTypes()
+        {
+            EntityConstructors[NetworkEntityType.BULLET] = new BulletEntityConstructor();
+            EntityConstructors[NetworkEntityType.PRIMITIVE] = new PrimitiveEntityConstructor();
+            EntityConstructors[NetworkEntityType.CHARACTER] = new CharacterEntityConstructor();
+            EntityConstructors[NetworkEntityType.GLOWSTICK] = new GlowstickEntityConstructor();
+            EntityConstructors[NetworkEntityType.GRENADE] = new GrenadeEntityConstructor();
+            EntityConstructors[NetworkEntityType.BLOCK_GROUP] = new BlockGroupEntityConstructor();
+            EntityConstructors[NetworkEntityType.BLOCK_ITEM] = new BlockItemEntityConstructor();
+            EntityConstructors[NetworkEntityType.STATIC_BLOCK] = new StaticBlockEntityConstructor();
+            EntityConstructors[NetworkEntityType.MODEL] = new ModelEntityConstructor();
+            
+        }
+
+
         /// <summary>
         /// Called when the window is loading, only to be used by the startup process.
         /// </summary>
@@ -293,6 +311,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             BuildWorld();
             SysConsole.Output(OutputType.INIT, "Preparing networking...");
             Network = new NetworkBase(this);
+            RegisterDefaultEntityTypes();
             SysConsole.Output(OutputType.INIT, "Playing background music...");
             BackgroundMusic();
             CVars.a_musicvolume.OnChanged += onMusicVolumeChanged;

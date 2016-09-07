@@ -41,4 +41,14 @@ namespace Voxalia.ClientGame.EntitySystem
             TheClient.Rendering.SetColor(Color4.White);
         }
     }
+
+    public class GrenadeEntityConstructor : EntityTypeConstructor
+    {
+        public override Entity Create(Region tregion, byte[] data)
+        {
+            GrenadeEntity ge = new GrenadeEntity(tregion, true);
+            ge.ApplyPhysicsNetworkData(data);
+            return ge;
+        }
+    }
 }

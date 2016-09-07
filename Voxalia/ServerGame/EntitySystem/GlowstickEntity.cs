@@ -42,6 +42,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             byte[] phys = GetPhysicsNetData();
             byte[] dat = new byte[phys.Length + 4];
+            phys.CopyTo(dat, 0);
             Utilities.IntToBytes(Color.ToArgb()).CopyTo(dat, phys.Length);
             return dat;
         }

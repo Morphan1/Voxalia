@@ -16,4 +16,16 @@ namespace Voxalia.ClientGame.EntitySystem
             SetMass(0);
         }
     }
+
+    public class StaticBlockEntityConstructor : EntityTypeConstructor
+    {
+        public override Entity Create(Region tregion, byte[] data)
+        {
+            int itsbyte = Utilities.BytesToInt(Utilities.BytesPartial(data, PhysicsEntity.PhysicsNetworkDataLength, 4));
+            BlockInternal bi = BlockInternal.FromItemDatum(itsbyte);
+            StaticBlockEntity sbe = new StaticBlockEntity(tregion, bi.Material, bi.BlockPaint);
+            sbe.ApplyPhysicsNetworkData(data);
+            return sbe;
+        }
+    }
 }

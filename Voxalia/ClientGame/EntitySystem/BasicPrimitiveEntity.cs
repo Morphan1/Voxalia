@@ -80,4 +80,39 @@ namespace Voxalia.ClientGame.EntitySystem
             }
         }
     }
+
+    public class BulletEntityConstructor : EntityTypeConstructor
+    {
+        public override Entity Create(Region tregion, byte[] e)
+        {
+            if (e.Length < 4 + 12 + 12)
+            {
+                return null;
+            }
+            BasicPrimitiveEntity bpe = new BasicPrimitiveEntity(tregion, false);
+            bpe.Scale = new Location(Utilities.BytesToFloat(Utilities.BytesPartial(e, 0, 4)));
+            bpe.SetPosition(Location.FromBytes(e, 4));
+            bpe.SetVelocity(Location.FromBytes(e, 4 + 12));
+            return bpe;
+        }
+    }
+
+    public class PrimitiveEntityConstructor : EntityTypeConstructor
+    {
+        public override Entity Create(Region tregion, byte[] e)
+        {
+            if (e.Length < 4 + 12 + 12)
+            {
+                return null;
+            }
+            BasicPrimitiveEntity bpe = new BasicPrimitiveEntity(tregion, false);
+            bpe.Position = Location.FromBytes(e, 0);
+            bpe.Velocity = Location.FromBytes(e, 12);
+            bpe.Angles = Utilities.BytesToQuaternion(e, 12 + 12);
+            bpe.Scale = Location.FromBytes(e, 12 + 12 + 16);
+            bpe.Gravity = Location.FromBytes(e, 12 + 12 + 16 + 12);
+            bpe.model = tregion.TheClient.Models.GetModel(tregion.TheClient.Network.Strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(e, 0, 12 + 12 + 16 + 12 + 12))));
+            return bpe;
+        }
+    }
 }

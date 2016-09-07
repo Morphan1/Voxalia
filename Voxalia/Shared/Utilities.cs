@@ -91,6 +91,7 @@ namespace Voxalia.Shared
             }
         }
 
+        // TODO: Reduce need for BytesPartial in packets via adding an index to BytesTo<Type>!
         public static byte[] BytesPartial(byte[] full, int start, int length)
         {
             byte[] data = new byte[length];

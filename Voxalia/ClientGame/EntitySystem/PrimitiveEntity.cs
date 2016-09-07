@@ -3,6 +3,7 @@ using Voxalia.Shared;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.Shared.Collision;
 using OpenTK;
+using System;
 
 namespace Voxalia.ClientGame.EntitySystem
 {

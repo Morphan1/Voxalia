@@ -33,6 +33,7 @@ namespace Voxalia.ServerGame.EntitySystem
             byte[] phys = GetPhysicsNetData();
             int start = phys.Length + 4 + 4 + 4;
             byte[] res = new byte[start + Blocks.Length * 4 + 1 + 4 + 12];
+            phys.CopyTo(res, 0);
             Utilities.IntToBytes(XWidth).CopyTo(res, phys.Length);
             Utilities.IntToBytes(YWidth).CopyTo(res, phys.Length + 4);
             Utilities.IntToBytes(ZWidth).CopyTo(res, phys.Length + 4 + 4);
