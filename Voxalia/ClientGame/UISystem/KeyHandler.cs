@@ -119,11 +119,14 @@ namespace Voxalia.ClientGame.UISystem
             RegKey("pageup", Key.PageUp); RegKey("pagedown", Key.PageDown);
             RegKey("left", Key.Left); RegKey("right", Key.Right);
             RegKey("up", Key.Up); RegKey("down", Key.Down);
+            // Perhaps not the best way to do this, but it works so well!
             RegKey("mouse1", Key.F35);
             RegKey("mouse2", Key.F34);
             RegKey("mouse3", Key.F33);
             RegKey("mousewheelup", Key.F32);
             RegKey("mousewheeldown", Key.F31);
+            RegKey("mouse4", Key.F30);
+            RegKey("mouse5", Key.F29);
         }
 
         static void RegKey(string name, Key key)
@@ -234,7 +237,13 @@ namespace Voxalia.ClientGame.UISystem
                         case MouseButton.Middle:
                             KeyPresses.Enqueue(Key.F33);
                             break;
-                        // TODO: More mouse buttons?
+                        case MouseButton.Button1:
+                            KeyPresses.Enqueue(Key.F30);
+                            break;
+                        case MouseButton.Button2:
+                            KeyPresses.Enqueue(Key.F29);
+                            break;
+                            // TODO: More mouse buttons?
                     }
                 }
             }
@@ -283,7 +292,13 @@ namespace Voxalia.ClientGame.UISystem
                         case MouseButton.Middle:
                             KeyUps.Enqueue(Key.F33);
                             break;
-                        // TODO: More mouse buttons?
+                        case MouseButton.Button1:
+                            KeyUps.Enqueue(Key.F30);
+                            break;
+                        case MouseButton.Button2:
+                            KeyUps.Enqueue(Key.F29);
+                            break;
+                            // TODO: More mouse buttons?
                     }
                 }
             }

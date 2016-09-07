@@ -47,7 +47,6 @@ void main()
 	}
 	pos1 *= simplebone_matrix;
 	f_pos = projection * model_matrix * vec4(pos1.xyz, 1.0);
-	f_pos /= f_pos.w;
 	f_texcoord = texcoords;
 	if (should_sqrt >= 0.5)
 	{

@@ -55,7 +55,7 @@ void main() // Let's put all code in main, why not...
 	float tex_size = light_data[3][2]; // If shadows are enabled, this is the inverse of the texture size of the shadow map.
 	// float unused = light_data[3][3];
 	vec4 f_spos = shadow_matrix * vec4(position, 1.0); // Calculate the position of the light relative to the view.
-	f_spos /= f_spos.w; // Standard perspective divide.
+	//f_spos /= f_spos.w; // Standard perspective divide.
 	vec3 N = normalize(-normal); // Normalize the normal, just in case
 	vec3 light_path = light_pos - position; // What path a light ray has to travel down in theory to get from the source to the current pixel.
 	float light_length = length(light_path); // How far the light is from this pixel.
@@ -74,7 +74,7 @@ void main() // Let's put all code in main, why not...
 		f_spos.x = sign(f_spos.x) * sqrt(abs(f_spos.x)); // Square-root the relative position while preserving the sign. Shadow creation buffer also did this.
 		f_spos.y = sign(f_spos.y) * sqrt(abs(f_spos.y)); // This section means that coordinates near the center of the light view will have more pixels per area available than coordinates far from the center.
 	}
-	vec3 fs = f_spos.xyz * 0.5 + vec3(0.5, 0.5, 0.5); // Create a variable representing the proper screen/texture coordinate of the shadow view (ranging from 0 to 1 instead of -1 to 1).
+	vec3 fs = f_spos.xyz / f_spos.w * 0.5 + vec3(0.5, 0.5, 0.5); // Create a variable representing the proper screen/texture coordinate of the shadow view (ranging from 0 to 1 instead of -1 to 1).
 	if (fs.x < 0.0 || fs.x > 1.0
 		|| fs.y < 0.0 || fs.y > 1.0
 		|| fs.z < 0.0 || fs.z > 1.0) // If any coordinate is outside view range...
@@ -107,7 +107,7 @@ void main() // Let's put all code in main, why not...
 				offz = -0.000001; // Force it to the threshold value to reduce errors.
 			}
 			offz -= 0.001; // Set it a bit farther regardless to reduce bad shadows.
-			float rd = texture(shadowtex, vec3(fs.x + x * jump, fs.y + y * jump, float(i))).r; // Calculate the depth of the pixel.
+			float rd = texture(shadowtex, vec3(fs.x + x * jump, -(fs.y + y * jump), float(i))).r; // Calculate the depth of the pixel.
 			depth += (rd >= (fs.z + offz) ? 1.0 : 0.0); // Get a 1 or 0 depth value for the current pixel. 0 means don't light, 1 means light.
 			depth_count++; // Can probably use math to generate this number rather than constantly incrementing a counter.
 		}
@@ -115,7 +115,7 @@ void main() // Let's put all code in main, why not...
 	depth = depth / depth_count; // Average up the 0 and 1 light values to produce gray near the edges of shadows. Soft shadows, hooray!
 #else
 	float rd = texture(shadowtex, vec3(fs.x, fs.y, float(i))).r; // Calculate the depth of the pixel.
-	float depth = (rd >= (fs.z - 0.1) ? 1.0 : 0.0); // If we have a bad graphics card, just quickly get a 0 or 1 depth value. This will be pixelated (hard) shadows!
+	float depth = (rd >= (fs.z - 0.00001) ? 1.0 : 0.0); // If we have a bad graphics card, just quickly get a 0 or 1 depth value. This will be pixelated (hard) shadows!
 #endif
 	if (depth <= 0.0)
 	{

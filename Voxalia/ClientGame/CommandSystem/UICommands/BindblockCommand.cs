@@ -49,6 +49,7 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
             }
             Key k = KeyHandler.GetKeyForName(key);
             KeyHandler.BindKey(k, entry.InnerCommandBlock, entry.BlockStart);
+            entry.Good(queue, "Keybind updated for " + KeyHandler.keystonames[k] + ".");
             CommandStackEntry cse = queue.CommandStack.Peek();
             cse.Index = entry.BlockEnd + 2;
         }

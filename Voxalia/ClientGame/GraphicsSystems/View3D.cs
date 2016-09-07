@@ -544,7 +544,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 Location campos = CameraPos;
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow);
                 int n = 0;
-                GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.Zero);
                 for (int i = 0; i < Lights.Count; i++)
                 {
                     if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos.ToBVector(), Lights[i].MaxDistance))
@@ -598,6 +597,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                 GL.DrawBuffer(DrawBufferMode.ColorAttachment0 + n);
                                 GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1f });
                                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1f });
+                                GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.Zero);
                                 Render3D(this);
                                 FBOid = FBOID.NONE;
                                 n++;
@@ -888,6 +888,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.UniformMatrix4(2, false, ref IdentityMatrix);
                 GL.Uniform2(4, new Vector2(Width, Height));
                 TheClient.Rendering.RenderRectangle(-1, -1, 1, 1);
+                StandardBlend();
                 CheckError("AfterHDRRead");
             }
             else

@@ -42,7 +42,7 @@ namespace Voxalia.ClientGame.CommandSystem.UICommands
             else if (entry.Arguments.Count >= 2)
             {
                 KeyHandler.BindKey(k, entry.GetArgument(queue, 1));
-                entry.Good(queue, "Keybind updated for " + k + ".");
+                entry.Good(queue, "Keybind updated for " + KeyHandler.keystonames[k] + ".");
             }
         }
     }
