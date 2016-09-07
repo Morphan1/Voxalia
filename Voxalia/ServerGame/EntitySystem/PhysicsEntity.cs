@@ -56,6 +56,51 @@ namespace Voxalia.ServerGame.EntitySystem
             return base.GetRAMUsage() + 200;
         }
 
+        public byte[] GetPhysicsNetData()
+        {
+            byte[] Data = new byte[4 + 12 + 12 + 16 + 12 + 4 + 4 + 1 + 1];
+            Utilities.FloatToBytes(GetMass()).CopyTo(Data, 0);
+            GetPosition().ToBytes().CopyTo(Data, 4);
+            GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
+            Utilities.QuaternionToBytes(GetOrientation()).CopyTo(Data, 4 + 12 + 12);
+            GetAngularVelocity().ToBytes().CopyTo(Data, 4 + 12 + 12 + 16);
+            Utilities.FloatToBytes(GetFriction()).CopyTo(Data, 4 + 12 + 12 + 16 + 12);
+            Utilities.FloatToBytes(GetBounciness()).CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 4);
+            // TODO: Proper flags thingy here?
+            Data[4 + 12 + 12 + 16 + 12 + 4 + 4] = (byte)((Visible ? 1 : 0) | (GenBlockShadow ? 2 : 0));
+            byte cg = 0;
+            if (CGroup == CollisionUtil.Solid)
+            {
+                cg = 2;
+            }
+            else if (CGroup == CollisionUtil.NonSolid)
+            {
+                cg = 4;
+            }
+            else if (CGroup == CollisionUtil.Item)
+            {
+                cg = 2 | 4;
+            }
+            else if (CGroup == CollisionUtil.Player)
+            {
+                cg = 8;
+            }
+            else if (CGroup == CollisionUtil.Water)
+            {
+                cg = 2 | 8;
+            }
+            else if (CGroup == CollisionUtil.WorldSolid)
+            {
+                cg = 2 | 4 | 8;
+            }
+            else if (CGroup == CollisionUtil.Character)
+            {
+                cg = 16;
+            }
+            Data[4 + 12 + 12 + 16 + 12 + 4 + 4 + 1] = cg;
+            return Data;
+        }
+
         /// <summary>
         /// The widest this entity gets at its furthest corner. Can be used to generate a bounding sphere.
         /// </summary>
@@ -259,12 +304,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             return new PhysicsEntityUpdatePacketOut(this);
         }
-
-        public override AbstractPacketOut GetSpawnPacket()
-        {
-            return new SpawnPhysicsEntityPacketOut(this);
-        }
-
+        
         bool needNetworking = false;
         
         public void ForceNetwork()

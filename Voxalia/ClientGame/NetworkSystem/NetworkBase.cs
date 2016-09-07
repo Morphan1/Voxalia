@@ -297,10 +297,6 @@ namespace Voxalia.ClientGame.NetworkSystem
                         packet = new YourPositionPacketIn();
                         usage = NetUsageType.PLAYERS;
                         break;
-                    case ServerToClientPacket.SPAWN_PHYSICS_ENTITY:
-                        packet = new SpawnPhysicsEntityPacketIn();
-                        usage = NetUsageType.ENTITIES;
-                        break;
                     case ServerToClientPacket.PHYSICS_ENTITY_UPDATE:
                         packet = new PhysicsEntityUpdatePacketIn();
                         usage = NetUsageType.ENTITIES;
@@ -312,10 +308,6 @@ namespace Voxalia.ClientGame.NetworkSystem
                     case ServerToClientPacket.CHARACTER_UPDATE:
                         packet = new CharacterUpdatePacketIn();
                         usage = NetUsageType.PLAYERS;
-                        break;
-                    case ServerToClientPacket.SPAWN_BULLET:
-                        packet = new SpawnBulletPacketIn();
-                        usage = NetUsageType.ENTITIES;
                         break;
                     case ServerToClientPacket.DESPAWN_ENTITY:
                         packet = new DespawnEntityPacketIn();
@@ -343,10 +335,6 @@ namespace Voxalia.ClientGame.NetworkSystem
                         break;
                     case ServerToClientPacket.DESTROY_JOINT:
                         packet = new DestroyJointPacketIn();
-                        usage = NetUsageType.ENTITIES;
-                        break;
-                    case ServerToClientPacket.SPAWN_PRIMITIVE_ENTITY:
-                        packet = new SpawnPrimitiveEntityPacketIn();
                         usage = NetUsageType.ENTITIES;
                         break;
                     case ServerToClientPacket.PRIMITIVE_ENTITY_UPDATE:
@@ -432,10 +420,6 @@ namespace Voxalia.ClientGame.NetworkSystem
                     case ServerToClientPacket.ADD_TO_CLOUD:
                         packet = new AddToCloudPacketIn();
                         usage = NetUsageType.CLOUDS;
-                        break;
-                    case ServerToClientPacket.SPAWN_CHARACTER:
-                        packet = new SpawnCharacterPacketIn();
-                        usage = NetUsageType.PLAYERS;
                         break;
                     case ServerToClientPacket.SET_STATUS:
                         packet = new SetStatusPacketIn();

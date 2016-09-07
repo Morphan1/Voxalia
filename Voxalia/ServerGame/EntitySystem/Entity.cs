@@ -5,6 +5,7 @@ using Voxalia.ServerGame.ServerMainSystem;
 using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.NetworkSystem;
+using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
@@ -34,6 +35,10 @@ namespace Voxalia.ServerGame.EntitySystem
         }
 
         public bool NetworkMe = true; // TODO: Readonly? Toggler method?
+
+        public abstract NetworkEntityType GetNetType();
+
+        public abstract byte[] GetNetData();
 
         /// <summary>
         /// Whether this entity is allowed to save to file.
@@ -72,7 +77,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public List<InternalBaseJoint> Joints = new List<InternalBaseJoint>();
 
-        public abstract AbstractPacketOut GetSpawnPacket();
+        public AbstractPacketOut GetSpawnPacket()
+        {
+            return new SpawnEntityPacketOut(this);
+        }
 
         /// <summary>
         /// Tick the entity. Default implementation throws exception.

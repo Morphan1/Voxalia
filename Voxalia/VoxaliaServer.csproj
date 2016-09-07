@@ -230,11 +230,8 @@
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetHeldItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetItemPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SetStatusPacketOut.cs" />
-    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnBulletPacketOut.cs" />
-    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnCharacterPacketOut.cs" />
+    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnItemPacketOut.cs" />
-    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPhysicsEntityPacketOut.cs" />
-    <Compile Include="ServerGame\NetworkSystem\PacketsOut\SpawnPrimitiveEntityPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\SunAnglePacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\TeleportPacketOut.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsOut\YourEIDPacketOut.cs" />

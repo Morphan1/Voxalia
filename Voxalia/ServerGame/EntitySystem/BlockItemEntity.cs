@@ -23,6 +23,23 @@ namespace Voxalia.ServerGame.EntitySystem
             SetPosition(pos.GetBlockLocation() + offset);
         }
 
+        public override NetworkEntityType GetNetType()
+        {
+            return NetworkEntityType.BLOCK_ITEM;
+        }
+
+        public override byte[] GetNetData()
+        {
+            byte[] phys = GetPhysicsNetData();
+            int start = phys.Length;
+            byte[] Data = new byte[start + 2 + 1 + 1 + 1];
+            Utilities.UshortToBytes(Original.BlockMaterial).CopyTo(Data, start);
+            Data[start + 2] = Original.BlockData;
+            Data[start + 3] = Original.BlockPaint;
+            Data[start + 4] = Original.DamageData;
+            return Data;
+        }
+
         public override EntityType GetEntityType()
         {
             return EntityType.BLOCK_ITEM;

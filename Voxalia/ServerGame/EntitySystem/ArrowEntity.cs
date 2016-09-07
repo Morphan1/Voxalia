@@ -19,6 +19,16 @@ namespace Voxalia.ServerGame.EntitySystem
             Gravity = new Location(grav);
             Scale = new Location(0.05f, 0.05f, 0.05f);
         }
+        
+        public override NetworkEntityType GetNetType()
+        {
+            return NetworkEntityType.PRIMITIVE;
+        }
+
+        public override byte[] GetNetData()
+        {
+            return GetPrimitiveNetData();
+        }
 
         public override string GetModel()
         {

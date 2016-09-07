@@ -244,11 +244,7 @@
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetHeldItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetItemPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SetStatusPacketIn.cs" />
-    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnBulletPacketIn.cs" />
-    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnCharacterPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnItemPacketIn.cs" />
-    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPhysicsEntityPacketIn.cs" />
-    <Compile Include="ClientGame\NetworkSystem\PacketsIn\SpawnPrimitiveEntityPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\SunAnglePacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\TeleportPacketIn.cs" />
     <Compile Include="ClientGame\NetworkSystem\PacketsIn\YourEIDPacketIn.cs" />

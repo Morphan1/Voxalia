@@ -26,7 +26,20 @@ namespace Voxalia.ServerGame.EntitySystem
             SetPosition(pos.GetBlockLocation() + offset);
             SetOrientation(Quaternion.Identity);
         }
-        
+
+        public override NetworkEntityType GetNetType()
+        {
+            return NetworkEntityType.STATIC_BLOCK;
+        }
+
+        public override byte[] GetNetData()
+        {
+            byte[] dat = new byte[4 + 12];
+            Utilities.IntToBytes((ushort)Original.Datum).CopyTo(dat, 0);
+            GetPosition().ToBytes().CopyTo(dat, 4);
+            return dat;
+        }
+
         public float Health = 5;
 
         public float MaxHealth = 5;

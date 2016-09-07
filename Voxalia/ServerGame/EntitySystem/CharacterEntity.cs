@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Voxalia.Shared;
 using Voxalia.Shared.Collision;
+using Voxalia.Shared.Files;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.ServerGame.JointSystem;
 using Voxalia.ServerGame.ItemSystem.CommonItems;
@@ -61,6 +62,82 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool ItemDown = false;
 
         public float SprintOrWalk = 0f;
+
+        public byte[] GetCharacterNetData()
+        {
+            DataStream ds = new DataStream();
+            DataWriter dr = new DataWriter(ds);
+            dr.WriteBytes(GetPosition().ToBytes());
+            Quaternion quat = GetOrientation();
+            dr.WriteFloat(quat.X);
+            dr.WriteFloat(quat.Y);
+            dr.WriteFloat(quat.Z);
+            dr.WriteFloat(quat.W);
+            dr.WriteLong(EID);
+            dr.WriteFloat(GetMass());
+            dr.WriteFloat(CBAirForce);
+            dr.WriteFloat(CBAirSpeed);
+            dr.WriteFloat(CBCrouchSpeed);
+            dr.WriteFloat(CBDownStepHeight);
+            dr.WriteFloat(CBGlueForce);
+            dr.WriteFloat(CBHHeight);
+            dr.WriteFloat(CBJumpSpeed);
+            dr.WriteFloat(CBMargin);
+            dr.WriteFloat(CBMaxSupportSlope);
+            dr.WriteFloat(CBMaxTractionSlope);
+            dr.WriteFloat(CBProneSpeed);
+            dr.WriteFloat(CBRadius);
+            dr.WriteFloat(CBSlideForce);
+            dr.WriteFloat(CBSlideJumpSpeed);
+            dr.WriteFloat(CBSlideSpeed);
+            dr.WriteFloat(CBStandSpeed);
+            dr.WriteFloat(CBStepHeight);
+            dr.WriteFloat(CBTractionForce);
+            dr.WriteFloat(mod_xrot);
+            dr.WriteFloat(mod_yrot);
+            dr.WriteFloat(mod_zrot);
+            dr.WriteFloat(mod_scale);
+            dr.WriteInt(mod_color.ToArgb());
+            byte dtx = 0;
+            if (Visible)
+            {
+                dtx |= 1;
+            }
+            if (CGroup == CollisionUtil.Solid)
+            {
+                dtx |= 2;
+            }
+            else if (CGroup == CollisionUtil.NonSolid)
+            {
+                dtx |= 4;
+            }
+            else if (CGroup == CollisionUtil.Item)
+            {
+                dtx |= 2 | 4;
+            }
+            else if (CGroup == CollisionUtil.Player)
+            {
+                dtx |= 8;
+            }
+            else if (CGroup == CollisionUtil.Water)
+            {
+                dtx |= 2 | 8;
+            }
+            else if (CGroup == CollisionUtil.WorldSolid)
+            {
+                dtx |= 2 | 4 | 8;
+            }
+            else if (CGroup == CollisionUtil.Character)
+            {
+                dtx |= 16;
+            }
+            dr.Write(dtx);
+            dr.WriteInt(TheServer.Networking.Strings.IndexForString(model));
+            dr.Flush();
+            byte[] Data = ds.ToArray();
+            dr.Close();
+            return Data;
+        }
 
         /// <summary>
         /// The direction the character is currently facing, as Yaw/Pitch.
@@ -174,12 +251,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             return new CharacterUpdatePacketOut(this);
         }
-
-        public override AbstractPacketOut GetSpawnPacket()
-        {
-            return new SpawnCharacterPacketOut(this);
-        }
-
+        
         public double PathUpdate = 0;
 
         bool PathMovement = false;

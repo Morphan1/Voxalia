@@ -33,6 +33,17 @@ namespace Voxalia.ServerGame.EntitySystem
             //mod_xrot = -90;
         }
 
+
+        public override NetworkEntityType GetNetType()
+        {
+            return NetworkEntityType.CHARACTER;
+        }
+
+        public override byte[] GetNetData()
+        {
+            return GetCharacterNetData();
+        }
+
         public override EntityType GetEntityType()
         {
             return EntityType.SLIME;

@@ -22,6 +22,20 @@ namespace Voxalia.ServerGame.EntitySystem
             return "invisbox";
         }
 
+        public override NetworkEntityType GetNetType()
+        {
+            return NetworkEntityType.BULLET;
+        }
+
+        public override byte[] GetNetData()
+        {
+            byte[] res = new byte[4 + 12 + 12];
+            Utilities.FloatToBytes(Size).CopyTo(res, 0);
+            GetPosition().ToBytes().CopyTo(res, 4);
+            GetVelocity().ToBytes().CopyTo(res, 4 + 12);
+            return res;
+        }
+
         public override EntityType GetEntityType()
         {
             return EntityType.BULLET;
@@ -32,12 +46,7 @@ namespace Voxalia.ServerGame.EntitySystem
             // Does not save.
             return null;
         }
-
-        public override AbstractPacketOut GetSpawnPacket()
-        {
-            return new SpawnBulletPacketOut(this); // TODO: Why is this separate?
-        }
-
+        
         public void OnCollide(object sender, CollisionEventArgs args)
         {
             if (args.Info.HitEnt != null)

@@ -28,7 +28,17 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.cItem = 1;
             Items.Items[0].Info.PrepItem(this, Items.Items[0]);
         }
-        
+
+        public override NetworkEntityType GetNetType()
+        {
+            return NetworkEntityType.CHARACTER;
+        }
+
+        public override byte[] GetNetData()
+        {
+            return GetCharacterNetData();
+        }
+
         public override EntityType GetEntityType()
         {
             return EntityType.TARGET_ENTITY;

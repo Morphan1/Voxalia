@@ -23,6 +23,32 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public int ZWidth = 0;
 
+        public override NetworkEntityType GetNetType()
+        {
+            return NetworkEntityType.BLOCK_GROUP;
+        }
+
+        public override byte[] GetNetData()
+        {
+            byte[] phys = GetPhysicsNetData();
+            int start = phys.Length + 4 + 4 + 4;
+            byte[] res = new byte[start + Blocks.Length * 4 + 1 + 4 + 12];
+            Utilities.IntToBytes(XWidth).CopyTo(res, phys.Length);
+            Utilities.IntToBytes(YWidth).CopyTo(res, phys.Length + 4);
+            Utilities.IntToBytes(ZWidth).CopyTo(res, phys.Length + 4 + 4);
+            for (int i = 0; i < Blocks.Length; i++)
+            {
+                Utilities.UshortToBytes(Blocks[i].BlockMaterial).CopyTo(res, start + i * 2);
+                res[start + Blocks.Length * 2 + i] = Blocks[i].BlockData;
+                res[start + Blocks.Length * 3 + i] = Blocks[i].BlockPaint;
+            }
+            res[start + Blocks.Length * 4] = (byte)TraceMode;
+            Utilities.IntToBytes(Color.ToArgb()).CopyTo(res, start + Blocks.Length * 4 + 1);
+            shapeOffs.ToBytes().CopyTo(res, start + Blocks.Length * 4 + 1 + 4);
+            scale.ToBytes().CopyTo(res, start + Blocks.Length * 4 + 1 + 4 + 12);
+            return res;
+        }
+
         public BGETraceMode TraceMode = BGETraceMode.CONVEX;
 
         public BlockInternal[] Blocks;

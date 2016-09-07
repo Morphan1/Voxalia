@@ -32,6 +32,19 @@ namespace Voxalia.ServerGame.EntitySystem
             doc["gs_color"] = Color.ToArgb();
             return doc;
         }
+
+        public override NetworkEntityType GetNetType()
+        {
+            return NetworkEntityType.GLOWSTICK;
+        }
+
+        public override byte[] GetNetData()
+        {
+            byte[] phys = GetPhysicsNetData();
+            byte[] dat = new byte[phys.Length + 4];
+            Utilities.IntToBytes(Color.ToArgb()).CopyTo(dat, phys.Length);
+            return dat;
+        }
     }
 
     public class GlowstickEntityConstructor : EntityConstructor

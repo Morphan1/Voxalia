@@ -36,6 +36,18 @@ namespace Voxalia.ServerGame.EntitySystem
         {
         }
 
+        public byte[] GetPrimitiveNetData()
+        {
+            byte[] Data = new byte[12 + 12 + 16 + 12 + 12 + 4];
+            GetPosition().ToBytes().CopyTo(Data, 0);
+            GetVelocity().ToBytes().CopyTo(Data, 12);
+            Utilities.QuaternionToBytes(Angles).CopyTo(Data, 12 + 12);
+            Scale.ToBytes().CopyTo(Data, 12 + 12 + 16);
+            Gravity.ToBytes().CopyTo(Data, 12 + 12 + 16 + 12);
+            Utilities.IntToBytes(TheServer.Networking.Strings.IndexForString(GetModel())).CopyTo(Data, 12 + 12 + 16 + 12 + 12);
+            return Data;
+        }
+
         public override void PotentialActivate()
         {
         }
@@ -123,12 +135,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 TheRegion.LoadChunk(cpos);
             }
         }
-
-        public override AbstractPacketOut GetSpawnPacket()
-        {
-            return new SpawnPrimitiveEntityPacketOut(this);
-        }
-
+        
         public Location lPos = Location.NaN;
 
         public EventHandler<CollisionEventArgs> Collide;

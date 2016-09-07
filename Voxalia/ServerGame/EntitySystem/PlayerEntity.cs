@@ -25,6 +25,16 @@ namespace Voxalia.ServerGame.EntitySystem
     {
         public string SessionKey = null;
 
+        public override NetworkEntityType GetNetType()
+        {
+            return NetworkEntityType.CHARACTER;
+        }
+
+        public override byte[] GetNetData()
+        {
+            return GetCharacterNetData();
+        }
+
         public GameMode Mode = GameMode.SURVIVOR;
 
         public bool IsFirstJoin = true;

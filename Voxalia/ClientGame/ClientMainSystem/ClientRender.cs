@@ -56,6 +56,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
             }
             toret.Add(new Tuple<string, long>("chunks", chunkc));
+            // TODO: Maybe also View3D render helper usage?
             return toret;
         }
 

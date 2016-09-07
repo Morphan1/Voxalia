@@ -141,11 +141,11 @@ namespace Voxalia.Shared
     {
         PING = 0,
         YOUR_POSITION = 1,
-        SPAWN_PHYSICS_ENTITY = 2,
+        SPAWN_ENTITY = 2,
         PHYSICS_ENTITY_UPDATE = 3,
         MESSAGE = 4,
         CHARACTER_UPDATE = 5,
-        SPAWN_BULLET = 6,
+        // ...
         DESPAWN_ENTITY = 7,
         NET_STRING = 8,
         SPAWN_ITEM = 9,
@@ -153,7 +153,7 @@ namespace Voxalia.Shared
         ADD_JOINT = 11,
         YOUR_EID = 12,
         DESTROY_JOINT = 13,
-        SPAWN_PRIMITIVE_ENTITY = 14,
+        // ...
         PRIMITIVE_ENTITY_UPDATE = 15,
         ANIMATION = 16,
         FLASHLIGHT = 17,
@@ -175,12 +175,26 @@ namespace Voxalia.Shared
         ADD_CLOUD = 33,
         REMOVE_CLOUD = 34,
         ADD_TO_CLOUD = 35,
-        SPAWN_CHARACTER = 36,
+        // ...
         SET_STATUS = 37,
         HIGHLIGHT = 38,
         PLAY_SOUND = 39,
         LOD_MODEL = 40,
         LOSE_CONTROL_OF_VEHICLE = 41
+    }
+
+    public enum NetworkEntityType : byte
+    {
+        NONE = 0,
+        BULLET = 1,
+        PRIMITIVE = 2,
+        CHARACTER = 3,
+        GLOWSTICK = 4,
+        GRENADE = 5,
+        BLOCK_GROUP = 6,
+        BLOCK_ITEM = 7,
+        STATIC_BLOCK = 8,
+        MODEL = 9
     }
 
     public enum TextChannel : byte

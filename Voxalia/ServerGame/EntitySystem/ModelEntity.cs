@@ -29,6 +29,21 @@ namespace Voxalia.ServerGame.EntitySystem
             return null;
         }
 
+        public override NetworkEntityType GetNetType()
+        {
+            return NetworkEntityType.MODEL;
+        }
+
+        public override byte[] GetNetData()
+        {
+            byte[] phys = GetPhysicsNetData();
+            byte[] data = new byte[phys.Length + 4 + 1 + 12];
+            Utilities.IntToBytes(TheServer.Networking.Strings.IndexForString(model)).CopyTo(data, phys.Length);
+            data[phys.Length + 4] = (byte)mode;
+            scale.ToBytes().CopyTo(data, phys.Length + 4 + 1);
+            return data;
+        }
+
         public override BsonDocument GetSaveData()
         {
             BsonDocument doc = new BsonDocument();
