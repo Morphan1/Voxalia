@@ -78,106 +78,118 @@ namespace Voxalia.ClientGame.GraphicsSystems
             // TODO: Separate files for each texture detail!
             List<MaterialTextureInfo> texs = new List<MaterialTextureInfo>(datums.Length);
             IntTexs = new string[MaterialHelpers.TextureCount];
-            for (int i = 0; i < datums.Length; i++)
+            float time = 0;
+            for (int ia = 0; ia < datums.Length; ia++)
             {
+                int i = ia;
                 if (datums[i].StartsWith("#") || datums[i].Length <= 1)
                 {
                     continue;
                 }
-                MaterialTextureInfo tex = new MaterialTextureInfo();
-                string[] dets = datums[i].SplitFast('=');
-                if (dets[0].StartsWith("m"))
+                TheClient.Schedule.ScheduleSyncTask(() =>
                 {
-                    tex.Mat = (Material)(MaterialHelpers.TextureCount - Utilities.StringToInt(dets[0].Substring(1)));
-                }
-                else
-                {
-                    tex.Mat = MaterialHelpers.FromNameOrNumber(dets[0]);
-                }
-                string[] refrornot = dets[1].SplitFast('@');
-                if (refrornot.Length > 1)
-                {
-                    string[] rorn = refrornot[1].SplitFast('%');
-                    if (rorn.Length > 1)
+                    MaterialTextureInfo tex = new MaterialTextureInfo();
+                    string[] dets = datums[i].SplitFast('=');
+                    if (dets[0].StartsWith("m"))
                     {
-                        tex.RefrRate = Utilities.StringToFloat(rorn[1]);
+                        tex.Mat = (Material)(MaterialHelpers.TextureCount - Utilities.StringToInt(dets[0].Substring(1)));
                     }
-                    tex.RefractTextures = rorn[0].SplitFast(',');
-                }
-                string[] glowornot = refrornot[0].SplitFast('!');
-                if (glowornot.Length > 1)
-                {
-                    tex.GlowingTextures = glowornot[1].SplitFast(',');
-                }
-                string[] reflornot = glowornot[0].SplitFast('*');
-                if (reflornot.Length > 1)
-                {
-                    tex.ReflectTextures = reflornot[1].SplitFast(',');
-                }
-                string[] specularornot = reflornot[0].SplitFast('&');
-                if (specularornot.Length > 1)
-                {
-                    tex.SpecularTextures = specularornot[1].SplitFast(',');
-                }
-                string[] normalornot = specularornot[0].SplitFast('$');
-                GL.BindTexture(TextureTarget.Texture2DArray, NormalTextureID);
-                if (normalornot.Length > 1)
-                {
-                    string[] rorn = normalornot[1].SplitFast('%');
-                    if (rorn.Length > 1)
+                    else
                     {
-                        tex.NormRate = Utilities.StringToFloat(rorn[1]);
+                        tex.Mat = MaterialHelpers.FromNameOrNumber(dets[0]);
                     }
-                    tex.NormalTextures = rorn[0].SplitFast(',');
-                    SetTexture((int)tex.Mat, tex.NormalTextures[0]);
-                    if (tex.NormalTextures.Length > 1)
+                    string[] refrornot = dets[1].SplitFast('@');
+                    if (refrornot.Length > 1)
                     {
-                        SetAnimated((int)tex.Mat, tex.NormRate, tex.NormalTextures, NormalTextureID);
+                        string[] rorn = refrornot[1].SplitFast('%');
+                        if (rorn.Length > 1)
+                        {
+                            tex.RefrRate = Utilities.StringToFloat(rorn[1]);
+                        }
+                        tex.RefractTextures = rorn[0].SplitFast(',');
                     }
-                }
-                else
-                {
-                    SetTexture((int)tex.Mat, "normal_def");
-                }
-                string[] rateornot = normalornot[0].SplitFast('%');
-                if (rateornot.Length > 1)
-                {
-                    tex.Rate = Utilities.StringToFloat(rateornot[1]);
-                }
-                tex.Textures = rateornot[0].SplitFast(',');
-                GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
-                SetTexture((int)tex.Mat, tex.Textures[0]);
-                if (tex.Textures.Length > 1)
-                {
-                    SetAnimated((int)tex.Mat, tex.Rate, tex.Textures, TextureID);
-                }
-                texs.Add(tex);
-                IntTexs[(int)tex.Mat] = tex.Textures[0];
+                    string[] glowornot = refrornot[0].SplitFast('!');
+                    if (glowornot.Length > 1)
+                    {
+                        tex.GlowingTextures = glowornot[1].SplitFast(',');
+                    }
+                    string[] reflornot = glowornot[0].SplitFast('*');
+                    if (reflornot.Length > 1)
+                    {
+                        tex.ReflectTextures = reflornot[1].SplitFast(',');
+                    }
+                    string[] specularornot = reflornot[0].SplitFast('&');
+                    if (specularornot.Length > 1)
+                    {
+                        tex.SpecularTextures = specularornot[1].SplitFast(',');
+                    }
+                    string[] normalornot = specularornot[0].SplitFast('$');
+                    GL.BindTexture(TextureTarget.Texture2DArray, NormalTextureID);
+                    if (normalornot.Length > 1)
+                    {
+                        string[] rorn = normalornot[1].SplitFast('%');
+                        if (rorn.Length > 1)
+                        {
+                            tex.NormRate = Utilities.StringToFloat(rorn[1]);
+                        }
+                        tex.NormalTextures = rorn[0].SplitFast(',');
+                        SetTexture((int)tex.Mat, tex.NormalTextures[0]);
+                        if (tex.NormalTextures.Length > 1)
+                        {
+                            SetAnimated((int)tex.Mat, tex.NormRate, tex.NormalTextures, NormalTextureID);
+                        }
+                    }
+                    else
+                    {
+                        SetTexture((int)tex.Mat, "normal_def");
+                    }
+                    string[] rateornot = normalornot[0].SplitFast('%');
+                    if (rateornot.Length > 1)
+                    {
+                        tex.Rate = Utilities.StringToFloat(rateornot[1]);
+                    }
+                    tex.Textures = rateornot[0].SplitFast(',');
+                    GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
+                    SetTexture((int)tex.Mat, tex.Textures[0]);
+                    if (tex.Textures.Length > 1)
+                    {
+                        SetAnimated((int)tex.Mat, tex.Rate, tex.Textures, TextureID);
+                    }
+                    texs.Add(tex);
+                    IntTexs[(int)tex.Mat] = tex.Textures[0];
+                }, i * LoadRate);
+                time = i * 0.1f;
             }
-            GL.BindTexture(TextureTarget.Texture2DArray, HelpTextureID);
-            for (int i = 0; i < texs.Count; i++)
+            for (int ia = 0; ia < texs.Count; ia++)
             {
-                Bitmap combo = GetCombo(texs[i], 0);
-                TEngine.LockBitmapToTexture(combo, (int)texs[i].Mat);
-                if ((texs[i].SpecularTextures != null) && (texs[i].ReflectTextures != null) && (texs[i].RefractTextures != null) && (texs[i].GlowingTextures != null) && texs[i].SpecularTextures.Length > 1)
+                int i = ia;
+                TheClient.Schedule.ScheduleSyncTask(() =>
                 {
-                    Bitmap[] bmps = new Bitmap[texs[i].SpecularTextures.Length];
-                    bmps[0] = combo;
-                    for (int x = 1; x < bmps.Length; x++)
+                    GL.BindTexture(TextureTarget.Texture2DArray, HelpTextureID);
+                    Bitmap combo = GetCombo(texs[i], 0);
+                    TEngine.LockBitmapToTexture(combo, (int)texs[i].Mat);
+                    if ((texs[i].SpecularTextures != null) && (texs[i].ReflectTextures != null) && (texs[i].RefractTextures != null) && (texs[i].GlowingTextures != null) && texs[i].SpecularTextures.Length > 1)
                     {
-                        bmps[x] = GetCombo(texs[i], x);
+                        Bitmap[] bmps = new Bitmap[texs[i].SpecularTextures.Length];
+                        bmps[0] = combo;
+                        for (int x = 1; x < bmps.Length; x++)
+                        {
+                            bmps[x] = GetCombo(texs[i], x);
+                        }
+                        SetAnimated((int)texs[i].Mat, texs[i].RefrRate, bmps, HelpTextureID);
+                        for (int x = 1; x < bmps.Length; x++)
+                        {
+                            bmps[x].Dispose();
+                        }
                     }
-                    SetAnimated((int)texs[i].Mat, texs[i].RefrRate, bmps, HelpTextureID);
-                    for (int x = 1; x < bmps.Length; x++)
-                    {
-                        bmps[x].Dispose();
-                    }
-                }
-                combo.Dispose();
+                    combo.Dispose();
+                }, time + i * LoadRate);
             }
             GL.BindTexture(TextureTarget.Texture2DArray, 0);
             GL.BindTexture(TextureTarget.Texture2DArray, 0);
         }
+
+        const float LoadRate = 0.1f;
 
         public Bitmap GetCombo(MaterialTextureInfo tex, int coord)
         {

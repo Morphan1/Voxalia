@@ -32,6 +32,7 @@ namespace Voxalia.ServerGame.WorldSystem
 
         /// <summary>
         /// All entities that exist on this server.
+        /// TODO: Dictionary? Linked list? Experiment with speeds of different data types for common usages here!
         /// </summary>
         public List<Entity> Entities = new List<Entity>();
 
