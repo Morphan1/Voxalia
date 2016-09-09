@@ -702,10 +702,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             TextureCoordinates tc = new TextureCoordinates();
             string[] data = str.SplitFast('/');
-            tc.xscale = Utilities.StringToFloat(data[0]);
-            tc.yscale = Utilities.StringToFloat(data[1]);
-            tc.xshift = Utilities.StringToFloat(data[2]);
-            tc.yshift = Utilities.StringToFloat(data[3]);
+            tc.xscale = (float)Utilities.StringToFloat(data[0]);
+            tc.yscale = (float)Utilities.StringToFloat(data[1]);
+            tc.xshift = (float)Utilities.StringToFloat(data[2]);
+            tc.yshift = (float)Utilities.StringToFloat(data[3]);
             tc.xflip = data[4] == "t";
             tc.yflip = data[5] == "t";
             return tc;

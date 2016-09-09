@@ -25,7 +25,7 @@ namespace Voxalia.ServerGame.WorldSystem
             TheRegion = tregion;
         }
 
-        public void Update(float dt)
+        public void Update(double dt)
         {
             ReadOnlyList<Entity> ents = TheRegion.PhysicsWorld.Entities; // TODO: Direct/raw read?
             TheRegion.PhysicsWorld.ParallelLooper.ForLoop(0, ents.Count, (i) =>
@@ -34,7 +34,7 @@ namespace Voxalia.ServerGame.WorldSystem
             });
         }
 
-        void ApplyLiquidForcesTo(Entity e, float dt)
+        void ApplyLiquidForcesTo(Entity e, double dt)
         {
             if (e.Mass <= 0)
             {
@@ -63,16 +63,16 @@ namespace Voxalia.ServerGame.WorldSystem
                         double vol = e.CollisionInformation.Shape.Volume;
                         double dens = (e.Mass / vol);
                         double WaterDens = 5; // TODO: Read from material. // TODO: Sanity of values.
-                        float modifier = (float)(WaterDens / dens);
-                        float submod = 0.125f;
+                        double modifier = (double)(WaterDens / dens);
+                        double submod = 0.125f;
                         // TODO: Tracing accuracy!
                         Vector3 impulse = -(TheRegion.PhysicsWorld.ForceUpdater.Gravity + TheRegion.GravityNormal.ToBVector() * 0.4f) * e.Mass * dt * modifier * submod;
                         // TODO: Don't apply smaller logic this if scale is big!
-                        for (float x2 = 0.25f; x2 < 1; x2 += 0.5f)
+                        for (double x2 = 0.25f; x2 < 1; x2 += 0.5f)
                         {
-                            for (float y2 = 0.25f; y2 < 1; y2 += 0.5f)
+                            for (double y2 = 0.25f; y2 < 1; y2 += 0.5f)
                             {
-                                for (float z2 = 0.25f; z2 < 1; z2 += 0.5f)
+                                for (double z2 = 0.25f; z2 < 1; z2 += 0.5f)
                                 {
                                     Location lc = c + new Location(x2, y2, z2);
                                     RayHit rh;

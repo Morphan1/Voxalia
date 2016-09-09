@@ -29,7 +29,7 @@ namespace Voxalia.ServerGame.EntitySystem
             return 8 + 8 + (Seats == null ? 8 : Seats.Count * 8) + 8;
         }
 
-        public virtual float GetScaleEstimate()
+        public virtual double GetScaleEstimate()
         {
             return 1;
         }

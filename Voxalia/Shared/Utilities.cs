@@ -30,6 +30,7 @@ namespace Voxalia.Shared
 
         public static string HashQuick(string username, string password)
         {
+            // TODO: Dynamic hash text maybe?
             return Convert.ToBase64String(sha512.ComputeHash(encoding.GetBytes(salt1 + username + salt2 + password + salt3)));
         }
         
@@ -99,7 +100,7 @@ namespace Voxalia.Shared
             return data;
         }
 
-        public static float StepTowards(float start, float target, float amount)
+        public static double StepTowards(double start, double target, double amount)
         {
             if (start < target - amount)
             {
@@ -115,16 +116,16 @@ namespace Voxalia.Shared
             }
         }
 
-        public static bool IsCloseTo(float one, float target, float amount)
+        public static bool IsCloseTo(double one, double target, double amount)
         {
             return one > target ? one - amount < target : one + amount > target;
         }
 
         /// <summary>
-        /// Converts a string to a float. Returns 0 if the string is not a valid float.
+        /// Converts a string to a double. Returns 0 if the string is not a valid double.
         /// </summary>
         /// <param name="input">The string to convert.</param>
-        /// <returns>The converted float.</returns>
+        /// <returns>The converted double.</returns>
         public static float StringToFloat(string input)
         {
             float output;
@@ -426,10 +427,10 @@ namespace Voxalia.Shared
         public static byte[] QuaternionToBytes(Quaternion quat)
         {
             byte[] dat = new byte[4 + 4 + 4 + 4];
-            Utilities.FloatToBytes(quat.X).CopyTo(dat, 0);
-            Utilities.FloatToBytes(quat.Y).CopyTo(dat, 4);
-            Utilities.FloatToBytes(quat.Z).CopyTo(dat, 4 + 4);
-            Utilities.FloatToBytes(quat.W).CopyTo(dat, 4 + 4 + 4);
+            Utilities.FloatToBytes((float)quat.X).CopyTo(dat, 0);
+            Utilities.FloatToBytes((float)quat.Y).CopyTo(dat, 4);
+            Utilities.FloatToBytes((float)quat.Z).CopyTo(dat, 4 + 4);
+            Utilities.FloatToBytes((float)quat.W).CopyTo(dat, 4 + 4 + 4);
             return dat;
         }
 
@@ -445,9 +446,9 @@ namespace Voxalia.Shared
             Location zAxis = (end - start).Normalize();
             Location xAxis = up.CrossProduct(zAxis).Normalize();
             Location yAxis = zAxis.CrossProduct(xAxis);
-            return new Matrix((float)xAxis.X, (float)yAxis.X, (float)zAxis.X, 0, (float)xAxis.Y,
-                (float)yAxis.Y, (float)zAxis.Y, 0, (float)xAxis.Z, (float)yAxis.Z, (float)zAxis.Z, 0,
-                (float)-xAxis.Dot(start), (float)-yAxis.Dot(start), (float)-zAxis.Dot(start), 1);
+            return new Matrix((double)xAxis.X, (double)yAxis.X, (double)zAxis.X, 0, (double)xAxis.Y,
+                (double)yAxis.Y, (double)zAxis.Y, 0, (double)xAxis.Z, (double)yAxis.Z, (double)zAxis.Z, 0,
+                (double)-xAxis.Dot(start), (double)-yAxis.Dot(start), (double)-zAxis.Dot(start), 1);
         }
 
         public static Location MatrixToAngles(Matrix WorldTransform)
@@ -462,9 +463,9 @@ namespace Voxalia.Shared
         public static Matrix AnglesToMatrix(Location rot)
         {
             // TODO: better method?
-            return Matrix.CreateFromAxisAngle(new BEPUutilities.Vector3(1, 0, 0), (float)(rot.X * Utilities.PI180))
-                    * Matrix.CreateFromAxisAngle(new BEPUutilities.Vector3(0, 1, 0), (float)(rot.Y * Utilities.PI180))
-                    * Matrix.CreateFromAxisAngle(new BEPUutilities.Vector3(0, 0, 1), (float)(rot.Z * Utilities.PI180));
+            return Matrix.CreateFromAxisAngle(new BEPUutilities.Vector3(1, 0, 0), (double)(rot.X * Utilities.PI180))
+                    * Matrix.CreateFromAxisAngle(new BEPUutilities.Vector3(0, 1, 0), (double)(rot.Y * Utilities.PI180))
+                    * Matrix.CreateFromAxisAngle(new BEPUutilities.Vector3(0, 0, 1), (double)(rot.Z * Utilities.PI180));
         }
 
         /// <summary>
@@ -563,20 +564,20 @@ namespace Voxalia.Shared
         /// Calculates a Halton Sequence result.
         /// </summary>
         /// <param name="basen">Should be prime.</param>
-        static float HaltonSequence(int index, int basen)
+        static double HaltonSequence(int index, int basen)
         {
             if (basen <= 1)
             {
                 return 0;
             }
-            float res = 0;
-            float f = 1;
+            double res = 0;
+            double f = 1;
             int i = index;
             while (i > 0)
             {
                 f = f / basen;
                 res = res + f * (i % basen);
-                i = (int)Math.Floor((float)i / basen);
+                i = (int)Math.Floor((double)i / basen);
             }
             return res;
         }

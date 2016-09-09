@@ -52,8 +52,8 @@ namespace Voxalia.ServerGame.EntitySystem
             if (!Removed)
             {
                 int itemMusicType = Original.GetAttributeI("music_type", 0);
-                float itemMusicVolume = Original.GetAttributeF("music_volume", 0.5f);
-                float itemMusicPitch = Original.GetAttributeF("music_pitch", 1f);
+                double itemMusicVolume = Original.GetAttributeF("music_volume", 0.5f);
+                double itemMusicPitch = Original.GetAttributeF("music_pitch", 1f);
                 TheRegion.PlaySound("sfx/musicnotes/" + itemMusicType, GetPosition(), itemMusicVolume, itemMusicPitch);
             }
         }
@@ -63,21 +63,21 @@ namespace Voxalia.ServerGame.EntitySystem
             // Do nothing
         }
 
-        public float Health = 5;
+        public double Health = 5;
 
-        public float MaxHealth = 5;
+        public double MaxHealth = 5;
 
-        public float GetHealth()
+        public double GetHealth()
         {
             return Health;
         }
 
-        public float GetMaxHealth()
+        public double GetMaxHealth()
         {
             return MaxHealth;
         }
 
-        public void SetHealth(float health)
+        public void SetHealth(double health)
         {
             Health = health;
             if (health < 0)
@@ -87,7 +87,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
-        public void SetMaxHealth(float health)
+        public void SetMaxHealth(double health)
         {
             MaxHealth = health;
             if (Health > MaxHealth)
@@ -96,7 +96,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
-        public void Damage(float amount)
+        public void Damage(double amount)
         {
             SetHealth(GetHealth() - amount);
         }
@@ -108,8 +108,8 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             ItemStack it = new ItemStack(doc["mb_item"].AsBinary, tregion.TheServer);
             MusicBlockEntity mbe = new MusicBlockEntity(tregion, it, Location.Zero);
-            mbe.SetMaxHealth((float)doc["mb_maxhealth"].AsDouble);
-            mbe.SetHealth((float)doc["mb_health"].AsDouble);
+            mbe.SetMaxHealth((double)doc["mb_maxhealth"].AsDouble);
+            mbe.SetHealth((double)doc["mb_health"].AsDouble);
             return mbe;
         }
     }

@@ -10,30 +10,30 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
     {
         public SimpleBiomeGenerator Biomes = new SimpleBiomeGenerator();
 
-        public const float GlobalHeightMapSize = 400;
+        public const double GlobalHeightMapSize = 400;
 
-        public const float LocalHeightMapSize = 40;
+        public const double LocalHeightMapSize = 40;
 
-        public const float SolidityMapSize = 100;
+        public const double SolidityMapSize = 100;
         
-        public const float OreMapSize = 70;
+        public const double OreMapSize = 70;
 
-        public const float OreTypeMapSize = 150;
+        public const double OreTypeMapSize = 150;
 
-        public const float OreMapTolerance = 0.90f;
+        public const double OreMapTolerance = 0.90f;
 
-        public const float OreMapThickTolerance = 0.94f;
+        public const double OreMapThickTolerance = 0.94f;
         
         public Material GetMatType(int seed2, int seed3, int seed4, int seed5, int x, int y, int z)
         {
             // TODO: better non-simplex code!
-            float val = SimplexNoise.Generate((float)seed2 + (x / OreMapSize), (float)seed5 + (y / OreMapSize), (float)seed4 + (z / OreMapSize));
+            double val = SimplexNoise.Generate((double)seed2 + (x / OreMapSize), (double)seed5 + (y / OreMapSize), (double)seed4 + (z / OreMapSize));
             if (val < OreMapTolerance)
             {
                 return Material.AIR;
             }
             bool thick = val > OreMapThickTolerance;
-            float tval = SimplexNoise.Generate((float)seed5 + (x / OreTypeMapSize), (float)seed3 + (y / OreTypeMapSize), (float)seed2 + (z / OreTypeMapSize));
+            double tval = SimplexNoise.Generate((double)seed5 + (x / OreTypeMapSize), (double)seed3 + (y / OreTypeMapSize), (double)seed2 + (z / OreTypeMapSize));
             if (thick)
             {
                 if (tval > 0.66f)
@@ -95,15 +95,15 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         public bool CanBeSolid(int seed3, int seed4, int seed5, int x, int y, int z, SimpleBiome biome)
         {
             // TODO: better non-simplex code?!
-            float val = SimplexNoise.Generate((float)seed3 + (x / SolidityMapSize), (float)seed4 + (y / SolidityMapSize), (float)seed5 + (z / SolidityMapSize));
+            double val = SimplexNoise.Generate((double)seed3 + (x / SolidityMapSize), (double)seed4 + (y / SolidityMapSize), (double)seed5 + (z / SolidityMapSize));
             //SysConsole.Output(OutputType.INFO, seed3 + "," + seed4 + "," + seed5 + " -> " + x + ", " + y + ", " + z + " -> " + val);
             return val < biome.AirDensity();
         }
 
-        public float GetHeightQuick(int Seed, int seed2, float x, float y)
+        public double GetHeightQuick(int Seed, int seed2, double x, double y)
         {
-            float lheight = SimplexNoise.Generate((float)seed2 + (x / GlobalHeightMapSize), (float)Seed + (y / GlobalHeightMapSize)) * 50f - 10f;
-            float height = SimplexNoise.Generate((float)Seed + (x / LocalHeightMapSize), (float)seed2 + (y / LocalHeightMapSize)) * 6f - 3f;
+            double lheight = SimplexNoise.Generate((double)seed2 + (x / GlobalHeightMapSize), (double)Seed + (y / GlobalHeightMapSize)) * 50f - 10f;
+            double height = SimplexNoise.Generate((double)Seed + (x / LocalHeightMapSize), (double)seed2 + (y / LocalHeightMapSize)) * 6f - 3f;
             return lheight + height;
         }
 
@@ -117,9 +117,9 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         new Vector3i(-15, 0, 0), new Vector3i(0, -15, 0), new Vector3i(15, 0, 0), new Vector3i(0, 15, 0),
         new Vector3i(-5, 0, 0), new Vector3i(0, -5, 0), new Vector3i(5, 0, 0), new Vector3i(0, 5, 0)};
 
-        float relmod = 1f;*/
+        double relmod = 1f;*/
 
-        public override float GetHeight(int Seed, int seed2, int seed3, int seed4, int seed5, float x, float y, float z, out Biome biome)
+        public override double GetHeight(int Seed, int seed2, int seed3, int seed4, int seed5, double x, double y, double z, out Biome biome)
         {
 #if TIMINGS
             Stopwatch sw = new Stopwatch();
@@ -127,17 +127,17 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             try
 #endif
             {
-                float valBasic = GetHeightQuick(Seed, seed2, x, y);
+                double valBasic = GetHeightQuick(Seed, seed2, x, y);
                 //if (z < -50 || z > 50)
                 {
                     biome = Biomes.BiomeFor(seed2, seed3, seed4, x, y, z, valBasic);
                     return valBasic;
                 }
                 /*Biome b = Biomes.BiomeFor(seed2, seed3, seed4, x, y, z, valBasic);
-                float total = valBasic; * ((SimpleBiome)b).HeightMod();
+                double total = valBasic; * ((SimpleBiome)b).HeightMod();
                 foreach (Vector3i vecer in Rels)
                 {
-                    float valt = GetHeightQuick(Seed, seed2, x + vecer.X * relmod, y + vecer.Y * relmod);
+                    double valt = GetHeightQuick(Seed, seed2, x + vecer.X * relmod, y + vecer.Y * relmod);
                     Biome bt = Biomes.BiomeFor(seed2, seed3, seed4, x + vecer.X * relmod, y + vecer.Y * relmod, z, valt);
                     total += valt * ((SimpleBiome)bt).HeightMod();
                 }
@@ -217,11 +217,11 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     int cx = (int)cpos.X + x;
                     int cy = (int)cpos.Y + y;
                     Biome biomeOrig;
-                    float hheight = GetHeight(Seed, seed2, seed3, seed4, seed5, cx, cy, (float)cpos.Z, out biomeOrig);
+                    double hheight = GetHeight(Seed, seed2, seed3, seed4, seed5, cx, cy, (double)cpos.Z, out biomeOrig);
                     SimpleBiome biome = (SimpleBiome)biomeOrig;
                     //Biome biomeOrig2;
-                    /*float hheight2 = */
-                    /*GetHeight(Seed, seed2, seed3, seed4, seed5, cx + 7, cy + 7, (float)cpos.Z + 7, out biomeOrig2);
+                    /*double hheight2 = */
+                    /*GetHeight(Seed, seed2, seed3, seed4, seed5, cx + 7, cy + 7, (double)cpos.Z + 7, out biomeOrig2);
                     SimpleBiome biome2 = (SimpleBiome)biomeOrig2;*/
                     Material surf = biome.SurfaceBlock();
                     Material seco = biome.SecondLayerBlock();
@@ -232,7 +232,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     Material basb2 = biome2.BaseBlock();*/
                     // TODO: Make this possible?: hheight = (hheight + hheight2) / 2f;
                     int hheightint = (int)Math.Round(hheight);
-                    float topf = hheight - (float)(chunk.WorldPosition.Z * Chunk.CHUNK_SIZE);
+                    double topf = hheight - (double)(chunk.WorldPosition.Z * Chunk.CHUNK_SIZE);
                     int top = (int)Math.Round(topf);
                     // General natural ground
                     for (int z = 0; z < Math.Min(top - 5, Chunk.CHUNK_SIZE); z++)
@@ -245,14 +245,14 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                             {
                                 shape = OreShapes[new Random((int)((hheight + cx + cy + cpos.Z + z) * 5)).Next(OreShapes.Length)];
                             }
-                            //bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
+                            //bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((double)cpos.Z + z) / 10f) >= 0.5f;
                             chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(typex == Material.AIR ? (/*choice ? basb2 : */basb) : typex), shape, 0, 0);
                         }
                         else if ((CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z - 1, biome) || (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z + 1, biome))) &&
                             (CanBeSolid(seed3, seed4, seed5, cx + 1, cy, (int)cpos.Z + z, biome) || CanBeSolid(seed3, seed4, seed5, cx, cy + 1, (int)cpos.Z + z, biome)
                                 || CanBeSolid(seed3, seed4, seed5, cx - 1, cy, (int)cpos.Z + z, biome) || CanBeSolid(seed3, seed4, seed5, cx, cy - 1, (int)cpos.Z + z, biome)))
                         {
-                            //bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
+                            //bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((double)cpos.Z + z) / 10f) >= 0.5f;
                             chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(/*choice ? basb2 : */basb), 3, 0, 0);
                         }
                     }
@@ -260,28 +260,28 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     {
                         if (CanBeSolid(seed3, seed4, seed5, cx, cy, (int)cpos.Z + z, biome))
                         {
-                            //bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
+                            //bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((double)cpos.Z + z) / 10f) >= 0.5f;
                             chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(/*choice ? seco2 :*/ seco), 0, 0, 0);
                         }
                     }
                     for (int z = Math.Max(top - 1, 0); z < Math.Min(top, Chunk.CHUNK_SIZE); z++)
                     {
-                        //bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
+                        //bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((double)cpos.Z + z) / 10f) >= 0.5f;
                         chunk.BlocksInternal[chunk.BlockIndex(x, y, z)] = new BlockInternal((ushort)(/*choice ? surf2 : */surf), 0, 0, 0);
                     }
                     // Smooth terrain cap
                     Biome tempb;
-                    float heightfxp = GetHeight(Seed, seed2, seed3, seed4, seed5, cx + 1, cy, (float)cpos.Z, out tempb);
-                    float heightfxm = GetHeight(Seed, seed2, seed3, seed4, seed5, cx - 1, cy, (float)cpos.Z, out tempb);
-                    float heightfyp = GetHeight(Seed, seed2, seed3, seed4, seed5, cx, cy + 1, (float)cpos.Z, out tempb);
-                    float heightfym = GetHeight(Seed, seed2, seed3, seed4, seed5, cx, cy - 1, (float)cpos.Z, out tempb);
-                    float topfxp = heightfxp - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
-                    float topfxm = heightfxm - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
-                    float topfyp = heightfyp - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
-                    float topfym = heightfym - (float)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
+                    double heightfxp = GetHeight(Seed, seed2, seed3, seed4, seed5, cx + 1, cy, (double)cpos.Z, out tempb);
+                    double heightfxm = GetHeight(Seed, seed2, seed3, seed4, seed5, cx - 1, cy, (double)cpos.Z, out tempb);
+                    double heightfyp = GetHeight(Seed, seed2, seed3, seed4, seed5, cx, cy + 1, (double)cpos.Z, out tempb);
+                    double heightfym = GetHeight(Seed, seed2, seed3, seed4, seed5, cx, cy - 1, (double)cpos.Z, out tempb);
+                    double topfxp = heightfxp - (double)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
+                    double topfxm = heightfxm - (double)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
+                    double topfyp = heightfyp - (double)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
+                    double topfym = heightfym - (double)chunk.WorldPosition.Z * Chunk.CHUNK_SIZE;
                     for (int z = Math.Max(top, 0); z < Math.Min(top + 1, Chunk.CHUNK_SIZE); z++)
                     {
-                        //bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z + z) / 10f) >= 0.5f;
+                        //bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((double)cpos.Z + z) / 10f) >= 0.5f;
                         ushort tsf = (ushort)(/*choice ? surf2 : */surf);
                         if (topf - top > 0f)
                         {
@@ -336,7 +336,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                     int level = 0 - (int)(chunk.WorldPosition.Z * Chunk.CHUNK_SIZE);
                     if (hheightint <= 0)
                     {
-                       // bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z) / 10f) >= 0.5f;
+                       // bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((double)cpos.Z) / 10f) >= 0.5f;
                         ushort sandmat = (ushort)(/*choice ? biome2 : */biome).SandMaterial();
                         for (int z = Math.Max(top, 0); z < Math.Min(top + 1, Chunk.CHUNK_SIZE); z++)
                         {
@@ -353,7 +353,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         {
                             if (Math.Round(heightfxp) <= 0 || Math.Round(heightfxm) <= 0 || Math.Round(heightfyp) <= 0 || Math.Round(heightfym) <= 0)
                             {
-                                //bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((float)cpos.Z) / 10f) >= 0.5f;
+                                //bool choice = SimplexNoise.Generate(cx / 10f, cy / 10f, ((double)cpos.Z) / 10f) >= 0.5f;
                                 chunk.BlocksInternal[chunk.BlockIndex(x, y, level)] = new BlockInternal((ushort)(/*choice ? biome2 : */biome).SandMaterial(), 0, 0, 0);
                             }
                         }

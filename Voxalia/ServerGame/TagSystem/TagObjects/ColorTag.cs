@@ -24,10 +24,10 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             Internal = loc;
         }
 
-        static bool TryParseComponent(string inp, out float comp)
+        static bool TryParseComponent(string inp, out double comp)
         {
-            float t;
-            if (float.TryParse(inp, out t))
+            double t;
+            if (double.TryParse(inp, out t))
             {
                 if (t >= 0 && t <= 1)
                 {
@@ -52,7 +52,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             else if (split.Length == 3)
             {
-                float r, g, b;
+                double r, g, b;
                 if (TryParseComponent(split[0], out r) && TryParseComponent(split[1], out g) && TryParseComponent(split[2], out b))
                 {
                     return new ColorTag(System.Drawing.Color.FromArgb((int)(r * 255), (int)(g * 255), (int)(b * 255)));
@@ -60,7 +60,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             }
             else if (split.Length == 4)
             {
-                float r, g, b, a;
+                double r, g, b, a;
                 if (TryParseComponent(split[0], out r) && TryParseComponent(split[1], out g) && TryParseComponent(split[2], out b) && TryParseComponent(split[3], out a))
                 {
                     return new ColorTag(System.Drawing.Color.FromArgb((int)(a * 255), (int)(r * 255), (int)(g * 255), (int)(b * 255)));

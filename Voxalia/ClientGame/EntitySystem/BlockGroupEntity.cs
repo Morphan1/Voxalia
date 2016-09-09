@@ -187,11 +187,11 @@ namespace Voxalia.ClientGame.EntitySystem
                             for (int i = 0; i < vecsi.Count; i++)
                             {
                                 // TODO: is PosMultiplier used correctly here?
-                                OpenTK.Vector3 vt = new OpenTK.Vector3(vecsi[i].X, vecsi[i].Y, vecsi[i].Z);
+                                OpenTK.Vector3 vt = new OpenTK.Vector3((float)vecsi[i].X, (float)vecsi[i].Y, (float)vecsi[i].Z);
                                 Vertices.Add(vt);
-                                OpenTK.Vector3 nt = new OpenTK.Vector3(normsi[i].X, normsi[i].Y, normsi[i].Z);
+                                OpenTK.Vector3 nt = new OpenTK.Vector3((float)normsi[i].X, (float)normsi[i].Y, (float)normsi[i].Z);
                                 Normals.Add(nt);
-                                TexCoords.Add(new OpenTK.Vector3(tci[i].X, tci[i].Y, tci[i].Z));
+                                TexCoords.Add(new OpenTK.Vector3((float)tci[i].X, (float)tci[i].Y, (float)tci[i].Z));
                                 Colrs.Add(new OpenTK.Vector4(1, 1, 1, 1));
                                 TCOLs.Add(TheClient.Rendering.AdaptColor(vt, Colors.ForByte(c.BlockPaint)));
                             }
@@ -216,12 +216,12 @@ namespace Voxalia.ClientGame.EntitySystem
                                 int tf = Colrs.Count - vecsi.Count;
                                 for (int i = vecsi.Count - 1; i >= 0; i--)
                                 {
-                                    Vertices.Add(new OpenTK.Vector3(vecsi[i].X, vecsi[i].Y, vecsi[i].Z));
+                                    Vertices.Add(new OpenTK.Vector3((float)vecsi[i].X, (float)vecsi[i].Y, (float)vecsi[i].Z));
                                     int tx = tf + i;
                                     Colrs.Add(Colrs[tx]);
                                     TCOLs.Add(TCOLs[tx]);
-                                    Normals.Add(new OpenTK.Vector3(-normsi[i].X, -normsi[i].Y, -normsi[i].Z));
-                                    TexCoords.Add(new OpenTK.Vector3(tci[i].X, tci[i].Y, tci[i].Z));
+                                    Normals.Add(new OpenTK.Vector3(-(float)normsi[i].X, -(float)normsi[i].Y, -(float)normsi[i].Z));
+                                    TexCoords.Add(new OpenTK.Vector3((float)tci[i].X, (float)tci[i].Y, (float)tci[i].Z));
                                 }
                             }
                         }

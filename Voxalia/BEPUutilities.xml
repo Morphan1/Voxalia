@@ -1315,7 +1315,7 @@
         <member name="T:BEPUutilities.DataStructures.TinyList`1">
             <summary>
             Special datatype used for heapless lists without unsafe/stackalloc.
-            Designed for object types or reference-sized structs (int, float...).
+            Designed for object types or reference-sized structs (int, double...).
             Stores a maximum of 8 entries.
             </summary>
             <typeparam name="T">Struct type to use.</typeparam>
@@ -1786,13 +1786,13 @@
             </summary>
             <param name="set">Set to return.</param>
         </member>
-        <member name="M:BEPUutilities.ResourceManagement.CommonResources.GetFloatList">
+        <member name="M:BEPUutilities.ResourceManagement.CommonResources.GetdoubleList">
             <summary>
-            Retrieves a float list from the resource pool.
+            Retrieves a double list from the resource pool.
             </summary>
-            <returns>Empty float list.</returns>
+            <returns>Empty double list.</returns>
         </member>
-        <member name="M:BEPUutilities.ResourceManagement.CommonResources.GiveBack(BEPUutilities.DataStructures.RawList{System.Single})">
+        <member name="M:BEPUutilities.ResourceManagement.CommonResources.GiveBack(BEPUutilities.DataStructures.RawList{System.Double})">
             <summary>
             Returns a resource to the pool.
             </summary>
@@ -1931,7 +1931,7 @@
             W component of the vector.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Vector4.#ctor(System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Vector4.#ctor(System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a new 3d vector.
             </summary>
@@ -1940,21 +1940,21 @@
             <param name="z">Z component of the vector.</param>
             <param name="w">W component of the vector.</param>
         </member>
-        <member name="M:BEPUutilities.Vector4.#ctor(BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUutilities.Vector4.#ctor(BEPUutilities.Vector3,System.Double)">
             <summary>
             Constructs a new 3d vector.
             </summary>
             <param name="xyz">X, Y, and Z components of the vector.</param>
             <param name="w">W component of the vector.</param>
         </member>
-        <member name="M:BEPUutilities.Vector4.#ctor(System.Single,BEPUutilities.Vector3)">
+        <member name="M:BEPUutilities.Vector4.#ctor(System.Double,BEPUutilities.Vector3)">
             <summary>
             Constructs a new 3d vector.
             </summary>
             <param name="x">X component of the vector.</param>
             <param name="yzw">Y, Z, and W components of the vector.</param>
         </member>
-        <member name="M:BEPUutilities.Vector4.#ctor(BEPUutilities.Vector2,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Vector4.#ctor(BEPUutilities.Vector2,System.Double,System.Double)">
             <summary>
             Constructs a new 3d vector.
             </summary>
@@ -1962,7 +1962,7 @@
             <param name="z">Z component of the vector.</param>
             <param name="w">W component of the vector.</param>
         </member>
-        <member name="M:BEPUutilities.Vector4.#ctor(System.Single,BEPUutilities.Vector2,System.Single)">
+        <member name="M:BEPUutilities.Vector4.#ctor(System.Double,BEPUutilities.Vector2,System.Double)">
             <summary>
             Constructs a new 3d vector.
             </summary>
@@ -1970,7 +1970,7 @@
             <param name="yz">Y and Z components of the vector.</param>
             <param name="w">W component of the vector.</param>
         </member>
-        <member name="M:BEPUutilities.Vector4.#ctor(System.Single,System.Single,BEPUutilities.Vector2)">
+        <member name="M:BEPUutilities.Vector4.#ctor(System.Double,System.Double,BEPUutilities.Vector2)">
             <summary>
             Constructs a new 3d vector.
             </summary>
@@ -2016,7 +2016,7 @@
             <param name="b">Second vector in the product.</param>
             <returns>Resulting dot product.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector4.Dot(BEPUutilities.Vector4@,BEPUutilities.Vector4@,System.Single@)">
+        <member name="M:BEPUutilities.Vector4.Dot(BEPUutilities.Vector4@,BEPUutilities.Vector4@,System.Double@)">
             <summary>
             Computes the dot product of two vectors.
             </summary>
@@ -2040,7 +2040,7 @@
             <param name="b">Vector to subtract from the first vector.</param>
             <param name="difference">Result of the subtraction.</param>
         </member>
-        <member name="M:BEPUutilities.Vector4.Multiply(BEPUutilities.Vector4@,System.Single,BEPUutilities.Vector4@)">
+        <member name="M:BEPUutilities.Vector4.Multiply(BEPUutilities.Vector4@,System.Double,BEPUutilities.Vector4@)">
             <summary>
             Scales a vector.
             </summary>
@@ -2056,7 +2056,7 @@
             <param name="b">Second vector to multiply.</param>
             <param name="result">Result of the componentwise multiplication.</param>
         </member>
-        <member name="M:BEPUutilities.Vector4.Divide(BEPUutilities.Vector4@,System.Single,BEPUutilities.Vector4@)">
+        <member name="M:BEPUutilities.Vector4.Divide(BEPUutilities.Vector4@,System.Double,BEPUutilities.Vector4@)">
             <summary>
             Divides a vector's components by some amount.
             </summary>
@@ -2064,7 +2064,7 @@
             <param name="divisor">Value to divide the vector's components.</param>
             <param name="result">Result of the division.</param>
         </member>
-        <member name="M:BEPUutilities.Vector4.op_Multiply(BEPUutilities.Vector4,System.Single)">
+        <member name="M:BEPUutilities.Vector4.op_Multiply(BEPUutilities.Vector4,System.Double)">
             <summary>
             Scales a vector.
             </summary>
@@ -2072,7 +2072,7 @@
             <param name="f">Amount to scale.</param>
             <returns>Scaled vector.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector4.op_Multiply(System.Single,BEPUutilities.Vector4)">
+        <member name="M:BEPUutilities.Vector4.op_Multiply(System.Double,BEPUutilities.Vector4)">
             <summary>
             Scales a vector.
             </summary>
@@ -2088,7 +2088,7 @@
             <param name="b">Second vector to multiply.</param>
             <returns>Result of the componentwise multiplication.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector4.op_Division(BEPUutilities.Vector4,System.Single)">
+        <member name="M:BEPUutilities.Vector4.op_Division(BEPUutilities.Vector4,System.Double)">
             <summary>
             Divides a vector's components by some amount.
             </summary>
@@ -2162,7 +2162,7 @@
             </returns>
             <filterpriority>2</filterpriority>
         </member>
-        <member name="M:BEPUutilities.Vector4.DistanceSquared(BEPUutilities.Vector4@,BEPUutilities.Vector4@,System.Single@)">
+        <member name="M:BEPUutilities.Vector4.DistanceSquared(BEPUutilities.Vector4@,BEPUutilities.Vector4@,System.Double@)">
             <summary>
             Computes the squared distance between two vectors.
             </summary>
@@ -2170,7 +2170,7 @@
             <param name="b">Second vector.</param>
             <param name="distanceSquared">Squared distance between the two vectors.</param>
         </member>
-        <member name="M:BEPUutilities.Vector4.Distance(BEPUutilities.Vector4@,BEPUutilities.Vector4@,System.Single@)">
+        <member name="M:BEPUutilities.Vector4.Distance(BEPUutilities.Vector4@,BEPUutilities.Vector4@,System.Double@)">
             <summary>
             Computes the distance between two two vectors.
             </summary>
@@ -2278,7 +2278,7 @@
             <param name="b">Second input vector to compare values from.</param>
             <returns>Vector containing the greater values of each vector.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector4.Lerp(BEPUutilities.Vector4,BEPUutilities.Vector4,System.Single)">
+        <member name="M:BEPUutilities.Vector4.Lerp(BEPUutilities.Vector4,BEPUutilities.Vector4,System.Double)">
             <summary>
             Computes an interpolated state between two vectors.
             </summary>
@@ -2287,7 +2287,7 @@
             <param name="interpolationAmount">Amount of the end location to use.</param>
             <returns>Interpolated intermediate state.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector4.Lerp(BEPUutilities.Vector4@,BEPUutilities.Vector4@,System.Single,BEPUutilities.Vector4@)">
+        <member name="M:BEPUutilities.Vector4.Lerp(BEPUutilities.Vector4@,BEPUutilities.Vector4@,System.Double,BEPUutilities.Vector4@)">
             <summary>
             Computes an interpolated state between two vectors.
             </summary>
@@ -2296,7 +2296,7 @@
             <param name="interpolationAmount">Amount of the end location to use.</param>
             <param name="result">Interpolated intermediate state.</param>
         </member>
-        <member name="M:BEPUutilities.Vector4.Hermite(BEPUutilities.Vector4@,BEPUutilities.Vector4@,BEPUutilities.Vector4@,BEPUutilities.Vector4@,System.Single,BEPUutilities.Vector4@)">
+        <member name="M:BEPUutilities.Vector4.Hermite(BEPUutilities.Vector4@,BEPUutilities.Vector4@,BEPUutilities.Vector4@,BEPUutilities.Vector4@,System.Double,BEPUutilities.Vector4@)">
             <summary>
             Computes an intermediate location using hermite interpolation.
             </summary>
@@ -2307,7 +2307,7 @@
             <param name="interpolationAmount">Amount of the second point to use.</param>
             <param name="result">Interpolated intermediate state.</param>
         </member>
-        <member name="M:BEPUutilities.Vector4.Hermite(BEPUutilities.Vector4,BEPUutilities.Vector4,BEPUutilities.Vector4,BEPUutilities.Vector4,System.Single)">
+        <member name="M:BEPUutilities.Vector4.Hermite(BEPUutilities.Vector4,BEPUutilities.Vector4,BEPUutilities.Vector4,BEPUutilities.Vector4,System.Double)">
             <summary>
             Computes an intermediate location using hermite interpolation.
             </summary>
@@ -2548,7 +2548,7 @@
             Location of the center of the sphere.
             </summary>
         </member>
-        <member name="M:BEPUutilities.BoundingSphere.#ctor(BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUutilities.BoundingSphere.#ctor(BEPUutilities.Vector3,System.Double)">
             <summary>
             Constructs a new bounding sphere.
             </summary>
@@ -2560,14 +2560,14 @@
             Contains conditional extensions to check for bad values in various structures.
             </summary>
         </member>
-        <member name="M:BEPUutilities.MathChecker.IsInvalid(System.Single)">
+        <member name="M:BEPUutilities.MathChecker.IsInvalid(System.Double)">
             <summary>
-            Checks a single float for validity.  Separate from the extension method to avoid throwing exceptions deep in a call tree.
+            Checks a single double for validity.  Separate from the extension method to avoid throwing exceptions deep in a call tree.
             </summary>
             <param name="f">Value to validate.</param>
             <returns>True if the value is invalid, false if it is valid.</returns>
         </member>
-        <member name="M:BEPUutilities.MathChecker.Validate(System.Single)">
+        <member name="M:BEPUutilities.MathChecker.Validate(System.Double)">
             <summary>
             Checks the value to see if it is a NaN or infinite.  If it is, an exception is thrown.
             This is only run when the CHECKMATH symbol is defined.
@@ -2664,14 +2664,14 @@
             Approximate value of Pi divided by four.
             </summary>
         </member>
-        <member name="M:BEPUutilities.MathHelper.WrapAngle(System.Single)">
+        <member name="M:BEPUutilities.MathHelper.WrapAngle(System.Double)">
             <summary>
             Reduces the angle into a range from -Pi to Pi.
             </summary>
             <param name="angle">Angle to wrap.</param>
             <returns>Wrapped angle.</returns>
         </member>
-        <member name="M:BEPUutilities.MathHelper.Clamp(System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.MathHelper.Clamp(System.Double,System.Double,System.Double)">
             <summary>
             Clamps a value between a minimum and maximum value.
             </summary>
@@ -2680,7 +2680,7 @@
             <param name="max">Maximum value.  If the value is more than this, the maximum is returned instead.</param>
             <returns>Clamped value.</returns>
         </member>
-        <member name="M:BEPUutilities.MathHelper.Max(System.Single,System.Single)">
+        <member name="M:BEPUutilities.MathHelper.Max(System.Double,System.Double)">
             <summary>
             Returns the higher value of the two parameters.
             </summary>
@@ -2688,7 +2688,7 @@
             <param name="b">Second value.</param>
             <returns>Higher value of the two parameters.</returns>
         </member>
-        <member name="M:BEPUutilities.MathHelper.Min(System.Single,System.Single)">
+        <member name="M:BEPUutilities.MathHelper.Min(System.Double,System.Double)">
             <summary>
             Returns the lower value of the two parameters.
             </summary>
@@ -2696,14 +2696,14 @@
             <param name="b">Second value.</param>
             <returns>Lower value of the two parameters.</returns>
         </member>
-        <member name="M:BEPUutilities.MathHelper.ToRadians(System.Single)">
+        <member name="M:BEPUutilities.MathHelper.ToRadians(System.Double)">
             <summary>
             Converts degrees to radians.
             </summary>
             <param name="degrees">Degrees to convert.</param>
             <returns>Radians equivalent to the input degrees.</returns>
         </member>
-        <member name="M:BEPUutilities.MathHelper.ToDegrees(System.Single)">
+        <member name="M:BEPUutilities.MathHelper.ToDegrees(System.Double)">
             <summary>
             Converts radians to degrees.
             </summary>
@@ -2795,7 +2795,7 @@
             Value at row 4, column 4 of the matrix.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Matrix.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Matrix.#ctor(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a new 4 row, 4 column matrix.
             </summary>
@@ -2862,7 +2862,7 @@
             Transposes the matrix in-place.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3,System.Double)">
             <summary>
             Creates a matrix representing the given axis and angle rotation.
             </summary>
@@ -2870,7 +2870,7 @@
             <param name="angle">Angle to rotate around the axis.</param>
             <returns>Matrix created from the axis and angle.</returns>
         </member>
-        <member name="M:BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3@,System.Single,BEPUutilities.Matrix@)">
+        <member name="M:BEPUutilities.Matrix.CreateFromAxisAngle(BEPUutilities.Vector3@,System.Double,BEPUutilities.Matrix@)">
             <summary>
             Creates a matrix representing the given axis and angle rotation.
             </summary>
@@ -2908,7 +2908,7 @@
             <param name="b">Second matrix to multiply.</param>
             <returns>Combined transformation.</returns>
         </member>
-        <member name="M:BEPUutilities.Matrix.Multiply(BEPUutilities.Matrix@,System.Single,BEPUutilities.Matrix@)">
+        <member name="M:BEPUutilities.Matrix.Multiply(BEPUutilities.Matrix@,System.Double,BEPUutilities.Matrix@)">
             <summary>
             Scales all components of the matrix.
             </summary>
@@ -2924,7 +2924,7 @@
             <param name="b">Second matrix to multiply.</param>
             <returns>Combined transformation.</returns>
         </member>
-        <member name="M:BEPUutilities.Matrix.op_Multiply(BEPUutilities.Matrix,System.Single)">
+        <member name="M:BEPUutilities.Matrix.op_Multiply(BEPUutilities.Matrix,System.Double)">
             <summary>
             Scales all components of the matrix by the given value.
             </summary>
@@ -2932,7 +2932,7 @@
             <param name="f">Scaling value to apply to all components of the matrix.</param>
             <returns>Product of the multiplication.</returns>
         </member>
-        <member name="M:BEPUutilities.Matrix.op_Multiply(System.Single,BEPUutilities.Matrix)">
+        <member name="M:BEPUutilities.Matrix.op_Multiply(System.Double,BEPUutilities.Matrix)">
             <summary>
             Scales all components of the matrix by the given value.
             </summary>
@@ -3108,7 +3108,7 @@
             Gets the 4x4 identity matrix.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Matrix.CreateOrthographicRH(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,BEPUutilities.Matrix@)">
+        <member name="M:BEPUutilities.Matrix.CreateOrthographicRH(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,BEPUutilities.Matrix@)">
             <summary>
             Creates a right handed orthographic projection.
             </summary>
@@ -3120,7 +3120,7 @@
             <param name="zFar">Far plane of the projection.</param>
             <param name="projection">The resulting orthographic projection matrix.</param>
         </member>
-        <member name="M:BEPUutilities.Matrix.CreatePerspectiveFieldOfViewRH(System.Single,System.Single,System.Single,System.Single,BEPUutilities.Matrix@)">
+        <member name="M:BEPUutilities.Matrix.CreatePerspectiveFieldOfViewRH(System.Double,System.Double,System.Double,System.Double,BEPUutilities.Matrix@)">
             <summary>
             Creates a right-handed perspective matrix.
             </summary>
@@ -3130,7 +3130,7 @@
             <param name="farClip">Far clip plane of the perspective.</param>
             <param name="perspective">Resulting perspective matrix.</param>
         </member>
-        <member name="M:BEPUutilities.Matrix.CreatePerspectiveFieldOfViewRH(System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Matrix.CreatePerspectiveFieldOfViewRH(System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Creates a right-handed perspective matrix.
             </summary>
@@ -3222,7 +3222,7 @@
             <param name="scale">Scale to be represented by the matrix.</param>
             <returns>Matrix representing the given scale.</returns>
         </member>
-        <member name="M:BEPUutilities.Matrix.CreateScale(System.Single,System.Single,System.Single,BEPUutilities.Matrix@)">
+        <member name="M:BEPUutilities.Matrix.CreateScale(System.Double,System.Double,System.Double,BEPUutilities.Matrix@)">
             <summary>
             Creates a matrix representing the given axis aligned scale.
             </summary>
@@ -3231,7 +3231,7 @@
             <param name="z">Scale along the z axis.</param>
             <param name="scaleMatrix">Matrix representing the given scale.</param>
         </member>
-        <member name="M:BEPUutilities.Matrix.CreateScale(System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Matrix.CreateScale(System.Double,System.Double,System.Double)">
             <summary>
             Creates a matrix representing the given axis aligned scale.
             </summary>
@@ -3271,7 +3271,7 @@
             Value at row 2, column 2 of the matrix.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Matrix2x2.#ctor(System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Matrix2x2.#ctor(System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a new 2 row, 2 column matrix.
             </summary>
@@ -3317,7 +3317,7 @@
             <param name="b">Second matrix to add.</param>
             <param name="result">Sum of the two matrices.</param>
         </member>
-        <member name="M:BEPUutilities.Matrix2x2.CreateScale(System.Single,BEPUutilities.Matrix2x2@)">
+        <member name="M:BEPUutilities.Matrix2x2.CreateScale(System.Double,BEPUutilities.Matrix2x2@)">
             <summary>
             Constructs a uniform scaling matrix.
             </summary>
@@ -3445,7 +3445,7 @@
             Value at row 2, column 3 of the matrix.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Matrix2x3.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Matrix2x3.#ctor(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a new 2 row, 2 column matrix.
             </summary>
@@ -3559,7 +3559,7 @@
             Value at row 3, column 2 of the matrix.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Matrix3x2.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Matrix3x2.#ctor(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a new 3 row, 2 column matrix.
             </summary>
@@ -3688,7 +3688,7 @@
             Value at row 3, column 3 of the matrix.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Matrix3x3.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Matrix3x3.#ctor(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a new 3 row, 3 column matrix.
             </summary>
@@ -3790,14 +3790,14 @@
             <param name="matrix4X4">Matrix to extract a 3x3 matrix from.</param>
             <returns>Upper 3x3 matrix extracted from the XNA matrix.</returns>
         </member>
-        <member name="M:BEPUutilities.Matrix3x3.CreateScale(System.Single,BEPUutilities.Matrix3x3@)">
+        <member name="M:BEPUutilities.Matrix3x3.CreateScale(System.Double,BEPUutilities.Matrix3x3@)">
             <summary>
             Constructs a uniform scaling matrix.
             </summary>
             <param name="scale">Value to use in the diagonal.</param>
             <param name="matrix">Scaling matrix.</param>
         </member>
-        <member name="M:BEPUutilities.Matrix3x3.CreateScale(System.Single)">
+        <member name="M:BEPUutilities.Matrix3x3.CreateScale(System.Double)">
             <summary>
             Constructs a uniform scaling matrix.
             </summary>
@@ -3818,7 +3818,7 @@
             <param name="scale">Values defining the axis scales.</param>
             <returns>Scaling matrix.</returns>
         </member>
-        <member name="M:BEPUutilities.Matrix3x3.CreateScale(System.Single,System.Single,System.Single,BEPUutilities.Matrix3x3@)">
+        <member name="M:BEPUutilities.Matrix3x3.CreateScale(System.Double,System.Double,System.Double,BEPUutilities.Matrix3x3@)">
             <summary>
             Constructs a non-uniform scaling matrix.
             </summary>
@@ -3827,7 +3827,7 @@
             <param name="z">Scaling along the z axis.</param>
             <param name="matrix">Scaling matrix.</param>
         </member>
-        <member name="M:BEPUutilities.Matrix3x3.CreateScale(System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Matrix3x3.CreateScale(System.Double,System.Double,System.Double)">
             <summary>
             Constructs a non-uniform scaling matrix.
             </summary>
@@ -3883,7 +3883,7 @@
             <param name="b">Second matrix to multiply.</param>
             <returns>Product of the multiplication.</returns>
         </member>
-        <member name="M:BEPUutilities.Matrix3x3.op_Multiply(BEPUutilities.Matrix3x3,System.Single)">
+        <member name="M:BEPUutilities.Matrix3x3.op_Multiply(BEPUutilities.Matrix3x3,System.Double)">
             <summary>
             Scales all components of the matrix by the given value.
             </summary>
@@ -3891,7 +3891,7 @@
             <param name="f">Scaling value to apply to all components of the matrix.</param>
             <returns>Product of the multiplication.</returns>
         </member>
-        <member name="M:BEPUutilities.Matrix3x3.op_Multiply(System.Single,BEPUutilities.Matrix3x3)">
+        <member name="M:BEPUutilities.Matrix3x3.op_Multiply(System.Double,BEPUutilities.Matrix3x3)">
             <summary>
             Scales all components of the matrix by the given value.
             </summary>
@@ -3939,7 +3939,7 @@
             <param name="transpose">Matrix to be transposed and multiplied.</param>
             <param name="result">Product of the multiplication.</param>
         </member>
-        <member name="M:BEPUutilities.Matrix3x3.Multiply(BEPUutilities.Matrix3x3@,System.Single,BEPUutilities.Matrix3x3@)">
+        <member name="M:BEPUutilities.Matrix3x3.Multiply(BEPUutilities.Matrix3x3@,System.Double,BEPUutilities.Matrix3x3@)">
             <summary>
             Scales all components of the matrix.
             </summary>
@@ -4070,7 +4070,7 @@
             <param name="b">Second vector.</param>
             <param name="result">Outer product result.</param>
         </member>
-        <member name="M:BEPUutilities.Matrix3x3.CreateFromAxisAngle(BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUutilities.Matrix3x3.CreateFromAxisAngle(BEPUutilities.Vector3,System.Double)">
             <summary>
             Creates a matrix representing a rotation of a given angle around a given axis.
             </summary>
@@ -4078,7 +4078,7 @@
             <param name="angle">Amount to rotate.</param>
             <returns>Matrix representing the rotation.</returns>
         </member>
-        <member name="M:BEPUutilities.Matrix3x3.CreateFromAxisAngle(BEPUutilities.Vector3@,System.Single,BEPUutilities.Matrix3x3@)">
+        <member name="M:BEPUutilities.Matrix3x3.CreateFromAxisAngle(BEPUutilities.Vector3@,System.Double,BEPUutilities.Matrix3x3@)">
             <summary>
             Creates a matrix representing a rotation of a given angle around a given axis.
             </summary>
@@ -4115,21 +4115,21 @@
             <param name="position">A point on the plane.</param>
             <param name="normal">The normal of the plane.</param>
         </member>
-        <member name="M:BEPUutilities.Plane.#ctor(BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUutilities.Plane.#ctor(BEPUutilities.Vector3,System.Double)">
             <summary>
             Constructs a new plane.
             </summary>
             <param name="normal">Normal of the plane.</param>
             <param name="d">Negative distance to the plane from the origin along the normal.</param>
         </member>
-        <member name="M:BEPUutilities.Plane.#ctor(BEPUutilities.Vector3@,System.Single)">
+        <member name="M:BEPUutilities.Plane.#ctor(BEPUutilities.Vector3@,System.Double)">
             <summary>
             Constructs a new plane.
             </summary>
             <param name="normal">Normal of the plane.</param>
             <param name="d">Negative distance to the plane from the origin along the normal.</param>
         </member>
-        <member name="M:BEPUutilities.Plane.DotCoordinate(BEPUutilities.Vector3@,System.Single@)">
+        <member name="M:BEPUutilities.Plane.DotCoordinate(BEPUutilities.Vector3@,System.Double@)">
             <summary>
             Gets the dot product of the position offset from the plane along the plane's normal.
             </summary>
@@ -4161,7 +4161,7 @@
             W component of the quaternion.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Quaternion.#ctor(System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Quaternion.#ctor(System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a new Quaternion.
             </summary>
@@ -4186,7 +4186,7 @@
             <param name="b">Second quaternion to multiply.</param>
             <param name="result">Product of the multiplication.</param>
         </member>
-        <member name="M:BEPUutilities.Quaternion.Multiply(BEPUutilities.Quaternion@,System.Single,BEPUutilities.Quaternion@)">
+        <member name="M:BEPUutilities.Quaternion.Multiply(BEPUutilities.Quaternion@,System.Double,BEPUutilities.Quaternion@)">
             <summary>
             Scales a quaternion.
             </summary>
@@ -4274,7 +4274,7 @@
             </summary>
             <returns>Length of the quaternion.</returns>
         </member>
-        <member name="M:BEPUutilities.Quaternion.Slerp(BEPUutilities.Quaternion@,BEPUutilities.Quaternion@,System.Single,BEPUutilities.Quaternion@)">
+        <member name="M:BEPUutilities.Quaternion.Slerp(BEPUutilities.Quaternion@,BEPUutilities.Quaternion@,System.Double,BEPUutilities.Quaternion@)">
             <summary>
             Blends two quaternions together to get an intermediate state.
             </summary>
@@ -4283,7 +4283,7 @@
             <param name="interpolationAmount">Amount of the end point to use.</param>
             <param name="result">Interpolated intermediate quaternion.</param>
         </member>
-        <member name="M:BEPUutilities.Quaternion.Slerp(BEPUutilities.Quaternion,BEPUutilities.Quaternion,System.Single)">
+        <member name="M:BEPUutilities.Quaternion.Slerp(BEPUutilities.Quaternion,BEPUutilities.Quaternion,System.Double)">
             <summary>
             Blends two quaternions together to get an intermediate state.
             </summary>
@@ -4400,7 +4400,7 @@
             <param name="rotation">Rotation to apply to the vector.</param>
             <returns>Transformed vector.</returns>
         </member>
-        <member name="M:BEPUutilities.Quaternion.TransformX(System.Single,BEPUutilities.Quaternion@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Quaternion.TransformX(System.Double,BEPUutilities.Quaternion@,BEPUutilities.Vector3@)">
             <summary>
             Transforms a vector using a quaternion. Specialized for x,0,0 vectors.
             </summary>
@@ -4408,7 +4408,7 @@
             <param name="rotation">Rotation to apply to the vector.</param>
             <param name="result">Transformed vector.</param>
         </member>
-        <member name="M:BEPUutilities.Quaternion.TransformY(System.Single,BEPUutilities.Quaternion@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Quaternion.TransformY(System.Double,BEPUutilities.Quaternion@,BEPUutilities.Vector3@)">
             <summary>
             Transforms a vector using a quaternion. Specialized for 0,y,0 vectors.
             </summary>
@@ -4416,7 +4416,7 @@
             <param name="rotation">Rotation to apply to the vector.</param>
             <param name="result">Transformed vector.</param>
         </member>
-        <member name="M:BEPUutilities.Quaternion.TransformZ(System.Single,BEPUutilities.Quaternion@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Quaternion.TransformZ(System.Double,BEPUutilities.Quaternion@,BEPUutilities.Vector3@)">
             <summary>
             Transforms a vector using a quaternion. Specialized for 0,0,z vectors.
             </summary>
@@ -4432,7 +4432,7 @@
             <param name="b">Second quaternion to multiply.</param>
             <returns>Product of the multiplication.</returns>
         </member>
-        <member name="M:BEPUutilities.Quaternion.CreateFromAxisAngle(BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUutilities.Quaternion.CreateFromAxisAngle(BEPUutilities.Vector3,System.Double)">
             <summary>
             Creates a quaternion from an axis and angle.
             </summary>
@@ -4440,7 +4440,7 @@
             <param name="angle">Angle to rotate around the axis.</param>
             <returns>Quaternion representing the axis and angle rotation.</returns>
         </member>
-        <member name="M:BEPUutilities.Quaternion.CreateFromAxisAngle(BEPUutilities.Vector3@,System.Single,BEPUutilities.Quaternion@)">
+        <member name="M:BEPUutilities.Quaternion.CreateFromAxisAngle(BEPUutilities.Vector3@,System.Double,BEPUutilities.Quaternion@)">
             <summary>
             Creates a quaternion from an axis and angle.
             </summary>
@@ -4448,7 +4448,7 @@
             <param name="angle">Angle to rotate around the axis.</param>
             <param name="q">Quaternion representing the axis and angle rotation.</param>
         </member>
-        <member name="M:BEPUutilities.Quaternion.CreateFromYawPitchRoll(System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Quaternion.CreateFromYawPitchRoll(System.Double,System.Double,System.Double)">
             <summary>
             Constructs a quaternion from yaw, pitch, and roll.
             </summary>
@@ -4457,7 +4457,7 @@
             <param name="roll">Roll of the rotation.</param>
             <returns>Quaternion representing the yaw, pitch, and roll.</returns>
         </member>
-        <member name="M:BEPUutilities.Quaternion.CreateFromYawPitchRoll(System.Single,System.Single,System.Single,BEPUutilities.Quaternion@)">
+        <member name="M:BEPUutilities.Quaternion.CreateFromYawPitchRoll(System.Double,System.Double,System.Double,BEPUutilities.Quaternion@)">
             <summary>
             Constructs a quaternion from yaw, pitch, and roll.
             </summary>
@@ -4473,7 +4473,7 @@
             <param name="q">Quaternion to be converted.</param>
             <returns>Angle around the axis represented by the quaternion.</returns>
         </member>
-        <member name="M:BEPUutilities.Quaternion.GetAxisAngleFromQuaternion(BEPUutilities.Quaternion@,BEPUutilities.Vector3@,System.Single@)">
+        <member name="M:BEPUutilities.Quaternion.GetAxisAngleFromQuaternion(BEPUutilities.Quaternion@,BEPUutilities.Vector3@,System.Double@)">
             <summary>
             Computes the axis angle representation of a normalized quaternion.
             </summary>
@@ -4533,7 +4533,7 @@
             <param name="position">Starting position of the ray.</param>
             <param name="direction">Direction in which the ray points.</param>
         </member>
-        <member name="M:BEPUutilities.Ray.Intersects(BEPUutilities.BoundingBox@,System.Single@)">
+        <member name="M:BEPUutilities.Ray.Intersects(BEPUutilities.BoundingBox@,System.Double@)">
             <summary>
             Determines if and when the ray intersects the bounding box.
             </summary>
@@ -4541,7 +4541,7 @@
             <param name="t">The length along the ray to the impact, if any impact occurs.</param>
             <returns>True if the ray intersects the target, false otherwise.</returns>
         </member>
-        <member name="M:BEPUutilities.Ray.Intersects(BEPUutilities.BoundingBox,System.Single@)">
+        <member name="M:BEPUutilities.Ray.Intersects(BEPUutilities.BoundingBox,System.Double@)">
             <summary>
             Determines if and when the ray intersects the bounding box.
             </summary>
@@ -4549,7 +4549,7 @@
             <param name="t">The length along the ray to the impact, if any impact occurs.</param>
             <returns>True if the ray intersects the target, false otherwise.</returns>
         </member>
-        <member name="M:BEPUutilities.Ray.Intersects(BEPUutilities.Plane@,System.Single@)">
+        <member name="M:BEPUutilities.Ray.Intersects(BEPUutilities.Plane@,System.Double@)">
             <summary>
             Determines if and when the ray intersects the plane.
             </summary>
@@ -4557,7 +4557,7 @@
             <param name="t">The length along the ray to the impact, if any impact occurs.</param>
             <returns>True if the ray intersects the target, false otherwise.</returns>
         </member>
-        <member name="M:BEPUutilities.Ray.Intersects(BEPUutilities.Plane,System.Single@)">
+        <member name="M:BEPUutilities.Ray.Intersects(BEPUutilities.Plane,System.Double@)">
             <summary>
             Determines if and when the ray intersects the plane.
             </summary>
@@ -4565,7 +4565,7 @@
             <param name="t">The length along the ray to the impact, if any impact occurs.</param>
             <returns>True if the ray intersects the target, false otherwise.</returns>
         </member>
-        <member name="M:BEPUutilities.Ray.GetPointOnRay(System.Single,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Ray.GetPointOnRay(System.Double,BEPUutilities.Vector3@)">
             <summary>
             Computes a point along a ray given the length along the ray from the ray position.
             </summary>
@@ -4717,7 +4717,7 @@
             Y component of the vector.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Vector2.#ctor(System.Single,System.Single)">
+        <member name="M:BEPUutilities.Vector2.#ctor(System.Double,System.Double)">
             <summary>
             Constructs a new two dimensional vector.
             </summary>
@@ -4758,7 +4758,7 @@
             <param name="b">Vector to subtract from the first vector.</param>
             <param name="difference">Result of the subtraction.</param>
         </member>
-        <member name="M:BEPUutilities.Vector2.Multiply(BEPUutilities.Vector2@,System.Single,BEPUutilities.Vector2@)">
+        <member name="M:BEPUutilities.Vector2.Multiply(BEPUutilities.Vector2@,System.Double,BEPUutilities.Vector2@)">
             <summary>
             Scales a vector.
             </summary>
@@ -4774,7 +4774,7 @@
             <param name="b">Second vector to multiply.</param>
             <param name="result">Result of the componentwise multiplication.</param>
         </member>
-        <member name="M:BEPUutilities.Vector2.Divide(BEPUutilities.Vector2@,System.Single,BEPUutilities.Vector2@)">
+        <member name="M:BEPUutilities.Vector2.Divide(BEPUutilities.Vector2@,System.Double,BEPUutilities.Vector2@)">
             <summary>
             Divides a vector's components by some amount.
             </summary>
@@ -4782,7 +4782,7 @@
             <param name="divisor">Value to divide the vector's components.</param>
             <param name="result">Result of the division.</param>
         </member>
-        <member name="M:BEPUutilities.Vector2.Dot(BEPUutilities.Vector2@,BEPUutilities.Vector2@,System.Single@)">
+        <member name="M:BEPUutilities.Vector2.Dot(BEPUutilities.Vector2@,BEPUutilities.Vector2@,System.Double@)">
             <summary>
             Computes the dot product of the two vectors.
             </summary>
@@ -4885,7 +4885,7 @@
             Normalizes the vector.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Vector2.op_Multiply(BEPUutilities.Vector2,System.Single)">
+        <member name="M:BEPUutilities.Vector2.op_Multiply(BEPUutilities.Vector2,System.Double)">
             <summary>
             Scales a vector.
             </summary>
@@ -4893,7 +4893,7 @@
             <param name="f">Amount to scale.</param>
             <returns>Scaled vector.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector2.op_Multiply(System.Single,BEPUutilities.Vector2)">
+        <member name="M:BEPUutilities.Vector2.op_Multiply(System.Double,BEPUutilities.Vector2)">
             <summary>
             Scales a vector.
             </summary>
@@ -4909,7 +4909,7 @@
             <param name="b">Second vector to multiply.</param>
             <returns>Result of the componentwise multiplication.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector2.op_Division(BEPUutilities.Vector2,System.Single)">
+        <member name="M:BEPUutilities.Vector2.op_Division(BEPUutilities.Vector2,System.Double)">
             <summary>
             Divides a vector.
             </summary>
@@ -5003,7 +5003,7 @@
             Z component of the vector.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Vector3.#ctor(System.Single,System.Single,System.Single)">
+        <member name="M:BEPUutilities.Vector3.#ctor(System.Double,System.Double,System.Double)">
             <summary>
             Constructs a new 3d vector.
             </summary>
@@ -5011,14 +5011,14 @@
             <param name="y">Y component of the vector.</param>
             <param name="z">Z component of the vector.</param>
         </member>
-        <member name="M:BEPUutilities.Vector3.#ctor(BEPUutilities.Vector2,System.Single)">
+        <member name="M:BEPUutilities.Vector3.#ctor(BEPUutilities.Vector2,System.Double)">
             <summary>
             Constructs a new 3d vector.
             </summary>
             <param name="xy">X and Y components of the vector.</param>
             <param name="z">Z component of the vector.</param>
         </member>
-        <member name="M:BEPUutilities.Vector3.#ctor(System.Single,BEPUutilities.Vector2)">
+        <member name="M:BEPUutilities.Vector3.#ctor(System.Double,BEPUutilities.Vector2)">
             <summary>
             Constructs a new 3d vector.
             </summary>
@@ -5056,7 +5056,7 @@
             <param name="b">Second vector in the product.</param>
             <returns>Resulting dot product.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector3.Dot(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Single@)">
+        <member name="M:BEPUutilities.Vector3.Dot(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Double@)">
             <summary>
             Computes the dot product of two vectors.
             </summary>
@@ -5080,7 +5080,7 @@
             <param name="b">Vector to subtract from the first vector.</param>
             <param name="difference">Result of the subtraction.</param>
         </member>
-        <member name="M:BEPUutilities.Vector3.Multiply(BEPUutilities.Vector3@,System.Single,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Vector3.Multiply(BEPUutilities.Vector3@,System.Double,BEPUutilities.Vector3@)">
             <summary>
             Scales a vector.
             </summary>
@@ -5096,7 +5096,7 @@
             <param name="b">Second vector to multiply.</param>
             <param name="result">Result of the componentwise multiplication.</param>
         </member>
-        <member name="M:BEPUutilities.Vector3.Divide(BEPUutilities.Vector3@,System.Single,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Vector3.Divide(BEPUutilities.Vector3@,System.Double,BEPUutilities.Vector3@)">
             <summary>
             Divides a vector's components by some amount.
             </summary>
@@ -5104,7 +5104,7 @@
             <param name="divisor">Value to divide the vector's components.</param>
             <param name="result">Result of the division.</param>
         </member>
-        <member name="M:BEPUutilities.Vector3.op_Multiply(BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUutilities.Vector3.op_Multiply(BEPUutilities.Vector3,System.Double)">
             <summary>
             Scales a vector.
             </summary>
@@ -5112,7 +5112,7 @@
             <param name="f">Amount to scale.</param>
             <returns>Scaled vector.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector3.op_Multiply(System.Single,BEPUutilities.Vector3)">
+        <member name="M:BEPUutilities.Vector3.op_Multiply(System.Double,BEPUutilities.Vector3)">
             <summary>
             Scales a vector.
             </summary>
@@ -5128,7 +5128,7 @@
             <param name="b">Second vector to multiply.</param>
             <returns>Result of the componentwise multiplication.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector3.op_Division(BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUutilities.Vector3.op_Division(BEPUutilities.Vector3,System.Double)">
             <summary>
             Divides a vector's components by some amount.
             </summary>
@@ -5202,7 +5202,7 @@
             </returns>
             <filterpriority>2</filterpriority>
         </member>
-        <member name="M:BEPUutilities.Vector3.DistanceSquared(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Single@)">
+        <member name="M:BEPUutilities.Vector3.DistanceSquared(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Double@)">
             <summary>
             Computes the squared distance between two vectors.
             </summary>
@@ -5218,7 +5218,7 @@
             <param name="b">Second vector.</param>
             <returns>Squared distance between the two vectors.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector3.Distance(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Single@)">
+        <member name="M:BEPUutilities.Vector3.Distance(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Double@)">
             <summary>
             Computes the distance between two two vectors.
             </summary>
@@ -5367,7 +5367,7 @@
             <param name="b">Second input vector to compare values from.</param>
             <returns>Vector containing the greater values of each vector.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector3.Lerp(BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUutilities.Vector3.Lerp(BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double)">
             <summary>
             Computes an interpolated state between two vectors.
             </summary>
@@ -5376,7 +5376,7 @@
             <param name="interpolationAmount">Amount of the end location to use.</param>
             <returns>Interpolated intermediate state.</returns>
         </member>
-        <member name="M:BEPUutilities.Vector3.Lerp(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Single,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Vector3.Lerp(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Double,BEPUutilities.Vector3@)">
             <summary>
             Computes an interpolated state between two vectors.
             </summary>
@@ -5385,7 +5385,7 @@
             <param name="interpolationAmount">Amount of the end location to use.</param>
             <param name="result">Interpolated intermediate state.</param>
         </member>
-        <member name="M:BEPUutilities.Vector3.Hermite(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Single,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Vector3.Hermite(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Double,BEPUutilities.Vector3@)">
             <summary>
             Computes an intermediate location using hermite interpolation.
             </summary>
@@ -5396,7 +5396,7 @@
             <param name="interpolationAmount">Amount of the second point to use.</param>
             <param name="result">Interpolated intermediate state.</param>
         </member>
-        <member name="M:BEPUutilities.Vector3.Hermite(BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUutilities.Vector3.Hermite(BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double)">
             <summary>
             Computes an intermediate location using hermite interpolation.
             </summary>
@@ -5499,7 +5499,7 @@
             Refers to the rigid identity transformation.
             </summary>
         </member>
-        <member name="M:BEPUutilities.Toolbox.FindRayTriangleIntersection(BEPUutilities.Ray@,System.Single,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Boolean@,BEPUutilities.RayHit@)">
+        <member name="M:BEPUutilities.Toolbox.FindRayTriangleIntersection(BEPUutilities.Ray@,System.Double,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Boolean@,BEPUutilities.RayHit@)">
             <summary>
             Determines the intersection between a ray and a triangle.
             </summary>
@@ -5512,7 +5512,7 @@
             <param name="hit">Hit data of the ray, if any</param>
             <returns>Whether or not the ray and triangle intersect.</returns>
         </member>
-        <member name="M:BEPUutilities.Toolbox.FindRayTriangleIntersection(BEPUutilities.Ray@,System.Single,BEPUutilities.TriangleSidedness,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.RayHit@)">
+        <member name="M:BEPUutilities.Toolbox.FindRayTriangleIntersection(BEPUutilities.Ray@,System.Double,BEPUutilities.TriangleSidedness,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.RayHit@)">
             <summary>
             Determines the intersection between a ray and a triangle.
             </summary>
@@ -5547,7 +5547,7 @@
             <param name="q">Intersection point.</param>
             <returns>Whether or not the segment intersects the plane.</returns>
         </member>
-        <member name="M:BEPUutilities.Toolbox.GetSegmentPlaneIntersection(BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Plane,System.Single@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Toolbox.GetSegmentPlaneIntersection(BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Plane,System.Double@,BEPUutilities.Vector3@)">
             <summary>
             Finds the intersection between the given segment and the given plane.
             </summary>
@@ -5558,7 +5558,7 @@
             <param name="q">Intersection point.</param>
             <returns>Whether or not the segment intersects the plane.</returns>
         </member>
-        <member name="M:BEPUutilities.Toolbox.GetLinePlaneIntersection(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Plane@,System.Single@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Toolbox.GetLinePlaneIntersection(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Plane@,System.Double@,BEPUutilities.Vector3@)">
             <summary>
             Finds the intersection between the given line and the given plane.
             </summary>
@@ -5569,7 +5569,7 @@
             <param name="q">Intersection point.</param>
             <returns>Whether or not the line intersects the plane.  If false, the line is parallel to the plane's surface.</returns>
         </member>
-        <member name="M:BEPUutilities.Toolbox.GetRayPlaneIntersection(BEPUutilities.Ray@,BEPUutilities.Plane@,System.Single@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Toolbox.GetRayPlaneIntersection(BEPUutilities.Ray@,BEPUutilities.Plane@,System.Double@,BEPUutilities.Vector3@)">
             <summary>
             Finds the intersection between the given ray and the given plane.
             </summary>
@@ -5601,7 +5601,7 @@
             <param name="subsimplex">The source of the voronoi region which contains the point.</param>
             <param name="closestPoint">Closest point on tetrahedron to point.</param>
         </member>
-        <member name="M:BEPUutilities.Toolbox.GetClosestPointOnTriangleToPoint(BEPUutilities.DataStructures.RawList{BEPUutilities.Vector3},System.Int32,System.Int32,System.Int32,BEPUutilities.Vector3@,BEPUutilities.DataStructures.RawList{System.Int32},BEPUutilities.DataStructures.RawList{System.Single},BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Toolbox.GetClosestPointOnTriangleToPoint(BEPUutilities.DataStructures.RawList{BEPUutilities.Vector3},System.Int32,System.Int32,System.Int32,BEPUutilities.Vector3@,BEPUutilities.DataStructures.RawList{System.Int32},BEPUutilities.DataStructures.RawList{System.Double},BEPUutilities.Vector3@)">
             <summary>
             Determines the closest point on a triangle given by points a, b, and c to point p and provides the subsimplex whose voronoi region contains the point.
             </summary>
@@ -5624,7 +5624,7 @@
             <param name="p">The point for comparison against the triangle.</param>
             <returns>Whether or not the point is within the triangle.</returns>
         </member>
-        <member name="M:BEPUutilities.Toolbox.IsPointInsideTriangle(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Single)">
+        <member name="M:BEPUutilities.Toolbox.IsPointInsideTriangle(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Double)">
             <summary>
             Determines if supplied point is within the triangle as defined by the provided vertices.
             </summary>
@@ -5654,7 +5654,7 @@
             <param name="subsimplex">The source of the voronoi region which contains the point.</param>
             <param name="closestPoint">Closest point on the edge to p.</param>
         </member>
-        <member name="M:BEPUutilities.Toolbox.GetClosestPointOnSegmentToPoint(System.Collections.Generic.List{BEPUutilities.Vector3},System.Int32,System.Int32,BEPUutilities.Vector3@,System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{System.Single},BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Toolbox.GetClosestPointOnSegmentToPoint(System.Collections.Generic.List{BEPUutilities.Vector3},System.Int32,System.Int32,BEPUutilities.Vector3@,System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{System.Double},BEPUutilities.Vector3@)">
             <summary>
             Determines the closest point on the provided segment ab to point p.
             </summary>
@@ -5686,7 +5686,7 @@
             <param name="c1">Closest point on first segment.</param>
             <param name="c2">Closest point on second segment.</param>
         </member>
-        <member name="M:BEPUutilities.Toolbox.GetClosestPointsBetweenSegments(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Single@,System.Single@,BEPUutilities.Vector3@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Toolbox.GetClosestPointsBetweenSegments(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Double@,System.Double@,BEPUutilities.Vector3@,BEPUutilities.Vector3@)">
             <summary>
             Computes closest points c1 and c2 betwen segments p1q1 and p2q2.
             </summary>
@@ -5699,7 +5699,7 @@
             <param name="c1">Closest point on first segment.</param>
             <param name="c2">Closest point on second segment.</param>
         </member>
-        <member name="M:BEPUutilities.Toolbox.GetClosestPointsBetweenLines(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Single@,System.Single@,BEPUutilities.Vector3@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Toolbox.GetClosestPointsBetweenLines(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Double@,System.Double@,BEPUutilities.Vector3@,BEPUutilities.Vector3@)">
             <summary>
             Computes closest points c1 and c2 betwen lines p1q1 and p2q2.
             </summary>
@@ -5773,7 +5773,7 @@
             <param name="subsimplex">The source of the voronoi region which contains the point.</param>
             <param name="closestPoint">Closest point on the tetrahedron to the point.</param>
         </member>
-        <member name="M:BEPUutilities.Toolbox.GetClosestPointOnTetrahedronToPoint(BEPUutilities.DataStructures.RawList{BEPUutilities.Vector3},BEPUutilities.Vector3@,BEPUutilities.DataStructures.RawList{System.Int32},BEPUutilities.DataStructures.RawList{System.Single},BEPUutilities.Vector3@)">
+        <member name="M:BEPUutilities.Toolbox.GetClosestPointOnTetrahedronToPoint(BEPUutilities.DataStructures.RawList{BEPUutilities.Vector3},BEPUutilities.Vector3@,BEPUutilities.DataStructures.RawList{System.Int32},BEPUutilities.DataStructures.RawList{System.Double},BEPUutilities.Vector3@)">
             <summary>
             Determines the closest point on a tetrahedron to a provided point p.
             </summary>
@@ -5783,7 +5783,7 @@
             <param name="baryCoords">Barycentric coordinates of p on the tetrahedron.</param>
             <param name="closestPoint">Closest point on the tetrahedron to the point.</param>
         </member>
-        <member name="M:BEPUutilities.Toolbox.RayCastSphere(BEPUutilities.Ray@,BEPUutilities.Vector3@,System.Single,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUutilities.Toolbox.RayCastSphere(BEPUutilities.Ray@,BEPUutilities.Vector3@,System.Double,System.Double,BEPUutilities.RayHit@)">
             <summary>
              Tests a ray against a sphere.
             </summary>
@@ -5830,7 +5830,7 @@
             <param name="c">Third vertex of the triangle.</param>
             <param name="aabb">Bounding box of the triangle.</param>
         </member>
-        <member name="M:BEPUutilities.Toolbox.UpdateOrientationRK4(BEPUutilities.Quaternion@,BEPUutilities.Matrix3x3@,BEPUutilities.Vector3@,System.Single,BEPUutilities.Quaternion@)">
+        <member name="M:BEPUutilities.Toolbox.UpdateOrientationRK4(BEPUutilities.Quaternion@,BEPUutilities.Matrix3x3@,BEPUutilities.Vector3@,System.Double,BEPUutilities.Quaternion@)">
             <summary>
             Updates the quaternion using RK4 integration.
             </summary>
@@ -5849,7 +5849,7 @@
             <param name="angularMomentum">Angular momentum of the object.</param>
              <param name="orientationChange">Change in quaternion.</param>
         </member>
-        <member name="M:BEPUutilities.Toolbox.GetBarycentricCoordinates(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Single@,System.Single@,System.Single@)">
+        <member name="M:BEPUutilities.Toolbox.GetBarycentricCoordinates(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Double@,System.Double@,System.Double@)">
             <summary>
             Gets the barycentric coordinates of the point with respect to a triangle's vertices.
             </summary>

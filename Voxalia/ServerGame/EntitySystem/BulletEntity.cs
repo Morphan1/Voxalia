@@ -30,7 +30,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public override byte[] GetNetData()
         {
             byte[] res = new byte[4 + 12 + 12];
-            Utilities.FloatToBytes(Size).CopyTo(res, 0);
+            Utilities.FloatToBytes((float)Size).CopyTo(res, 0);
             GetPosition().ToBytes().CopyTo(res, 4);
             GetVelocity().ToBytes().CopyTo(res, 4 + 12);
             return res;
@@ -69,9 +69,9 @@ namespace Voxalia.ServerGame.EntitySystem
             RemoveMe();
         }
 
-        public float Size = 1;
-        public float Damage = 1;
-        public float SplashSize = 0;
-        public float SplashDamage = 0;
+        public double Size = 1;
+        public double Damage = 1;
+        public double SplashSize = 0;
+        public double SplashDamage = 0;
     }
 }

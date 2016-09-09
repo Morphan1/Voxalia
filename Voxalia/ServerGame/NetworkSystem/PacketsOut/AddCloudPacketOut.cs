@@ -23,8 +23,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             for (int i = 0; i < cloud.Points.Count; i++)
             {
                 dw.WriteBytes(cloud.Points[i].ToBytes());
-                dw.WriteFloat(cloud.Sizes[i]);
-                dw.WriteFloat(cloud.EndSizes[i]);
+                dw.WriteFloat((float)cloud.Sizes[i]);
+                dw.WriteFloat((float)cloud.EndSizes[i]);
             }
             dw.Flush();
             Data = ds.ToArray();

@@ -687,7 +687,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     if (bi.IsOpaque())
                     {
                         Material mat = (Material)bi.BlockMaterial;
-                        float lrange = mat.GetLightEmitRange();
+                        float lrange = (float)mat.GetLightEmitRange();
                         if (lrange > 0)
                         {
                             int biz = z + ZP * Chunk.CHUNK_SIZE;
@@ -704,7 +704,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         }
                         return Location.Zero;
                     }
-                    light -= ((Material)bi.BlockMaterial).GetLightDamage();
+                    light -= (float)((Material)bi.BlockMaterial).GetLightDamage();
                     z++;
                 }
                 ZP++;

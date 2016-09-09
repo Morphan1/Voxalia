@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 namespace Voxalia.Shared
 {
     /// <summary>
-    /// Represents a 3D location, using 3 double-precision floating-point coordinates.
+    /// Represents a 3D location, using 3 double-precision doubleing-point coordinates.
     /// Occupies 24 bytes, calculated as 8 * 3, as it has 3 fields (X, Y, Z) each occupying 8 bytes (a double).
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
     public struct Location : IEquatable<Location>
     {
-        // TODO: Use floats to simplify and accelerate this class?
+        // TODO: Use doubles to simplify and accelerate this class?
 
         /// <summary>
         /// A Location of (0, 0, 0).
@@ -413,16 +413,6 @@ namespace Voxalia.Shared
             return new Location(v1.X / v2.X, v1.Y / v2.Y, v1.Z / v2.Z);
         }
 
-        public static Location operator *(Location v, float scale)
-        {
-            return new Location(v.X * scale, v.Y * scale, v.Z * scale);
-        }
-
-        public static Location operator *(float scale, Location v)
-        {
-            return new Location(v.X * scale, v.Y * scale, v.Z * scale);
-        }
-
         public static Location operator *(Location v, double scale)
         {
             return new Location(v.X * scale, v.Y * scale, v.Z * scale);
@@ -433,13 +423,23 @@ namespace Voxalia.Shared
             return new Location(v.X * scale, v.Y * scale, v.Z * scale);
         }
 
-        public static Location operator /(Location v, float scale)
+        public static Location operator *(Location v, float scale)
         {
-            float sc = 1 / scale;
-            return new Location(v.X * sc, v.Y * sc, v.Z * sc);
+            return new Location(v.X * scale, v.Y * scale, v.Z * scale);
+        }
+
+        public static Location operator *(float scale, Location v)
+        {
+            return new Location(v.X * scale, v.Y * scale, v.Z * scale);
         }
 
         public static Location operator /(Location v, double scale)
+        {
+            double sc = 1 / scale;
+            return new Location(v.X * sc, v.Y * sc, v.Z * sc);
+        }
+
+        public static Location operator /(Location v, float scale)
         {
             double sc = 1 / scale;
             return new Location(v.X * sc, v.Y * sc, v.Z * sc);
@@ -475,9 +475,9 @@ namespace Voxalia.Shared
             {
                 return new Location(0);
             }
-            float X = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index, 4));
-            float Y = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index + 4, 4));
-            float Z = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index + 4 + 4, 4));
+            double X = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index, 4));
+            double Y = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index + 4, 4));
+            double Z = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index + 4 + 4, 4));
             return new Location(X, Y, Z);
         }
         
@@ -487,7 +487,7 @@ namespace Voxalia.Shared
         /// <returns>.</returns>
         public BEPUutilities.Vector3 ToBVector()
         {
-            return new BEPUutilities.Vector3((float)X, (float)Y, (float)Z);
+            return new BEPUutilities.Vector3((double)X, (double)Y, (double)Z);
         }
         
         /// <summary>

@@ -71,12 +71,12 @@ namespace Voxalia.ServerGame.ItemSystem
             Load(dr);
         }
         
-        public float GetAttributeF(string attr, float def)
+        public double GetAttributeF(string attr, double def)
         {
             TemplateObject outp;
             if (Attributes.TryGetValue(attr, out outp))
             {
-                return (float)NumberTag.TryFor(outp).Internal;
+                return (double)NumberTag.TryFor(outp).Internal;
             }
             return def;
         }
@@ -267,10 +267,10 @@ namespace Voxalia.ServerGame.ItemSystem
             bool bound = false;
             string shared = "";
             string local = "";
-            float weight = 1;
-            float volume = 1;
+            double weight = 1;
+            double volume = 1;
             int datum = 0;
-            float temperature = 0;
+            double temperature = 0;
             System.Drawing.Color color = System.Drawing.Color.White;
             foreach (KeyValuePair<string, string> pair in pairs)
             {

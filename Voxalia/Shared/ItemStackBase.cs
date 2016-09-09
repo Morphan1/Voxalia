@@ -55,22 +55,22 @@ namespace Voxalia.Shared
         /// <summary>
         /// How much volume this item takes up.
         /// </summary>
-        public float Volume = 1;
+        public double Volume = 1;
 
         /// <summary>
         /// How much weight this item takes up.
         /// </summary>
-        public float Weight = 1;
+        public double Weight = 1;
 
         /// <summary>
         /// What temperature (F) this item is at.
         /// </summary>
-        public float Temperature = 70;
+        public double Temperature = 70;
 
         /// <summary>
         /// The temperature (C) this item is at.
         /// </summary>
-        public float TemperatureC
+        public double TemperatureC
         {
             get
             {
@@ -96,9 +96,9 @@ namespace Voxalia.Shared
             DataWriter dw = new DataWriter(ds);
             dw.WriteInt(Count);
             dw.WriteInt(Datum);
-            dw.WriteFloat(Weight);
-            dw.WriteFloat(Volume);
-            dw.WriteFloat(Temperature);
+            dw.WriteFloat((float)Weight);
+            dw.WriteFloat((float)Volume);
+            dw.WriteFloat((float)Temperature);
             dw.WriteInt(DrawColor.ToArgb());
             dw.WriteFullString(Name);
             dw.WriteFullString(SecondaryName == null ? "" : SecondaryName);

@@ -31,7 +31,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
             {
                 tm = BGETraceMode.PERFECT;
             }
-            float maxRad = 20; // TODO: Config!
+            double maxRad = 20; // TODO: Config!
             Location start = (entry.Player.GetPosition() + new Location(0, 0, -0.1)).GetBlockLocation();
             List<KeyValuePair<Location, BlockInternal>> blocks = new List<KeyValuePair<Location, BlockInternal>>();
             AABB extent = new AABB() { Min = start, Max = start };
@@ -60,7 +60,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
 
         Location[] FloodDirs = new Location[] { Location.UnitX, Location.UnitY, -Location.UnitX, -Location.UnitY, Location.UnitZ, -Location.UnitZ };
 
-        bool FloodFrom(Region tregion, Location start, List<KeyValuePair<Location, BlockInternal>> blocks, float maxRad, AABB extent)
+        bool FloodFrom(Region tregion, Location start, List<KeyValuePair<Location, BlockInternal>> blocks, double maxRad, AABB extent)
         {
             Queue<Location> locsToGo = new Queue<Location>();
             locsToGo.Enqueue(start);

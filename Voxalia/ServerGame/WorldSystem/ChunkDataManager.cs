@@ -44,7 +44,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public void Init(Region tregion)
         {
             TheRegion = tregion;
-            string dir = "/saves/" + TheRegion.TheWorld.Name + "/" + TheRegion.Position.X + "," + TheRegion.Position.Y + "/";
+            string dir = "/saves/" + TheRegion.TheWorld.Name + "/";
             TheRegion.TheServer.Files.CreateDirectory(dir);
             dir = TheRegion.TheServer.Files.BaseDirectory + dir;
             Database = new LiteDatabase("filename=" + dir + "chunks.ldb");

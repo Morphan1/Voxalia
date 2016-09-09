@@ -139,7 +139,7 @@ namespace Voxalia.Shared.Collision
         {
             if (x < 0 || y < 0 || z < 0 || x >= CHUNK_SIZE || y >= CHUNK_SIZE || z >= CHUNK_SIZE)
             {
-                offs = new Vector3(float.NaN, float.NaN, float.NaN);
+                offs = new Vector3(double.NaN, double.NaN, double.NaN);
                 return null;
             }
             Location loffs;
@@ -149,17 +149,17 @@ namespace Voxalia.Shared.Collision
             return shape;
         }
         
-        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, float slen, MaterialSolidity solidness, out RayHit hit)
+        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, double slen, MaterialSolidity solidness, out RayHit hit)
         {
             BoundingBox bb;
             RigidTransform rot = new RigidTransform(Vector3.Zero, startingTransform.Orientation);
             castShape.GetBoundingBox(ref rot, out bb);
-            float adv = 0.1f;
-            float max = slen + adv;
+            double adv = 0.1f;
+            double max = slen + adv;
             bool gotOne = false;
             RayHit BestRH = default(RayHit);
             Vector3 sweep = sweepnorm * slen;
-            for (float f = 0; f < max; f += adv)
+            for (double f = 0; f < max; f += adv)
             {
                 Vector3 c = startingTransform.Position + sweepnorm * f;
                 int mx = (int)Math.Ceiling(c.X + bb.Max.X);
@@ -192,7 +192,7 @@ namespace Voxalia.Shared.Collision
                                 {
                                     continue;
                                 }
-                                Vector3 adj = new Vector3(x + (float)offs.X, y + (float)offs.Y, z + (float)offs.Z);
+                                Vector3 adj = new Vector3(x + (double)offs.X, y + (double)offs.Y, z + (double)offs.Z);
                                 EntityCollidable coll = es.GetCollidableInstance();
                                 //coll.LocalPosition = adj;
                                 RigidTransform rt = new RigidTransform(Vector3.Zero, Quaternion.Identity);
@@ -226,7 +226,7 @@ namespace Voxalia.Shared.Collision
 
         BoxShape RayCastShape = new BoxShape(0.1f, 0.1f, 0.1f);
         
-        public bool RayCast(ref Ray ray, float maximumLength, MaterialSolidity solidness, out RayHit hit)
+        public bool RayCast(ref Ray ray, double maximumLength, MaterialSolidity solidness, out RayHit hit)
         {
             // TODO: Original special ray code!
             RigidTransform rt = new RigidTransform(ray.Position, Quaternion.Identity);

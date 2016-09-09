@@ -20,10 +20,10 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             int ind = me.TheServer.Networking.Strings.IndexForString(me.model);
             Utilities.IntToBytes(ind).CopyTo(Data, 12);
             Quaternion quat = me.GetOrientation();
-            Utilities.FloatToBytes(quat.X).CopyTo(Data, 12 + 4);
-            Utilities.FloatToBytes(quat.Y).CopyTo(Data, 12 + 4 + 4);
-            Utilities.FloatToBytes(quat.Z).CopyTo(Data, 12 + 4 + 8);
-            Utilities.FloatToBytes(quat.W).CopyTo(Data, 12 + 4 + 12);
+            Utilities.FloatToBytes((float)quat.X).CopyTo(Data, 12 + 4);
+            Utilities.FloatToBytes((float)quat.Y).CopyTo(Data, 12 + 4 + 4);
+            Utilities.FloatToBytes((float)quat.Z).CopyTo(Data, 12 + 4 + 8);
+            Utilities.FloatToBytes((float)quat.W).CopyTo(Data, 12 + 4 + 12);
             Utilities.LongToBytes(me.EID).CopyTo(Data, 12 + 4 + 16);
             me.scale.ToBytes().CopyTo(Data, 12 + 4 + 16 + 8);
         }

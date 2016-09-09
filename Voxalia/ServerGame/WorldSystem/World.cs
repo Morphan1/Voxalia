@@ -18,7 +18,11 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public string Name;
 
-        public Dictionary<Vector2i, Region> LoadedRegions = new Dictionary<Vector2i, Region>();
+        /// <summary>
+        /// Represents the only region currently contained by a world.
+        /// May in the future by changed to a dictionary of separate worldly regions.
+        /// </summary>
+        public Region MainRegion = null;
 
         public Server TheServer;
 
@@ -84,21 +88,23 @@ namespace Voxalia.ServerGame.WorldSystem
             Execution.Start();
         }
 
-        public void LoadRegion(int x, int y)
+        public void LoadRegion()
         {
+            if (MainRegion != null)
+            {
+                return;
+            }
             Region rg = new Region();
             rg.TheServer = TheServer;
             rg.TheWorld = this;
-            Vector2i pos = new Vector2i(x, y);
-            rg.Position = pos;
             rg.BuildWorld();
-            LoadedRegions.Add(pos, rg);
+            MainRegion = rg;
         }
         
         private void MainThread()
         {
             LoadConfig();
-            LoadRegion(0, 0);
+            LoadRegion();
             // Tick
             double TARGETFPS = 30d;
             Stopwatch Counter = new Stopwatch();
@@ -179,11 +185,8 @@ namespace Voxalia.ServerGame.WorldSystem
                 return;
             }
             // TODO: Lock safely!
-            foreach (Region reg in LoadedRegions.Values)
-            {
-                reg.UnloadFully();
-            }
-            LoadedRegions.Clear();
+            MainRegion.UnloadFully();
+            MainRegion = null;
             Execution.Abort();
             Execution = null;
         }
@@ -192,10 +195,7 @@ namespace Voxalia.ServerGame.WorldSystem
         
         public void FinalShutdown()
         {
-            foreach (Region reg in LoadedRegions.Values)
-            {
-                reg.FinalShutdown();
-            }
+            MainRegion.FinalShutdown();
         }
 
         Object SaveWorldCFGLock = new Object();
@@ -219,10 +219,7 @@ namespace Voxalia.ServerGame.WorldSystem
         public void Tick(double delta)
         {
             Schedule.RunAllSyncTasks(delta);
-            foreach (Region r in LoadedRegions.Values)
-            {
-                r.Tick(delta);
-            }
+            MainRegion.Tick(delta);
         }
     }
 }

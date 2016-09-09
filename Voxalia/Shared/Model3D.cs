@@ -33,7 +33,7 @@ namespace Voxalia.Shared
     {
         public string Name;
         public List<int> IDs;
-        public List<float> Weights;
+        public List<double> Weights;
         public Matrix MatrixA;
     }
 

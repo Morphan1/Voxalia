@@ -352,7 +352,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public void SetMoveSpeed(CharacterController cc, UserInputSet uis)
         {
-            float speedmod = new Vector2(uis.XMove, uis.YMove).Length() * 2;
+            float speedmod = (float)new Vector2(uis.XMove, uis.YMove).Length() * 2;
             speedmod *= (1f + uis.SprintOrWalk * 0.5f);
             if (Click)
             {
@@ -373,11 +373,11 @@ namespace Voxalia.ClientGame.EntitySystem
             cc.Body.CollisionInformation.Shape.GetBoundingBox(ref transf, out box);
             Location pos = new Location(cc.Body.Position) + new Location(0, 0, box.Min.Z);
             Material mat = TheRegion.GetBlockMaterial(pos + new Location(0, 0, -0.05f));
-            speedmod *= mat.GetSpeedMod();
+            speedmod *= (float)mat.GetSpeedMod();
             cc.StandingSpeed = CBStandSpeed * speedmod;
             cc.CrouchingSpeed = CBCrouchSpeed * speedmod;
             float frictionmod = 1f;
-            frictionmod *= mat.GetFrictionMod();
+            frictionmod *= (float)mat.GetFrictionMod();
             cc.SlidingForce = CBSlideForce * frictionmod * Mass;
             cc.AirForce = CBAirForce * frictionmod * Mass;
             cc.TractionForce = CBTractionForce * frictionmod * Mass;
@@ -478,8 +478,8 @@ namespace Voxalia.ClientGame.EntitySystem
                     tmove.Normalize();
                 }
             }
-            XMove = tmove.X;
-            YMove = tmove.Y;
+            XMove = (float)tmove.X;
+            YMove = (float)tmove.Y;
             if (GamePadHandler.JumpKey)
             {
                 PGPJump = true;
@@ -795,8 +795,10 @@ namespace Voxalia.ClientGame.EntitySystem
                     * (Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 90) * Utilities.PI180) % 360f))
                     * hand.GetBoneTotalMatrix(aTTime, adjs))
                     * Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-90) * Utilities.PI180) % 360f));
-                OpenTK.Matrix4 bonemat = new OpenTK.Matrix4(m4.M11, m4.M12, m4.M13, m4.M14, m4.M21, m4.M22, m4.M23, m4.M24,
-                    m4.M31, m4.M32, m4.M33, m4.M34, m4.M41, m4.M42, m4.M43, m4.M44);
+                OpenTK.Matrix4 bonemat = new OpenTK.Matrix4((float)m4.M11, (float)m4.M12, (float)m4.M13, (float)m4.M14,
+                    (float)m4.M21, (float)m4.M22, (float)m4.M23, (float)m4.M24,
+                    (float)m4.M31, (float)m4.M32, (float)m4.M33, (float)m4.M34,
+                    (float)m4.M41, (float)m4.M42, (float)m4.M43, (float)m4.M44);
                 GL.UniformMatrix4(10, false, ref bonemat);
                 mod.LoadSkin(TheClient.Textures);
                 mod.Draw();
@@ -817,8 +819,8 @@ namespace Voxalia.ClientGame.EntitySystem
                     * (Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 90) * Utilities.PI180) % 360f))
                     * spine.GetBoneTotalMatrix(aTTime, adjs))
                      * Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)((90) * Utilities.PI180) % 360f));
-                OpenTK.Matrix4 bonemat = new OpenTK.Matrix4(m4.M11, m4.M12, m4.M13, m4.M14, m4.M21, m4.M22, m4.M23, m4.M24,
-                    m4.M31, m4.M32, m4.M33, m4.M34, m4.M41, m4.M42, m4.M43, m4.M44);
+                OpenTK.Matrix4 bonemat = new OpenTK.Matrix4((float)m4.M11, (float)m4.M12, (float)m4.M13, (float)m4.M14, (float)m4.M21, (float)m4.M22, (float)m4.M23, (float)m4.M24,
+                    (float)m4.M31, (float)m4.M32, (float)m4.M33, (float)m4.M34, (float)m4.M41, (float)m4.M42, (float)m4.M43, (float)m4.M44);
                 GL.UniformMatrix4(10, false, ref bonemat);
                 jetp.LoadSkin(TheClient.Textures);
                 jetp.Draw();

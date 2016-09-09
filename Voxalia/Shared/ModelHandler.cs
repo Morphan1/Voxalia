@@ -40,9 +40,9 @@ namespace Voxalia.Shared
                 mesh.Vertices = new List<Vector3>(vertexCount);
                 for (int v = 0; v < vertexCount; v++)
                 {
-                    float f1 = dr.ReadFloat();
-                    float f2 = dr.ReadFloat();
-                    float f3 = dr.ReadFloat();
+                    double f1 = dr.ReadFloat();
+                    double f2 = dr.ReadFloat();
+                    double f3 = dr.ReadFloat();
                     mesh.Vertices.Add(new Vector3(f1, f2, f3));
                 }
                 int indiceCount = dr.ReadInt() * 3;
@@ -55,17 +55,17 @@ namespace Voxalia.Shared
                 mesh.TexCoords = new List<Vector2>(tcCount);
                 for (int t = 0; t < tcCount; t++)
                 {
-                    float f1 = dr.ReadFloat();
-                    float f2 = dr.ReadFloat();
+                    double f1 = dr.ReadFloat();
+                    double f2 = dr.ReadFloat();
                     mesh.TexCoords.Add(new Vector2(f1, f2));
                 }
                 int normCount = dr.ReadInt();
                 mesh.Normals = new List<Vector3>(normCount);
                 for (int n = 0; n < normCount; n++)
                 {
-                    float f1 = dr.ReadFloat();
-                    float f2 = dr.ReadFloat();
-                    float f3 = dr.ReadFloat();
+                    double f1 = dr.ReadFloat();
+                    double f2 = dr.ReadFloat();
+                    double f3 = dr.ReadFloat();
                     mesh.Normals.Add(new Vector3(f1, f2, f3));
                 }
                 int boneCount = dr.ReadInt();
@@ -77,7 +77,7 @@ namespace Voxalia.Shared
                     bone.Name = dr.ReadFullString();
                     int weights = dr.ReadInt();
                     bone.IDs = new List<int>(weights);
-                    bone.Weights = new List<float>(weights);
+                    bone.Weights = new List<double>(weights);
                     for (int w = 0; w < weights; w++)
                     {
                         bone.IDs.Add(dr.ReadInt());
@@ -107,22 +107,22 @@ namespace Voxalia.Shared
 
         public Matrix ReadMat(DataReader reader)
         {
-            float a1 = reader.ReadFloat();
-            float a2 = reader.ReadFloat();
-            float a3 = reader.ReadFloat();
-            float a4 = reader.ReadFloat();
-            float b1 = reader.ReadFloat();
-            float b2 = reader.ReadFloat();
-            float b3 = reader.ReadFloat();
-            float b4 = reader.ReadFloat();
-            float c1 = reader.ReadFloat();
-            float c2 = reader.ReadFloat();
-            float c3 = reader.ReadFloat();
-            float c4 = reader.ReadFloat();
-            float d1 = reader.ReadFloat();
-            float d2 = reader.ReadFloat();
-            float d3 = reader.ReadFloat();
-            float d4 = reader.ReadFloat();
+            double a1 = reader.ReadFloat();
+            double a2 = reader.ReadFloat();
+            double a3 = reader.ReadFloat();
+            double a4 = reader.ReadFloat();
+            double b1 = reader.ReadFloat();
+            double b2 = reader.ReadFloat();
+            double b3 = reader.ReadFloat();
+            double b4 = reader.ReadFloat();
+            double c1 = reader.ReadFloat();
+            double c2 = reader.ReadFloat();
+            double c3 = reader.ReadFloat();
+            double c4 = reader.ReadFloat();
+            double d1 = reader.ReadFloat();
+            double d2 = reader.ReadFloat();
+            double d3 = reader.ReadFloat();
+            double d4 = reader.ReadFloat();
             return new Matrix(a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4, d1, d2, d3, d4);
             //return new Matrix(a1, b1, c1, d1, a2, b2, c2, d2, a3, b3, c3, d3, a4, b4, c4, d4);
         }

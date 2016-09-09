@@ -32,11 +32,11 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             Location loc = Location.NaN;
             if (entry.Arguments.Count > 1)
             {
-                pitch = Utilities.StringToFloat(entry.GetArgument(queue, 1));
+                pitch = (float)Utilities.StringToFloat(entry.GetArgument(queue, 1));
             }
             if (entry.Arguments.Count > 2)
             {
-                gain = Utilities.StringToFloat(entry.GetArgument(queue, 2));
+                gain = (float)Utilities.StringToFloat(entry.GetArgument(queue, 2));
             }
             if (entry.Arguments.Count > 3)
             {
@@ -45,7 +45,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             float seek = 0;
             if (entry.Arguments.Count > 4)
             {
-                seek = Utilities.StringToFloat(entry.GetArgument(queue, 4));
+                seek = (float)(float)Utilities.StringToFloat(entry.GetArgument(queue, 4));
             }
             TheClient.Sounds.Play(TheClient.Sounds.GetSound(sfx), false, loc, pitch, gain, seek);
         }

@@ -10,9 +10,9 @@ namespace Voxalia.ServerGame.JointSystem
 {
     public class ConstWheelStepUp: BaseJoint
     {
-        public float Height;
+        public double Height;
 
-        public ConstWheelStepUp(PhysicsEntity ent, float height)
+        public ConstWheelStepUp(PhysicsEntity ent, double height)
         {
             One = ent;
             Two = ent;

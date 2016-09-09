@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Name = "suctionray";
         }
 
-        public override float GetStrength()
+        public override double GetStrength()
         {
             return 1;
         }

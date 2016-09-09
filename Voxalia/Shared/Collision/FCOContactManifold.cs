@@ -82,19 +82,19 @@ namespace Voxalia.Shared.Collision
 
         public static bool IsNaNOrInfOrZero(ref Vector3 vec)
         {
-            return float.IsInfinity(vec.X) || float.IsNaN(vec.X)
-                || float.IsInfinity(vec.Y) || float.IsNaN(vec.Y)
-                || float.IsInfinity(vec.Z) || float.IsNaN(vec.Z) || (vec.X == 0 && vec.Y == 0 && vec.Z == 0);
+            return double.IsInfinity(vec.X) || double.IsNaN(vec.X)
+                || double.IsInfinity(vec.Y) || double.IsNaN(vec.Y)
+                || double.IsInfinity(vec.Z) || double.IsNaN(vec.Z) || (vec.X == 0 && vec.Y == 0 && vec.Z == 0);
         }
 
         public static bool IsNaNOrInf(ref Vector3 vec)
         {
-            return float.IsInfinity(vec.X) || float.IsNaN(vec.X)
-                || float.IsInfinity(vec.Y) || float.IsNaN(vec.Y)
-                || float.IsInfinity(vec.Z) || float.IsNaN(vec.Z);
+            return double.IsInfinity(vec.X) || double.IsNaN(vec.X)
+                || double.IsInfinity(vec.Y) || double.IsNaN(vec.Y)
+                || double.IsInfinity(vec.Z) || double.IsNaN(vec.Z);
         }
         
-        public override void Update(float dt)
+        public override void Update(double dt)
         {
             RigidTransform transform = new RigidTransform(mesh.Position);
             RigidTransform convexTransform = convex.WorldTransform;

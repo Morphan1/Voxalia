@@ -199,10 +199,10 @@ namespace Voxalia.ServerGame.EntitySystem
             byte[] bytes = new byte[12 + 12 + 4 + 4 + 4 + 4 + 12];
             GetPosition().ToBytes().CopyTo(bytes, 0);
             GetVelocity().ToBytes().CopyTo(bytes, 12);
-            Utilities.FloatToBytes(Angles.X).CopyTo(bytes, 12 + 12);
-            Utilities.FloatToBytes(Angles.Y).CopyTo(bytes, 12 + 12 + 4);
-            Utilities.FloatToBytes(Angles.Z).CopyTo(bytes, 12 + 12 + 4 + 4);
-            Utilities.FloatToBytes(Angles.W).CopyTo(bytes, 12 + 12 + 4 + 4 + 4);
+            Utilities.FloatToBytes((float)Angles.X).CopyTo(bytes, 12 + 12);
+            Utilities.FloatToBytes((float)Angles.Y).CopyTo(bytes, 12 + 12 + 4);
+            Utilities.FloatToBytes((float)Angles.Z).CopyTo(bytes, 12 + 12 + 4 + 4);
+            Utilities.FloatToBytes((float)Angles.W).CopyTo(bytes, 12 + 12 + 4 + 4 + 4);
             Gravity.ToBytes().CopyTo(bytes, 12 + 12 + 4 + 4 + 4 + 4);
             return bytes;
         }

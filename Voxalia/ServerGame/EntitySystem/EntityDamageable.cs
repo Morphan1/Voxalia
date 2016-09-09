@@ -2,14 +2,14 @@
 {
     public interface EntityDamageable
     {
-        float GetHealth();
+        double GetHealth();
 
-        float GetMaxHealth();
+        double GetMaxHealth();
 
-        void SetHealth(float health);
+        void SetHealth(double health);
 
-        void SetMaxHealth(float health);
+        void SetMaxHealth(double health);
 
-        void Damage(float amount);
+        void Damage(double amount);
     }
 }

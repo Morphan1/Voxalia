@@ -15,7 +15,7 @@ namespace Voxalia.Shared.Collision
             shape = tshape;
         }
 
-        protected override void UpdateBoundingBoxInternal(float dt)
+        protected override void UpdateBoundingBoxInternal(double dt)
         {
             Shape.GetBoundingBox(ref worldTransform, out boundingBox);
             ExpandBoundingBox(ref boundingBox, dt);

@@ -165,7 +165,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            PhysicsWorld.Update((float)delta);
+            PhysicsWorld.Update((double)delta);
             sw.Stop();
             TheServer.PhysicsTimeC += sw.Elapsed.TotalMilliseconds;
             TheServer.PhysicsTimes++;
@@ -213,8 +213,6 @@ namespace Voxalia.ServerGame.WorldSystem
         public Server TheServer = null;
 
         public World TheWorld = null;
-
-        public Vector2i Position = new Vector2i(0, 0);
         
         /// <summary>
         /// Does not return until fully unloaded.
@@ -270,7 +268,7 @@ namespace Voxalia.ServerGame.WorldSystem
             ChunkManager.Shutdown();
         }
 
-        public void PlaySound(string sound, Location pos, float vol, float pitch)
+        public void PlaySound(string sound, Location pos, double vol, double pitch)
         {
             bool nan = pos.IsNaN();
             Vector3i cpos = nan ? Vector3i.Zero : ChunkLocFor(pos);
@@ -284,7 +282,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        public void PaintBomb(Location pos, byte bcol, float rad = 5f)
+        public void PaintBomb(Location pos, byte bcol, double rad = 5f)
         {
             foreach (Location loc in GetBlocksInRadius(pos, 5))
             {
@@ -301,13 +299,13 @@ namespace Voxalia.ServerGame.WorldSystem
             // TODO: Sound effect?
         }
 
-        public void Explode(Location pos, float rad = 5f, bool effect = true, bool breakblock = true, bool applyforce = true, bool doDamage = true)
+        public void Explode(Location pos, double rad = 5f, bool effect = true, bool breakblock = true, bool applyforce = true, bool doDamage = true)
         {
             if (doDamage)
             {
                 // TODO: DO DAMAGE!
             }
-            float expDamage = 5 * rad;
+            double expDamage = 5 * rad;
             CheckThreadValidity();
             if (breakblock)
             {
@@ -346,7 +344,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     if (e is PhysicsEntity)
                     {
                         Location offs = e.GetPosition() - pos;
-                        float dpower = (float)((rad * 5) - offs.Length()); // TODO: Efficiency?
+                        double dpower = (double)((rad * 5) - offs.Length()); // TODO: Efficiency?
                         Location force = new Location(1, 1, 3) * dpower;
                         ((PhysicsEntity)e).ApplyForce(force);
                     }

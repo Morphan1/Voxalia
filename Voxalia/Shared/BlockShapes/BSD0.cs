@@ -197,15 +197,15 @@ namespace Voxalia.Shared.BlockShapes
             List<Vector4> swei = new List<Vector4>();
             if (!bzp)
             {
-                float txp = XP.Material.TextureID(MaterialSide.TOP);
-                float txm = XM.Material.TextureID(MaterialSide.TOP);
-                float typ = YP.Material.TextureID(MaterialSide.TOP);
-                float tym = YM.Material.TextureID(MaterialSide.TOP);
-                float zer = 0;
-                float vxp = XP.IsOpaque() ? 1 : 0;
-                float vxm = XM.IsOpaque() ? 1 : 0;
-                float vyp = YP.IsOpaque() ? 1 : 0;
-                float vym = XM.IsOpaque() ? 1 : 0;
+                double txp = XP.Material.TextureID(MaterialSide.TOP);
+                double txm = XM.Material.TextureID(MaterialSide.TOP);
+                double typ = YP.Material.TextureID(MaterialSide.TOP);
+                double tym = YM.Material.TextureID(MaterialSide.TOP);
+                double zer = 0;
+                double vxp = XP.IsOpaque() ? 1 : 0;
+                double vxm = XM.IsOpaque() ? 1 : 0;
+                double vyp = YP.IsOpaque() ? 1 : 0;
+                double vym = XM.IsOpaque() ? 1 : 0;
                 for (int i = 0; i < 6; i++)
                 {
                     sdat.Add(new Vector4(txp, txm, typ, tym));

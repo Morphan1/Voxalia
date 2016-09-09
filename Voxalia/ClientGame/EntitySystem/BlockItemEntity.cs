@@ -56,9 +56,9 @@ namespace Voxalia.ClientGame.EntitySystem
             System.Drawing.Color tcol = Voxalia.Shared.Colors.ForByte(Paint);
             for (int i = 0; i < vecs.Count; i++)
             {
-                vbo.Vertices.Add(new OpenTK.Vector3(vecs[i].X, vecs[i].Y, vecs[i].Z));
-                vbo.Normals.Add(new OpenTK.Vector3(norms[i].X, norms[i].Y, norms[i].Z));
-                vbo.TexCoords.Add(new OpenTK.Vector3(tcoord[i].X, tcoord[i].Y, tcoord[i].Z));
+                vbo.Vertices.Add(new OpenTK.Vector3((float)vecs[i].X, (float)vecs[i].Y, (float)vecs[i].Z));
+                vbo.Normals.Add(new OpenTK.Vector3((float)norms[i].X, (float)norms[i].Y, (float)norms[i].Z));
+                vbo.TexCoords.Add(new OpenTK.Vector3((float)tcoord[i].X, (float)tcoord[i].Y, (float)tcoord[i].Z));
                 vbo.Indices.Add((uint)i);
                 vbo.Colors.Add(new Vector4(1, 1, 1, 1));
                 vbo.TCOLs.Add(TheClient.Rendering.AdaptColor(vbo.Vertices[i], tcol));
@@ -105,7 +105,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 ContactInformation info;
                 ((ConvexFCOPairHandler)pair).ContactInfo(/*contact.Id*/0, out info);
-                float vellen = Math.Abs(info.RelativeVelocity.X) + Math.Abs(info.RelativeVelocity.Y) + Math.Abs(info.RelativeVelocity.Z);
+                float vellen = (float)(Math.Abs(info.RelativeVelocity.X) + Math.Abs(info.RelativeVelocity.Y) + Math.Abs(info.RelativeVelocity.Z));
                 float mod = vellen / 5;
                 if (mod > 2)
                 {
@@ -133,7 +133,7 @@ namespace Voxalia.ClientGame.EntitySystem
                     velocity = e.LinearVelocity;
                 }
                 BEPUutilities.Vector3 relvel = Body.LinearVelocity - velocity;
-                float vellen = Math.Abs(relvel.X) + Math.Abs(relvel.Y) + Math.Abs(relvel.Z);
+                float vellen = (float)(Math.Abs(relvel.X) + Math.Abs(relvel.Y) + Math.Abs(relvel.Z));
                 float mod = vellen / 5;
                 if (mod > 2)
                 {

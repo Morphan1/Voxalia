@@ -261,27 +261,27 @@ namespace Voxalia.Shared
             if (Positions.Count == 1)
             {
                 Location pos = Positions[0];
-                return new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);
+                return new Vector3((double)pos.X, (double)pos.Y, (double)pos.Z);
             }
             int index = findPos(aTime);
             int nextIndex = index + 1;
             if (nextIndex >= Positions.Count)
             {
                 Location pos = Positions[0];
-                return new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);
+                return new Vector3((double)pos.X, (double)pos.Y, (double)pos.Z);
             }
             double deltaT = PosTimes[nextIndex] - PosTimes[index];
             double factor = (aTime - PosTimes[index]) / deltaT;
             if (factor < 0 || factor > 1)
             {
                 Location pos = Positions[0];
-                return new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);
+                return new Vector3((double)pos.X, (double)pos.Y, (double)pos.Z);
             }
             Location start = Positions[index];
             Location end = Positions[nextIndex];
             Location deltaV = end - start;
-            Location npos = start + (float)factor * deltaV;
-            return new Vector3((float)npos.X, (float)npos.Y, (float)npos.Z);
+            Location npos = start + (double)factor * deltaV;
+            return new Vector3((double)npos.X, (double)npos.Y, (double)npos.Z);
         }
 
         int findRotate(double time)
@@ -320,7 +320,7 @@ namespace Voxalia.Shared
             }
             Quaternion start = Rotations[index];
             Quaternion end = Rotations[nextIndex];
-            Quaternion res = Quaternion.Slerp(start, end, (float)factor);
+            Quaternion res = Quaternion.Slerp(start, end, (double)factor);
             res.Normalize();
             return res;
         }

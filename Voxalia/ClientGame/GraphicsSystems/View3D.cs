@@ -939,7 +939,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.Uniform1(10, MainEXP);
             GL.Uniform1(16, TheClient.CVars.r_znear.ValueF);
             GL.Uniform1(17, TheClient.CVars.r_zfar.ValueF);
-            GL.Uniform4(18, new Vector4(ClientUtilities.Convert(Headmat.GetFogColor()), Headmat.GetFogAlpha()));
+            GL.Uniform4(18, new Vector4(ClientUtilities.Convert(Headmat.GetFogColor()), (float)Headmat.GetFogAlpha()));
             GL.Uniform1(19, DesaturationAmount);
             GL.Uniform3(20, ClientUtilities.Convert(CameraPos));
             GL.Uniform3(21, DesaturationColor);

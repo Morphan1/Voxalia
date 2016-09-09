@@ -5,9 +5,9 @@ namespace Voxalia.Shared.BlockShapes
 {
     public class BSD39a76: BlockShapeDetails
     {
-        public float Width = 1f;
+        public double Width = 1f;
 
-        public BSD39a76(float width)
+        public BSD39a76(double width)
         {
             Width = width;
         }

@@ -101,15 +101,15 @@ namespace Voxalia.Shared.Collision
             convex = null;
         }
         
-        public override void UpdateTimeOfImpact(Collidable requester, float dt)
+        public override void UpdateTimeOfImpact(Collidable requester, double dt)
         {
             //Notice that we don't test for convex entity null explicitly.  The convex.IsActive property does that for us.
             if (convex.IsActive && convex.Entity.PositionUpdateMode == PositionUpdateMode.Continuous)
             {
                 //Only perform the test if the minimum radii are small enough relative to the size of the velocity.
                 Vector3 velocity = convex.Entity.LinearVelocity * dt;
-                float velocitySquared = velocity.LengthSquared();
-                float minimumRadius = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
+                double velocitySquared = velocity.LengthSquared();
+                double minimumRadius = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
                 timeOfImpact = 1;
                 if (minimumRadius * minimumRadius < velocitySquared)
                 {

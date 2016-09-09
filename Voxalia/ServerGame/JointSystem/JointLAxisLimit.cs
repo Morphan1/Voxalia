@@ -14,7 +14,7 @@ namespace Voxalia.ServerGame.JointSystem
 {
     class JointLAxisLimit : BaseJoint
     {
-        public JointLAxisLimit(PhysicsEntity e1, PhysicsEntity e2, float min, float max, Location cpos1, Location cpos2, Location axis)
+        public JointLAxisLimit(PhysicsEntity e1, PhysicsEntity e2, double min, double max, Location cpos1, Location cpos2, Location axis)
         {
             Ent1 = e1;
             Ent2 = e2;
@@ -25,8 +25,8 @@ namespace Voxalia.ServerGame.JointSystem
             Axis = axis;
         }
 
-        public float Min;
-        public float Max;
+        public double Min;
+        public double Max;
         public Location CPos1;
         public Location CPos2;
         public Location Axis;

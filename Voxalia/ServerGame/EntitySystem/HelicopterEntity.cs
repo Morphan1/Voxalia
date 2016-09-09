@@ -35,12 +35,12 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool ILeft = false;
         public bool IRight = false;
 
-        public float SprintOrWalk = 0f;
+        public double SprintOrWalk = 0f;
 
-        public float ForwBack = 0;
-        public float RightLeft = 0;
+        public double ForwBack = 0;
+        public double RightLeft = 0;
 
-        public float TiltMod = 1f;
+        public double TiltMod = 1f;
 
         public override void SpawnBody()
         {
@@ -50,7 +50,7 @@ namespace Voxalia.ServerGame.EntitySystem
         }
         
         // TODO: Customizable, networked!
-        public float LiftStrength
+        public double LiftStrength
         {
             get
             {
@@ -58,7 +58,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
-        public float FallStrength
+        public double FallStrength
         {
             get
             {
@@ -93,7 +93,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Vector3 up = Quaternion.Transform(Vector3.UnitZ, Entity.Orientation);
                 // Apply the amount of force necessary to counteract downward force, within a limit.
                 // POTENTIAL: Adjust according to orientation?
-                float uspeed = Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass);
+                double uspeed = Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass);
                 if (uspeed < 0f)
                 {
                     uspeed += (uspeed - Helicopter.FallStrength) * Helicopter.SprintOrWalk;
@@ -108,27 +108,27 @@ namespace Voxalia.ServerGame.EntitySystem
                 // At the same time, fight against existing rotation.
                 Vector3 VecUp = new Vector3(Helicopter.RightLeft * 0.2f * Helicopter.TiltMod, Helicopter.ForwBack * -0.2f * Helicopter.TiltMod, 1);
                 // TODO: Simplify yawrel calculation.
-                float tyaw = (float)(Utilities.MatrixToAngles(Matrix.CreateFromQuaternion(Entity.Orientation)).Z * Utilities.PI180);
+                double tyaw = (double)(Utilities.MatrixToAngles(Matrix.CreateFromQuaternion(Entity.Orientation)).Z * Utilities.PI180);
                 Quaternion yawrel = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, tyaw);
                 VecUp = Quaternion.Transform(VecUp, yawrel);
                 VecUp.Y = -VecUp.Y;
                 VecUp.Normalize();
                 Vector3 axis = Vector3.Cross(VecUp, up);
-                float len = axis.Length();
+                double len = axis.Length();
                 if (len > 0)
                 {
                     axis /= len;
-                    float angle = (float)Math.Asin(len);
-                    if (!float.IsNaN(angle))
+                    double angle = (double)Math.Asin(len);
+                    if (!double.IsNaN(angle))
                     {
-                        float avel = Vector3.Dot(Entity.AngularVelocity, axis);
+                        double avel = Vector3.Dot(Entity.AngularVelocity, axis);
                         Vector3 torque = axis * ((-angle) - 0.3f * avel);
                         torque *= Entity.Mass * Delta * 30;
                         Entity.ApplyAngularImpulse(ref torque);
                     }
                 }
                 // Spin in place
-                float rotation = (Helicopter.IRight ? -1f : 0f) + (Helicopter.ILeft ? 1f : 0f);
+                double rotation = (Helicopter.IRight ? -1f : 0f) + (Helicopter.ILeft ? 1f : 0f);
                 if (rotation * rotation > 0f)
                 {
                     Vector3 rot = new Vector3(0, 0, rotation * 15f * Delta * Entity.Mass);
@@ -141,14 +141,14 @@ namespace Voxalia.ServerGame.EntitySystem
                 Entity.ActivityInformation.Activate();
             }
 
-            public override float SolveIteration()
+            public override double SolveIteration()
             {
                 return 0; // Do nothing
             }
 
-            float Delta;
+            double Delta;
 
-            public override void Update(float dt)
+            public override void Update(double dt)
             {
                 Delta = dt;
             }

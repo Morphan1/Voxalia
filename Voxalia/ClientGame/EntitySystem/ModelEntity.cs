@@ -106,14 +106,14 @@ namespace Voxalia.ClientGame.EntitySystem
                 Entity.ActivityInformation.Activate();
             }
 
-            public override float SolveIteration()
+            public override double SolveIteration()
             {
                 return 0; // Do nothing
             }
 
-            float Delta;
+            double Delta;
 
-            public override void Update(float dt)
+            public override void Update(double dt)
             {
                 Delta = dt;
             }
@@ -173,7 +173,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitZ, Entity.Orientation);
                 // Apply the amount of force necessary to counteract downward force, within a limit.
                 // POTENTIAL: Adjust according to orientation?
-                float uspeed = Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass);
+                double uspeed = Math.Min(Helicopter.LiftStrength, -(Entity.LinearVelocity.Z + Entity.Space.ForceUpdater.Gravity.Z) * Entity.Mass);
                 if (uspeed < 0f)
                 {
                     uspeed += (uspeed - Helicopter.FallStrength) * Helicopter.HeloPilot.SprintOrWalk;
@@ -194,14 +194,14 @@ namespace Voxalia.ClientGame.EntitySystem
                 VecUp.Normalize();
                 VecUp.Y = -VecUp.Y;
                 BEPUutilities.Vector3 axis = BEPUutilities.Vector3.Cross(VecUp, up);
-                float len = axis.Length();
+                double len = axis.Length();
                 if (len > 0)
                 {
                     axis /= len;
                     float angle = (float)Math.Asin(len);
                     if (!float.IsNaN(angle))
                     {
-                        float avel = BEPUutilities.Vector3.Dot(Entity.AngularVelocity, axis);
+                        double avel = BEPUutilities.Vector3.Dot(Entity.AngularVelocity, axis);
                         BEPUutilities.Vector3 torque = axis * ((-angle) - 0.3f * avel);
                         torque *= Entity.Mass * Delta * 30;
                         Entity.ApplyAngularImpulse(ref torque);
@@ -221,14 +221,14 @@ namespace Voxalia.ClientGame.EntitySystem
                 Entity.ActivityInformation.Activate();
             }
 
-            public override float SolveIteration()
+            public override double SolveIteration()
             {
                 return 0; // Do nothing
             }
 
-            float Delta;
+            double Delta;
 
-            public override void Update(float dt)
+            public override void Update(double dt)
             {
                 Delta = dt;
             }

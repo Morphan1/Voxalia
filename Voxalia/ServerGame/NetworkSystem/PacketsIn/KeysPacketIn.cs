@@ -26,14 +26,14 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             bool iright = val.HasFlag(KeysPacketData.ITEMRIGHT);
             bool iup = val.HasFlag(KeysPacketData.ITEMUP);
             bool idown = val.HasFlag(KeysPacketData.ITEMDOWN);
-            float yaw = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2, 4));
-            float pitch = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4, 4));
-            float x = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4 + 4, 4));
-            float y = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4 + 4 + 4, 4));
+            double yaw = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2, 4));
+            double pitch = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4, 4));
+            double x = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4 + 4, 4));
+            double y = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4 + 4 + 4, 4));
             int s = 8 + 2 + 4 + 4 + 4 + 4;
             Location pos = Location.FromBytes(data, s);
             Location vel = Location.FromBytes(data, s + 12);
-            float sow = Utilities.BytesToFloat(Utilities.BytesPartial(data, s + 12 + 12, 4));
+            double sow = Utilities.BytesToFloat(Utilities.BytesPartial(data, s + 12 + 12, 4));
             Vector2 tmove = new Vector2(x, y);
             if (tmove.LengthSquared() > 1f)
             {
@@ -84,7 +84,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
                 }
                 rel /= len;
                 RayCastResult rcr;
-                if (Player.TheRegion.SpecialCaseConvexTrace(new BoxShape(1.1f, 1.1f, 1.1f), start + up, rel, (float)len, MaterialSolidity.FULLSOLID, Player.IgnoreThis, out rcr))
+                if (Player.TheRegion.SpecialCaseConvexTrace(new BoxShape(1.1f, 1.1f, 1.1f), start + up, rel, (double)len, MaterialSolidity.FULLSOLID, Player.IgnoreThis, out rcr))
                 {
                     Player.Teleport(start);
                 }

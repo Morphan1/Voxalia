@@ -89,7 +89,7 @@ namespace Voxalia.Shared.Collision
 
         public CollisionResult CuboidLineTrace(Location halfsize, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
         {
-            BoxShape shape = new BoxShape((float)halfsize.X * 2f, (float)halfsize.Y * 2f, (float)halfsize.Z * 2f);
+            BoxShape shape = new BoxShape((double)halfsize.X * 2f, (double)halfsize.Y * 2f, (double)halfsize.Z * 2f);
             return CuboidLineTrace(shape, start, end, filter);
         }
 
@@ -102,8 +102,8 @@ namespace Voxalia.Shared.Collision
         /// <returns>The collision details.</returns>
         public CollisionResult CuboidLineTrace(ConvexShape shape, Location start, Location end, Func<BroadPhaseEntry, bool> filter = null)
         {
-            Vector3 e = new Vector3((float)(end.X - start.X), (float)(end.Y - start.Y), (float)(end.Z - start.Z));
-            RigidTransform rt = new RigidTransform(new Vector3((float)start.X, (float)start.Y, (float)start.Z));
+            Vector3 e = new Vector3((double)(end.X - start.X), (double)(end.Y - start.Y), (double)(end.Z - start.Z));
+            RigidTransform rt = new RigidTransform(new Vector3((double)start.X, (double)start.Y, (double)start.Z));
             RayCastResult rcr;
             bool hit;
             if (filter == null)
@@ -153,11 +153,11 @@ namespace Voxalia.Shared.Collision
             bool hit;
             if (filter == null)
             {
-                hit = World.RayCast(ray, (float)len, out rcr);
+                hit = World.RayCast(ray, (double)len, out rcr);
             }
             else
             {
-                hit = World.RayCast(ray, (float)len, filter, out rcr);
+                hit = World.RayCast(ray, (double)len, filter, out rcr);
             }
             CollisionResult cr = new CollisionResult();
             cr.Hit = hit;

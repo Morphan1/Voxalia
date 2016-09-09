@@ -14,11 +14,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Name = "bow";
         }
 
-        public float DrawMinimum = 0.5f;
+        public double DrawMinimum = 0.5f;
 
-        public float DrawRate = 1f;
+        public double DrawRate = 1f;
 
-        public float FireStrength = 1f;
+        public double FireStrength = 1f;
 
         public override void PrepItem(Entity entity, ItemStack item)
         {
@@ -75,24 +75,24 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 player.ItemStartClickTime = -1;
                 return;
             }
-            float drawRate = DrawRate;
+            double drawRate = DrawRate;
             TemplateObject dw2;
             if (item.SharedAttributes.TryGetValue("drawrate", out dw2))
             {
                 NumberTag nt = NumberTag.TryFor(dw2);
                 if (nt != null)
                 {
-                    drawRate = (float)nt.Internal;
+                    drawRate = (double)nt.Internal;
                 }
             }
-            float drawMin = DrawMinimum;
+            double drawMin = DrawMinimum;
             TemplateObject dm2;
             if (item.SharedAttributes.TryGetValue("drawmin", out dm2))
             {
                 NumberTag nt = NumberTag.TryFor(dm2);
                 if (nt != null)
                 {
-                    drawMin = (float)nt.Internal;
+                    drawMin = (double)nt.Internal;
                 }
             }
             double timeStretched = Math.Min((player.TheRegion.GlobalTickTime - player.ItemStartClickTime) * drawRate, 3) + drawMin;
@@ -114,7 +114,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Matrix lookatlh = Utilities.LookAtLH(Location.Zero, forward, Location.UnitZ);
             lookatlh.Transpose();
             ae.Angles = Quaternion.CreateFromRotationMatrix(lookatlh);
-            ae.Angles *= Quaternion.CreateFromAxisAngle(Vector3.UnitX, 90f * (float)Utilities.PI180);
+            ae.Angles *= Quaternion.CreateFromAxisAngle(Vector3.UnitX, 90f * (double)Utilities.PI180);
             player.TheRegion.SpawnEntity(ae);
             return ae;
         }
@@ -147,13 +147,13 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             PlayerEntity player = (PlayerEntity)entity;
-            float speedm = 1f;
+            double speedm = 1f;
             if (item.SharedAttributes.ContainsKey("cspeedm"))
             {
                 NumberTag nt = NumberTag.TryFor(item.SharedAttributes["cspeedm"]);
                 if (nt != null)
                 {
-                    speedm = (float)nt.Internal;
+                    speedm = (double)nt.Internal;
                 }
             }
             player.ItemSpeedMod = speedm;

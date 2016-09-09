@@ -51,7 +51,7 @@ namespace Voxalia.Shared
             D = -(Normal.Dot(vec1));
         }
 
-        public Plane(Location _normal, float _d)
+        public Plane(Location _normal, double _d)
         {
             double fact = 1 / _normal.Length();
             Normal = _normal * fact;

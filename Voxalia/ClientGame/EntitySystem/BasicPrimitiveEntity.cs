@@ -41,8 +41,10 @@ namespace Voxalia.ClientGame.EntitySystem
                 TheClient.Rendering.SetMinimumLight(0f);
                 BEPUutilities.Matrix matang = BEPUutilities.Matrix.CreateFromQuaternion(Angles);
                 //matang.Transpose();
-                Matrix4 matang4 = new Matrix4(matang.M11, matang.M12, matang.M13, matang.M14, matang.M21, matang.M22, matang.M23, matang.M24,
-                    matang.M31, matang.M32, matang.M33, matang.M34, matang.M41, matang.M42, matang.M43, matang.M44);
+                Matrix4 matang4 = new Matrix4((float)matang.M11, (float)matang.M12, (float)matang.M13, (float)matang.M14,
+                    (float)matang.M21, (float)matang.M22, (float)matang.M23, (float)matang.M24,
+                    (float)matang.M31, (float)matang.M32, (float)matang.M33, (float)matang.M34,
+                    (float)matang.M41, (float)matang.M42, (float)matang.M43, (float)matang.M44);
                 Matrix4 mat = matang4 * Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
                 GL.UniformMatrix4(2, false, ref mat);
                 model.Draw(); // TODO: Animation?

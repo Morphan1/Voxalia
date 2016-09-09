@@ -65,7 +65,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                     {
                         player.BlockBreakStarted = player.TheRegion.GlobalTickTime;
                     }
-                    float bt = mat.GetBreakTime();
+                    double bt = mat.GetBreakTime();
                     MaterialBreaker breaker = GetBreaker();
                     MaterialBreaker matbreaker = mat.GetBreaker();
                     if (matbreaker == MaterialBreaker.NON_BREAKABLE)

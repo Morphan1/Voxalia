@@ -177,7 +177,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return Friction;
             }
-            return Body.Material.KineticFriction;
+            return (float)Body.Material.KineticFriction;
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return Bounciness;
             }
-            return Body.Material.Bounciness;
+            return (float)Body.Material.Bounciness;
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace Voxalia.ClientGame.EntitySystem
         /// </summary>
         public virtual float GetMass()
         {
-            return Body == null ? Mass : Body.Mass;
+            return Body == null ? Mass : (float)Body.Mass;
         }
 
         /// <summary>

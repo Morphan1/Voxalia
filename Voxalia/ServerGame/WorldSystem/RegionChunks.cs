@@ -407,7 +407,7 @@ namespace Voxalia.ServerGame.WorldSystem
             return true;
         }
 
-        public List<Location> GetBlocksInRadius(Location pos, float rad)
+        public List<Location> GetBlocksInRadius(Location pos, double rad)
         {
             int min = (int)Math.Floor(-rad);
             int max = (int)Math.Ceiling(rad);

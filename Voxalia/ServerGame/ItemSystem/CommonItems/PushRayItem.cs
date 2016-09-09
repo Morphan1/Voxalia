@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Name = "pushray";
         }
 
-        public override float GetStrength()
+        public override double GetStrength()
         {
             return -1;
         }

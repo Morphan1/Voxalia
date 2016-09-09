@@ -127,16 +127,16 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 Biome biome;
                 Location posBlock = entry.Player.GetPosition().GetBlockLocation();
-                float h = entry.Player.TheRegion.Generator.GetHeight(entry.Player.TheRegion.TheWorld.Seed, entry.Player.TheRegion.TheWorld.Seed2, entry.Player.TheRegion.TheWorld.Seed3,
-                    entry.Player.TheRegion.TheWorld.Seed4, entry.Player.TheRegion.TheWorld.Seed5, (float)posBlock.X, (float)posBlock.Y, (float)posBlock.Z, out biome);
+                double h = entry.Player.TheRegion.Generator.GetHeight(entry.Player.TheRegion.TheWorld.Seed, entry.Player.TheRegion.TheWorld.Seed2, entry.Player.TheRegion.TheWorld.Seed3,
+                    entry.Player.TheRegion.TheWorld.Seed4, entry.Player.TheRegion.TheWorld.Seed5, (double)posBlock.X, (double)posBlock.Y, (double)posBlock.Z, out biome);
                 BlockInternal bi = entry.Player.TheRegion.GetBlockInternal_NoLoad((entry.Player.GetPosition() + new Location(0, 0, -0.05f)).GetBlockLocation());
                 entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Mat: " + bi.Material + ", data: " + ((int)bi.BlockData) + ", locDat: " + ((int)bi.BlockLocalData)
                     + ", Damage: " + bi.Damage + ", Paint: " + bi.BlockPaint
                     + ", xp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXP() + ", xm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesXM()
                     + ", yp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYP() + ", ym: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesYM()
                     + ", zp: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesTOP() + ", zm: " + BlockShapeRegistry.BSD[bi.BlockData].OccupiesBOTTOM());
-                float temp = entry.Player.TheRegion.BiomeGen.GetTemperature(entry.Player.TheRegion.TheWorld.Seed2, entry.Player.TheRegion.TheWorld.Seed3, (float)posBlock.X, (float)posBlock.Y);
-                float down = entry.Player.TheRegion.BiomeGen.GetDownfallRate(entry.Player.TheRegion.TheWorld.Seed3, entry.Player.TheRegion.TheWorld.Seed4, (float)posBlock.X, (float)posBlock.Y);
+                double temp = entry.Player.TheRegion.BiomeGen.GetTemperature(entry.Player.TheRegion.TheWorld.Seed2, entry.Player.TheRegion.TheWorld.Seed3, (double)posBlock.X, (double)posBlock.Y);
+                double down = entry.Player.TheRegion.BiomeGen.GetDownfallRate(entry.Player.TheRegion.TheWorld.Seed3, entry.Player.TheRegion.TheWorld.Seed4, (double)posBlock.X, (double)posBlock.Y);
                 entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Height: " + h + ", temperature: " + temp + ", downfallrate: " + down + ", biome yield: " + biome.GetName());
             }
             else if (arg0 == "structureSelect" && entry.InputArguments.Count > 1)
@@ -154,8 +154,8 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             else if (arg0 == "musicBlock" && entry.InputArguments.Count > 3)
             {
                 int arg1 = Utilities.StringToInt(entry.InputArguments[1]);
-                float arg2 = Utilities.StringToFloat(entry.InputArguments[2]);
-                float arg3 = Utilities.StringToFloat(entry.InputArguments[3]);
+                double arg2 = Utilities.StringToFloat(entry.InputArguments[2]);
+                double arg3 = Utilities.StringToFloat(entry.InputArguments[3]);
                 entry.Player.Items.GiveItem(new ItemStack("customblock", entry.Player.TheServer, 1, "items/custom_blocks/music_block",
                     "Music Block", "Plays music!", System.Drawing.Color.White, "items/custom_blocks/music_block", false, 0,
                     new KeyValuePair<string, TemplateObject>("music_type", new IntegerTag(arg1)),

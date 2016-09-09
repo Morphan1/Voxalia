@@ -8,7 +8,7 @@ namespace Voxalia.ServerGame.JointSystem
 {
     public class JointDistance : BaseJoint
     {
-        public JointDistance(PhysicsEntity e1, PhysicsEntity e2, float min, float max, Location e1pos, Location e2pos)
+        public JointDistance(PhysicsEntity e1, PhysicsEntity e2, double min, double max, Location e1pos, Location e2pos)
         {
             Ent1 = e1;
             Ent2 = e2;
@@ -18,8 +18,8 @@ namespace Voxalia.ServerGame.JointSystem
             Ent2Pos = e2pos - e2.GetPosition();
         }
 
-        public float Min;
-        public float Max;
+        public double Min;
+        public double Max;
         public Location Ent1Pos;
         public Location Ent2Pos;
 

@@ -99,8 +99,8 @@ namespace Voxalia.ServerGame.EntitySystem
             base.Tick();
             Body.ActivityInformation.Activate();
             CursorMarker.SetPosition(GetEyePosition() + ForwardVector() * 0.9f);
-            CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(Direction.Pitch * Utilities.PI180)) *
-                Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(Direction.Yaw * Utilities.PI180)));
+            CursorMarker.SetOrientation(Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (double)(Direction.Pitch * Utilities.PI180)) *
+                Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (double)(Direction.Yaw * Utilities.PI180)));
         }
 
         public double LastClick = 0;
@@ -133,9 +133,9 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 SingleAnimationNode head = tAnim.GetNode("special06.r");
                 Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
-                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)(Direction.Pitch / 1.75f * Utilities.PI180)));
+                Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(double)(Direction.Pitch / 1.75f * Utilities.PI180)));
                 adjs["spine05"] = rotforw;
-                Matrix m4 = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
+                Matrix m4 = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (double)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
                     * head.GetBoneTotalMatrix(0, adjs) * (rotforw * Matrix.CreateTranslation(new Vector3(0, 0, 0.2f)));
                 m4.Transpose();
                 return GetPosition() + new Location(m4.Translation) * 1.5f;// TODO: Match clientside ray trace?
@@ -159,10 +159,10 @@ namespace Voxalia.ServerGame.EntitySystem
             return Items.GetItemForSlot(Items.cItem).Name == "parachute";
         }
 
-        public double JetpackBoostRate(out float max)
+        public double JetpackBoostRate(out double max)
         {
             const double baseBoost = 1500.0;
-            const float baseMax = 2000.0f;
+            const double baseMax = 2000.0f;
             max = baseMax; // TODO: Own mod
             ItemStack its = Items.GetItemForSlot(Items.cItem);
             TemplateObject mod;
@@ -257,11 +257,11 @@ namespace Voxalia.ServerGame.EntitySystem
                         {
                             return;
                         }
-                        float max;
+                        double max;
                         double boost = Human.JetpackBoostRate(out max);
                         double glen;
                         Vector3 move = GetMoveVector(out glen);
-                        Vector3 vec = -(move * (float)boost) * Delta;
+                        Vector3 vec = -(move * (double)boost) * Delta;
                         Human.CBody.Jump();
                         Entity.ApplyLinearImpulse(ref vec);
                         if (Entity.LinearVelocity.LengthSquared() > max * max)
@@ -280,21 +280,21 @@ namespace Voxalia.ServerGame.EntitySystem
                         double hover = Human.JetpackHoverStrength();
                         double glen;
                         Vector3 move = GetMoveVector(out glen);
-                        Vector3 vec = -(move * (float)glen * (float)hover) * Delta;
+                        Vector3 vec = -(move * (double)glen * (double)hover) * Delta;
                         Entity.ApplyLinearImpulse(ref vec);
                         entity.ModifyLinearDamping(0.6f);
                     }
                 }
             }
 
-            public override float SolveIteration()
+            public override double SolveIteration()
             {
                 return 0; // Do nothing
             }
 
-            float Delta;
+            double Delta;
 
-            public override void Update(float dt)
+            public override void Update(double dt)
             {
                 Delta = dt;
             }

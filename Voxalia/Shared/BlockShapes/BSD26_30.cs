@@ -5,9 +5,9 @@ namespace Voxalia.Shared.BlockShapes
 {
     public class BSD26_30: BlockShapeDetails
     {
-        public float Percent;
+        public double Percent;
 
-        public BSD26_30(float perc)
+        public BSD26_30(double perc)
         {
             Percent = 1 - perc;
         }

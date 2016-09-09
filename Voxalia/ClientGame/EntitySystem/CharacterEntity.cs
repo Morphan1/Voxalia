@@ -450,14 +450,14 @@ namespace Voxalia.ClientGame.EntitySystem
                 }
             }
 
-            float Delta;
+            double Delta;
 
-            public override float SolveIteration()
+            public override double SolveIteration()
             {
                 return 0; // Do nothing
             }
 
-            public override void Update(float dt)
+            public override void Update(double dt)
             {
                 Delta = dt;
             }

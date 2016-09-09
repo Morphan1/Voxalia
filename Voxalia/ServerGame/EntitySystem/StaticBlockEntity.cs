@@ -40,21 +40,21 @@ namespace Voxalia.ServerGame.EntitySystem
             return dat;
         }
 
-        public float Health = 5;
+        public double Health = 5;
 
-        public float MaxHealth = 5;
+        public double MaxHealth = 5;
 
-        public float GetHealth()
+        public double GetHealth()
         {
             return Health;
         }
 
-        public float GetMaxHealth()
+        public double GetMaxHealth()
         {
             return MaxHealth;
         }
 
-        public void SetHealth(float health)
+        public void SetHealth(double health)
         {
             Health = health;
             if (health < 0)
@@ -63,7 +63,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
-        public void SetMaxHealth(float health)
+        public void SetMaxHealth(double health)
         {
             MaxHealth = health;
             if (Health > MaxHealth)
@@ -72,7 +72,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
-        public void Damage(float amount)
+        public void Damage(double amount)
         {
             SetHealth(GetHealth() - amount);
         }

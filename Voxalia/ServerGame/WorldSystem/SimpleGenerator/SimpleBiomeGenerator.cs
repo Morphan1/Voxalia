@@ -5,18 +5,18 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
 {
     public class SimpleBiomeGenerator: BiomeGenerator
     {
-        public float TemperatureMapSize = 2400;
+        public double TemperatureMapSize = 2400;
 
-        public float DownfallMapSize = 4800;
+        public double DownfallMapSize = 4800;
 
-        public override float GetTemperature(int seed2, int seed3, float x, float y)
+        public override double GetTemperature(int seed2, int seed3, double x, double y)
         {
-            return SimplexNoise.Generate((float)seed2 + (x / TemperatureMapSize), (float)seed3 + (y / TemperatureMapSize)) * 100f;
+            return SimplexNoise.Generate((double)seed2 + (x / TemperatureMapSize), (double)seed3 + (y / TemperatureMapSize)) * 100f;
         }
 
-        public override float GetDownfallRate(int seed3, int seed4, float x, float y)
+        public override double GetDownfallRate(int seed3, int seed4, double x, double y)
         {
-            return SimplexNoise.Generate((float)seed3 + (x / DownfallMapSize), (float)seed4 + (y / DownfallMapSize));
+            return SimplexNoise.Generate((double)seed3 + (x / DownfallMapSize), (double)seed4 + (y / DownfallMapSize));
         }
 
         public SimpleRainForestBiome RainForest = new SimpleRainForestBiome();
@@ -47,7 +47,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
 
         SimpleStoneBiome Stone = new SimpleStoneBiome();
 
-        public override Biome BiomeFor(int seed2, int seed3, int seed4, float x, float y, float z, float height)
+        public override Biome BiomeFor(int seed2, int seed3, int seed4, double x, double y, double z, double height)
         {
             if (z < -300)
             {
@@ -57,8 +57,8 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             {
                 return Stone;
             }
-            float temp = GetTemperature(seed2, seed3, x, y);
-            float down = GetDownfallRate(seed3, seed4, x, y);
+            double temp = GetTemperature(seed2, seed3, x, y);
+            double down = GetDownfallRate(seed3, seed4, x, y);
             if (height > 0f && height < 20f)
             {
                 if (down >= 0.8f && temp >= 80f)

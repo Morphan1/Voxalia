@@ -37,7 +37,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             PhysicsEntity target = (PhysicsEntity)cr.HitEnt.Tag;
             player.Manipulator_Grabbed = target;
-            player.Manipulator_Distance = (float)(eye - target.GetPosition()).Length();
+            player.Manipulator_Distance = (double)(eye - target.GetPosition()).Length();
             player.Manipulator_Beam = new ConnectorBeam() { type = BeamType.MULTICURVE };
             player.Manipulator_Beam.One = player;
             player.Manipulator_Beam.Two = target;
@@ -96,19 +96,19 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             }
             if (player.ItemUp)
             {
-                player.Manipulator_Distance = Math.Min(player.Manipulator_Distance + (float)(player.TheRegion.Delta * 2f), 50f);
+                player.Manipulator_Distance = Math.Min(player.Manipulator_Distance + (double)(player.TheRegion.Delta * 2f), 50f);
             }
             if (player.ItemDown)
             {
-                player.Manipulator_Distance = Math.Max(player.Manipulator_Distance - (float)(player.TheRegion.Delta * 2f), 2f);
+                player.Manipulator_Distance = Math.Max(player.Manipulator_Distance - (double)(player.TheRegion.Delta * 2f), 2f);
             }
             Location goal = player.GetEyePosition() + player.ForwardVector() * player.Manipulator_Distance;
             player.Manipulator_Grabbed.SetVelocity((goal - player.Manipulator_Grabbed.GetPosition()) * 5f);
             if (player.Flags.HasFlag(YourStatusFlags.NO_ROTATE))
             {
                 // TODO: Better method for easy rotation
-                Quaternion quat = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)player.AttemptedDirectionChange.Pitch * 0.1f)
-                    * Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)player.AttemptedDirectionChange.Yaw * 0.1f);
+                Quaternion quat = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (double)player.AttemptedDirectionChange.Pitch * 0.1f)
+                    * Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (double)player.AttemptedDirectionChange.Yaw * 0.1f);
                 player.Manipulator_Grabbed.SetOrientation(player.Manipulator_Grabbed.GetOrientation() * quat);
                 player.Manipulator_Grabbed.SetAngularVelocity(Location.Zero);
                 player.AttemptedDirectionChange = Location.Zero;

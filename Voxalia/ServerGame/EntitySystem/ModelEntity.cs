@@ -110,7 +110,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Location size = abox.Max - abox.Min;
                 Location center = abox.Max - size / 2;
                 offset = -center;
-                Shape = new BoxShape((float)size.X * (float)scale.X, (float)size.Y * (float)scale.Y, (float)size.Z * (float)scale.Z);
+                Shape = new BoxShape((double)size.X * (double)scale.X, (double)size.Y * (double)scale.Y, (double)size.Z * (double)scale.Z);
             }
             else
             {
@@ -125,7 +125,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 }
                 double size = Math.Sqrt(distSq);
                 offset = Location.Zero;
-                Shape = new SphereShape((float)size * (float)scale.X);
+                Shape = new SphereShape((double)size * (double)scale.X);
             }
             base.SpawnBody();
             if (mode == ModelCollisionMode.PRECISE)

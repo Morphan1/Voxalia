@@ -9,14 +9,14 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
 {
     class FlagEntityPacketOut: AbstractPacketOut
     {
-        public FlagEntityPacketOut(Entity e, EntityFlag flag, float value)
+        public FlagEntityPacketOut(Entity e, EntityFlag flag, double value)
         {
             UsageType = NetUsageType.ENTITIES;
             ID = ServerToClientPacket.FLAG_ENTITY;
             Data = new byte[8 + 1 + 4];
             Utilities.LongToBytes(e.EID).CopyTo(Data, 0);
             Data[8] = (byte)flag;
-            Utilities.FloatToBytes(value).CopyTo(Data, 8 + 1);
+            Utilities.FloatToBytes((float)value).CopyTo(Data, 8 + 1);
         }
     }
 }

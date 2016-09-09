@@ -8,6 +8,7 @@ using OpenTK.Graphics.OpenGL4;
 using Voxalia.Shared.Files;
 using System.Linq;
 using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -160,7 +161,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 for (int i = 0; i < mesh.Vertices.Count; i++)
                 {
                     BEPUutilities.Vector3 vertex = mesh.Vertices[i];
-                    modmesh.vbo.Vertices.Add(new Vector3(vertex.X, vertex.Y, vertex.Z));
+                    modmesh.vbo.Vertices.Add(new Vector3((float)vertex.X, (float)vertex.Y, (float)vertex.Z));
                     if (!hastc)
                     {
                         modmesh.vbo.TexCoords.Add(new Vector3(0, 0, 0));
@@ -168,7 +169,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     else
                     {
                         BEPUutilities.Vector2 texCoord = mesh.TexCoords[i];
-                        modmesh.vbo.TexCoords.Add(new Vector3(texCoord.X, 1 - texCoord.Y, 0));
+                        modmesh.vbo.TexCoords.Add(new Vector3((float)texCoord.X, 1 - (float)texCoord.Y, 0));
                     }
                     if (!hasn)
                     {
@@ -176,7 +177,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                     else
                     {
-                        modmesh.vbo.Normals.Add(new Vector3(mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z));
+                        modmesh.vbo.Normals.Add(new Vector3((float)mesh.Normals[i].X, (float)mesh.Normals[i].Y, (float)mesh.Normals[i].Z));
                     }
                     modmesh.vbo.Colors.Add(new Vector4(1, 1, 1, 1)); // TODO: From the mesh?
                 }
@@ -200,7 +201,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     for (int x = 0; x < mesh.Bones[i].Weights.Count; x++)
                     {
                         int IDa = mesh.Bones[i].IDs[x];
-                        float Weighta = mesh.Bones[i].Weights[x];
+                        float Weighta = (float)mesh.Bones[i].Weights[x];
                         int spot = pos[IDa]++;
                         if (spot > 7)
                         {
@@ -249,8 +250,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         Matrix4 convert(BEPUutilities.Matrix mat)
         {
-            return new Matrix4(mat.M11, mat.M12, mat.M13, mat.M14, mat.M21, mat.M22, mat.M23, mat.M24,
-                mat.M31, mat.M32, mat.M33, mat.M34, mat.M41, mat.M42, mat.M43, mat.M44);
+            return ClientUtilities.Convert(mat);
         }
 
         void PopulateChildren(ModelNode node, Model3DNode orin, Model model, AnimationEngine engine, List<ModelNode> allNodes)
@@ -353,9 +353,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 BEPUutilities.Vector3 vec = pNodeAnim.lerpPos(time);
                 BEPUutilities.Quaternion quat = pNodeAnim.lerpRotate(time);
-                Quaternion oquat = new Quaternion(quat.X, quat.Y, quat.Z, quat.W);
+                Quaternion oquat = new Quaternion((float)quat.X, (float)quat.Y, (float)quat.Z, (float)quat.W);
                 Matrix4 trans;
-                Matrix4.CreateTranslation(vec.X, vec.Y, vec.Z, out trans);
+                Matrix4.CreateTranslation((float)vec.X, (float)vec.Y, (float)vec.Z, out trans);
                 trans.Transpose();
                 Matrix4 rot;
                 Matrix4.CreateFromQuaternion(ref oquat, out rot);

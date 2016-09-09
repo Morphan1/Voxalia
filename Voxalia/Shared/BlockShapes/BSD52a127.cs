@@ -6,11 +6,11 @@ namespace Voxalia.Shared.BlockShapes
 {
     public class BSD52a127 : BlockShapeDetails
     {
-        public float LowerCoordinate;
-        public float UpperCoordinate;
-        public float ZTop;
+        public double LowerCoordinate;
+        public double UpperCoordinate;
+        public double ZTop;
 
-        public BSD52a127(float low, float high, float zhigh)
+        public BSD52a127(double low, double high, double zhigh)
         {
             LowerCoordinate = low;
             UpperCoordinate = high;

@@ -29,7 +29,7 @@ namespace Voxalia.ServerGame.WorldSystem
         /// </summary>
         public Space PhysicsWorld;
 
-        public bool SpecialCaseRayTrace(Location start, Location dir, float len, MaterialSolidity considerSolid, Func<BroadPhaseEntry, bool> filter, out RayCastResult rayHit)
+        public bool SpecialCaseRayTrace(Location start, Location dir, double len, MaterialSolidity considerSolid, Func<BroadPhaseEntry, bool> filter, out RayCastResult rayHit)
         {
             Ray ray = new Ray(start.ToBVector(), dir.ToBVector());
             RayCastResult best = new RayCastResult(new RayHit() { T = len }, null);
@@ -73,7 +73,7 @@ namespace Voxalia.ServerGame.WorldSystem
             return hA;
         }
 
-        public bool SpecialCaseConvexTrace(ConvexShape shape, Location start, Location dir, float len, MaterialSolidity considerSolid, Func<BroadPhaseEntry, bool> filter, out RayCastResult rayHit)
+        public bool SpecialCaseConvexTrace(ConvexShape shape, Location start, Location dir, double len, MaterialSolidity considerSolid, Func<BroadPhaseEntry, bool> filter, out RayCastResult rayHit)
         {
             RigidTransform rt = new RigidTransform(start.ToBVector(), BEPUutilities.Quaternion.Identity);
             BEPUutilities.Vector3 sweep = (dir * len).ToBVector();
@@ -135,7 +135,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             Location center = (max + min) * 0.5;
             Location rel = max - min;
-            BoxShape box = new BoxShape((float)rel.X, (float)rel.Y, (float)rel.Z);
+            BoxShape box = new BoxShape((double)rel.X, (double)rel.Y, (double)rel.Z);
             RigidTransform start = new RigidTransform(center.ToBVector(), Quaternion.Identity);
             Vector3 sweep = new Vector3(0, 0, 0.01f);
             RayHit rh;

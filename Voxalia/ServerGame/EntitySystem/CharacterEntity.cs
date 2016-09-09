@@ -19,7 +19,7 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public abstract class CharacterEntity: LivingEntity
     {
-        public CharacterEntity(Region tregion, float maxhealth)
+        public CharacterEntity(Region tregion, double maxhealth)
             : base(tregion, maxhealth)
         {
             CGroup = CollisionUtil.Character;
@@ -32,18 +32,18 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public string model = "cube";
 
-        public float mod_xrot = 0;
-        public float mod_yrot = 0;
-        public float mod_zrot = 0;
-        public float mod_scale = 1;
+        public double mod_xrot = 0;
+        public double mod_yrot = 0;
+        public double mod_zrot = 0;
+        public double mod_scale = 1;
 
         public System.Drawing.Color mod_color = System.Drawing.Color.White;
 
         public bool Upward = false;
 
-        public float XMove;
+        public double XMove;
 
-        public float YMove;
+        public double YMove;
         
         public bool Downward = false;
 
@@ -61,7 +61,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool ItemDown = false;
 
-        public float SprintOrWalk = 0f;
+        public double SprintOrWalk = 0f;
 
         public byte[] GetCharacterNetData()
         {
@@ -69,33 +69,33 @@ namespace Voxalia.ServerGame.EntitySystem
             DataWriter dr = new DataWriter(ds);
             dr.WriteBytes(GetPosition().ToBytes());
             Quaternion quat = GetOrientation();
-            dr.WriteFloat(quat.X);
-            dr.WriteFloat(quat.Y);
-            dr.WriteFloat(quat.Z);
-            dr.WriteFloat(quat.W);
-            dr.WriteFloat(GetMass());
-            dr.WriteFloat(CBAirForce);
-            dr.WriteFloat(CBAirSpeed);
-            dr.WriteFloat(CBCrouchSpeed);
-            dr.WriteFloat(CBDownStepHeight);
-            dr.WriteFloat(CBGlueForce);
-            dr.WriteFloat(CBHHeight);
-            dr.WriteFloat(CBJumpSpeed);
-            dr.WriteFloat(CBMargin);
-            dr.WriteFloat(CBMaxSupportSlope);
-            dr.WriteFloat(CBMaxTractionSlope);
-            dr.WriteFloat(CBProneSpeed);
-            dr.WriteFloat(CBRadius);
-            dr.WriteFloat(CBSlideForce);
-            dr.WriteFloat(CBSlideJumpSpeed);
-            dr.WriteFloat(CBSlideSpeed);
-            dr.WriteFloat(CBStandSpeed);
-            dr.WriteFloat(CBStepHeight);
-            dr.WriteFloat(CBTractionForce);
-            dr.WriteFloat(mod_xrot);
-            dr.WriteFloat(mod_yrot);
-            dr.WriteFloat(mod_zrot);
-            dr.WriteFloat(mod_scale);
+            dr.WriteFloat((float)quat.X);
+            dr.WriteFloat((float)quat.Y);
+            dr.WriteFloat((float)quat.Z);
+            dr.WriteFloat((float)quat.W);
+            dr.WriteFloat((float)GetMass());
+            dr.WriteFloat((float)CBAirForce);
+            dr.WriteFloat((float)CBAirSpeed);
+            dr.WriteFloat((float)CBCrouchSpeed);
+            dr.WriteFloat((float)CBDownStepHeight);
+            dr.WriteFloat((float)CBGlueForce);
+            dr.WriteFloat((float)CBHHeight);
+            dr.WriteFloat((float)CBJumpSpeed);
+            dr.WriteFloat((float)CBMargin);
+            dr.WriteFloat((float)CBMaxSupportSlope);
+            dr.WriteFloat((float)CBMaxTractionSlope);
+            dr.WriteFloat((float)CBProneSpeed);
+            dr.WriteFloat((float)CBRadius);
+            dr.WriteFloat((float)CBSlideForce);
+            dr.WriteFloat((float)CBSlideJumpSpeed);
+            dr.WriteFloat((float)CBSlideSpeed);
+            dr.WriteFloat((float)CBStandSpeed);
+            dr.WriteFloat((float)CBStepHeight);
+            dr.WriteFloat((float)CBTractionForce);
+            dr.WriteFloat((float)mod_xrot);
+            dr.WriteFloat((float)mod_yrot);
+            dr.WriteFloat((float)mod_zrot);
+            dr.WriteFloat((float)mod_scale);
             dr.WriteInt(mod_color.ToArgb());
             byte dtx = 0;
             if (Visible)
@@ -178,7 +178,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public ListQueue<Location> Path = null;
 
-        public float PathFindCloseEnough = 0.8f * 0.8f;
+        public double PathFindCloseEnough = 0.8f * 0.8f;
 
         public void UpdatePath()
         {
@@ -286,7 +286,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 {
                     Location targetdir = (Path.Peek() - spos).Normalize();
                     Location movegoal = Utilities.RotateVector(targetdir, (270 + Direction.Yaw) * Utilities.PI180);
-                    Vector2 movegoal2 = new Vector2((float)movegoal.X, (float)movegoal.Y);
+                    Vector2 movegoal2 = new Vector2((double)movegoal.X, (double)movegoal.Y);
                     if (movegoal2.LengthSquared() > 0)
                     {
                         movegoal2.Normalize();
@@ -331,7 +331,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 pup = false;
             }
-            float speedmod = new Vector2(XMove, YMove).Length() * 2;
+            double speedmod = new Vector2(XMove, YMove).Length() * 2;
             speedmod *= (1f + SprintOrWalk * 0.5f);
             if (ItemDoSpeedMod)
             {
@@ -341,7 +341,7 @@ namespace Voxalia.ServerGame.EntitySystem
             speedmod *= mat.GetSpeedMod();
             CBody.StandingSpeed = CBStandSpeed * speedmod;
             CBody.CrouchingSpeed = CBCrouchSpeed * speedmod;
-            float frictionmod = 1f;
+            double frictionmod = 1f;
             frictionmod *= mat.GetFrictionMod();
             CBody.SlidingForce = CBSlideForce * frictionmod * Mass;
             CBody.AirForce = CBAirForce * frictionmod * Mass;
@@ -390,43 +390,43 @@ namespace Voxalia.ServerGame.EntitySystem
             MinZ = box.Min.Z;
         }
 
-        const float defHalfHeight = 1.3f;
+        const double defHalfHeight = 1.3f;
 
-        public float CBHHeight = defHalfHeight;
+        public double CBHHeight = defHalfHeight;
 
-        public float CBProneSpeed = 1f;
+        public double CBProneSpeed = 1f;
 
-        public float CBMargin = 0.01f;
+        public double CBMargin = 0.01f;
 
-        public float CBStepHeight = 0.6f;
+        public double CBStepHeight = 0.6f;
 
-        public float CBDownStepHeight = 0.6f;
+        public double CBDownStepHeight = 0.6f;
 
-        public float CBRadius = 0.3f;
+        public double CBRadius = 0.3f;
 
-        public float CBMaxTractionSlope = 1.0f;
+        public double CBMaxTractionSlope = 1.0f;
 
-        public float CBMaxSupportSlope = 1.3f;
+        public double CBMaxSupportSlope = 1.3f;
 
-        public float CBStandSpeed = 5.0f;
+        public double CBStandSpeed = 5.0f;
 
-        public float CBCrouchSpeed = 2.5f;
+        public double CBCrouchSpeed = 2.5f;
 
-        public float CBSlideSpeed = 3f;
+        public double CBSlideSpeed = 3f;
 
-        public float CBAirSpeed = 1f;
+        public double CBAirSpeed = 1f;
 
-        public float CBTractionForce = 100f;
+        public double CBTractionForce = 100f;
 
-        public float CBSlideForce = 70f;
+        public double CBSlideForce = 70f;
 
-        public float CBAirForce = 50f;
+        public double CBAirForce = 50f;
 
-        public float CBJumpSpeed = 8f;
+        public double CBJumpSpeed = 8f;
 
-        public float CBSlideJumpSpeed = 3.5f;
+        public double CBSlideJumpSpeed = 3.5f;
 
-        public float CBGlueForce = 500f;
+        public double CBGlueForce = 500f;
 
         public override void DestroyBody()
         {
@@ -439,11 +439,11 @@ namespace Voxalia.ServerGame.EntitySystem
             Body = null;
         }
 
-        public float ItemSpeedMod = 1;
+        public double ItemSpeedMod = 1;
         public bool ItemDoSpeedMod = false;
 
         public bool IsFlying = false;
-        public float PreFlyMass = 0;
+        public double PreFlyMass = 0;
 
         public virtual void Fly()
         {
@@ -477,7 +477,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public abstract Location GetEyePosition();
 
-        public float MinZ = -defHalfHeight * 1.5f;
+        public double MinZ = -defHalfHeight * 1.5f;
 
         public override Location GetPosition()
         {
@@ -496,8 +496,8 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override Quaternion GetOrientation()
         {
-            return Quaternion.CreateFromAxisAngle(Vector3.UnitY, (float)Direction.Pitch)
-                * Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)Direction.Yaw);
+            return Quaternion.CreateFromAxisAngle(Vector3.UnitY, (double)Direction.Pitch)
+                * Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (double)Direction.Yaw);
         }
 
         public override void SetOrientation(Quaternion rot)

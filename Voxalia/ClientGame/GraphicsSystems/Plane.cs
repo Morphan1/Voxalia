@@ -42,7 +42,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             vec3 = v3;
             Normal = Vector3.Cross((v2 - v1), (v3 - v1));
             Normal.Normalize();
-            D = -Vector3.Dot(Normal, vec1);
+            D = (float)-Vector3.Dot(Normal, vec1);
         }
 
         public Plane(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 _normal)
@@ -51,12 +51,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
             vec2 = v2;
             vec3 = v3;
             Normal = _normal;
-            D = -Vector3.Dot(Normal, vec1);
+            D = (float)-Vector3.Dot(Normal, vec1);
         }
 
         public Plane(Vector3 _normal, float _d)
         {
-            float fact = 1f / _normal.Length();
+            float fact = 1f / (float)_normal.Length();
             Normal = _normal * fact;
             D = _d * fact;
         }
@@ -70,8 +70,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public Vector3 IntersectLine(Vector3 start, Vector3 end)
         {
             Vector3 ba = end - start;
-            float nDotA = Vector3.Dot(Normal, start);
-            float nDotBA = Vector3.Dot(Normal, ba);
+            float nDotA = (float)Vector3.Dot(Normal, start);
+            float nDotBA = (float)Vector3.Dot(Normal, ba);
             float t = -(nDotA + D) / (nDotBA);
             if (t < 0) // || t > 1
             {
@@ -92,7 +92,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>The distance.</returns>
         public float Distance(Vector3 point)
         {
-            return Vector3.Dot(Normal, point) + D;
+            return (float)Vector3.Dot(Normal, point) + D;
         }
 
         /// <summary>

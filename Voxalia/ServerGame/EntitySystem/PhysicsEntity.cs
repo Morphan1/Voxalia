@@ -37,7 +37,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Gravity = new Location(TheRegion.PhysicsWorld.ForceUpdater.Gravity);
         }
 
-        public override float GetScaleEstimate()
+        public override double GetScaleEstimate()
         {
             if (ScaleEst < 0)
             {
@@ -59,13 +59,13 @@ namespace Voxalia.ServerGame.EntitySystem
         public byte[] GetPhysicsNetData()
         {
             byte[] Data = new byte[4 + 12 + 12 + 16 + 12 + 4 + 4 + 1 + 1];
-            Utilities.FloatToBytes(GetMass()).CopyTo(Data, 0);
+            Utilities.FloatToBytes((float)GetMass()).CopyTo(Data, 0);
             GetPosition().ToBytes().CopyTo(Data, 4);
             GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
             Utilities.QuaternionToBytes(GetOrientation()).CopyTo(Data, 4 + 12 + 12);
             GetAngularVelocity().ToBytes().CopyTo(Data, 4 + 12 + 12 + 16);
-            Utilities.FloatToBytes(GetFriction()).CopyTo(Data, 4 + 12 + 12 + 16 + 12);
-            Utilities.FloatToBytes(GetBounciness()).CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 4);
+            Utilities.FloatToBytes((float)GetFriction()).CopyTo(Data, 4 + 12 + 12 + 16 + 12);
+            Utilities.FloatToBytes((float)GetBounciness()).CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 4);
             // TODO: Proper flags thingy here?
             Data[4 + 12 + 12 + 16 + 12 + 4 + 4] = (byte)((Visible ? 1 : 0) | (GenBlockShadow ? 2 : 0));
             byte cg = 0;
@@ -104,7 +104,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// The widest this entity gets at its furthest corner. Can be used to generate a bounding sphere.
         /// </summary>
-        public float Widest = 1;
+        public double Widest = 1;
 
         /// <summary>
         /// All information on the physical version of this entity as it exists within the physics world.
@@ -114,17 +114,17 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// The mass of the entity.
         /// </summary>
-        internal float Mass = 0f;
+        internal double Mass = 0f;
 
         /// <summary>
         /// The friction value of the entity.
         /// </summary>
-        internal float Friction = 0.5f;
+        internal double Friction = 0.5f;
 
         /// <summary>
         /// The bounciness (restitution coefficient) of the entity.
         /// </summary>
-        internal float Bounciness = 0.25f;
+        internal double Bounciness = 0.25f;
 
         /// <summary>
         /// The gravity power of this entity.
@@ -169,7 +169,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Location lPos = Location.NaN;
 
-        public float ScaleEst = -1;
+        public double ScaleEst = -1;
 
         public void PreTick()
         {
@@ -326,8 +326,8 @@ namespace Voxalia.ServerGame.EntitySystem
             Body = new BEPUphysics.Entities.Entity(Shape, Mass);
             Body.CollisionInformation.CollisionRules.Group = CGroup;
             InternalOffset = new Location(Body.Position);
-            Body.AngularVelocity = new Vector3((float)AVel.X, (float)AVel.Y, (float)AVel.Z);
-            Body.LinearVelocity = new Vector3((float)LVel.X, (float)LVel.Y, (float)LVel.Z);
+            Body.AngularVelocity = new Vector3((double)AVel.X, (double)AVel.Y, (double)AVel.Z);
+            Body.LinearVelocity = new Vector3((double)LVel.X, (double)LVel.Y, (double)LVel.Z);
             Body.WorldTransform = WorldTransform; // TODO: Position, Orientation
             Body.Tag = this;
             Body.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Passive;
@@ -384,7 +384,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// Returns the friction level of this entity.
         /// </summary>
-        public virtual float GetFriction()
+        public virtual double GetFriction()
         {
             if (Body == null)
             {
@@ -397,7 +397,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// Sets the friction level of this entity.
         /// </summary>
         /// <param name="fric">The friction level.</param>
-        public virtual void SetFriction(float fric)
+        public virtual void SetFriction(double fric)
         {
             Friction = fric;
             if (Body != null)
@@ -411,7 +411,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// Returns the bounciness (restitution coefficient) of this entity.
         /// </summary>
-        public virtual float GetBounciness()
+        public virtual double GetBounciness()
         {
             if (Body == null)
             {
@@ -425,7 +425,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         /// <param name="bounce">The bounciness (restitution coefficient) .</param>
         public virtual void SetBounciness
-            (float bounce)
+            (double bounce)
         {
             Bounciness = bounce;
             if (Body != null)
@@ -437,7 +437,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// Returns the mass of the entity.
         /// </summary>
-        public virtual float GetMass()
+        public virtual double GetMass()
         {
             return Body == null ? Mass : Body.Mass;
         }
@@ -446,7 +446,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// Sets the mass of this entity.
         /// </summary>
         /// <param name="mass">The new mass value.</param>
-        public virtual void SetMass(float mass)
+        public virtual void SetMass(double mass)
         {
             Mass = mass;
             if (Body != null)
@@ -702,10 +702,10 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             if (doc.ContainsKey("ph_ang_x") && doc.ContainsKey("ph_ang_y") && doc.ContainsKey("ph_ang_z") && doc.ContainsKey("ph_ang_w"))
             {
-                float ax = (float)doc["ph_ang_x"].AsDouble;
-                float ay = (float)doc["ph_ang_y"].AsDouble;
-                float az = (float)doc["ph_ang_z"].AsDouble;
-                float aw = (float)doc["ph_ang_w"].AsDouble;
+                double ax = (double)doc["ph_ang_x"].AsDouble;
+                double ay = (double)doc["ph_ang_y"].AsDouble;
+                double az = (double)doc["ph_ang_z"].AsDouble;
+                double aw = (double)doc["ph_ang_w"].AsDouble;
                 SetOrientation(new Quaternion(ax, ay, az, aw));
             }
             if (doc.ContainsKey("ph_grav"))
@@ -714,15 +714,15 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             if (doc.ContainsKey("ph_bounce"))
             {
-                SetBounciness((float)doc["ph_bounce"].AsDouble);
+                SetBounciness((double)doc["ph_bounce"].AsDouble);
             }
             if (doc.ContainsKey("ph_frict"))
             {
-                SetFriction((float)doc["ph_frict"].AsDouble);
+                SetFriction((double)doc["ph_frict"].AsDouble);
             }
             if (doc.ContainsKey("ph_mass"))
             {
-                SetMass((float)doc["ph_mass"].AsDouble);
+                SetMass((double)doc["ph_mass"].AsDouble);
             }
             if (doc.ContainsKey("ph_cg"))
             {

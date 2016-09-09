@@ -262,9 +262,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 if (tcol.R == 127 && tcol.G == 0 && tcol.B == 127)
                 {
-                    float r = SimplexNoise.Generate(vt.X / 10f, vt.Y / 10f, vt.Z / 10f);
-                    float g = SimplexNoise.Generate((vt.X + 50f) / 10f, (vt.Y + 127f) / 10f, (vt.Z + 10f) / 10f);
-                    float b = SimplexNoise.Generate((vt.X - 150f) / 10f, (vt.Y - 65f) / 10f, (vt.Z + 73f) / 10f);
+                    float r = (float)SimplexNoise.Generate(vt.X / 10f, vt.Y / 10f, vt.Z / 10f);
+                    float g = (float)SimplexNoise.Generate((vt.X + 50f) / 10f, (vt.Y + 127f) / 10f, (vt.Z + 10f) / 10f);
+                    float b = (float)SimplexNoise.Generate((vt.X - 150f) / 10f, (vt.Y - 65f) / 10f, (vt.Z + 73f) / 10f);
                     return new Vector4(r, g, b, 1f);
                 }
                 else if (tcol.R == 127 && tcol.G == 0 && tcol.B == 0)

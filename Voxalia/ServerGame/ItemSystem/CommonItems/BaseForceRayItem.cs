@@ -10,17 +10,17 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
     public abstract class BaseForceRayItem : GenericItem
     {
-        public abstract float GetStrength();
+        public abstract double GetStrength();
 
         /// <summary>
         /// The default range of the item, prior to ItemStack-level adjustments.
         /// </summary>
-        float RangeBase = 10;
+        double RangeBase = 10;
 
         /// <summary>
         /// The default strength of the item, prior to ItemStack-level adjustments.
         /// </summary>
-        float StrengthBase = 15;
+        double StrengthBase = 15;
 
         public override void Click(Entity entity, ItemStack item)
         {
@@ -30,8 +30,8 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             CharacterEntity character = (CharacterEntity)entity;
-            float range = RangeBase * item.GetAttributeF("range_mod", 1f);
-            float strength = StrengthBase * item.GetAttributeF("strength_mod", 1f) * GetStrength();
+            double range = RangeBase * item.GetAttributeF("range_mod", 1f);
+            double strength = StrengthBase * item.GetAttributeF("strength_mod", 1f) * GetStrength();
             Location start = character.GetEyePosition(); // TODO: ItemPosition?
             Location forw = character.ForwardVector();
             Location mid = start + forw * range;

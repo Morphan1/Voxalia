@@ -13,7 +13,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator.Biomes
             return "AlmostHell";
         }
 
-        public override float AirDensity()
+        public override double AirDensity()
         {
             return 0.7f;
         }

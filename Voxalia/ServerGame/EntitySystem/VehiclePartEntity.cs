@@ -12,7 +12,7 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class VehiclePartEntity: ModelEntity
     {
-        public float StepHeight = 0.7f;
+        public double StepHeight = 0.7f;
 
         public bool IsWheel;
 

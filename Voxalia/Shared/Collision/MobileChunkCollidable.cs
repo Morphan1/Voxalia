@@ -38,7 +38,7 @@ namespace Voxalia.Shared.Collision
             get { return Events; }
         }
         
-        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, float slen, MaterialSolidity solidness, out RayHit hit)
+        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, double slen, MaterialSolidity solidness, out RayHit hit)
         {
             RigidTransform rt;
             RigidTransform.MultiplyByInverse(ref startingTransform, ref worldTransform, out rt);
@@ -54,7 +54,7 @@ namespace Voxalia.Shared.Collision
         public override bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweep, Func<BroadPhaseEntry, bool> filter, out RayHit hit)
         {
             Vector3 swp = sweep;
-            float len = swp.Length();
+            double len = swp.Length();
             swp /= len;
             return ConvexCast(castShape, ref startingTransform, ref swp, len, MaterialSolidity.FULLSOLID, out hit);
         }
@@ -64,19 +64,19 @@ namespace Voxalia.Shared.Collision
             return ConvexCast(castShape, ref startingTransform, ref sweep, null, out hit);
         }
         
-        public override bool RayCast(Ray ray, float maximumLength, Func<BroadPhaseEntry, bool> filter, out RayHit rayHit)
+        public override bool RayCast(Ray ray, double maximumLength, Func<BroadPhaseEntry, bool> filter, out RayHit rayHit)
         {
             RigidTransform start = new RigidTransform(ray.Position);
             Vector3 sweep = ray.Direction;
             return ConvexCast(new BoxShape(0.1f, 0.1f, 0.1f), ref start, ref sweep, maximumLength, MaterialSolidity.FULLSOLID, out rayHit);
         }
 
-        public override bool RayCast(Ray ray, float maximumLength, out RayHit rayHit)
+        public override bool RayCast(Ray ray, double maximumLength, out RayHit rayHit)
         {
             return RayCast(ray, maximumLength, null, out rayHit);
         }
 
-        protected override void UpdateBoundingBoxInternal(float dt)
+        protected override void UpdateBoundingBoxInternal(double dt)
         {
             Shape.GetBoundingBox(ref worldTransform, out boundingBox);
             ExpandBoundingBox(ref boundingBox, dt);

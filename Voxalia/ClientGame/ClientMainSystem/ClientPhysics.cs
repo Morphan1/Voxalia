@@ -102,7 +102,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Vector3 tsd = TheSun.Direction.ToBVector();
                 Vector3 tpd = PlanetDir.ToBVector();
                 Quaternion.GetQuaternionBetweenNormalizedVectors(ref tsd, ref tpd, out diff);
-                PlanetSunDist = Quaternion.GetAngleFromQuaternion(ref diff) / (float)Utilities.PI180;
+                PlanetSunDist = (float)Quaternion.GetAngleFromQuaternion(ref diff) / (float)Utilities.PI180;
                 if (PlanetSunDist < 75)
                 {
                     TheSun.InternalLights[0].color = new OpenTK.Vector3((float)Math.Min(SunLightDef.X * (PlanetSunDist / 15), 1),

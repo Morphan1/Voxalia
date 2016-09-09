@@ -28,8 +28,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 Data = new byte[len + 4 + 4 + 12 + 12];
                 Data[0] = 2;
-                Utilities.FloatToBytes(((JointDistance)joint).Min).CopyTo(Data, len);
-                Utilities.FloatToBytes(((JointDistance)joint).Max).CopyTo(Data, len + 4);
+                Utilities.FloatToBytes((float)((JointDistance)joint).Min).CopyTo(Data, len);
+                Utilities.FloatToBytes((float)((JointDistance)joint).Max).CopyTo(Data, len + 4);
                 ((JointDistance)joint).Ent1Pos.ToBytes().CopyTo(Data, len + 4 + 4);
                 ((JointDistance)joint).Ent2Pos.ToBytes().CopyTo(Data, len + 4 + 4 + 12);
             }
@@ -77,8 +77,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 ((JointLAxisLimit)joint).CPos1.ToBytes().CopyTo(Data, len);
                 ((JointLAxisLimit)joint).CPos2.ToBytes().CopyTo(Data, len + 12);
                 ((JointLAxisLimit)joint).Axis.ToBytes().CopyTo(Data, len + 12 + 12);
-                Utilities.FloatToBytes(((JointLAxisLimit)joint).Min).CopyTo(Data, len + 12 + 12 + 12);
-                Utilities.FloatToBytes(((JointLAxisLimit)joint).Max).CopyTo(Data, len + 12 + 12 + 12 + 4);
+                Utilities.FloatToBytes((float)((JointLAxisLimit)joint).Min).CopyTo(Data, len + 12 + 12 + 12);
+                Utilities.FloatToBytes((float)((JointLAxisLimit)joint).Max).CopyTo(Data, len + 12 + 12 + 12 + 4);
             }
             else if (joint is JointSwivelHinge)
             {
@@ -91,7 +91,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 Data = new byte[len + 4];
                 Data[0] = 11;
-                Utilities.FloatToBytes(((ConstWheelStepUp)joint).Height).CopyTo(Data, len);
+                Utilities.FloatToBytes((float)((ConstWheelStepUp)joint).Height).CopyTo(Data, len);
             }
             else if (joint is ConnectorBeam)
             {
@@ -115,16 +115,16 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             Utilities.LongToBytes(joint.JID).CopyTo(Data, 1 + 8 + 8);
             joint.One.GetPosition().ToBytes().CopyTo(Data, 1 + 8 + 8 + 8);
             BEPUutilities.Quaternion quat = joint.One.GetOrientation();
-            Utilities.FloatToBytes(quat.X).CopyTo(Data, 1 + 8 + 8 + 8 + 12);
-            Utilities.FloatToBytes(quat.Y).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4);
-            Utilities.FloatToBytes(quat.Z).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4);
-            Utilities.FloatToBytes(quat.W).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4);
+            Utilities.FloatToBytes((float)quat.X).CopyTo(Data, 1 + 8 + 8 + 8 + 12);
+            Utilities.FloatToBytes((float)quat.Y).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4);
+            Utilities.FloatToBytes((float)quat.Z).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4);
+            Utilities.FloatToBytes((float)quat.W).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4);
             joint.Two.GetPosition().ToBytes().CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4);
             BEPUutilities.Quaternion quat2 = joint.Two.GetOrientation();
-            Utilities.FloatToBytes(quat2.X).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12);
-            Utilities.FloatToBytes(quat2.Y).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4);
-            Utilities.FloatToBytes(quat2.Z).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4);
-            Utilities.FloatToBytes(quat2.W).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4);
+            Utilities.FloatToBytes((float)quat2.X).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12);
+            Utilities.FloatToBytes((float)quat2.Y).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4);
+            Utilities.FloatToBytes((float)quat2.Z).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4);
+            Utilities.FloatToBytes((float)quat2.W).CopyTo(Data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4);
         }
     }
 }

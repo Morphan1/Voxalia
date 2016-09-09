@@ -95,7 +95,7 @@ namespace Voxalia.Shared.Collision
             boundingBox = new BoundingBox(Position, Position + new Vector3(30, 30, 30));
         }
 
-        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, float slen, MaterialSolidity solidness, out RayHit hit)
+        public bool ConvexCast(ConvexShape castShape, ref RigidTransform startingTransform, ref Vector3 sweepnorm, double slen, MaterialSolidity solidness, out RayHit hit)
         {
             RigidTransform rt = new RigidTransform(startingTransform.Position - Position, startingTransform.Orientation);
             RayHit rHit;
@@ -109,7 +109,7 @@ namespace Voxalia.Shared.Collision
         {
             RigidTransform rt = new RigidTransform(startingTransform.Position - Position, startingTransform.Orientation);
             RayHit rHit;
-            float slen = sweep.Length();
+            double slen = sweep.Length();
             Vector3 sweepnorm = sweep / slen;
             bool h = ChunkShape.ConvexCast(castShape, ref rt, ref sweepnorm, slen, MaterialSolidity.FULLSOLID, out rHit);
             rHit.Location = rHit.Location + Position;
@@ -122,7 +122,7 @@ namespace Voxalia.Shared.Collision
             return ConvexCast(castShape, ref startingTransform, ref sweep, null, out hit);
         }
 
-        public bool RayCast(Ray ray, float maximumLength, Func<BroadPhaseEntry, bool> filter, MaterialSolidity solidness, out RayHit rayHit)
+        public bool RayCast(Ray ray, double maximumLength, Func<BroadPhaseEntry, bool> filter, MaterialSolidity solidness, out RayHit rayHit)
         {
             Ray r2 = new Ray(ray.Position - Position, ray.Direction);
             RayHit rHit;
@@ -132,12 +132,12 @@ namespace Voxalia.Shared.Collision
             return h;
         }
 
-        public override bool RayCast(Ray ray, float maximumLength, Func<BroadPhaseEntry, bool> filter, out RayHit rayHit)
+        public override bool RayCast(Ray ray, double maximumLength, Func<BroadPhaseEntry, bool> filter, out RayHit rayHit)
         {
             return RayCast(ray, maximumLength, filter, MaterialSolidity.FULLSOLID, out rayHit);
         }
 
-        public override bool RayCast(Ray ray, float maximumLength, out RayHit rayHit)
+        public override bool RayCast(Ray ray, double maximumLength, out RayHit rayHit)
         {
             return RayCast(ray, maximumLength, null, out rayHit);
         }

@@ -62,7 +62,7 @@ namespace Voxalia.ServerGame.EntitySystem
             string world = config.GetString("world", null);
             if (world != null) // TODO: && worldIsValidAndLoaded
             {
-                // TODO: Set world, region!
+                // TODO: Set world!
             }
             if (!Enum.TryParse(config.GetString("gamemode", "SURVIVOR"), out Mode))
             {
@@ -106,7 +106,6 @@ namespace Voxalia.ServerGame.EntitySystem
             config.Set("position", GetPosition().ToString());
             config.Set("secure_movement", SecureMovement ? "true" : "false"); // TODO: Boolean safety
             config.Set("world", TheRegion.TheWorld.Name);
-            config.Set("region", TheRegion.Position.ToLocation().ToString());
             for (int i = 0; i < (int)NetUsageType.COUNT; i++)
             {
                 string path = "stats.net_usage." + ((NetUsageType)i).ToString().ToLowerFast();
@@ -225,7 +224,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public ConnectorBeam Manipulator_Beam = null;
 
-        public float Manipulator_Distance = 10;
+        public double Manipulator_Distance = 10;
 
         public Location AttemptedDirectionChange = Location.Zero;
 
@@ -273,7 +272,7 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// The default mass of the player.
         /// </summary>
-        public float tmass = 70;
+        public double tmass = 70;
 
         // TODO: Dictionary<breadcrumb id: int, List<Location>> ?
         public List<Location> Breadcrumbs = new List<Location>();
@@ -655,7 +654,7 @@ namespace Voxalia.ServerGame.EntitySystem
         static Vector3i[] MoveDirs = new Vector3i[] { new Vector3i(-1, 0, 0), new Vector3i(1, 0, 0),
             new Vector3i(0, -1, 0), new Vector3i(0, 1, 0), new Vector3i(0, 0, -1), new Vector3i(0, 0, 1) };
 
-        const float Max_FOV = 100f;
+        const double Max_FOV = 100f;
         
         void ChunkMarchAndSend()
         {
@@ -666,7 +665,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return;
             }
-            Matrix proj = Matrix.CreatePerspectiveFieldOfViewRH(Max_FOV * (float)Utilities.PI180, 1, 0.5f, 3000f);
+            Matrix proj = Matrix.CreatePerspectiveFieldOfViewRH(Max_FOV * (double)Utilities.PI180, 1, 0.5f, 3000f);
             Matrix view = Matrix.CreateLookAtRH((LoadRelPos - LoadRelDir * 8).ToBVector(), (LoadRelPos + LoadRelDir * 8).ToBVector(), new Vector3(0, 0, 1));
             Matrix combined = view * proj;
             BFrustum bfs = new BFrustum(combined);
@@ -1180,13 +1179,13 @@ namespace Voxalia.ServerGame.EntitySystem
             Network.SendPacket(new YourStatusPacketOut(GetHealth(), GetMaxHealth(), Flags));
         }
 
-        public override void SetHealth(float health)
+        public override void SetHealth(double health)
         {
             base.SetHealth(health);
             SendStatus();
         }
 
-        public override void SetMaxHealth(float maxhealth)
+        public override void SetMaxHealth(double maxhealth)
         {
             base.SetMaxHealth(maxhealth);
             SendStatus();
@@ -1200,7 +1199,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public BlockGroupEntity Pasting = null;
 
-        public float PastingDist = 5;
+        public double PastingDist = 5;
     }
 
     public class ChunkAwarenessInfo

@@ -145,7 +145,7 @@ namespace Voxalia.ClientGame.OtherSystems
                 BEPUutilities.BoundingBox bb;
                 RenderedModel.Shape.GetBoundingBox(ref rt, out bb);
                 BEPUutilities.Vector3 scale = BEPUutilities.Vector3.Max(bb.Max, -bb.Min);
-                float len = scale.Length();
+                float len = (float)scale.Length();
                 RenderedModel.WorldTransform = BEPUutilities.Matrix.CreateScale(size.ToBVector() * len)
                     * rot1
                     * BEPUutilities.Matrix.CreateTranslation(pos.ToBVector());

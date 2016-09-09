@@ -56,8 +56,8 @@ namespace Voxalia.ServerGame.EntitySystem
             return null;
         }
         
-        public float Damage = 1;
-        public float DamageTimesVelocity = 1;
+        public double Damage = 1;
+        public double DamageTimesVelocity = 1;
 
         public PhysicsEntity StuckTo = null;
 
@@ -94,7 +94,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     Matrix lookatlh = Utilities.LookAtLH(Location.Zero, vel, Location.UnitZ);
                     lookatlh.Transpose();
                     Angles = Quaternion.CreateFromRotationMatrix(lookatlh);
-                    Angles *= Quaternion.CreateFromAxisAngle(Vector3.UnitX, 90f * (float)Utilities.PI180);
+                    Angles *= Quaternion.CreateFromAxisAngle(Vector3.UnitX, 90f * (double)Utilities.PI180);
                 }
             }
         }
@@ -127,7 +127,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 PhysicsEntity pe = (PhysicsEntity)args.Info.HitEnt.Tag;
                 if (pe is EntityDamageable)
                 {
-                    ((EntityDamageable)pe).Damage(Damage + DamageTimesVelocity * (float)len);
+                    ((EntityDamageable)pe).Damage(Damage + DamageTimesVelocity * (double)len);
                 }
                 Vector3 loc = (args.Info.Position - pe.GetPosition()).ToBVector();
                 Vector3 impulse = GetVelocity().ToBVector() * DamageTimesVelocity / 1000f;

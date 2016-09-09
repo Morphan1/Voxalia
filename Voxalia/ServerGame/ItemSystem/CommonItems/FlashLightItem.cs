@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             Name = "flashlight";
         }
 
-        public float Distance = 20;
+        public double Distance = 20;
 
         public Location Color = Location.One;
 

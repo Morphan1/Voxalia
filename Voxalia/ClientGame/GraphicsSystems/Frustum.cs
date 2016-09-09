@@ -100,7 +100,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         float TryPoint(Vector3 point, Plane plane)
         {
-            return point.X * plane.Normal.X + point.Y * plane.Normal.Y + point.Z * plane.Normal.Z + plane.D;
+            return (float)(point.X * plane.Normal.X + point.Y * plane.Normal.Y + point.Z * plane.Normal.Z + plane.D);
         }
     }
 }

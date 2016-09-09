@@ -211,7 +211,7 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
-        public List<PlayerEntity> GetPlayersInRadius(Location pos, float rad)
+        public List<PlayerEntity> GetPlayersInRadius(Location pos, double rad)
         {
             CheckThreadValidity();
             List<PlayerEntity> pes = new List<PlayerEntity>();
@@ -225,12 +225,12 @@ namespace Voxalia.ServerGame.WorldSystem
             return pes;
         }
 
-        public List<Entity> GetEntitiesInRadius(Location pos, float rad)
+        public List<Entity> GetEntitiesInRadius(Location pos, double rad)
         {
             List<Entity> es = new List<Entity>();
             // TODO: Efficiency!
             // TODO: Accuracy!
-            float rx = rad * rad;
+            double rx = rad * rad;
             foreach (Entity e in Entities)
             {
                 if ((e.GetPosition().DistanceSquared(pos)) <= rx + e.GetScaleEstimate())
@@ -331,7 +331,7 @@ namespace Voxalia.ServerGame.WorldSystem
             Vector3 norm = /*h ? rcr.HitData.Normal : */new Vector3(0, 0, 1);
             Quaternion orient;
             Quaternion.GetQuaternionBetweenNormalizedVectors(ref treealign, ref norm, out orient);
-            orient *= Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)(Utilities.UtilRandom.NextDouble() * Math.PI * 2));
+            orient *= Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (double)(Utilities.UtilRandom.NextDouble() * Math.PI * 2));
             me.SetOrientation(orient);
             me.SetPosition(pos);
             me.CanLOD = true;

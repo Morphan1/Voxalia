@@ -19,7 +19,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
                 return;
             }
             Material chosenMat = MaterialHelpers.FromNameOrNumber(entry.InputArguments[0]);
-            float maxRad = Utilities.StringToFloat(entry.InputArguments[1]);
+            double maxRad = Utilities.StringToFloat(entry.InputArguments[1]);
             if (maxRad > 50) // TODO: Config!
             {
                 entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Maximum radius is 50!");
@@ -31,7 +31,7 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.RegionCommands
 
         Location[] FloodDirs = new Location[] { Location.UnitX, Location.UnitY, -Location.UnitX, -Location.UnitY, -Location.UnitZ };
 
-        void FloodFrom(Region tregion, Location start, Location c, Material mat, float maxRad)
+        void FloodFrom(Region tregion, Location start, Location c, Material mat, double maxRad)
         {
             if ((c - start).LengthSquared() > maxRad * maxRad)
             {

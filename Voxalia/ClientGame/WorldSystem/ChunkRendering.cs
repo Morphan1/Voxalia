@@ -112,18 +112,18 @@ namespace Voxalia.ClientGame.WorldSystem
                                     BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].GetStretchData(pos, vecsi, xp, xm, yp, ym, zp, zm, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
-                                    Vector3 vt = new Vector3(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z);
+                                    Vector3 vt = new Vector3((float)vecsi[i].X * PosMultiplier + ppos.X, (float)vecsi[i].Y * PosMultiplier + ppos.Y, (float)vecsi[i].Z * PosMultiplier + ppos.Z);
                                     rh.Vertices.Add(vt);
-                                    Vector3 nt = new Vector3(normsi[i].X, normsi[i].Y, normsi[i].Z);
+                                    Vector3 nt = new Vector3((float)normsi[i].X, (float)normsi[i].Y, (float)normsi[i].Z);
                                     rh.Norms.Add(nt);
-                                    rh.TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
+                                    rh.TCoords.Add(new Vector3((float)tci[i].X, (float)tci[i].Y, (float)tci[i].Z));
                                     Location lcol = OwningRegion.GetLightAmount(ClientUtilities.Convert(vt), ClientUtilities.Convert(nt));
                                     rh.Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
                                     rh.TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(vt, Colors.ForByte(c.BlockPaint)));
                                     if (ths.Key != null)
                                     {
-                                        rh.THVs.Add(new Vector4(ths.Key[i].X, ths.Key[i].Y, ths.Key[i].Z, ths.Key[i].W));
-                                        rh.THWs.Add(new Vector4(ths.Value[i].X, ths.Value[i].Y, ths.Value[i].Z, ths.Value[i].W));
+                                        rh.THVs.Add(new Vector4((float)ths.Key[i].X, (float)ths.Key[i].Y, (float)ths.Key[i].Z, (float)ths.Key[i].W));
+                                        rh.THWs.Add(new Vector4((float)ths.Value[i].X, (float)ths.Value[i].Y, (float)ths.Value[i].Z, (float)ths.Value[i].W));
                                     }
                                     else
                                     {
@@ -136,16 +136,16 @@ namespace Voxalia.ClientGame.WorldSystem
                                     int tf = rh.Cols.Count - vecsi.Count;
                                     for (int i = vecsi.Count - 1; i >= 0; i--)
                                     {
-                                        rh.Vertices.Add(new Vector3(vecsi[i].X * PosMultiplier + ppos.X, vecsi[i].Y * PosMultiplier + ppos.Y, vecsi[i].Z * PosMultiplier + ppos.Z));
+                                        rh.Vertices.Add(new Vector3((float)vecsi[i].X * PosMultiplier + ppos.X, (float)vecsi[i].Y * PosMultiplier + ppos.Y, (float)vecsi[i].Z * PosMultiplier + ppos.Z));
                                         int tx = tf + i;
                                         rh.Cols.Add(rh.Cols[tx]);
                                         rh.TCols.Add(rh.TCols[tx]);
-                                        rh.Norms.Add(new Vector3(-normsi[i].X, -normsi[i].Y, -normsi[i].Z));
-                                        rh.TCoords.Add(new Vector3(tci[i].X, tci[i].Y, tci[i].Z));
+                                        rh.Norms.Add(new Vector3((float)-normsi[i].X, (float)-normsi[i].Y, (float)-normsi[i].Z));
+                                        rh.TCoords.Add(new Vector3((float)tci[i].X, (float)tci[i].Y, (float)tci[i].Z));
                                         if (ths.Key != null)
                                         {
-                                            rh.THVs.Add(new Vector4(ths.Key[i].X, ths.Key[i].Y, ths.Key[i].Z, ths.Key[i].W));
-                                            rh.THWs.Add(new Vector4(ths.Value[i].X, ths.Value[i].Y, ths.Value[i].Z, ths.Value[i].W));
+                                            rh.THVs.Add(new Vector4((float)ths.Key[i].X, (float)ths.Key[i].Y, (float)ths.Key[i].Z, (float)ths.Key[i].W));
+                                            rh.THWs.Add(new Vector4((float)ths.Value[i].X, (float)ths.Value[i].Y, (float)ths.Value[i].Z, (float)ths.Value[i].W));
                                         }
                                         else
                                         {

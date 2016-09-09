@@ -51,7 +51,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 Sitter.SetPosition(SeatHolder.GetPosition() + PositionOffset);
             }
-            float len = (float)PositionOffset.Length();
+            double len = (double)PositionOffset.Length();
             js = new JointSlider(SeatHolder, sitter, PositionOffset / len);
             jbs = new JointBallSocket(SeatHolder, sitter, sitter.GetPosition());
             jnc = new JointNoCollide(SeatHolder, sitter);

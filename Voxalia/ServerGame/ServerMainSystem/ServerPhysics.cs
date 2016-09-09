@@ -93,14 +93,11 @@ namespace Voxalia.ServerGame.ServerMainSystem
         {
             foreach (World world in LoadedWorlds)
             {
-                foreach (Region region in world.LoadedRegions.Values)
+                foreach (Entity ent in world.MainRegion.Entities)
                 {
-                    foreach (Entity ent in region.Entities)
+                    if (ent.EID == eid)
                     {
-                        if (ent.EID == eid)
-                        {
-                            return ent;
-                        }
+                        return ent;
                     }
                 }
             }

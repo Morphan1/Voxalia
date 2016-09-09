@@ -61,8 +61,8 @@ namespace Voxalia.ServerGame.EntitySystem
             if (NextBoing <= 0)
             {
                 NextBoing = Utilities.UtilRandom.NextDouble() * 2;
-                XMove = (float)Utilities.UtilRandom.NextDouble() * 2f - 1f;
-                YMove = (float)Utilities.UtilRandom.NextDouble() * 2f - 1f;
+                XMove = (double)Utilities.UtilRandom.NextDouble() * 2f - 1f;
+                YMove = (double)Utilities.UtilRandom.NextDouble() * 2f - 1f;
                 Upward = Utilities.UtilRandom.Next(100) > 75;
             }
             NextAttack -= TheRegion.Delta;

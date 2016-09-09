@@ -40,11 +40,11 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
         {
             RemoveHook(player);
             PhysicsEntity pe;
-            float len = (float)(Position - player.GetCenter()).Length();
+            double len = (double)(Position - player.GetCenter()).Length();
             Location step = (player.GetCenter() - Position) / len;
             Location forw = Utilities.VectorToAngles(step);
-            BEPUutilities.Quaternion quat = Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)(forw.Pitch * Utilities.PI180)) *
-                Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)(forw.Yaw * Utilities.PI180));
+            BEPUutilities.Quaternion quat = Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), (double)(forw.Pitch * Utilities.PI180)) *
+                Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), (double)(forw.Yaw * Utilities.PI180));
             if (HitEnt == null)
             {
                 ModelEntity mod = new ModelEntity("cube", player.TheRegion);
@@ -67,7 +67,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             //player.TheRegion.AddJoint(jd);
             //player.Hooks.Add(new HookInfo() { Joint = jd, Hit = pe, IsBar = false });
             PhysicsEntity cent = pe;
-            for (float f = 0; f < len - 1f; f += 0.5f)
+            for (double f = 0; f < len - 1f; f += 0.5f)
             {
                 Location cpos = Position + step * f;
                 ModelEntity ce = new ModelEntity("cube", player.TheRegion);

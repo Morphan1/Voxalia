@@ -16,7 +16,7 @@ namespace Voxalia.Shared.Collision
 {
     public class WheelStepUpConstraint : SingleEntityConstraint
     {
-        public WheelStepUpConstraint(Entity e, CollisionUtil collis, float height)
+        public WheelStepUpConstraint(Entity e, CollisionUtil collis, double height)
         {
             Entity = e;
             HopHeight = height;
@@ -24,7 +24,7 @@ namespace Voxalia.Shared.Collision
         }
 
         CollisionUtil Collision;
-        float HopHeight;
+        double HopHeight;
         bool NeedsHop;
         Vector3 Hop;
 
@@ -36,7 +36,7 @@ namespace Voxalia.Shared.Collision
             }
         }
 
-        public override float SolveIteration()
+        public override double SolveIteration()
         {
             return 0; // TODO: ???
         }
@@ -50,7 +50,7 @@ namespace Voxalia.Shared.Collision
             return Collision.ShouldCollide(entry);
         }
 
-        public override void Update(float dt)
+        public override void Update(double dt)
         {
             NeedsHop = false;
             Entity e = Entity;

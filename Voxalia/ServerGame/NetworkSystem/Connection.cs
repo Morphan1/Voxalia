@@ -314,7 +314,7 @@ namespace Voxalia.ServerGame.NetworkSystem
                                     {
                                         // TODO: Additional details?
                                         // TODO: Choose a world smarter.
-                                        PlayerEntity player = new PlayerEntity(TheServer.LoadedWorlds[0].LoadedRegions.Values.First(), this, name);
+                                        PlayerEntity player = new PlayerEntity(TheServer.LoadedWorlds[0].MainRegion, this, name);
                                         player.SessionKey = key;
                                         PE = player;
                                         player.Host = host;

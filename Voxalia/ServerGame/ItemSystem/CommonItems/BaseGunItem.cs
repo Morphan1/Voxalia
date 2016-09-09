@@ -6,8 +6,8 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
 {
     public abstract class BaseGunItem: BaseItemInfo
     {
-        public BaseGunItem(string name, float round_size, float impact_damage, float splash_size, float splash_max_damage,
-            float shot_speed, int clip_size, string ammo_type, float spread, int shots, float fire_rate, float reload_delay, bool shot_per_click)
+        public BaseGunItem(string name, double round_size, double impact_damage, double splash_size, double splash_max_damage,
+            double shot_speed, int clip_size, string ammo_type, double spread, int shots, double fire_rate, double reload_delay, bool shot_per_click)
         {
             Name = name;
             RoundSize = round_size;
@@ -24,17 +24,17 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             ShotPerClick = shot_per_click;
         }
 
-        public float RoundSize;
-        public float ImpactDamage;
-        public float SplashSize;
-        public float SplashMaxDamage;
-        public float Speed;
+        public double RoundSize;
+        public double ImpactDamage;
+        public double SplashSize;
+        public double SplashMaxDamage;
+        public double Speed;
         public int ClipSize;
         public string AmmoType;
-        public float Spread;
+        public double Spread;
         public int Shots;
-        public float FireRate;
-        public float ReloadDelay;
+        public double FireRate;
+        public double ReloadDelay;
         public bool ShotPerClick;
 
         public override void PrepItem(Entity entity, ItemStack item)
@@ -49,12 +49,12 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 return;
             }
             HumanoidEntity character = (HumanoidEntity)entity;
-            float fireRate = FireRate * item.GetAttributeF("firerate_mod", 1f);
+            double fireRate = FireRate * item.GetAttributeF("firerate_mod", 1f);
             if (item.Datum != 0 && !character.WaitingForClickRelease && (character.TheRegion.GlobalTickTime - character.LastGunShot >= fireRate))
             {
-                float spread = Spread * item.GetAttributeF("spread_mod", 1f);
-                float speed = Speed * item.GetAttributeF("speed_mod", 1f);
-                int shots = (int)((float)Shots * item.GetAttributeF("shots_mod", 1f));
+                double spread = Spread * item.GetAttributeF("spread_mod", 1f);
+                double speed = Speed * item.GetAttributeF("speed_mod", 1f);
+                int shots = (int)((double)Shots * item.GetAttributeF("shots_mod", 1f));
                 for (int i = 0; i < shots; i++)
                 {
                     BulletEntity be = new BulletEntity(character.TheRegion);
@@ -93,7 +93,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             {
                 return false;
             }
-            int clipSize = (int)((float)ClipSize * item.GetAttributeF("clipsize_mod", 1f));
+            int clipSize = (int)((double)ClipSize * item.GetAttributeF("clipsize_mod", 1f));
             if (item.Datum < clipSize)
             {
                 for (int i = 0; i < character.Items.Items.Count; i++)

@@ -14,7 +14,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator.Biomes
             return Material.HELLSTONE;
         }
 
-        public override float AirDensity()
+        public override double AirDensity()
         {
             return 0.5f;
         }

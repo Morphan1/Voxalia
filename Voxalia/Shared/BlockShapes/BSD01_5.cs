@@ -5,9 +5,9 @@ namespace Voxalia.Shared.BlockShapes
 {
     public class BSD01_5: BlockShapeDetails
     {
-        public float Percent;
+        public double Percent;
 
-        public BSD01_5(float perc)
+        public BSD01_5(double perc)
         {
             Percent = perc;
             OffsetCache = new Location(0.5, 0.5, Percent / 2);

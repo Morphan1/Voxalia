@@ -87,7 +87,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
                 bge.Angle = 0;
                 bge.rotOffs = Location.Zero;
             }
-            bge.SetOrientation(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)bge.Angle * (float)Utilities.PI180));
+            bge.SetOrientation(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (double)bge.Angle * (double)Utilities.PI180));
         }
 
         public override void Tick(Entity entity, ItemStack item)
@@ -100,12 +100,12 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             PlayerEntity player = (PlayerEntity)entity;
             if (player.ItemUp)
             {
-                player.PastingDist += (float)(player.TheRegion.Delta * 3.0);
+                player.PastingDist += (double)(player.TheRegion.Delta * 3.0);
                 player.PastingDist = Math.Min(player.PastingDist, 20);
             }
             if (player.ItemDown)
             {
-                player.PastingDist -= (float)(player.TheRegion.Delta * 3.0);
+                player.PastingDist -= (double)(player.TheRegion.Delta * 3.0);
                 player.PastingDist = Math.Max(player.PastingDist, 0.1f);
             }
             if (player.Pasting != null)

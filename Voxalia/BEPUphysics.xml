@@ -168,7 +168,7 @@
             <param name="sphere">Sphere to test against the world.</param>
             <param name="entries">Entries of the space which intersect the sphere.</param>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseSystems.Hierarchies.DynamicHierarchyQueryAccelerator.RayCast(BEPUutilities.Ray,System.Single,System.Collections.Generic.IList{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry})">
+        <member name="M:BEPUphysics.BroadPhaseSystems.Hierarchies.DynamicHierarchyQueryAccelerator.RayCast(BEPUutilities.Ray,System.Double,System.Collections.Generic.IList{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry})">
             <summary>
             Finds all intersections between the ray and broad phase entries.
             </summary>
@@ -221,7 +221,7 @@
             <param name="outputIntersections">Overlapped entries.</param>
             <returns>Whether or not the ray hit anything.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseSystems.IQueryAccelerator.RayCast(BEPUutilities.Ray,System.Single,System.Collections.Generic.IList{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry})">
+        <member name="M:BEPUphysics.BroadPhaseSystems.IQueryAccelerator.RayCast(BEPUutilities.Ray,System.Double,System.Collections.Generic.IList{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry})">
             <summary>
              Gets the broad phase entries overlapping the ray.
             </summary>
@@ -353,7 +353,7 @@
             Gets the entry's collision rules.
             </summary>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.BroadPhaseEntry.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.BroadPhaseEntry.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Tests a ray against the entry.
             </summary>
@@ -362,7 +362,7 @@
             <param name="rayHit">Hit location of the ray on the entry, if any.</param>
             <returns>Whether or not the ray hit the entry.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.BroadPhaseEntry.RayCast(BEPUutilities.Ray,System.Single,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.BroadPhaseEntry.RayCast(BEPUutilities.Ray,System.Double,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUutilities.RayHit@)">
             <summary>
             Tests a ray against the entry.
             </summary>
@@ -434,7 +434,7 @@
             Updates the bounding box to the current state of the entry.
             </summary>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.StaticGroup.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.StaticGroup.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Tests a ray against the entry.
             </summary>
@@ -443,7 +443,7 @@
             <param name="rayHit">Hit location of the ray on the entry, if any.</param>
             <returns>Whether or not the ray hit the entry.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.StaticGroup.RayCast(BEPUutilities.Ray,System.Single,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.StaticGroup.RayCast(BEPUutilities.Ray,System.Double,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUutilities.RayHit@)">
             <summary>
             Tests a ray against the entry.
             </summary>
@@ -931,7 +931,7 @@
             <param name="b">Compound to receive children removed from the original compound.</param>
             <returns>Whether or not the predicate returned true for any element in the original compound and split the compound.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundHelper.SplitCompound(System.Func{BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundChild,System.Boolean},BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable,BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable,BEPUphysics.CollisionShapes.ShapeDistributionInformation@,BEPUphysics.CollisionShapes.ShapeDistributionInformation@,System.Single@,System.Single@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundHelper.SplitCompound(System.Func{BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundChild,System.Boolean},BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable,BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable,BEPUphysics.CollisionShapes.ShapeDistributionInformation@,BEPUphysics.CollisionShapes.ShapeDistributionInformation@,System.Double@,System.Double@)">
             <summary>
             Splits a single compound collidable into two separate compound collidables and computes information needed by the simulation.
             </summary>
@@ -963,7 +963,7 @@
             <param name="compound">Original compound to have a child removed.</param>
             <returns>Whether or not the predicate returned true for any element in the original compound and split the compound.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundHelper.RemoveChildFromCompound(BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable,System.Func{BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundChild,System.Boolean},System.Collections.Generic.IList{BEPUphysics.CollisionShapes.ShapeDistributionInformation},BEPUphysics.CollisionShapes.ShapeDistributionInformation@,System.Single@,System.Single@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundHelper.RemoveChildFromCompound(BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable,System.Func{BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundChild,System.Boolean},System.Collections.Generic.IList{BEPUphysics.CollisionShapes.ShapeDistributionInformation},BEPUphysics.CollisionShapes.ShapeDistributionInformation@,System.Double@,System.Double@,BEPUutilities.Vector3@)">
             <summary>
             Removes a child from a compound collidable.
             </summary>
@@ -1007,7 +1007,7 @@
             the robustness of contacts at edges and vertices.
             </summary>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.MobileMeshCollidable.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.MobileMeshCollidable.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Tests a ray against the entry.
             </summary>
@@ -1016,7 +1016,7 @@
             <param name="rayHit">Hit location of the ray on the entry, if any.</param>
             <returns>Whether or not the ray hit the entry.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.MobileMeshCollidable.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.TriangleSidedness,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.MobileMeshCollidable.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.TriangleSidedness,BEPUutilities.RayHit@)">
             <summary>
              Tests a ray against the surface of the mesh.  This does not take into account solidity.
             </summary>
@@ -1091,7 +1091,7 @@
             <param name="position">Position to use for the calculation.</param>
             <param name="orientation">Orientation to use for the calculation.</param>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Tests a ray against the collidable.
             </summary>
@@ -1100,7 +1100,7 @@
             <param name="rayHit">Hit location of the ray on the collidable, if any.</param>
             <returns>Whether or not the ray hit the collidable.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable.RayCast(BEPUutilities.Ray,System.Single,BEPUphysics.RayCastResult@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable.RayCast(BEPUutilities.Ray,System.Double,BEPUphysics.RayCastResult@)">
             <summary>
             Tests a ray against the compound.
             </summary>
@@ -1109,7 +1109,7 @@
             <param name="rayHit">Hit data and the hit child collidable, if any.</param>
             <returns>Whether or not the ray hit the entry.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.RayHit@,BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundChild@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.RayHit@,BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundChild@)">
             <summary>
             Tests a ray against the collidable.
             </summary>
@@ -1119,7 +1119,7 @@
             <param name="hitChild">Child collidable hit by the ray, if any.</param>
             <returns>Whether or not the ray hit the entry.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable.RayCast(BEPUutilities.Ray,System.Single,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable.RayCast(BEPUutilities.Ray,System.Double,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUutilities.RayHit@)">
             <summary>
             Tests a ray against the collidable.
             </summary>
@@ -1130,7 +1130,7 @@
             <param name="rayHit">Hit location of the ray on the collidable, if any.</param>
             <returns>Whether or not the ray hit the collidable.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable.RayCast(BEPUutilities.Ray,System.Single,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUphysics.RayCastResult@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable.RayCast(BEPUutilities.Ray,System.Double,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUphysics.RayCastResult@)">
             <summary>
             Tests a ray against the compound.
             </summary>
@@ -1141,7 +1141,7 @@
             in the entry, this filter will be passed into inner ray casts.</param>
             <returns>Whether or not the ray hit the entry.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable.RayCast(BEPUutilities.Ray,System.Single,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUutilities.RayHit@,BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundChild@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundCollidable.RayCast(BEPUutilities.Ray,System.Double,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUutilities.RayHit@,BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundChild@)">
             <summary>
             Tests a ray against the collidable.
             </summary>
@@ -1331,7 +1331,7 @@
             </summary>
             <param name="shape">Shape to use in the collidable.</param>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.ConvexCollidable`1.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.ConvexCollidable`1.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Tests a ray against the entry.
             </summary>
@@ -1382,7 +1382,7 @@
              UpdateBoundingBoxForTransform instead.
             </summary>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable.UpdateBoundingBox(System.Single)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable.UpdateBoundingBox(System.Double)">
             <summary>
              Updates the bounding box of the mobile collidable according to the associated entity's current state.
              Do not use this if the EntityCollidable does not have an associated entity; consider using
@@ -1398,7 +1398,7 @@
             <param name="position">Position to use for the calculation.</param>
             <param name="orientation">Orientation to use for the calculation.</param>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable.UpdateBoundingBoxForTransform(BEPUutilities.RigidTransform@,System.Single)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable.UpdateBoundingBoxForTransform(BEPUutilities.RigidTransform@,System.Double)">
             <summary>
             Updates the collidable's world transform and bounding box.  The transform provided
             will be offset by the collidable's LocalPosition to get the shape transform.
@@ -1461,7 +1461,7 @@
              Superclass of all collidables which are capable of movement, and thus need bounding box updates every frame.
             </summary>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.MobileCollidable.UpdateBoundingBox(System.Single)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.MobileCollidables.MobileCollidable.UpdateBoundingBox(System.Double)">
             <summary>
              Updates the bounding box of the mobile collidable.
             </summary>
@@ -1759,7 +1759,7 @@
              Gets the event manager of the mesh.
             </summary>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.InstancedMesh.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.InstancedMesh.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Tests a ray against the entry.
             </summary>
@@ -1768,7 +1768,7 @@
             <param name="rayHit">Hit location of the ray on the entry, if any.</param>
             <returns>Whether or not the ray hit the entry.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.InstancedMesh.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.TriangleSidedness,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.InstancedMesh.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.TriangleSidedness,BEPUutilities.RayHit@)">
             <summary>
              Tests a ray against the instance.
             </summary>
@@ -1833,7 +1833,7 @@
             <param name="shape">Shape to use for the terrain.</param>
             <param name="worldTransform">Transform to use for the terrain.</param>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.Terrain.#ctor(System.Single[0:,0:],BEPUutilities.AffineTransform)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.Terrain.#ctor(System.Double[0:,0:],BEPUutilities.AffineTransform)">
             <summary>
              Constructs a new Terrain.
             </summary>
@@ -1845,7 +1845,7 @@
              Updates the bounding box of the terrain.
             </summary>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.Terrain.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.Terrain.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Tests a ray against the entry.
             </summary>
@@ -2102,7 +2102,7 @@
             Updates the bounding box to the current state of the entry.
             </summary>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.StaticMesh.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.StaticMesh.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Tests a ray against the entry.
             </summary>
@@ -2121,7 +2121,7 @@
             <param name="hit">Hit data, if any.</param>
             <returns>Whether or not the cast hit anything.</returns>
         </member>
-        <member name="M:BEPUphysics.BroadPhaseEntries.StaticMesh.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.TriangleSidedness,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.BroadPhaseEntries.StaticMesh.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.TriangleSidedness,BEPUutilities.RayHit@)">
             <summary>
              Tests a ray against the mesh.
             </summary>
@@ -2277,7 +2277,7 @@
             The support finder analyzes the character's contacts to see if any of them provide support and/or traction.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Character.CharacterController.#ctor(BEPUutilities.Vector3,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Character.CharacterController.#ctor(BEPUutilities.Vector3,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a new character controller.
             </summary>
@@ -2365,7 +2365,7 @@
             Gets or sets the maximum slope that a character can be supported by.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Character.CharacterContactCategorizer.#ctor(System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Character.CharacterContactCategorizer.#ctor(System.Double,System.Double,System.Double)">
             <summary>
             Creates a new character contact categorizer.
             </summary>
@@ -2518,7 +2518,7 @@
             <param name="characterBody">Character body to be governed by this constraint.</param>
             <param name="supportFinder">Helper used to find supports for the character.</param>
         </member>
-        <member name="M:BEPUphysics.Character.HorizontalMotionConstraint.Update(System.Single)">
+        <member name="M:BEPUphysics.Character.HorizontalMotionConstraint.Update(System.Double)">
             <summary>
             Computes per-frame information necessary for the constraint.
             </summary>
@@ -2608,7 +2608,7 @@
             Imagine sliding down a steep slope.
             </summary>
         </member>
-        <member name="F:BEPUphysics.Character.MovementMode.Floating">
+        <member name="F:BEPUphysics.Character.MovementMode.doubleing">
             <summary>
             The character has no support.
             </summary>
@@ -2623,7 +2623,7 @@
             Constructs the query manager for a character.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Character.QueryManager.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.Character.QueryManager.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Computes the intersection, if any, between a ray and the objects in the character's bounding box.
             </summary>
@@ -2632,7 +2632,7 @@
             <param name="earliestHit">Earliest intersection location and information.</param>
             <returns>Whether or not the ray hit anything.</returns>
         </member>
-        <member name="M:BEPUphysics.Character.QueryManager.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.RayHit@,BEPUphysics.BroadPhaseEntries.Collidable@)">
+        <member name="M:BEPUphysics.Character.QueryManager.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.RayHit@,BEPUphysics.BroadPhaseEntries.Collidable@)">
             <summary>
             Computes the intersection, if any, between a ray and the objects in the character's bounding box.
             </summary>
@@ -2642,7 +2642,7 @@
             <param name="hitObject">Collidable intersected by the ray, if any.</param>
             <returns>Whether or not the ray hit anything.</returns>
         </member>
-        <member name="M:BEPUphysics.Character.QueryManager.RayCastHitAnything(BEPUutilities.Ray,System.Single)">
+        <member name="M:BEPUphysics.Character.QueryManager.RayCastHitAnything(BEPUutilities.Ray,System.Double)">
             <summary>
             Determines if a ray intersects any object in the character's bounding box.
             </summary>
@@ -2709,7 +2709,7 @@
             Gets or sets the stance that the character is trying to move into.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Character.StanceManager.#ctor(BEPUphysics.Entities.Prefabs.Cylinder,System.Single,System.Single,BEPUphysics.Character.QueryManager,BEPUphysics.Character.SupportFinder)">
+        <member name="M:BEPUphysics.Character.StanceManager.#ctor(BEPUphysics.Entities.Prefabs.Cylinder,System.Double,System.Double,BEPUphysics.Character.QueryManager,BEPUphysics.Character.SupportFinder)">
             <summary>
             Constructs a stance manager for a character.
             </summary>
@@ -2719,7 +2719,7 @@
             <param name="queryManager">Provider of queries used by the stance manager to test if it is okay to change stances.</param>
             <param name="supportFinder">Support finder used by the character.</param>
         </member>
-        <member name="M:BEPUphysics.Character.StanceManager.CheckTransition(BEPUphysics.Character.Stance,System.Single@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.Character.StanceManager.CheckTransition(BEPUphysics.Character.Stance,System.Double@,BEPUutilities.Vector3@)">
             <summary>
             Checks if a transition from the current stance to the target stance is possible given the current environment.
             </summary>
@@ -2984,7 +2984,7 @@
             Gets the effective mass felt by the constraint.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Character.VerticalMotionConstraint.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Character.SupportFinder,System.Single)">
+        <member name="M:BEPUphysics.Character.VerticalMotionConstraint.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Character.SupportFinder,System.Double)">
             <summary>
             Constructs a new vertical motion constraint.
             </summary>
@@ -3004,7 +3004,7 @@
             Called automatically by the solver.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Character.VerticalMotionConstraint.Update(System.Single)">
+        <member name="M:BEPUphysics.Character.VerticalMotionConstraint.Update(System.Double)">
             <summary>
             Performs any per-frame computation needed by the constraint.
             </summary>
@@ -3136,7 +3136,7 @@
             The support finder analyzes the character's contacts to see if any of them provide support and/or traction.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Character.SphereCharacterController.#ctor(BEPUutilities.Vector3,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Character.SphereCharacterController.#ctor(BEPUutilities.Vector3,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a new character controller.
             </summary>
@@ -3555,7 +3555,7 @@
             Length of the box.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.BoxShape.#ctor(System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.BoxShape.#ctor(System.Double,System.Double,System.Double)">
             <summary>
              Constructs a new box shape.
             </summary>
@@ -3563,7 +3563,7 @@
             <param name="height">Height of the box.</param>
             <param name="length">Length of the box.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.BoxShape.#ctor(System.Single,System.Single,System.Single,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeDescription)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.BoxShape.#ctor(System.Double,System.Double,System.Double,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeDescription)">
             <summary>
              Constructs a new box shape from cached information.
             </summary>
@@ -3572,7 +3572,7 @@
             <param name="length">Length of the box.</param>
              <param name="description">Cached information about the shape. Assumed to be correct; no extra processing or validation is performed.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.BoxShape.ComputeDescription(System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.BoxShape.ComputeDescription(System.Double,System.Double,System.Double,System.Double)">
              <summary>
              Computes a convex shape description for a BoxShape.
              </summary>
@@ -3596,7 +3596,7 @@
             <param name="direction">Direction to find the extreme point in.</param>
             <param name="extremePoint">Extreme point on the shape.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.BoxShape.RayTest(BEPUutilities.Ray@,BEPUutilities.RigidTransform@,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.BoxShape.RayTest(BEPUutilities.Ray@,BEPUutilities.RigidTransform@,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Gets the intersection between the box and the ray.
             </summary>
@@ -3627,21 +3627,21 @@
              Gets or sets the radius of the capsule.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CapsuleShape.#ctor(System.Single,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CapsuleShape.#ctor(System.Double,System.Double)">
             <summary>
              Constructs a new capsule shape.
             </summary>
             <param name="length">Length of the capsule's inner line segment.</param>
             <param name="radius">Radius to expand the line segment width.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CapsuleShape.#ctor(System.Single,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeDescription)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CapsuleShape.#ctor(System.Double,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeDescription)">
             <summary>
              Constructs a new capsule shape from cached information.
             </summary>
             <param name="length">Length of the capsule's inner line segment.</param>
              <param name="description">Cached information about the shape. Assumed to be correct; no extra processing or validation is performed.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CapsuleShape.ComputeDescription(System.Single,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CapsuleShape.ComputeDescription(System.Double,System.Double)">
              <summary>
              Computes a convex shape description for a CapsuleShape.
              </summary>
@@ -3662,7 +3662,7 @@
             </summary>
             <returns>EntityCollidable that uses this shape.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CapsuleShape.RayTest(BEPUutilities.Ray@,BEPUutilities.RigidTransform@,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CapsuleShape.RayTest(BEPUutilities.Ray@,BEPUutilities.RigidTransform@,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Gets the intersection between the convex shape and the ray.
             </summary>
@@ -3687,14 +3687,14 @@
              Gets or sets the radius of the cone base.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.ConeShape.#ctor(System.Single,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.ConeShape.#ctor(System.Double,System.Double)">
             <summary>
              Constructs a new cone shape.
             </summary>
             <param name="height">Height of the cone.</param>
             <param name="radius">Radius of the cone base.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.ConeShape.#ctor(System.Single,System.Single,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeDescription)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.ConeShape.#ctor(System.Double,System.Double,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeDescription)">
             <summary>
              Constructs a new cone shape.
             </summary>
@@ -3702,7 +3702,7 @@
             <param name="radius">Radius of the cone base.</param>
              <param name="description">Cached information about the shape. Assumed to be correct; no extra processing or validation is performed.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.ConeShape.ComputeDescription(System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.ConeShape.ComputeDescription(System.Double,System.Double,System.Double)">
              <summary>
              Computes a convex shape description for a ConeShape.
              </summary>
@@ -3770,7 +3770,7 @@
             <param name="localSurfaceVertices">List of vertex positions on the surface of the convex hull shape, centered on the desired origin. These vertices are used as-is for the shape representation; no additional processing occurs.</param>
             <param name="description">Cached information about the shape. Assumed to be correct; no extra processing or validation is performed.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.ConvexHullShape.ComputeDescription(System.Collections.Generic.IList{BEPUutilities.Vector3},System.Single,BEPUutilities.Vector3@,System.Collections.Generic.IList{System.Int32},System.Collections.Generic.IList{BEPUutilities.Vector3})">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.ConvexHullShape.ComputeDescription(System.Collections.Generic.IList{BEPUutilities.Vector3},System.Double,BEPUutilities.Vector3@,System.Collections.Generic.IList{System.Int32},System.Collections.Generic.IList{BEPUutilities.Vector3})">
             <summary>
             Computes a convex shape description for a ConvexHullShape.
             </summary>
@@ -3782,7 +3782,7 @@
             <param name="outputUniqueSurfaceVertices">Computed nonredundant list of vertices composing the outer shell of the input point set. Recentered on the local origin.</param>
             <returns>Description required to define a convex shape.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.ConvexHullShape.ComputeMaximumRadius(System.Collections.Generic.IList{BEPUutilities.Vector3},System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.ConvexHullShape.ComputeMaximumRadius(System.Collections.Generic.IList{BEPUutilities.Vector3},System.Double)">
             <summary>
             Computes the minimum radius for the given convex hull data.
             </summary>
@@ -3865,7 +3865,7 @@
             <param name="shapeTransform">Transform to use.</param>
             <param name="boundingBox">Bounding box of the transformed shape.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape.RayTest(BEPUutilities.Ray@,BEPUutilities.RigidTransform@,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape.RayTest(BEPUutilities.Ray@,BEPUutilities.RigidTransform@,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Gets the intersection between the convex shape and the ray.
             </summary>
@@ -3917,14 +3917,14 @@
              Gets or sets the height of the cylinder.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CylinderShape.#ctor(System.Single,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CylinderShape.#ctor(System.Double,System.Double)">
             <summary>
              Constructs a new cylinder shape.
             </summary>
             <param name="height">Height of the cylinder.</param>
             <param name="radius">Radius of the cylinder.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CylinderShape.#ctor(System.Single,System.Single,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeDescription)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CylinderShape.#ctor(System.Double,System.Double,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeDescription)">
             <summary>
              Constructs a new cylinder shape from cached data.
             </summary>
@@ -3932,7 +3932,7 @@
             <param name="radius">Radius of the cylinder.</param>
              <param name="description">Cached information about the shape. Assumed to be correct; no extra processing or validation is performed.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CylinderShape.ComputeDescription(System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CylinderShape.ComputeDescription(System.Double,System.Double,System.Double)">
              <summary>
              Computes a convex shape description for a CylinderShape.
              </summary>
@@ -3961,7 +3961,7 @@
             </summary>
             <returns>EntityCollidable that uses this shape.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CylinderShape.RayTest(BEPUutilities.Ray@,BEPUutilities.RigidTransform@,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.CylinderShape.RayTest(BEPUutilities.Ray@,BEPUutilities.RigidTransform@,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Gets the intersection between the convex shape and the ray.
             </summary>
@@ -3988,7 +3988,7 @@
              Number of samples the system takes along a side of an object's AABB when voxelizing it.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.InertiaHelper.GetPointContribution(System.Single,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Matrix3x3@)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.InertiaHelper.GetPointContribution(System.Double,BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Matrix3x3@)">
             <summary>
              Computes the volume contribution of a point.
             </summary>
@@ -4015,7 +4015,7 @@
             <param name="vertices">Vertex buffer of the sphere.</param>
             <param name="triangles">Index buffer of the sphere. Each group of three integers represents one triangle.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.InertiaHelper.ComputeShapeDistribution(System.Collections.Generic.IList{BEPUutilities.Vector3},System.Collections.Generic.IList{System.Int32},System.Single@,BEPUutilities.Matrix3x3@)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.InertiaHelper.ComputeShapeDistribution(System.Collections.Generic.IList{BEPUutilities.Vector3},System.Collections.Generic.IList{System.Int32},System.Double@,BEPUutilities.Matrix3x3@)">
             <summary>
             Computes the center, volume, and volume distribution of a shape represented by a mesh.
             </summary>
@@ -4024,7 +4024,7 @@
             <param name="volume">Volume of the shape.</param>
             <param name="volumeDistribution">Distribution of the volume as measured from the computed center.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.InertiaHelper.ComputeShapeDistribution(System.Collections.Generic.IList{BEPUutilities.Vector3},System.Collections.Generic.IList{System.Int32},BEPUutilities.Vector3@,System.Single@,BEPUutilities.Matrix3x3@)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.InertiaHelper.ComputeShapeDistribution(System.Collections.Generic.IList{BEPUutilities.Vector3},System.Collections.Generic.IList{System.Int32},BEPUutilities.Vector3@,System.Double@,BEPUutilities.Matrix3x3@)">
             <summary>
             Computes the center, volume, and volume distribution of a shape represented by a mesh.
             </summary>
@@ -4179,7 +4179,7 @@
              Gets or sets the radius of the sphere.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.SphereShape.#ctor(System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.SphereShape.#ctor(System.Double)">
             <summary>
              Constructs a new sphere shape.
             </summary>
@@ -4191,7 +4191,7 @@
             </summary>
              <param name="description">Cached information about the shape. Assumed to be correct; no extra processing or validation is performed.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.SphereShape.ComputeDescription(System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.SphereShape.ComputeDescription(System.Double)">
              <summary>
              Computes a convex shape description for a SphereShape.
              </summary>
@@ -4212,7 +4212,7 @@
             <param name="direction">Direction to find the extreme point in.</param>
             <param name="extremePoint">Extreme point on the shape.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.SphereShape.RayTest(BEPUutilities.Ray@,BEPUutilities.RigidTransform@,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.SphereShape.RayTest(BEPUutilities.Ray@,BEPUutilities.RigidTransform@,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Gets the intersection between the sphere and the ray.
             </summary>
@@ -4343,7 +4343,7 @@
             <param name="vC">Third vertex in the triangle.</param>
              <param name="description">Cached information about the shape. Assumed to be correct; no extra processing or validation is performed.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.TriangleShape.ComputeDescription(BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.TriangleShape.ComputeDescription(BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double)">
              <summary>
              Computes a convex shape description for a TransformableShape.
              </summary>
@@ -4391,7 +4391,7 @@
             <param name="transform">World transform.</param>
             <returns>Normal of the triangle in world space.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.TriangleShape.RayTest(BEPUutilities.Ray@,BEPUutilities.RigidTransform@,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.CollisionShapes.ConvexShapes.TriangleShape.RayTest(BEPUutilities.Ray@,BEPUutilities.RigidTransform@,System.Double,BEPUutilities.RayHit@)">
             <summary>
             Gets the intersection between the triangle and the ray.
             </summary>
@@ -4594,7 +4594,7 @@
             </summary>
             <param name="collidable">Collidable to remove.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.StaticGroupShape.RayCast(BEPUutilities.Ray,System.Single,BEPUphysics.RayCastResult@)">
+        <member name="M:BEPUphysics.CollisionShapes.StaticGroupShape.RayCast(BEPUutilities.Ray,System.Double,BEPUphysics.RayCastResult@)">
             <summary>
             Tests a ray against the collidable.
             </summary>
@@ -4603,7 +4603,7 @@
             <param name="result">Hit data, if any.</param>
             <returns>Whether or not the ray hit the entry.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.StaticGroupShape.RayCast(BEPUutilities.Ray,System.Single,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUphysics.RayCastResult@)">
+        <member name="M:BEPUphysics.CollisionShapes.StaticGroupShape.RayCast(BEPUutilities.Ray,System.Double,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUphysics.RayCastResult@)">
             <summary>
             Tests a ray against the collidable.
             </summary>
@@ -4670,7 +4670,7 @@
             for the purposes of center of rotation computation.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.CompoundShapeEntry.#ctor(BEPUphysics.CollisionShapes.EntityShape,BEPUutilities.RigidTransform,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.CompoundShapeEntry.#ctor(BEPUphysics.CollisionShapes.EntityShape,BEPUutilities.RigidTransform,System.Double)">
             <summary>
              Constructs a new compound shape entry using the volume of the shape as a weight.
             </summary>
@@ -4679,7 +4679,7 @@
             <param name="weight">Weight of the entry.  This defines how much the entry contributes to its owner
              for the purposes of center of rotation computation.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.CompoundShapeEntry.#ctor(BEPUphysics.CollisionShapes.EntityShape,BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.CompoundShapeEntry.#ctor(BEPUphysics.CollisionShapes.EntityShape,BEPUutilities.Vector3,System.Double)">
             <summary>
              Constructs a new compound shape entry using the volume of the shape as a weight.
             </summary>
@@ -4688,7 +4688,7 @@
             <param name="weight">Weight of the entry.  This defines how much the entry contributes to its owner
              for the purposes of center of mass and inertia computation.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.CompoundShapeEntry.#ctor(BEPUphysics.CollisionShapes.EntityShape,BEPUutilities.Quaternion,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.CompoundShapeEntry.#ctor(BEPUphysics.CollisionShapes.EntityShape,BEPUutilities.Quaternion,System.Double)">
             <summary>
              Constructs a new compound shape entry using the volume of the shape as a weight.
             </summary>
@@ -4697,7 +4697,7 @@
             <param name="weight">Weight of the entry.  This defines how much the entry contributes to its owner
              for the purposes of center of rotation computation.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.CompoundShapeEntry.#ctor(BEPUphysics.CollisionShapes.EntityShape,System.Single)">
+        <member name="M:BEPUphysics.CollisionShapes.CompoundShapeEntry.#ctor(BEPUphysics.CollisionShapes.EntityShape,System.Double)">
             <summary>
              Constructs a new compound shape entry using the volume of the shape as a weight.
             </summary>
@@ -4762,7 +4762,7 @@
             <param name="shapes">Shape entries used to create the compound. Assumed to be centered properly.</param>
              <param name="volumeDescription">Description of the volume and its distribution in the shape. Assumed to be correct; no processing or validation is performed.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.CompoundShape.ComputeVolumeDistribution(System.Collections.Generic.IList{BEPUphysics.CollisionShapes.CompoundShapeEntry},System.Single@,BEPUutilities.Matrix3x3@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.CollisionShapes.CompoundShape.ComputeVolumeDistribution(System.Collections.Generic.IList{BEPUphysics.CollisionShapes.CompoundShapeEntry},System.Double@,BEPUutilities.Matrix3x3@,BEPUutilities.Vector3@)">
             <summary>
             Computes the volume distribution and center of the shape.
             </summary>
@@ -4771,7 +4771,7 @@
             <param name="volumeDistribution">Volume distribution of the shape.</param>
             <param name="center">Center of the compound.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.CompoundShape.TransformContribution(BEPUutilities.RigidTransform@,BEPUutilities.Vector3@,BEPUutilities.Matrix3x3@,System.Single,BEPUutilities.Matrix3x3@)">
+        <member name="M:BEPUphysics.CollisionShapes.CompoundShape.TransformContribution(BEPUutilities.RigidTransform@,BEPUutilities.Vector3@,BEPUutilities.Matrix3x3@,System.Double,BEPUutilities.Matrix3x3@)">
             <summary>
             Modifies a contribution using a transform, position, and weight.
             </summary>
@@ -4920,7 +4920,7 @@
             <param name="solidity">Solidity state of the shape.</param>
              <param name="center">Center of the shape.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.MobileMeshShape.#ctor(BEPUphysics.DataStructures.TransformableMeshData,System.Collections.Generic.IList{BEPUutilities.Vector3},BEPUphysics.CollisionShapes.MobileMeshSolidity,BEPUutilities.TriangleSidedness,System.Single,BEPUphysics.CollisionShapes.EntityShapeVolumeDescription)">
+        <member name="M:BEPUphysics.CollisionShapes.MobileMeshShape.#ctor(BEPUphysics.DataStructures.TransformableMeshData,System.Collections.Generic.IList{BEPUutilities.Vector3},BEPUphysics.CollisionShapes.MobileMeshSolidity,BEPUutilities.TriangleSidedness,System.Double,BEPUphysics.CollisionShapes.EntityShapeVolumeDescription)">
             <summary>
              Constructs a new mobile mesh shape from cached data.
             </summary>
@@ -4944,7 +4944,7 @@
             Tests to see if a ray's origin is contained within the mesh.
             If it is, the hit location is found.
             If it isn't, the hit location is still valid if a hit occurred.
-            If the origin isn't inside and there was no hit, the hit has a T value of float.MaxValue.
+            If the origin isn't inside and there was no hit, the hit has a T value of double.MaxValue.
             </summary>
             <param name="ray">Ray in the local space of the shape to test.</param>
             <param name="hit">The first hit against the mesh, if any.</param>
@@ -5080,7 +5080,7 @@
              Gets or sets the quad triangle organization.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.TerrainShape.#ctor(System.Single[0:,0:],BEPUphysics.CollisionShapes.QuadTriangleOrganization)">
+        <member name="M:BEPUphysics.CollisionShapes.TerrainShape.#ctor(System.Double[0:,0:],BEPUphysics.CollisionShapes.QuadTriangleOrganization)">
             <summary>
              Constructs a TerrainShape.
             </summary>
@@ -5088,7 +5088,7 @@
             <param name="triangleOrganization">Triangle organization of each quad.</param>
             <exception cref="T:System.ArgumentException">Thrown if the heights array has less than 2x2 vertices.</exception>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.TerrainShape.#ctor(System.Single[0:,0:])">
+        <member name="M:BEPUphysics.CollisionShapes.TerrainShape.#ctor(System.Double[0:,0:])">
             <summary>
              Constructs a TerrainShape.
             </summary>
@@ -5101,7 +5101,7 @@
             <param name="transform">Transform to apply to the terrain during the bounding box calculation.</param>
             <param name="boundingBox">Bounding box of the terrain shape when transformed.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.TerrainShape.RayCast(BEPUutilities.Ray@,System.Single,BEPUutilities.AffineTransform@,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.CollisionShapes.TerrainShape.RayCast(BEPUutilities.Ray@,System.Double,BEPUutilities.AffineTransform@,BEPUutilities.RayHit@)">
             <summary>
              Tests a ray against the terrain shape.
             </summary>
@@ -5111,7 +5111,7 @@
             <param name="hit">Hit data of the ray cast, if any.</param>
             <returns>Whether or not the ray hit the transformed terrain shape.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionShapes.TerrainShape.RayCast(BEPUutilities.Ray@,System.Single,BEPUutilities.AffineTransform@,BEPUutilities.TriangleSidedness,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.CollisionShapes.TerrainShape.RayCast(BEPUutilities.Ray@,System.Double,BEPUutilities.AffineTransform@,BEPUutilities.TriangleSidedness,BEPUutilities.RayHit@)">
             <summary>
              Tests a ray against the terrain shape.
             </summary>
@@ -5261,7 +5261,7 @@
             <param name="transformB">Transform to apply to shape b.</param>
             <returns>Whether or not the boxes collide.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.BoxBoxCollider.AreBoxesColliding(BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUutilities.RigidTransform@,BEPUutilities.RigidTransform@,System.Single@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.BoxBoxCollider.AreBoxesColliding(BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUutilities.RigidTransform@,BEPUutilities.RigidTransform@,System.Double@,BEPUutilities.Vector3@)">
             <summary>
             Determines if the two boxes are colliding.
             </summary>
@@ -5273,7 +5273,7 @@
             <param name="transformB">Transform to apply to shape B.</param>
             <returns>Whether or not the boxes collide.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.BoxBoxCollider.AreBoxesCollidingWithPenetration(BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUutilities.RigidTransform@,BEPUutilities.RigidTransform@,System.Single@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.BoxBoxCollider.AreBoxesCollidingWithPenetration(BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUutilities.RigidTransform@,BEPUutilities.RigidTransform@,System.Double@,BEPUutilities.Vector3@)">
             <summary>
             Determines if the two boxes are colliding, including penetration depth data.
             </summary>
@@ -5285,7 +5285,7 @@
             <param name="transformB">Transform to apply to shape B.</param>
             <returns>Whether or not the boxes collide.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.BoxBoxCollider.AreBoxesColliding(BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUutilities.RigidTransform@,BEPUutilities.RigidTransform@,System.Single@,BEPUutilities.Vector3@,BEPUutilities.DataStructures.TinyStructList{BEPUphysics.CollisionTests.CollisionAlgorithms.BoxContactData}@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.BoxBoxCollider.AreBoxesColliding(BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUutilities.RigidTransform@,BEPUutilities.RigidTransform@,System.Double@,BEPUutilities.Vector3@,BEPUutilities.DataStructures.TinyStructList{BEPUphysics.CollisionTests.CollisionAlgorithms.BoxContactData}@)">
             <summary>
             Determines if the two boxes are colliding and computes contact data.
             </summary>
@@ -5298,7 +5298,7 @@
             <param name="transformB">Transform to apply to shape B.</param>
             <returns>Whether or not the boxes collide.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.BoxBoxCollider.AreBoxesColliding(BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUutilities.RigidTransform@,BEPUutilities.RigidTransform@,System.Single@,BEPUutilities.Vector3@,BEPUphysics.CollisionTests.CollisionAlgorithms.BoxContactDataCache@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.BoxBoxCollider.AreBoxesColliding(BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUphysics.CollisionShapes.ConvexShapes.BoxShape,BEPUutilities.RigidTransform@,BEPUutilities.RigidTransform@,System.Double@,BEPUutilities.Vector3@,BEPUphysics.CollisionTests.CollisionAlgorithms.BoxContactDataCache@)">
             <summary>
             Determines if the two boxes are colliding and computes contact data.
             </summary>
@@ -5440,7 +5440,7 @@
             <param name="closestPointB">Closest point on the second shape to the first shape.</param>
             <returns>Whether or not the objects were intersecting.  If they are intersecting, then the closest points cannot be identified.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.GJK.GJKToolbox.RayCast(BEPUutilities.Ray,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.GJK.GJKToolbox.RayCast(BEPUutilities.Ray,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,System.Double,BEPUutilities.RayHit@)">
             <summary>
              Tests a ray against a convex shape.
             </summary>
@@ -5476,7 +5476,7 @@
             <param name="hit">Hit data of the sweep test, if any.</param>
             <returns>Whether or not the swept shapes hit each other..</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.GJK.GJKToolbox.SphereCast(BEPUutilities.Ray,System.Single,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.GJK.GJKToolbox.SphereCast(BEPUutilities.Ray,System.Double,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,System.Double,BEPUutilities.RayHit@)">
             <summary>
              Casts a fat (sphere expanded) ray against the shape.
             </summary>
@@ -5488,7 +5488,7 @@
             <param name="hit">Hit data of the sphere cast, if any.</param>
             <returns>Whether or not the sphere cast hit the shape.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.GJK.GJKToolbox.CCDSphereCast(BEPUutilities.Ray,System.Single,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.GJK.GJKToolbox.CCDSphereCast(BEPUutilities.Ray,System.Double,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,System.Double,BEPUutilities.RayHit@)">
             <summary>
              Casts a fat (sphere expanded) ray against the shape.  If the raycast appears to be stuck in the shape, the cast will be attempted
              with a smaller ray (scaled by the MotionSettings.CoreShapeScaling each time).
@@ -5838,7 +5838,7 @@
             <param name="localTransformB">Transform of shapeB in the local space of A.</param>
             <param name="extremePoint">The extreme point in the local space of A.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.MinkowskiToolbox.ExpandMinkowskiSum(System.Single,System.Single,BEPUutilities.Vector3@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.MinkowskiToolbox.ExpandMinkowskiSum(System.Double,System.Double,BEPUutilities.Vector3@,BEPUutilities.Vector3@)">
             <summary>
              Computes the expansion of the minkowski sum due to margins in a given direction.
             </summary>
@@ -5847,7 +5847,7 @@
             <param name="direction">Extreme point direction.</param>
             <param name="contribution">Margin contribution to the extreme point.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.MinkowskiToolbox.ExpandMinkowskiSum(System.Single,System.Single,BEPUutilities.Vector3,BEPUutilities.Vector3@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.MinkowskiToolbox.ExpandMinkowskiSum(System.Double,System.Double,BEPUutilities.Vector3,BEPUutilities.Vector3@,BEPUutilities.Vector3@)">
             <summary>
              Computes the expansion of the minkowski sum due to margins in a given direction.
             </summary>
@@ -5950,7 +5950,7 @@
             <param name="localTransformB">Relative transform of shape B to shape A.</param>
             <returns>Whether or not the shapes are overlapping.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.MPRToolbox.LocalSurfaceCast(BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,BEPUutilities.Vector3@,System.Single@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.MPRToolbox.LocalSurfaceCast(BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,BEPUutilities.Vector3@,System.Double@,BEPUutilities.Vector3@)">
             <summary>
             Casts a ray from the origin in the given direction at the surface of the minkowski difference.
             Assumes that the origin is within the minkowski difference.
@@ -5962,7 +5962,7 @@
             <param name="t">Length along the direction vector that the impact was found.</param>
             <param name="normal">Normal of the impact at the surface of the convex.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.MPRToolbox.LocalSurfaceCast(BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,BEPUutilities.Vector3@,System.Single@,BEPUutilities.Vector3@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.MPRToolbox.LocalSurfaceCast(BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,BEPUutilities.Vector3@,System.Double@,BEPUutilities.Vector3@,BEPUutilities.Vector3@)">
             <summary>
             Casts a ray from the origin in the given direction at the surface of the minkowski difference.
             Assumes that the origin is within the minkowski difference.
@@ -5987,7 +5987,7 @@
             <param name="contact">Contact data between the two shapes, if any.</param>
             <returns>Whether or not the shapes overlap.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.MPRToolbox.RefinePenetration(BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,System.Single,BEPUutilities.Vector3@,System.Single@,BEPUutilities.Vector3@,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.MPRToolbox.RefinePenetration(BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,System.Double,BEPUutilities.Vector3@,System.Double@,BEPUutilities.Vector3@,BEPUutilities.Vector3@)">
             <summary>
             Incrementally refines the penetration depth and normal towards the local minimum.
             </summary>
@@ -6035,7 +6035,7 @@
             <param name="position">Position of the minkowski difference origin in the local space of A, if the swept volumes intersect.</param>
             <returns>Whether the swept shapes intersect.</returns>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.MPRToolbox.RayCast(BEPUutilities.Ray,System.Single,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.CollisionTests.CollisionAlgorithms.MPRToolbox.RayCast(BEPUutilities.Ray,System.Double,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.RigidTransform@,BEPUutilities.RayHit@)">
             <summary>
             Casts a ray against a shape.
             </summary>
@@ -6333,7 +6333,7 @@
              Constructs a new manifold.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.Manifolds.BoxContactManifold.Update(System.Single)">
+        <member name="M:BEPUphysics.CollisionTests.Manifolds.BoxContactManifold.Update(System.Double)">
             <summary>
              Updates the manifold.
             </summary>
@@ -6372,7 +6372,7 @@
              Constructs a new manifold.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.Manifolds.BoxSphereContactManifold.Update(System.Single)">
+        <member name="M:BEPUphysics.CollisionTests.Manifolds.BoxSphereContactManifold.Update(System.Double)">
             <summary>
              Updates the manifold.
             </summary>
@@ -6428,7 +6428,7 @@
              Cleans up the manifold.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.Manifolds.ContactManifold.Update(System.Single)">
+        <member name="M:BEPUphysics.CollisionTests.Manifolds.ContactManifold.Update(System.Double)">
             <summary>
              Updates the manifold.
             </summary>
@@ -6464,7 +6464,7 @@
              Constructs a new convex-convex manifold.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.Manifolds.GeneralConvexContactManifold.Update(System.Single)">
+        <member name="M:BEPUphysics.CollisionTests.Manifolds.GeneralConvexContactManifold.Update(System.Double)">
             <summary>
              Updates the manifold.
             </summary>
@@ -6585,7 +6585,7 @@
              Constructs a new manifold.
             </summary>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.Manifolds.SphereContactManifold.Update(System.Single)">
+        <member name="M:BEPUphysics.CollisionTests.Manifolds.SphereContactManifold.Update(System.Double)">
             <summary>
              Updates the manifold.
             </summary>
@@ -6724,7 +6724,7 @@
             <param name="convexInverseWorldTransform">Inverse of the world transform of the convex shape.</param>
             <param name="fromMeshLocalToConvexLocal">Transform to apply to native local triangles to bring them into the local space of the convex.</param>
         </member>
-        <member name="M:BEPUphysics.CollisionTests.Manifolds.TriangleMeshConvexContactManifold.Update(System.Single)">
+        <member name="M:BEPUphysics.CollisionTests.Manifolds.TriangleMeshConvexContactManifold.Update(System.Double)">
             <summary>
              Updates the manifold.
             </summary>
@@ -6831,7 +6831,7 @@
             </summary>
             <returns>The rough applied impulse magnitude.</returns>
         </member>
-        <member name="M:BEPUphysics.Constraints.Collision.ContactFrictionConstraint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.Collision.ContactFrictionConstraint.Update(System.Double)">
             <summary>
             Initializes the constraint for this frame.
             </summary>
@@ -6984,7 +6984,7 @@
              Gets the relative velocity between the associated entities at the contact point along the contact normal.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.Collision.ContactPenetrationConstraint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.Collision.ContactPenetrationConstraint.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -7046,7 +7046,7 @@
             </summary>
             <param name="contact">Contact to remove.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.Collision.ConvexContactManifoldConstraint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.Collision.ConvexContactManifoldConstraint.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -7104,7 +7104,7 @@
             </summary>
             <param name="contact">Contact to remove.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.Collision.NonConvexContactManifoldConstraint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.Collision.NonConvexContactManifoldConstraint.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -7168,7 +7168,7 @@
             </summary>
             <returns>The rough applied impulse magnitude.</returns>
         </member>
-        <member name="M:BEPUphysics.Constraints.Collision.SlidingFrictionTwoAxis.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.Collision.SlidingFrictionTwoAxis.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -7212,7 +7212,7 @@
             </summary>
             <returns>The rough applied impulse magnitude.</returns>
         </member>
-        <member name="M:BEPUphysics.Constraints.Collision.TwistFrictionConstraint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.Collision.TwistFrictionConstraint.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -7315,7 +7315,7 @@
             Updates the activity state of the solver updateable based on its members.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.SolverUpdateable.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.SolverUpdateable.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -7412,7 +7412,7 @@
             </summary>
             <param name="jacobian">Linear jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.I1DJacobianConstraint.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.I1DJacobianConstraint.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -7788,7 +7788,7 @@
             IsActive also starts as false with this constructor.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.SingleEntity.MaximumAngularSpeedConstraint.#ctor(BEPUphysics.Entities.Entity,System.Single)">
+        <member name="M:BEPUphysics.Constraints.SingleEntity.MaximumAngularSpeedConstraint.#ctor(BEPUphysics.Entities.Entity,System.Double)">
             <summary>
             Constructs a maximum speed constraint.
             </summary>
@@ -7831,7 +7831,7 @@
             Called automatically by space.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.SingleEntity.MaximumAngularSpeedConstraint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.SingleEntity.MaximumAngularSpeedConstraint.Update(System.Double)">
             <summary>
             Calculates necessary information for velocity solving.
             Called automatically by space.
@@ -7850,7 +7850,7 @@
             IsActive also starts as false with this constructor.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.SingleEntity.MaximumLinearSpeedConstraint.#ctor(BEPUphysics.Entities.Entity,System.Single)">
+        <member name="M:BEPUphysics.Constraints.SingleEntity.MaximumLinearSpeedConstraint.#ctor(BEPUphysics.Entities.Entity,System.Double)">
             <summary>
             Constructs a maximum speed constraint.
             </summary>
@@ -7895,7 +7895,7 @@
             Called automatically by space.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.SingleEntity.MaximumLinearSpeedConstraint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.SingleEntity.MaximumLinearSpeedConstraint.Update(System.Double)">
             <summary>
             Calculates necessary information for velocity solving.
             Called automatically by space.
@@ -7961,7 +7961,7 @@
             Applies the corrective impulses required by the constraint.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.SingleEntity.SingleEntityAngularMotor.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.SingleEntity.SingleEntityAngularMotor.Update(System.Double)">
             <summary>
             Initializes the constraint for the current frame.
             </summary>
@@ -7974,7 +7974,7 @@
             Usually, this is used for applying warmstarting impulses.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.SingleEntity.SingleEntityAngularMotor.ComputeMaxForces(System.Single,System.Single)">
+        <member name="M:BEPUphysics.Constraints.SingleEntity.SingleEntityAngularMotor.ComputeMaxForces(System.Double,System.Double)">
             <summary>
             Computes the maxForceDt and maxForceDtSquared fields.
             </summary>
@@ -7987,7 +7987,7 @@
         <member name="F:BEPUphysics.Constraints.SingleEntity.SingleEntityConstraint.iterationsAtZeroImpulse">
             <summary>
             Number of frames so far at effectively zero corrective impulse.
-            Set to zero during every preStep(float dt) call and incremented by checkForEarlyOutIterations(Vector3 impulse).
+            Set to zero during every preStep(double dt) call and incremented by checkForEarlyOutIterations(Vector3 impulse).
             </summary>
         </member>
         <member name="F:BEPUphysics.Constraints.SingleEntity.SingleEntityConstraint.entity">
@@ -8083,7 +8083,7 @@
             </summary>
             <returns>The rough applied impulse magnitude.</returns>
         </member>
-        <member name="M:BEPUphysics.Constraints.SingleEntity.SingleEntityLinearMotor.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.SingleEntity.SingleEntityLinearMotor.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -8096,7 +8096,7 @@
             Usually, this is used for applying warmstarting impulses.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.SingleEntity.SingleEntityLinearMotor.ComputeMaxForces(System.Single,System.Single)">
+        <member name="M:BEPUphysics.Constraints.SingleEntity.SingleEntityLinearMotor.ComputeMaxForces(System.Double,System.Double)">
             <summary>
             Computes the maxForceDt and maxForceDtSquared fields.
             </summary>
@@ -8323,7 +8323,7 @@
             this may need to be called alongside the preStep from within the parent constraint.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.SolverGroups.SolverGroup.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.SolverGroups.SolverGroup.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -8619,7 +8619,7 @@
             Gets or sets the stiffness coefficient of this spring.  Higher values make the spring stiffer.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.SpringSettings.ComputeErrorReductionAndSoftness(System.Single,System.Single,System.Single@,System.Single@)">
+        <member name="M:BEPUphysics.Constraints.SpringSettings.ComputeErrorReductionAndSoftness(System.Double,System.Double,System.Double@,System.Double@)">
             <summary>
             Computes the error reduction parameter and softness of a constraint based on its constants.
             Automatically called by constraint presteps to compute their per-frame values.
@@ -8653,7 +8653,7 @@
             This constructor sets the constraint's IsActive property to false by default.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.DistanceLimit.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Entities.Entity,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.DistanceLimit.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Entities.Entity,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double,System.Double)">
             <summary>
             Constructs a distance limit joint.
             </summary>
@@ -8733,7 +8733,7 @@
             </summary>
             <param name="jacobian">Angular jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.DistanceLimit.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.DistanceLimit.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -8745,7 +8745,7 @@
             Called automatically by space.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.DistanceLimit.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.DistanceLimit.Update(System.Double)">
             <summary>
             Calculates necessary information for velocity solving.
             </summary>
@@ -8773,7 +8773,7 @@
             This constructor sets the constraint's IsActive property to false by default.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.EllipseSwingLimit.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Entities.Entity,BEPUutilities.Vector3,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.EllipseSwingLimit.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Entities.Entity,BEPUutilities.Vector3,System.Double,System.Double)">
             <summary>
             Constructs a new swing limit.
             </summary>
@@ -8866,7 +8866,7 @@
             </summary>
             <param name="jacobian">Angular jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.EllipseSwingLimit.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.EllipseSwingLimit.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -8878,7 +8878,7 @@
             </summary>
             <param name="twistAxis">Axis around which rotation is allowed.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.EllipseSwingLimit.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.EllipseSwingLimit.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -8938,7 +8938,7 @@
             Gets or sets the small area that the constraint can be violated without applying position correction.  Helps avoid jitter.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.JointLimit.ComputeBounceVelocity(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.JointLimit.ComputeBounceVelocity(System.Double)">
             <summary>
             Computes the bounce velocity for this limit.
             </summary>
@@ -8959,7 +8959,7 @@
             This constructor sets the constraint's IsActive property to false by default.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.LinearAxisLimit.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Entities.Entity,BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.LinearAxisLimit.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Entities.Entity,BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double,System.Double)">
             <summary>
             Constructs a constraint which tries to keep anchors on two entities within a certain distance of each other along an axis.
             </summary>
@@ -9060,7 +9060,7 @@
             </summary>
             <param name="jacobian">Angular jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.LinearAxisLimit.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.LinearAxisLimit.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -9072,7 +9072,7 @@
             </summary>
             <returns>The rough applied impulse magnitude.</returns>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.LinearAxisLimit.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.LinearAxisLimit.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -9108,7 +9108,7 @@
             This constructor sets the constraint's IsActive property to false by default.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.RevoluteLimit.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Entities.Entity,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.RevoluteLimit.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Entities.Entity,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double,System.Double)">
             <summary>
             Constructs a new constraint which prevents the connected entities from rotating relative to each other around an axis beyond given limits.
             </summary>
@@ -9222,7 +9222,7 @@
             </summary>
             <returns>The rough applied impulse magnitude.</returns>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.RevoluteLimit.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.RevoluteLimit.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -9248,7 +9248,7 @@
             This constructor sets the constraint's IsActive property to false by default.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.SwingLimit.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Entities.Entity,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.SwingLimit.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Entities.Entity,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double)">
             <summary>
             Constructs a new constraint which attempts to restrict the maximum relative angle of two entities to some value.
             </summary>
@@ -9322,7 +9322,7 @@
             </summary>
             <param name="jacobian">Angular jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.SwingLimit.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.SwingLimit.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -9333,7 +9333,7 @@
             Applies the sequential impulse.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.SwingLimit.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.SwingLimit.Update(System.Double)">
             <summary>
             Initializes the constraint for this frame.
             </summary>
@@ -9362,7 +9362,7 @@
             This constructor sets the constraint's IsActive property to false by default.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.TwistLimit.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Entities.Entity,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.TwistLimit.#ctor(BEPUphysics.Entities.Entity,BEPUphysics.Entities.Entity,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double,System.Double)">
             <summary>
             Constructs a new constraint which prevents the connected entities from twisting relative to each other beyond given limits.
             </summary>
@@ -9437,7 +9437,7 @@
             </summary>
             <param name="jacobian">Angular jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.TwistLimit.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.TwistLimit.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -9455,7 +9455,7 @@
             Solves for velocity.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.TwistLimit.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.JointLimits.TwistLimit.Update(System.Double)">
             <summary>
             Do any necessary computations to prepare the constraint for this frame.
             </summary>
@@ -9562,10 +9562,10 @@
             </summary>
             <param name="outputMassMatrix">Constraint's mass matrix.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.BallSocketJoint.Update(System.Double)">
             <summary>
             Calculates necessary information for velocity solving.
-            Called by preStep(float dt)
+            Called by preStep(double dt)
             </summary>
             <param name="dt">Time in seconds since the last update.</param>
         </member>
@@ -9674,7 +9674,7 @@
             </summary>
             <param name="jacobian">Angular jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.DistanceJoint.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.DistanceJoint.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -9686,7 +9686,7 @@
             Called automatically by space.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.DistanceJoint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.DistanceJoint.Update(System.Double)">
             <summary>
             Calculates necessary information for velocity solving.
             </summary>
@@ -9820,7 +9820,7 @@
             Applies the corrective impulses required by the constraint.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.NoRotationJoint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.NoRotationJoint.Update(System.Double)">
             <summary>
             Initializes the constraint for the current frame.
             </summary>
@@ -9953,7 +9953,7 @@
             Called automatically by space.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.PointOnLineJoint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.PointOnLineJoint.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -10068,7 +10068,7 @@
             </summary>
             <param name="jacobian">Angular jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.PointOnPlaneJoint.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.PointOnPlaneJoint.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -10080,7 +10080,7 @@
             </summary>
             <returns>The rough applied impulse magnitude.</returns>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.PointOnPlaneJoint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.PointOnPlaneJoint.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -10192,7 +10192,7 @@
             </summary>
             <param name="massMatrix">Constraint's mass matrix.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.RevoluteAngularJoint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.RevoluteAngularJoint.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -10295,7 +10295,7 @@
             </summary>
             <param name="jacobian">Angular jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.SwivelHingeAngularJoint.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.SwivelHingeAngularJoint.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -10306,7 +10306,7 @@
             Solves for velocity.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.SwivelHingeAngularJoint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.SwivelHingeAngularJoint.Update(System.Double)">
             <summary>
             Do any necessary computations to prepare the constraint for this frame.
             </summary>
@@ -10401,7 +10401,7 @@
             </summary>
             <param name="jacobian">Angular jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.TwistJoint.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.TwistJoint.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -10412,7 +10412,7 @@
             Solves for velocity.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.TwistJoint.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Joints.TwistJoint.Update(System.Double)">
             <summary>
             Do any necessary computations to prepare the constraint for this frame.
             </summary>
@@ -10521,7 +10521,7 @@
             Applies the corrective impulses required by the constraint.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.AngularMotor.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.AngularMotor.Update(System.Double)">
             <summary>
             Initializes the constraint for the current frame.
             </summary>
@@ -10642,7 +10642,7 @@
             </summary>
             <param name="jacobian">Angular jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.LinearAxisMotor.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.LinearAxisMotor.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -10671,7 +10671,7 @@
             Softness divided by the timestep to maintain timestep independence.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.Motor.ComputeMaxForces(System.Single,System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.Motor.ComputeMaxForces(System.Double,System.Double)">
             <summary>
             Computes the maxForceDt and maxForceDtSquared fields.
             </summary>
@@ -10965,7 +10965,7 @@
             </summary>
             <param name="jacobian">Angular jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.RevoluteMotor.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.RevoluteMotor.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -10977,7 +10977,7 @@
             </summary>
             <param name="motorizedAxis">Axis around which the motor acts.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.RevoluteMotor.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.RevoluteMotor.Update(System.Double)">
             <summary>
              Performs the frame's configuration step.
             </summary>
@@ -11083,7 +11083,7 @@
             </summary>
             <param name="jacobian">Angular jacobian entry for the second connected entity.</param>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.TwistMotor.GetMassMatrix(System.Single@)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.TwistMotor.GetMassMatrix(System.Double@)">
             <summary>
             Gets the mass matrix of the constraint.
             </summary>
@@ -11101,7 +11101,7 @@
             Solves for velocity.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.TwistMotor.Update(System.Single)">
+        <member name="M:BEPUphysics.Constraints.TwoEntity.Motors.TwistMotor.Update(System.Double)">
             <summary>
             Do any necessary computations to prepare the constraint for this frame.
             </summary>
@@ -11411,7 +11411,7 @@
             <param name="outputOverlappedElements">Indices of triangles in the index buffer with bounding boxes which are overlapped by the query.</param>
             <returns>Whether or not any elements were overlapped.</returns>
         </member>
-        <member name="M:BEPUphysics.DataStructures.BoundingBoxTree`1.GetOverlaps(BEPUutilities.Ray,System.Single,System.Collections.Generic.IList{`0})">
+        <member name="M:BEPUphysics.DataStructures.BoundingBoxTree`1.GetOverlaps(BEPUutilities.Ray,System.Double,System.Collections.Generic.IList{`0})">
             <summary>
             Gets the triangles whose bounding boxes are overlapped by the query.
             </summary>
@@ -11498,7 +11498,7 @@
             <param name="outputOverlappedElements">Indices of triangles in the index buffer with bounding boxes which are overlapped by the query.</param>
             <returns>Whether or not any elements were overlapped.</returns>
         </member>
-        <member name="M:BEPUphysics.DataStructures.MeshBoundingBoxTree.GetOverlaps(BEPUutilities.Ray,System.Single,System.Collections.Generic.IList{System.Int32})">
+        <member name="M:BEPUphysics.DataStructures.MeshBoundingBoxTree.GetOverlaps(BEPUutilities.Ray,System.Double,System.Collections.Generic.IList{System.Int32})">
             <summary>
             Gets the triangles whose bounding boxes are overlapped by the query.
             </summary>
@@ -11706,7 +11706,7 @@
             <param name="hits">Hit data for the ray, if any.</param>
             <returns>Whether or not the ray hit the mesh.</returns>
         </member>
-        <member name="M:BEPUphysics.DataStructures.TriangleMesh.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.DataStructures.TriangleMesh.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.RayHit@)">
             <summary>
              Tests a ray against the triangle mesh.
             </summary>
@@ -11715,7 +11715,7 @@
             <param name="rayHit">Hit data for the ray, if any.</param>
             <returns>Whether or not the ray hit the mesh.</returns>
         </member>
-        <member name="M:BEPUphysics.DataStructures.TriangleMesh.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.TriangleSidedness,BEPUutilities.RayHit@)">
+        <member name="M:BEPUphysics.DataStructures.TriangleMesh.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.TriangleSidedness,BEPUutilities.RayHit@)">
             <summary>
              Tests a ray against the triangle mesh.
             </summary>
@@ -11725,7 +11725,7 @@
             <param name="rayHit">Hit data for the ray, if any.</param>
             <returns>Whether or not the ray hit the mesh.</returns>
         </member>
-        <member name="M:BEPUphysics.DataStructures.TriangleMesh.RayCast(BEPUutilities.Ray,System.Single,System.Collections.Generic.IList{BEPUutilities.RayHit})">
+        <member name="M:BEPUphysics.DataStructures.TriangleMesh.RayCast(BEPUutilities.Ray,System.Double,System.Collections.Generic.IList{BEPUutilities.RayHit})">
             <summary>
              Tests a ray against the triangle mesh.
             </summary>
@@ -11734,7 +11734,7 @@
             <param name="hits">Hit data for the ray, if any.</param>
             <returns>Whether or not the ray hit the mesh.</returns>
         </member>
-        <member name="M:BEPUphysics.DataStructures.TriangleMesh.RayCast(BEPUutilities.Ray,System.Single,BEPUutilities.TriangleSidedness,System.Collections.Generic.IList{BEPUutilities.RayHit})">
+        <member name="M:BEPUphysics.DataStructures.TriangleMesh.RayCast(BEPUutilities.Ray,System.Double,BEPUutilities.TriangleSidedness,System.Collections.Generic.IList{BEPUutilities.RayHit})">
             <summary>
              Tests a ray against the triangle mesh.
             </summary>
@@ -12027,7 +12027,7 @@
              Gets the connections associated with this member.
             </summary>
         </member>
-        <member name="M:BEPUphysics.DeactivationManagement.SimulationIslandMember.UpdateDeactivationCandidacy(System.Single)">
+        <member name="M:BEPUphysics.DeactivationManagement.SimulationIslandMember.UpdateDeactivationCandidacy(System.Double)">
             <summary>
              Updates the member's deactivation state.
             </summary>
@@ -12230,14 +12230,14 @@
             </summary>
             <param name="collisionInformation">Collidable for the entity.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Entity`1.#ctor(`0,System.Single)">
+        <member name="M:BEPUphysics.Entities.Entity`1.#ctor(`0,System.Double)">
             <summary>
              Constructs a dynamic Entity.
             </summary>
             <param name="collisionInformation">Collidable for the entity.</param>
              <param name="mass">Mass of the entity.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Entity`1.#ctor(`0,System.Single,BEPUutilities.Matrix3x3)">
+        <member name="M:BEPUphysics.Entities.Entity`1.#ctor(`0,System.Double,BEPUutilities.Matrix3x3)">
             <summary>
              Constructs a dynamic Entity.
             </summary>
@@ -12392,14 +12392,14 @@
             </summary>
             <param name="collisionInformation">Collidable to use with the entity.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Entity.#ctor(BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable,System.Single)">
+        <member name="M:BEPUphysics.Entities.Entity.#ctor(BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable,System.Double)">
             <summary>
              Constructs a new entity.
             </summary>
             <param name="collisionInformation">Collidable to use with the entity.</param>
             <param name="mass">Mass of the entity. If positive, the entity will be dynamic. Otherwise, it will be kinematic.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Entity.#ctor(BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable,System.Single,BEPUutilities.Matrix3x3)">
+        <member name="M:BEPUphysics.Entities.Entity.#ctor(BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable,System.Double,BEPUutilities.Matrix3x3)">
             <summary>
              Constructs a new entity.
             </summary>
@@ -12413,14 +12413,14 @@
             </summary>
             <param name="shape">Shape to use with the entity.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Entity.#ctor(BEPUphysics.CollisionShapes.EntityShape,System.Single)">
+        <member name="M:BEPUphysics.Entities.Entity.#ctor(BEPUphysics.CollisionShapes.EntityShape,System.Double)">
             <summary>
              Constructs a new entity.
             </summary>
             <param name="shape">Shape to use with the entity.</param>
             <param name="mass">Mass of the entity. If positive, the entity will be dynamic. Otherwise, it will be kinematic.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Entity.#ctor(BEPUphysics.CollisionShapes.EntityShape,System.Single,BEPUutilities.Matrix3x3)">
+        <member name="M:BEPUphysics.Entities.Entity.#ctor(BEPUphysics.CollisionShapes.EntityShape,System.Double,BEPUutilities.Matrix3x3)">
             <summary>
              Constructs a new entity.
             </summary>
@@ -12477,13 +12477,13 @@
              Forces the entity to become kinematic.  Kinematic entities have infinite mass and inertia.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Entities.Entity.BecomeDynamic(System.Single)">
+        <member name="M:BEPUphysics.Entities.Entity.BecomeDynamic(System.Double)">
             <summary>
              Forces the entity to become dynamic.  Dynamic entities respond to collisions and have finite mass and inertia.
             </summary>
             <param name="mass">Mass to use for the entity.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Entity.BecomeDynamic(System.Single,BEPUutilities.Matrix3x3)">
+        <member name="M:BEPUphysics.Entities.Entity.BecomeDynamic(System.Double,BEPUutilities.Matrix3x3)">
             <summary>
              Forces the entity to become dynamic.  Dynamic entities respond to collisions and have finite mass and inertia.
             </summary>
@@ -12514,14 +12514,14 @@
              from the entity over a unit of time.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Entities.Entity.ModifyLinearDamping(System.Single)">
+        <member name="M:BEPUphysics.Entities.Entity.ModifyLinearDamping(System.Double)">
             <summary>
             Temporarily adjusts the linear damping by an amount.  After the value is used, the
             damping returns to the base value.
             </summary>
             <param name="damping">Damping to add.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Entity.ModifyAngularDamping(System.Single)">
+        <member name="M:BEPUphysics.Entities.Entity.ModifyAngularDamping(System.Double)">
             <summary>
             Temporarily adjusts the angular damping by an amount.  After the value is used, the
             damping returns to the base value.
@@ -12671,14 +12671,14 @@
             </summary>
             <param name="collisionInformation">Collidable to use with the entity.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.MorphableEntity.#ctor(BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable,System.Single)">
+        <member name="M:BEPUphysics.Entities.MorphableEntity.#ctor(BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable,System.Double)">
             <summary>
              Constructs a new morphable entity.
             </summary>
             <param name="collisionInformation">Collidable to use with the entity.</param>
             <param name="mass">Mass of the entity.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.MorphableEntity.#ctor(BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable,System.Single,BEPUutilities.Matrix3x3)">
+        <member name="M:BEPUphysics.Entities.MorphableEntity.#ctor(BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable,System.Double,BEPUutilities.Matrix3x3)">
             <summary>
              Constructs a new morphable entity.
             </summary>
@@ -12692,14 +12692,14 @@
             </summary>
             <param name="shape">Shape to use with the entity.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.MorphableEntity.#ctor(BEPUphysics.CollisionShapes.EntityShape,System.Single)">
+        <member name="M:BEPUphysics.Entities.MorphableEntity.#ctor(BEPUphysics.CollisionShapes.EntityShape,System.Double)">
             <summary>
              Constructs a new morphable entity.
             </summary>
             <param name="shape">Shape to use with the entity.</param>
             <param name="mass">Mass of the entity.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.MorphableEntity.#ctor(BEPUphysics.CollisionShapes.EntityShape,System.Single,BEPUutilities.Matrix3x3)">
+        <member name="M:BEPUphysics.Entities.MorphableEntity.#ctor(BEPUphysics.CollisionShapes.EntityShape,System.Double,BEPUutilities.Matrix3x3)">
             <summary>
              Constructs a new morphable entity.
             </summary>
@@ -12713,14 +12713,14 @@
             </summary>
             <param name="newCollisionInformation">New collidable to use.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.MorphableEntity.SetCollisionInformation(BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable,System.Single)">
+        <member name="M:BEPUphysics.Entities.MorphableEntity.SetCollisionInformation(BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable,System.Double)">
             <summary>
             Sets the collision information of the entity to another collidable.
             </summary>
             <param name="newCollisionInformation">New collidable to use.</param>
             <param name="newMass">New mass to use for the entity.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.MorphableEntity.SetCollisionInformation(BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable,System.Single,BEPUutilities.Matrix3x3)">
+        <member name="M:BEPUphysics.Entities.MorphableEntity.SetCollisionInformation(BEPUphysics.BroadPhaseEntries.MobileCollidables.EntityCollidable,System.Double,BEPUutilities.Matrix3x3)">
             <summary>
             Sets the collision information of the entity to another collidable.
             </summary>
@@ -12733,7 +12733,7 @@
             Box-shaped object that can collide and move.  After making an entity, add it to a Space so that the engine can manage it.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Box.#ctor(BEPUutilities.Vector3,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Box.#ctor(BEPUutilities.Vector3,System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a physically simulated box.
             </summary>
@@ -12743,7 +12743,7 @@
             <param name="height">Height of the box.</param>
             <param name="mass">Mass of the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Box.#ctor(BEPUutilities.Vector3,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Box.#ctor(BEPUutilities.Vector3,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a nondynamic box.
             </summary>
@@ -12752,7 +12752,7 @@
             <param name="length">Length of the box.</param>
             <param name="height">Height of the box.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Box.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Box.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a physically simulated box.
             </summary>
@@ -12762,7 +12762,7 @@
             <param name="height">Height of the box.</param>
             <param name="mass">Mass of the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Box.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Box.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a nondynamic box.
             </summary>
@@ -12816,7 +12816,7 @@
             Gets or sets the radius of the capsule.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.GetCapsuleInformation(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Quaternion@,System.Single@)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.GetCapsuleInformation(BEPUutilities.Vector3@,BEPUutilities.Vector3@,BEPUutilities.Quaternion@,System.Double@)">
             <summary>
              Computes an orientation and length from a line segment.
             </summary>
@@ -12825,7 +12825,7 @@
             <param name="orientation">Orientation of a line that fits the line segment.</param>
             <param name="length">Length of the line segment.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.#ctor(BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.#ctor(BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double)">
             <summary>
              Constructs a new kinematic capsule.
             </summary>
@@ -12833,7 +12833,7 @@
             <param name="end">Line segment end point.</param>
             <param name="radius">Radius of the capsule to expand the line segment by.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.#ctor(BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.#ctor(BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double,System.Double)">
             <summary>
              Constructs a new dynamic capsule.
             </summary>
@@ -12842,7 +12842,7 @@
             <param name="radius">Radius of the capsule to expand the line segment by.</param>
              <param name="mass">Mass of the entity.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.#ctor(BEPUutilities.Vector3,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.#ctor(BEPUutilities.Vector3,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a physically simulated capsule.
             </summary>
@@ -12851,7 +12851,7 @@
             <param name="radius">Radius of the capsule.</param>
             <param name="mass">Mass of the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.#ctor(BEPUutilities.Vector3,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.#ctor(BEPUutilities.Vector3,System.Double,System.Double)">
             <summary>
             Constructs a nondynamic capsule.
             </summary>
@@ -12859,7 +12859,7 @@
             <param name="length">Length of the capsule.</param>
             <param name="radius">Radius of the capsule.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a dynamic capsule.
             </summary>
@@ -12868,7 +12868,7 @@
             <param name="radius">Radius of the capsule.</param>
             <param name="mass">Mass of the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Capsule.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Double,System.Double)">
             <summary>
             Constructs a nondynamic capsule.
             </summary>
@@ -12893,7 +12893,7 @@
             <param name="bodies">List of entities to use as subbodies of the compound body.</param>
             <exception cref="T:System.InvalidOperationException">Thrown when the bodies list is empty or there is a mix of kinematic and dynamic entities in the body list.</exception>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.CompoundBody.#ctor(System.Collections.Generic.IList{BEPUphysics.CollisionShapes.CompoundShapeEntry},System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.CompoundBody.#ctor(System.Collections.Generic.IList{BEPUphysics.CollisionShapes.CompoundShapeEntry},System.Double)">
             <summary>
             Creates a new dynamic CompoundBody with the given subbodies.
             </summary>
@@ -12907,7 +12907,7 @@
             </summary>
             <param name="children">Children data to construct the compound from.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.CompoundBody.#ctor(System.Collections.Generic.IList{BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundChildData},System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.CompoundBody.#ctor(System.Collections.Generic.IList{BEPUphysics.BroadPhaseEntries.MobileCollidables.CompoundChildData},System.Double)">
             <summary>
              Constructs a dynamic compound body from the children data.
             </summary>
@@ -12929,7 +12929,7 @@
             Gets or sets the radius of the cone.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Cone.#ctor(BEPUutilities.Vector3,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Cone.#ctor(BEPUutilities.Vector3,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a physically simulated cone.
             </summary>
@@ -12938,7 +12938,7 @@
             <param name="radius">Radius of the cone.</param>
             <param name="mass">Mass of the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Cone.#ctor(BEPUutilities.Vector3,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Cone.#ctor(BEPUutilities.Vector3,System.Double,System.Double)">
             <summary>
             Constructs a nondynamic cone.
             </summary>
@@ -12946,7 +12946,7 @@
             <param name="height">Height of the cone.</param>
             <param name="radius">Radius of the cone.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Cone.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Cone.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a physically simulated cone.
             </summary>
@@ -12955,7 +12955,7 @@
             <param name="radius">Radius of the cone.</param>
             <param name="mass">Mass of the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Cone.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Cone.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Double,System.Double)">
             <summary>
             Constructs a nondynamic cone.
             </summary>
@@ -12979,14 +12979,14 @@
             </summary>
             <param name="points">List of points in the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.ConvexHull.#ctor(System.Collections.Generic.IList{BEPUutilities.Vector3},System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.ConvexHull.#ctor(System.Collections.Generic.IList{BEPUutilities.Vector3},System.Double)">
             <summary>
             Constructs a physically simulated convex hull of points.
             </summary>
             <param name="points">List of points in the object.</param>
             <param name="mass">Mass of the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.ConvexHull.#ctor(BEPUutilities.Vector3,System.Collections.Generic.IList{BEPUutilities.Vector3},System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.ConvexHull.#ctor(BEPUutilities.Vector3,System.Collections.Generic.IList{BEPUutilities.Vector3},System.Double)">
             <summary>
             Constructs a physically simulated convex hull of points.
             </summary>
@@ -13001,7 +13001,7 @@
             <param name="position">Position to place the convex hull.</param>
             <param name="points">List of points in the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.ConvexHull.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Collections.Generic.IList{BEPUutilities.Vector3},System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.ConvexHull.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Collections.Generic.IList{BEPUutilities.Vector3},System.Double)">
             <summary>
             Constructs a physically simulated convex hull of points.
             </summary>
@@ -13031,7 +13031,7 @@
             Gets or sets the radius of the cylinder.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Cylinder.#ctor(BEPUutilities.Vector3,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Cylinder.#ctor(BEPUutilities.Vector3,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a physically simulated cylinder.
             </summary>
@@ -13040,7 +13040,7 @@
             <param name="radius">Radius of the cylinder.</param>
             <param name="mass">Mass of the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Cylinder.#ctor(BEPUutilities.Vector3,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Cylinder.#ctor(BEPUutilities.Vector3,System.Double,System.Double)">
             <summary>
             Constructs a nondynamic cylinder.
             </summary>
@@ -13048,7 +13048,7 @@
             <param name="height">Height of the cylinder.</param>
             <param name="radius">Radius of the cylinder.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Cylinder.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Cylinder.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Double,System.Double,System.Double)">
             <summary>
             Constructs a physically simulated cylinder.
             </summary>
@@ -13057,7 +13057,7 @@
             <param name="radius">Radius of the cylinder.</param>
             <param name="mass">Mass of the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Cylinder.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Cylinder.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Double,System.Double)">
             <summary>
             Constructs a nondynamic cylinder.
             </summary>
@@ -13080,7 +13080,7 @@
             Second entity in the sum.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.MinkowskiSum.#ctor(BEPUutilities.Vector3,BEPUphysics.CollisionShapes.ConvexShapes.OrientedConvexShapeEntry,BEPUphysics.CollisionShapes.ConvexShapes.OrientedConvexShapeEntry,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.MinkowskiSum.#ctor(BEPUutilities.Vector3,BEPUphysics.CollisionShapes.ConvexShapes.OrientedConvexShapeEntry,BEPUphysics.CollisionShapes.ConvexShapes.OrientedConvexShapeEntry,System.Double)">
             <summary>
             Constructs a dynamic minkowski sum.
             </summary>
@@ -13097,7 +13097,7 @@
             <param name="a">First entity in the sum.</param>
             <param name="b">Second entity in the sum.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.MinkowskiSum.#ctor(BEPUphysics.EntityStateManagement.MotionState,BEPUphysics.CollisionShapes.ConvexShapes.OrientedConvexShapeEntry,BEPUphysics.CollisionShapes.ConvexShapes.OrientedConvexShapeEntry,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.MinkowskiSum.#ctor(BEPUphysics.EntityStateManagement.MotionState,BEPUphysics.CollisionShapes.ConvexShapes.OrientedConvexShapeEntry,BEPUphysics.CollisionShapes.ConvexShapes.OrientedConvexShapeEntry,System.Double)">
             <summary>
             Constructs a dynamic minkowski sum of two entities.
             </summary>
@@ -13114,7 +13114,7 @@
             <param name="a">First entity in the sum.</param>
             <param name="b">Second entity in the sum.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.MinkowskiSum.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Collections.Generic.IList{BEPUphysics.CollisionShapes.ConvexShapes.OrientedConvexShapeEntry},System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.MinkowskiSum.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Collections.Generic.IList{BEPUphysics.CollisionShapes.ConvexShapes.OrientedConvexShapeEntry},System.Double)">
             <summary>
             Constructs a dynamic minkowski sum entity.
             </summary>
@@ -13143,7 +13143,7 @@
             <param name="localTransform">Affine transform to apply to the vertices.</param>
             <param name="solidity">Solidity/sidedness of the mesh.  "Solid" is only permitted if the mesh is closed.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.MobileMesh.#ctor(BEPUutilities.Vector3[],System.Int32[],BEPUutilities.AffineTransform,BEPUphysics.CollisionShapes.MobileMeshSolidity,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.MobileMesh.#ctor(BEPUutilities.Vector3[],System.Int32[],BEPUutilities.AffineTransform,BEPUphysics.CollisionShapes.MobileMeshSolidity,System.Double)">
             <summary>
             Creates a new dynamic MobileMesh.
             </summary>
@@ -13163,7 +13163,7 @@
             Radius of the sphere.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Sphere.#ctor(BEPUutilities.Vector3,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Sphere.#ctor(BEPUutilities.Vector3,System.Double,System.Double)">
             <summary>
             Constructs a physically simulated sphere.
             </summary>
@@ -13171,14 +13171,14 @@
             <param name="radius">Radius of the sphere.</param>
             <param name="mass">Mass of the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Sphere.#ctor(BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Sphere.#ctor(BEPUutilities.Vector3,System.Double)">
             <summary>
             Constructs a nondynamic sphere.
             </summary>
             <param name="position">Position of the sphere.</param>
             <param name="radius">Radius of the sphere.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Sphere.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Sphere.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Double,System.Double)">
             <summary>
             Constructs a physically simulated sphere.
             </summary>
@@ -13186,7 +13186,7 @@
             <param name="radius">Radius of the sphere.</param>
             <param name="mass">Mass of the object.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Sphere.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Sphere.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Double)">
             <summary>
             Constructs a nondynamic sphere.
             </summary>
@@ -13208,7 +13208,7 @@
              Gets the linear transform that the shape uses to transform its base shape.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.TransformableEntity.#ctor(BEPUutilities.Vector3,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.Matrix3x3,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.TransformableEntity.#ctor(BEPUutilities.Vector3,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.Matrix3x3,System.Double)">
             <summary>
             Constructs a dynamic transformable entity.
             </summary>
@@ -13225,7 +13225,7 @@
             <param name="shape">Shape to transform.</param>
             <param name="transform">Transform to apply to the shape.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.TransformableEntity.#ctor(BEPUphysics.EntityStateManagement.MotionState,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.Matrix3x3,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.TransformableEntity.#ctor(BEPUphysics.EntityStateManagement.MotionState,BEPUphysics.CollisionShapes.ConvexShapes.ConvexShape,BEPUutilities.Matrix3x3,System.Double)">
             <summary>
             Constructs a dynamic transformable entity.
             </summary>
@@ -13282,7 +13282,7 @@
              Gets or sets the sidedness of the triangle.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Triangle.#ctor(BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Triangle.#ctor(BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double)">
             <summary>
             Constructs a dynamic triangle.
             </summary>
@@ -13299,7 +13299,7 @@
             <param name="v2">Position of the second vertex.</param>
             <param name="v3">Position of the third vertex.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Triangle.#ctor(BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Triangle.#ctor(BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double)">
             <summary>
             Constructs a dynamic triangle.
             </summary>
@@ -13318,7 +13318,7 @@
             <param name="v2">Position of the second vertex.</param>
             <param name="v3">Position of the third vertex.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.Triangle.#ctor(BEPUphysics.EntityStateManagement.MotionState,BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.Triangle.#ctor(BEPUphysics.EntityStateManagement.MotionState,BEPUutilities.Vector3,BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double)">
             <summary>
             Constructs a dynamic triangle.
             </summary>
@@ -13347,13 +13347,13 @@
              Gets the list of shapes in the wrapped body.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.WrappedBody.#ctor(System.Collections.Generic.IList{BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeEntry},System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.WrappedBody.#ctor(System.Collections.Generic.IList{BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeEntry},System.Double)">
             <exception cref="T:System.ArgumentException">Thrown when the subbodies list contains zero entities.</exception>
         </member>
         <member name="M:BEPUphysics.Entities.Prefabs.WrappedBody.#ctor(System.Collections.Generic.IList{BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeEntry})">
             <exception cref="T:System.ArgumentException">Thrown when the subbodies list contains zero entities.</exception>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.WrappedBody.#ctor(BEPUutilities.Vector3,System.Collections.Generic.IList{BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeEntry},System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.WrappedBody.#ctor(BEPUutilities.Vector3,System.Collections.Generic.IList{BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeEntry},System.Double)">
             <summary>
             Constructs a physically simulated box.
             </summary>
@@ -13368,7 +13368,7 @@
             <param name="position">Position of the box.</param>
             <param name="subBodies">List of entities composing the body.</param>
         </member>
-        <member name="M:BEPUphysics.Entities.Prefabs.WrappedBody.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Collections.Generic.IList{BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeEntry},System.Single)">
+        <member name="M:BEPUphysics.Entities.Prefabs.WrappedBody.#ctor(BEPUphysics.EntityStateManagement.MotionState,System.Collections.Generic.IList{BEPUphysics.CollisionShapes.ConvexShapes.ConvexShapeEntry},System.Double)">
             <summary>
             Constructs a dynamic wrapped body.
             </summary>
@@ -13842,7 +13842,7 @@
              Constructs a new material.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Materials.Material.#ctor(System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Materials.Material.#ctor(System.Double,System.Double,System.Double)">
             <summary>
              Constructs a new material.
             </summary>
@@ -14506,7 +14506,7 @@
              updated object.
             </summary>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.CollidablePairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.CollidablePairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Double)">
             <summary>
              Updates the time of impact for the pair.
             </summary>
@@ -14831,7 +14831,7 @@
              Pair handler that manages a pair of two convex shapes.
             </summary>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.ConvexPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.ConvexPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Double)">
             <summary>
              Updates the time of impact for the pair.
             </summary>
@@ -14900,19 +14900,19 @@
              Cleans up the pair handler.
             </summary>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.GroupPairHandler.UpdateContacts(System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.GroupPairHandler.UpdateContacts(System.Double)">
             <summary>
              Updates the pair handler's contacts.
             </summary>
             <param name="dt">Timestep duration.</param>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.GroupPairHandler.UpdateCollision(System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.GroupPairHandler.UpdateCollision(System.Double)">
             <summary>
              Updates the pair handler.
             </summary>
             <param name="dt">Timestep duration.</param>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.GroupPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.GroupPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Double)">
             <summary>
              Updates the time of impact for the pair.
             </summary>
@@ -14961,7 +14961,7 @@
              Cleans up the pair handler.
             </summary>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.InstancedMeshPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.InstancedMeshPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Double)">
             <summary>
              Updates the time of impact for the pair.
             </summary>
@@ -15289,7 +15289,7 @@
             <param name="index">Index to create a collidable for.</param>
             <returns>Collidable for the object at the given index.</returns>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.MeshGroupPairHandler.ConfigureCollidable(BEPUphysics.NarrowPhaseSystems.Pairs.TriangleEntry,System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.MeshGroupPairHandler.ConfigureCollidable(BEPUphysics.NarrowPhaseSystems.Pairs.TriangleEntry,System.Double)">
             <summary>
             Configure a triangle from CollidableB to represent the object at the given index.
             </summary>
@@ -15302,19 +15302,19 @@
             </summary>
             <param name="collidable">Collidable to clean up.</param>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.MeshGroupPairHandler.UpdateContacts(System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.MeshGroupPairHandler.UpdateContacts(System.Double)">
             <summary>
              Updates the pair handler's contacts.
             </summary>
             <param name="dt">Timestep duration.</param>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.MeshGroupPairHandler.UpdateCollision(System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.MeshGroupPairHandler.UpdateCollision(System.Double)">
             <summary>
              Updates the pair handler.
             </summary>
             <param name="dt">Timestep duration.</param>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.MeshGroupPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.MeshGroupPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Double)">
             <summary>
              Updates the time of impact for the pair.
             </summary>
@@ -15414,7 +15414,7 @@
              Cleans up the pair handler.
             </summary>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.MobileMeshPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.MobileMeshPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Double)">
             <summary>
              Updates the time of impact for the pair.
             </summary>
@@ -15470,7 +15470,7 @@
              Superclass of objects which handle a collision between two broad phase entries.
             </summary>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.NarrowPhasePair.UpdateCollision(System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.NarrowPhasePair.UpdateCollision(System.Double)">
             <summary>
              Updates the collision between the broad phase entries.
             </summary>
@@ -15589,7 +15589,7 @@
              Cleans up the pair handler.
             </summary>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.StandardPairHandler.UpdateCollision(System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.StandardPairHandler.UpdateCollision(System.Double)">
             <summary>
              Updates the pair handler.
             </summary>
@@ -15637,7 +15637,7 @@
              Cleans up the pair handler.
             </summary>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.StaticMeshPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.StaticMeshPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Double)">
             <summary>
              Updates the time of impact for the pair.
             </summary>
@@ -15681,7 +15681,7 @@
              Cleans up the pair handler.
             </summary>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.TerrainPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.TerrainPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Double)">
             <summary>
              Updates the time of impact for the pair.
             </summary>
@@ -15715,7 +15715,7 @@
              Cleans up the pair handler.
             </summary>
         </member>
-        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.TriangleConvexPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Single)">
+        <member name="M:BEPUphysics.NarrowPhaseSystems.Pairs.TriangleConvexPairHandler.UpdateTimeOfImpact(BEPUphysics.BroadPhaseEntries.Collidable,System.Double)">
             <summary>
              Updates the time of impact for the pair.
             </summary>
@@ -15881,7 +15881,7 @@
              Defines an object which can be updated using forces by the ForceUpdater.
             </summary>
         </member>
-        <member name="M:BEPUphysics.OtherSpaceStages.IForceUpdateable.UpdateForForces(System.Single)">
+        <member name="M:BEPUphysics.OtherSpaceStages.IForceUpdateable.UpdateForForces(System.Double)">
             <summary>
              Applies forces to the object.
             </summary>
@@ -16065,14 +16065,14 @@
             Performs any custom logic desired prior to the force application.
             </summary>
         </member>
-        <member name="M:BEPUphysics.UpdateableSystems.ForceFields.ForceField.BEPUphysics#UpdateableSystems#IDuringForcesUpdateable#Update(System.Single)">
+        <member name="M:BEPUphysics.UpdateableSystems.ForceFields.ForceField.BEPUphysics#UpdateableSystems#IDuringForcesUpdateable#Update(System.Double)">
             <summary>
             Applies forces specified by the given calculation delegate to bodies in the volume.
             Called automatically when needed by the owning Space.
             </summary>
             <param name="dt">Time since the last frame in simulation seconds.</param>
         </member>
-        <member name="M:BEPUphysics.UpdateableSystems.ForceFields.ForceField.CalculateImpulse(BEPUphysics.Entities.Entity,System.Single,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.UpdateableSystems.ForceFields.ForceField.CalculateImpulse(BEPUphysics.Entities.Entity,System.Double,BEPUutilities.Vector3@)">
             <summary>
             Calculates the impulse to apply to the entity.
             </summary>
@@ -16176,7 +16176,7 @@
         <member name="P:BEPUphysics.UpdateableSystems.FluidVolume.DensityMultipliers">
             <summary>
             Gets or sets the dictionary storing density multipliers for the fluid volume.  If a value is specified for an entity, the density of the object is effectively scaled to match.
-            Higher values make entities sink more, lower values make entities float more.
+            Higher values make entities sink more, lower values make entities double more.
             </summary>
         </member>
         <member name="P:BEPUphysics.UpdateableSystems.FluidVolume.BoundingBox">
@@ -16202,12 +16202,12 @@
         </member>
         <member name="P:BEPUphysics.UpdateableSystems.FluidVolume.LinearDamping">
             <summary>
-            Fraction by which to reduce the linear momentum of floating objects each update.
+            Fraction by which to reduce the linear momentum of doubleing objects each update.
             </summary>
         </member>
         <member name="P:BEPUphysics.UpdateableSystems.FluidVolume.AngularDamping">
             <summary>
-            Fraction by which to reduce the angular momentum of floating objects each update.
+            Fraction by which to reduce the angular momentum of doubleing objects each update.
             </summary>
         </member>
         <member name="P:BEPUphysics.UpdateableSystems.FluidVolume.FlowDirection">
@@ -16243,7 +16243,7 @@
              Gets or sets the gravity used by the fluid volume.
             </summary>
         </member>
-        <member name="M:BEPUphysics.UpdateableSystems.FluidVolume.#ctor(BEPUutilities.Vector3,System.Single,System.Collections.Generic.List{BEPUutilities.Vector3[]},System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.UpdateableSystems.FluidVolume.#ctor(BEPUutilities.Vector3,System.Double,System.Collections.Generic.List{BEPUutilities.Vector3[]},System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Creates a fluid volume.
             </summary>
@@ -16252,15 +16252,15 @@
             <param name="surfaceTriangles">List of triangles composing the surface of the fluid.  Set up as a list of length 3 arrays of Vector3's.</param>
             <param name="depth">Depth of the fluid back along the surface normal.</param>
             <param name="fluidDensity">Density of the fluid represented in the volume.</param>
-            <param name="linearDamping">Fraction by which to reduce the linear momentum of floating objects each update, in addition to any of the body's own damping.</param>
-            <param name="angularDamping">Fraction by which to reduce the angular momentum of floating objects each update, in addition to any of the body's own damping.</param>
+            <param name="linearDamping">Fraction by which to reduce the linear momentum of doubleing objects each update, in addition to any of the body's own damping.</param>
+            <param name="angularDamping">Fraction by which to reduce the angular momentum of doubleing objects each update, in addition to any of the body's own damping.</param>
         </member>
         <member name="M:BEPUphysics.UpdateableSystems.FluidVolume.RecalculateBoundingBox">
             <summary>
             Recalculates the bounding box of the fluid based on its depth, surface normal, and surface triangles.
             </summary>
         </member>
-        <member name="M:BEPUphysics.UpdateableSystems.FluidVolume.BEPUphysics#UpdateableSystems#IDuringForcesUpdateable#Update(System.Single)">
+        <member name="M:BEPUphysics.UpdateableSystems.FluidVolume.BEPUphysics#UpdateableSystems#IDuringForcesUpdateable#Update(System.Double)">
             <summary>
             Applies buoyancy forces to appropriate objects.
             Called automatically when needed by the owning Space.
@@ -16277,7 +16277,7 @@
              Defines an object which is updated by the space before the narrow phase runs.
             </summary>
         </member>
-        <member name="M:BEPUphysics.UpdateableSystems.IBeforeNarrowPhaseUpdateable.Update(System.Single)">
+        <member name="M:BEPUphysics.UpdateableSystems.IBeforeNarrowPhaseUpdateable.Update(System.Double)">
             <summary>
              Updates the updateable before the narrow phase.
             </summary>
@@ -16288,7 +16288,7 @@
              Defines an object which is updated by the space at the end of a time step.
             </summary>
         </member>
-        <member name="M:BEPUphysics.UpdateableSystems.IBeforePositionUpdateUpdateable.Update(System.Single)">
+        <member name="M:BEPUphysics.UpdateableSystems.IBeforePositionUpdateUpdateable.Update(System.Double)">
             <summary>
              Updates the object at the end of a time step.
             </summary>
@@ -16299,7 +16299,7 @@
              Defines an object which is updated by the space before the solver runs.
             </summary>
         </member>
-        <member name="M:BEPUphysics.UpdateableSystems.IBeforeSolverUpdateable.Update(System.Single)">
+        <member name="M:BEPUphysics.UpdateableSystems.IBeforeSolverUpdateable.Update(System.Double)">
             <summary>
              Updates the updateable before the solver.
             </summary>
@@ -16310,7 +16310,7 @@
              Defines an object which is updated by a space during force application.
             </summary>
         </member>
-        <member name="M:BEPUphysics.UpdateableSystems.IDuringForcesUpdateable.Update(System.Single)">
+        <member name="M:BEPUphysics.UpdateableSystems.IDuringForcesUpdateable.Update(System.Double)">
             <summary>
              Updates the object during force application.
             </summary>
@@ -16321,7 +16321,7 @@
              Defines an object which is updated by the space at the end of the frame.
             </summary>
         </member>
-        <member name="M:BEPUphysics.UpdateableSystems.IEndOfFrameUpdateable.Update(System.Single)">
+        <member name="M:BEPUphysics.UpdateableSystems.IEndOfFrameUpdateable.Update(System.Double)">
             <summary>
             Updates the object at the end of the frame.
             </summary>
@@ -16332,7 +16332,7 @@
              Defines an object which is updated by the space at the end of a time step.
             </summary>
         </member>
-        <member name="M:BEPUphysics.UpdateableSystems.IEndOfTimeStepUpdateable.Update(System.Single)">
+        <member name="M:BEPUphysics.UpdateableSystems.IEndOfTimeStepUpdateable.Update(System.Double)">
             <summary>
              Updates the object at the end of a time step.
             </summary>
@@ -16561,7 +16561,7 @@
             Gets or sets the unsteered orientation of the wheel in the vehicle's local space.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Vehicle.CylinderCastWheelShape.#ctor(System.Single,System.Single,BEPUutilities.Quaternion,BEPUutilities.Matrix,System.Boolean)">
+        <member name="M:BEPUphysics.Vehicle.CylinderCastWheelShape.#ctor(System.Double,System.Double,BEPUutilities.Quaternion,BEPUutilities.Matrix,System.Boolean)">
             <summary>
             Creates a new cylinder cast based wheel shape.
             </summary>
@@ -16597,7 +16597,7 @@
             and update the wheel transforms safely.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Vehicle.CylinderCastWheelShape.FindSupport(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Single@,BEPUphysics.BroadPhaseEntries.Collidable@,BEPUphysics.Entities.Entity@,BEPUphysics.Materials.Material@)">
+        <member name="M:BEPUphysics.Vehicle.CylinderCastWheelShape.FindSupport(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Double@,BEPUphysics.BroadPhaseEntries.Collidable@,BEPUphysics.Entities.Entity@,BEPUphysics.Materials.Material@)">
             <summary>
             Finds a supporting entity, the contact location, and the contact normal.
             </summary>
@@ -16634,7 +16634,7 @@
             Uses a raycast as the shape of a wheel.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Vehicle.RaycastWheelShape.#ctor(System.Single,BEPUutilities.Matrix)">
+        <member name="M:BEPUphysics.Vehicle.RaycastWheelShape.#ctor(System.Double,BEPUutilities.Matrix)">
             <summary>
             Creates a new raycast based wheel shape.
             </summary>
@@ -16661,7 +16661,7 @@
             and update the wheel transforms safely.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Vehicle.RaycastWheelShape.FindSupport(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Single@,BEPUphysics.BroadPhaseEntries.Collidable@,BEPUphysics.Entities.Entity@,BEPUphysics.Materials.Material@)">
+        <member name="M:BEPUphysics.Vehicle.RaycastWheelShape.FindSupport(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Double@,BEPUphysics.BroadPhaseEntries.Collidable@,BEPUphysics.Entities.Entity@,BEPUphysics.Materials.Material@)">
             <summary>
             Finds a supporting entity, the contact location, and the contact normal.
             </summary>
@@ -16729,13 +16729,13 @@
             Called automatically when the space adds the vehicle.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Vehicle.Vehicle.BEPUphysics#UpdateableSystems#IEndOfFrameUpdateable#Update(System.Single)">
+        <member name="M:BEPUphysics.Vehicle.Vehicle.BEPUphysics#UpdateableSystems#IEndOfFrameUpdateable#Update(System.Double)">
             <summary>
             Performs the end-of-frame update component.
             </summary>
             <param name="dt">Time since last frame in simulation seconds.</param>
         </member>
-        <member name="M:BEPUphysics.Vehicle.Vehicle.BEPUphysics#UpdateableSystems#IEndOfTimeStepUpdateable#Update(System.Single)">
+        <member name="M:BEPUphysics.Vehicle.Vehicle.BEPUphysics#UpdateableSystems#IEndOfTimeStepUpdateable#Update(System.Double)">
             <summary>
             Performs the end-of-update update component.
             </summary>
@@ -16766,7 +16766,7 @@
             This allows the non-batched multithreading system to lock properly.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Vehicle.Vehicle.Update(System.Single)">
+        <member name="M:BEPUphysics.Vehicle.Vehicle.Update(System.Double)">
             <summary>
             Computes information required during the later update.
             Called once before the iteration loop.
@@ -16897,7 +16897,7 @@
             Default blender used by WheelRollingFriction constraints.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Vehicle.WheelBrake.BlendFriction(System.Single,System.Single,System.Boolean,BEPUphysics.Vehicle.Wheel)">
+        <member name="M:BEPUphysics.Vehicle.WheelBrake.BlendFriction(System.Double,System.Double,System.Boolean,BEPUphysics.Vehicle.Wheel)">
             <summary>
             Function which takes the friction values from a wheel and a supporting material and computes the blended friction.
             </summary>
@@ -16907,7 +16907,7 @@
             <param name="wheel">Wheel being blended.</param>
             <returns>Blended friction coefficient.</returns>
         </member>
-        <member name="M:BEPUphysics.Vehicle.WheelBrake.#ctor(System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Vehicle.WheelBrake.#ctor(System.Double,System.Double,System.Double)">
             <summary>
             Constructs a new rolling friction object for a wheel.
             </summary>
@@ -17000,7 +17000,7 @@
             Default blender used by WheelSlidingFriction constraints.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Vehicle.WheelDrivingMotor.BlendFriction(System.Single,System.Single,System.Boolean,BEPUphysics.Vehicle.Wheel)">
+        <member name="M:BEPUphysics.Vehicle.WheelDrivingMotor.BlendFriction(System.Double,System.Double,System.Boolean,BEPUphysics.Vehicle.Wheel)">
             <summary>
             Function which takes the friction values from a wheel and a supporting material and computes the blended friction.
             </summary>
@@ -17010,7 +17010,7 @@
             <param name="wheel">Wheel being blended.</param>
             <returns>Blended friction coefficient.</returns>
         </member>
-        <member name="M:BEPUphysics.Vehicle.WheelDrivingMotor.#ctor(System.Single,System.Single,System.Single)">
+        <member name="M:BEPUphysics.Vehicle.WheelDrivingMotor.#ctor(System.Double,System.Double,System.Double)">
             <summary>
             Constructs a new wheel motor.
             </summary>
@@ -17170,13 +17170,13 @@
             and update the wheel transforms safely.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Vehicle.WheelShape.UpdateSpin(System.Single)">
+        <member name="M:BEPUphysics.Vehicle.WheelShape.UpdateSpin(System.Double)">
             <summary>
             Updates the spin velocity and spin angle for the shape.
             </summary>
             <param name="dt">Simulation timestep.</param>
         </member>
-        <member name="M:BEPUphysics.Vehicle.WheelShape.FindSupport(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Single@,BEPUphysics.BroadPhaseEntries.Collidable@,BEPUphysics.Entities.Entity@,BEPUphysics.Materials.Material@)">
+        <member name="M:BEPUphysics.Vehicle.WheelShape.FindSupport(BEPUutilities.Vector3@,BEPUutilities.Vector3@,System.Double@,BEPUphysics.BroadPhaseEntries.Collidable@,BEPUphysics.Entities.Entity@,BEPUphysics.Materials.Material@)">
             <summary>
             Finds a supporting entity, the contact location, and the contact normal.
             </summary>
@@ -17208,7 +17208,7 @@
             Default blender used by WheelSlidingFriction constraints.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Vehicle.WheelSlidingFriction.BlendFriction(System.Single,System.Single,System.Boolean,BEPUphysics.Vehicle.Wheel)">
+        <member name="M:BEPUphysics.Vehicle.WheelSlidingFriction.BlendFriction(System.Double,System.Double,System.Boolean,BEPUphysics.Vehicle.Wheel)">
             <summary>
             Function which takes the friction values from a wheel and a supporting material and computes the blended friction.
             </summary>
@@ -17218,7 +17218,7 @@
             <param name="wheel">Wheel being blended.</param>
             <returns>Blended friction coefficient.</returns>
         </member>
-        <member name="M:BEPUphysics.Vehicle.WheelSlidingFriction.#ctor(System.Single,System.Single)">
+        <member name="M:BEPUphysics.Vehicle.WheelSlidingFriction.#ctor(System.Double,System.Double)">
             <summary>
             Constructs a new sliding friction object for a wheel.
             </summary>
@@ -17285,7 +17285,7 @@
             Allows the connected wheel and vehicle to smoothly absorb bumps.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Vehicle.WheelSuspension.#ctor(System.Single,System.Single,BEPUutilities.Vector3,System.Single,BEPUutilities.Vector3)">
+        <member name="M:BEPUphysics.Vehicle.WheelSuspension.#ctor(System.Double,System.Double,BEPUutilities.Vector3,System.Double,BEPUutilities.Vector3)">
             <summary>
             Constructs a new suspension for a wheel.
             </summary>
@@ -17393,14 +17393,14 @@
             Wrapper around an orientation curve that specifies a specific velocity at which to travel.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Paths.ConstantAngularSpeedCurve.#ctor(System.Single,BEPUphysics.Paths.Curve{BEPUutilities.Quaternion})">
+        <member name="M:BEPUphysics.Paths.ConstantAngularSpeedCurve.#ctor(System.Double,BEPUphysics.Paths.Curve{BEPUutilities.Quaternion})">
             <summary>
             Constructs a new constant speed curve.
             </summary>
             <param name="speed">Speed to maintain while traveling around a curve.</param>
             <param name="curve">Curve to wrap.</param>
         </member>
-        <member name="M:BEPUphysics.Paths.ConstantAngularSpeedCurve.#ctor(System.Single,BEPUphysics.Paths.Curve{BEPUutilities.Quaternion},System.Int32)">
+        <member name="M:BEPUphysics.Paths.ConstantAngularSpeedCurve.#ctor(System.Double,BEPUphysics.Paths.Curve{BEPUutilities.Quaternion},System.Int32)">
             <summary>
             Constructs a new constant speed curve.
             </summary>
@@ -17414,14 +17414,14 @@
             Wrapper around a 3d position curve that specifies a specific velocity at which to travel.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Paths.ConstantLinearSpeedCurve.#ctor(System.Single,BEPUphysics.Paths.Curve{BEPUutilities.Vector3})">
+        <member name="M:BEPUphysics.Paths.ConstantLinearSpeedCurve.#ctor(System.Double,BEPUphysics.Paths.Curve{BEPUutilities.Vector3})">
             <summary>
             Constructs a new constant speed curve.
             </summary>
             <param name="speed">Speed to maintain while traveling around a curve.</param>
             <param name="curve">Curve to wrap.</param>
         </member>
-        <member name="M:BEPUphysics.Paths.ConstantLinearSpeedCurve.#ctor(System.Single,BEPUphysics.Paths.Curve{BEPUutilities.Vector3},System.Int32)">
+        <member name="M:BEPUphysics.Paths.ConstantLinearSpeedCurve.#ctor(System.Double,BEPUphysics.Paths.Curve{BEPUutilities.Vector3},System.Int32)">
             <summary>
             Constructs a new constant speed curve.
             </summary>
@@ -17436,14 +17436,14 @@
             </summary>
             <typeparam name="TValue">Type of the values in the curve.</typeparam>
         </member>
-        <member name="M:BEPUphysics.Paths.ConstantSpeedCurve`1.#ctor(System.Single,BEPUphysics.Paths.Curve{`0})">
+        <member name="M:BEPUphysics.Paths.ConstantSpeedCurve`1.#ctor(System.Double,BEPUphysics.Paths.Curve{`0})">
             <summary>
             Constructs a new constant speed curve.
             </summary>
             <param name="speed">Speed to maintain while traveling around a curve.</param>
             <param name="curve">Curve to wrap.</param>
         </member>
-        <member name="M:BEPUphysics.Paths.ConstantSpeedCurve`1.#ctor(System.Single,BEPUphysics.Paths.Curve{`0},System.Int32)">
+        <member name="M:BEPUphysics.Paths.ConstantSpeedCurve`1.#ctor(System.Double,BEPUphysics.Paths.Curve{`0},System.Int32)">
             <summary>
             Constructs a new constant speed curve.
             </summary>
@@ -17502,7 +17502,7 @@
             <param name="postLoop">Looping behavior of the curve after the last endpoint's time.</param>
             <returns>Time within the curve's interval.</returns>
         </member>
-        <member name="M:BEPUphysics.Paths.Curve`1.Evaluate(System.Int32,System.Single,`0@)">
+        <member name="M:BEPUphysics.Paths.Curve`1.Evaluate(System.Int32,System.Double,`0@)">
             <summary>
             Evaluates the curve section starting at the control point index using
             the weight value.
@@ -17650,7 +17650,7 @@
             </summary>
             <param name="point">New control point to add to the curve.</param>
         </member>
-        <member name="M:BEPUphysics.Paths.CurveControlPointList`1.Add(System.Single,`0)">
+        <member name="M:BEPUphysics.Paths.CurveControlPointList`1.Add(System.Double,`0)">
             <summary>
             Adds a new control point to the curve.
             </summary>
@@ -17717,7 +17717,7 @@
             Gets the tangents used by the curve per control point.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Paths.HermiteCurve3D.Evaluate(System.Int32,System.Single,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.Paths.HermiteCurve3D.Evaluate(System.Int32,System.Double,BEPUutilities.Vector3@)">
             <summary>
             Evaluates the curve section starting at the control point index using
             the weight value.
@@ -17764,7 +17764,7 @@
             Defines a 3D curve using linear interpolation.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Paths.LinearInterpolationCurve3D.Evaluate(System.Int32,System.Single,BEPUutilities.Vector3@)">
+        <member name="M:BEPUphysics.Paths.LinearInterpolationCurve3D.Evaluate(System.Int32,System.Double,BEPUutilities.Vector3@)">
             <summary>
             Evaluates the curve section starting at the control point index using
             the weight value.
@@ -17854,7 +17854,7 @@
             Gets or sets the target location of the entity mover.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Paths.PathFollowing.EntityMover.GetLinearVelocity(BEPUutilities.Vector3,BEPUutilities.Vector3,System.Single)">
+        <member name="M:BEPUphysics.Paths.PathFollowing.EntityMover.GetLinearVelocity(BEPUutilities.Vector3,BEPUutilities.Vector3,System.Double)">
             <summary>
             Gets the angular velocity necessary to change an entity's orientation from
             the starting quaternion to the ending quaternion over time dt.
@@ -17874,7 +17874,7 @@
             Removes the motors from the space.  Called automatically.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Paths.PathFollowing.EntityMover.BEPUphysics#UpdateableSystems#IDuringForcesUpdateable#Update(System.Single)">
+        <member name="M:BEPUphysics.Paths.PathFollowing.EntityMover.BEPUphysics#UpdateableSystems#IDuringForcesUpdateable#Update(System.Double)">
             <summary>
             Called automatically by the space.
             </summary>
@@ -17916,7 +17916,7 @@
             Gets or sets the target orientation of the entity rotator.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Paths.PathFollowing.EntityRotator.GetAngularVelocity(BEPUutilities.Quaternion,BEPUutilities.Quaternion,System.Single)">
+        <member name="M:BEPUphysics.Paths.PathFollowing.EntityRotator.GetAngularVelocity(BEPUutilities.Quaternion,BEPUutilities.Quaternion,System.Double)">
             <summary>
             Gets the angular velocity necessary to change an entity's orientation from
             the starting quaternion to the ending quaternion over time dt.
@@ -17936,7 +17936,7 @@
             Removes the motors from the solver.  Called automatically.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Paths.PathFollowing.EntityRotator.BEPUphysics#UpdateableSystems#IDuringForcesUpdateable#Update(System.Single)">
+        <member name="M:BEPUphysics.Paths.PathFollowing.EntityRotator.BEPUphysics#UpdateableSystems#IDuringForcesUpdateable#Update(System.Double)">
             <summary>
             Called automatically by the space.
             </summary>
@@ -17974,7 +17974,7 @@
             Defines a quaternion curve using spherical linear interpolation.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Paths.QuaternionSlerpCurve.Evaluate(System.Int32,System.Single,BEPUutilities.Quaternion@)">
+        <member name="M:BEPUphysics.Paths.QuaternionSlerpCurve.Evaluate(System.Int32,System.Double,BEPUutilities.Quaternion@)">
             <summary>
             Evaluates the curve section starting at the control point index using
             the weight value.
@@ -18131,7 +18131,7 @@
             Instead, it just picks the value from the previous control point.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Paths.StepCurve1D.Evaluate(System.Int32,System.Single,System.Single@)">
+        <member name="M:BEPUphysics.Paths.StepCurve1D.Evaluate(System.Int32,System.Double,System.Double@)">
             <summary>
             Evaluates the curve at a given time using linear interpolation.
             </summary>
@@ -18154,14 +18154,14 @@
             The speed curve should be designed with the wrapped curve's times in mind.
             Speeds will be sampled based on the wrapped curve's interval.</remarks>
         </member>
-        <member name="M:BEPUphysics.Paths.VariableAngularSpeedCurve.#ctor(BEPUphysics.Paths.Path{System.Single},BEPUphysics.Paths.Curve{BEPUutilities.Quaternion})">
+        <member name="M:BEPUphysics.Paths.VariableAngularSpeedCurve.#ctor(BEPUphysics.Paths.Path{System.Double},BEPUphysics.Paths.Curve{BEPUutilities.Quaternion})">
             <summary>
             Constructs a new variable speed curve.
             </summary>
             <param name="speedCurve">Curve defining speeds to use.</param>
             <param name="curve">Curve to wrap.</param>
         </member>
-        <member name="M:BEPUphysics.Paths.VariableAngularSpeedCurve.#ctor(BEPUphysics.Paths.Path{System.Single},BEPUphysics.Paths.Curve{BEPUutilities.Quaternion},System.Int32)">
+        <member name="M:BEPUphysics.Paths.VariableAngularSpeedCurve.#ctor(BEPUphysics.Paths.Path{System.Double},BEPUphysics.Paths.Curve{BEPUutilities.Quaternion},System.Int32)">
             <summary>
             Constructs a new variable speed curve.
             </summary>
@@ -18178,14 +18178,14 @@
             The speed curve should be designed with the wrapped curve's times in mind.
             Speeds will be sampled based on the wrapped curve's interval.</remarks>
         </member>
-        <member name="M:BEPUphysics.Paths.VariableLinearSpeedCurve.#ctor(BEPUphysics.Paths.Path{System.Single},BEPUphysics.Paths.Curve{BEPUutilities.Vector3})">
+        <member name="M:BEPUphysics.Paths.VariableLinearSpeedCurve.#ctor(BEPUphysics.Paths.Path{System.Double},BEPUphysics.Paths.Curve{BEPUutilities.Vector3})">
             <summary>
             Constructs a new variable speed curve.
             </summary>
             <param name="speedCurve">Curve defining speeds to use.</param>
             <param name="curve">Curve to wrap.</param>
         </member>
-        <member name="M:BEPUphysics.Paths.VariableLinearSpeedCurve.#ctor(BEPUphysics.Paths.Path{System.Single},BEPUphysics.Paths.Curve{BEPUutilities.Vector3},System.Int32)">
+        <member name="M:BEPUphysics.Paths.VariableLinearSpeedCurve.#ctor(BEPUphysics.Paths.Path{System.Double},BEPUphysics.Paths.Curve{BEPUutilities.Vector3},System.Int32)">
             <summary>
             Constructs a new variable speed curve.
             </summary>
@@ -18200,14 +18200,14 @@
             </summary>
             <typeparam name="TValue">Type of the value of the wrapped curve.</typeparam>
         </member>
-        <member name="M:BEPUphysics.Paths.VariableSpeedCurve`1.#ctor(BEPUphysics.Paths.Path{System.Single},BEPUphysics.Paths.Curve{`0})">
+        <member name="M:BEPUphysics.Paths.VariableSpeedCurve`1.#ctor(BEPUphysics.Paths.Path{System.Double},BEPUphysics.Paths.Curve{`0})">
             <summary>
             Constructs a new constant speed curve.
             </summary>
             <param name="speedCurve">Curve defining speeds to use.</param>
             <param name="curve">Curve to wrap.</param>
         </member>
-        <member name="M:BEPUphysics.Paths.VariableSpeedCurve`1.#ctor(BEPUphysics.Paths.Path{System.Single},BEPUphysics.Paths.Curve{`0},System.Int32)">
+        <member name="M:BEPUphysics.Paths.VariableSpeedCurve`1.#ctor(BEPUphysics.Paths.Path{System.Double},BEPUphysics.Paths.Curve{`0},System.Int32)">
             <summary>
             Constructs a new constant speed curve.
             </summary>
@@ -18300,13 +18300,13 @@
              A position updateable that can be updated continuously.
             </summary>
         </member>
-        <member name="M:BEPUphysics.PositionUpdating.ICCDPositionUpdateable.UpdateTimesOfImpact(System.Single)">
+        <member name="M:BEPUphysics.PositionUpdating.ICCDPositionUpdateable.UpdateTimesOfImpact(System.Double)">
             <summary>
              Updates the time of impacts associated with the updateable.
             </summary>
             <param name="dt">Time step duration.</param>
         </member>
-        <member name="M:BEPUphysics.PositionUpdating.ICCDPositionUpdateable.UpdatePositionContinuously(System.Single)">
+        <member name="M:BEPUphysics.PositionUpdating.ICCDPositionUpdateable.UpdatePositionContinuously(System.Double)">
             <summary>
             Updates the updateable using its continuous nature.
             </summary>
@@ -18340,7 +18340,7 @@
              Gets or sets the position updater that owns this updateable.
             </summary>
         </member>
-        <member name="M:BEPUphysics.PositionUpdating.IPositionUpdateable.PreUpdatePosition(System.Single)">
+        <member name="M:BEPUphysics.PositionUpdating.IPositionUpdateable.PreUpdatePosition(System.Double)">
             <summary>
              Updates the position state of the object.
             </summary>
@@ -18792,7 +18792,7 @@
              Performs a single timestep.
             </summary>
         </member>
-        <member name="M:BEPUphysics.Space.Update(System.Single)">
+        <member name="M:BEPUphysics.Space.Update(System.Double)">
             <summary>
             Performs as many timesteps as necessary to get as close to the elapsed time as possible.
             </summary>
@@ -18815,7 +18815,7 @@
             <param name="result">Hit data of the ray, if any.</param>
             <returns>Whether or not the ray hit anything.</returns>
         </member>
-        <member name="M:BEPUphysics.Space.RayCast(BEPUutilities.Ray,System.Single,BEPUphysics.RayCastResult@)">
+        <member name="M:BEPUphysics.Space.RayCast(BEPUutilities.Ray,System.Double,BEPUphysics.RayCastResult@)">
             <summary>
             Tests a ray against the space.
             </summary>
@@ -18824,7 +18824,7 @@
             <param name="result">Hit data of the ray, if any.</param>
             <returns>Whether or not the ray hit anything.</returns>
         </member>
-        <member name="M:BEPUphysics.Space.RayCast(BEPUutilities.Ray,System.Single,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUphysics.RayCastResult@)">
+        <member name="M:BEPUphysics.Space.RayCast(BEPUutilities.Ray,System.Double,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},BEPUphysics.RayCastResult@)">
             <summary>
             Tests a ray against the space.
             </summary>
@@ -18834,7 +18834,7 @@
             <param name="result">Hit data of the ray, if any.</param>
             <returns>Whether or not the ray hit anything.</returns>
         </member>
-        <member name="M:BEPUphysics.Space.RayCast(BEPUutilities.Ray,System.Single,System.Collections.Generic.IList{BEPUphysics.RayCastResult})">
+        <member name="M:BEPUphysics.Space.RayCast(BEPUutilities.Ray,System.Double,System.Collections.Generic.IList{BEPUphysics.RayCastResult})">
             <summary>
             Tests a ray against the space, possibly returning multiple hits.
             </summary>
@@ -18843,7 +18843,7 @@
             <param name="outputRayCastResults">Hit data of the ray, if any.</param>
             <returns>Whether or not the ray hit anything.</returns>
         </member>
-        <member name="M:BEPUphysics.Space.RayCast(BEPUutilities.Ray,System.Single,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},System.Collections.Generic.IList{BEPUphysics.RayCastResult})">
+        <member name="M:BEPUphysics.Space.RayCast(BEPUutilities.Ray,System.Double,System.Func{BEPUphysics.BroadPhaseEntries.BroadPhaseEntry,System.Boolean},System.Collections.Generic.IList{BEPUphysics.RayCastResult})">
             <summary>
             Tests a ray against the space, possibly returning multiple hits.
             </summary>
@@ -18906,20 +18906,20 @@
         </member>
         <member name="F:BEPUphysics.TimeStepSettings.MaximumTimeStepsPerFrame">
             <summary>
-            Maximum number of timesteps to perform during a given frame when Space.Update(float) is used.  The unsimulated time will be accumulated for subsequent calls to Space.Update(float).
+            Maximum number of timesteps to perform during a given frame when Space.Update(double) is used.  The unsimulated time will be accumulated for subsequent calls to Space.Update(double).
             Defaults to 3.
             </summary>
         </member>
         <member name="F:BEPUphysics.TimeStepSettings.TimeStepDuration">
             <summary>
             Length of each integration step.  Calling a Space's Update() method moves time forward this much.
-            The other method, Space.Update(float), will try to move time forward by the amount specified in the parameter by taking steps of TimeStepDuration size.
+            The other method, Space.Update(double), will try to move time forward by the amount specified in the parameter by taking steps of TimeStepDuration size.
             Defaults to 1/60.
             </summary>
         </member>
         <member name="F:BEPUphysics.TimeStepSettings.AccumulatedTime">
             <summary>
-            Amount of time accumulated by previous calls to Space.Update(float) that has not yet been simulated.
+            Amount of time accumulated by previous calls to Space.Update(double) that has not yet been simulated.
             </summary>
         </member>
     </members>

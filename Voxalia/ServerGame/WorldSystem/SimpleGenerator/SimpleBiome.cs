@@ -23,7 +23,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             return Material.STONE;
         }
         
-        public virtual float HeightMod()
+        public virtual double HeightMod()
         {
             return 1;
         }
@@ -38,7 +38,7 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
             return Material.SAND;
         }
 
-        public virtual float AirDensity()
+        public virtual double AirDensity()
         {
             return 0.8f;
         }

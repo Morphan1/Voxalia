@@ -90,7 +90,7 @@ namespace Voxalia.Shared
         /// <param name="point">The center of the sphere.</param>
         /// <param name="radius">The radius of the sphere.</param>
         /// <returns>Whether it intersects.</returns>
-        public bool ContainsSphere(Location point, float radius)
+        public bool ContainsSphere(Location point, double radius)
         {
             // TODO: Fix
             /*

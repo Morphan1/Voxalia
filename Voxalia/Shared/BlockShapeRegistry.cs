@@ -155,7 +155,7 @@ namespace Voxalia.Shared
             int c = GetVertices(blockPos, bxp, bxm, byp, bym, btop, bbottom).Count;
             for (int i = 0; i < c; i++)
             {
-                float f = (float)cblock.BlockLocalData / 255f;
+                double f = (double)cblock.BlockLocalData / 255f;
                 lits.Add(new Vector4(f, f, f, 1f));
             }
             return lits;

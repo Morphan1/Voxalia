@@ -20,7 +20,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
         {
         }
 
-        public static float MaxRadius = 50;
+        public static double MaxRadius = 50;
 
         public override void AltClick(Entity entity, ItemStack item)
         {
@@ -39,7 +39,7 @@ namespace Voxalia.ServerGame.ItemSystem.CommonItems
             // TODO: Effect?
         }
 
-        public static float fireRate = 1f;
+        public static double fireRate = 1f;
 
         public override void ReleaseAltClick(Entity entity, ItemStack item)
         {

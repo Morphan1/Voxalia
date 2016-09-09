@@ -36,10 +36,10 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool ILeft = false;
         public bool IRight = false;
 
-        public float FastOrSlow = 0f;
+        public double FastOrSlow = 0f;
 
-        public float ForwBack = 0;
-        public float RightLeft = 0;
+        public double ForwBack = 0;
+        public double RightLeft = 0;
 
         public override void SpawnBody()
         {
@@ -52,7 +52,7 @@ namespace Voxalia.ServerGame.EntitySystem
         }
 
         // TODO: Customizable and networked speeds!
-        public float FastStrength
+        public double FastStrength
         {
             get
             {
@@ -60,7 +60,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
-        public float RegularStrength
+        public double RegularStrength
         {
             get
             {
@@ -68,7 +68,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
-        public float SlowStrength
+        public double SlowStrength
         {
             get
             {
@@ -121,14 +121,14 @@ namespace Voxalia.ServerGame.EntitySystem
                 Entity.ActivityInformation.Activate();
             }
 
-            public override float SolveIteration()
+            public override double SolveIteration()
             {
                 return 0; // Do nothing
             }
 
-            float Delta;
+            double Delta;
 
-            public override void Update(float dt)
+            public override void Update(double dt)
             {
                 Delta = dt;
             }

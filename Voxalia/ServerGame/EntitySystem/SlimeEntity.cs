@@ -16,7 +16,7 @@ namespace Voxalia.ServerGame.EntitySystem
 {
     public class SlimeEntity: CharacterEntity
     {
-        public SlimeEntity(Region tregion, float scale)
+        public SlimeEntity(Region tregion, double scale)
             : base(tregion, 20)
         {
             CBHHeight = 0.3f * 0.5f;
@@ -75,7 +75,7 @@ namespace Voxalia.ServerGame.EntitySystem
             ApplyDamage = DamageDelay;
         }
 
-        public float DamageAmt = 5;
+        public double DamageAmt = 5;
 
         public double DamageDelay = 0.5f;
 

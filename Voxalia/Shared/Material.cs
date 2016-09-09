@@ -106,22 +106,22 @@ namespace Voxalia.Shared
                             inf.Solidity = (MaterialSolidity)Enum.Parse(typeof(MaterialSolidity), opt[1].ToUpperInvariant());
                             break;
                         case "speedmod":
-                            inf.SpeedMod = float.Parse(opt[1]);
+                            inf.SpeedMod = double.Parse(opt[1]);
                             break;
                         case "frictionmod":
-                            inf.FrictionMod = float.Parse(opt[1]);
+                            inf.FrictionMod = double.Parse(opt[1]);
                             break;
                         case "lightdamage":
-                            inf.LightDamage = float.Parse(opt[1]);
+                            inf.LightDamage = double.Parse(opt[1]);
                             break;
                         case "lightemitrange":
-                            inf.LightEmitRange = float.Parse(opt[1]);
+                            inf.LightEmitRange = double.Parse(opt[1]);
                             break;
                         case "lightemit":
                             inf.LightEmit = Location.FromString(opt[1]);
                             break;
                         case "fogalpha":
-                            inf.FogAlpha = float.Parse(opt[1]);
+                            inf.FogAlpha = double.Parse(opt[1]);
                             break;
                         case "opaque":
                             inf.Opaque = opt[1].ToLowerFast() == "true";
@@ -142,10 +142,10 @@ namespace Voxalia.Shared
                             inf.CanRenderAgainstSelf = opt[1].ToLowerFast() == "true";
                             break;
                         case "hardness":
-                            inf.Hardness = float.Parse(opt[1]);
+                            inf.Hardness = double.Parse(opt[1]);
                             break;
                         case "breaktime":
-                            inf.BreakTime = opt[1].ToLowerFast() == "infinity" ? float.PositiveInfinity : float.Parse(opt[1]);
+                            inf.BreakTime = opt[1].ToLowerFast() == "infinity" ? double.PositiveInfinity : double.Parse(opt[1]);
                             break;
                         case "breaker":
                             inf.Breaker = (MaterialBreaker)Enum.Parse(typeof(MaterialBreaker), opt[1].ToUpperInvariant());
@@ -271,12 +271,12 @@ namespace Voxalia.Shared
             return mat.ToString();
         }
         
-        public static float GetSpeedMod(this Material mat)
+        public static double GetSpeedMod(this Material mat)
         {
             return ALL_MATS[(int)mat].SpeedMod;
         }
 
-        public static float GetFrictionMod(this Material mat)
+        public static double GetFrictionMod(this Material mat)
         {
             return ALL_MATS[(int)mat].FrictionMod;
         }
@@ -286,12 +286,12 @@ namespace Voxalia.Shared
             return ALL_MATS[(int)mat].FogColor;
         }
 
-        public static float GetFogAlpha(this Material mat)
+        public static double GetFogAlpha(this Material mat)
         {
             return ALL_MATS[(int)mat].FogAlpha;
         }
 
-        public static float GetHardness(this Material mat)
+        public static double GetHardness(this Material mat)
         {
             return ALL_MATS[(int)mat].Hardness;
         }
@@ -306,12 +306,12 @@ namespace Voxalia.Shared
             return ALL_MATS[(int)mat].Spreads;
         }
 
-        public static float GetBreakTime(this Material mat)
+        public static double GetBreakTime(this Material mat)
         {
             return ALL_MATS[(int)mat].BreakTime;
         }
 
-        public static float GetLightDamage(this Material mat)
+        public static double GetLightDamage(this Material mat)
         {
             return ALL_MATS[(int)mat].LightDamage;
         }
@@ -341,7 +341,7 @@ namespace Voxalia.Shared
             return ALL_MATS[(int)mat].LightEmit;
         }
 
-        public static float GetLightEmitRange(this Material mat)
+        public static double GetLightEmitRange(this Material mat)
         {
             return ALL_MATS[(int)mat].LightEmitRange;
         }
@@ -492,7 +492,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// The movement speed modifier for things (particularly characters) moving along the surface of this material.
         /// </summary>
-        public float SpeedMod = 1f;
+        public double SpeedMod = 1f;
         
         /// <summary>
         /// Whether this material is fully opaque.
@@ -512,7 +512,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// The friction modifier for objects on the surface of this material.
         /// </summary>
-        public float FrictionMod = 1f;
+        public double FrictionMod = 1f;
 
         /// <summary>
         /// What color fog to display when the camera is inside this material.
@@ -522,23 +522,23 @@ namespace Voxalia.Shared
         /// <summary>
         /// The opacity value of fog when the camera is inside this material.
         /// </summary>
-        public float FogAlpha = 1;
+        public double FogAlpha = 1;
 
         /// <summary>
         /// How hard the material is (this affects EG how badly it is damaged by explosions).
         /// </summary>
-        public float Hardness = 10;
+        public double Hardness = 10;
 
         /// <summary>
         /// How long it takes, in seconds, for this material to break by default. Different breakers affect how fast this breaks.
         /// The exact value is how fast a hand will break it.
         /// </summary>
-        public float BreakTime = 1f;
+        public double BreakTime = 1f;
 
         /// <summary>
         /// How strongly this material blocks out light.
         /// </summary>
-        public float LightDamage = 1f;
+        public double LightDamage = 1f;
 
         /// <summary>
         /// What sound type this material plays when struck.
@@ -588,7 +588,7 @@ namespace Voxalia.Shared
         /// <summary>
         /// How far this block should emit light.
         /// </summary>
-        public float LightEmitRange = 0;
+        public double LightEmitRange = 0;
 
         public Material BigSpreadsAs = Material.AIR;
     }

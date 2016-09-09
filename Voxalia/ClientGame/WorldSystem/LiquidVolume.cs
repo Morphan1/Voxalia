@@ -25,7 +25,7 @@ namespace Voxalia.ClientGame.WorldSystem
             TheRegion = tregion;
         }
 
-        public void Update(float dt)
+        public void Update(double dt)
         {
             ReadOnlyList<Entity> ents = TheRegion.PhysicsWorld.Entities; // TODO: Direct/raw read?
             TheRegion.PhysicsWorld.ParallelLooper.ForLoop(0, ents.Count, (i) =>
@@ -34,7 +34,7 @@ namespace Voxalia.ClientGame.WorldSystem
             });
         }
 
-        void ApplyLiquidForcesTo(Entity e, float dt)
+        void ApplyLiquidForcesTo(Entity e, double dt)
         {
             if (e.Mass <= 0)
             {
