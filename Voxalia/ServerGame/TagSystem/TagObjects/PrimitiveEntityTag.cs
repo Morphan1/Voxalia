@@ -40,7 +40,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "10" .velocity could return "(40, 10, 0)".
                 // -->
                 case "velocity":
-                    return new LocationTag(Internal.GetVelocity()).Handle(data.Shrink());
+                    return new LocationTag(Internal.GetVelocity(), null).Handle(data.Shrink());
                 // <--[tag]
                 // @Name PrimitiveEntityTag.scale
                 // @Group General Information
@@ -49,7 +49,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "5" .scale could return "(1, 1, 1)".
                 // -->
                 case "scale":
-                    return new LocationTag(Internal.Scale).Handle(data.Shrink());
+                    return new LocationTag(Internal.Scale, null).Handle(data.Shrink());
 
                 default:
                     return new EntityTag((Entity)Internal).Handle(data);

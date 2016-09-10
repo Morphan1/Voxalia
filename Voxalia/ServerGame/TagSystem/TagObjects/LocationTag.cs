@@ -5,6 +5,9 @@ using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using Voxalia.Shared;
+using Voxalia.ServerGame.OtherSystems;
+using Voxalia.ServerGame.WorldSystem;
+using Voxalia.ServerGame.ServerMainSystem;
 
 namespace Voxalia.ServerGame.TagSystem.TagObjects
 {
@@ -13,24 +16,42 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
         // <--[object]
         // @Type LocationTag
         // @SubType TextTag
-        // @Group Mathematics
-        // @Description Represents any Location.
+        // @Group Worlds
+        // @Description Represents any Location in the world.
         // -->
-        public Location Internal;
+        public GameLocation Internal;
 
-        public LocationTag(Location loc)
+        public LocationTag(Location coord, World w)
+        {
+            Internal = new GameLocation(coord, w);
+        }
+
+        public LocationTag(GameLocation loc)
         {
             Internal = loc;
         }
 
-        public static LocationTag For(string input)
+        public static LocationTag For(Server tserver, TagData dat, string input)
         {
-            Location loc = Location.FromString(input);
-            if (loc.IsNaN())
+            string[] spl = input.Split(',');
+            Location coord;
+            if (spl.Length < 3)
             {
-                return null;
+                dat.Error("Invalid LocationTag input!");
             }
-            return new LocationTag(loc);
+            coord.X = NumberTag.For(dat, spl[0]).Internal;
+            coord.Y = NumberTag.For(dat, spl[1]).Internal;
+            coord.Z = NumberTag.For(dat, spl[2]).Internal;
+            World w = null;
+            if (spl.Length >= 4)
+            {
+                w = tserver.GetWorld(spl[3]);
+                if (w == null)
+                {
+                    dat.Error("Invalid world for LocationTag input!");
+                }
+            }
+            return new LocationTag(coord, w);
         }
 
         public override TemplateObject Handle(TagData data)
@@ -49,7 +70,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "0,1,2" .x returns "0".
                 // -->
                 case "x":
-                    return new NumberTag(Internal.X).Handle(data.Shrink());
+                    return new NumberTag(Internal.Coordinates.X).Handle(data.Shrink());
                 // <--[tag]
                 // @Name LocationTag.y
                 // @Group General Information
@@ -58,7 +79,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "0,1,2" .y returns "1".
                 // -->
                 case "y":
-                    return new NumberTag(Internal.Y).Handle(data.Shrink());
+                    return new NumberTag(Internal.Coordinates.Y).Handle(data.Shrink());
                 // <--[tag]
                 // @Name LocationTag.z
                 // @Group General Information
@@ -67,7 +88,16 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "0,1,2" .z returns "2".
                 // -->
                 case "z":
-                    return new NumberTag(Internal.Z).Handle(data.Shrink());
+                    return new NumberTag(Internal.Coordinates.Z).Handle(data.Shrink());
+                // <--[tag]
+                // @Name LocationTag.world
+                // @Group General Information
+                // @ReturnType WorldTag
+                // @Returns the World of this location.
+                // @Example "0,1,2,default" .world returns "default".
+                // -->
+                case "world":
+                    return new WorldTag(Internal.World).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

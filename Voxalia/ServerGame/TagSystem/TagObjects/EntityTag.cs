@@ -40,7 +40,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "2" .location could return "(1, 1, 1)".
                 // -->
                 case "location":
-                    return new LocationTag(Internal.GetPosition()).Handle(data.Shrink());
+                    return new LocationTag(Internal.GetPosition(), Internal.TheRegion.TheWorld).Handle(data.Shrink());
                 // <--[tag]
                 // @Name EntityTag.eid
                 // @Group General Information

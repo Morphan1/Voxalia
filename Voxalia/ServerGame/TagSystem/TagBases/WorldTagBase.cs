@@ -31,13 +31,11 @@ namespace Voxalia.ServerGame.TagSystem.TagBases
 
         public override TemplateObject Handle(TagData data)
         {
-            string rname = data.GetModifier(0).ToLowerFast();
-            foreach (World w in TheServer.LoadedWorlds)
+            string rname = data.GetModifier(0);
+            World w = TheServer.GetWorld(rname);
+            if (w != null)
             {
-                if (w.Name.ToLowerFast() == rname)
-                {
-                    return new WorldTag(w).Handle(data.Shrink());
-                }
+                return new WorldTag(w);
             }
             data.Error("Invalid world '" + TagParser.Escape(rname) + "'!");
             return new NullTag();

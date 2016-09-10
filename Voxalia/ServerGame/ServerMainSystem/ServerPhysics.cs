@@ -103,6 +103,20 @@ namespace Voxalia.ServerGame.ServerMainSystem
             }
             return null;
         }
+
+        public World GetWorld(string name)
+        {
+            name = name.ToLowerFast();
+            // TODO: LoadedWorlds -> Dictionary!
+            for (int i = 0; i < LoadedWorlds.Count; i++)
+            {
+                if (LoadedWorlds[i].Name == name)
+                {
+                    return LoadedWorlds[i];
+                }
+            }
+            return null;
+        }
     }
 
     public class WorldLoadEventArgs : EventArgs

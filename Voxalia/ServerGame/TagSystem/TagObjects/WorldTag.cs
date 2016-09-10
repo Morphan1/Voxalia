@@ -25,6 +25,8 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             Internal = w;
         }
 
+        // TODO: For(...) { ... }
+
         public override TemplateObject Handle(TagData data)
         {
             if (data.Remaining == 0)

@@ -49,7 +49,7 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
                 // @Example "5" .scale could return "(1, 1, 1)".
                 // -->
                 case "scale":
-                    return new LocationTag(Internal.scale).Handle(data.Shrink());
+                    return new LocationTag(Internal.scale, null).Handle(data.Shrink());
 
                 default:
                     return new PhysicsEntityTag((PhysicsEntity)Internal).Handle(data);
