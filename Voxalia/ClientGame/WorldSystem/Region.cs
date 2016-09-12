@@ -383,7 +383,7 @@ namespace Voxalia.ClientGame.WorldSystem
             UpdateChunk(ch);
             if (x == 0 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
-                ch = GetChunk(ChunkLocFor(pos + new Location(-1, 0, 0)));
+                ch = GetChunk(ChunkLocFor(pos) + new Vector3i(-1, 0, 0));
                 if (ch != null)
                 {
                     UpdateChunk(ch);
@@ -391,7 +391,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             if (y == 0 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
-                ch = GetChunk(ChunkLocFor(pos + new Location(0, -1, 0)));
+                ch = GetChunk(ChunkLocFor(pos) + new Vector3i(0, -1, 0));
                 if (ch != null)
                 {
                     UpdateChunk(ch);
@@ -407,7 +407,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             if (x == ch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
-                ch = GetChunk(ChunkLocFor(pos + new Location(1, 0, 0)));
+                ch = GetChunk(ChunkLocFor(pos) + new Vector3i(1, 0, 0));
                 if (ch != null)
                 {
                     UpdateChunk(ch);
@@ -415,7 +415,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             if (y == ch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
-                ch = GetChunk(ChunkLocFor(pos + new Location(0, 1, 0)));
+                ch = GetChunk(ChunkLocFor(pos) + new Vector3i(0, 1, 0));
                 if (ch != null)
                 {
                     UpdateChunk(ch);
@@ -423,7 +423,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             if (z == ch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
-                ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, 1)));
+                ch = GetChunk(ChunkLocFor(pos) + new Vector3i(0, 0, 1));
                 if (ch != null)
                 {
                     UpdateChunk(ch);

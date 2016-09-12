@@ -29,10 +29,10 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override byte[] GetNetData()
         {
-            byte[] res = new byte[4 + 12 + 12];
+            byte[] res = new byte[4 + 24 + 24];
             Utilities.FloatToBytes((float)Size).CopyTo(res, 0);
-            GetPosition().ToBytes().CopyTo(res, 4);
-            GetVelocity().ToBytes().CopyTo(res, 4 + 12);
+            GetPosition().ToDoubleBytes().CopyTo(res, 4);
+            GetVelocity().ToDoubleBytes().CopyTo(res, 4 + 24);
             return res;
         }
 

@@ -122,20 +122,7 @@ namespace Voxalia.Shared
             }
             return psign;
         }
-
-        /// <summary>
-        /// Converts the plane to a 36-byte array for transmission.
-        /// </summary>
-        /// <returns>A byte array.</returns>
-        public byte[] ToBytes()
-        {
-            byte[] toret = new byte[36];
-            vec1.ToBytes().CopyTo(toret, 0);
-            vec2.ToBytes().CopyTo(toret, 12);
-            vec3.ToBytes().CopyTo(toret, 24);
-            return toret;
-        }
-
+        
         public override string ToString()
         {
             return "[" + vec1.ToString() + "/" + vec2.ToString() + "/" + vec3.ToString() + "]";
@@ -154,16 +141,6 @@ namespace Voxalia.Shared
                 return null;
             }
             return new Plane(Location.FromString(data[0]), Location.FromString(data[1]), Location.FromString(data[2]));
-        }
-
-        /// <summary>
-        /// Converts a byte array to a plane.
-        /// </summary>
-        /// <param name="input">The byte array.</param>
-        /// <returns>A plane.</returns>
-        public static Plane FromBytes(byte[] input)
-        {
-            return new Plane(Location.FromBytes(input, 0), Location.FromBytes(input, 12), Location.FromBytes(input, 24));
         }
     }
 }

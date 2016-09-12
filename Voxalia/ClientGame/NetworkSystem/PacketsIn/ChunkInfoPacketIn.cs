@@ -10,19 +10,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length == 12)
-            {
-                int x = Utilities.BytesToInt(Utilities.BytesPartial(data, 0, 4));
-                int y = Utilities.BytesToInt(Utilities.BytesPartial(data, 4, 4));
-                int z = Utilities.BytesToInt(Utilities.BytesPartial(data, 8, 4));
-                Vector3i wpos = new Vector3i(x, y, z);
-                Chunk tchk;
-                if (TheClient.TheRegion.LoadedChunks.TryGetValue(wpos, out tchk))
-                {
-                    tchk.Destroy();
-                }
-                return true;
-            }
             TheClient.Schedule.StartASyncTask(() => ParseData(data));
             return true;
         }
@@ -95,7 +82,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     chk.BlocksInternal[i].BlockPaint = 0;
                 }
             }
-            //chk.CalculateLighting();
             chk.LOADING = false;
             chk.PRED = true;
             chk.OwningRegion.Regen(chk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE, chk);

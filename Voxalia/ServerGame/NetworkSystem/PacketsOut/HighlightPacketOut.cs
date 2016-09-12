@@ -29,8 +29,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             {
                 if (!sels[i].Min.IsNaN())
                 {
-                    sels[i].Min.ToBytes().CopyTo(Data, 4 + t * 12 * 2);
-                    sels[i].Max.ToBytes().CopyTo(Data, 4 + t * 12 * 2 + 12);
+                    sels[i].Min.ToDoubleBytes().CopyTo(Data, 4 + t * 24 * 2);
+                    sels[i].Max.ToDoubleBytes().CopyTo(Data, 4 + t * 24 * 2 + 24);
                     t++;
                 }
             }

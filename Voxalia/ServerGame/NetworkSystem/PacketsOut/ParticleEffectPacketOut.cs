@@ -12,21 +12,21 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         {
             UsageType = NetUsageType.EFFECTS;
             ID = ServerToClientPacket.PARTICLE_EFFECT;
-            Data = new byte[1 + 4 + 12];
+            Data = new byte[1 + 4 + 24];
             Data[0] = (byte)type;
             Utilities.FloatToBytes((float)dat1).CopyTo(Data, 1);
-            pos.ToBytes().CopyTo(Data, 1 + 4);
+            pos.ToDoubleBytes().CopyTo(Data, 1 + 4);
         }
 
         public ParticleEffectPacketOut(ParticleEffectNetType type, double dat1, Location pos, Location dat2)
         {
             UsageType = NetUsageType.EFFECTS;
             ID = ServerToClientPacket.PARTICLE_EFFECT;
-            Data = new byte[1 + 4 + 12 + 12];
+            Data = new byte[1 + 4 + 12 + 24];
             Data[0] = (byte)type;
             Utilities.FloatToBytes((float)dat1).CopyTo(Data, 1);
-            pos.ToBytes().CopyTo(Data, 1 + 4);
-            dat2.ToBytes().CopyTo(Data, 1 + 4 + 12);
+            pos.ToDoubleBytes().CopyTo(Data, 1 + 4);
+            dat2.ToDoubleBytes().CopyTo(Data, 1 + 4 + 12);
         }
     }
 }

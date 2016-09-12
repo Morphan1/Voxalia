@@ -14,11 +14,11 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         {
             UsageType = NetUsageType.EFFECTS;
             ID = ServerToClientPacket.PLAY_SOUND;
-            Data = new byte[4 + 4 + 4 + 12];
+            Data = new byte[4 + 4 + 4 + 24];
             Utilities.IntToBytes(tserver.Networking.Strings.IndexForString(sound)).CopyTo(Data, 0);
             Utilities.FloatToBytes((float)vol).CopyTo(Data, 4);
             Utilities.FloatToBytes((float)pitch).CopyTo(Data, 4 + 4);
-            pos.ToBytes().CopyTo(Data, 4 + 4 + 4);
+            pos.ToDoubleBytes().CopyTo(Data, 4 + 4 + 4);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             byte[] dat = new byte[4 + 12];
             Utilities.IntToBytes((ushort)Original.Datum).CopyTo(dat, 0);
-            GetPosition().ToBytes().CopyTo(dat, 4);
+            GetPosition().ToDoubleBytes().CopyTo(dat, 4);
             return dat;
         }
 

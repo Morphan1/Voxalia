@@ -36,15 +36,17 @@ namespace Voxalia.ServerGame.EntitySystem
         {
         }
 
+        public const int PrimitiveNetDataLength = 24 + 24 + 16 + 24 + 24 + 4;
+
         public byte[] GetPrimitiveNetData()
         {
-            byte[] Data = new byte[12 + 12 + 16 + 12 + 12 + 4];
-            GetPosition().ToBytes().CopyTo(Data, 0);
-            GetVelocity().ToBytes().CopyTo(Data, 12);
-            Utilities.QuaternionToBytes(Angles).CopyTo(Data, 12 + 12);
-            Scale.ToBytes().CopyTo(Data, 12 + 12 + 16);
-            Gravity.ToBytes().CopyTo(Data, 12 + 12 + 16 + 12);
-            Utilities.IntToBytes(TheServer.Networking.Strings.IndexForString(GetModel())).CopyTo(Data, 12 + 12 + 16 + 12 + 12);
+            byte[] Data = new byte[PrimitiveNetDataLength];
+            GetPosition().ToDoubleBytes().CopyTo(Data, 0);
+            GetVelocity().ToDoubleBytes().CopyTo(Data, 24);
+            Utilities.QuaternionToBytes(Angles).CopyTo(Data, 24 + 24);
+            Scale.ToDoubleBytes().CopyTo(Data, 24 + 24 + 16);
+            Gravity.ToDoubleBytes().CopyTo(Data, 24 + 24 + 16 + 24);
+            Utilities.IntToBytes(TheServer.Networking.Strings.IndexForString(GetModel())).CopyTo(Data, 24 + 24 + 16 + 24 + 24);
             return Data;
         }
 
@@ -196,14 +198,14 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <returns>The binary data.</returns>
         public byte[] GetPrimitiveBytes()
         {
-            byte[] bytes = new byte[12 + 12 + 4 + 4 + 4 + 4 + 12];
-            GetPosition().ToBytes().CopyTo(bytes, 0);
-            GetVelocity().ToBytes().CopyTo(bytes, 12);
-            Utilities.FloatToBytes((float)Angles.X).CopyTo(bytes, 12 + 12);
-            Utilities.FloatToBytes((float)Angles.Y).CopyTo(bytes, 12 + 12 + 4);
-            Utilities.FloatToBytes((float)Angles.Z).CopyTo(bytes, 12 + 12 + 4 + 4);
-            Utilities.FloatToBytes((float)Angles.W).CopyTo(bytes, 12 + 12 + 4 + 4 + 4);
-            Gravity.ToBytes().CopyTo(bytes, 12 + 12 + 4 + 4 + 4 + 4);
+            byte[] bytes = new byte[24 + 24 + 4 + 4 + 4 + 4 + 24];
+            GetPosition().ToDoubleBytes().CopyTo(bytes, 0);
+            GetVelocity().ToDoubleBytes().CopyTo(bytes, 24);
+            Utilities.FloatToBytes((float)Angles.X).CopyTo(bytes, 24 + 24);
+            Utilities.FloatToBytes((float)Angles.Y).CopyTo(bytes, 24 + 24 + 4);
+            Utilities.FloatToBytes((float)Angles.Z).CopyTo(bytes, 24 + 24 + 4 + 4);
+            Utilities.FloatToBytes((float)Angles.W).CopyTo(bytes, 24 + 24 + 4 + 4 + 4);
+            Gravity.ToDoubleBytes().CopyTo(bytes, 24 + 24 + 4 + 4 + 4 + 4);
             return bytes;
         }
     }

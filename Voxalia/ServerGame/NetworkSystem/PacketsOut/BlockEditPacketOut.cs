@@ -14,7 +14,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             dw.WriteInt(pos.Length);
             for (int i = 0; i < pos.Length; i++)
             {
-                dw.WriteBytes(pos[i].ToBytes());
+                dw.WriteBytes(pos[i].ToDoubleBytes());
             }
             for (int i = 0; i < mat.Length; i++)
             {

@@ -32,7 +32,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             byte[] phys = GetPhysicsNetData();
             int start = phys.Length + 4 + 4 + 4;
-            byte[] res = new byte[start + Blocks.Length * 4 + 1 + 4 + 12];
+            byte[] res = new byte[start + Blocks.Length * 4 + 1 + 4 + 24 + 24];
             phys.CopyTo(res, 0);
             Utilities.IntToBytes(XWidth).CopyTo(res, phys.Length);
             Utilities.IntToBytes(YWidth).CopyTo(res, phys.Length + 4);
@@ -45,8 +45,8 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             res[start + Blocks.Length * 4] = (byte)TraceMode;
             Utilities.IntToBytes(Color.ToArgb()).CopyTo(res, start + Blocks.Length * 4 + 1);
-            shapeOffs.ToBytes().CopyTo(res, start + Blocks.Length * 4 + 1 + 4);
-            scale.ToBytes().CopyTo(res, start + Blocks.Length * 4 + 1 + 4 + 12);
+            shapeOffs.ToDoubleBytes().CopyTo(res, start + Blocks.Length * 4 + 1 + 4);
+            scale.ToDoubleBytes().CopyTo(res, start + Blocks.Length * 4 + 1 + 4 + 24);
             return res;
         }
 

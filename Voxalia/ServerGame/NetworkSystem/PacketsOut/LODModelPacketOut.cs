@@ -15,17 +15,17 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         {
             UsageType = NetUsageType.ENTITIES;
             ID = ServerToClientPacket.LOD_MODEL;
-            Data = new byte[12 + 4 + 16 + 8 + 12];
-            me.GetPosition().ToBytes().CopyTo(Data, 0);
+            Data = new byte[24 + 4 + 16 + 8 + 24];
+            me.GetPosition().ToDoubleBytes().CopyTo(Data, 0);
             int ind = me.TheServer.Networking.Strings.IndexForString(me.model);
-            Utilities.IntToBytes(ind).CopyTo(Data, 12);
+            Utilities.IntToBytes(ind).CopyTo(Data, 24);
             Quaternion quat = me.GetOrientation();
-            Utilities.FloatToBytes((float)quat.X).CopyTo(Data, 12 + 4);
-            Utilities.FloatToBytes((float)quat.Y).CopyTo(Data, 12 + 4 + 4);
-            Utilities.FloatToBytes((float)quat.Z).CopyTo(Data, 12 + 4 + 8);
-            Utilities.FloatToBytes((float)quat.W).CopyTo(Data, 12 + 4 + 12);
+            Utilities.FloatToBytes((float)quat.X).CopyTo(Data, 24 + 4);
+            Utilities.FloatToBytes((float)quat.Y).CopyTo(Data, 24 + 4 + 4);
+            Utilities.FloatToBytes((float)quat.Z).CopyTo(Data, 24 + 4 + 4 + 4);
+            Utilities.FloatToBytes((float)quat.W).CopyTo(Data, 24 + 4 + 4 + 4 + 4);
             Utilities.LongToBytes(me.EID).CopyTo(Data, 12 + 4 + 16);
-            me.scale.ToBytes().CopyTo(Data, 12 + 4 + 16 + 8);
+            me.scale.ToDoubleBytes().CopyTo(Data, 12 + 4 + 16 + 8);
         }
     }
 }

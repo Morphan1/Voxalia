@@ -58,12 +58,12 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public byte[] GetPhysicsNetData()
         {
-            byte[] Data = new byte[4 + 12 + 12 + 16 + 12 + 4 + 4 + 1 + 1];
+            byte[] Data = new byte[4 + 24 + 24 + 16 + 24 + 4 + 4 + 1 + 1];
             Utilities.FloatToBytes((float)GetMass()).CopyTo(Data, 0);
-            GetPosition().ToBytes().CopyTo(Data, 4);
-            GetVelocity().ToBytes().CopyTo(Data, 4 + 12);
+            GetPosition().ToDoubleBytes().CopyTo(Data, 4);
+            GetVelocity().ToDoubleBytes().CopyTo(Data, 4 + 12);
             Utilities.QuaternionToBytes(GetOrientation()).CopyTo(Data, 4 + 12 + 12);
-            GetAngularVelocity().ToBytes().CopyTo(Data, 4 + 12 + 12 + 16);
+            GetAngularVelocity().ToDoubleBytes().CopyTo(Data, 4 + 12 + 12 + 16);
             Utilities.FloatToBytes((float)GetFriction()).CopyTo(Data, 4 + 12 + 12 + 16 + 12);
             Utilities.FloatToBytes((float)GetBounciness()).CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 4);
             // TODO: Proper flags thingy here?
@@ -645,16 +645,16 @@ namespace Voxalia.ServerGame.EntitySystem
         
         public void AddPhysicsData(BsonDocument doc)
         {
-            doc["ph_pos"] = GetPosition().ToBytes();
-            doc["ph_vel"] = GetVelocity().ToBytes();
-            doc["ph_avel"] = GetAngularVelocity().ToBytes();
+            doc["ph_pos"] = GetPosition().ToDoubleBytes();
+            doc["ph_vel"] = GetVelocity().ToDoubleBytes();
+            doc["ph_avel"] = GetAngularVelocity().ToDoubleBytes();
             // TODO: Quat-to-bytes system!
             Quaternion quat = GetOrientation();
             doc["ph_ang_x"] = (double)quat.X;
             doc["ph_ang_y"] = (double)quat.Y;
             doc["ph_ang_z"] = (double)quat.Z;
             doc["ph_ang_w"] = (double)quat.W;
-            doc["ph_grav"] = GetGravity().ToBytes();
+            doc["ph_grav"] = GetGravity().ToDoubleBytes();
             doc["ph_bounce"] = (double)GetBounciness();
             doc["ph_frict"] = (double)GetFriction();
             doc["ph_mass"] = (double)GetMass();

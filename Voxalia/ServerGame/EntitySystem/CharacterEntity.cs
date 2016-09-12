@@ -67,7 +67,7 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             DataStream ds = new DataStream();
             DataWriter dr = new DataWriter(ds);
-            dr.WriteBytes(GetPosition().ToBytes());
+            dr.WriteBytes(GetPosition().ToDoubleBytes());
             Quaternion quat = GetOrientation();
             dr.WriteFloat((float)quat.X);
             dr.WriteFloat((float)quat.Y);

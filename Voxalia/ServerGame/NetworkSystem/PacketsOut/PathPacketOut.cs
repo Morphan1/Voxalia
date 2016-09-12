@@ -12,11 +12,11 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         {
             UsageType = NetUsageType.EFFECTS;
             ID = ServerToClientPacket.PATH;
-            Data = new byte[locs.Count * 12 + 4];
+            Data = new byte[locs.Count * 24 + 4];
             Utilities.IntToBytes(locs.Count).CopyTo(Data, 0);
             for (int i = 0; i < locs.Count; i++)
             {
-                locs[i].ToBytes().CopyTo(Data, 4 + 12 * i);
+                locs[i].ToDoubleBytes().CopyTo(Data, 4 + 24 * i);
             }
         }
     }

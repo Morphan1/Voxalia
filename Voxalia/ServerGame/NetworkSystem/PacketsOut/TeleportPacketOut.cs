@@ -8,7 +8,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         {
             UsageType = NetUsageType.PLAYERS;
             ID = ServerToClientPacket.TELEPORT;
-            Data = pos.ToBytes();
+            Data = pos.ToDoubleBytes();
         }
     }
 }

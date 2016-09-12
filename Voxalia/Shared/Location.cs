@@ -334,18 +334,18 @@ namespace Voxalia.Shared
         {
             return this - (2 * this.Dot(normal) * normal);
         }
-
+        
         /// <summary>
         /// Converts the Location to a simple byte[] representation.
-        /// Contains 12 bytes.
-        /// Inverts .FromBytes()
+        /// Contains 24 bytes.
+        /// Inverts .FromDoubleBytes()
         /// </summary>
-        public byte[] ToBytes()
+        public byte[] ToDoubleBytes()
         {
-            byte[] toret = new byte[12];
-            Utilities.FloatToBytes((float)X).CopyTo(toret, 0);
-            Utilities.FloatToBytes((float)Y).CopyTo(toret, 4);
-            Utilities.FloatToBytes((float)Z).CopyTo(toret, 8);
+            byte[] toret = new byte[24];
+            Utilities.DoubleToBytes(X).CopyTo(toret, 0);
+            Utilities.DoubleToBytes(Y).CopyTo(toret, 8);
+            Utilities.DoubleToBytes(Z).CopyTo(toret, 8 + 8);
             return toret;
         }
 
@@ -463,31 +463,31 @@ namespace Voxalia.Shared
 
         /// <summary>
         /// Reads the byte array to a Location object.
-        /// Expects 12 bytes.
-        /// Inverts .ToBytes()
+        /// Expects 24 bytes.
+        /// Inverts .ToDoubleBytes()
         /// </summary>
         /// <param name="bytes">The bytes to read.</param>
         /// <param name="index">The index to start at.</param>
         /// <returns>the location object.</returns>
-        public static Location FromBytes(byte[] bytes, int index)
+        public static Location FromDoubleBytes(byte[] bytes, int index)
         {
-            if (bytes.Length - index < 12)
+            if (bytes.Length - index < 24)
             {
-                return new Location(0);
+                return new Location(0); // TODO: Exception?
             }
-            double X = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index, 4));
-            double Y = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index + 4, 4));
-            double Z = Utilities.BytesToFloat(Utilities.BytesPartial(bytes, index + 4 + 4, 4));
+            double X = Utilities.BytesToDouble(Utilities.BytesPartial(bytes, index, 8));
+            double Y = Utilities.BytesToDouble(Utilities.BytesPartial(bytes, index + 8, 8));
+            double Z = Utilities.BytesToDouble(Utilities.BytesPartial(bytes, index + 8 + 8, 8));
             return new Location(X, Y, Z);
         }
-        
+
         /// <summary>
         /// Converts the Location to a BEPUPhysics Vector3.
         /// </summary>
         /// <returns>.</returns>
         public BEPUutilities.Vector3 ToBVector()
         {
-            return new BEPUutilities.Vector3((double)X, (double)Y, (double)Z);
+            return new BEPUutilities.Vector3(X, Y, Z);
         }
         
         /// <summary>
