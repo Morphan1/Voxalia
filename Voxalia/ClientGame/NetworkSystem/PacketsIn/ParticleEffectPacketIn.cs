@@ -10,19 +10,19 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 1 + 4 + 12
-                && data.Length != 1 + 4 + 12 + 12)
+            if (data.Length != 1 + 4 + 24
+                && data.Length != 1 + 4 + 24 + 24)
             {
                 return false;
             }
             ParticleEffectNetType type = (ParticleEffectNetType)data[0];
             float fdata1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1, 4));
             Location ldata2 = Location.NaN;
-            if (data.Length == 1 + 4 + 12 + 12)
+            if (data.Length == 1 + 4 + 24 + 24)
             {
-                ldata2 = Location.FromBytes(data, 1 + 4 + 12);
+                ldata2 = Location.FromDoubleBytes(data, 1 + 4 + 24);
             }
-            Location pos = Location.FromBytes(data, 1 + 4);
+            Location pos = Location.FromDoubleBytes(data, 1 + 4);
             switch (type)
             {
                 case ParticleEffectNetType.EXPLOSION:

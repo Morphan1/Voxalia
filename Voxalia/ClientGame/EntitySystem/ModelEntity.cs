@@ -382,7 +382,7 @@ namespace Voxalia.ClientGame.EntitySystem
             me.ApplyPhysicsNetworkData(data);
             byte moder = data[PhysicsEntity.PhysicsNetworkDataLength + 4];
             me.mode = (ModelCollisionMode)moder;
-            me.scale = Location.FromBytes(data, PhysicsEntity.PhysicsNetworkDataLength + 4 + 1);
+            me.scale = Location.FromDoubleBytes(data, PhysicsEntity.PhysicsNetworkDataLength + 4 + 1);
             return me;
         }
     }

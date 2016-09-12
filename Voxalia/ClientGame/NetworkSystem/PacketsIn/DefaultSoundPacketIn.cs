@@ -11,13 +11,13 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 12 + 1 + 1)
+            if (data.Length != 24 + 1 + 1)
             {
                 return false;
             }
-            Location loc = Location.FromBytes(data, 0);
-            DefaultSound soundtype = (DefaultSound)data[12];
-            byte subdat = data[12 + 1];
+            Location loc = Location.FromDoubleBytes(data, 0);
+            DefaultSound soundtype = (DefaultSound)data[24];
+            byte subdat = data[24 + 1];
             switch (soundtype)
             {
                 case DefaultSound.BREAK:

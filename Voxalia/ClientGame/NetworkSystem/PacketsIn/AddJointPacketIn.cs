@@ -8,7 +8,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            int len = 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 4;
+            int len = 1 + 8 + 8 + 8 + 24 + 4 + 4 + 4 + 4 + 24 + 4 + 4 + 4 + 4;
             if (data.Length < len)
             {
                 SysConsole.Output(OutputType.WARNING, "Joint packet: Bad initial length!");
@@ -35,19 +35,19 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 SysConsole.Output(OutputType.WARNING, "Joint Packet: Invalid EID-2 " + EID2);
                 return false;
             }
-            Location pos1 = Location.FromBytes(data, 1 + 8 + 8 + 8);
-            float qx1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12, 4));
-            float qy1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 4, 4));
-            float qz1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 4 + 4, 4));
-            float qw1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4, 4));
+            Location pos1 = Location.FromDoubleBytes(data, 1 + 8 + 8 + 8);
+            float qx1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 24, 4));
+            float qy1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 24 + 4, 4));
+            float qz1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 24 + 4 + 4, 4));
+            float qw1 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 24 + 4 + 4 + 4, 4));
             BEPUutilities.Quaternion quat1 = new BEPUutilities.Quaternion(qx1, qy1, qz1, qw1);
             pe1.SetPosition(pos1);
             pe1.SetOrientation(quat1);
-            Location pos2 = Location.FromBytes(data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 4);
-            float qx2 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 12 + 4 + 4 + 4 + 4, 4));
-            float qy2 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 4 + 12 + 4 + 4 + 4 + 4, 4));
-            float qz2 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 12 + 4 + 4 + 4 + 4, 4));
-            float qw2 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 12 + 4 + 4 + 4 + 12 + 4 + 4 + 4 + 4, 4));
+            Location pos2 = Location.FromDoubleBytes(data, 1 + 8 + 8 + 8 + 24 + 4 + 4 + 4 + 4);
+            float qx2 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 24 + 24 + 4 + 4 + 4 + 4, 4));
+            float qy2 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 24 + 4 + 24 + 4 + 4 + 4 + 4, 4));
+            float qz2 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 24 + 4 + 4 + 24 + 4 + 4 + 4 + 4, 4));
+            float qw2 = Utilities.BytesToFloat(Utilities.BytesPartial(data, 1 + 8 + 8 + 8 + 24 + 4 + 4 + 4 + 24 + 4 + 4 + 4 + 4, 4));
             BEPUutilities.Quaternion quat2 = new BEPUutilities.Quaternion(qx2, qy2, qz2, qw2);
             pe1.SetPosition(pos1);
             pe1.SetOrientation(quat1);
@@ -55,12 +55,12 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             pe2.SetOrientation(quat2);
             if (type == 0)
             {
-                if (data.Length != len + 12)
+                if (data.Length != len + 24)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
-                Location pos = Location.FromBytes(data, len);
+                Location pos = Location.FromDoubleBytes(data, len);
                 JointBallSocket jbs = new JointBallSocket((PhysicsEntity)pe1, (PhysicsEntity)pe2, pos);
                 jbs.JID = JID;
                 TheClient.TheRegion.AddJoint(jbs);
@@ -68,12 +68,12 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 1)
             {
-                if (data.Length != len + 12)
+                if (data.Length != len + 24)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
-                Location dir = Location.FromBytes(data, len);
+                Location dir = Location.FromDoubleBytes(data, len);
                 JointSlider js = new JointSlider((PhysicsEntity)pe1, (PhysicsEntity)pe2, dir);
                 js.JID = JID;
                 TheClient.TheRegion.AddJoint(js);
@@ -81,15 +81,15 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 2)
             {
-                if (data.Length != len + 4 + 4 + 12 + 12)
+                if (data.Length != len + 4 + 4 + 24 + 24)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
                 float min = Utilities.BytesToFloat(Utilities.BytesPartial(data, len, 4));
                 float max = Utilities.BytesToFloat(Utilities.BytesPartial(data, len + 4, 4));
-                Location ent1pos = Location.FromBytes(data, len + 4 + 4);
-                Location ent2pos = Location.FromBytes(data, len + 4 + 4 + 12);
+                Location ent1pos = Location.FromDoubleBytes(data, len + 4 + 4);
+                Location ent2pos = Location.FromDoubleBytes(data, len + 4 + 4 + 24);
                 JointDistance jd = new JointDistance((PhysicsEntity)pe1, (PhysicsEntity)pe2, min, max, ent1pos, ent2pos);
                 jd.JID = JID;
                 TheClient.TheRegion.AddJoint(jd);
@@ -97,13 +97,13 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 3)
             {
-                if (data.Length != len + 12 + 1)
+                if (data.Length != len + 24 + 1)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
-                Location axis = Location.FromBytes(data, len);
-                bool mode = data[len + 12] == 1;
+                Location axis = Location.FromDoubleBytes(data, len);
+                bool mode = data[len + 24] == 1;
                 JointPullPush jpp = new JointPullPush((PhysicsEntity)pe1, (PhysicsEntity)pe2, axis, mode);
                 jpp.JID = JID;
                 TheClient.TheRegion.AddJoint(jpp);
@@ -123,12 +123,12 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 5)
             {
-                if (data.Length != len + 12)
+                if (data.Length != len + 24)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
-                Location dir = Location.FromBytes(data, len);
+                Location dir = Location.FromDoubleBytes(data, len);
                 JointSpinner js = new JointSpinner((PhysicsEntity)pe1, (PhysicsEntity)pe2, dir);
                 js.JID = JID;
                 TheClient.TheRegion.AddJoint(js);
@@ -136,13 +136,13 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 6)
             {
-                if (data.Length != len + 12 + 12)
+                if (data.Length != len + 24 + 24)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
-                Location a1 = Location.FromBytes(data, len);
-                Location a2 = Location.FromBytes(data, len + 12);
+                Location a1 = Location.FromDoubleBytes(data, len);
+                Location a2 = Location.FromDoubleBytes(data, len + 12);
                 JointTwist jt = new JointTwist((PhysicsEntity)pe1, (PhysicsEntity)pe2, a1, a2);
                 jt.JID = JID;
                 TheClient.TheRegion.AddJoint(jt);
@@ -162,13 +162,13 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 8)
             {
-                if (data.Length != len + 12 + 1)
+                if (data.Length != len + 24 + 1)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
-                Location dir = Location.FromBytes(data, len);
-                bool issteering = data[len + 12] == 1;
+                Location dir = Location.FromDoubleBytes(data, len);
+                bool issteering = data[len + 24] == 1;
                 JointVehicleMotor jm = new JointVehicleMotor((PhysicsEntity)pe1, (PhysicsEntity)pe2, dir, issteering);
                 jm.JID = JID;
                 TheClient.TheRegion.AddJoint(jm);
@@ -176,16 +176,16 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 9)
             {
-                if (data.Length != len + 12 + 12 + 12 + 4 + 4)
+                if (data.Length != len + 24 + 24 + 24 + 4 + 4)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
-                Location cpos1 = Location.FromBytes(data, len);
-                Location cpos2 = Location.FromBytes(data, len + 12);
-                Location axis = Location.FromBytes(data, len + 12 + 12);
-                float min = Utilities.BytesToFloat(Utilities.BytesPartial(data, len + 12 + 12 + 12, 4));
-                float max = Utilities.BytesToFloat(Utilities.BytesPartial(data, len + 12 + 12 + 12 + 4, 4));
+                Location cpos1 = Location.FromDoubleBytes(data, len);
+                Location cpos2 = Location.FromDoubleBytes(data, len + 24);
+                Location axis = Location.FromDoubleBytes(data, len + 24 + 24);
+                float min = Utilities.BytesToFloat(Utilities.BytesPartial(data, len + 24 + 24 + 24, 4));
+                float max = Utilities.BytesToFloat(Utilities.BytesPartial(data, len + 24 + 24 + 24 + 4, 4));
                 JointLAxisLimit jlal = new JointLAxisLimit((PhysicsEntity)pe1, (PhysicsEntity)pe2, min, max, cpos1, cpos2, axis);
                 jlal.JID = JID;
                 TheClient.TheRegion.AddJoint(jlal);
@@ -193,13 +193,13 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             }
             else if (type == 10)
             {
-                if (data.Length != len + 12 + 12)
+                if (data.Length != len + 24 + 24)
                 {
                     SysConsole.Output(OutputType.WARNING, "Joint packet: Bad length!");
                     return false;
                 }
-                Location hinge = Location.FromBytes(data, len);
-                Location twist = Location.FromBytes(data, len + 12);
+                Location hinge = Location.FromDoubleBytes(data, len);
+                Location twist = Location.FromDoubleBytes(data, len + 24);
                 JointSwivelHinge jlal = new JointSwivelHinge((PhysicsEntity)pe1, (PhysicsEntity)pe2, hinge, twist);
                 jlal.JID = JID;
                 TheClient.TheRegion.AddJoint(jlal);

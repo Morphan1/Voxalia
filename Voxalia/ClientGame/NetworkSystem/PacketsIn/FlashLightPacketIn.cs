@@ -23,14 +23,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
 
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 8 + 1 + 4 + 12)
+            if (data.Length != 8 + 1 + 4 + 24)
             {
                 return false;
             }
             long EID = Utilities.BytesToLong(Utilities.BytesPartial(data, 0, 8));
             bool enabled = (data[8] & 1) == 1;
             float distance = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 1, 4));
-            Location color = Location.FromBytes(data, 8 + 1 + 4);
+            Location color = Location.FromDoubleBytes(data, 8 + 1 + 4);
             Entity ent = TheClient.TheRegion.GetEntity(EID);
             if (ent == null || !(ent is CharacterEntity))
             {

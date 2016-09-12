@@ -8,17 +8,17 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 12 + 12 + 16 + 12 + 1 + 8)
+            if (data.Length != 24 + 24 + 16 + 24 + 1 + 8)
             {
                 SysConsole.Output(OutputType.WARNING, "Invalid physentupdtpacket: invalid length!");
                 return false;
             }
-            Location pos = Location.FromBytes(data, 0);
-            Location vel = Location.FromBytes(data, 12);
-            BEPUutilities.Quaternion ang = Utilities.BytesToQuaternion(data, 12 + 12);
-            Location angvel = Location.FromBytes(data, 12 + 12 + 16);
-            bool active = (data[12 + 12 + 16 + 12] & 1) == 1;
-            long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 12 + 12 + 16 + 12 + 1, 8));
+            Location pos = Location.FromDoubleBytes(data, 0);
+            Location vel = Location.FromDoubleBytes(data, 24);
+            BEPUutilities.Quaternion ang = Utilities.BytesToQuaternion(data, 24 + 24);
+            Location angvel = Location.FromDoubleBytes(data, 24 + 24 + 16);
+            bool active = (data[24 + 24 + 16 + 24] & 1) == 1;
+            long eID = Utilities.BytesToLong(Utilities.BytesPartial(data, 24 + 24 + 16 + 24 + 1, 8));
             for (int i = 0; i < TheClient.TheRegion.Entities.Count; i++)
             {
                 if (TheClient.TheRegion.Entities[i] is PhysicsEntity)

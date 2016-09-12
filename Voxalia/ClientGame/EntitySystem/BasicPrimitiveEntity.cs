@@ -87,14 +87,14 @@ namespace Voxalia.ClientGame.EntitySystem
     {
         public override Entity Create(Region tregion, byte[] e)
         {
-            if (e.Length < 4 + 12 + 12)
+            if (e.Length < 4 + 24 + 24)
             {
                 return null;
             }
             BasicPrimitiveEntity bpe = new BasicPrimitiveEntity(tregion, false);
             bpe.Scale = new Location(Utilities.BytesToFloat(Utilities.BytesPartial(e, 0, 4)));
-            bpe.SetPosition(Location.FromBytes(e, 4));
-            bpe.SetVelocity(Location.FromBytes(e, 4 + 12));
+            bpe.SetPosition(Location.FromDoubleBytes(e, 4));
+            bpe.SetVelocity(Location.FromDoubleBytes(e, 4 + 24));
             return bpe;
         }
     }
@@ -103,17 +103,17 @@ namespace Voxalia.ClientGame.EntitySystem
     {
         public override Entity Create(Region tregion, byte[] e)
         {
-            if (e.Length < 4 + 12 + 12)
+            if (e.Length < 4 + 24 + 24 + 16 + 24 + 4)
             {
                 return null;
             }
             BasicPrimitiveEntity bpe = new BasicPrimitiveEntity(tregion, false);
-            bpe.Position = Location.FromBytes(e, 0);
-            bpe.Velocity = Location.FromBytes(e, 12);
-            bpe.Angles = Utilities.BytesToQuaternion(e, 12 + 12);
-            bpe.Scale = Location.FromBytes(e, 12 + 12 + 16);
-            bpe.Gravity = Location.FromBytes(e, 12 + 12 + 16 + 12);
-            bpe.model = tregion.TheClient.Models.GetModel(tregion.TheClient.Network.Strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(e, 0, 12 + 12 + 16 + 12 + 12))));
+            bpe.Position = Location.FromDoubleBytes(e, 0);
+            bpe.Velocity = Location.FromDoubleBytes(e, 24);
+            bpe.Angles = Utilities.BytesToQuaternion(e, 24 + 24);
+            bpe.Scale = Location.FromDoubleBytes(e, 24 + 24 + 16);
+            bpe.Gravity = Location.FromDoubleBytes(e, 24 + 24 + 16 + 24);
+            bpe.model = tregion.TheClient.Models.GetModel(tregion.TheClient.Network.Strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(e, 24 + 24 + 16 + 24 + 24, 4))));
             return bpe;
         }
     }

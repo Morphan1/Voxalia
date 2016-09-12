@@ -273,9 +273,9 @@ namespace Voxalia.ClientGame.EntitySystem
                 bi[i].BlockPaint = data[PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 3 + i];
             }
             BGETraceMode tm = (BGETraceMode)data[PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 4];
-            BlockGroupEntity bge = new BlockGroupEntity(tregion, tm, bi, xwidth, ywidth, zwidth, Location.FromBytes(data, PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 4 + 1 + 4));
+            BlockGroupEntity bge = new BlockGroupEntity(tregion, tm, bi, xwidth, ywidth, zwidth, Location.FromDoubleBytes(data, PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 4 + 1 + 4));
             bge.Color = System.Drawing.Color.FromArgb(Utilities.BytesToInt(Utilities.BytesPartial(data, PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 4 + 1, 4)));
-            bge.scale = Location.FromBytes(data, PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 4 + 1 + 4 + 12);
+            bge.scale = Location.FromDoubleBytes(data, PhysicsEntity.PhysicsNetworkDataLength + (4 + 4 + 4) + bi.Length * 4 + 1 + 4 + 24);
             bge.ApplyPhysicsNetworkData(data);
             return bge;
         }

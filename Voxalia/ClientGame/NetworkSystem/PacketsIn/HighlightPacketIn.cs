@@ -17,7 +17,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 return false;
             }
             int len = Utilities.BytesToInt(Utilities.BytesPartial(data, 0, 4));
-            if (data.Length != 4 + 12 * 2 * len)
+            if (data.Length != 4 + 24 * 2 * len)
             {
                 return false;
             }
@@ -25,8 +25,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             for (int i = 0; i < len; i++)
             {
                 boxes[i] = new AABB();
-                boxes[i].Min = Location.FromBytes(data, 4 + i * 12 * 2);
-                boxes[i].Max = Location.FromBytes(data, 4 + i * 12 * 2 + 12);
+                boxes[i].Min = Location.FromDoubleBytes(data, 4 + i * 24 * 2);
+                boxes[i].Max = Location.FromDoubleBytes(data, 4 + i * 24 * 2 + 24);
             }
             TheClient.TheRegion.Highlights = boxes;
             return true;

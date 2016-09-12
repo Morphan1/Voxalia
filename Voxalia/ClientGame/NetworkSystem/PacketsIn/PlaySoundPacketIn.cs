@@ -11,14 +11,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 4 + 4 + 4 + 12)
+            if (data.Length != 4 + 4 + 4 + 24)
             {
                 return false;
             }
             string sound = TheClient.Network.Strings.StringForIndex(Utilities.BytesToInt(Utilities.BytesPartial(data, 0, 4)));
             float vol = Utilities.BytesToFloat(Utilities.BytesPartial(data, 4, 4));
             float pitch = Utilities.BytesToFloat(Utilities.BytesPartial(data, 4 + 4, 4));
-            Location pos = Location.FromBytes(data, 4 + 4 + 4);
+            Location pos = Location.FromDoubleBytes(data, 4 + 4 + 4);
             TheClient.Sounds.Play(TheClient.Sounds.GetSound(sound), false, pos, pitch, vol);
             return true;
         }

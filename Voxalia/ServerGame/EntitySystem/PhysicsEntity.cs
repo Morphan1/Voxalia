@@ -690,15 +690,15 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             if (doc.ContainsKey("ph_pos"))
             {
-                SetPosition(Location.FromBytes(doc["ph_pos"].AsBinary, 0));
+                SetPosition(Location.FromDoubleBytes(doc["ph_pos"].AsBinary, 0));
             }
             if (doc.ContainsKey("ph_vel"))
             {
-                SetVelocity(Location.FromBytes(doc["ph_vel"].AsBinary, 0));
+                SetVelocity(Location.FromDoubleBytes(doc["ph_vel"].AsBinary, 0));
             }
             if (doc.ContainsKey("ph_avel"))
             {
-                SetAngularVelocity(Location.FromBytes(doc["ph_avel"].AsBinary, 0));
+                SetAngularVelocity(Location.FromDoubleBytes(doc["ph_avel"].AsBinary, 0));
             }
             if (doc.ContainsKey("ph_ang_x") && doc.ContainsKey("ph_ang_y") && doc.ContainsKey("ph_ang_z") && doc.ContainsKey("ph_ang_w"))
             {
@@ -710,7 +710,7 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             if (doc.ContainsKey("ph_grav"))
             {
-                SetGravity(Location.FromBytes(doc["ph_grav"].AsBinary, 0));
+                SetGravity(Location.FromDoubleBytes(doc["ph_grav"].AsBinary, 0));
             }
             if (doc.ContainsKey("ph_bounce"))
             {

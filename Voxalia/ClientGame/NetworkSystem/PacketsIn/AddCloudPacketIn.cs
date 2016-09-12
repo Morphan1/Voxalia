@@ -14,8 +14,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
         {
             DataStream ds = new DataStream(data);
             DataReader dr = new DataReader(ds);
-            Location pos = Location.FromBytes(dr.ReadBytes(12), 0);
-            Location vel = Location.FromBytes(dr.ReadBytes(12), 0);
+            Location pos = Location.FromDoubleBytes(dr.ReadBytes(24), 0);
+            Location vel = Location.FromDoubleBytes(dr.ReadBytes(24), 0);
             long cid = dr.ReadLong();
             for (int i = 0; i < TheClient.TheRegion.Clouds.Count; i++)
             {
@@ -31,7 +31,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             int count = dr.ReadInt();
             for (int i = 0; i < count; i++)
             {
-                cloud.Points.Add(Location.FromBytes(dr.ReadBytes(12), 0));
+                cloud.Points.Add(Location.FromDoubleBytes(dr.ReadBytes(24), 0));
                 cloud.Sizes.Add(dr.ReadFloat());
                 cloud.EndSizes.Add(dr.ReadFloat());
             }

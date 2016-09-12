@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 8 + 2 + 4 + 4 + 4 + 4 + 12 + 12 + 4)
+            if (data.Length != 8 + 2 + 4 + 4 + 4 + 4 + 24 + 24 + 4)
             {
                 return false;
             }
@@ -31,9 +31,9 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsIn
             double x = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4 + 4, 4));
             double y = Utilities.BytesToFloat(Utilities.BytesPartial(data, 8 + 2 + 4 + 4 + 4, 4));
             int s = 8 + 2 + 4 + 4 + 4 + 4;
-            Location pos = Location.FromBytes(data, s);
-            Location vel = Location.FromBytes(data, s + 12);
-            double sow = Utilities.BytesToFloat(Utilities.BytesPartial(data, s + 12 + 12, 4));
+            Location pos = Location.FromDoubleBytes(data, s);
+            Location vel = Location.FromDoubleBytes(data, s + 24);
+            double sow = Utilities.BytesToFloat(Utilities.BytesPartial(data, s + 24 + 24, 4));
             Vector2 tmove = new Vector2(x, y);
             if (tmove.LengthSquared() > 1f)
             {

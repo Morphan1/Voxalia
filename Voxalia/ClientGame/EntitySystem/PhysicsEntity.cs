@@ -376,7 +376,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
         }
 
-        public const int PhysicsNetworkDataLength = 4 + 12 + 12 + 16 + 12 + 4 + 4 + 1 + 1;
+        public const int PhysicsNetworkDataLength = 4 + 24 + 24 + 16 + 24 + 4 + 4 + 1 + 1;
 
         public bool ApplyPhysicsNetworkData(byte[] dat)
         {
@@ -385,17 +385,17 @@ namespace Voxalia.ClientGame.EntitySystem
                 return false;
             }
             SetMass(Utilities.BytesToFloat(Utilities.BytesPartial(dat, 0, 4)));
-            SetPosition(Location.FromBytes(dat, 4));
-            SetVelocity(Location.FromBytes(dat, 4 + 12));
-            SetOrientation(Utilities.BytesToQuaternion(dat, 4 + 12 + 12));
-            SetAngularVelocity(Location.FromBytes(dat, 4 + 12 + 12 + 16));
-            SetFriction(Utilities.BytesToFloat(Utilities.BytesPartial(dat, 4 + 12 + 12 + 16 + 12, 4)));
-            SetBounciness(Utilities.BytesToFloat(Utilities.BytesPartial(dat, 4 + 12 + 12 + 16 + 12 + 4, 4)));
+            SetPosition(Location.FromDoubleBytes(dat, 4));
+            SetVelocity(Location.FromDoubleBytes(dat, 4 + 24));
+            SetOrientation(Utilities.BytesToQuaternion(dat, 4 + 24 + 24));
+            SetAngularVelocity(Location.FromDoubleBytes(dat, 4 + 24 + 24 + 16));
+            SetFriction(Utilities.BytesToFloat(Utilities.BytesPartial(dat, 4 + 24 + 24 + 16 + 24, 4)));
+            SetBounciness(Utilities.BytesToFloat(Utilities.BytesPartial(dat, 4 + 24 + 24 + 16 + 24 + 4, 4)));
             // TODO: Proper flags thingy here?
-            byte fl = dat[4 + 12 + 12 + 16 + 12 + 4 + 4];
+            byte fl = dat[4 + 24 + 24 + 16 + 24 + 4 + 4];
             Visible = (fl & 1) == 1;
             GenBlockShadows = (fl & 2) == 2;
-            byte cg = dat[4 + 12 + 12 + 16 + 12 + 4 + 4 + 1];
+            byte cg = dat[4 + 24 + 24 + 16 + 24 + 4 + 4 + 1];
             if (cg == 2)
             {
                 CGroup = CollisionUtil.Solid;

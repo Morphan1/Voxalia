@@ -62,7 +62,7 @@ namespace Voxalia.ClientGame.EntitySystem
             DataStream ds = new DataStream(data);
             DataReader dr = new DataReader(ds);
             GenericCharacterEntity ent = new GenericCharacterEntity(tregion);
-            ent.SetPosition(Location.FromBytes(dr.ReadBytes(12), 0));
+            ent.SetPosition(Location.FromDoubleBytes(dr.ReadBytes(24), 0));
             ent.SetOrientation(new BEPUutilities.Quaternion(dr.ReadFloat(), dr.ReadFloat(), dr.ReadFloat(), dr.ReadFloat()));
             ent.SetMass(dr.ReadFloat());
             ent.CBAirForce = dr.ReadFloat();

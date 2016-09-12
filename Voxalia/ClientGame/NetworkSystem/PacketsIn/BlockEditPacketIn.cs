@@ -19,7 +19,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             List<ushort> mats = new List<ushort>();
             for (int i = 0; i < len; i++)
             {
-                locs.Add(Location.FromBytes(dr.ReadBytes(12), 0));
+                locs.Add(Location.FromDoubleBytes(dr.ReadBytes(24), 0));
             }
             for (int i = 0; i < len; i++)
             {
