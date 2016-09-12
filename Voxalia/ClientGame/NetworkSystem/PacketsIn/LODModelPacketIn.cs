@@ -23,8 +23,8 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             pme.SetPosition(pos);
             float qX = Utilities.BytesToFloat(Utilities.BytesPartial(data, 24 + 4, 4));
             float qY = Utilities.BytesToFloat(Utilities.BytesPartial(data, 24 + 4 + 4, 4));
-            float qZ = Utilities.BytesToFloat(Utilities.BytesPartial(data, 24 + 4 + 8, 4));
-            float qW = Utilities.BytesToFloat(Utilities.BytesPartial(data, 24 + 4 + 12, 4));
+            float qZ = Utilities.BytesToFloat(Utilities.BytesPartial(data, 24 + 4 + 4 + 4, 4));
+            float qW = Utilities.BytesToFloat(Utilities.BytesPartial(data, 24 + 4 + 4 + 4 + 4, 4));
             pme.SetOrientation(new BEPUutilities.Quaternion(qX, qY, qZ, qW));
             pme.EID = Utilities.BytesToLong(Utilities.BytesPartial(data, 24 + 4 + 16, 8));
             pme.scale = Location.FromDoubleBytes(data, 24 + 4 + 16 + 8);

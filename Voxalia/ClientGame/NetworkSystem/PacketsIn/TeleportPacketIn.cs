@@ -6,7 +6,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            if (data.Length != 12)
+            if (data.Length != 24)
             {
                 return false;
             }

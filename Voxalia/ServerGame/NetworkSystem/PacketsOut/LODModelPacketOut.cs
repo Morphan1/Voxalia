@@ -24,8 +24,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             Utilities.FloatToBytes((float)quat.Y).CopyTo(Data, 24 + 4 + 4);
             Utilities.FloatToBytes((float)quat.Z).CopyTo(Data, 24 + 4 + 4 + 4);
             Utilities.FloatToBytes((float)quat.W).CopyTo(Data, 24 + 4 + 4 + 4 + 4);
-            Utilities.LongToBytes(me.EID).CopyTo(Data, 12 + 4 + 16);
-            me.scale.ToDoubleBytes().CopyTo(Data, 12 + 4 + 16 + 8);
+            Utilities.LongToBytes(me.EID).CopyTo(Data, 24 + 4 + 16);
+            me.scale.ToDoubleBytes().CopyTo(Data, 24 + 4 + 16 + 8);
         }
     }
 }

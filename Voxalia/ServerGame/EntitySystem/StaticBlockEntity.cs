@@ -34,7 +34,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override byte[] GetNetData()
         {
-            byte[] dat = new byte[4 + 12];
+            byte[] dat = new byte[4 + 24];
             Utilities.IntToBytes((ushort)Original.Datum).CopyTo(dat, 0);
             GetPosition().ToDoubleBytes().CopyTo(dat, 4);
             return dat;

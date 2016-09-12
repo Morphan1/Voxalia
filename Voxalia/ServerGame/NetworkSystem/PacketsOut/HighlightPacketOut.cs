@@ -22,7 +22,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 }
             }
             ID = ServerToClientPacket.HIGHLIGHT;
-            Data = new byte[4 + 12 * 2 * c];
+            Data = new byte[4 + 24 * 2 * c];
             Utilities.IntToBytes(c).CopyTo(Data, 0);
             int t = 0;
             for (int i = 0; i < sels.Length; i++)

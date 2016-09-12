@@ -22,11 +22,11 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
         {
             UsageType = NetUsageType.EFFECTS;
             ID = ServerToClientPacket.PARTICLE_EFFECT;
-            Data = new byte[1 + 4 + 12 + 24];
+            Data = new byte[1 + 4 + 24 + 24];
             Data[0] = (byte)type;
             Utilities.FloatToBytes((float)dat1).CopyTo(Data, 1);
             pos.ToDoubleBytes().CopyTo(Data, 1 + 4);
-            dat2.ToDoubleBytes().CopyTo(Data, 1 + 4 + 12);
+            dat2.ToDoubleBytes().CopyTo(Data, 1 + 4 + 24);
         }
     }
 }

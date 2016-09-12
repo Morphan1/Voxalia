@@ -14,8 +14,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             ID = ServerToClientPacket.DEFAULT_SOUND;
             Data = new byte[24 + 1 + 1];
             loc.ToDoubleBytes().CopyTo(Data, 0);
-            Data[12] = (byte)sound;
-            Data[12 + 1] = subdat;
+            Data[24] = (byte)sound;
+            Data[24 + 1] = subdat;
         }
     }
 }

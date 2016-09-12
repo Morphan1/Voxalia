@@ -142,7 +142,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                     return false;
                 }
                 Location a1 = Location.FromDoubleBytes(data, len);
-                Location a2 = Location.FromDoubleBytes(data, len + 12);
+                Location a2 = Location.FromDoubleBytes(data, len + 24);
                 JointTwist jt = new JointTwist((PhysicsEntity)pe1, (PhysicsEntity)pe2, a1, a2);
                 jt.JID = JID;
                 TheClient.TheRegion.AddJoint(jt);

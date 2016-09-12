@@ -14,7 +14,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             e.GetVelocity().ToDoubleBytes().CopyTo(Data, 24);
             Utilities.QuaternionToBytes(e.GetOrientation()).CopyTo(Data, 24 + 24);
             e.GetAngularVelocity().ToDoubleBytes().CopyTo(Data, 24 + 24 + 16);
-            Data[12 + 12 + 16 + 12] = (byte)((e.Body != null && e.Body.ActivityInformation.IsActive) ? 1 : 0);
+            Data[24 + 24 + 16 + 24] = (byte)((e.Body != null && e.Body.ActivityInformation.IsActive) ? 1 : 0);
             Utilities.LongToBytes(e.EID).CopyTo(Data, 24 + 24 + 16 + 24 + 1);
         }
     }

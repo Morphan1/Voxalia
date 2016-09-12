@@ -56,18 +56,20 @@ namespace Voxalia.ServerGame.EntitySystem
             return base.GetRAMUsage() + 200;
         }
 
+        public const int PhysicsNetLength = 4 + 24 + 24 + 16 + 24 + 4 + 4 + 1 + 1;
+
         public byte[] GetPhysicsNetData()
         {
-            byte[] Data = new byte[4 + 24 + 24 + 16 + 24 + 4 + 4 + 1 + 1];
+            byte[] Data = new byte[PhysicsNetLength];
             Utilities.FloatToBytes((float)GetMass()).CopyTo(Data, 0);
             GetPosition().ToDoubleBytes().CopyTo(Data, 4);
-            GetVelocity().ToDoubleBytes().CopyTo(Data, 4 + 12);
-            Utilities.QuaternionToBytes(GetOrientation()).CopyTo(Data, 4 + 12 + 12);
-            GetAngularVelocity().ToDoubleBytes().CopyTo(Data, 4 + 12 + 12 + 16);
-            Utilities.FloatToBytes((float)GetFriction()).CopyTo(Data, 4 + 12 + 12 + 16 + 12);
-            Utilities.FloatToBytes((float)GetBounciness()).CopyTo(Data, 4 + 12 + 12 + 16 + 12 + 4);
+            GetVelocity().ToDoubleBytes().CopyTo(Data, 4 + 24);
+            Utilities.QuaternionToBytes(GetOrientation()).CopyTo(Data, 4 + 24 + 24);
+            GetAngularVelocity().ToDoubleBytes().CopyTo(Data, 4 + 24 + 24 + 16);
+            Utilities.FloatToBytes((float)GetFriction()).CopyTo(Data, 4 + 24 + 24 + 16 + 24);
+            Utilities.FloatToBytes((float)GetBounciness()).CopyTo(Data, 4 + 24 + 24 + 16 + 24 + 4);
             // TODO: Proper flags thingy here?
-            Data[4 + 12 + 12 + 16 + 12 + 4 + 4] = (byte)((Visible ? 1 : 0) | (GenBlockShadow ? 2 : 0));
+            Data[4 + 24 + 24 + 16 + 24 + 4 + 4] = (byte)((Visible ? 1 : 0) | (GenBlockShadow ? 2 : 0));
             byte cg = 0;
             if (CGroup == CollisionUtil.Solid)
             {
@@ -97,7 +99,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 cg = 16;
             }
-            Data[4 + 12 + 12 + 16 + 12 + 4 + 4 + 1] = cg;
+            Data[4 + 24 + 24 + 16 + 24 + 4 + 4 + 1] = cg;
             return Data;
         }
 
