@@ -54,58 +54,65 @@ namespace Voxalia.ServerGame.TagSystem.TagObjects
             return new LocationTag(coord, w);
         }
 
+        public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
+
+        static LocationTag()
+        {
+            // <--[tag]
+            // @Name LocationTag.x
+            // @Group General Information
+            // @ReturnType NumberTag
+            // @Returns the X coordinate of this location.
+            // @Example "0,1,2" .x returns "0".
+            // -->
+            Handlers.Add("x", new TagSubHandler() { Handle = (data, obj) => new NumberTag(((LocationTag) obj).Internal.Coordinates.X), ReturnTypeString = "numbertag" });
+            // <--[tag]
+            // @Name LocationTag.y
+            // @Group General Information
+            // @ReturnType NumberTag
+            // @Returns the Y coordinate of this location.
+            // @Example "0,1,2" .y returns "1".
+            // -->
+            Handlers.Add("y", new TagSubHandler() { Handle = (data, obj) => new NumberTag(((LocationTag)obj).Internal.Coordinates.Y), ReturnTypeString = "numbertag" });
+            // <--[tag]
+            // @Name LocationTag.z
+            // @Group General Information
+            // @ReturnType NumberTag
+            // @Returns the Z coordinate of this location.
+            // @Example "0,1,2" .z returns "2".
+            // -->
+            Handlers.Add("z", new TagSubHandler() { Handle = (data, obj) => new NumberTag(((LocationTag)obj).Internal.Coordinates.Z), ReturnTypeString = "numbertag" });
+            // <--[tag]
+            // @Name LocationTag.world
+            // @Group General Information
+            // @ReturnType WorldTag
+            // @Returns the World of this location.
+            // @Example "0,1,2,default" .world returns "default".
+            // -->
+            Handlers.Add("world", new TagSubHandler() { Handle = (data, obj) => new WorldTag(((LocationTag)obj).Internal.World) /* TODO: , ReturnTypeString = "numbertag" */ });
+            // Documented in TextTag.
+            Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new NullTag() /* TODO: , ReturnTypeString = "locationtag" */ });
+            // Documented in TextTag.
+            // TODO: Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Null), ReturnTypeString = "tagtypetag" });
+        }
+
         public override TemplateObject Handle(TagData data)
         {
             if (data.Remaining == 0)
             {
                 return this;
             }
-            switch (data[0])
+            TagSubHandler handler;
+            if (Handlers.TryGetValue(data[0], out handler))
             {
-                // <--[tag]
-                // @Name LocationTag.x
-                // @Group General Information
-                // @ReturnType NumberTag
-                // @Returns the X coordinate of this location.
-                // @Example "0,1,2" .x returns "0".
-                // -->
-                case "x":
-                    return new NumberTag(Internal.Coordinates.X).Handle(data.Shrink());
-                // <--[tag]
-                // @Name LocationTag.y
-                // @Group General Information
-                // @ReturnType NumberTag
-                // @Returns the Y coordinate of this location.
-                // @Example "0,1,2" .y returns "1".
-                // -->
-                case "y":
-                    return new NumberTag(Internal.Coordinates.Y).Handle(data.Shrink());
-                // <--[tag]
-                // @Name LocationTag.z
-                // @Group General Information
-                // @ReturnType NumberTag
-                // @Returns the Z coordinate of this location.
-                // @Example "0,1,2" .z returns "2".
-                // -->
-                case "z":
-                    return new NumberTag(Internal.Coordinates.Z).Handle(data.Shrink());
-                // <--[tag]
-                // @Name LocationTag.world
-                // @Group General Information
-                // @ReturnType WorldTag
-                // @Returns the World of this location.
-                // @Example "0,1,2,default" .world returns "default".
-                // -->
-                case "world":
-                    return new WorldTag(Internal.World).Handle(data.Shrink());
-                default:
-                    return new TextTag(ToString()).Handle(data);
+                return handler.Handle(data, this).Handle(data.Shrink());
             }
+            return new TextTag(ToString()).Handle(data);
         }
 
         public override string ToString()
         {
-            return Internal.ToString();
+            return Internal.Coordinates.X + "," + Internal.Coordinates.Y + "," + Internal.Coordinates.Z + "," + Internal.World.Name;
         }
 
     }
