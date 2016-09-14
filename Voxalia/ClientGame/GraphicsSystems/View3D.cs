@@ -481,6 +481,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             camFrust = new Frustum(PrimaryMatrix);
             cf2 = new Frustum(PrimaryMatrix_OffsetFor3D);
+            CFrust = camFrust;
             CheckError("AfterSetup");
         }
 
