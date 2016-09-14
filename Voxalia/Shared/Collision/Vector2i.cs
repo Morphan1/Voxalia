@@ -46,7 +46,7 @@ namespace Voxalia.Shared.Collision
 
         public override string ToString()
         {
-            return ToVector2().ToString();
+            return "(" + X + ", " + Y + ")";
         }
 
         public static bool operator !=(Vector2i one, Vector2i two)
