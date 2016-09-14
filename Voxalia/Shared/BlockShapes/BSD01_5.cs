@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUutilities;
 
 namespace Voxalia.Shared.BlockShapes
@@ -10,8 +11,10 @@ namespace Voxalia.Shared.BlockShapes
         public BSD01_5(double perc)
         {
             Percent = perc;
-            OffsetCache = new Location(0.5, 0.5, Percent / 2);
-            BlockShapeCache = new BEPUphysics.CollisionShapes.ConvexShapes.BoxShape(1, 1, Percent);
+            OffsetCache = new Location(0.5, 0.5, Percent * 0.5);
+            BlockShapeCache = new BoxShape(1, 1, Percent);
+            ShrunkOffsetCache = new Location(SHRINK_CONSTANT * 0.5, SHRINK_CONSTANT * 0.5, Percent * SHRINK_CONSTANT * 0.5);
+            ShrunkBlockShapeCache = new BoxShape(SHRINK_CONSTANT, SHRINK_CONSTANT, Percent * SHRINK_CONSTANT);
         }
 
         public override List<Vector3> GetVertices(Vector3 pos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)

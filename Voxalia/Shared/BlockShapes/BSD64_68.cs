@@ -14,6 +14,8 @@ namespace Voxalia.Shared.BlockShapes
             Mats = mats;
             BlockShapeCache = new BoxShape(1f, 1f, 1f);
             OffsetCache = new Location(0.5);
+            ShrunkBlockShapeCache = new BoxShape(SHRINK_CONSTANT, SHRINK_CONSTANT, SHRINK_CONSTANT);
+            ShrunkOffsetCache = new Location(SHRINK_CONSTANT * 0.5);
         }
 
         public override List<Vector3> GetVertices(Vector3 pos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)

@@ -144,7 +144,7 @@ namespace Voxalia.Shared.Collision
             }
             Location loffs;
             BlockInternal bi = Blocks[BlockIndex(x, y, z)];
-            ConvexShape shape = (ConvexShape)BlockShapeRegistry.BSD[bi.BlockData].GetShape(bi.Damage, out loffs);
+            ConvexShape shape = (ConvexShape)BlockShapeRegistry.BSD[bi.BlockData].GetShape(bi.Damage, out loffs, false);
             offs = loffs.ToBVector();
             return shape;
         }
@@ -187,7 +187,7 @@ namespace Voxalia.Shared.Collision
                             if (solidness.HasFlag(((Material)bi.BlockMaterial).GetSolidity()))
                             {
                                 Location offs;
-                                EntityShape es = BlockShapeRegistry.BSD[bi.BlockData].GetShape(bi.Damage, out offs);
+                                EntityShape es = BlockShapeRegistry.BSD[bi.BlockData].GetShape(bi.Damage, out offs, false);
                                 if (es == null)
                                 {
                                     continue;

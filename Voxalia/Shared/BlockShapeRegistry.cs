@@ -127,6 +127,8 @@ namespace Voxalia.Shared
     /// </summary>
     public abstract class BlockShapeDetails
     {
+        public const double SHRINK_CONSTANT = 0.9;
+
         public abstract List<Vector3> GetVertices(Vector3 blockPos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM);
 
         public abstract List<Vector3> GetNormals(Vector3 blockPos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM);
@@ -163,7 +165,11 @@ namespace Voxalia.Shared
 
         public EntityShape BlockShapeCache;
 
+        public EntityShape ShrunkBlockShapeCache;
+
         public Location OffsetCache;
+
+        public Location ShrunkOffsetCache;
 
         public virtual KeyValuePair<List<Vector4>, List<Vector4>> GetStretchData(Vector3 blockpos, List<Vector3> vertices, BlockInternal XP, BlockInternal XM,
             BlockInternal YP, BlockInternal YM, BlockInternal ZP, BlockInternal ZM, bool bxp, bool bxm, bool byp, bool bym, bool bzp, bool bzm)
@@ -178,12 +184,12 @@ namespace Voxalia.Shared
             return new KeyValuePair<List<Vector4>, List<Vector4>>(stretchvals, stretchweis);
         }
 
-        public virtual EntityShape GetShape(BlockDamage damage, out Location offset)
+        public virtual EntityShape GetShape(BlockDamage damage, out Location offset, bool shrink)
         {
-            if (BlockShapeCache != null)
+            if ((shrink ? ShrunkBlockShapeCache : BlockShapeCache) != null)
             {
-                offset = OffsetCache;
-                return BlockShapeCache;
+                offset = (shrink ? ShrunkOffsetCache : OffsetCache);
+                return (shrink ? ShrunkBlockShapeCache : BlockShapeCache);
             }
             List<Vector3> vecs = GetVertices(new Vector3(0, 0, 0), false, false, false, false, false, false);
             Vector3 offs;
@@ -191,10 +197,25 @@ namespace Voxalia.Shared
             {
                 throw new Exception("No vertices for shape " + this);
             }
+            if (shrink)
+            {
+                for (int i = 0; i < vecs.Count; i++)
+                {
+                    vecs[i] = (vecs[i] - new Vector3(0.5f, 0.5f, 0.5f)) * SHRINK_CONSTANT + new Vector3(0.5f, 0.5f, 0.5f);
+                }
+            }
             ConvexHullShape shape = new ConvexHullShape(vecs, out offs) { CollisionMargin = 0 };
             offset = new Location(offs);
-            OffsetCache = offset;
-            BlockShapeCache = shape;
+            if (shrink)
+            {
+                ShrunkBlockShapeCache = shape;
+                ShrunkOffsetCache = offset;
+            }
+            else
+            {
+                BlockShapeCache = shape;
+                OffsetCache = offset;
+            }
             return shape;
         }
     }

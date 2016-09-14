@@ -22,7 +22,7 @@ namespace Voxalia.ServerGame.EntitySystem
             CGroup = CollisionUtil.Item;
             Original = orig;
             Location offset;
-            Shape = BlockShapeRegistry.BSD[0].GetShape(BlockDamage.NONE, out offset);
+            Shape = BlockShapeRegistry.BSD[0].GetShape(BlockDamage.NONE, out offset, false);
             SetPosition(pos.GetBlockLocation() + offset);
             SetOrientation(Quaternion.Identity);
         }

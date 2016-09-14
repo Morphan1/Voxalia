@@ -30,8 +30,8 @@ namespace Voxalia.ClientGame.EntitySystem
             Dat = dat;
             Paint = tpaint;
             Damage = tdamage;
-            Shape = BlockShapeRegistry.BSD[dat].GetShape(Damage, out Offset);
-            SetMass(5);
+            Shape = BlockShapeRegistry.BSD[dat].GetShape(Damage, out Offset, !(this is StaticBlockEntity));
+            SetMass(20);
         }
 
         public Location Offset;

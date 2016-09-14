@@ -15,11 +15,11 @@ namespace Voxalia.ServerGame.EntitySystem
         public BlockItemEntity(Region tregion, BlockInternal orig, Location pos)
             : base(tregion)
         {
-            SetMass(5);
+            SetMass(20);
             CGroup = CollisionUtil.Item;
             Original = orig;
             Location offset;
-            Shape = BlockShapeRegistry.BSD[orig.BlockData].GetShape(orig.Damage, out offset);
+            Shape = BlockShapeRegistry.BSD[orig.BlockData].GetShape(orig.Damage, out offset, true);
             SetPosition(pos.GetBlockLocation() + offset);
         }
 

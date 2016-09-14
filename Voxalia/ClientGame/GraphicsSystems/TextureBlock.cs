@@ -86,6 +86,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     continue;
                 }
+                // TODO: Make this saner, and don't allow entering a game until it's done maybe?
                 TheClient.Schedule.ScheduleSyncTask(() =>
                 {
                     MaterialTextureInfo tex = new MaterialTextureInfo();
