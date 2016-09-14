@@ -60,7 +60,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                     case "throw":
                         break;
                     case "click":
-                        TheClient.Player.Use = true;
+                        TheClient.Player.Click = true;
                         break;
                     case "alt":
                         TheClient.Player.AltClick = true;
@@ -84,7 +84,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                     case "throw":
                         break;
                     case "click":
-                        TheClient.Player.Use = false;
+                        TheClient.Player.Click = false;
                         break;
                     case "alt":
                         TheClient.Player.AltClick = false;
