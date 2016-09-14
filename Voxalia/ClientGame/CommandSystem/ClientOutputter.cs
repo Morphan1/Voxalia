@@ -75,5 +75,10 @@ namespace Voxalia.ClientGame.CommandSystem
         {
             // TODO: TheClient.AutorunScripts();
         }
+
+        public override bool ShouldErrorOnInvalidCommand()
+        {
+            return false;
+        }
     }
 }

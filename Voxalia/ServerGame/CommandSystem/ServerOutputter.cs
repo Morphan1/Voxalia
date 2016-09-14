@@ -64,5 +64,10 @@ namespace Voxalia.ServerGame.CommandSystem
             TheServer.Recipes.Recipes.Clear();
             TheServer.AutorunScripts();
         }
+
+        public override bool ShouldErrorOnInvalidCommand()
+        {
+            return true;
+        }
     }
 }
