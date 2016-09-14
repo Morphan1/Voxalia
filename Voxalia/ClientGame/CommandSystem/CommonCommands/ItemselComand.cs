@@ -32,9 +32,10 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             {
                 return;
             }
-            TheClient.QuickBarPos = Math.Abs(Utilities.StringToInt(entry.GetArgument(queue, 0))) % (TheClient.Items.Count + 1);
-            TheClient.Network.SendPacket(new HoldItemPacketOut(TheClient.QuickBarPos));
-            TheClient.RenderExtraItems = 3;
+            int slot = Math.Abs(Utilities.StringToInt(entry.GetArgument(queue, 0))) % (TheClient.Items.Count + 1);
+            TheClient.SetHeldItemSlot(slot, DEFAULT_RENDER_EXTRA_ITEMS);
         }
+
+        private const double DEFAULT_RENDER_EXTRA_ITEMS = 3.0;
     }
 }

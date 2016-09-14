@@ -17,6 +17,7 @@ using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using Voxalia.ClientGame.NetworkSystem;
 using Voxalia.ClientGame.EntitySystem;
+using Voxalia.ClientGame.NetworkSystem.PacketsOut;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -25,6 +26,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public List<ItemStack> Items = new List<ItemStack>();
 
         public int QuickBarPos = 0;
+        public int PrevQuickItem = -1;
+        public string QuickItemUseType;
 
         public Object TickLock = new Object();
         
@@ -62,6 +65,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 return Items[slot - 1];
             }
+        }
+
+        public void SetHeldItemSlot(int slot, double extraItemsTime = 0)
+        {
+            QuickBarPos = slot;
+            Network.SendPacket(new HoldItemPacketOut(QuickBarPos));
+            RenderExtraItems = extraItemsTime;
         }
 
         public double opsat = 0;
