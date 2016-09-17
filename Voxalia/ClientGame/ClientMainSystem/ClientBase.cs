@@ -94,6 +94,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public LanguageEngine Languages = new LanguageEngine();
 
+        public float DPIScale = 1f;
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
@@ -117,6 +119,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Generating window...");
             Window = new GameWindow(CVars.r_width.ValueI, CVars.r_height.ValueI, new GraphicsMode(24, 24, 0, 0), Program.GameName + " v" + Program.GameVersion,
                 GameWindowFlags.Default, DisplayDevice.Default, 4, 3, GraphicsContextFlags.ForwardCompatible);
+            Window.Location = new Point(0, 0);
             Window.WindowState = CVars.r_fullscreen.ValueB ? WindowState.Fullscreen : WindowState.Normal;
             Window.Load += new EventHandler<EventArgs>(Window_Load);
             Window.RenderFrame += new EventHandler<FrameEventArgs>(Window_RenderFrame);
@@ -256,6 +259,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         void Window_Load(object sender, EventArgs e)
         {
             SysConsole.Output(OutputType.INIT, "Window generated!");
+            DPIScale = Window.Width / CVars.r_width.ValueF;
+            SysConsole.Output(OutputType.INIT, "DPIScale is " + DPIScale + "!");
             SysConsole.Output(OutputType.INIT, "Loading textures...");
             PreInitRendering();
             Textures = new TextureEngine();
@@ -485,8 +490,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 Window.ClientSize = new Size(Window.ClientSize.Width, 720);
             }
-            CVars.r_width.Set(Window.ClientSize.Width.ToString());
-            CVars.r_height.Set(Window.ClientSize.Height.ToString());
+            CVars.r_width.Set(((int)(Window.ClientSize.Width / DPIScale)).ToString());
+            CVars.r_height.Set(((int)(Window.ClientSize.Height / DPIScale)).ToString());
             Schedule.ScheduleSyncTask(windowupdatehandle);
         }
 
