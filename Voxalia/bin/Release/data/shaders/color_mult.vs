@@ -18,8 +18,8 @@ layout (location = 3) uniform vec4 v_color = vec4(1.0);
 // ...
 layout (location = 6) uniform float time;
 // ...
-layout (location = 10) uniform mat4 simplebone_matrix = mat4(1.0);
-layout (location = 11) uniform mat4 boneTrans[MAX_BONES];
+layout (location = 40) uniform mat4 simplebone_matrix = mat4(1.0);
+layout (location = 41) uniform mat4 boneTrans[MAX_BONES];
 
 layout (location = 0) out vec4 f_color;
 layout (location = 1) out vec2 f_texcoord;

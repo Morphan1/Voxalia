@@ -15,14 +15,14 @@ in struct vox_out // Represents data from the VS file.
 	vec2 texcoord; // The texture coordinate.
 } f; // It's named "f".
 
-const int LIGHTS_MAX = 10;
+const int LIGHTS_MAX = 10; // How many lights we can ever have.
 
 layout (location = 3) uniform float depth_jump = 0.5; // How much to jump around when calculating shadow coordinates.
 layout (location = 4) uniform vec3 ambient = vec3(0.05); // How much ambient light to apply.
 // ...
 layout (location = 9) uniform float lights_used = 0.0; // How many lights are present.
-layout (location = 10) uniform mat4 shadow_matrix_array[LIGHTS_MAX]; // The matrix of the light source.
-layout (location = 20) uniform mat4 light_data_array[LIGHTS_MAX]; // Data for the current light.
+layout (location = 10) uniform mat4 shadow_matrix_array[LIGHTS_MAX]; // The matrices of the light sources.
+layout (location = 20) uniform mat4 light_data_array[LIGHTS_MAX]; // Data for all the lights.
 
 const float HDR_Mod = 5.0; // The HDR modifier: multiply all lights by this constant to improve accuracy of colors.
 

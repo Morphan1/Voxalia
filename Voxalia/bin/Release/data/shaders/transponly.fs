@@ -13,9 +13,9 @@
 #define ab_shared_pool_size (8 * 1024 * 1024)
 
 layout (binding = 0) uniform sampler2D tex;
-// TODO: Spec, refl!
 layout (binding = 1) uniform sampler2D normal_tex;
-layout (binding = 3) uniform sampler2DShadow shadowtex;
+// TODO: Spec, refl!
+layout (binding = 3) uniform sampler2DArray shadowtex;
 #if MCM_LL
 layout(size1x32, binding = 4) coherent uniform uimage2DArray ui_page;
 layout(size4x32, binding = 5) coherent uniform imageBuffer uib_spage;
@@ -23,12 +23,15 @@ layout(size1x32, binding = 6) coherent uniform uimageBuffer uib_llist;
 layout(size1x32, binding = 7) coherent uniform uimageBuffer uib_cspage;
 #endif
 
+const int LIGHTS_MAX = 10; // How many lights we can ever have.
+
 layout (location = 4) uniform float desaturationAmount = 1.0;
 layout (location = 5) uniform float minimum_light;
-layout (location = 6) uniform mat4 shadow_matrix;
-layout (location = 7) uniform vec3 light_color = vec3(1.0, 1.0, 1.0);
-layout (location = 8) uniform mat4 light_details;
-layout (location = 9) uniform mat4 light_details2;
+layout (location = 8) uniform vec2 u_screensize = vec2(1024, 1024);
+layout (location = 9) uniform float lights_used = 0.0;
+layout (location = 10) uniform mat4 shadow_matrix_array[LIGHTS_MAX];
+layout (location = 20) uniform mat4 light_details_array[LIGHTS_MAX];
+layout (location = 30) uniform mat4 light_details2_array[LIGHTS_MAX];
 
 in struct vox_out
 {
@@ -54,7 +57,6 @@ void main()
 {
 #if MCM_LL
 	vec4 color;
-	vec2 u_screensize = vec2(light_details2[0][3], light_details2[1][3]);
 #endif
 	vec4 tcolor = texture(tex, f.texcoord);
 	if (tcolor.w * f.color.w >= 0.99)
@@ -67,7 +69,15 @@ void main()
 	}
 	color = tcolor * f.color;
 #if MCM_LIT
+	color = vec4(0.0);
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - 1.0;
+	int count = int(lights_used);
+	for (int i = 0; i < count; i++)
+	{
+	mat4 light_details = light_details_array[i];
+	mat4 light_details2 = light_details2_array[i];
+	mat4 shadow_matrix = shadow_matrix_array[i];
+	// Loop body
 	float light_radius = light_details[0][0];
 	vec3 diffuse_albedo = vec3(light_details[0][1], light_details[0][2], light_details[0][3]);
 	vec3 specular_albedo = vec3(light_details[1][1], light_details[1][2], light_details[1][3]);
@@ -84,8 +94,9 @@ void main()
 	vec4 bambient = (vec4(light_details[3][0], light_details[3][1], light_details[3][2], 1.0)
 		+ vec4(minimum_light, minimum_light, minimum_light, 0.0)) / lightc;
 	vec3 eye_pos = vec3(light_details2[0][0], light_details2[0][1], light_details2[0][2]);
-	float exposure = light_details2[2][0];
 	vec3 light_pos = vec3(light_details2[1][0], light_details2[1][1], light_details2[1][2]);
+	float exposure = light_details2[2][0];
+	vec3 light_color = vec3(light_details2[0][3], light_details2[2][1], light_details2[2][2]);
 	vec4 x_spos = shadow_matrix * vec4(f.position.xyz, 1.0);
 	vec3 N = normalize(-normalize(f.tbn * norms));
 	vec3 light_path = light_pos - f.position.xyz;
@@ -139,20 +150,22 @@ void main()
 				offz = -0.000001;
 			}
 			offz -= 0.001;
-			depth += textureProj(shadowtex, fs + vec4(x * jump, y * jump, offz, 0.0));
+			float rd = texture(shadowtex, vec3(fs.x + x * jump, -(fs.y + y * jump), float(i))).r;
+			depth += (rd >= (fs.z + offz) ? 1.0 : 0.0);
 			depth_count++;
 		}
 	}
 	depth = depth / depth_count;
-#else
-		float depth = textureProj(shadowtex, fs - vec4(0.0, 0.0, 0.0001, 0.0));
-#endif
+#else // good graphics
+	float rd = texture(shadowtex, vec3(fs.x, fs.y, float(i))).r;
+	float depth = (rd >= (fs.z - 0.00001) ? 1.0 : 0.0);
+#endif // else-good graphics
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f.position.xyz - eye_pos)), 0.0), /* renderhint.y * 1000.0 */ 128.0) * specular_albedo * /* renderhint.x */ 0.0);
-	color = vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
+	color += vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, color.w);
-#else
+#else // shadows
 	vec4 fs = x_spos / x_spos.w / 2.0 + vec4(0.5, 0.5, 0.5, 0.0);
 	fs.w = 1.0;
 	if (fs.x < 0.0 || fs.x > 1.0
@@ -165,10 +178,11 @@ void main()
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f.position.xyz - eye_pos)), 0.0), /* renderhint.y * 1000.0 */ 128.0) * specular_albedo * /* renderhint.x */ 0.0);
-	color = vec4((bambient * color + (vec4(1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
+	color = +vec4((bambient * color + (vec4(1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten)).xyz * exposure, color.w);
-#endif
-#endif
+#endif // else-shadows
+	}
+#endif // lit
 #if MCM_GOOD_GRAPHICS
 	color = vec4(desaturate(color.xyz), color.w);
 #endif

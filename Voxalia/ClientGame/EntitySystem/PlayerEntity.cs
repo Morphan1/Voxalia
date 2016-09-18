@@ -799,11 +799,11 @@ namespace Voxalia.ClientGame.EntitySystem
                     (float)m4.M21, (float)m4.M22, (float)m4.M23, (float)m4.M24,
                     (float)m4.M31, (float)m4.M32, (float)m4.M33, (float)m4.M34,
                     (float)m4.M41, (float)m4.M42, (float)m4.M43, (float)m4.M44);
-                GL.UniformMatrix4(10, false, ref bonemat);
+                GL.UniformMatrix4(40, false, ref bonemat);
                 mod.LoadSkin(TheClient.Textures);
                 mod.Draw();
                 bonemat = OpenTK.Matrix4.Identity;
-                GL.UniformMatrix4(10, false, ref bonemat);
+                GL.UniformMatrix4(40, false, ref bonemat);
             }
             if (hasjp)
             {
@@ -821,11 +821,11 @@ namespace Voxalia.ClientGame.EntitySystem
                      * Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)((90) * Utilities.PI180) % 360f));
                 OpenTK.Matrix4 bonemat = new OpenTK.Matrix4((float)m4.M11, (float)m4.M12, (float)m4.M13, (float)m4.M14, (float)m4.M21, (float)m4.M22, (float)m4.M23, (float)m4.M24,
                     (float)m4.M31, (float)m4.M32, (float)m4.M33, (float)m4.M34, (float)m4.M41, (float)m4.M42, (float)m4.M43, (float)m4.M44);
-                GL.UniformMatrix4(10, false, ref bonemat);
+                GL.UniformMatrix4(40, false, ref bonemat);
                 jetp.LoadSkin(TheClient.Textures);
                 jetp.Draw();
                 bonemat = OpenTK.Matrix4.Identity;
-                GL.UniformMatrix4(10, false, ref bonemat);
+                GL.UniformMatrix4(40, false, ref bonemat);
             }
             if (IsTyping)
             {

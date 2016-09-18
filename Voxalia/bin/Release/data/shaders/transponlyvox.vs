@@ -11,7 +11,7 @@ layout (location = 1) uniform mat4 projection = mat4(1.0);
 layout (location = 2) uniform mat4 model_matrix = mat4(1.0);
 layout (location = 3) uniform vec4 v_color = vec4(1.0);
 // ...
-layout (location = 10) uniform float time;
+layout (location = 7) uniform float time;
 
 out struct vox_out
 {

@@ -1354,46 +1354,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         }
                     }
                 }
+                int c = 0;
+                float[] l_dats1 = new float[LIGHTS_MAX * 16];
+                float[] l_dats2 = new float[LIGHTS_MAX * 16];
+                float[] s_mats = new float[LIGHTS_MAX * 16];
                 for (int i = 0; i < Lights.Count; i++)
                 {
                     if (Lights[i] is SkyLight || frustumToUse == null || frustumToUse.ContainsSphere(Lights[i].EyePos.ToBVector(), Lights[i].MaxDistance))
                     {
                         for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                         {
-                            if (TheClient.CVars.r_transpshadows.ValueB && TheClient.CVars.r_shadows.ValueB)
-                            {
-                                if (TheClient.CVars.r_transpll.ValueB)
-                                {
-                                    TheClient.s_transponlyvoxlitsh_ll = TheClient.s_transponlyvoxlitsh_ll.Bind();
-                                }
-                                else
-                                {
-                                    TheClient.s_transponlyvoxlitsh = TheClient.s_transponlyvoxlitsh.Bind();
-                                }
-                                GL.ActiveTexture(TextureUnit.Texture2);
-                                // TODO: shadows!
-                                // GL.BindTexture(TextureTarget.Texture2D, Lights[i].InternalLights[x].fbo_depthtex);
-                                GL.BindTexture(TextureTarget.Texture2D, 0);
-                                GL.ActiveTexture(TextureUnit.Texture0);
-                            }
-                            else
-                            {
-                                if (TheClient.CVars.r_transpll.ValueB)
-                                {
-                                    TheClient.s_transponlyvoxlit_ll = TheClient.s_transponlyvoxlit_ll.Bind();
-                                }
-                                else
-                                {
-                                    TheClient.s_transponlyvoxlit = TheClient.s_transponlyvoxlit.Bind();
-                                }
-                            }
-                            CheckError("PreRenderATranspLight");
-                            Matrix4 ident = Matrix4.Identity;
-                            //  GL.UniformMatrix4(1, false, ref combined);
-                            GL.UniformMatrix4(2, false, ref ident);
                             Matrix4 lmat = Lights[i].InternalLights[x].GetMatrix();
-                            GL.UniformMatrix4(6, false, ref lmat);
-                            GL.Uniform3(7, Lights[i].InternalLights[x].color);
                             float maxrange = (Lights[i].InternalLights[x] is LightOrtho) ? LightMaximum : Lights[i].InternalLights[x].maxrange;
                             Matrix4 matxyz = new Matrix4(Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero);
                             matxyz[0, 0] = maxrange <= 0 ? LightMaximum : maxrange;
@@ -1411,60 +1382,98 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             matxyz[3, 0] = (float)ambient.X;
                             matxyz[3, 1] = (float)ambient.Y;
                             matxyz[3, 2] = (float)ambient.Z;
-                            CheckError("HalfRenderATranspLight");
-                            GL.UniformMatrix4(8, false, ref matxyz);
                             Matrix4 matabc = new Matrix4(Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero);
                             matabc[0, 0] = (float)CameraPos.X;
                             matabc[0, 1] = (float)CameraPos.Y;
                             matabc[0, 2] = (float)CameraPos.Z;
-                            matabc[0, 3] = (float)Width;
                             matabc[1, 0] = (float)Lights[i].EyePos.X;
                             matabc[1, 1] = (float)Lights[i].EyePos.Y;
                             matabc[1, 2] = (float)Lights[i].EyePos.Z;
-                            matabc[1, 3] = (float)Height;
                             matabc[2, 0] = MainEXP;
-                            CheckError("MidRenderTranspDetails1");
-                            GL.UniformMatrix4(9, false, ref matabc);
-                            if (TheClient.CVars.r_transpshadows.ValueB && TheClient.CVars.r_shadows.ValueB)
+                            matabc[0, 3] = Lights[i].InternalLights[x].color.X;
+                            matabc[2, 1] = Lights[i].InternalLights[x].color.Y;
+                            matabc[2, 2] = Lights[i].InternalLights[x].color.Z;
+                            for (int mx = 0; mx < 4; mx++)
                             {
-                                if (TheClient.CVars.r_transpll.ValueB)
+                                for (int my = 0; my < 4; my++)
                                 {
-                                    TheClient.s_transponlylitsh_ll = TheClient.s_transponlylitsh_ll.Bind();
-                                }
-                                else
-                                {
-                                    TheClient.s_transponlylitsh = TheClient.s_transponlylitsh.Bind();
+                                    s_mats[c * 16 + mx * 4 + my] = lmat[mx, my];
+                                    l_dats1[c * 16 + mx * 4 + my] = matxyz[mx, my];
+                                    l_dats2[c * 16 + mx * 4 + my] = matabc[mx, my];
                                 }
                             }
-                            else
+                            c++;
+                            if (c >= LIGHTS_MAX)
                             {
-                                if (TheClient.CVars.r_transpll.ValueB)
-                                {
-                                    TheClient.s_transponlylit_ll = TheClient.s_transponlylit_ll.Bind();
-                                }
-                                else
-                                {
-                                    TheClient.s_transponlylit = TheClient.s_transponlylit.Bind();
-                                }
+                                goto lights_apply;
                             }
-                            CheckError("MidRenderTranspDetails2");
-                            //GL.UniformMatrix4(1, false, ref combined);
-                            GL.UniformMatrix4(2, false, ref ident);
-                            CheckError("MidRenderTranspDetails2.5");
-                            //GL.Uniform3(5, Lights[i].InternalLights[x].eye);
-                            CheckError("MidRenderTranspDetails3");
-                            GL.UniformMatrix4(6, false, ref lmat);
-                            GL.Uniform3(7, Lights[i].InternalLights[x].color);
-                            CheckError("MidRenderTranspDetails4");
-                            GL.UniformMatrix4(8, false, ref matxyz);
-                            CheckError("MidRenderTranspDetails5");
-                            GL.UniformMatrix4(9, false, ref matabc);
-                            CheckError("PreRenderTranspWorld");
-                            Render3D(this);
-                            CheckError("PostRenderATranspLight");
                         }
                     }
                 }
+                lights_apply:
+                CheckError("PreRenderTranspLights");
+                if (TheClient.CVars.r_transpshadows.ValueB && TheClient.CVars.r_shadows.ValueB)
+                {
+                    if (TheClient.CVars.r_transpll.ValueB)
+                    {
+                        TheClient.s_transponlyvoxlitsh_ll = TheClient.s_transponlyvoxlitsh_ll.Bind();
+                    }
+                    else
+                    {
+                        TheClient.s_transponlyvoxlitsh = TheClient.s_transponlyvoxlitsh.Bind();
+                    }
+                }
+                else
+                {
+                    if (TheClient.CVars.r_transpll.ValueB)
+                    {
+                        TheClient.s_transponlyvoxlit_ll = TheClient.s_transponlyvoxlit_ll.Bind();
+                    }
+                    else
+                    {
+                        TheClient.s_transponlyvoxlit = TheClient.s_transponlyvoxlit.Bind();
+                    }
+                }
+                GL.UniformMatrix4(2, false, ref IdentityMatrix);
+                GL.Uniform1(7, (float)TheClient.GlobalTickTimeLocal);
+                GL.Uniform2(8, new Vector2(Width, Height));
+                GL.Uniform1(9, (float)c);
+                GL.UniformMatrix4(10, LIGHTS_MAX, false, s_mats);
+                GL.UniformMatrix4(20, LIGHTS_MAX, false, l_dats1);
+                GL.UniformMatrix4(30, LIGHTS_MAX, false, l_dats2);
+                if (TheClient.CVars.r_transpshadows.ValueB && TheClient.CVars.r_shadows.ValueB)
+                {
+                    if (TheClient.CVars.r_transpll.ValueB)
+                    {
+                        TheClient.s_transponlylitsh_ll = TheClient.s_transponlylitsh_ll.Bind();
+                    }
+                    else
+                    {
+                        TheClient.s_transponlylitsh = TheClient.s_transponlylitsh.Bind();
+                    }
+                }
+                else
+                {
+                    if (TheClient.CVars.r_transpll.ValueB)
+                    {
+                        TheClient.s_transponlylit_ll = TheClient.s_transponlylit_ll.Bind();
+                    }
+                    else
+                    {
+                        TheClient.s_transponlylit = TheClient.s_transponlylit.Bind();
+                    }
+                }
+                GL.UniformMatrix4(2, false, ref IdentityMatrix);
+                GL.Uniform2(8, new Vector2(Width, Height));
+                GL.Uniform1(9, (float)c);
+                GL.UniformMatrix4(10, LIGHTS_MAX, false, s_mats);
+                GL.UniformMatrix4(20, LIGHTS_MAX, false, l_dats1);
+                GL.UniformMatrix4(30, LIGHTS_MAX, false, l_dats2);
+                GL.ActiveTexture(TextureUnit.Texture4);
+                GL.BindTexture(TextureTarget.Texture2DArray, fbo_shadow_tex);
+                GL.ActiveTexture(TextureUnit.Texture0);
+                Render3D(this);
+                CheckError("PostRenderTranspLights");
                 GL.ActiveTexture(TextureUnit.Texture2);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);

@@ -338,7 +338,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                 }
             }
-            GL.UniformMatrix4(11, mats.Length, false, set);
+            GL.UniformMatrix4(41, mats.Length, false, set);
         }
         
         public Dictionary<string, Matrix4> CustomAnimationAdjustments = new Dictionary<string, Matrix4>();
