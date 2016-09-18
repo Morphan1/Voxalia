@@ -87,7 +87,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     continue;
                 }
                 // TODO: Make this saner, and don't allow entering a game until it's done maybe?
-                TheClient.Schedule.ScheduleSyncTask(() =>
+                //TheClient.Schedule.ScheduleSyncTask(() =>
                 {
                     MaterialTextureInfo tex = new MaterialTextureInfo();
                     string[] dets = datums[i].SplitFast('=');
@@ -158,13 +158,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                     texs.Add(tex);
                     IntTexs[(int)tex.Mat] = tex.Textures[0];
-                }, i * LoadRate);
+                }//, i * LoadRate);
                 time = i * 0.1f;
             }
             for (int ia = 0; ia < texs.Count; ia++)
             {
                 int i = ia;
-                TheClient.Schedule.ScheduleSyncTask(() =>
+                //TheClient.Schedule.ScheduleSyncTask(() =>
                 {
                     GL.BindTexture(TextureTarget.Texture2DArray, HelpTextureID);
                     Bitmap combo = GetCombo(texs[i], 0);
@@ -184,7 +184,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         }
                     }
                     combo.Dispose();
-                }, time + i * LoadRate);
+                }//, time + i * LoadRate);
             }
             GL.BindTexture(TextureTarget.Texture2DArray, 0);
             GL.BindTexture(TextureTarget.Texture2DArray, 0);

@@ -492,28 +492,27 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             RenderingShadows = false;
             GL.ActiveTexture(TextureUnit.Texture0);
-            Matrix4 fident = Matrix4.Identity;
             FBOid = FBOID.FORWARD_SOLID;
             TheClient.s_forw_vox.Bind();
             GL.UniformMatrix4(1, false, ref PrimaryMatrix);
-            GL.UniformMatrix4(2, false, ref fident);
+            GL.UniformMatrix4(2, false, ref IdentityMatrix);
             GL.Uniform1(6, (float)TheClient.GlobalTickTimeLocal);
             TheClient.Rendering.SetColor(Color4.White);
             TheClient.s_forw.Bind();
             GL.UniformMatrix4(1, false, ref PrimaryMatrix);
-            GL.UniformMatrix4(2, false, ref fident);
+            GL.UniformMatrix4(2, false, ref IdentityMatrix);
             GL.Uniform1(6, (float)TheClient.GlobalTickTimeLocal);
             TheClient.Rendering.SetColor(Color4.White);
             Render3D(this);
             FBOid = FBOID.FORWARD_TRANSP;
             TheClient.s_forw_vox_trans.Bind();
             GL.UniformMatrix4(1, false, ref PrimaryMatrix);
-            GL.UniformMatrix4(2, false, ref fident);
+            GL.UniformMatrix4(2, false, ref IdentityMatrix);
             GL.Uniform1(6, (float)TheClient.GlobalTickTimeLocal);
             TheClient.Rendering.SetColor(Color4.White);
             TheClient.s_forw_trans.Bind();
             GL.UniformMatrix4(1, false, ref PrimaryMatrix);
-            GL.UniformMatrix4(2, false, ref fident);
+            GL.UniformMatrix4(2, false, ref IdentityMatrix);
             GL.Uniform1(6, (float)TheClient.GlobalTickTimeLocal);
             TheClient.Rendering.SetColor(Color4.White);
             if (PostFirstRender != null)

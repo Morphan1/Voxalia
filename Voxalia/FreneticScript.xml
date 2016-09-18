@@ -2513,11 +2513,38 @@
             Construct the TernaryTags - for internal use only.
             </summary>
         </member>
-        <member name="M:FreneticScript.TagHandlers.Common.TernaryTagBase.Handle(FreneticScript.TagHandlers.TagData)">
+        <member name="M:FreneticScript.TagHandlers.Common.TernaryTagBase.HandleOne(FreneticScript.TagHandlers.TagData)">
             <summary>
-            Handles the 'ternary' tag.
+            Handles the 'ternary[]' tag.
             </summary>
             <param name="data">The data to be handled.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Common.TernaryTagBase.Handle(FreneticScript.TagHandlers.TagData)">
+            <summary>
+            Handles the 'ternary[]' tag.
+            </summary>
+            <param name="data">The data to be handled.</param>
+        </member>
+        <member name="T:FreneticScript.TagHandlers.Common.TernaryTagBase.TernaryPassTag">
+            <summary>
+            Handles Ternary calculations.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.TagHandlers.Common.TernaryTagBase.TernaryPassTag.Passed">
+            <summary>
+            Whether this ternary tag passed.
+            </summary>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Common.TernaryTagBase.TernaryPassTag.Handle(FreneticScript.TagHandlers.TagData)">
+            <summary>
+            Handles the 'ternary[].pass[]' tag.
+            </summary>
+            <param name="data">The data to be handled.</param>
+        </member>
+        <member name="M:FreneticScript.TagHandlers.Common.TernaryTagBase.TernaryPassTag.ToString">
+            <summary>
+            Returns NullTag.ToString.
+            </summary>
         </member>
         <member name="T:FreneticScript.TagHandlers.Common.BooleanTagBase">
             <summary>
@@ -3543,6 +3570,11 @@
         <member name="F:FreneticScript.TagHandlers.TagSubHandler.ReturnTypeString">
             <summary>
             What type this returns as. Specify null for dynamic return.
+            </summary>
+        </member>
+        <member name="F:FreneticScript.TagHandlers.TagSubHandler.IsNullTyped">
+            <summary>
+            Whether this tag is for null checks.
             </summary>
         </member>
         <member name="M:FreneticScript.TagHandlers.TagSubHandler.Duplicate">
