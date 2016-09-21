@@ -12,7 +12,7 @@ namespace Voxalia.Shared
     public static class Colors
     {
         public static Color WHITE = Color.FromArgb(255, 255, 255);
-        public static Color BLACK = Color.FromArgb(0, 0, 0);
+        public static Color BLACK = Color.FromArgb(7, 7, 7);
         public static Color GREEN = Color.FromArgb(0, 255, 0);
         public static Color BLUE = Color.FromArgb(0, 0, 255);
         public static Color RED = Color.FromArgb(255, 0, 0);

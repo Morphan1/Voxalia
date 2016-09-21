@@ -62,6 +62,10 @@ namespace Voxalia.ClientGame.NetworkSystem
             {
                 throw new Exception("Can't get session, not logged in!");
             }
+            if (!TheClient.CVars.n_online.ValueB)
+            {
+                return "NO_SESSION";
+            }
             using (ShortWebClient wb = new ShortWebClient())
             {
                 NameValueCollection data = new NameValueCollection();

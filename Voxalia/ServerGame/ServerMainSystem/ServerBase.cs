@@ -290,13 +290,13 @@ namespace Voxalia.ServerGame.ServerMainSystem
             {
                 LoadWorld(str.ToLowerFast());
             }
+            SysConsole.Output(OutputType.INIT, "Preparing block image system...");
+            BlockImages = new BlockImageManager();
+            BlockImages.Init(this);
             if (loaded != null)
             {
                 loaded.Invoke();
             }
-            SysConsole.Output(OutputType.INIT, "Preparing block image system...");
-            BlockImages = new BlockImageManager();
-            BlockImages.Init(this);
             SysConsole.Output(OutputType.INIT, "Ticking...");
             // Tick
             double TARGETFPS = 30d;

@@ -114,11 +114,30 @@ namespace Voxalia.ServerGame.NetworkSystem
 
         bool trying = false;
 
+        public bool IsLocalIP(string rip)
+        {
+            return rip.Contains("127.0.0.1")
+                        || rip.Contains("[::1]")
+                        || rip.Contains("192.168.0.")
+                        || rip.Contains("192.168.1.")
+                        || rip.Contains("10.0.0.");
+        }
+
         public void CheckWebSession(string username, string key)
         {
             if (username == null || key == null)
             {
                 throw new ArgumentNullException();
+            }
+            string rip = PrimarySocket.RemoteEndPoint.ToString();
+            if (!TheServer.CVars.n_online.ValueB)
+            {
+                if (!IsLocalIP(rip))
+                {
+                    throw new Exception("Connection from '" + rip + "' rejected because its IP is not localhost!");
+                }
+                SysConsole.Output(OutputType.INFO, "Connection from '" + rip + "' accepted **WITHOUT AUTHENTICATION** with username: " + username);
+                return;
             }
             using (ShortWebClient wb = new ShortWebClient())
             {
@@ -128,16 +147,11 @@ namespace Voxalia.ServerGame.NetworkSystem
                 data["session"] = key;
                 byte[] response = wb.UploadValues(Program.GlobalServerAddress + "account/microconfirm", "POST", data);
                 string resp = FileHandler.encoding.GetString(response).Trim(' ', '\n', '\r', '\t');
-                string rip = PrimarySocket.RemoteEndPoint.ToString();
                 if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))
                 {
                     string ip = resp.Substring("ACCEPT=".Length, resp.Length - 1 - "ACCEPT=".Length);
                     if (!TheServer.CVars.n_verifyip.ValueB
-                        || rip.Contains("127.0.0.1")
-                        || rip.Contains("[::1]")
-                        || rip.Contains("192.168.0.")
-                        || rip.Contains("192.168.1.")
-                        || rip.Contains("10.0.0.")
+                        || IsLocalIP(rip)
                         || rip.Contains(ip))
                     {
                         SysConsole.Output(OutputType.INFO, "Connection from '" + rip + "' accepted with username: " + username);
