@@ -32,6 +32,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             {
                 // TODO: Goto load screen?
                 success = true;
+                TheClient.TheRegion.RenderingNow.Clear();
                 foreach (Chunk chunk in TheClient.TheRegion.LoadedChunks.Values)
                 {
                     chunk.OwningRegion.UpdateChunk(chunk);
