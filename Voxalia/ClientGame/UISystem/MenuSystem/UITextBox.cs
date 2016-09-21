@@ -105,7 +105,12 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             Menus.TheClient.Rendering.RenderRectangle(x - 1, y - 1, x + w + 1, y + Fonts.font_default.Height + 1);
             GL.Enable(EnableCap.ScissorTest);
             GL.Scissor(x, Menus.TheClient.Window.Height - (y + (int)Fonts.font_default.Height), w, (int)Fonts.font_default.Height);
-            Fonts.DrawColoredText((Selected ? "^0|": "") + (Text.Length == 0 ? ("^)^i" + Info): ("^0" + Text)), new Location(x, y, 0));
+            Fonts.DrawColoredText((Text.Length == 0 ? ("^)^i" + Info): ("^0" + Text)), new Location(x, y, 0));
+            if (Selected)
+            {
+                float textw = Fonts.MeasureFancyText(Text);
+                Fonts.DrawColoredText("^0|", new Location(x + textw, y, 0));
+            }
             GL.Scissor(0, 0, Menus.TheClient.Window.Width, Menus.TheClient.Window.Height); // TODO: Bump around a stack, for embedded scroll groups?
             GL.Disable(EnableCap.ScissorTest);
         }
