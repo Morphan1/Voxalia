@@ -47,7 +47,6 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.F1, "toggle u_showhud");
             BindKey(Key.F2, "toggle u_highlight_targetblock;toggle u_highlight_placeblock");
             BindKey(Key.F3, "toggle u_debug");
-            BindKey(Key.F5, "+quickitem click 5");
             BindKey(Key.F12, "screenshot");
             BindKey(Key.F35, "+attack");
             BindKey(Key.F34, "+secondary");
@@ -84,6 +83,18 @@ namespace Voxalia.ClientGame.UISystem
             BindKey(Key.Number0, "itemsel 9");
             BindKey(Key.Minus, "itemsel 10");
             BindKey(Key.Plus, "itemsel 11");
+            BindKey(Key.Keypad0, "+quickitem click 0");
+            BindKey(Key.Keypad1, "+quickitem click 1");
+            BindKey(Key.Keypad2, "+quickitem click 2");
+            BindKey(Key.Keypad3, "+quickitem click 3");
+            BindKey(Key.Keypad4, "+quickitem click 4");
+            BindKey(Key.Keypad5, "+quickitem click 5");
+            BindKey(Key.Keypad6, "+quickitem click 6");
+            BindKey(Key.Keypad7, "+quickitem click 7");
+            BindKey(Key.Keypad8, "+quickitem click 8");
+            BindKey(Key.Keypad9, "+quickitem click 9");
+            BindKey(Key.KeypadMinus, "+quickitem click 10");
+            BindKey(Key.KeypadPlus, "+quickitem click 11");
             namestokeys = new Dictionary<string, Key>();
             keystonames = new Dictionary<Key, string>();
             RegKey("a", Key.A); RegKey("b", Key.B); RegKey("c", Key.C);
