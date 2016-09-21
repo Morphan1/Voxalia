@@ -11,7 +11,7 @@ namespace Voxalia.ServerGame.WorldSystem
 {
     public partial class Region
     {
-        public Location Wind = new Location(0.3f, 0, 0);
+        public Location Wind = new Location(0.3, 0, 0);
 
         public void TickClouds()
         {

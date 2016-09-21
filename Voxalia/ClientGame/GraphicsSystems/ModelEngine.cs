@@ -420,7 +420,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// Draws the model.
         /// </summary>
-        public void Draw(double aTimeHead = 0, SingleAnimation headanim = null, double aTimeTorso = 0, SingleAnimation torsoanim = null, double aTimeLegs = 0, SingleAnimation legsanim = null)
+        public void Draw(double aTimeHead = 0, SingleAnimation headanim = null, double aTimeTorso = 0, SingleAnimation torsoanim = null, double aTimeLegs = 0, SingleAnimation legsanim = null, bool forceBones = false)
         {
             LastDrawTime = Engine.cTime;
             hAnim = headanim;
@@ -437,7 +437,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             for (int i = 0; i < Meshes.Count; i++)
             {
-                if (any && Meshes[i].Bones.Count > 0)
+                if ((any || forceBones) && Meshes[i].Bones.Count > 0)
                 {
                     Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];
                     for (int x = 0; x < Meshes[i].Bones.Count; x++)

@@ -13,8 +13,13 @@ namespace Voxalia.ClientGame.WorldSystem
 {
     public partial class Region
     {
+        public Location Wind = new Location(0.3, 0, 0); // TODO: Gather this value from the server!
+
+        public Location ActualWind = new Location(0.8, 0, 0);
+
         public void TickClouds()
         {
+            ActualWind = Wind * Math.Sin(GlobalTickTimeLocal * 0.1);
             for (int i = 0; i < Clouds.Count; i++)
             {
                 Clouds[i].Position += Clouds[i].Velocity * Delta;
