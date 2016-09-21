@@ -305,6 +305,7 @@ namespace Voxalia.ServerGame.WorldSystem
                 me.SetPosition(h ? new Location(rcr.HitData.Location) : pos);
                 me.CGroup = CollisionUtil.NonSolid;
                 me.CanLOD = true;
+                me.ShakesInWind = true;
                 SpawnEntity(me);
                 me.SetPosition(me.GetPosition() - new Location(Quaternion.Transform(me.offset.ToBVector(), orient)));
                 me.ForceNetwork();

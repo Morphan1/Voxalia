@@ -18,6 +18,8 @@ namespace Voxalia.ServerGame.EntitySystem
             return EntityType.MODEL;
         }
 
+        public bool ShakesInWind = false;
+
         public bool CanLOD = false;
 
         public override AbstractPacketOut GetLODSpawnPacket()
@@ -37,11 +39,12 @@ namespace Voxalia.ServerGame.EntitySystem
         public override byte[] GetNetData()
         {
             byte[] phys = GetPhysicsNetData();
-            byte[] data = new byte[phys.Length + 4 + 1 + 24];
+            byte[] data = new byte[phys.Length + 4 + 1 + 24 + 1];
             phys.CopyTo(data, 0);
             Utilities.IntToBytes(TheServer.Networking.Strings.IndexForString(model)).CopyTo(data, phys.Length);
             data[phys.Length + 4] = (byte)mode;
             scale.ToDoubleBytes().CopyTo(data, phys.Length + 4 + 1);
+            data[phys.Length + 4 + 1 + 24] = (byte)(ShakesInWind ? 1 : 0); // TODO: Flags?
             return data;
         }
 

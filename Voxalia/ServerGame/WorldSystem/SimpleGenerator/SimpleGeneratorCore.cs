@@ -366,15 +366,15 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         sw.Start();
 #endif
                         Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000)); // TODO: Improve!
-                        if (spotr.Next(65) == 1) // TODO: Efficiency! // TODO: Biome based chance!
-                        {
-                            // TODO: Different plants per biome!
-                            chunk.OwningRegion.SpawnSmallPlant("tallgrass", new Location(cx + 0.5f, cy + 0.5f, hheight), chunk);
-                        }
-                        else if (spotr.Next(300) == 1) // TODO: Efficiency! // TODO: Biome based chance!
+                        if (spotr.Next(300) == 1) // TODO: Efficiency! // TODO: Biome based chance!
                         {
                             // TODO: Different trees per biome!
                             chunk.OwningRegion.SpawnTree("treevox0" + (Utilities.UtilRandom.Next(2) + 1), new Location(cx + 0.5f, cy + 0.5f, hheight), chunk);
+                        }
+                        else if (spotr.Next(2) == 1) // TODO: Efficiency! // TODO: Biome based chance!
+                        {
+                            // TODO: Different plants per biome!
+                            chunk.OwningRegion.SpawnSmallPlant("basic_grass_bones", new Location(cx + 0.5f, cy + 0.5f, hheight), chunk);
                         }
 #if TIMINGS
                         sw.Stop();
