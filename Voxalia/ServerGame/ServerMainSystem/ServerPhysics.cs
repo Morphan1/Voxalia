@@ -56,7 +56,7 @@ namespace Voxalia.ServerGame.ServerMainSystem
             OnWorldLoadEvent.Fire(e2);
             if (e.Cancelled)
             {
-                world.UnloadFully();
+                world.UnloadFully(null);
                 return null;
             }
             LoadedWorlds.Add(world);

@@ -146,11 +146,32 @@ namespace Voxalia.ServerGame.ServerMainSystem
             {
                 player.Kick("Server shutting down.");
             }
+            Object tlock = new Object();
+            int t = 0;
+            int c = 0;
             foreach (World world in LoadedWorlds)
             {
+                t++;
                 // TODO: Thread-safer shutdown sequence!
                 SysConsole.Output(OutputType.INFO, "[Shutdown] Unloading world: " + world.Name);
-                world.UnloadFully();
+                world.UnloadFully(() =>
+                {
+                    lock (tlock)
+                    {
+                        c++;
+                    }
+                });
+            }
+            while (true)
+            {
+                lock (tlock)
+                {
+                    if (c >= t)
+                    {
+                        break;
+                    }
+                }
+                Thread.Sleep(50);
             }
             LoadedWorlds.Clear();
             SysConsole.Output(OutputType.INFO, "[Shutdown] Clearing plugins...");

@@ -148,7 +148,7 @@ namespace Voxalia.ServerGame.WorldSystem
                     {
                         if (NeedShutdown)
                         {
-                            UnloadFully();
+                            UnloadFully(null);
                             return;
                         }
                         lock (TickLock)
@@ -177,8 +177,14 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public Object TickLock = new Object();
 
-        public void UnloadFully()
+        Action UnloadCallback = null;
+
+        public void UnloadFully(Action wrapUp)
         {
+            if (wrapUp != null)
+            {
+                UnloadCallback = wrapUp;
+            }
             NeedShutdown = true;
             if (Thread.CurrentThread != Execution)
             {
@@ -187,6 +193,7 @@ namespace Voxalia.ServerGame.WorldSystem
             // TODO: Lock safely!
             MainRegion.UnloadFully();
             MainRegion = null;
+            UnloadCallback?.Invoke();
             Execution.Abort();
             Execution = null;
         }
