@@ -30,7 +30,6 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             bool is_all = arg == "all";
             if (arg == "chunks" || is_all)
             {
-                // TODO: Goto load screen?
                 success = true;
                 TheClient.TheRegion.RenderingNow.Clear();
                 foreach (Chunk chunk in TheClient.TheRegion.LoadedChunks.Values)

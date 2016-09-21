@@ -342,6 +342,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         }
         
         public Dictionary<string, Matrix4> CustomAnimationAdjustments = new Dictionary<string, Matrix4>();
+
+        public bool ForceBoneNoOffset = false;
         
         public void UpdateTransforms(ModelNode pNode, Matrix4 transf)
         {
@@ -367,13 +369,27 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 rot.Transpose();
                 Matrix4.Mult(ref trans, ref rot, out nodeTransf);
             }
+            else
+            {
+                Matrix4 temp;
+                if (CustomAnimationAdjustments.TryGetValue(nodename, out temp))
+                {
+                    temp.Transpose();
+                    nodeTransf = temp;
+                }
+            }
             Matrix4 global;
             Matrix4.Mult(ref transf, ref nodeTransf, out global);
             for (int i = 0; i < pNode.Bones.Count; i++)
             {
-                //Matrix4 modded;
-                //Matrix4.Mult(ref globalInverse, ref global, out modded);
-                Matrix4.Mult(ref global, ref pNode.Bones[i].Offset, out pNode.Bones[i].Transform);
+                if (ForceBoneNoOffset)
+                {
+                    pNode.Bones[i].Transform = global;
+                }
+                else
+                {
+                    Matrix4.Mult(ref global, ref pNode.Bones[i].Offset, out pNode.Bones[i].Transform);
+                }
             }
             for (int i = 0; i < pNode.Children.Count; i++)
             {
@@ -426,7 +442,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             hAnim = headanim;
             tAnim = torsoanim;
             lAnim = legsanim;
-            bool any = hAnim != null || tAnim != null || lAnim != null;
+            bool any = hAnim != null || tAnim != null || lAnim != null || forceBones;
             if (any)
             {
                 // globalInverse = Root.Inverted();
@@ -435,9 +451,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 aTLegs = aTimeLegs;
                 UpdateTransforms(RootNode, Matrix4.Identity);
             }
+            // TODO: If hasBones && !any { defaultBones() } ?
             for (int i = 0; i < Meshes.Count; i++)
             {
-                if ((any || forceBones) && Meshes[i].Bones.Count > 0)
+                if (any && Meshes[i].Bones.Count > 0)
                 {
                     Matrix4[] mats = new Matrix4[Meshes[i].Bones.Count];
                     for (int x = 0; x < Meshes[i].Bones.Count; x++)

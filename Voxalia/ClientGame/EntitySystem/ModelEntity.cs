@@ -373,17 +373,13 @@ namespace Voxalia.ClientGame.EntitySystem
             bool boned = model.Name.Contains("bones");
             if (boned) // TODO: Flag of some form. Probably controlled by the server!
             {
+                model.ForceBoneNoOffset = true;
                 OpenTK.Vector3 wind = ClientUtilities.Convert(TheRegion.ActualWind);
                 float len = wind.Length;
-                Matrix4 windtranfs = Matrix4.CreateFromAxisAngle(wind / len, (float)Math.Min(Math.Sqrt(len) * 2f, 2.0));
+                Matrix4 windtransf = Matrix4.CreateFromAxisAngle(wind / len, (float)Math.Min(len, 1.0));
                 // TODO: Calculate this block in the model code?
-                foreach (ModelMesh mesh in model.Meshes)
-                {
-                    foreach (ModelBone bone in mesh.Bones)
-                    {
-                        bone.Transform = Matrix4.CreateRotationZ((float)(Utilities.UtilRandom.NextDouble() * 0.1));
-                    }
-                }
+                model.CustomAnimationAdjustments["b_bottom"] = windtransf;
+                model.CustomAnimationAdjustments["b_top"] = windtransf;
             }
             model.Draw(0, null, 0, null, 0, null, boned); // TODO: Animation?
         }

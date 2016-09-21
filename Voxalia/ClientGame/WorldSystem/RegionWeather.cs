@@ -19,7 +19,7 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void TickClouds()
         {
-            ActualWind = Wind * Math.Sin(GlobalTickTimeLocal * 0.1);
+            ActualWind = Wind * Math.Sin(GlobalTickTimeLocal * 0.6);
             for (int i = 0; i < Clouds.Count; i++)
             {
                 Clouds[i].Position += Clouds[i].Velocity * Delta;

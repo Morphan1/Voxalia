@@ -778,7 +778,7 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             else
             {
-                model.CustomAnimationAdjustments["neck01"] = GetAdjustmentOTK("neck01") * OpenTK.Matrix4.Identity;
+                model.CustomAnimationAdjustments["neck01"] = GetAdjustmentOTK("neck01");
             }
             model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
             Model mod = TheClient.GetItemForSlot(TheClient.QuickBarPos).Mod;
