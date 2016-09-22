@@ -286,40 +286,7 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             return !(entry is EntityCollidable);
         }
-
-        public void SpawnSmallPlant(string plant, Location opos, Chunk chunk)
-        {
-            // TODO: Efficiency!
-            ModelEntity me = new ModelEntity("plants/small/" + plant, this);
-            Location pos = opos + new Location(0, 0, 1);
-            Action res = () =>
-            {
-                RayCastResult rcr;
-                bool h = SpecialCaseRayTrace(pos, -Location.UnitZ, 3, MaterialSolidity.FULLSOLID, IgnoreEntities, out rcr);
-                me.SetPosition(h ? new Location(rcr.HitData.Location) : pos);
-                Vector3 plantalign = new Vector3(0, 0, 1);
-                Vector3 norm = h ? rcr.HitData.Normal : new Vector3(0, 0, 1);
-                Quaternion orient = Quaternion.Identity;
-                Quaternion.GetQuaternionBetweenNormalizedVectors(ref plantalign, ref norm, out orient);
-                me.SetOrientation(orient);
-                me.SetPosition(h ? new Location(rcr.HitData.Location) : pos);
-                me.CGroup = CollisionUtil.NonSolid;
-                me.CanLOD = true;
-                me.ShakesInWind = true;
-                SpawnEntity(me);
-                me.SetPosition(me.GetPosition() - new Location(Quaternion.Transform(me.offset.ToBVector(), orient)));
-                me.ForceNetwork();
-            };
-            if (chunk == null)
-            {
-                res.Invoke();
-            }
-            else
-            {
-                chunk.fixesToRun.Add(TheWorld.Schedule.GetSyncTask(res));
-            }
-        }
-
+        
         public void SpawnTree(string tree, Location opos, Chunk chunk)
         {
             // TODO: Efficiency!

@@ -146,6 +146,19 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 _VBO = null;
             }
+            DestroyPlants();
+        }
+
+        public void DestroyPlants()
+        {
+            if (PlantsSpawned != null)
+            {
+                foreach (Vector3i v in PlantsSpawned)
+                {
+                    OwningRegion.AxisAlignedModels.Remove(v);
+                }
+                PlantsSpawned = null;
+            }
         }
 
         public bool LOADING = false;

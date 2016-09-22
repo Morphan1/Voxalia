@@ -370,19 +370,8 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 TheClient.Textures.White.Bind();
             }
-            if (ShakesInWind)
-            {
-                model.ForceBoneNoOffset = true;
-                OpenTK.Vector3 wind = ClientUtilities.Convert(TheRegion.ActualWind);
-                float len = wind.Length;
-                Matrix4 windtransf = Matrix4.CreateFromAxisAngle(wind / len, (float)Math.Min(len, 1.0));
-                model.CustomAnimationAdjustments["b_bottom"] = windtransf;
-                model.CustomAnimationAdjustments["b_top"] = windtransf;
-            }
-            model.Draw(0, null, 0, null, 0, null, ShakesInWind); // TODO: Animation(s)?
+            model.Draw(); // TODO: Animation(s)?
         }
-
-        public bool ShakesInWind = false;
     }
 
     public class ModelEntityConstructor : EntityTypeConstructor
@@ -394,7 +383,6 @@ namespace Voxalia.ClientGame.EntitySystem
             byte moder = data[PhysicsEntity.PhysicsNetworkDataLength + 4];
             me.mode = (ModelCollisionMode)moder;
             me.scale = Location.FromDoubleBytes(data, PhysicsEntity.PhysicsNetworkDataLength + 4 + 1);
-            me.ShakesInWind = data[PhysicsEntity.PhysicsNetworkDataLength + 4 + 1 + 24] == 1;
             return me;
         }
     }

@@ -53,6 +53,8 @@ namespace Voxalia.ClientGame.WorldSystem
             return BlockInternal.AIR;
         }
 
+        public List<Vector3i> PlantsSpawned = null;
+
         void VBOHInternal()
         {
             try
@@ -68,6 +70,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     return;
                 }
+                List<Tuple<Vector3i, Matrix4, Model, Model>> PlantsToSpawn = new List<Tuple<Vector3i, Matrix4, Model, Model>>();
                 Vector3 ppos = ClientUtilities.Convert(WorldPosition.ToLocation() * CHUNK_SIZE);
                 //bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, 1));
@@ -84,7 +87,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         for (int z = 0; z < CSize; z++)
                         {
                             BlockInternal c = GetBlockAt(x, y, z);
-                            if (((Material)c.BlockMaterial).RendersAtAll())
+                            if ((c.Material).RendersAtAll())
                             {
                                 BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : (c_zp == null ? t_air : GetMostSolid(c_zp, x, y, z + 1 - CSize));
                                 BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : (c_zm == null ? t_air : GetMostSolid(c_zm, x, y, z - 1 + CSize));
@@ -153,6 +156,13 @@ namespace Voxalia.ClientGame.WorldSystem
                                             rh.THWs.Add(new Vector4(0, 0, 0, 0));
                                         }
                                     }
+                                }
+                                if (c.Material.GetPlant() != null && !zp.Material.RendersAtAll() && zp.Material.GetSolidity() == MaterialSolidity.NONSOLID)
+                                {
+                                    Model m = OwningRegion.TheClient.Models.GetModel(c.Material.GetPlant() + "_hd");
+                                    Model m2 = OwningRegion.TheClient.Models.GetModel(c.Material.GetPlant());
+                                    Matrix4 tmat = Matrix4.CreateTranslation(WorldPosition.X * CHUNK_SIZE + x + 0.5f, WorldPosition.Y * CHUNK_SIZE + y + 0.5f, WorldPosition.Z * CHUNK_SIZE + z + 1); // TODO: Rotation from block shape!
+                                    PlantsToSpawn.Add(new Tuple<Vector3i, Matrix4, Model, Model>(WorldPosition * CHUNK_SIZE + new Vector3i(x, y, z + 1), tmat, m, m2));
                                 }
                             }
                         }
@@ -271,6 +281,13 @@ namespace Voxalia.ClientGame.WorldSystem
                     {
                         tVBO.GenerateOrUpdate();
                         tVBO.CleanLists();
+                    }
+                    DestroyPlants();
+                    PlantsSpawned = new List<Vector3i>();
+                    foreach (Tuple<Vector3i, Matrix4, Model, Model> plant in PlantsToSpawn)
+                    {
+                        OwningRegion.AxisAlignedModels[plant.Item1] = new Tuple<Matrix4, Model, Model>(plant.Item2, plant.Item3, plant.Item4);
+                        PlantsSpawned.Add(plant.Item1);
                     }
                 });
                 OwningRegion.DoneRendering(this);

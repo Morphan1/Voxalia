@@ -72,6 +72,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
         }
 
+        Object Locker = new Object();
+
         /// <summary>
         /// Gets the model object for a specific model name.
         /// </summary>
@@ -79,39 +81,42 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>A valid model object.</returns>
         public Model GetModel(string modelname)
         {
-            modelname = FileHandler.CleanFileName(modelname);
-            for (int i = 0; i < LoadedModels.Count; i++)
+            lock (Locker)
             {
-                if (LoadedModels[i].Name == modelname)
+                modelname = FileHandler.CleanFileName(modelname);
+                for (int i = 0; i < LoadedModels.Count; i++)
                 {
-                    return LoadedModels[i];
+                    if (LoadedModels[i].Name == modelname)
+                    {
+                        return LoadedModels[i];
+                    }
                 }
-            }
-            Model Loaded = null;
-            try
-            {
-                Loaded = LoadModel(modelname);
-            }
-            catch (Exception ex)
-            {
-                SysConsole.Output(OutputType.ERROR, ex.ToString());
-            }
-            if (Loaded == null)
-            {
-                if (norecurs)
+                Model Loaded = null;
+                try
                 {
-                    Loaded = new Model(modelname) { Engine = this, Root = Matrix4.Identity, Meshes = new List<ModelMesh>(), RootNode = null };
+                    Loaded = LoadModel(modelname);
                 }
-                else
+                catch (Exception ex)
                 {
-                    norecurs = true;
-                    Model m = GetModel("cube");
-                    norecurs = false;
-                    Loaded = new Model(modelname) { Engine = this, Root = m.Root, RootNode = m.RootNode, Meshes = m.Meshes, Original = m.Original };
+                    SysConsole.Output(OutputType.ERROR, ex.ToString());
                 }
+                if (Loaded == null)
+                {
+                    if (norecurs)
+                    {
+                        Loaded = new Model(modelname) { Engine = this, Root = Matrix4.Identity, Meshes = new List<ModelMesh>(), RootNode = null };
+                    }
+                    else
+                    {
+                        norecurs = true;
+                        Model m = GetModel("cube");
+                        norecurs = false;
+                        Loaded = new Model(modelname) { Engine = this, Root = m.Root, RootNode = m.RootNode, Meshes = m.Meshes, Original = m.Original };
+                    }
+                }
+                LoadedModels.Add(Loaded);
+                return Loaded;
             }
-            LoadedModels.Add(Loaded);
-            return Loaded;
         }
 
         bool norecurs = false;
@@ -221,7 +226,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                 }
                 model.Meshes.Add(modmesh);
-                modmesh.GenerateVBO();
             }
             model.RootNode = new ModelNode() { Parent = null, Name = scene.RootNode.Name.ToLowerFast() };
             List<ModelNode> allNodes = new List<ModelNode>();
@@ -325,7 +329,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             return null;
         }
 
-        void SetBones(Matrix4[] mats)
+        public void SetBones(Matrix4[] mats)
         {
             float[] set = new float[mats.Length * 16];
             for (int i = 0; i < mats.Length; i++)
@@ -602,13 +606,20 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public void GenerateVBO()
         {
             vbo.GenerateVBO();
+            VBOGenned = true;
         }
+
+        public bool VBOGenned = false;
 
         /// <summary>
         /// Renders the mesh.
         /// </summary>
         public void Draw()
         {
+            if (!VBOGenned)
+            {
+                GenerateVBO();
+            }
             vbo.Render(true);
         }
     }

@@ -18,6 +18,7 @@ using System.Diagnostics;
 using Priority_Queue;
 using FreneticScript;
 using Voxalia.ClientGame.GraphicsSystems;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -456,6 +457,57 @@ namespace Voxalia.ClientGame.WorldSystem
                 ch.AddToWorld();
                 ch.CreateVBO();
             });
+        }
+
+        public Dictionary<Vector3i, Tuple<Matrix4, Model, Model>> AxisAlignedModels = new Dictionary<Vector3i, Tuple<Matrix4, Model, Model>>();
+
+        const double MAX_GRASS_DIST = 15;
+
+        const double mgd_sq = MAX_GRASS_DIST * MAX_GRASS_DIST;
+
+        public void RenderPlants()
+        {
+            RenderPlants(false);
+            RenderPlants(true);
+        }
+
+        public void RenderPlants(bool close)
+        {
+            OpenTK.Vector3 wind = ClientUtilities.Convert(ActualWind);
+            float len = wind.Length;
+            Matrix4 windtransf = Matrix4.CreateFromAxisAngle(wind / len, (float)Math.Min(len, 1.0));
+            HashSet<Model> mods = new HashSet<Model>();
+            Model prev = null;
+            foreach (KeyValuePair<Vector3i, Tuple<Matrix4, Model, Model>> mod in AxisAlignedModels)
+            {
+                double dist = mod.Key.ToLocation().DistanceSquared(TheClient.MainWorldView.CameraPos);
+                if (dist > mgd_sq * (close ? 1 : 4))
+                {
+                    continue;
+                }
+                Model mt = close ? mod.Value.Item2 : mod.Value.Item3;
+                if (!mods.Contains(mt))
+                {
+                    mt.ForceBoneNoOffset = true;
+                    mt.CustomAnimationAdjustments["b_bottom"] = windtransf;
+                    mt.CustomAnimationAdjustments["b_top"] = windtransf;
+                    mt.UpdateTransforms(mt.RootNode, Matrix4.Identity);
+                    mt.LoadSkin(TheClient.Textures);
+                }
+                if (mt != prev) // TODO: Sort so we don't need to update very often?
+                {
+                    Matrix4[] mats = new Matrix4[mt.Meshes[0].Bones.Count];
+                    for (int x = 0; x < mt.Meshes[0].Bones.Count; x++)
+                    {
+                        mats[x] = mt.Meshes[0].Bones[x].Transform;
+                    }
+                    mt.SetBones(mats);
+                    prev = mt;
+                }
+                Matrix4 transf = Matrix4.CreateScale((float)((mgd_sq * 4 - dist) / (mgd_sq * 4))) * mod.Value.Item1;
+                GL.UniformMatrix4(2, false, ref transf);
+                mt.Draw();
+            }
         }
 
         public void RenderEffects()

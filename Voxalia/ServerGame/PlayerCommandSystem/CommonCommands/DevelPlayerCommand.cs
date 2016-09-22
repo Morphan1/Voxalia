@@ -175,10 +175,6 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
             {
                 entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Testing " + entry.InputArguments[1] + ": " + entry.Player.HasPermission(entry.InputArguments[1]));
             }
-            else if (arg0 == "spawnSmallPlant" && entry.InputArguments.Count > 1)
-            {
-                entry.Player.TheRegion.SpawnSmallPlant(entry.InputArguments[1].ToLowerFast(), entry.Player.GetPosition(), null);
-            }
             else if (arg0 == "spawnTree" && entry.InputArguments.Count > 1)
             {
                 entry.Player.TheRegion.SpawnTree(entry.InputArguments[1].ToLowerFast(), entry.Player.GetPosition(), null);

@@ -99,6 +99,9 @@ namespace Voxalia.Shared
                         case "name":
                             inf.SetName(opt[1]);
                             break;
+                        case "plant":
+                            inf.Plant = opt[1];
+                            break;
                         case "sound":
                             inf.Sound = (MaterialSound)Enum.Parse(typeof(MaterialSound), opt[1].ToUpperInvariant());
                             break;
@@ -346,6 +349,11 @@ namespace Voxalia.Shared
             return ALL_MATS[(int)mat].LightEmitRange;
         }
 
+        public static string GetPlant(this Material mat)
+        {
+            return ALL_MATS[(int)mat].Plant;
+        }
+
         public static Type MaterialType = typeof(Material);
 
         public static bool TryGetFromNameOrNumber(string input, out Material mat)
@@ -589,6 +597,11 @@ namespace Voxalia.Shared
         /// How far this block should emit light.
         /// </summary>
         public double LightEmitRange = 0;
+
+        /// <summary>
+        /// What plant model to render for this material.
+        /// </summary>
+        public string Plant = null;
 
         public Material BigSpreadsAs = Material.AIR;
     }

@@ -754,6 +754,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.ActiveTexture(TextureUnit.Texture0);
                 Particles.Engine.Render();
             }
+            SetEnts();
+            TheRegion.RenderPlants();
             isVox = false;
             SetVox();
             TheRegion.Render();
