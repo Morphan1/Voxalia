@@ -69,6 +69,7 @@ namespace Voxalia.Shared
         public static Color BLUR = Color.FromArgb(0, 0, 127, 0);
         public static Color CRACKS = Color.FromArgb(0, 127, 127, 127);
         public static Color INVERT = Color.FromArgb(0, 127, 127, 145);
+        public static Color SHINE = Color.FromArgb(0, 145, 127, 127);
 
         public static Dictionary<string, byte> KnownColorNames = new Dictionary<string, byte>();
 
@@ -149,7 +150,6 @@ namespace Voxalia.Shared
             Register("LIME", LIME);
             Register("SKY_BLUE", SKY_BLUE);
             Register("VERY_DARK_GRAY", VERY_DARK_GRAY);
-            Register("PLACEHOLDER_6", WHITE);
             Register("PLACEHOLDER_5", WHITE);
             Register("PLACEHOLDER_4", WHITE);
             Register("PLACEHOLDER_3", WHITE);
@@ -183,6 +183,7 @@ namespace Voxalia.Shared
             M_BLUR = Register("BLUR", BLUR);
             Register("CRACKS", CRACKS);
             Register("INVERT", INVERT);
+            Register("SHINE", SHINE);
         }
     }
 }

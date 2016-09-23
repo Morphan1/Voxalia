@@ -90,6 +90,8 @@ void main()
 	col = thval / thstr;
 	col.w = tw;
 	float rhBlur = 0.0;
+    float spec = dets.x;
+    float refl = dets.y;
 	if (f.tcol.w == 0.0 && f.tcol.x == 0.0 && f.tcol.z == 0.0 && f.tcol.y > 0.3 && f.tcol.y < 0.7)
 	{
 		rhBlur = (f.tcol.y - 0.31) * ((1.0 / 0.38) * (3.14159 * 2.0));
@@ -99,6 +101,11 @@ void main()
 		if (f.tcol.z > 0.51)
 		{
 			col.xyz = vec3(1.0) - col.xyz;
+		}
+		else if (f.tcol.x > 0.51)
+		{
+			spec = 1.0;
+			refl = 0.75;
 		}
 		else
 		{
@@ -114,8 +121,6 @@ void main()
 		discard;
 	}
 	vec3 lightcol = clamp(f.color.xyz, vec3(light_clamp.x), vec3(light_clamp.y));
-    float spec = dets.x;
-    float refl = dets.y;
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - vec3(1.0);
 	color = col * v_color;
 	position = vec4(f.position.xyz, 1.0);
