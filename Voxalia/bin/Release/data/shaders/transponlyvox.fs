@@ -60,6 +60,8 @@ void main()
 	vec4 color;
 #endif
 	vec4 tcolor = texture(tex, f.texcoord);
+	vec4 dets = texture(htex, f.texcoord);
+    float spec = dets.r; // TODO: Refract / reflect?
 	if (f.tcol.w == 0.0 && f.tcol.x == 0.0 && f.tcol.z == 0.0 && f.tcol.y > 0.3 && f.tcol.y < 0.7)
 	{
 		// float rhBlur = (f.tcol.y - 0.31) * ((1.0 / 0.38) * (3.14159 * 2.0));
@@ -69,6 +71,11 @@ void main()
 		if (f.tcol.z > 0.51)
 		{
 			tcolor.xyz = vec3(1.0) - tcolor.xyz;
+		}
+		else if (f.tcol.x > 0.51)
+		{
+			spec = 1.0;
+			//refl = 0.75;
 		}
 		else
 		{
@@ -91,8 +98,6 @@ void main()
 #if MCM_LIT
 	color = vec4(0.0);
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - 1.0;
-	vec4 dets = texture(htex, f.texcoord);
-    float spec = dets.r; // TODO: Refract / reflect?
 	int count = int(lights_used);
 	for (int i = 0; i < count; i++)
 	{
