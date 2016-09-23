@@ -4,10 +4,9 @@
 #define MCM_REFRACT 0
 
 layout (binding = 0) uniform sampler2D s;
-// TODO: Spec, refl.
-//layout (binding = 1) uniform sampler2D spec;
-//layout (binding = 2) uniform sampler2D refl;
 layout (binding = 1) uniform sampler2D normal_tex;
+layout (binding = 2) uniform sampler2D spec;
+layout (binding = 3) uniform sampler2D refl;
 
 // ...
 layout (location = 5) uniform float minimum_light = 0.0;
@@ -58,9 +57,8 @@ void main()
 		discard;
 	}
 #endif
-	// TODO: spec, refl.
-	float specular_strength = 0.0;//texture(spec, f.texcoord).r;
-	float reflection_amt = 0.0;//texture(refl, f.texcoord).r;
+	float specular_strength = texture(spec, f.texcoord).r;
+	float reflection_amt = texture(refl, f.texcoord).r;
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - vec3(1.0);
 	color = col * f.color;
 	position = vec4(f.position.xyz, 1.0);
