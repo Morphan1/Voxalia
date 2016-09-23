@@ -34,6 +34,7 @@ layout (location = 22) uniform mat4 proj_mat = mat4(1.0); // The full 3D project
 layout (location = 24) uniform float width = 1280.0; // How wide the screen is.
 layout (location = 25) uniform float height = 720.0; // How tall the screen is.
 layout (location = 26) uniform float time = 0.0; // A timer value, in seconds. Simply used for things that move.
+layout (location = 27) uniform vec2 mot_blur = vec2(0.0); // How much motion blur to apply, and in what direction.
 
 const float HDR_Mod = 5.0; // How much to multiply all lights by to ensure lighting colors are quality.
 const float HDR_Div = (1.0 / HDR_Mod); // The inverse of HDR_Mod, for quick calculation.
@@ -118,7 +119,7 @@ vec4 getColorInt(in vec2 pos, in float exposure) // Grab the color of a pixel, a
 #endif
 }
 
-vec4 getColor(in vec2 pos, in float exposure) // Grab the color of a pixel, after lighting AND blurring.
+vec4 getColor(in vec2 pos, in float exposure, in float mblen) // Grab the color of a pixel, after lighting AND blurring.
 {
 	vec4 renderhint = texture(renderhinttex, pos);
 	if (renderhint.y > 0.01) // If blurring is enabled.
@@ -127,7 +128,17 @@ vec4 getColor(in vec2 pos, in float exposure) // Grab the color of a pixel, afte
 		vec2 psx = normalize(pos - vec2(0.5 + cos(time + renderhint.y), 0.5 + sin(time + renderhint.y))) * 0.02;
 		return getColorInt(pos + psx, exposure);
 	}
-	return getColorInt(pos, exposure); // Just use the other function for getting the actual color data.
+	vec4 bcol = vec4(0.0);
+	float mblen_inv = 1.0 / mblen;
+	float amt = 0.0;
+	for (float f = 0.0; f <= mblen; f += 0.001)
+	{
+		vec4 ccol = getColorInt(pos + mot_blur * mblen_inv * f, exposure); // Just use the other function for getting the actual color data.
+		float cur = ((mblen - f) * mblen_inv);
+		bcol += ccol * cur;
+		amt += cur;
+	}
+	return bcol * (1.0 / amt);
 }
 
 // If TOONIFY is enabled, this section will contain all the toonify helper methods.
@@ -138,7 +149,8 @@ vec4 getColor(in vec2 pos, in float exposure) // Grab the color of a pixel, afte
 void main() // The central entry point of the shader. Handles everything!
 {
 	vec2 hdr_data = getHDRValue(); // Grab HDR values.
-	vec4 light_color = vec4(getColor(f_texcoord, hdr_data.x).xyz, 1.0); // Grab the basic color of our pixel.
+	float mblen = dot(mot_blur, mot_blur) <= 0.0001 ? 0.0001 : length(mot_blur);
+	vec4 light_color = vec4(getColor(f_texcoord, hdr_data.x, mblen).xyz, 1.0); // Grab the basic color of our pixel.
 	// This section applies toonify if it is enabled generally.
 #if MCM_TOONIFY
 	// TODO: Toonify option per pixel: block paint?
@@ -146,7 +158,7 @@ void main() // The central entry point of the shader. Handles everything!
     vHSV.x = nearestLevel(vHSV.x, 0);
     vHSV.y = nearestLevel(vHSV.y, 1);
     vHSV.z = nearestLevel(vHSV.z, 2);
-    float edg = IsEdge(f_texcoord, hdr_data.x);
+    float edg = IsEdge(f_texcoord, hdr_data.x, mblen);
     vec3 vRGB = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : HSVtoRGB(vHSV.x, vHSV.y, vHSV.z);
     light_color = vec4(vRGB.x, vRGB.y, vRGB.z, light_color.w);
 	// TODO: Maybe just return here?
@@ -165,7 +177,7 @@ void main() // The central entry point of the shader. Handles everything!
 	{
 		vec3 viewDir = texture(positiontex, f_texcoord).xyz - eye_position;
 		vec3 refr = refract(normalize(viewDir), normalize(renderhint2), 0.75);
-		vec4 refrCol = getColor(f_texcoord + refr.xy * 0.1, hdr_data.x);
+		vec4 refrCol = getColor(f_texcoord + refr.xy * 0.1, hdr_data.x, mblen);
 		// TODO: Maybe apply a dynamic mixing value here, rather than static 0.5?
 		light_color = light_color * 0.5 + refrCol * 0.5; // Color is half base value, and half refracted value.
 	}

@@ -372,7 +372,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public bool RenderingShadows;
 
-        public Location ForwardVec;
+        public Location ForwardVec = Location.Zero;
         
         public Matrix4 PrimaryMatrix;
 
@@ -431,6 +431,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 RenderPass_GBuffer();
                 RenderPass_Lights();
                 FinalHDRGrab();
+                PForward = ForwardVec + CameraPos;
                 timer.Stop();
                 TotalTime = (double)timer.ElapsedMilliseconds / 1000f;
                 if (TotalTime > TotalSpikeTime)
@@ -452,6 +453,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         Location cameraAdjust;
 
         Matrix4 PrimaryMatrix_OffsetFor3D;
+
+        Location PForward = Location.Zero;
 
         /// <summary>
         /// Set up the rendering engine.
@@ -943,10 +946,19 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.Uniform1(19, DesaturationAmount);
             GL.Uniform3(20, ClientUtilities.Convert(CameraPos));
             GL.Uniform3(21, DesaturationColor);
+            GL.UniformMatrix4(22, false, ref PrimaryMatrix);
             GL.Uniform1(24, (float)Width);
             GL.Uniform1(25, (float)Height);
             GL.Uniform1(26, (float)TheClient.GlobalTickTimeLocal);
-            GL.UniformMatrix4(22, false, ref PrimaryMatrix);
+            Vector4 v = Vector4.Transform(new Vector4(ClientUtilities.Convert(PForward), 1f), PrimaryMatrix);
+            Vector2 v2 = (v.Xy / v.W);
+            Vector2 rel = (pfRes - v2) * 0.01f;
+            if (float.IsNaN(rel.X) || float.IsInfinity(rel.X) || float.IsNaN(rel.Y) || float.IsInfinity(rel.Y))
+            {
+                rel = new Vector2(0f, 0f);
+            }
+            GL.Uniform2(27, ref rel);
+            pfRes = v2;
             GL.ActiveTexture(TextureUnit.Texture4);
             GL.BindTexture(TextureTarget.Texture2D, fbo_texture);
             GL.ActiveTexture(TextureUnit.Texture7);
@@ -998,6 +1010,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             CheckError("AfterPostFirstRender");
         }
+
+        Vector2 pfRes = Vector2.Zero;
 
         public int RenderPass_Transparents()
         {
