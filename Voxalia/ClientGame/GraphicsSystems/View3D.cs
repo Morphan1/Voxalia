@@ -919,7 +919,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 }
                 else
                 {
-                    TheClient.s_finalgodray_lights = TheClient.s_finalgodray_lights.Bind();
+                    if (TheClient.CVars.r_motionblur.ValueB)
+                    {
+                        TheClient.s_finalgodray_lights_motblur = TheClient.s_finalgodray_lights_motblur.Bind();
+                    }
+                    else
+                    {
+                        TheClient.s_finalgodray_lights = TheClient.s_finalgodray_lights.Bind();
+                    }
                 }
             }
             else

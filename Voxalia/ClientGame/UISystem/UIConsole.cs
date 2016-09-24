@@ -416,23 +416,34 @@ namespace Voxalia.ClientGame.UISystem
                 float percentone = -(float)ScrolledLine / (float)Lines;
                 float percenttwo = -((float)ScrolledLine - (float)Client.Central.Window.Height / Client.Central.FontSets.Standard.font_default.Height) / (float)Lines;
                 Client.Central.Rendering.RenderRectangle(0, (int)(Y - Y * percenttwo), 2, (int)(Y - Y * percentone));
-
                 // Bottom line
                 Client.Central.Textures.White.Bind();
                 Client.Central.Rendering.SetColor(Color4.Cyan);
                 Client.Central.Rendering.RenderRectangle(0, (Client.Central.Window.Height / 2) - 1, Client.Central.Window.Width, Client.Central.Window.Height / 2);
-
                 // Typing text
+                string typed = Typing;
+                int c = 0;
+                if (!Client.Central.CVars.u_colortyping.ValueB)
+                {
+                    for (int i = 0; i < typed.Length && i < TypingCursor; i++)
+                    {
+                        if (typed[i] == '^')
+                        {
+                            c++;
+                        }
+                    }
+                    typed = typed.Replace("^", "^^n");
+                }
                 Client.Central.Rendering.SetColor(Color4.White);
-                Client.Central.FontSets.Standard.DrawColoredText(Typing, TypingLoc);
+                Client.Central.FontSets.Standard.DrawColoredText(typed, TypingLoc);
                 // Cursor
                 if (keymark_add)
                 {
-                    double XAdd = Client.Central.FontSets.Standard.MeasureFancyText(Typing.Substring(0, TypingCursor + 1)) - 1;
-                    if (Typing.Length > TypingCursor + 1 && Typing[TypingCursor] == '^'
-                        && FontSet.IsColorSymbol(Typing[TypingCursor + 1]))
+                    double XAdd = Client.Central.FontSets.Standard.MeasureFancyText(typed.Substring(0, TypingCursor + 1 + c)) - 1;
+                    if (typed.Length > TypingCursor + 1 && typed[TypingCursor + c] == '^'
+                        && FontSet.IsColorSymbol(typed[TypingCursor + 1 + c]))
                     {
-                        XAdd -= Client.Central.FontSets.Standard.font_default.MeasureString(Typing[TypingCursor].ToString());
+                        XAdd -= Client.Central.FontSets.Standard.font_default.MeasureString(typed[TypingCursor + c].ToString());
                     }
                     Client.Central.FontSets.Standard.DrawColoredText("|", new Location(TypingLoc.X + XAdd, TypingLoc.Y, 0));
                 }

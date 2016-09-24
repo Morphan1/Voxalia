@@ -2,6 +2,7 @@
 
 #define MCM_GOOD_GRAPHICS 0
 #define MCM_TOONIFY 0
+#define MCM_MOTBLUR 0
 #define MCM_LIGHTS 0
 
 layout (binding = 0) uniform sampler2D colortex; // Color G-Buffer Texture
@@ -128,6 +129,7 @@ vec4 getColor(in vec2 pos, in float exposure, in float mblen) // Grab the color 
 		vec2 psx = normalize(pos - vec2(0.5 + cos(time + renderhint.y), 0.5 + sin(time + renderhint.y))) * 0.02;
 		return getColorInt(pos + psx, exposure);
 	}
+#if MCM_MOTBLUR
 	vec4 bcol = vec4(0.0);
 	float mblen_inv = 1.0 / mblen;
 	float amt = 0.0;
@@ -139,6 +141,9 @@ vec4 getColor(in vec2 pos, in float exposure, in float mblen) // Grab the color 
 		amt += cur;
 	}
 	return bcol * (1.0 / amt);
+#else
+	return getColorInt(pos, exposure);
+#endif
 }
 
 // If TOONIFY is enabled, this section will contain all the toonify helper methods.

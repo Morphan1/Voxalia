@@ -34,7 +34,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality, r_shadowblur, r_shadowpace, r_shadows,
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth, r_toonify, r_transplighting, r_transpshadows,
             r_3d_enable, r_fast, r_chunksatonce, r_chunkoverrender, r_transpll, r_noblockshapes, r_treeshadows,
-            r_godrays, r_hdr, r_extrasuns, r_chunkmarch, r_clouds;
+            r_godrays, r_hdr, r_extrasuns, r_chunkmarch, r_clouds, r_motionblur;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect, a_echovolume;
@@ -42,7 +42,8 @@ namespace Voxalia.ClientGame.CommandSystem
         // UI CVars
         public CVar u_mouse_sensitivity, u_reticle, u_reticlescale, u_showhud,
             u_highlight_targetblock, u_highlight_placeblock, u_showping,
-            u_debug, u_showmap, u_showrangefinder, u_showcompass;
+            u_debug, u_showmap, u_showrangefinder, u_showcompass,
+            u_colortyping;
 
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
@@ -105,6 +106,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_extrasuns = Register("r_extrasuns", "true", CVarFlag.Boolean, "Whether to include additional solar light sources alongside the main sun light."); // TODO: Callback to auto-set
             r_chunkmarch = Register("r_chunkmarch", "false", CVarFlag.Boolean, "Whether to use 'chunk marching' method to render chunks (if false, uses a generic loop).");
             r_clouds = Register("r_clouds", "true", CVarFlag.Boolean, "Whether to render clouds."); // TODO: Inform the server of this to reduce bandwidth.
+            r_motionblur = Register("r_motionblur", "false", CVarFlag.Boolean, "Whether to blur the screen to better represent motion.");
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "1", CVarFlag.Numeric, "What volume the music should be.");
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");
@@ -125,6 +127,7 @@ namespace Voxalia.ClientGame.CommandSystem
             u_showrangefinder = Register("u_showrangefinder", "false", CVarFlag.Boolean | CVarFlag.ServerControl, "Whether to display a range finder on the HUD.");
             u_showping = Register("u_showping", "true", CVarFlag.Boolean, "Whether to display the current ping on the UI.");
             u_showcompass = Register("u_showcompass", "false", CVarFlag.Boolean | CVarFlag.ServerControl, "Whether to display a compass on the HUD.");
+            u_colortyping = Register("u_colortyping", "false", CVarFlag.Boolean, "Whether to color the text currently being typed typed (chat, console, ...).");
         }
 
         CVar Register(string name, string value, CVarFlag flags, string desc = null)

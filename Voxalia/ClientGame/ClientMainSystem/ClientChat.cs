@@ -69,6 +69,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Network.SendPacket(packet);
             }
             ChatBox.Text = "";
+            ChatBox.MinCursor = 0;
+            ChatBox.MaxCursor = 0;
         }
 
         void ToggleLink(UITextLink link, string n, int chan)

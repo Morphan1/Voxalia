@@ -159,6 +159,27 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public override void Render(double delta, int xoff, int yoff)
         {
+            string typed = Text;
+            int c = 0;
+            int cmax = 0;
+            if (!Menus.TheClient.CVars.u_colortyping.ValueB)
+            {
+                for (int i = 0; i < typed.Length && i < MinCursor; i++)
+                {
+                    if (typed[i] == '^')
+                    {
+                        c++;
+                    }
+                }
+                for (int i = 0; i < typed.Length && i < MaxCursor; i++)
+                {
+                    if (typed[i] == '^')
+                    {
+                        cmax++;
+                    }
+                }
+                typed = typed.Replace("^", "^^n");
+            }
             int x = X() + xoff;
             int y = Y() + yoff;
             int w = Width();
@@ -169,13 +190,13 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             GL.Scissor(x, Menus.TheClient.Window.Height - (y + (int)Fonts.font_default.Height), w, (int)Fonts.font_default.Height);
             if (Selected)
             {
-                float textw = Fonts.MeasureFancyText(Text.Substring(0, MinCursor));
-                float textw2 = Fonts.MeasureFancyText(Text.Substring(0, MaxCursor));
+                float textw = Fonts.MeasureFancyText(typed.Substring(0, MinCursor + c));
+                float textw2 = Fonts.MeasureFancyText(typed.Substring(0, MaxCursor + cmax));
                 Menus.TheClient.Rendering.SetColor(new Color4(0f, 0.2f, 1f, 0.5f));
                 Menus.TheClient.Rendering.RenderRectangle(x + textw, y, x + textw2 + 1, y + Fonts.font_default.Height);
             }
             Menus.TheClient.Rendering.SetColor(Color4.White);
-            Fonts.DrawColoredText((Text.Length == 0 ? ("^)^i" + Info): ("^0" + Text)), new Location(x, y, 0));
+            Fonts.DrawColoredText((typed.Length == 0 ? ("^)^i" + Info): ("^0" + typed)), new Location(x, y, 0));
             GL.Scissor(0, 0, Menus.TheClient.Window.Width, Menus.TheClient.Window.Height); // TODO: Bump around a stack, for embedded scroll groups?
             GL.Disable(EnableCap.ScissorTest);
         }
