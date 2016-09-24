@@ -82,6 +82,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -262,6 +263,7 @@
     <Compile Include="ClientGame\OtherSystems\ChatMessage.cs" />
     <Compile Include="ClientGame\OtherSystems\ClientUtilities.cs" />
     <Compile Include="ClientGame\OtherSystems\ItemStack.cs" />
+    <Compile Include="ClientGame\AudioSystem\TextToSpeech.cs" />
     <Compile Include="ClientGame\UISystem\GamePadHandler.cs" />
     <Compile Include="ClientGame\UISystem\KeyHandler.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIItemGroup.cs" />

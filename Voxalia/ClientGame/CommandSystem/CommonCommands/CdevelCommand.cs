@@ -9,6 +9,8 @@ using Voxalia.Shared;
 using Voxalia.ClientGame.WorldSystem;
 using FreneticScript.TagHandlers;
 using Voxalia.Shared.Collision;
+using Voxalia.ClientGame.AudioSystem;
+using FreneticScript.TagHandlers.Objects;
 
 namespace Voxalia.ClientGame.CommandSystem.CommonCommands
 {
@@ -75,6 +77,17 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                             c += val.Item2;
                         }
                         entry.Good(queue, "-> Total: " + c + " (" + (c / 1024 / 1024) + "MB)");
+                        break;
+                    }
+                case "speakText":
+                    {
+                        if (entry.Arguments.Count < 3)
+                        {
+                            ShowUsage(queue, entry);
+                            break;
+                        }
+                        bool male = !entry.GetArgument(queue, 1).ToString().ToLowerFast().StartsWith("f");
+                        TextToSpeech.Speak(entry.GetArgument(queue, 2), male);
                         break;
                     }
                 default:
