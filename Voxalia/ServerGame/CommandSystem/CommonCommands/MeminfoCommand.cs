@@ -38,7 +38,7 @@ namespace Voxalia.ServerGame.CommandSystem.CommonCommands
             {
                 n++;
                 long chunk = Chunk.RAM_USAGE * world.MainRegion.LoadedChunks.Count;
-                string reg_cr = Utilities.Pad(Utilities.FormatNumber(chunk), ' ', cr.Length, false);
+                //string reg_cr = Utilities.Pad(Utilities.FormatNumber(chunk), ' ', cr.Length, false);
                 long ent = 0;
                 foreach (Entity e in world.MainRegion.Entities)
                 {

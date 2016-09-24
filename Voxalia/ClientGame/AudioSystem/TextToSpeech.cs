@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Voxalia.Shared;
+#if WINDOWS
 using System.Speech.Synthesis;
+#endif
 
 namespace Voxalia.ClientGame.AudioSystem
 {
@@ -19,6 +21,7 @@ namespace Voxalia.ClientGame.AudioSystem
             {
                 try
                 {
+#if WINDOWS
                     if (TrySpeech)
                     {
                         SpeechSynthesizer speech = new SpeechSynthesizer();
@@ -49,12 +52,18 @@ namespace Voxalia.ClientGame.AudioSystem
                             speech.Speak(text);
                         }
                     }
+#endif
+                    TrySpeech = false;
                 }
                 catch (Exception ex)
                 {
                     Utilities.CheckException(ex);
                     TrySpeech = false;
-                    Process p = Process.Start("espeak", "\"" + text.Replace("\"", " quote ") + "\"");
+                }
+                if (!TrySpeech)
+                {
+                    String addme = male ? " -p 40" : " -p 95";
+                    Process p = Process.Start("espeak", "\"" + text.Replace("\"", " quote ") + "\"" + addme);
                     Console.WriteLine(p.MainModule.FileName);
                 }
             });

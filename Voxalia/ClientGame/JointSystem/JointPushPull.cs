@@ -16,7 +16,7 @@ namespace Voxalia.ClientGame.JointSystem
             Mode = mode;
         }
 
-        public float Strength;
+        //public float Strength;
 
         public bool Mode;
 

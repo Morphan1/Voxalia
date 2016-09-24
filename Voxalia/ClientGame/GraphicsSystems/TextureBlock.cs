@@ -78,7 +78,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             // TODO: Separate files for each texture detail!
             List<MaterialTextureInfo> texs = new List<MaterialTextureInfo>(datums.Length);
             IntTexs = new string[MaterialHelpers.TextureCount];
-            float time = 0;
+            //float time = 0;
             for (int ia = 0; ia < datums.Length; ia++)
             {
                 int i = ia;
@@ -159,7 +159,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     texs.Add(tex);
                     IntTexs[(int)tex.Mat] = tex.Textures[0];
                 }//, i * LoadRate);
-                time = i * 0.1f;
+                //time = i * 0.1f;
             }
             for (int ia = 0; ia < texs.Count; ia++)
             {
