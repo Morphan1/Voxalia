@@ -22,15 +22,16 @@ Also used libraries:
 
 ## Linux Install Notes
 
-- Requires mono
-- Requires LibOpus
-- Requires fully up to date non-Intel graphics drivers
-- Requires a 64-bit system
+- Requires mono.
+- Requires LibOpus.
+- Requires fully up to date non-Intel graphics drivers (Must support OpenGL 4.3).
+- Requires "espeak" program/package. Must be a valid "espeak" executable in path.
+- Requires a 64-bit system.
 - Linux build is primarily tested on Ubuntu 16.04 with latest NVidia drivers.
 
 ## Mac Install Notes
 
-- Should be similar to Linux requirements
+- Should be similar to Linux requirements...
 - ??? (Untested!)
 
 ## Compiling
