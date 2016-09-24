@@ -27,14 +27,18 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
+  <ItemGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <Reference Include="System.Speech" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)|$(Platform)' == 'zDebug|x64'">
+    <Reference Include="System.Speech" />
+  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Release\</OutputPath>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <Reference Include="System.Speech">
-    </Reference>
     <Optimize>true</Optimize>
     <DocumentationFile>bin\Release\VoxaliaClientGame.XML</DocumentationFile>
     <WarningLevel>3</WarningLevel>
@@ -46,8 +50,6 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Release\</OutputPath>
     <DocumentationFile>bin\Release\VoxaliaClientGame.XML</DocumentationFile>
-    <Reference Include="System.Speech">
-    </Reference>
     <Optimize>false</Optimize>
     <WarningLevel>3</WarningLevel>
     <DebugType>full</DebugType>

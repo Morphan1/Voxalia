@@ -28,6 +28,12 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
+  <ItemGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <Reference Include="System.Speech" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)|$(Platform)' == 'zDebug|x64'">
+    <Reference Include="System.Speech" />
+  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Release\</OutputPath>
@@ -37,8 +43,6 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <Optimize>true</Optimize>
     <DocumentationFile>bin\Release\Voxalia.XML</DocumentationFile>
-    <Reference Include="System.Speech">
-    </Reference>
     <WarningLevel>3</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -46,8 +50,6 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Release\</OutputPath>
     <DocumentationFile>bin\Release\Voxalia.XML</DocumentationFile>
-    <Reference Include="System.Speech">
-    </Reference>
     <Optimize>false</Optimize>
     <WarningLevel>3</WarningLevel>
     <DebugType>full</DebugType>
