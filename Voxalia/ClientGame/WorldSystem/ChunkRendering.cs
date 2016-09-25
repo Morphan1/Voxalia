@@ -159,10 +159,21 @@ namespace Voxalia.ClientGame.WorldSystem
                                 }
                                 if (c.Material.GetPlant() != null && !zp.Material.RendersAtAll() && zp.Material.GetSolidity() == MaterialSolidity.NONSOLID)
                                 {
+                                    Location offset;
+                                    BEPUphysics.CollisionShapes.EntityShape es = BlockShapeRegistry.BSD[c.BlockData].GetShape(c.Damage, out offset, false);
+                                    BEPUutilities.RayHit rayhit;
+                                    es.GetCollidableInstance().RayCast(new BEPUutilities.Ray(new BEPUutilities.Vector3(0, 0, 2), new BEPUutilities.Vector3(0, 0, -1)), 3, out rayhit);
                                     Model m = OwningRegion.TheClient.Models.GetModel(c.Material.GetPlant() + "_hd");
                                     Model m2 = OwningRegion.TheClient.Models.GetModel(c.Material.GetPlant());
                                     Vector3 trans = new Vector3(WorldPosition.X * CHUNK_SIZE + x + 0.5f, WorldPosition.Y* CHUNK_SIZE +y + 0.5f, WorldPosition.Z* CHUNK_SIZE +z + 1);
-                                    Matrix4 tmat = Matrix4.CreateTranslation(trans); // TODO: Rotation from block shape!
+                                    Matrix4 tmat = Matrix4.CreateTranslation(trans);
+                                    if (rayhit.Normal.LengthSquared() > 0)
+                                    {
+                                        BEPUutilities.Vector3 plantalign = new BEPUutilities.Vector3(0, 0, 1);
+                                        BEPUutilities.Quaternion orient;
+                                        BEPUutilities.Quaternion.GetQuaternionBetweenNormalizedVectors(ref plantalign, ref rayhit.Normal, out orient);
+                                        tmat = Matrix4.CreateFromQuaternion(new Quaternion((float)orient.X, (float)orient.Y, (float)orient.Z, (float)orient.W)) * tmat;
+                                    }
                                     Location skylight = OwningRegion.GetLightAmount(ClientUtilities.Convert(trans), Location.UnitZ);
                                     PlantsToSpawn.Add(new Tuple<Vector3i, Matrix4, Model, Model, float>(WorldPosition * CHUNK_SIZE + new Vector3i(x, y, z + 1), tmat, m, m2, (float)skylight.X));
                                 }
