@@ -22,7 +22,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public string mod;
 
-        public Matrix4 transform;
+        public Matrix4d transform;
 
         public Location Offset;
 
@@ -298,7 +298,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Offset = InternalOffset;
             }
             BEPUutilities.Vector3 offs = Offset.ToBVector();
-            transform = Matrix4.CreateTranslation(ClientUtilities.Convert(Offset));
+            transform = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(Offset));
             List<BEPUutilities.Vector3> tvecs = TheClient.Models.Handler.GetVertices(model.Original);
             if (tvecs.Count == 0)
             {
@@ -337,8 +337,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 return;
             }
             TheClient.SetEnts();
-            Matrix4 mat = GetTransformationMatrix();
-            GL.UniformMatrix4(2, false, ref mat);
+            Matrix4d mat = GetTransformationMatrix();
+            TheClient.MainWorldView.SetMatrix(2, mat);
             if (model.Meshes[0].vbo.Tex == null)
             {
                 TheClient.Textures.White.Bind();
@@ -362,9 +362,9 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
-            Matrix4 orient = GetOrientationMatrix();
-            Matrix4 mat = transform * (Matrix4.CreateScale(ClientUtilities.Convert(scale)) * orient * Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition())));
-            GL.UniformMatrix4(2, false, ref mat);
+            Matrix4d orient = GetOrientationMatrix();
+            Matrix4d mat = transform * (Matrix4d.Scale(ClientUtilities.ConvertD(scale)) * orient * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(GetPosition())));
+            TheClient.MainWorldView.SetMatrix(2, mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
             if (model.Meshes[0].vbo.Tex == null)
             {

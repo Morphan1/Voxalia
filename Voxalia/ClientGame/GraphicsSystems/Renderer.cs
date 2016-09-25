@@ -205,16 +205,16 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public ShaderEngine Shaders;
 
         /// <summary>
-        /// Renders a black line box.
+        /// Renders a line box.
         /// </summary>
-        public void RenderLineBox(Location min, Location max, Matrix4? rot = null)
+        public void RenderLineBox(Location min, Location max, Matrix4d? rot = null)
         {
             Engine.White.Bind();
             Location halfsize = (max - min) / 2;
-            Matrix4 mat = Matrix4.CreateScale(ClientUtilities.Convert(halfsize))
-                * (rot != null && rot.HasValue ? rot.Value : Matrix4.Identity)
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(min + halfsize));
-            GL.UniformMatrix4(2, false, ref mat);
+            Matrix4d mat = Matrix4d.Scale(ClientUtilities.ConvertD(halfsize))
+                * (rot != null && rot.HasValue ? rot.Value : Matrix4d.Identity)
+                * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(min + halfsize));
+            Client.Central.MainWorldView.SetMatrix(2, mat); // TODO: Client reference!
             GL.BindVertexArray(Box._VAO);
             GL.DrawElements(PrimitiveType.Lines, 24, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
@@ -229,11 +229,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
             // TODO: Efficiency!
             float len = (float)(end - start).Length();
             Location vecang = Utilities.VectorToAngles(start - end);
-            Matrix4 mat = Matrix4.CreateScale(len, 1, 1)
-                * Matrix4.CreateRotationY((float)(vecang.Y * Utilities.PI180))
-                * Matrix4.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(start));
-            GL.UniformMatrix4(2, false, ref mat);
+            Matrix4d mat = Matrix4d.Scale(len, 1, 1)
+                * Matrix4d.CreateRotationY((float)(vecang.Y * Utilities.PI180))
+                * Matrix4d.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
+                * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(start));
+            Client.Central.MainWorldView.SetMatrix(2, mat); // TODO: Client reference!
             GL.BindVertexArray(Line._VAO);
             GL.DrawElements(PrimitiveType.Lines, 2, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
@@ -247,12 +247,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             float len = (float)(end - start).Length();
             Location vecang = Utilities.VectorToAngles(start - end);
-            Matrix4 mat = Matrix4.CreateRotationY((float)(90 * Utilities.PI180))
-                * Matrix4.CreateScale(len, width, width)
-                * Matrix4.CreateRotationY((float)(vecang.Y * Utilities.PI180))
-                * Matrix4.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
-                 * Matrix4.CreateTranslation(ClientUtilities.Convert(start));
-            GL.UniformMatrix4(2, false, ref mat);
+            Matrix4d mat = Matrix4d.CreateRotationY((float)(90 * Utilities.PI180))
+                * Matrix4d.Scale(len, width, width)
+                * Matrix4d.CreateRotationY((float)(vecang.Y * Utilities.PI180))
+                * Matrix4d.CreateRotationZ((float)(vecang.Z * Utilities.PI180))
+                 * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(start));
+            Client.Central.MainWorldView.SetMatrix(2, mat);
             Client.Central.Models.Cylinder.Draw(); // TODO: Models reference in constructor - or client reference?
         }
 
@@ -323,12 +323,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             // TODO: Quaternion magic?
             Location relang = Utilities.VectorToAngles(pos - facing);
-            Matrix4 mat = Matrix4.CreateTranslation(-0.5f, -0.5f, 0f)
-                * Matrix4.CreateScale(ClientUtilities.Convert(scale))
-                * Matrix4.CreateRotationY((float)((relang.Y - 90) * Utilities.PI180))
-                * Matrix4.CreateRotationZ((float)(relang.Z * Utilities.PI180))
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(pos));
-            GL.UniformMatrix4(2, false, ref mat);
+            Matrix4d mat = Matrix4d.CreateTranslation(-0.5f, -0.5f, 0f)
+                * Matrix4d.Scale(ClientUtilities.ConvertD(scale))
+                * Matrix4d.CreateRotationY((float)((relang.Y - 90) * Utilities.PI180))
+                * Matrix4d.CreateRotationZ((float)(relang.Z * Utilities.PI180))
+                * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(pos));
+            Client.Central.MainWorldView.SetMatrix(2, mat); // TODO: Client reference!
             GL.BindVertexArray(Square._VAO);
             GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
@@ -345,14 +345,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             Location updir = (p2 - pos) / len2;
             Location right = updir.CrossProduct(lookdir);
-            Matrix4 mat = Matrix4.CreateTranslation(-0.5f, -0.5f, 0f) * Matrix4.CreateScale((float)len2 * 0.5f, width, 1f);
-            Matrix4 m2 = new Matrix4((float)right.X, (float)updir.X, (float)lookdir.X, (float)center.X,
-                (float)right.Y, (float)updir.Y, (float)lookdir.Y, (float)center.Y,
-                (float)right.Z, (float)updir.Z, (float)lookdir.Z, (float)center.Z,
+            Matrix4d mat = Matrix4d.CreateTranslation(-0.5f, -0.5f, 0f) * Matrix4d.Scale((float)len2 * 0.5f, width, 1f);
+            Matrix4d m2 = new Matrix4d(right.X, updir.X, lookdir.X, center.X,
+                right.Y, updir.Y, lookdir.Y, center.Y,
+                right.Z, updir.Z, lookdir.Z, center.Z,
                 0, 0, 0, 1);
             m2.Transpose();
             mat *= m2;
-            GL.UniformMatrix4(2, false, ref mat);
+            Client.Central.MainWorldView.SetMatrix(2, mat);
             GL.BindVertexArray(Square._VAO);
             GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }

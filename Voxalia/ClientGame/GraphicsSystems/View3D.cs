@@ -70,6 +70,20 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public Func<int> ShadowTexSize = () => 64;
 
+        public Matrix4d OffsetWorld = Matrix4d.Identity;
+
+        public const int MAT_LOC_VIEW = 1;
+
+        public const int MAT_LOC_OBJECT = 2;
+
+        public void SetMatrix(int mat_loc, Matrix4d mat)
+        {
+            Matrix4d temp = mat * OffsetWorld;
+            Matrix4 mat4f = new Matrix4((float)temp.M11, (float)temp.M12, (float)temp.M13, (float)temp.M14, (float)temp.M21, (float)temp.M22, (float)temp.M23, (float)temp.M24,
+                (float)temp.M31, (float)temp.M32, (float)temp.M33, (float)temp.M34, (float)temp.M41, (float)temp.M42, (float)temp.M43, (float)temp.M44);
+            GL.UniformMatrix4(mat_loc, false, ref mat4f);
+        }
+
         public void FinalHDRGrab()
         {
             if (TheClient.CVars.r_hdr.ValueB)
@@ -472,18 +486,30 @@ namespace Voxalia.ClientGame.GraphicsSystems
             cameraAdjust = -ForwardVec.CrossProduct(CameraUp) * 0.25;
             SetViewport();
             CameraTarget = CameraPos + ForwardVec;
+            OffsetWorld = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos));
             Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
                 (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
-            Location bx = TheClient.CVars.r_3d_enable.ValueB ? (CameraPos + cameraAdjust) : CameraPos;
+            Location bx = TheClient.CVars.r_3d_enable.ValueB ? (cameraAdjust) : Location.Zero;
             Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + ForwardVec), ClientUtilities.Convert(CameraUp));
             PrimaryMatrix = view * proj;
             if (TheClient.CVars.r_3d_enable.ValueB)
             {
-                Matrix4 view2 = Matrix4.LookAt(ClientUtilities.Convert(CameraPos - cameraAdjust), ClientUtilities.Convert(CameraPos - cameraAdjust + ForwardVec), ClientUtilities.Convert(CameraUp));
+                Matrix4 view2 = Matrix4.LookAt(ClientUtilities.Convert(-cameraAdjust), ClientUtilities.Convert(-cameraAdjust + ForwardVec), ClientUtilities.Convert(CameraUp));
                 PrimaryMatrix_OffsetFor3D = view2 * proj;
             }
-            camFrust = new Frustum(PrimaryMatrix);
-            cf2 = new Frustum(PrimaryMatrix_OffsetFor3D);
+            Matrix4d projd = Matrix4d.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
+                (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
+            Location bxd = TheClient.CVars.r_3d_enable.ValueB ? (CameraPos + cameraAdjust) : CameraPos;
+            Matrix4d viewd = Matrix4d.LookAt(ClientUtilities.ConvertD(bxd), ClientUtilities.ConvertD(bxd + ForwardVec), ClientUtilities.ConvertD(CameraUp));
+            Matrix4d PrimaryMatrixd = viewd * projd;
+            Matrix4d PrimaryMatrix_OffsetFor3Dd = Matrix4d.Identity;
+            if (TheClient.CVars.r_3d_enable.ValueB)
+            {
+                Matrix4d view2d = Matrix4d.LookAt(ClientUtilities.ConvertD(CameraPos - cameraAdjust), ClientUtilities.ConvertD(CameraPos - cameraAdjust + ForwardVec), ClientUtilities.ConvertD(CameraUp));
+                PrimaryMatrix_OffsetFor3Dd = view2d * projd;
+            }
+            camFrust = new Frustum(PrimaryMatrixd);
+            cf2 = new Frustum(PrimaryMatrix_OffsetFor3Dd);
             CFrust = camFrust;
             CheckError("AfterSetup");
         }
@@ -567,7 +593,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                 }
                                 else
                                 {
-                                    CFrust = new Frustum(Lights[i].InternalLights[x].GetMatrix());
+                                    CFrust = new Frustum(ClientUtilities.ConvertToD(Lights[i].InternalLights[x].GetMatrix()));
                                 }
                                 CameraPos = ClientUtilities.Convert(Lights[i].InternalLights[x].eye);
                                 TheClient.s_shadowvox = TheClient.s_shadowvox.Bind();
@@ -1326,8 +1352,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.Uniform2(4, new Vector2(Width, Height));
                 Matrix4 flatProj = Matrix4.CreateOrthographicOffCenter(-1, 1, 1, -1, -1, 1);
                 GL.UniformMatrix4(1, false, ref flatProj);
-                Matrix4 ident = Matrix4.Identity;
-                GL.UniformMatrix4(2, false, ref ident);
+                GL.UniformMatrix4(2, false, ref IdentityMatrix);
                 GL.Uniform2(4, new Vector2(Width, Height));
                 TheClient.Rendering.RenderRectangle(-1, -1, 1, 1);
                 GL.MemoryBarrier(MemoryBarrierFlags.AllBarrierBits);
@@ -1344,7 +1369,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 TheClient.s_ll_fpass.Bind();
                 GL.Uniform2(4, new Vector2(Width, Height));
                 GL.UniformMatrix4(1, false, ref flatProj);
-                GL.UniformMatrix4(2, false, ref ident);
+                GL.UniformMatrix4(2, false, ref IdentityMatrix);
                 GL.Uniform2(4, new Vector2(Width, Height));
                 TheClient.Rendering.RenderRectangle(-1, -1, 1, 1);
             }
@@ -1505,27 +1530,25 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 if (TheClient.CVars.r_transpll.ValueB)
                 {
                     TheClient.s_transponlyvox_ll.Bind();
-                    Matrix4 ident = Matrix4.Identity;
                     // GL.UniformMatrix4(1, false, ref combined);
-                    GL.UniformMatrix4(2, false, ref ident);
+                    GL.UniformMatrix4(2, false, ref IdentityMatrix);
                     Matrix4 matabc = new Matrix4(Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero);
                     matabc[0, 3] = (float)Width;
                     matabc[1, 3] = (float)Height;
                     GL.UniformMatrix4(9, false, ref matabc);
                     TheClient.s_transponly_ll.Bind();
                     //GL.UniformMatrix4(1, false, ref combined);
-                    GL.UniformMatrix4(2, false, ref ident);
+                    GL.UniformMatrix4(2, false, ref IdentityMatrix);
                     GL.UniformMatrix4(9, false, ref matabc);
                 }
                 else
                 {
                     TheClient.s_transponlyvox.Bind();
-                    Matrix4 ident = Matrix4.Identity;
                     //GL.UniformMatrix4(1, false, ref combined);
-                    GL.UniformMatrix4(2, false, ref ident);
+                    GL.UniformMatrix4(2, false, ref IdentityMatrix);
                     TheClient.s_transponly.Bind();
                     //GL.UniformMatrix4(1, false, ref combined);
-                    GL.UniformMatrix4(2, false, ref ident);
+                    GL.UniformMatrix4(2, false, ref IdentityMatrix);
                 }
                 Render3D(this);
             }

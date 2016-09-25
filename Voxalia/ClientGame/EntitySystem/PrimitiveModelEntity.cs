@@ -65,9 +65,9 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 return;
             }
-            Matrix4 orient = GetOrientationMatrix();
-            Matrix4 mat = (Matrix4.CreateScale(ClientUtilities.Convert(scale)) * orient * Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition())));
-            GL.UniformMatrix4(2, false, ref mat);
+            Matrix4d orient = GetOrientationMatrix();
+            Matrix4d mat = (Matrix4d.Scale(ClientUtilities.ConvertD(scale)) * orient * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(GetPosition())));
+            TheClient.MainWorldView.SetMatrix(2, mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
             if (model.Meshes[0].vbo.Tex == null)
             {

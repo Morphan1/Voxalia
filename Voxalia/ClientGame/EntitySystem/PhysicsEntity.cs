@@ -330,22 +330,22 @@ namespace Voxalia.ClientGame.EntitySystem
         /// Gets the transformation matrix of this entity as an OpenTK matrix.
         /// </summary>
         /// <returns>.</returns>
-        public OpenTK.Matrix4 GetTransformationMatrix()
+        public OpenTK.Matrix4d GetTransformationMatrix()
         {
             if (Body == null)
             {
-                return ClientUtilities.Convert(WorldTransform);
+                return ClientUtilities.ConvertD(WorldTransform);
             }
-            return ClientUtilities.Convert(Body.WorldTransform);
+            return ClientUtilities.ConvertD(Body.WorldTransform);
         }
 
-        public OpenTK.Matrix4 GetOrientationMatrix()
+        public OpenTK.Matrix4d GetOrientationMatrix()
         {
             if (Body == null)
             {
-                return OpenTK.Matrix4.Identity;
+                return OpenTK.Matrix4d.Identity;
             }
-            return ClientUtilities.Convert(Matrix3x3.ToMatrix4X4(Body.OrientationMatrix));
+            return ClientUtilities.ConvertD(Matrix3x3.ToMatrix4X4(Body.OrientationMatrix));
         }
 
         /// <summary>

@@ -105,15 +105,15 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                     break;
                 case ParticleEffectType.BOX:
                     {
-                        Matrix4 mat = Matrix4.CreateScale(ClientUtilities.Convert(End(this))) * Matrix4.CreateTranslation(ClientUtilities.Convert(start));
-                        GL.UniformMatrix4(2, false, ref mat);
+                        Matrix4d mat = Matrix4d.Scale(ClientUtilities.ConvertD(End(this))) * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(start));
+                        TheClient.MainWorldView.SetMatrix(2, mat);
                         TheClient.Models.Cube.Draw();
                     }
                     break;
                 case ParticleEffectType.SPHERE:
                     {
-                        Matrix4 mat = Matrix4.CreateScale(ClientUtilities.Convert(End(this))) * Matrix4.CreateTranslation(ClientUtilities.Convert(start));
-                        GL.UniformMatrix4(2, false, ref mat);
+                        Matrix4d mat = Matrix4d.Scale(ClientUtilities.ConvertD(End(this))) * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(start));
+                        TheClient.MainWorldView.SetMatrix(2, mat);
                         TheClient.Models.Sphere.Draw();
                     }
                     break;

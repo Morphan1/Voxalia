@@ -33,7 +33,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <summary>
         /// The distance from the origin.
         /// </summary>
-        public float D;
+        public double D;
 
         public Plane(Vector3 v1, Vector3 v2, Vector3 v3)
         {
@@ -54,9 +54,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
             D = (float)-Vector3.Dot(Normal, vec1);
         }
 
-        public Plane(Vector3 _normal, float _d)
+        public Plane(Vector3 _normal, double _d)
         {
-            float fact = 1f / (float)_normal.Length();
+            double fact = 1f / _normal.Length();
             Normal = _normal * fact;
             D = _d * fact;
         }
@@ -70,12 +70,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public Vector3 IntersectLine(Vector3 start, Vector3 end)
         {
             Vector3 ba = end - start;
-            float nDotA = (float)Vector3.Dot(Normal, start);
-            float nDotBA = (float)Vector3.Dot(Normal, ba);
-            float t = -(nDotA + D) / (nDotBA);
+            double nDotA = Vector3.Dot(Normal, start);
+            double nDotBA = Vector3.Dot(Normal, ba);
+            double t = -(nDotA + D) / (nDotBA);
             if (t < 0) // || t > 1
             {
-                return new Vector3(float.NaN, float.NaN, float.NaN);
+                return new Vector3(double.NaN, double.NaN, double.NaN);
             }
             return start + t * ba;
         }
@@ -90,9 +90,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns>The distance.</returns>
-        public float Distance(Vector3 point)
+        public double Distance(Vector3 point)
         {
-            return (float)Vector3.Dot(Normal, point) + D;
+            return Vector3.Dot(Normal, point) + D;
         }
 
         /// <summary>

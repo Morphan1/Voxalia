@@ -138,8 +138,8 @@ namespace Voxalia.ClientGame.EntitySystem
                 return;
             }
             TheClient.SetVox();
-            OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(ClientUtilities.Convert(scale)) * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(shapeOffs)) * GetTransformationMatrix();
-            GL.UniformMatrix4(2, false, ref mat);
+            OpenTK.Matrix4d mat = OpenTK.Matrix4d.Scale(ClientUtilities.ConvertD(scale)) * OpenTK.Matrix4d.CreateTranslation(ClientUtilities.ConvertD(shapeOffs)) * GetTransformationMatrix();
+            TheClient.MainWorldView.SetMatrix(2, mat);
             TheClient.Rendering.SetColor(Color);
             vbo.Render(false);
             TheClient.Rendering.SetColor(Color4.White);

@@ -728,7 +728,7 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public float MaxHealth;
 
-        public static OpenTK.Matrix4 PlayerAngleMat = OpenTK.Matrix4.CreateRotationZ((float)(270 * Utilities.PI180));
+        public static OpenTK.Matrix4d PlayerAngleMat = OpenTK.Matrix4d.CreateRotationZ((float)(270 * Utilities.PI180));
 
         public override Location GetWeldSpot()
         {
@@ -763,11 +763,11 @@ namespace Voxalia.ClientGame.EntitySystem
                 TheClient.Rendering.RenderLine(ServerLocation, renderrelpos);
                 TheClient.Rendering.RenderLineBox(ServerLocation + new Location(-0.2), ServerLocation + new Location(0.2));
             }
-            OpenTK.Matrix4 mat = OpenTK.Matrix4.CreateScale(1.5f)
-                * OpenTK.Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180))
+            OpenTK.Matrix4d mat = OpenTK.Matrix4d.Scale(1.5f)
+                * OpenTK.Matrix4d.CreateRotationZ((Direction.Yaw * Utilities.PI180))
                 * PlayerAngleMat
-                * OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(renderrelpos));
-            GL.UniformMatrix4(2, false, ref mat);
+                * OpenTK.Matrix4d.CreateTranslation(ClientUtilities.ConvertD(renderrelpos));
+            TheClient.MainWorldView.SetMatrix(2, mat);
             TheClient.Rendering.SetMinimumLight(0.0f);
             model.CustomAnimationAdjustments = new Dictionary<string, OpenTK.Matrix4>(SavedAdjustmentsOTK);
             // TODO: safe (no-collision) rotation check?
@@ -785,8 +785,8 @@ namespace Voxalia.ClientGame.EntitySystem
             bool hasjp = HasJetpack();
             if (!hasjp && tAnim != null && mod != null)
             {
-                mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(renderrelpos));
-                GL.UniformMatrix4(2, false, ref mat);
+                mat = OpenTK.Matrix4d.CreateTranslation(ClientUtilities.ConvertD(renderrelpos));
+                TheClient.MainWorldView.SetMatrix(2, mat);
                 Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>(SavedAdjustments);
                 Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, ((float)(Direction.Pitch / 2f * Utilities.PI180) % 360f)));
                 adjs["spine04"] = GetAdjustment("spine04") * rotforw;
@@ -809,8 +809,8 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 // TODO: Abstractify!
                 Model jetp = GetHeldItem().Mod;
-                mat = OpenTK.Matrix4.CreateTranslation(ClientUtilities.Convert(renderrelpos));
-                GL.UniformMatrix4(2, false, ref mat);
+                mat = OpenTK.Matrix4d.CreateTranslation(ClientUtilities.ConvertD(renderrelpos));
+                TheClient.MainWorldView.SetMatrix(2, mat);
                 Dictionary<string, Matrix> adjs = new Dictionary<string, Matrix>();
                 Matrix rotforw = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitX, ((float)(Direction.Pitch / 2f * Utilities.PI180) % 360f)));
                 adjs["spine04"] = GetAdjustment("spine04") * rotforw;

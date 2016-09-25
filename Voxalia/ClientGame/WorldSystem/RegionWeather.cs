@@ -161,8 +161,8 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             TheClient.SetEnts();
             TheClient.Textures.GetTexture("effects/clouds/cloud1").Bind(); // TODO: Cache!
-            Matrix4 identity = Matrix4.Identity;
-            GL.UniformMatrix4(2, false, ref identity);
+            Matrix4d identity = Matrix4d.Identity;
+            TheClient.MainWorldView.SetMatrix(2,identity);
             GL.BindVertexArray(Cl_VAO);
             GL.DrawElements(PrimitiveType.Triangles, Cl_Ind.Count, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }

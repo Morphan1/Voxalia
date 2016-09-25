@@ -344,7 +344,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Matrix4 ortho = Matrix4.CreateOrthographicOffCenter((float)box.Min.X, (float)box.Max.X, (float)box.Min.Y, (float)box.Max.Y, (float)box.Min.Z, (float)box.Max.Z);
                     //  Matrix4 oident = Matrix4.Identity;
                     s_mapvox = s_mapvox.Bind();
-                    GL.UniformMatrix4(1, false, ref ortho);
+                    GL.UniformMatrix4(View3D.MAT_LOC_VIEW, false, ref ortho);
                     GL.Viewport(0, 0, 256, 256); // TODO: Customizable!
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, map_fbo_main);
                     GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
@@ -419,7 +419,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Rendering.SetMinimumLight(1);
             GL.Disable(EnableCap.CullFace);
             Rendering.SetColor(Color4.White);
-            Matrix4 scale = Matrix4.CreateScale(dist2, dist2, dist2) * Matrix4.CreateTranslation(ClientUtilities.Convert(MainWorldView.CameraPos));
+            Matrix4 scale = Matrix4.CreateScale(dist2, dist2, dist2);
             GL.UniformMatrix4(2, false, ref scale);
             // TODO: Save textures!
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/bottom").Bind();
@@ -435,7 +435,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/yp").Bind();
             skybox[5].Render(false);
             Rendering.SetColor(new Vector4(1, 1, 1, (float)Math.Max(Math.Min((SunAngle.Pitch - 70) / (-90), 1), 0)));
-            scale = Matrix4.CreateScale(dist, dist, dist) * Matrix4.CreateTranslation(ClientUtilities.Convert(MainWorldView.CameraPos));
+            scale = Matrix4.CreateScale(dist, dist, dist);
             GL.UniformMatrix4(2, false, ref scale);
             // TODO: Save textures!
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/bottom").Bind();
@@ -455,14 +455,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Matrix4 rot = Matrix4.CreateTranslation(-150f, -150f, 0f)
                 * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + SunAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(MainWorldView.CameraPos + TheSun.Direction * -(dist * 0.96f)));
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(TheSun.Direction * -(dist * 0.96f)));
             Rendering.RenderRectangle(0, 0, 300, 300, rot); // TODO: Adjust scale based on view rad
             Textures.GetTexture("skies/planet").Bind(); // TODO: Store var!
             Rendering.SetColor(new Color4(PlanetLight, PlanetLight, PlanetLight, 1));
             rot = Matrix4.CreateTranslation(-450f, -450f, 0f)
                 * Matrix4.CreateRotationY((float)((-PlanetAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + PlanetAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(MainWorldView.CameraPos + PlanetDir * -(dist * 0.8f)));
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(PlanetDir * -(dist * 0.8f)));
             Rendering.RenderRectangle(0, 0, 900, 900, rot);
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.Enable(EnableCap.CullFace);
@@ -586,7 +586,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             if (FixPersp != Matrix4.Identity)
             {
-                GL.UniformMatrix4(1, false, ref FixPersp);
+                GL.UniformMatrix4(View3D.MAT_LOC_VIEW, false, ref FixPersp);
             }
         }
 
@@ -678,7 +678,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             if (FixPersp != Matrix4.Identity)
             {
-                GL.UniformMatrix4(1, false, ref FixPersp);
+                GL.UniformMatrix4(View3D.MAT_LOC_VIEW, false, ref FixPersp);
             }
         }
 
@@ -732,11 +732,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     {
                         RainCylPos -= 1.0;
                     }
-                    Matrix4 rot = (CVars.g_weathermode.ValueI == 2) ? Matrix4.CreateRotationZ((float)Math.Sin(RainCylPos * 2f * Math.PI) * 0.1f) : Matrix4.Identity;
+                    Matrix4d rot = (CVars.g_weathermode.ValueI == 2) ? Matrix4d.CreateRotationZ(Math.Sin(RainCylPos * 2f * Math.PI) * 0.1f) : Matrix4d.Identity;
                     for (int i = -10; i <= 10; i++)
                     {
-                        Matrix4 mat = rot * Matrix4.CreateTranslation(ClientUtilities.Convert(MainWorldView.CameraPos + new Location(0, 0, 4 * i + RainCylPos * -4)));
-                        GL.UniformMatrix4(2, false, ref mat);
+                        Matrix4d mat = rot * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(MainWorldView.CameraPos + new Location(0, 0, 4 * i + RainCylPos * -4)));
+                        MainWorldView.SetMatrix(2, mat);
                         if (CVars.g_weathermode.ValueI == 1)
                         {
                             RainCyl.Draw();

@@ -33,7 +33,7 @@ namespace Voxalia.ClientGame.EntitySystem
             model.LoadSkin(TheClient.Textures);
         }
 
-        public Matrix4 PreRot = Matrix4.Identity;
+        public Matrix4d PreRot = Matrix4d.Identity;
 
         public override void Render()
         {
@@ -41,8 +41,8 @@ namespace Voxalia.ClientGame.EntitySystem
             TheClient.Rendering.SetColor(TheClient.Rendering.AdaptColor(ClientUtilities.Convert(GetPosition()), color));
             TheClient.Rendering.SetMinimumLight(0.0f);
             // TODO: Prevent model flipping (Possibly related to animation?)
-            Matrix4 mat = PreRot * Matrix4.CreateRotationZ((float)(Direction.Yaw * Utilities.PI180)) * Matrix4.CreateTranslation(ClientUtilities.Convert(GetPosition()));
-            GL.UniformMatrix4(2, false, ref mat);
+            Matrix4d mat = PreRot * Matrix4d.CreateRotationZ((Direction.Yaw * Utilities.PI180)) * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(GetPosition()));
+            TheClient.MainWorldView.SetMatrix(2, mat);
             model.CustomAnimationAdjustments = new Dictionary<string, Matrix4>(SavedAdjustmentsOTK);
             model.Draw(aHTime, hAnim, aTTime, tAnim, aLTime, lAnim);
             TheClient.Rendering.SetColor(Color4.White);
@@ -83,11 +83,11 @@ namespace Voxalia.ClientGame.EntitySystem
             ent.CBStandSpeed = dr.ReadFloat();
             ent.CBStepHeight = dr.ReadFloat();
             ent.CBTractionForce = dr.ReadFloat();
-            ent.PreRot *= Matrix4.CreateRotationX(dr.ReadFloat() * (float)Utilities.PI180);
-            ent.PreRot *= Matrix4.CreateRotationY(dr.ReadFloat() * (float)Utilities.PI180);
-            ent.PreRot *= Matrix4.CreateRotationZ(dr.ReadFloat() * (float)Utilities.PI180);
+            ent.PreRot *= Matrix4d.CreateRotationX(dr.ReadFloat() * Utilities.PI180);
+            ent.PreRot *= Matrix4d.CreateRotationY(dr.ReadFloat() * Utilities.PI180);
+            ent.PreRot *= Matrix4d.CreateRotationZ(dr.ReadFloat() * Utilities.PI180);
             ent.mod_scale = dr.ReadFloat();
-            ent.PreRot = Matrix4.CreateScale(ent.mod_scale) * ent.PreRot;
+            ent.PreRot = Matrix4d.Scale(ent.mod_scale) * ent.PreRot;
             ent.color = System.Drawing.Color.FromArgb(dr.ReadInt());
             byte dtx = dr.ReadByte();
             ent.Visible = (dtx & 1) == 1;

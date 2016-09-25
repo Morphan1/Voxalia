@@ -159,8 +159,8 @@ namespace Voxalia.ClientGame.EntitySystem
         public override void Render()
         {
             TheClient.SetVox();
-            Matrix4 mat = Matrix4.CreateTranslation(-ClientUtilities.Convert(Offset)) * GetTransformationMatrix();
-            GL.UniformMatrix4(2, false, ref mat);
+            Matrix4d mat = Matrix4d.CreateTranslation(-ClientUtilities.ConvertD(Offset)) * GetTransformationMatrix();
+            TheClient.MainWorldView.SetMatrix(2, mat);
             vbo.Render(false);
         }
     }

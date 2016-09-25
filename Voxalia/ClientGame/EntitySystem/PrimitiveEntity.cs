@@ -55,9 +55,9 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public BEPUutilities.Quaternion Angles;
 
-        public Matrix4 GetOrientationMatrix()
+        public Matrix4d GetOrientationMatrix()
         {
-            return Matrix4.CreateFromQuaternion(new Quaternion((float)Angles.X, (float)Angles.Y, (float)Angles.Z, (float)Angles.W));
+            return Matrix4d.CreateFromQuaternion(new Quaterniond(Angles.X, Angles.Y, Angles.Z, Angles.W));
         }
 
         public override BEPUutilities.Quaternion GetOrientation()

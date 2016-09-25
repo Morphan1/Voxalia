@@ -70,8 +70,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     return;
                 }
-                List<Tuple<Vector3i, Matrix4, Model, Model, float>> PlantsToSpawn = new List<Tuple<Vector3i, Matrix4, Model, Model, float>>();
-                Vector3 ppos = ClientUtilities.Convert(WorldPosition.ToLocation() * CHUNK_SIZE);
+                List<Tuple<Vector3i, Matrix4d, Model, Model, float>> PlantsToSpawn = new List<Tuple<Vector3i, Matrix4d, Model, Model, float>>();
                 //bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, 1));
                 Chunk c_zm = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, -1));
@@ -115,12 +114,12 @@ namespace Voxalia.ClientGame.WorldSystem
                                     BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].GetStretchData(pos, vecsi, xp, xm, yp, ym, zp, zm, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
-                                    Vector3 vt = new Vector3((float)vecsi[i].X * PosMultiplier + ppos.X, (float)vecsi[i].Y * PosMultiplier + ppos.Y, (float)vecsi[i].Z * PosMultiplier + ppos.Z);
+                                    Vector3 vt = new Vector3((float)vecsi[i].X * PosMultiplier, (float)vecsi[i].Y * PosMultiplier, (float)vecsi[i].Z * PosMultiplier);
                                     rh.Vertices.Add(vt);
                                     Vector3 nt = new Vector3((float)normsi[i].X, (float)normsi[i].Y, (float)normsi[i].Z);
                                     rh.Norms.Add(nt);
                                     rh.TCoords.Add(new Vector3((float)tci[i].X, (float)tci[i].Y, (float)tci[i].Z));
-                                    Location lcol = OwningRegion.GetLightAmount(ClientUtilities.Convert(vt), ClientUtilities.Convert(nt));
+                                    Location lcol = OwningRegion.GetLightAmount(ClientUtilities.Convert(vt) + WorldPosition.ToLocation() * CHUNK_SIZE, ClientUtilities.Convert(nt));
                                     rh.Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
                                     rh.TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(vt, Colors.ForByte(c.BlockPaint)));
                                     if (ths.Key != null)
@@ -139,7 +138,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     int tf = rh.Cols.Count - vecsi.Count;
                                     for (int i = vecsi.Count - 1; i >= 0; i--)
                                     {
-                                        rh.Vertices.Add(new Vector3((float)vecsi[i].X * PosMultiplier + ppos.X, (float)vecsi[i].Y * PosMultiplier + ppos.Y, (float)vecsi[i].Z * PosMultiplier + ppos.Z));
+                                        rh.Vertices.Add(new Vector3((float)vecsi[i].X * PosMultiplier, (float)vecsi[i].Y * PosMultiplier, (float)vecsi[i].Z * PosMultiplier));
                                         int tx = tf + i;
                                         rh.Cols.Add(rh.Cols[tx]);
                                         rh.TCols.Add(rh.TCols[tx]);
@@ -165,17 +164,17 @@ namespace Voxalia.ClientGame.WorldSystem
                                     es.GetCollidableInstance().RayCast(new BEPUutilities.Ray(new BEPUutilities.Vector3(0, 0, 2), new BEPUutilities.Vector3(0, 0, -1)), 3, out rayhit);
                                     Model m = OwningRegion.TheClient.Models.GetModel(c.Material.GetPlant() + "_hd");
                                     Model m2 = OwningRegion.TheClient.Models.GetModel(c.Material.GetPlant());
-                                    Vector3 trans = new Vector3(WorldPosition.X * CHUNK_SIZE + x + 0.5f, WorldPosition.Y* CHUNK_SIZE +y + 0.5f, WorldPosition.Z* CHUNK_SIZE +z + 1);
-                                    Matrix4 tmat = Matrix4.CreateTranslation(trans);
+                                    Vector3d trans = new Vector3d(WorldPosition.X * CHUNK_SIZE + x + 0.5f, WorldPosition.Y* CHUNK_SIZE +y + 0.5f, WorldPosition.Z* CHUNK_SIZE +z + 1);
+                                    Matrix4d tmat = Matrix4d.CreateTranslation(trans);
                                     if (rayhit.Normal.LengthSquared() > 0)
                                     {
                                         BEPUutilities.Vector3 plantalign = new BEPUutilities.Vector3(0, 0, 1);
                                         BEPUutilities.Quaternion orient;
                                         BEPUutilities.Quaternion.GetQuaternionBetweenNormalizedVectors(ref plantalign, ref rayhit.Normal, out orient);
-                                        tmat = Matrix4.CreateFromQuaternion(new Quaternion((float)orient.X, (float)orient.Y, (float)orient.Z, (float)orient.W)) * tmat;
+                                        tmat = Matrix4d.CreateFromQuaternion(new Quaterniond(orient.X, orient.Y, orient.Z, orient.W)) * tmat;
                                     }
-                                    Location skylight = OwningRegion.GetLightAmount(ClientUtilities.Convert(trans), Location.UnitZ);
-                                    PlantsToSpawn.Add(new Tuple<Vector3i, Matrix4, Model, Model, float>(WorldPosition * CHUNK_SIZE + new Vector3i(x, y, z + 1), tmat, m, m2, (float)skylight.X));
+                                    Location skylight = OwningRegion.GetLightAmount(ClientUtilities.ConvertD(trans), Location.UnitZ);
+                                    PlantsToSpawn.Add(new Tuple<Vector3i, Matrix4d, Model, Model, float>(WorldPosition * CHUNK_SIZE + new Vector3i(x, y, z + 1), tmat, m, m2, (float)skylight.X));
                                 }
                             }
                         }
@@ -297,9 +296,9 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                     DestroyPlants();
                     PlantsSpawned = new List<Vector3i>();
-                    foreach (Tuple<Vector3i, Matrix4, Model, Model, float> plant in PlantsToSpawn)
+                    foreach (Tuple<Vector3i, Matrix4d, Model, Model, float> plant in PlantsToSpawn)
                     {
-                        OwningRegion.AxisAlignedModels[plant.Item1] = new Tuple<Matrix4, Model, Model, float>(plant.Item2, plant.Item3, plant.Item4, plant.Item5);
+                        OwningRegion.AxisAlignedModels[plant.Item1] = new Tuple<Matrix4d, Model, Model, float>(plant.Item2, plant.Item3, plant.Item4, plant.Item5);
                         PlantsSpawned.Add(plant.Item1);
                     }
                 });
@@ -318,6 +317,8 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (_VBO != null && _VBO.generated)
             {
+                Matrix4d mat = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(WorldPosition.ToLocation() * CHUNK_SIZE));
+                OwningRegion.TheClient.MainWorldView.SetMatrix(2, mat);
                 _VBO.Render(OwningRegion.TheClient.RenderTextures);
             }
         }

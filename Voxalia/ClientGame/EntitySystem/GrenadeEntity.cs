@@ -34,8 +34,8 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             TheClient.SetEnts();
             TheClient.Textures.White.Bind();
-            Matrix4 mat = Matrix4.CreateScale(0.05f, 0.2f, 0.05f) * GetTransformationMatrix();
-            GL.UniformMatrix4(2, false, ref mat);
+            Matrix4d mat = Matrix4d.Scale(0.05f, 0.2f, 0.05f) * GetTransformationMatrix();
+            TheClient.MainWorldView.SetMatrix(2, mat);
             TheClient.Rendering.SetColor(GColor);
             model.Draw();
             TheClient.Rendering.SetColor(Color4.White);
