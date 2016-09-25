@@ -461,7 +461,7 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public Dictionary<Vector3i, Tuple<Matrix4, Model, Model>> AxisAlignedModels = new Dictionary<Vector3i, Tuple<Matrix4, Model, Model>>();
 
-        const double MAX_GRASS_DIST = 15;
+        const double MAX_GRASS_DIST = 9; // TODO: CVar?
 
         const double mgd_sq = MAX_GRASS_DIST * MAX_GRASS_DIST;
 
@@ -478,6 +478,8 @@ namespace Voxalia.ClientGame.WorldSystem
             Matrix4 windtransf = Matrix4.CreateFromAxisAngle(wind / len, (float)Math.Min(len, 1.0));
             HashSet<Model> mods = new HashSet<Model>();
             Model prev = null;
+            bool matchable = false;
+            Location playerPos = TheClient.Player.GetPosition();
             foreach (KeyValuePair<Vector3i, Tuple<Matrix4, Model, Model>> mod in AxisAlignedModels)
             {
                 double dist = mod.Key.ToLocation().DistanceSquared(TheClient.MainWorldView.CameraPos);
@@ -485,16 +487,38 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     continue;
                 }
-                Model mt = close ? mod.Value.Item2 : mod.Value.Item3;
-                if (!mods.Contains(mt))
+                double dist2 = mod.Key.ToLocation().DistanceSquared(playerPos);
+                float rot = 0;
+                if (dist2 < 3 * 3)
                 {
+                    rot = (3 * 3 - (float)dist2) * 0.5f;
+                    matchable = false;
+                }
+                bool upd = false;
+                Model mt = close ? mod.Value.Item2 : mod.Value.Item3;
+                if (!mods.Contains(mt) || !matchable)
+                {
+                    upd = true;
                     mt.ForceBoneNoOffset = true;
-                    mt.CustomAnimationAdjustments["b_bottom"] = windtransf;
-                    mt.CustomAnimationAdjustments["b_top"] = windtransf;
+                    if (rot > 0.001)
+                    {
+                        OpenTK.Vector3 ppt = ClientUtilities.Convert(playerPos);
+                        ppt.Z = mod.Key.Z;
+                        OpenTK.Vector3 rel = ppt - ClientUtilities.Convert(mod.Key.ToLocation());
+                        Matrix4 rotter = Matrix4.CreateFromAxisAngle(rel.Normalized(), rot);
+                        mt.CustomAnimationAdjustments["b_bottom"] = rotter;
+                        mt.CustomAnimationAdjustments["b_top"] = rotter;
+                    }
+                    else
+                    {
+                        mt.CustomAnimationAdjustments["b_bottom"] = windtransf;
+                        mt.CustomAnimationAdjustments["b_top"] = windtransf;
+                        matchable = true;
+                    }
                     mt.UpdateTransforms(mt.RootNode, Matrix4.Identity);
                     mt.LoadSkin(TheClient.Textures);
                 }
-                if (mt != prev) // TODO: Sort so we don't need to update very often?
+                if (mt != prev || upd) // TODO: Sort so we don't need to update very often?
                 {
                     Matrix4[] mats = new Matrix4[mt.Meshes[0].Bones.Count];
                     for (int x = 0; x < mt.Meshes[0].Bones.Count; x++)
