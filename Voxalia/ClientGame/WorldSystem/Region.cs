@@ -459,7 +459,7 @@ namespace Voxalia.ClientGame.WorldSystem
             });
         }
 
-        public Dictionary<Vector3i, Tuple<Matrix4, Model, Model>> AxisAlignedModels = new Dictionary<Vector3i, Tuple<Matrix4, Model, Model>>();
+        public Dictionary<Vector3i, Tuple<Matrix4, Model, Model, float>> AxisAlignedModels = new Dictionary<Vector3i, Tuple<Matrix4, Model, Model, float>>();
 
         const double MAX_GRASS_DIST = 9; // TODO: CVar?
 
@@ -483,7 +483,7 @@ namespace Voxalia.ClientGame.WorldSystem
             Model prev = null;
             bool matchable = false;
             Location playerPos = TheClient.Player.GetPosition();
-            foreach (KeyValuePair<Vector3i, Tuple<Matrix4, Model, Model>> mod in AxisAlignedModels)
+            foreach (KeyValuePair<Vector3i, Tuple<Matrix4, Model, Model, float>> mod in AxisAlignedModels)
             {
                 double dist = mod.Key.ToLocation().DistanceSquared(TheClient.MainWorldView.CameraPos);
                 if (dist > mgd_sq * (close ? 1 : 4))
@@ -531,11 +531,12 @@ namespace Voxalia.ClientGame.WorldSystem
                     mt.SetBones(mats);
                     prev = mt;
                 }
-                // TODO: Correct lighting based on position?
+                TheClient.Rendering.SetColor(new OpenTK.Vector4(mod.Value.Item4, mod.Value.Item4, mod.Value.Item4, 1f));
                 Matrix4 transf = Matrix4.CreateScale((float)((mgd_sq * 4 - dist) / (mgd_sq * 4))) * mod.Value.Item1;
                 GL.UniformMatrix4(2, false, ref transf);
                 mt.Draw();
             }
+            TheClient.Rendering.SetColor(Color4.White);
         }
 
         public void RenderEffects()
