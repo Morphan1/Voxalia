@@ -467,8 +467,11 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void RenderPlants()
         {
-            RenderPlants(false);
-            RenderPlants(true);
+            if (TheClient.CVars.r_plants.ValueB)
+            {
+                RenderPlants(false);
+                RenderPlants(true);
+            }
         }
 
         public void RenderPlants(bool close)
@@ -528,6 +531,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     mt.SetBones(mats);
                     prev = mt;
                 }
+                // TODO: Correct lighting based on position?
                 Matrix4 transf = Matrix4.CreateScale((float)((mgd_sq * 4 - dist) / (mgd_sq * 4))) * mod.Value.Item1;
                 GL.UniformMatrix4(2, false, ref transf);
                 mt.Draw();
