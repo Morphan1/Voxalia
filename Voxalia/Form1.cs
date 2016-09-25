@@ -22,8 +22,18 @@ namespace VoxaliaLauncher
 
         public Form1()
         {
+            try
+            {
+                Microsoft.Win32.Registry.SetValue("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Internet Explorer\\Main\\FeatureControl\\FEATURE_BROWSER_EMULATION", "VoxaliaLauncher.exe", 11001, Microsoft.Win32.RegistryValueKind.DWord);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to update registry: " + ex.ToString());
+                // Do nothing.
+            }
             InitializeComponent();
             UpdateLoginDataFromFile();
+            webBrowser1.Url = new Uri("https://github.com/FreneticXYZ/Voxalia/blob/master/README.md#voxalia");
         }
 
         public string UserName = null;
@@ -155,6 +165,11 @@ namespace VoxaliaLauncher
             }
             UserName = null;
             FixButtons();
+        }
+
+        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            webBrowser1.Document.Body.Style = "zoom:75%";
         }
     }
 

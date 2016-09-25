@@ -519,7 +519,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void FixMouse()
         {
-            if (CInvMenu != null || !Window.Focused || UIConsole.Open || ChatVisible)
+            if (CInvMenu != null || !Window.Focused || UIConsole.Open || ChatVisible || CScreen != TheGameScreen)
             {
                 MouseHandler.ReleaseMouse();
             }

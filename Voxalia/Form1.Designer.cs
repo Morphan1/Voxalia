@@ -37,6 +37,7 @@
             this.playButton = new System.Windows.Forms.Button();
             this.logoutButton = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.SuspendLayout();
             // 
             // loggedAs
@@ -52,7 +53,7 @@
             // 
             this.changeLogin.Location = new System.Drawing.Point(439, 40);
             this.changeLogin.Name = "changeLogin";
-            this.changeLogin.Size = new System.Drawing.Size(101, 23);
+            this.changeLogin.Size = new System.Drawing.Size(113, 23);
             this.changeLogin.TabIndex = 1;
             this.changeLogin.Text = "Change Login";
             this.changeLogin.UseVisualStyleBackColor = true;
@@ -93,9 +94,9 @@
             // playButton
             // 
             this.playButton.Enabled = false;
-            this.playButton.Location = new System.Drawing.Point(12, 321);
+            this.playButton.Location = new System.Drawing.Point(12, 563);
             this.playButton.Name = "playButton";
-            this.playButton.Size = new System.Drawing.Size(540, 23);
+            this.playButton.Size = new System.Drawing.Size(917, 23);
             this.playButton.TabIndex = 6;
             this.playButton.Text = "Play Voxalia";
             this.playButton.UseVisualStyleBackColor = true;
@@ -103,9 +104,9 @@
             // 
             // logoutButton
             // 
-            this.logoutButton.Location = new System.Drawing.Point(439, 3);
+            this.logoutButton.Location = new System.Drawing.Point(816, 8);
             this.logoutButton.Name = "logoutButton";
-            this.logoutButton.Size = new System.Drawing.Size(101, 23);
+            this.logoutButton.Size = new System.Drawing.Size(113, 23);
             this.logoutButton.TabIndex = 7;
             this.logoutButton.Text = "Log Out";
             this.logoutButton.UseVisualStyleBackColor = true;
@@ -114,16 +115,31 @@
             // progressBar1
             // 
             this.progressBar1.Enabled = false;
-            this.progressBar1.Location = new System.Drawing.Point(19, 69);
+            this.progressBar1.Location = new System.Drawing.Point(558, 44);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(521, 10);
+            this.progressBar1.Size = new System.Drawing.Size(371, 19);
             this.progressBar1.TabIndex = 8;
+            // 
+            // webBrowser1
+            // 
+            this.webBrowser1.AllowNavigation = false;
+            this.webBrowser1.AllowWebBrowserDrop = false;
+            this.webBrowser1.IsWebBrowserContextMenuEnabled = false;
+            this.webBrowser1.Location = new System.Drawing.Point(12, 69);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.Size = new System.Drawing.Size(917, 488);
+            this.webBrowser1.TabIndex = 9;
+            this.webBrowser1.Url = new System.Uri("https://github.com/FreneticXYZ/Voxalia/blob/master/README.md", System.UriKind.Absolute);
+            this.webBrowser1.WebBrowserShortcutsEnabled = false;
+            this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(564, 356);
+            this.ClientSize = new System.Drawing.Size(941, 598);
+            this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.logoutButton);
             this.Controls.Add(this.playButton);
@@ -134,6 +150,7 @@
             this.Controls.Add(this.changeLogin);
             this.Controls.Add(this.loggedAs);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Voxalia Launcher";
             this.ResumeLayout(false);
@@ -152,6 +169,7 @@
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.Button logoutButton;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.WebBrowser webBrowser1;
     }
 }
 
