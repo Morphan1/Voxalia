@@ -182,6 +182,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                 }
                                 if (c.Material.GetPlant() != null && !zp.Material.RendersAtAll() && zp.Material.GetSolidity() == MaterialSolidity.NONSOLID)
                                 {
+                                    // TODO: Optimize this bit!
                                     Location offset;
                                     BEPUphysics.CollisionShapes.EntityShape es = BlockShapeRegistry.BSD[c.BlockData].GetShape(c.Damage, out offset, false);
                                     BEPUutilities.RayHit rayhit;

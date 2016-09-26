@@ -741,6 +741,7 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public Location GetSkyLight(Location pos, Location norm)
         {
+            // TODO: Optimize this method!
             if (norm.Z < -0.99)
             {
                 return Location.Zero;
