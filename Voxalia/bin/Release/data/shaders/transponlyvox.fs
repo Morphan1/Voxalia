@@ -114,8 +114,7 @@ void main()
 	float depth_jump = light_details[2][2];
 	float lightc = light_details[2][3];
 	float light_min = clamp(minimum_light + dets.a, 0.0, 1.0);
-	float blighting = max((f.color.x + f.color.y + f.color.z) / 3.0, light_min); // TODO: Clamp f.color.xyz, match fbo_vox;
-	color = vec4(color.xyz * blighting, color.w);
+	color = vec4(color.xyz * f.color.xyz, color.w);
 	vec4 bambient = (vec4(light_details[3][0], light_details[3][1], light_details[3][2], 1.0) + vec4(light_min, light_min, light_min, 0.0)) / lightc;
 	vec3 eye_pos = vec3(light_details2[0][0], light_details2[0][1], light_details2[0][2]);
 	vec3 light_pos = vec3(light_details2[1][0], light_details2[1][1], light_details2[1][2]);

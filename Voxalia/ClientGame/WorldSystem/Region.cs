@@ -840,6 +840,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     {
                         double distsq = (pot.Key.ToLocation() + ch.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE).DistanceSquared(pos);
                         double range = pot.Value.GetLightEmitRange();
+                        // TODO: Apply normal vector stuff?
                         if (distsq < range * range)
                         {
                             lit += pot.Value.GetLightEmit() * (range - Math.Sqrt(distsq));

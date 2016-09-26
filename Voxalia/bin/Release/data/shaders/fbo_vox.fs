@@ -121,14 +121,13 @@ void main()
 	{
 		discard;
 	}
-	vec3 lightcol = clamp(f.color.xyz, vec3(light_clamp.x), vec3(light_clamp.y));
+	vec3 lightcol = f.color.xyz;
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - vec3(1.0);
 	color = col * v_color;
 	position = vec4(f.position.xyz, 1.0);
 	normal = vec4(normalize(f.tbn * norms), 1.0);
 	float light_min = clamp(minimum_light + dets.a, 0.0, 1.0);
-	float blighting = max((lightcol.x + lightcol.y + lightcol.z) / 3.0, light_min);
-	color = vec4(color.xyz * blighting, color.w);
+	color = vec4(color.xyz * lightcol, color.w);
 	renderhint = vec4(spec, rhBlur, light_min, 1.0);
 	renderhint2 = vec4(0.0, refl, 0.0, 1.0);
 }
