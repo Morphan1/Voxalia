@@ -550,6 +550,19 @@ namespace Voxalia.ServerGame.EntitySystem
             WasItemRighting = ItemRight;
             Location pos = LoadRelPos;
             Vector3i cpos = TheRegion.ChunkLocFor(pos);
+            if (cpos != pChunkLoc)
+            {
+                for (int x = -2; x <= 2; x++)
+                {
+                    for (int y = -2; y <= 2; y++)
+                    {
+                        for (int z = -2; z <= 2; z++)
+                        {
+                            TryChunk(cpos + new Vector3i(x, y, z), 1);
+                        }
+                    }
+                }
+            }
             ChunkMarchAndSend();
             if (cpos != pChunkLoc)
             {
