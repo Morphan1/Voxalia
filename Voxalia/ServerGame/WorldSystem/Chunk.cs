@@ -180,6 +180,7 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             BsonDocument full = new BsonDocument();
             List<BsonValue> ents = new List<BsonValue>();
+            long ts = DateTime.UtcNow.Subtract(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks / TimeSpan.TicksPerSecond; // Seconds after January 1st, 2000.
             for (int i = 0; i < OwningRegion.Entities.Count; i++)
             {
                 if (OwningRegion.Entities[i].CanSave && Contains(OwningRegion.Entities[i].GetPosition()))
@@ -188,6 +189,8 @@ namespace Voxalia.ServerGame.WorldSystem
                     if (dat != null)
                     {
                         dat["ENTITY_TYPE"] = OwningRegion.Entities[i].GetEntityType().ToString();
+                        dat["ENTITY_TIMESTAMP"] = ts;
+                        dat["ENTITY_ID"] = OwningRegion.Entities[i].EID;
                         ents.Add(dat);
                     }
                 }
@@ -417,7 +420,9 @@ namespace Voxalia.ServerGame.WorldSystem
                         EntityType etype = (EntityType)Enum.Parse(typeof(EntityType), ent["ENTITY_TYPE"].AsString);
                         try
                         {
-                            entsToSpawn.Add(OwningRegion.ConstructorFor(etype).Create(OwningRegion, ent));
+                            Entity e = OwningRegion.ConstructorFor(etype).Create(OwningRegion, ent);
+                            e.EID = ent["ENTITY_ID"].AsInt64;
+                            entsToSpawn.Add(e);
                         }
                         catch (Exception ex)
                         {

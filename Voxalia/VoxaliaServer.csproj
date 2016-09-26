@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -198,7 +198,9 @@
     <Compile Include="ServerGame\JointSystem\JointWeld.cs" />
     <Compile Include="ServerGame\NetworkSystem\AbstractPacketIn.cs" />
     <Compile Include="ServerGame\NetworkSystem\AbstractPacketOut.cs" />
-    <Compile Include="ServerGame\NetworkSystem\Connection.cs" />
+    <Compile Include="ServerGame\NetworkSystem\Connection.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ServerGame\NetworkSystem\NetStringManager.cs" />
     <Compile Include="ServerGame\NetworkSystem\NetworkBase.cs" />
     <Compile Include="ServerGame\NetworkSystem\PacketsIn\CommandPacketIn.cs" />

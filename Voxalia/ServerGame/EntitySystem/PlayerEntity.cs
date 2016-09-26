@@ -92,6 +92,7 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 Permissions = new FDSSection();
             }
+            EID = config.GetLong("eid").Value;
             IsFirstJoin = false;
             SpawnedTime = TheRegion.GlobalTickTime;
         }
@@ -114,6 +115,7 @@ namespace Voxalia.ServerGame.EntitySystem
             const string timePath = "stats.general.time_seconds";
             config.Set(timePath, config.GetDouble(timePath, 0).Value + (TheRegion.GlobalTickTime - SpawnedTime));
             config.Set("permissions", Permissions);
+            config.Set("eid", EID);
             // TODO: Other stats!
             // TODO: CBody settings? Mass? ...?
             // TODO: Inventory!

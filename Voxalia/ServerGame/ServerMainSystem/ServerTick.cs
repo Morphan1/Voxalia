@@ -82,6 +82,19 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         public void OncePerSecondActions()
         {
+            long cid;
+            lock (CIDLock)
+            {
+                cid = cID;
+            }
+            if (cid != prev_eid)
+            {
+                prev_eid = cid;
+                Schedule.StartASyncTask(() =>
+                {
+                    Files.WriteText("server_eid.txt", cid.ToString());
+                });
+            }
             TPS = tpsc;
             tpsc = 0;
             if (CVars.system.Modified)
@@ -148,6 +161,8 @@ namespace Voxalia.ServerGame.ServerMainSystem
 
         public double EntityTimeC;
         public double EntityTimes;
+
+        long prev_eid = 0;
 
         /// <summary>
         /// The server's primary tick function.

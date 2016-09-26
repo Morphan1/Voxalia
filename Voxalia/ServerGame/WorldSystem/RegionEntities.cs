@@ -86,7 +86,7 @@ namespace Voxalia.ServerGame.WorldSystem
             SendToAll(new DestroyJointPacketOut(joint));
         }
 
-        public void SpawnEntity(Entity e, long eid = -1)
+        public void SpawnEntity(Entity e)
         {
             if (e.IsSpawned)
             {
@@ -94,13 +94,9 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             Entities.Add(e);
             e.IsSpawned = true;
-            if (eid == -1)
+            if (e.EID < 1)
             {
                 e.EID = TheServer.AdvanceCID();
-            }
-            else
-            {
-                e.EID = eid;
             }
             if (e.Ticks)
             {

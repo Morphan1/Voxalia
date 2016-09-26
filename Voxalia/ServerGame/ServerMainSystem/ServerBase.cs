@@ -288,6 +288,10 @@ namespace Voxalia.ServerGame.ServerMainSystem
                 string contents = Files.ReadText("serverdefaultsettings.cfg");
                 Commands.ExecuteCommands(contents);
             }
+            if (Files.Exists("server_eid.txt"))
+            {
+                cID = long.Parse(Files.ReadText("server_eid.txt") ?? "1");
+            }
             SysConsole.Output(OutputType.INIT, "Loading player command engine...");
             PCEngine = new PlayerCommandEngine();
             SysConsole.Output(OutputType.INIT, "Loading item registry...");

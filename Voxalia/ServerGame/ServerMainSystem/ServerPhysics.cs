@@ -65,9 +65,9 @@ namespace Voxalia.ServerGame.ServerMainSystem
             return world;
         }
         
-        long cID = 1; // TODO: Save/load value!
+        public long cID = 1; // TODO: Save/load value!
 
-        Object CIDLock = new Object();
+        public Object CIDLock = new Object();
 
         public long AdvanceCID()
         {

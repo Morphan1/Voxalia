@@ -207,8 +207,23 @@ namespace Voxalia.ServerGame.WorldSystem
 
         Object SaveWorldCFGLock = new Object();
 
+        long previous_eid = 0;
+
         public void OncePerSecondActions()
         {
+            long cid;
+            lock (TheServer.CIDLock)
+            {
+                cid = TheServer.cID;
+            }
+            if (cid != previous_eid)
+            {
+                previous_eid = cid;
+                Schedule.StartASyncTask(() =>
+                {
+                    TheServer.Files.WriteText("saves/" + Name + "/eid.txt", cid.ToString());
+                });
+            }
             if (CFGEdited)
             {
                 string cfg = Config.SaveToString();
@@ -223,8 +238,16 @@ namespace Voxalia.ServerGame.WorldSystem
             }
         }
 
+        double ops = 0;
+
         public void Tick(double delta)
         {
+            ops += delta;
+            if (ops > 1)
+            {
+                ops = 0;
+                OncePerSecondActions();
+            }
             Schedule.RunAllSyncTasks(delta);
             MainRegion.Tick(delta);
         }

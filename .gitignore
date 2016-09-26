@@ -32,3 +32,4 @@ Voxalia/bin/Release/bin/
 logindata.dat
 *.tmp
 *.mdb
+server_eid.txt
