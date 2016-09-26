@@ -60,7 +60,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             }
             texture.Bind();
             Location start = Start(this);
-            Location ligl = TheClient.TheRegion.GetLightAmount(start, Location.UnitZ);
+            Location ligl = TheClient.TheRegion.GetLightAmount(start, Location.UnitZ, null);
             Vector4 light = new Vector4((float)ligl.X, (float)ligl.Y, (float)ligl.Z, 1.0f);
             light.X = (float)Math.Max(light.X, MinLight.X);
             light.Y = (float)Math.Max(light.Y, MinLight.Y);

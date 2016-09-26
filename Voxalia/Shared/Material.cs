@@ -66,7 +66,7 @@ namespace Voxalia.Shared
         public static int TextureCount = 5;
 
         public static bool Populated = false;
-
+        
         public static void Populate(FileHandler files)
         {
             if (Populated)

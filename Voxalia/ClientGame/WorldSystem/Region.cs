@@ -459,7 +459,7 @@ namespace Voxalia.ClientGame.WorldSystem
             });
         }
 
-        public Dictionary<Vector3i, Tuple<Matrix4d, Model, Model, float>> AxisAlignedModels = new Dictionary<Vector3i, Tuple<Matrix4d, Model, Model, float>>();
+        public Dictionary<Vector3i, Tuple<Matrix4d, Model, Model, Location>> AxisAlignedModels = new Dictionary<Vector3i, Tuple<Matrix4d, Model, Model, Location>>();
 
         const double MAX_GRASS_DIST = 9; // TODO: CVar?
 
@@ -483,7 +483,7 @@ namespace Voxalia.ClientGame.WorldSystem
             Model prev = null;
             bool matchable = false;
             Location playerPos = TheClient.Player.GetPosition();
-            foreach (KeyValuePair<Vector3i, Tuple<Matrix4d, Model, Model, float>> mod in AxisAlignedModels)
+            foreach (KeyValuePair<Vector3i, Tuple<Matrix4d, Model, Model, Location>> mod in AxisAlignedModels)
             {
                 double dist = mod.Key.ToLocation().DistanceSquared(TheClient.MainWorldView.CameraPos);
                 if (dist > mgd_sq * (close ? 1 : 4))
@@ -531,7 +531,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     mt.SetBones(mats);
                     prev = mt;
                 }
-                TheClient.Rendering.SetColor(new OpenTK.Vector4(mod.Value.Item4, mod.Value.Item4, mod.Value.Item4, 1f));
+                TheClient.Rendering.SetColor(new OpenTK.Vector4((float)mod.Value.Item4.X, (float)mod.Value.Item4.Y, (float)mod.Value.Item4.Z, 1f));
                 Matrix4d transf = Matrix4d.Scale(((mgd_sq * 4 - dist) / (mgd_sq * 4))) * mod.Value.Item1;
                 TheClient.MainWorldView.SetMatrix(2, transf);
                 mt.Draw();
@@ -765,22 +765,6 @@ namespace Voxalia.ClientGame.WorldSystem
                     BlockInternal bi = ch.GetBlockAtLOD((int)x, (int)y, (int)z);
                     if (bi.IsOpaque())
                     {
-                        Material mat = (Material)bi.BlockMaterial;
-                        float lrange = (float)mat.GetLightEmitRange();
-                        if (lrange > 0)
-                        {
-                            int biz = z + ZP * Chunk.CHUNK_SIZE;
-                            int dist = biz - (int)pos.Z;
-                            if (dist <= 0)
-                            {
-                                return mat.GetLightEmit();
-                            }
-                            if (dist >= lrange)
-                            {
-                                return Location.Zero;
-                            }
-                            return mat.GetLightEmit() * (1f - dist / lrange) * SkyLightMod;
-                        }
                         return Location.Zero;
                     }
                     light -= (float)((Material)bi.BlockMaterial).GetLightDamage();
@@ -841,11 +825,51 @@ namespace Voxalia.ClientGame.WorldSystem
             return col / Math.Max(col.X, Math.Max(col.Y, col.Z));
         }
 
-        public Location GetLightAmount(Location pos, Location norm)
+        public Location GetBlockLight(Location pos, Location norm, List<Chunk> potentials)
         {
+            Location lit = Location.Zero;
+            foreach (Chunk ch in potentials)
+            {
+                if (ch == null)
+                {
+                    continue;
+                }
+                lock (ch.Lits)
+                {
+                    foreach (KeyValuePair<Vector3i, Material> pot in ch.Lits)
+                    {
+                        double distsq = (pot.Key.ToLocation() + ch.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE).DistanceSquared(pos);
+                        double range = pot.Value.GetLightEmitRange();
+                        if (distsq < range * range)
+                        {
+                            lit += pot.Value.GetLightEmit() * (range - Math.Sqrt(distsq));
+                        }
+                    }
+                }
+            }
+            return lit;
+        }
+
+        public Location GetLightAmount(Location pos, Location norm, List<Chunk> potentials)
+        {
+            if (potentials == null)
+            {
+                potentials = new List<Chunk>();
+                for (int x = -1; x <= 1; x++)
+                {
+                    for (int y = -1; y <= 1; y++)
+                    {
+                        for (int z = -1; z <= 1; z++)
+                        {
+                            potentials.Add(GetChunk(new Vector3i(x, y, z)));
+                        }
+                    }
+                }
+            }
             Location amb = GetAmbient(pos);
             Location sky = GetSkyLight(pos, norm);
-            return Regularize(amb + sky);
+            Location blk = GetBlockLight(pos, norm, potentials);
+            return amb + sky + blk;
         }
         
         public SimplePriorityQueue<Vector3i> NeedsRendering = new SimplePriorityQueue<Vector3i>();
@@ -877,6 +901,10 @@ namespace Voxalia.ClientGame.WorldSystem
             }
         }
 
+        /// <summary>
+        /// Do not call directly, use Chunk.CreateVBO().
+        /// </summary>
+        /// <param name="ch"></param>
         public void NeedToRender(Chunk ch)
         {
             lock (RenderingNow)

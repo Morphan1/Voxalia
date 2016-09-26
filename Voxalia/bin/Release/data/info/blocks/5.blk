@@ -8,5 +8,5 @@ Texture_XM=m3
 Texture_XP=m4
 Texture_YP=m5
 Texture_YM=m6
-LightEmit=0.1,1.0,1.0
+LightEmit=0.1,0.5,0.5
 LightEmitRange=10
