@@ -19,6 +19,7 @@ using Priority_Queue;
 using FreneticScript;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.ClientGame.OtherSystems;
+using System.Threading.Tasks;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -440,6 +441,7 @@ namespace Voxalia.ClientGame.WorldSystem
             int y = (int)Math.Floor(((int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * Chunk.CHUNK_SIZE) / (float)ch.PosMultiplier);
             int z = (int)Math.Floor(((int)Math.Floor(pos.Z) - (int)ch.WorldPosition.Z * Chunk.CHUNK_SIZE) / (float)ch.PosMultiplier);
             ch.SetBlockAt(x, y, z, new BlockInternal(mat, dat, paint, 0));
+            ch.Edited = true;
             if (regen)
             {
                 Regen(pos, ch, x, y, z);
@@ -873,10 +875,14 @@ namespace Voxalia.ClientGame.WorldSystem
             Location blk = GetBlockLight(pos, norm, potentials);
             return amb + sky + blk;
         }
+
+        public SimplePriorityQueue<Action> PrepChunks = new SimplePriorityQueue<Action>();
         
         public SimplePriorityQueue<Vector3i> NeedsRendering = new SimplePriorityQueue<Vector3i>();
 
         public HashSet<Vector3i> RenderingNow = new HashSet<Vector3i>();
+
+        public HashSet<Vector3i> PreppingNow = new HashSet<Vector3i>();
 
         public void CheckForRenderNeed()
         {
@@ -891,6 +897,14 @@ namespace Voxalia.ClientGame.WorldSystem
                         ch.MakeVBONow();
                         RenderingNow.Add(temp);
                     }
+                }
+            }
+            lock (PreppingNow)
+            {
+                while (PrepChunks.Count > 0 && PreppingNow.Count < TheClient.CVars.r_chunksatonce.ValueI)
+                {
+                    Action temp = PrepChunks.Dequeue();
+                    temp.Invoke();
                 }
             }
         }

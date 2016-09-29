@@ -14,23 +14,29 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public List<KeyValuePair<Vector3i, Material>> Lits = new List<KeyValuePair<Vector3i, Material>>();
 
+        public bool Edited = true;
+
         public void CreateVBO()
         {
-            lock (Lits)
+            if (Edited)
             {
-                Lits.Clear();
-                if (CSize == CHUNK_SIZE)
+                Edited = false;
+                lock (Lits)
                 {
-                    for (int x = 0; x < CHUNK_SIZE; x++)
+                    Lits.Clear();
+                    if (CSize == CHUNK_SIZE)
                     {
-                        for (int y = 0; y < CHUNK_SIZE; y++)
+                        for (int x = 0; x < CHUNK_SIZE; x++)
                         {
-                            for (int z = 0; z < CHUNK_SIZE; z++)
+                            for (int y = 0; y < CHUNK_SIZE; y++)
                             {
-                                BlockInternal bi = GetBlockAt(x, y, z);
-                                if (bi.Material.GetLightEmitRange() > 0)
+                                for (int z = 0; z < CHUNK_SIZE; z++)
                                 {
-                                    Lits.Add(new KeyValuePair<Vector3i, Material>(new Vector3i(x, y, z), bi.Material));
+                                    BlockInternal bi = GetBlockAt(x, y, z);
+                                    if (bi.Material.GetLightEmitRange() > 0)
+                                    {
+                                        Lits.Add(new KeyValuePair<Vector3i, Material>(new Vector3i(x, y, z), bi.Material));
+                                    }
                                 }
                             }
                         }

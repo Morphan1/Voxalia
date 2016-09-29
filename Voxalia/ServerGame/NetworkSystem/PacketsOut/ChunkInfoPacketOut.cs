@@ -50,6 +50,8 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
             if (data_orig == null)
             {
                 Data = new byte[12];
+                // TODO: This is a bit hackish
+                ID = ServerToClientPacket.CHUNK_FORGET;
                 Utilities.IntToBytes((int)chunk.WorldPosition.X).CopyTo(Data, 0);
                 Utilities.IntToBytes((int)chunk.WorldPosition.Y).CopyTo(Data, 4);
                 Utilities.IntToBytes((int)chunk.WorldPosition.Z).CopyTo(Data, 8);

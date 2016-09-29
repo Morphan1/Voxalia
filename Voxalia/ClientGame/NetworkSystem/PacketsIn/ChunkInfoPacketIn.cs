@@ -10,18 +10,49 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
     {
         public override bool ParseBytesAndExecute(byte[] data)
         {
-            TheClient.Schedule.StartASyncTask(() => ParseData(data));
-            return true;
-        }
-
-        void ParseData(byte[] data)
-        {
+            if (data.Length < 16)
+            {
+                SysConsole.Output(OutputType.WARNING, "Got chunk info packet of size: " + data.Length);
+                return false;
+            }
             DataStream ds = new DataStream(data);
             DataReader dr = new DataReader(ds);
             int x = dr.ReadInt();
             int y = dr.ReadInt();
             int z = dr.ReadInt();
             int posMult = dr.ReadInt();
+            double prio = (new Location(x, y, z) * Chunk.CHUNK_SIZE).DistanceSquared(TheClient.Player.GetPosition());
+            lock (TheClient.TheRegion.PreppingNow)
+            {
+                TheClient.TheRegion.PrepChunks.Enqueue(() =>
+                {
+                    lock (TheClient.TheRegion.PreppingNow)
+                    {
+                        TheClient.TheRegion.PreppingNow.Add(new Vector3i(x, y, z));
+                    }
+                    TheClient.Schedule.StartASyncTask(() =>
+                    {
+                        try
+                        {
+                            ParseData(data, dr, x, y, z, posMult);
+                        }
+                        catch (Exception ex)
+                        {
+                            Utilities.CheckException(ex);
+                            SysConsole.Output(ex);
+                            lock (TheClient.TheRegion.PreppingNow)
+                            {
+                                TheClient.TheRegion.PreppingNow.Remove(new Vector3i(x, y, z));
+                            }
+                        }
+                    });
+                }, prio);
+            }
+            return true;
+        }
+
+        void ParseData(byte[] data, DataReader dr, int x, int y, int z, int posMult)
+        {
             byte[] reach = dr.ReadBytes((int)ChunkReachability.COUNT);
             int csize = Chunk.CHUNK_SIZE / posMult;
             byte[] data_unzipped = dr.ReadBytes(data.Length - 16);
@@ -31,12 +62,20 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 if (data_orig.Length != Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 4)
                 {
                     SysConsole.Output(OutputType.WARNING, "Invalid chunk size! Expected " + (Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 3) + ", got " + data_orig.Length + ")");
+                    lock (TheClient.TheRegion.PreppingNow)
+                    {
+                        TheClient.TheRegion.PreppingNow.Remove(new Vector3i(x, y, z));
+                    }
                     return;
                 }
             }
             else if (data_orig.Length != csize * csize * csize * 2)
             {
                 SysConsole.Output(OutputType.WARNING, "Invalid LOD'ed chunk size! (LOD = " + posMult + ", Expected " + (csize * csize * csize * 2) + ", got " + data_orig.Length + ")");
+                lock (TheClient.TheRegion.PreppingNow)
+                {
+                    TheClient.TheRegion.PreppingNow.Remove(new Vector3i(x, y, z));
+                }
                 return;
             }
             Action act = () =>
@@ -48,7 +87,25 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 }
                 chk.LOADING = true;
                 chk.PROCESSED = false;
-                TheClient.Schedule.StartASyncTask(() => parsechunk2(chk, data_orig, posMult));
+                lock (TheClient.TheRegion.PreppingNow)
+                {
+                    TheClient.Schedule.StartASyncTask(() =>
+                    {
+                        try
+                        {
+                            parsechunk2(chk, data_orig, posMult);
+                        }
+                        catch (Exception ex)
+                        {
+                            Utilities.CheckException(ex);
+                            SysConsole.Output(ex);
+                            lock (TheClient.TheRegion.PreppingNow)
+                            {
+                                TheClient.TheRegion.PreppingNow.Remove(chk.WorldPosition);
+                            }
+                        }
+                    });
+                }
             };
             TheClient.Schedule.ScheduleSyncTask(act);
         }
@@ -85,6 +142,10 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             chk.LOADING = false;
             chk.PRED = true;
             chk.OwningRegion.Regen(chk.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE, chk);
+            lock (TheClient.TheRegion.PreppingNow)
+            {
+                TheClient.TheRegion.PreppingNow.Remove(chk.WorldPosition);
+            }
         }
     }
 }
