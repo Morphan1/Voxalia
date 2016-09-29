@@ -136,10 +136,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.DeleteTexture(fbo_godray_texture2);
                 GL.DeleteFramebuffer(hdrfbo);
                 GL.DeleteTexture(hdrtex);
-                GL.DeleteFramebuffer(fbo_shadow);
+                GL.DeleteFramebuffers(LIGHTS_MAX, fbo_shadow);
                 GL.DeleteTexture(fbo_shadow_depth);
                 GL.DeleteTexture(fbo_shadow_tex);
             }
+            CheckError("Load - View3D - Light - Deletes");
             RS4P = new RenderSurface4Part(Width, Height, TheClient.Rendering);
             // FBO
             fbo_texture = GL.GenTexture();
@@ -153,6 +154,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_main);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, fbo_texture, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            CheckError("Load - View3D - Light - FBO");
             // Godray FBO
             fbo_godray_texture = GL.GenTexture();
             fbo_godray_texture2 = GL.GenTexture();
@@ -174,6 +176,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment1, TextureTarget.Texture2D, fbo_godray_texture2, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.BindTexture(TextureTarget.Texture2D, 0);
+            CheckError("Load - View3D - Light - Godray");
             // HDR FBO
             hdrtex = GL.GenTexture();
             hdrfbo = GL.GenFramebuffer();
@@ -186,19 +189,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, hdrfbo);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, hdrtex, 0);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            CheckError("Load - View3D - Light - HDR");
             // Shadow FBO
-            fbo_shadow = GL.GenFramebuffer();
-            fbo_shadow_depth = GL.GenTexture();
             int sq = ShadowTexSize();
-            GL.BindTexture(TextureTarget.Texture2D, fbo_shadow_depth);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32, sq, sq, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow);
-            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, fbo_shadow_depth, 0);
-            GL.BindTexture(TextureTarget.Texture2D, 0);
             fbo_shadow_tex = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2DArray, fbo_shadow_tex);
             GL.TexImage3D(TextureTarget.Texture2DArray, 0, PixelInternalFormat.R32f, sq, sq, LIGHTS_MAX, 0, PixelFormat.Red, PixelType.Float, IntPtr.Zero);
@@ -206,15 +199,29 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            CheckError("Load - View3D - Light - Shadows");
             for (int i = 0; i < LIGHTS_MAX; i++)
             {
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow);
-                GL.FramebufferTextureLayer(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0 + i, fbo_shadow_tex, 0, i);
+                fbo_shadow[i] = GL.GenFramebuffer();
+                fbo_shadow_depth = GL.GenTexture();
+                GL.BindTexture(TextureTarget.Texture2D, fbo_shadow_depth);
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32, sq, sq, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow[i]);
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, fbo_shadow_depth, 0);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow[i]);
+                GL.FramebufferTextureLayer(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, fbo_shadow_tex, 0, i);
+                CheckError("Load - View3D - Light - LMAP:" + i);
             }
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            CheckError("Load - View3D - Light - Final");
         }
 
-        int fbo_shadow = -1;
+        int[] fbo_shadow = new int[LIGHTS_MAX];
         int fbo_shadow_tex = -1;
         int fbo_shadow_depth = -1;
 
@@ -262,7 +269,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Width = w;
             Height = h;
             GenerateLightHelpers();
+            CheckError("Load - View3D - Light");
             GenerateTranspHelpers();
+            CheckError("Load - View3D - Transp");
         }
 
         public void GenerateTranspHelpers()
@@ -398,7 +407,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public float[] ClearColor = new float[] { 0f, 1f, 1f, 0f };
 
-        public void CheckError(string loc)
+        public static void CheckError(string loc)
         {
 #if DEBUG
             ErrorCode ec = GL.GetError();
@@ -571,7 +580,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 ShadowsOnly = true;
                 LightsC = 0;
                 Location campos = CameraPos;
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow);
                 int n = 0;
                 for (int i = 0; i < Lights.Count; i++)
                 {
@@ -583,6 +591,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             LightsC++;
                             for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                             {
+                                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow[n]);
                                 if (Lights[i].InternalLights[x].color.LengthSquared <= 0.01)
                                 {
                                     continue;
@@ -622,8 +631,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                 GL.Uniform1(4, Lights[i].InternalLights[x].transp ? 1.0f : 0.0f);
                                 TranspShadows = Lights[i].InternalLights[x].transp;
                                 Lights[i].InternalLights[x].SetProj();
-                                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow);
-                                GL.DrawBuffer(DrawBufferMode.ColorAttachment0 + n);
+                                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow[n]);
+                                GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
                                 GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1f });
                                 GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 1f });
                                 GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.Zero);

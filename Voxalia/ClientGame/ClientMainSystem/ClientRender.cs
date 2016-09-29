@@ -75,13 +75,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
         void InitRendering()
         {
             ShadersCheck();
+            View3D.CheckError("Load - Rendering - Shaders");
             generateMapHelpers();
+            View3D.CheckError("Load - Rendering - Map");
             MainWorldView.ShadowingAllowed = true;
             MainWorldView.ShadowTexSize = () => CVars.r_shadowquality.ValueI;
             MainWorldView.Render3D = Render3D;
             MainWorldView.PostFirstRender = ReverseEntitiesOrder;
             MainWorldView.LLActive = CVars.r_transpll.ValueB; // TODO: CVar edit call back
+            View3D.CheckError("Load - Rendering - Settings");
             MainWorldView.Generate(this, Window.Width, Window.Height);
+            View3D.CheckError("Load - Rendering - ViewGen");
             skybox = new VBO[6];
             for (int i = 0; i < 6; i++)
             {
@@ -94,10 +98,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             skybox[3].AddSide(Location.UnitX, new TextureCoordinates());
             skybox[4].AddSide(-Location.UnitY, new TextureCoordinates());
             skybox[5].AddSide(Location.UnitY, new TextureCoordinates());
+            View3D.CheckError("Load - Rendering - VBO Prep");
             for (int i = 0; i < 6; i++)
             {
                 skybox[i].GenerateVBO();
             }
+            View3D.CheckError("Load - Rendering - Final");
         }
 
         public void ShadersCheck()
@@ -285,7 +291,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     SysConsole.Output(OutputType.ERROR, "Ticking: " + ex.ToString());
                 }
                 timer.Start();
-                MainWorldView.CheckError("Finish");
+                View3D.CheckError("Finish");
                 Window.SwapBuffers();
                 timer.Stop();
                 FinishTime = (double)timer.ElapsedMilliseconds / 1000f;

@@ -53,11 +53,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public override void Render()
         {
             TheClient.Establish2D();
+            View3D.CheckError("2D-Menu");
             GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0.5f, 0.5f, 1 });
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1 });
             Backg.Bind();
             TheClient.Rendering.RenderRectangle(0, 0, TheClient.Window.Width, TheClient.Window.Height);
             Menus.RenderAll(TheClient.gDelta);
+            View3D.CheckError("Menu Complete");
         }
     }
 }

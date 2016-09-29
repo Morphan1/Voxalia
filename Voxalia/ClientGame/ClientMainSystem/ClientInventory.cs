@@ -195,7 +195,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 MainWorldView = MainItemView;
                 MainItemView.Render();
                 MainWorldView = temp;
-                MainItemView.CheckError("ItemRender");
+                View3D.CheckError("ItemRender");
             }
         }
 

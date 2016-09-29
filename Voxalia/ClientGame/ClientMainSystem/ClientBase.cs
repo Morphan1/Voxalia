@@ -268,6 +268,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             ItemFrame = Textures.GetTexture("ui/hud/item_frame");
             TBlock = new TextureBlock();
             TBlock.Generate(this, CVars, Textures);
+            View3D.CheckError("Load - Textures");
             SysConsole.Output(OutputType.INIT, "Loading shaders...");
             Shaders = new ShaderEngine();
             GLVendor = GL.GetString(StringName.Vendor);
@@ -283,11 +284,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Shaders.MCM_GOOD_GRAPHICS = false;
             }
             Shaders.InitShaderSystem(this);
+            View3D.CheckError("Load - Shaders");
             SysConsole.Output(OutputType.INIT, "Loading fonts...");
             Fonts = new GLFontEngine(Shaders);
             Fonts.Init(this);
             FontSets = new FontSetEngine(Fonts);
             FontSets.Init(this);
+            View3D.CheckError("Load - Fonts");
             SysConsole.Output(OutputType.INIT, "Loading animation engine...");
             Animations = new AnimationEngine();
             SysConsole.Output(OutputType.INIT, "Loading model engine...");
@@ -299,24 +302,31 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Loading general graphics settings...");
             CVars.r_vsync.OnChanged += onVsyncChanged;
             onVsyncChanged(CVars.r_vsync, null);
-            SysConsole.Output(OutputType.INIT, "Loading UI Console...");
+            View3D.CheckError("Load - General Graphics");
+            SysConsole.Output(OutputType.INIT, "Loading UI engine...");
             UIConsole.InitConsole();
             InitChatSystem();
+            View3D.CheckError("Load - UI");
             SysConsole.Output(OutputType.INIT, "Preparing rendering engine...");
             InitRendering();
+            View3D.CheckError("Load - Rendering");
             SysConsole.Output(OutputType.INIT, "Loading particle effect engine...");
             Particles = new ParticleHelper(this) { Engine = new ParticleEngine(this) };
             SysConsole.Output(OutputType.INIT, "Preparing mouse, keyboard, and gamepad handlers...");
             KeyHandler.Init();
             GamePadHandler.Init();
+            View3D.CheckError("Load - Keyboard/mouse");
             SysConsole.Output(OutputType.INIT, "Building the sound system...");
             Sounds = new SoundEngine();
             Sounds.Init(this, CVars);
+            View3D.CheckError("Load - Sound");
             SysConsole.Output(OutputType.INIT, "Building game world...");
             BuildWorld();
+            View3D.CheckError("Load - World");
             SysConsole.Output(OutputType.INIT, "Preparing networking...");
             Network = new NetworkBase(this);
             RegisterDefaultEntityTypes();
+            View3D.CheckError("Load - Net");
             SysConsole.Output(OutputType.INIT, "Playing background music...");
             BackgroundMusic();
             CVars.a_musicvolume.OnChanged += onMusicVolumeChanged;
@@ -343,6 +353,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 SysConsole.Output(OutputType.INIT, "Failed to grab RawGamePad: " + ex.Message);
             }
+            View3D.CheckError("Load - Final");
             SysConsole.Output(OutputType.INIT, "Ready and looping!");
         }
 
