@@ -927,7 +927,7 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 if (!NeedsRendering.Contains(ch.WorldPosition))
                 {
-                    NeedsRendering.Enqueue(ch.WorldPosition, ch.WorldPosition.ToLocation().DistanceSquared(TheClient.MainWorldView.CameraPos));
+                    NeedsRendering.Enqueue(ch.WorldPosition, (ch.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE).DistanceSquared(TheClient.Player.GetPosition()));
                 }
             }
         }
