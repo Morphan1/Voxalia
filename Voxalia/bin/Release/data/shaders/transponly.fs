@@ -45,7 +45,7 @@ in struct vox_out
 
 #if MCM_LL
 #else
-out vec4 color;
+out vec4 fcolor;
 #endif
 
 vec3 desaturate(vec3 c)
@@ -56,7 +56,7 @@ vec3 desaturate(vec3 c)
 void main()
 {
 #if MCM_LL
-	vec4 color;
+	vec4 fcolor;
 #endif
 	vec4 tcolor = texture(tex, f.texcoord);
 	if (tcolor.w * f.color.w >= 0.99)
@@ -67,9 +67,10 @@ void main()
 	{
 		discard;
 	}
-	color = tcolor * f.color;
+	vec4 color = tcolor * f.color;
+	fcolor = color;
 #if MCM_LIT
-	color = vec4(0.0);
+	fcolor = vec4(0.0);
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - 1.0;
 	int count = int(lights_used);
 	for (int i = 0; i < count; i++)
@@ -88,7 +89,7 @@ void main()
 	float lightc = light_details[2][3];
 	if (minimum_light > 0.99)
 	{
-		color = vec4(color.xyz / lightc, color.w);
+		fcolor += vec4(color.xyz / lightc, color.w);
 		return;
 	}
 	vec4 bambient = (vec4(light_details[3][0], light_details[3][1], light_details[3][2], 1.0)
@@ -124,7 +125,7 @@ void main()
 		|| fs.y < 0.0 || fs.y > 1.0
 		|| fs.z < 0.0 || fs.z > 1.0)
 	{
-		color = vec4(0.0, 0.0, 0.0, color.w);
+		fcolor += vec4(0.0, 0.0, 0.0, color.w);
 		return;
 	}
 #if MCM_GOOD_GRAPHICS
@@ -163,7 +164,7 @@ void main()
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f.position.xyz - eye_pos)), 0.0), /* renderhint.y * 1000.0 */ 128.0) * specular_albedo * /* renderhint.x */ 0.0);
-	color += vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
+	fcolor += vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, color.w);
 #else // shadows
 	vec4 fs = x_spos / x_spos.w / 2.0 + vec4(0.5, 0.5, 0.5, 0.0);
@@ -172,20 +173,21 @@ void main()
 		|| fs.y < 0.0 || fs.y > 1.0
 		|| fs.z < 0.0 || fs.z > 1.0)
 	{
-		color = vec4(0.0, 0.0, 0.0, color.w);
+		fcolor += vec4(0.0, 0.0, 0.0, color.w);
 		return;
 	}
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
 	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f.position.xyz - eye_pos)), 0.0), /* renderhint.y * 1000.0 */ 128.0) * specular_albedo * /* renderhint.x */ 0.0);
-	color = +vec4((bambient * color + (vec4(1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
+	fcolor += vec4((bambient * color + (vec4(1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten)).xyz * exposure, color.w);
 #endif // else-shadows
 	}
 #endif // lit
 #if MCM_GOOD_GRAPHICS
-	color = vec4(desaturate(color.xyz), color.w);
+	fcolor = vec4(desaturate(fcolor.xyz), fcolor.w);
 #endif
+	fcolor = vec4(fcolor.xyz, tcolor.w * f.color.w);
 #if MCM_LL
 	uint page = 0;
 	uint frag = 0;
@@ -225,8 +227,8 @@ void main()
 	frag = frag_mod;
 	memoryBarrier();
 	imageAtomicExchange(ui_page, ivec3(scrpos, 2), 0U);
-	vec4 abv = color;
-	abv.z = float(int(color.z * 255) & 255 | int(color.w * 255 * 255) & (255 * 255));
+	vec4 abv = fcolor;
+	abv.z = float(int(fcolor.z * 255) & 255 | int(fcolor.w * 255 * 255) & (255 * 255));
 	abv.w = f.z;
 	imageStore(uib_spage, int(page + frag), abv);
 #endif
