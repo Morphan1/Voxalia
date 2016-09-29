@@ -11,7 +11,7 @@ namespace Voxalia.Shared
     {
         public const string GameName = "Voxalia";
 
-        public const string GameVersion = "0.0.9";
+        public const string GameVersion = "0.1.0";
 
         public const string GlobalServerAddress = "https://frenetic.xyz/";
         
@@ -19,7 +19,7 @@ namespace Voxalia.Shared
         {
             FileHandler files = new FileHandler();
             files.Init();
-            MaterialHelpers.Populate(files); // TODO: Non-static material helper data!
+            MaterialHelpers.Populate(files); // TODO: Non-static material helper data?
             FullChunkObject.RegisterMe();
         }
     }
