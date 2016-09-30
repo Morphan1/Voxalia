@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Voxalia.Shared.BlockShapes;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.CollisionShapes;
 using BEPUutilities;
 using FreneticScript;
@@ -202,6 +203,8 @@ namespace Voxalia.Shared
         public Location OffsetCache;
 
         public Location ShrunkOffsetCache;
+
+        public EntityCollidable Coll = null;
 
         public virtual KeyValuePair<List<Vector4>, List<Vector4>> GetStretchData(Vector3 blockpos, List<Vector3> vertices, BlockInternal XP, BlockInternal XM,
             BlockInternal YP, BlockInternal YM, BlockInternal ZP, BlockInternal ZM, bool bxp, bool bxm, bool byp, bool bym, bool bzp, bool bzm)

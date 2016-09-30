@@ -190,11 +190,14 @@ namespace Voxalia.ClientGame.WorldSystem
                                 }
                                 if (c.Material.GetPlant() != null && !zp.Material.RendersAtAll() && zp.Material.GetSolidity() == MaterialSolidity.NONSOLID)
                                 {
-                                    // TODO: Optimize this bit!
                                     Location offset;
-                                    BEPUphysics.CollisionShapes.EntityShape es = BlockShapeRegistry.BSD[c.BlockData].GetShape(c.Damage, out offset, false);
+                                    if (BlockShapeRegistry.BSD[c.BlockData].Coll == null)
+                                    {
+                                        BEPUphysics.CollisionShapes.EntityShape es = BlockShapeRegistry.BSD[c.BlockData].GetShape(c.Damage, out offset, false);
+                                        BlockShapeRegistry.BSD[c.BlockData].Coll = es.GetCollidableInstance();
+                                    }
                                     BEPUutilities.RayHit rayhit;
-                                    es.GetCollidableInstance().RayCast(new BEPUutilities.Ray(new BEPUutilities.Vector3(0, 0, 2), new BEPUutilities.Vector3(0, 0, -1)), 3, out rayhit);
+                                    BlockShapeRegistry.BSD[c.BlockData].Coll.RayCast(new BEPUutilities.Ray(new BEPUutilities.Vector3(0, 0, 2), new BEPUutilities.Vector3(0, 0, -1)), 3, out rayhit);
                                     Model m = OwningRegion.TheClient.Models.GetModel(c.Material.GetPlant() + "_hd");
                                     Model m2 = OwningRegion.TheClient.Models.GetModel(c.Material.GetPlant());
                                     Vector3d trans = new Vector3d(WorldPosition.X * CHUNK_SIZE + x + 0.5f, WorldPosition.Y * CHUNK_SIZE + y + 0.5f, WorldPosition.Z * CHUNK_SIZE + z + 1);
