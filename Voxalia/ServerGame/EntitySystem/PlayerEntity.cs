@@ -210,15 +210,15 @@ namespace Voxalia.ServerGame.EntitySystem
         /// <summary>
         /// How far (in chunks) the player can see, as a cubic radius, excluding the chunk the player is in.
         /// </summary>
-        public int ViewRadiusInChunks = 4;
+        public int ViewRadiusInChunks = 3;
 
-        public int ViewRadExtra2 = 2;
+        public int ViewRadExtra2 = 1;
 
-        public int ViewRadExtra2Height = 2;
+        public int ViewRadExtra2Height = 1;
 
-        public int ViewRadExtra5 = 4;
+        public int ViewRadExtra5 = 1;
 
-        public int ViewRadExtra5Height = 3;
+        public int ViewRadExtra5Height = 1;
         
         public int BestLOD = 1;
 

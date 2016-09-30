@@ -95,6 +95,15 @@ namespace Voxalia.Shared
             // ...
             BSD[127] = new BSD52a127(0f, 1f, 1f);
             // ...
+            // Final setup
+            for (int i = 0; i < 256; i++)
+            {
+                if (i > 0 && BSD[i] is BSD0)
+                {
+                    continue;
+                }
+                BSD[i].Preparse();
+            }
         }
 
         public static int GetBSDFor(string name)
@@ -122,6 +131,12 @@ namespace Voxalia.Shared
         }
     }
 
+    public class BlockShapeSubDetails
+    {
+        public List<Vector3>[] Verts = new List<Vector3>[64];
+        public List<Vector3>[] Norms = new List<Vector3>[64];
+    }
+
     /// <summary>
     /// Represents the details of a single block shape option.
     /// </summary>
@@ -147,22 +162,20 @@ namespace Voxalia.Shared
 
         public abstract bool OccupiesBOTTOM();
 
-        public bool BackTextureAllowed = true;
+        public BlockShapeSubDetails BSSD = new BlockShapeSubDetails();
 
-        public virtual List<Vector4> GetLights(Vector3 blockPos, BlockInternal cblock, BlockInternal XP, BlockInternal XM, BlockInternal YP, BlockInternal YM, BlockInternal TOP, BlockInternal BOTTOM,
-            bool bxp, bool bxm, bool byp, bool bym, bool btop, bool bbottom)
+        public void Preparse()
         {
-            // TODO: Remove default implementation?
-            List<Vector4> lits = new List<Vector4>(6 * 3 * 2);
-            int c = GetVertices(blockPos, bxp, bxm, byp, bym, btop, bbottom).Count;
-            for (int i = 0; i < c; i++)
+            for (int i = 0; i < 64; i++)
             {
-                double f = (double)cblock.BlockLocalData / 255f;
-                lits.Add(new Vector4(f, f, f, 1f));
+                BSSD.Verts[i] = GetVertices(Vector3.Zero, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
+                BSSD.Norms[i] = GetNormals(Vector3.Zero, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
+                // TODO: TCoord helper! Probably has to be per-shape? :/ Or some clever trickery somewhere... Debug block abuse? (Unique textures per side is useful for this)
             }
-            return lits;
         }
 
+        public bool BackTextureAllowed = true;
+        
         public EntityShape BlockShapeCache;
 
         public EntityShape ShrunkBlockShapeCache;
