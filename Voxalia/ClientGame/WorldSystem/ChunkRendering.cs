@@ -141,7 +141,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                 int index_bssd = (xps ? 1 : 0) | (xms ? 2 : 0) | (yps ? 4 : 0) | (yms ? 8 : 0) | (zps ? 16 : 0) | (zms ? 32 : 0);
                                 List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].BSSD.Verts[index_bssd];
                                 List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].BSSD.Norms[index_bssd];
-                                List<BEPUutilities.Vector3> tci = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].GetTCoords(pos, (Material)c.BlockMaterial, xps, xms, yps, yms, zps, zms);
+                                List<BEPUutilities.Vector3> tci = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].GetTCoordsQuick(index_bssd, c.Material);
                                 KeyValuePair<List<BEPUutilities.Vector4>, List<BEPUutilities.Vector4>> ths = !c.BlockShareTex ? default(KeyValuePair<List<BEPUutilities.Vector4>, List<BEPUutilities.Vector4>>) :
                                     BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].GetStretchData(pos, vecsi, xp, xm, yp, ym, zp, zm, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)

@@ -24,7 +24,7 @@ namespace Voxalia.Shared
         /// </summary>
         public static Dictionary<string, int> BSD_Names = new Dictionary<string, int>();
 
-        static BlockShapeRegistry()
+        static BlockShapeRegistry() // TODO: Init method rather than this thing
         {
             for (int i = 0; i < 256; i++)
             {
@@ -135,6 +135,7 @@ namespace Voxalia.Shared
     {
         public List<Vector3>[] Verts = new List<Vector3>[64];
         public List<Vector3>[] Norms = new List<Vector3>[64];
+        public List<Vector3>[] TCrds = new List<Vector3>[64];
     }
 
     /// <summary>
@@ -170,8 +171,26 @@ namespace Voxalia.Shared
             {
                 BSSD.Verts[i] = GetVertices(Vector3.Zero, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
                 BSSD.Norms[i] = GetNormals(Vector3.Zero, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
-                // TODO: TCoord helper! Probably has to be per-shape? :/ Or some clever trickery somewhere... Debug block abuse? (Unique textures per side is useful for this)
+                BSSD.TCrds[i] = GetTCoords(Vector3.Zero, Material.DEBUG, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
             }
+        }
+
+        public List<Vector3> GetTCoordsQuick(int index, Material mat)
+        {
+            List<Vector3> vecs = new List<Vector3>(BSSD.TCrds[index]);
+            for (int i = 0; i < vecs.Count; i++)
+            {
+                Vector3 temp = vecs[i];
+                for (int z = 0; z < 6; z++)
+                {
+                    if (temp.Z == Material.DEBUG.TextureID((MaterialSide)z))
+                    {
+                        temp.Z = mat.TextureID((MaterialSide)z);
+                    }
+                }
+                vecs[i] = temp;
+            }
+            return vecs;
         }
 
         public bool BackTextureAllowed = true;
