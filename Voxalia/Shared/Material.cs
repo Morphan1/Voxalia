@@ -102,6 +102,9 @@ namespace Voxalia.Shared
                         case "plant":
                             inf.Plant = opt[1];
                             break;
+                        case "plantdistant":
+                            inf.PlantDistance = opt[1];
+                            break;
                         case "sound":
                             inf.Sound = (MaterialSound)Enum.Parse(typeof(MaterialSound), opt[1].ToUpperInvariant());
                             break;
@@ -354,6 +357,11 @@ namespace Voxalia.Shared
             return ALL_MATS[(int)mat].Plant;
         }
 
+        public static string GetPlantDistant(this Material mat)
+        {
+            return ALL_MATS[(int)mat].PlantDistance;
+        }
+
         public static Type MaterialType = typeof(Material);
 
         public static bool TryGetFromNameOrNumber(string input, out Material mat)
@@ -604,5 +612,10 @@ namespace Voxalia.Shared
         public string Plant = null;
 
         public Material BigSpreadsAs = Material.AIR;
+
+        /// <summary>
+        /// What plant texture to render in the distance as.
+        /// </summary>
+        public string PlantDistance = null;
     }
 }

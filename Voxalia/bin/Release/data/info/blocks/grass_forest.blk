@@ -5,3 +5,4 @@ Breaker=Shovel
 Texture_TOP=m1
 Texture_BOTTOM=dirt
 Plant=plants/small/basic_grass_bones
+PlantDistant=blocks/transparent/tallgrass

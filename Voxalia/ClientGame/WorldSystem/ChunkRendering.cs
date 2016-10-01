@@ -99,7 +99,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     return;
                 }
-                List<Tuple<Vector3i, Matrix4d, Model, Model, Location>> PlantsToSpawn = new List<Tuple<Vector3i, Matrix4d, Model, Model, Location>>();
+                List<Tuple<Vector3i, Matrix4d, Model, Model, Location, Texture>> PlantsToSpawn = new List<Tuple<Vector3i, Matrix4d, Model, Model, Location, Texture>>();
                 //bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, 1));
                 Chunk c_zm = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, -1));
@@ -210,7 +210,8 @@ namespace Voxalia.ClientGame.WorldSystem
                                         tmat = Matrix4d.CreateFromQuaternion(new Quaterniond(orient.X, orient.Y, orient.Z, orient.W)) * tmat;
                                     }
                                     Location skylight = OwningRegion.GetLightAmount(ClientUtilities.ConvertD(trans), Location.UnitZ, potentials);
-                                    PlantsToSpawn.Add(new Tuple<Vector3i, Matrix4d, Model, Model, Location>(WorldPosition * CHUNK_SIZE + new Vector3i(x, y, z + 1), tmat, m, m2, skylight));
+                                    Texture plantDistant = new Texture() { Engine = OwningRegion.TheClient.Textures, Name = c.Material.GetPlantDistant() };
+                                    PlantsToSpawn.Add(new Tuple<Vector3i, Matrix4d, Model, Model, Location, Texture>(WorldPosition * CHUNK_SIZE + new Vector3i(x, y, z + 1), tmat, m, m2, skylight, plantDistant));
                                 }
                             }
                         }
@@ -332,9 +333,9 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                     DestroyPlants();
                     PlantsSpawned = new List<Vector3i>();
-                    foreach (Tuple<Vector3i, Matrix4d, Model, Model, Location> plant in PlantsToSpawn)
+                    foreach (Tuple<Vector3i, Matrix4d, Model, Model, Location, Texture> plant in PlantsToSpawn)
                     {
-                        OwningRegion.AxisAlignedModels[plant.Item1] = new Tuple<Matrix4d, Model, Model, Location>(plant.Item2, plant.Item3, plant.Item4, plant.Item5);
+                        OwningRegion.AxisAlignedModels[plant.Item1] = new Tuple<Matrix4d, Model, Model, Location, Texture>(plant.Item2, plant.Item3, plant.Item4, plant.Item5, plant.Item6);
                         PlantsSpawned.Add(plant.Item1);
                     }
                 });

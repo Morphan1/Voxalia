@@ -323,8 +323,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             // TODO: Quaternion magic?
             Location relang = Utilities.VectorToAngles(pos - facing);
-            Matrix4d mat = Matrix4d.CreateTranslation(-0.5f, -0.5f, 0f)
-                * Matrix4d.Scale(ClientUtilities.ConvertD(scale))
+            Matrix4d mat = 
+                Matrix4d.Scale(ClientUtilities.ConvertD(scale))
+                * Matrix4d.CreateTranslation(-0.5f, -0.5f, 0f)
                 * Matrix4d.CreateRotationY((float)((relang.Y - 90) * Utilities.PI180))
                 * Matrix4d.CreateRotationZ((float)(relang.Z * Utilities.PI180))
                 * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(pos));

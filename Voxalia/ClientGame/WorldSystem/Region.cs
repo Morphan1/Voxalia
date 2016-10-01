@@ -461,7 +461,7 @@ namespace Voxalia.ClientGame.WorldSystem
             });
         }
 
-        public Dictionary<Vector3i, Tuple<Matrix4d, Model, Model, Location>> AxisAlignedModels = new Dictionary<Vector3i, Tuple<Matrix4d, Model, Model, Location>>();
+        public Dictionary<Vector3i, Tuple<Matrix4d, Model, Model, Location, Texture>> AxisAlignedModels = new Dictionary<Vector3i, Tuple<Matrix4d, Model, Model, Location, Texture>>();
 
         const double MAX_GRASS_DIST = 9; // TODO: CVar?
 
@@ -471,13 +471,15 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (TheClient.CVars.r_plants.ValueB)
             {
-                RenderPlants(false);
-                RenderPlants(true);
+                RenderPlants(1);
+                RenderPlants(3);
+                RenderPlants(7);
             }
         }
 
-        public void RenderPlants(bool close)
+        public void RenderPlants(int distmod)
         {
+            // TODO: Clean this method
             OpenTK.Vector3 wind = ClientUtilities.Convert(ActualWind);
             float len = wind.Length;
             Matrix4 windtransf = Matrix4.CreateFromAxisAngle(wind / len, (float)Math.Min(len, 1.0));
@@ -485,10 +487,10 @@ namespace Voxalia.ClientGame.WorldSystem
             Model prev = null;
             bool matchable = false;
             Location playerPos = TheClient.Player.GetPosition();
-            foreach (KeyValuePair<Vector3i, Tuple<Matrix4d, Model, Model, Location>> mod in AxisAlignedModels)
+            foreach (KeyValuePair<Vector3i, Tuple<Matrix4d, Model, Model, Location, Texture>> mod in AxisAlignedModels)
             {
                 double dist = mod.Key.ToLocation().DistanceSquared(TheClient.MainWorldView.CameraPos);
-                if (dist > mgd_sq * (close ? 1 : 4))
+                if (dist > mgd_sq * distmod)
                 {
                     continue;
                 }
@@ -500,43 +502,60 @@ namespace Voxalia.ClientGame.WorldSystem
                     matchable = false;
                 }
                 bool upd = false;
-                Model mt = close ? mod.Value.Item2 : mod.Value.Item3;
-                if (!mods.Contains(mt) || !matchable)
+                if (distmod <= 4)
                 {
-                    upd = true;
-                    mt.ForceBoneNoOffset = true;
-                    if (rot > 0.001)
+                    Model mt = distmod <= 2 ? mod.Value.Item2 : mod.Value.Item3;
+                    if (!mods.Contains(mt) || !matchable)
                     {
-                        OpenTK.Vector3 ppt = ClientUtilities.Convert(playerPos);
-                        ppt.Z = mod.Key.Z;
-                        OpenTK.Vector3 rel = ppt - ClientUtilities.Convert(mod.Key.ToLocation());
-                        Matrix4 rotter = Matrix4.CreateFromAxisAngle(rel.Normalized(), rot);
-                        mt.CustomAnimationAdjustments["b_bottom"] = rotter;
-                        mt.CustomAnimationAdjustments["b_top"] = rotter;
+                        upd = true;
+                        mt.ForceBoneNoOffset = true;
+                        if (rot > 0.001)
+                        {
+                            OpenTK.Vector3 ppt = ClientUtilities.Convert(playerPos);
+                            ppt.Z = mod.Key.Z;
+                            OpenTK.Vector3 rel = ppt - ClientUtilities.Convert(mod.Key.ToLocation());
+                            Matrix4 rotter = Matrix4.CreateFromAxisAngle(rel.Normalized(), rot);
+                            mt.CustomAnimationAdjustments["b_bottom"] = rotter;
+                            mt.CustomAnimationAdjustments["b_top"] = rotter;
+                        }
+                        else
+                        {
+                            mt.CustomAnimationAdjustments["b_bottom"] = windtransf;
+                            mt.CustomAnimationAdjustments["b_top"] = windtransf;
+                            matchable = true;
+                        }
+                        mt.UpdateTransforms(mt.RootNode, Matrix4.Identity);
+                        mt.LoadSkin(TheClient.Textures);
                     }
-                    else
+                    if (mt != prev || upd) // TODO: Sort so we don't need to update very often?
                     {
-                        mt.CustomAnimationAdjustments["b_bottom"] = windtransf;
-                        mt.CustomAnimationAdjustments["b_top"] = windtransf;
-                        matchable = true;
+                        Matrix4[] mats = new Matrix4[mt.Meshes[0].Bones.Count];
+                        for (int x = 0; x < mt.Meshes[0].Bones.Count; x++)
+                        {
+                            mats[x] = mt.Meshes[0].Bones[x].Transform;
+                        }
+                        mt.SetBones(mats);
+                        prev = mt;
                     }
-                    mt.UpdateTransforms(mt.RootNode, Matrix4.Identity);
-                    mt.LoadSkin(TheClient.Textures);
+                    TheClient.Rendering.SetColor(new OpenTK.Vector4((float)mod.Value.Item4.X, (float)mod.Value.Item4.Y, (float)mod.Value.Item4.Z, 1f));
+                    Matrix4d transf = /* Matrix4d.Scale(((mgd_sq * 4 - dist) / (mgd_sq * 4))) * */ mod.Value.Item1;
+                    TheClient.MainWorldView.SetMatrix(2, transf);
+                    mt.Draw();
                 }
-                if (mt != prev || upd) // TODO: Sort so we don't need to update very often?
+                else if (mod.Value.Item5.Name != null && dist >= mgd_sq * 3)
                 {
-                    Matrix4[] mats = new Matrix4[mt.Meshes[0].Bones.Count];
-                    for (int x = 0; x < mt.Meshes[0].Bones.Count; x++)
+                    Texture t = mod.Value.Item5;
+                    if (!t.LoadedProperly)
                     {
-                        mats[x] = mt.Meshes[0].Bones[x].Transform;
+                        t.Internal_Texture = TheClient.Textures.GetTexture(t.Name).Original_InternalID;
+                        t.LoadedProperly = true;
                     }
-                    mt.SetBones(mats);
-                    prev = mt;
+                    t.Bind();
+                    Location start = ClientUtilities.ConvertD(mod.Value.Item1.ExtractTranslation());
+                    Location goal = TheClient.MainWorldView.CameraPos;
+                    goal.Z = start.Z;
+                    TheClient.Rendering.RenderBillboard(start, Location.One * (2 * (mgd_sq * distmod - dist) / (mgd_sq * distmod)), goal);
                 }
-                TheClient.Rendering.SetColor(new OpenTK.Vector4((float)mod.Value.Item4.X, (float)mod.Value.Item4.Y, (float)mod.Value.Item4.Z, 1f));
-                Matrix4d transf = Matrix4d.Scale(((mgd_sq * 4 - dist) / (mgd_sq * 4))) * mod.Value.Item1;
-                TheClient.MainWorldView.SetMatrix(2, transf);
-                mt.Draw();
             }
             TheClient.Rendering.SetColor(Color4.White);
         }
