@@ -57,7 +57,11 @@ namespace Voxalia.ClientGame.WorldSystem
         int Cl_VBO_Tang = -1;
         int Cl_VBO_Col = -1;
         int Cl_VBO_Ind = -1;
-        
+        int Cl_VBO_BID1 = -1;
+        int Cl_VBO_BID2 = -1;
+        int Cl_VBO_BWE1 = -1;
+        int Cl_VBO_BWE2 = -1;
+
         static Vector3[] Cl_Vecer = new Vector3[] { new Vector3(1, 0, 0), new Vector3(1, 1, 0), new Vector3(0, 1, 0),
                 new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0, 0, 0) };
 
@@ -70,10 +74,13 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (!TheClient.CVars.r_clouds.ValueB)
             {
-                Cl_Pos = new List<Vector3>();
-                Cl_Norm = new List<Vector3>();
-                Cl_TC = new List<Vector2>();
-                Cl_Ind = new List<uint>();
+                if (Cl_Pos.Count > 0)
+                {
+                    Cl_Pos = new List<Vector3>();
+                    Cl_Norm = new List<Vector3>();
+                    Cl_TC = new List<Vector2>();
+                    Cl_Ind = new List<uint>();
+                }
                 return;
             }
             if (ReClouds)
@@ -88,6 +95,10 @@ namespace Voxalia.ClientGame.WorldSystem
                     Cl_VBO_Tang = GL.GenBuffer();
                     Cl_VBO_Ind = GL.GenBuffer();
                     Cl_VBO_Col = GL.GenBuffer();
+                    Cl_VBO_BID1 = GL.GenBuffer();
+                    Cl_VBO_BID2 = GL.GenBuffer();
+                    Cl_VBO_BWE1 = GL.GenBuffer();
+                    Cl_VBO_BWE2 = GL.GenBuffer();
                     forceset = true;
                 }
                 Cl_Pos.Clear();
@@ -124,6 +135,11 @@ namespace Voxalia.ClientGame.WorldSystem
                 Vector3[] tang = VBO.TangentsFor(pos, norm, tc);
                 Vector4[] col = Cl_Col.ToArray();
                 uint[] ind = Cl_Ind.ToArray();
+                Vector4[] bdata = new Vector4[pos.Length];
+                for (int i = 0; i < bdata.Length; i++)
+                {
+                    bdata[i] = new Vector4(0f, 0f, 0f, 0f);
+                }
                 BufferUsageHint BufferMode = BufferUsageHint.StreamDraw;
                 GL.BindBuffer(BufferTarget.ArrayBuffer, Cl_VBO_Pos);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(pos.Length * Vector3.SizeInBytes), pos, BufferMode);
@@ -135,6 +151,14 @@ namespace Voxalia.ClientGame.WorldSystem
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(tang.Length * Vector3.SizeInBytes), tang, BufferMode);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, Cl_VBO_Col);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(col.Length * Vector4.SizeInBytes), col, BufferMode);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, Cl_VBO_BWE1);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(bdata.Length * Vector4.SizeInBytes), bdata, BufferMode);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, Cl_VBO_BID1);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(bdata.Length * Vector4.SizeInBytes), bdata, BufferMode);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, Cl_VBO_BWE2);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(bdata.Length * Vector4.SizeInBytes), bdata, BufferMode);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, Cl_VBO_BID2);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(bdata.Length * Vector4.SizeInBytes), bdata, BufferMode);
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, Cl_VBO_Ind);
                 GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(ind.Length * sizeof(uint)), ind, BufferMode);
                 if (forceset)
@@ -150,19 +174,32 @@ namespace Voxalia.ClientGame.WorldSystem
                     GL.VertexAttribPointer(3, 3, VertexAttribPointerType.Float, false, 0, 0);
                     GL.BindBuffer(BufferTarget.ArrayBuffer, Cl_VBO_Col);
                     GL.VertexAttribPointer(4, 4, VertexAttribPointerType.Float, false, 0, 0);
+                    GL.BindBuffer(BufferTarget.ArrayBuffer, Cl_VBO_BWE1);
+                    GL.VertexAttribPointer(5, 4, VertexAttribPointerType.Float, false, 0, 0);
+                    GL.BindBuffer(BufferTarget.ArrayBuffer, Cl_VBO_BID1);
+                    GL.VertexAttribPointer(6, 4, VertexAttribPointerType.Float, false, 0, 0);
+                    GL.BindBuffer(BufferTarget.ArrayBuffer, Cl_VBO_BWE2);
+                    GL.VertexAttribPointer(7, 4, VertexAttribPointerType.Float, false, 0, 0);
+                    GL.BindBuffer(BufferTarget.ArrayBuffer, Cl_VBO_BID2);
+                    GL.VertexAttribPointer(8, 4, VertexAttribPointerType.Float, false, 0, 0);
                     GL.EnableVertexAttribArray(0);
                     GL.EnableVertexAttribArray(1);
                     GL.EnableVertexAttribArray(2);
                     GL.EnableVertexAttribArray(3);
                     GL.EnableVertexAttribArray(4);
+                    GL.EnableVertexAttribArray(5);
+                    GL.EnableVertexAttribArray(6);
+                    GL.EnableVertexAttribArray(7);
+                    GL.EnableVertexAttribArray(8);
                     GL.BindBuffer(BufferTarget.ElementArrayBuffer, Cl_VBO_Ind);
                 }
                 ReClouds = false;
             }
             TheClient.SetEnts();
             TheClient.Textures.GetTexture("effects/clouds/cloud1").Bind(); // TODO: Cache!
-            Matrix4d identity = Matrix4d.Identity;
-            TheClient.MainWorldView.SetMatrix(2,identity);
+            TheClient.MainWorldView.SetMatrix(2, Matrix4d.Identity);
+            Matrix4 identity = Matrix4.Identity;
+            GL.UniformMatrix4(40, false, ref identity);
             GL.BindVertexArray(Cl_VAO);
             GL.DrawElements(PrimitiveType.Triangles, Cl_Ind.Count, DrawElementsType.UnsignedInt, IntPtr.Zero);
         }
