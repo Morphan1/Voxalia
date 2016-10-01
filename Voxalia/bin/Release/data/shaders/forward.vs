@@ -109,7 +109,7 @@ void main()
 #endif
 #endif
 #if MCM_GEOM_ACTIVE
-	f.color = vec4(1.0);
+	f.color = color * v_color;
 	gl_Position = mv_matrix * vec4(pos1.xyz, 1.0);
 #else
     fi.color = color_for(mv_matrix * vec4(pos1.xyz, 1.0), color * v_color);

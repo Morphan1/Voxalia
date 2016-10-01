@@ -20,6 +20,7 @@ namespace Voxalia.ClientGame.WorldSystem
         public int Plant_VAO = -1;
         public int Plant_VBO_Pos = -1;
         public int Plant_VBO_Ind = -1;
+        public int Plant_VBO_Col = -1;
         public int Plant_C;
 
         public void CreateVBO()
@@ -113,6 +114,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 List<Chunk> potentials = new List<Chunk>() { this, c_zp, c_zm, c_yp, c_ym, c_xp, c_xm };
                 BlockInternal t_air = new BlockInternal((ushort)Material.STONE, 0, 0, 0);
                 List<Vector3> poses = new List<Vector3>();
+                List<Vector4> colorses = new List<Vector4>();
                 for (int x = 0; x < CSize; x++)
                 {
                     for (int y = 0; y < CSize; y++)
@@ -202,8 +204,10 @@ namespace Voxalia.ClientGame.WorldSystem
                                     }
                                     BEPUutilities.RayHit rayhit;
                                     BlockShapeRegistry.BSD[c.BlockData].Coll.RayCast(new BEPUutilities.Ray(new BEPUutilities.Vector3(0, 0, 2), new BEPUutilities.Vector3(0, 0, -1)), 3, out rayhit);*/
-                                    //Location skylight = OwningRegion.GetLightAmount(ClientUtilities.ConvertD(trans), Location.UnitZ, potentials);
+                                    Location skylight = OwningRegion.GetLightAmount(new Location(WorldPosition.X * Chunk.CHUNK_SIZE + x + 0.5, WorldPosition.Y * Chunk.CHUNK_SIZE + y + 0.5,
+                                        WorldPosition.Z * Chunk.CHUNK_SIZE + z + 1.0), Location.UnitZ, potentials);
                                     poses.Add(new Vector3(x + 0.5f, y + 0.5f, z + 1));
+                                    colorses.Add(new Vector4((float)skylight.X, (float)skylight.Y, (float)skylight.Z, 1.0f));
                                 }
                             }
                         }
@@ -285,6 +289,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     tVBO.oldvert();
                 }
                 Vector3[] posset = poses.ToArray();
+                Vector4[] colorset = colorses.ToArray();
                 uint[] posind = new uint[posset.Length];
                 for (uint i = 0; i < posind.Length; i++)
                 {
@@ -333,15 +338,21 @@ namespace Voxalia.ClientGame.WorldSystem
                     Plant_VAO = GL.GenVertexArray();
                     Plant_VBO_Ind = GL.GenBuffer();
                     Plant_VBO_Pos = GL.GenBuffer();
+                    Plant_VBO_Col = GL.GenBuffer();
                     Plant_C = posind.Length;
                     GL.BindBuffer(BufferTarget.ArrayBuffer, Plant_VBO_Pos);
                     GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(posset.Length * OpenTK.Vector3.SizeInBytes), posset, BufferUsageHint.StaticDraw);
+                    GL.BindBuffer(BufferTarget.ArrayBuffer, Plant_VBO_Col);
+                    GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(colorset.Length * OpenTK.Vector4.SizeInBytes), colorset, BufferUsageHint.StaticDraw);
                     GL.BindBuffer(BufferTarget.ElementArrayBuffer, Plant_VBO_Ind);
                     GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(posind.Length * sizeof(uint)), posind, BufferUsageHint.StaticDraw);
                     GL.BindVertexArray(Plant_VAO);
                     GL.BindBuffer(BufferTarget.ArrayBuffer, Plant_VBO_Pos);
                     GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
                     GL.EnableVertexAttribArray(0);
+                    GL.BindBuffer(BufferTarget.ArrayBuffer, Plant_VBO_Col);
+                    GL.VertexAttribPointer(4, 4, VertexAttribPointerType.Float, false, 0, 0);
+                    GL.EnableVertexAttribArray(4);
                     GL.BindBuffer(BufferTarget.ElementArrayBuffer, Plant_VBO_Ind);
                 });
                 OwningRegion.DoneRendering(this);
