@@ -2,6 +2,7 @@
 
 #define MCM_TRANSP 0
 #define MCM_VOX 0
+#define MCM_GEOM_ACTIVE 0
 
 #if MCM_VOX
 layout (binding = 0) uniform sampler2DArray s;
@@ -13,7 +14,6 @@ layout (binding = 0) uniform sampler2D s;
 
 in struct vox_out
 {
-	vec4 position;
 #if MCM_VOX
 	vec3 texcoord;
 	vec4 tcol;
@@ -24,27 +24,27 @@ in struct vox_out
 	vec2 texcoord;
 #endif
 	vec4 color;
-} f;
+} fi;
 
 layout (location = 0) out vec4 color;
 
 void main()
 {
-	vec4 col = texture(s, f.texcoord);
+	vec4 col = texture(s, fi.texcoord);
 #if MCM_VOX
 	// TODO: Special color handlers?
-	col *= f.tcol;
+	col *= fi.tcol;
 #endif
 #if MCM_TRANSP
-	if (col.w * f.color.w >= 0.99)
+	if (col.w * fi.color.w >= 0.99)
 	{
 		discard;
 	}
 #else
-	if (col.w * f.color.w < 0.99)
+	if (col.w * fi.color.w < 0.99)
 	{
 		discard;
 	}
 #endif
-	color = col * f.color;
+	color = col * fi.color;
 }

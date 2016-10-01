@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using Voxalia.Shared;
 using Voxalia.ClientGame.ClientMainSystem;
@@ -471,10 +472,54 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (TheClient.CVars.r_plants.ValueB)
             {
+                TheClient.SetEnts();
                 RenderPlants(1);
                 RenderPlants(3);
                 RenderPlants(7);
+                RenderGrass();
             }
+        }
+
+        public void RenderGrass()
+        {
+            int ts_Arr = GL.GenVertexArray();
+            int ts_Buff = GL.GenBuffer();
+            int ts_Inds = GL.GenBuffer();
+            OpenTK.Vector3[] pos = new OpenTK.Vector3[60];
+            uint[] inds = new uint[60];
+            for (uint i = 0; i < 60; i++)
+            {
+                pos[i] = new OpenTK.Vector3((float)Utilities.UtilRandom.NextDouble() * 4 - 2, (float)Utilities.UtilRandom.NextDouble() * 4 - 2, (float)Utilities.UtilRandom.NextDouble() * 4 - 2);
+                inds[i] = i;
+            }
+            GL.BindBuffer(BufferTarget.ArrayBuffer, ts_Buff);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(pos.Length * OpenTK.Vector3.SizeInBytes), pos, BufferUsageHint.StaticDraw);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ts_Inds);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(inds.Length * sizeof(uint)), inds, BufferUsageHint.StaticDraw);
+            GL.BindVertexArray(ts_Arr);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, ts_Buff);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
+            GL.EnableVertexAttribArray(0);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ts_Inds);
+            if (TheClient.MainWorldView.FBOid == FBOID.FORWARD_SOLID)
+            {
+                TheClient.s_forw_grass = TheClient.s_forw_grass.Bind();
+            }
+            else
+            {
+                return;
+            }
+            GL.BindVertexArray(ts_Arr);
+            TheClient.Textures.GetTexture("blocks/transparent/tallgrass").Bind(); // TODO: Cache!
+            GL.UniformMatrix4(1, false, ref TheClient.MainWorldView.PrimaryMatrix);
+            Matrix4 ident = Matrix4.Identity;
+            GL.UniformMatrix4(2, false, ref ident);
+            GL.DrawElements(PrimitiveType.Points, inds.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            TheClient.isVox = true;
+            TheClient.SetEnts();
+            GL.DeleteVertexArray(ts_Arr);
+            GL.DeleteBuffer(ts_Buff);
+            GL.DeleteBuffer(ts_Inds);
         }
 
         public void RenderPlants(int distmod)

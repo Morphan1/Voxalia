@@ -145,6 +145,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             s_ll_clearer = Shaders.GetShader("clearer" + def);
             s_ll_fpass = Shaders.GetShader("fpass" + def);
             s_hdrpass = Shaders.GetShader("hdrpass" + def);
+            s_forw_grass = Shaders.GetShader("forward" + def + ",MCM_GEOM_ACTIVE?grass");
             // TODO: Better place for models?
             RainCyl = Models.GetModel("raincyl");
             RainCyl.LoadSkin(Textures);
@@ -223,6 +224,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_ll_clearer;
         public Shader s_ll_fpass;
         public Shader s_hdrpass;
+        public Shader s_forw_grass;
         
         public void sortEntities() // TODO: Maybe reverse ent order first, then this, to counteract existing reversal?
         {

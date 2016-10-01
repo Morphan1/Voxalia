@@ -99,7 +99,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             try
             {
-                string[] dat1 = filename.SplitFast('#', 1);
+                string[] datg = filename.SplitFast('?', 1);
+                string geom = datg.Length > 1 ? datg[1] : null;
+                string[] dat1 = datg[0].SplitFast('#', 1);
                 string[] vars = new string[0];
                 if (dat1.Length == 2)
                 {
@@ -122,7 +124,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 }
                 string VS = TheClient.Files.ReadText("shaders/" + filename + ".vs");
                 string FS = TheClient.Files.ReadText("shaders/" + filename + ".fs");
-                return CreateShader(VS, FS, filename, vars);
+                string GS = null;
+                if (geom != null)
+                {
+                    GS = TheClient.Files.ReadText("shaders/" + geom + ".geom");
+                }
+                return CreateShader(VS, FS, filename, vars, GS);
             }
             catch (Exception ex)
             {
@@ -140,9 +147,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="name">The name of the shader.</param>
         /// <param name="vars">The variables to use.</param>
         /// <returns>A valid Shader object.</returns>
-        public Shader CreateShader(string VS, string FS, string name, string[] vars)
+        public Shader CreateShader(string VS, string FS, string name, string[] vars, string geom)
         {
-            int Program = CompileToProgram(VS, FS, vars);
+            int Program = CompileToProgram(VS, FS, vars, geom);
             Shader generic = new Shader();
             generic.Name = name;
             generic.LoadedProperly = true;
@@ -189,7 +196,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="FS">The input FragmentShader code.</param>
         /// <param name="vars">All variables to include.</param>
         /// <returns>The internal OpenGL program ID.</returns>
-        public int CompileToProgram(string VS, string FS, string[] vars)
+        public int CompileToProgram(string VS, string FS, string[] vars, string geom)
         {
             for (int i = 0; i < vars.Length; i++)
             {
@@ -197,10 +204,29 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     VS = VS.Replace("#define " + vars[i] + " 0", "#define " + vars[i] + " 1");
                     FS = FS.Replace("#define " + vars[i] + " 0", "#define " + vars[i] + " 1");
+                    if (geom != null)
+                    {
+                        geom = geom.Replace("#define " + vars[i] + " 0", "#define " + vars[i] + " 1");
+                    }
                 }
             }
+            int gObj = -1;
             VS = Includes(VS);
             FS = Includes(FS);
+            if (geom != null)
+            {
+                geom = Includes(geom);
+                gObj = GL.CreateShader(ShaderType.GeometryShader);
+                GL.ShaderSource(gObj, geom);
+                GL.CompileShader(gObj);
+                string GS_Info = GL.GetShaderInfoLog(gObj);
+                int GS_Status = 0;
+                GL.GetShader(gObj, ShaderParameter.CompileStatus, out GS_Status);
+                if (GS_Status != 1)
+                {
+                    throw new Exception("Error creating GeometryShader. Error status: " + GS_Status + ", info: " + GS_Info);
+                }
+            }
             int VertexObject = GL.CreateShader(ShaderType.VertexShader);
             GL.ShaderSource(VertexObject, VS);
             GL.CompileShader(VertexObject);
@@ -224,6 +250,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             int Program = GL.CreateProgram();
             GL.AttachShader(Program, FragmentObject);
             GL.AttachShader(Program, VertexObject);
+            if (geom != null)
+            {
+                GL.AttachShader(Program, gObj);
+            }
             GL.LinkProgram(Program);
             string str = GL.GetProgramInfoLog(Program);
             if (str.Length != 0)
@@ -232,6 +262,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             GL.DeleteShader(FragmentObject);
             GL.DeleteShader(VertexObject);
+            if (geom != null)
+            {
+                GL.DeleteShader(gObj);
+            }
             return Program;
         }
     }
