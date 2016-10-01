@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.Shared;
 using OpenTK;
+using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.OtherSystems;
 using Voxalia.Shared.Collision;
 
@@ -15,6 +16,11 @@ namespace Voxalia.ClientGame.WorldSystem
         public List<KeyValuePair<Vector3i, Material>> Lits = new List<KeyValuePair<Vector3i, Material>>();
 
         public bool Edited = true;
+
+        public int Plant_VAO = -1;
+        public int Plant_VBO_Pos = -1;
+        public int Plant_VBO_Ind = -1;
+        public int Plant_C;
 
         public void CreateVBO()
         {
@@ -81,9 +87,7 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             return BlockInternal.AIR;
         }
-
-        public List<Vector3i> PlantsSpawned = null;
-
+        
         void VBOHInternal()
         {
             try
@@ -99,7 +103,6 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     return;
                 }
-                List<Tuple<Vector3i, Matrix4d, Model, Model, Location, Texture>> PlantsToSpawn = new List<Tuple<Vector3i, Matrix4d, Model, Model, Location, Texture>>();
                 //bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, 1));
                 Chunk c_zm = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, -1));
@@ -109,6 +112,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 Chunk c_xm = OwningRegion.GetChunk(WorldPosition + new Vector3i(-1, 0, 0));
                 List<Chunk> potentials = new List<Chunk>() { this, c_zp, c_zm, c_yp, c_ym, c_xp, c_xm };
                 BlockInternal t_air = new BlockInternal((ushort)Material.STONE, 0, 0, 0);
+                List<Vector3> poses = new List<Vector3>();
                 for (int x = 0; x < CSize; x++)
                 {
                     for (int y = 0; y < CSize; y++)
@@ -188,30 +192,18 @@ namespace Voxalia.ClientGame.WorldSystem
                                         }
                                     }
                                 }
-                                if (c.Material.GetPlant() != null && !zp.Material.RendersAtAll() && zp.Material.GetSolidity() == MaterialSolidity.NONSOLID)
+                                if (PosMultiplier == 1 && c.Material.GetPlant() != null && !zp.Material.RendersAtAll() && zp.Material.GetSolidity() == MaterialSolidity.NONSOLID)
                                 {
-                                    Location offset;
+                                    /*Location offset;
                                     if (BlockShapeRegistry.BSD[c.BlockData].Coll == null)
                                     {
                                         BEPUphysics.CollisionShapes.EntityShape es = BlockShapeRegistry.BSD[c.BlockData].GetShape(c.Damage, out offset, false);
                                         BlockShapeRegistry.BSD[c.BlockData].Coll = es.GetCollidableInstance();
                                     }
                                     BEPUutilities.RayHit rayhit;
-                                    BlockShapeRegistry.BSD[c.BlockData].Coll.RayCast(new BEPUutilities.Ray(new BEPUutilities.Vector3(0, 0, 2), new BEPUutilities.Vector3(0, 0, -1)), 3, out rayhit);
-                                    Model m = OwningRegion.TheClient.Models.GetModel(c.Material.GetPlant() + "_hd");
-                                    Model m2 = OwningRegion.TheClient.Models.GetModel(c.Material.GetPlant());
-                                    Vector3d trans = new Vector3d(WorldPosition.X * CHUNK_SIZE + x + 0.5f, WorldPosition.Y * CHUNK_SIZE + y + 0.5f, WorldPosition.Z * CHUNK_SIZE + z + 1);
-                                    Matrix4d tmat = Matrix4d.CreateTranslation(trans);
-                                    if (rayhit.Normal.LengthSquared() > 0)
-                                    {
-                                        BEPUutilities.Vector3 plantalign = new BEPUutilities.Vector3(0, 0, 1);
-                                        BEPUutilities.Quaternion orient;
-                                        BEPUutilities.Quaternion.GetQuaternionBetweenNormalizedVectors(ref plantalign, ref rayhit.Normal, out orient);
-                                        tmat = Matrix4d.CreateFromQuaternion(new Quaterniond(orient.X, orient.Y, orient.Z, orient.W)) * tmat;
-                                    }
-                                    Location skylight = OwningRegion.GetLightAmount(ClientUtilities.ConvertD(trans), Location.UnitZ, potentials);
-                                    Texture plantDistant = new Texture() { Engine = OwningRegion.TheClient.Textures, Name = c.Material.GetPlantDistant() };
-                                    PlantsToSpawn.Add(new Tuple<Vector3i, Matrix4d, Model, Model, Location, Texture>(WorldPosition * CHUNK_SIZE + new Vector3i(x, y, z + 1), tmat, m, m2, skylight, plantDistant));
+                                    BlockShapeRegistry.BSD[c.BlockData].Coll.RayCast(new BEPUutilities.Ray(new BEPUutilities.Vector3(0, 0, 2), new BEPUutilities.Vector3(0, 0, -1)), 3, out rayhit);*/
+                                    //Location skylight = OwningRegion.GetLightAmount(ClientUtilities.ConvertD(trans), Location.UnitZ, potentials);
+                                    poses.Add(new Vector3(x + 0.5f, y + 0.5f, z + 1));
                                 }
                             }
                         }
@@ -292,6 +284,12 @@ namespace Voxalia.ClientGame.WorldSystem
                     tVBO.BoneIDs2 = null;
                     tVBO.oldvert();
                 }
+                Vector3[] posset = poses.ToArray();
+                uint[] posind = new uint[posset.Length];
+                for (uint i = 0; i < posind.Length; i++)
+                {
+                    posind[i] = i;
+                }
                 OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                 {
                     if (DENIED)
@@ -332,12 +330,19 @@ namespace Voxalia.ClientGame.WorldSystem
                         tVBO.CleanLists();
                     }
                     DestroyPlants();
-                    PlantsSpawned = new List<Vector3i>();
-                    foreach (Tuple<Vector3i, Matrix4d, Model, Model, Location, Texture> plant in PlantsToSpawn)
-                    {
-                        OwningRegion.AxisAlignedModels[plant.Item1] = new Tuple<Matrix4d, Model, Model, Location, Texture>(plant.Item2, plant.Item3, plant.Item4, plant.Item5, plant.Item6);
-                        PlantsSpawned.Add(plant.Item1);
-                    }
+                    Plant_VAO = GL.GenVertexArray();
+                    Plant_VBO_Ind = GL.GenBuffer();
+                    Plant_VBO_Pos = GL.GenBuffer();
+                    Plant_C = posind.Length;
+                    GL.BindBuffer(BufferTarget.ArrayBuffer, Plant_VBO_Pos);
+                    GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(posset.Length * OpenTK.Vector3.SizeInBytes), posset, BufferUsageHint.StaticDraw);
+                    GL.BindBuffer(BufferTarget.ElementArrayBuffer, Plant_VBO_Ind);
+                    GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(posind.Length * sizeof(uint)), posind, BufferUsageHint.StaticDraw);
+                    GL.BindVertexArray(Plant_VAO);
+                    GL.BindBuffer(BufferTarget.ArrayBuffer, Plant_VBO_Pos);
+                    GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
+                    GL.EnableVertexAttribArray(0);
+                    GL.BindBuffer(BufferTarget.ElementArrayBuffer, Plant_VBO_Ind);
                 });
                 OwningRegion.DoneRendering(this);
             }

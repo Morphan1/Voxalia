@@ -6,6 +6,7 @@ using BEPUphysics.CollisionShapes;
 using BEPUphysics.BroadPhaseEntries;
 using Voxalia.Shared.Collision;
 using Voxalia.ClientGame.GraphicsSystems;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -151,13 +152,12 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void DestroyPlants()
         {
-            if (PlantsSpawned != null)
+            if (Plant_VAO != -1)
             {
-                foreach (Vector3i v in PlantsSpawned)
-                {
-                    OwningRegion.AxisAlignedModels.Remove(v);
-                }
-                PlantsSpawned = null;
+                GL.DeleteVertexArray(Plant_VAO);
+                GL.DeleteBuffer(Plant_VBO_Pos);
+                GL.DeleteBuffer(Plant_VBO_Ind);
+                Plant_VAO = -1;
             }
         }
 

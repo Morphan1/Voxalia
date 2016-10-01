@@ -765,11 +765,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Particles.Engine.Render();
             }
             SetEnts();
-            TheRegion.RenderPlants();
             isVox = false;
             SetVox();
             TheRegion.Render();
             SetEnts();
+            TheRegion.RenderPlants();
             if (!view.ShadowsOnly)
             {
                 GL.ActiveTexture(TextureUnit.Texture1);
