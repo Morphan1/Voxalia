@@ -23,7 +23,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         uint _THVVBO;
         uint _THWVBO;
         uint _TangentVBO;
-        public uint _VAO;
+        public int _VAO = -1;
 
         public Texture Tex;
         public Texture Tex_Specular;

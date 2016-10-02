@@ -315,9 +315,9 @@ namespace Voxalia.ClientGame.WorldSystem
                         }
                         return;
                     }
-                    if (_VBO != null)
+                    VBO tV = _VBO;
+                    if (tV != null)
                     {
-                        VBO tV = _VBO;
                         lock (OwningRegion.TheClient.vbos)
                         {
                             if (OwningRegion.TheClient.vbos.Count < 40)

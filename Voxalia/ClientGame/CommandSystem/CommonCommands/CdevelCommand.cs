@@ -57,7 +57,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                             {
                                 if (ch.GetBlockAt((int)x, (int)y, (int)z).IsOpaque())
                                 {
-                                    entry.Good(queue, "Died: " + x + ", " + y + ", " + z + " -- " + XP + ", " + YP + ", " + ZP);
+                                    entry.Info(queue, "Died: " + x + ", " + y + ", " + z + " -- " + XP + ", " + YP + ", " + ZP);
                                     goto end;
                                 }
                                 z++;
@@ -73,10 +73,10 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                         long c = 0;
                         foreach (Tuple<string, long> val in TheClient.CalculateVRAMUsage())
                         {
-                            entry.Good(queue, "-> " + val.Item1 + ": " + val.Item2 + " (" + (val.Item2 / 1024 / 1024) + "MB)");
+                            entry.Info(queue, "-> " + val.Item1 + ": " + val.Item2 + " (" + (val.Item2 / 1024 / 1024) + "MB)");
                             c += val.Item2;
                         }
-                        entry.Good(queue, "-> Total: " + c + " (" + (c / 1024 / 1024) + "MB)");
+                        entry.Info(queue, "-> Total: " + c + " (" + (c / 1024 / 1024) + "MB)");
                         break;
                     }
                 case "speakText":
@@ -88,6 +88,18 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                         }
                         bool male = !entry.GetArgument(queue, 1).ToString().ToLowerFast().StartsWith("f");
                         TextToSpeech.Speak(entry.GetArgument(queue, 2), male);
+                        break;
+                    }
+                case "chunkInfo":
+                    {
+                        Chunk ch = TheClient.TheRegion.GetChunk(TheClient.TheRegion.ChunkLocFor(TheClient.Player.GetPosition()));
+                        if (ch == null)
+                        {
+                            entry.Info(queue, "Chunk is null!");
+                            break;
+                        }
+                        entry.Info(queue, "Plants: " + ch.Plant_C + ", generated as ID: " + ch.Plant_VAO);
+                        entry.Info(queue, "Chunk rendering as " + (ch._VBO == null ? "{NULL}" : ch._VBO._VAO.ToString()));
                         break;
                     }
                 default:
