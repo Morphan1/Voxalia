@@ -91,8 +91,8 @@ namespace Voxalia.ServerGame.NetworkSystem
         public void GetPage()
         {
             // TODO: FIX ME!
-#if PAGE_MAGIC
             string pageLow = http_request_page.ToLowerFast();
+#if PAGE_MAGIC
             if (pageLow.StartsWith("/map/region/"))
             {
                 string after;
@@ -235,7 +235,9 @@ namespace Voxalia.ServerGame.NetworkSystem
                     }
                 }
             }
-            else if (pageLow.StartsWith("/log_view"))
+            else
+#endif
+            if (pageLow.StartsWith("/log_view/"))
             {
                 string[] dat = pageLow.Substring("/log_view/".Length).SplitFast('/');
                 string username = dat[0];
@@ -277,7 +279,6 @@ namespace Voxalia.ServerGame.NetworkSystem
                 http_response_content = FileHandler.encoding.GetBytes(content.ToString());
                 return;
             }
-#endif
             Do404();
         }
 
