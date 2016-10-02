@@ -13,7 +13,7 @@ namespace Voxalia.ClientGame.WorldSystem
 {
     public partial class Region
     {
-        public Location Wind = new Location(0.3, 0, 0); // TODO: Gather this value from the server!
+        public Location Wind = new Location(0.8, 0, 0); // TODO: Gather this value from the server!
 
         public Location ActualWind = new Location(0.8, 0, 0);
 

@@ -491,6 +491,7 @@ namespace Voxalia.ClientGame.WorldSystem
             GL.UniformMatrix4(1, false, ref TheClient.MainWorldView.PrimaryMatrix);
             Matrix4 ident = Matrix4.Identity;
             GL.Uniform3(5, ClientUtilities.Convert(ActualWind));
+            GL.Uniform1(6, (float)GlobalTickTimeLocal);
             foreach (Chunk chunk in chToRender)
             {
                 if (chunk.Plant_VAO != -1)
