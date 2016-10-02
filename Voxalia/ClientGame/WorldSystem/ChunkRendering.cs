@@ -142,17 +142,15 @@ namespace Voxalia.ClientGame.WorldSystem
                                 {
                                     continue;
                                 }
-                                BEPUutilities.Vector3 pos = new BEPUutilities.Vector3(x, y, z);
-                                Vector3 otkpos = new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);
                                 int index_bssd = (xps ? 1 : 0) | (xms ? 2 : 0) | (yps ? 4 : 0) | (yms ? 8 : 0) | (zps ? 16 : 0) | (zms ? 32 : 0);
                                 List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].BSSD.Verts[index_bssd];
                                 List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].BSSD.Norms[index_bssd];
                                 List<BEPUutilities.Vector3> tci = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].GetTCoordsQuick(index_bssd, c.Material);
                                 KeyValuePair<List<BEPUutilities.Vector4>, List<BEPUutilities.Vector4>> ths = !c.BlockShareTex ? default(KeyValuePair<List<BEPUutilities.Vector4>, List<BEPUutilities.Vector4>>) :
-                                    BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].GetStretchData(pos, vecsi, xp, xm, yp, ym, zp, zm, xps, xms, yps, yms, zps, zms);
+                                    BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].GetStretchData(new BEPUutilities.Vector3(x, y, z), vecsi, xp, xm, yp, ym, zp, zm, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)
                                 {
-                                    Vector3 vt = otkpos + new Vector3((float)vecsi[i].X * PosMultiplier, (float)vecsi[i].Y * PosMultiplier, (float)vecsi[i].Z * PosMultiplier);
+                                    Vector3 vt = new Vector3((float)(x + vecsi[i].X) * PosMultiplier, (float)(y + vecsi[i].Y) * PosMultiplier, (float)(z + vecsi[i].Z) * PosMultiplier);
                                     rh.Vertices.Add(vt);
                                     Vector3 nt = new Vector3((float)normsi[i].X, (float)normsi[i].Y, (float)normsi[i].Z);
                                     rh.Norms.Add(nt);
@@ -176,7 +174,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     int tf = rh.Cols.Count - vecsi.Count;
                                     for (int i = vecsi.Count - 1; i >= 0; i--)
                                     {
-                                        rh.Vertices.Add(otkpos + new Vector3((float)vecsi[i].X * PosMultiplier, (float)vecsi[i].Y * PosMultiplier, (float)vecsi[i].Z * PosMultiplier));
+                                        Vector3 vt = new Vector3((float)(x + vecsi[i].X) * PosMultiplier, (float)(y + vecsi[i].Y) * PosMultiplier, (float)(z + vecsi[i].Z) * PosMultiplier);
                                         int tx = tf + i;
                                         rh.Cols.Add(rh.Cols[tx]);
                                         rh.TCols.Add(rh.TCols[tx]);
