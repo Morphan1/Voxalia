@@ -157,7 +157,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     rh.TCoords.Add(new Vector3((float)tci[i].X, (float)tci[i].Y, (float)tci[i].Z));
                                     Location lcol = OwningRegion.GetLightAmount(ClientUtilities.Convert(vt) + WorldPosition.ToLocation() * CHUNK_SIZE, ClientUtilities.Convert(nt), potentials);
                                     rh.Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
-                                    rh.TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(vt, Colors.ForByte(c.BlockPaint)));
+                                    rh.TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(ClientUtilities.ConvertD(WorldPosition.ToLocation()) * CHUNK_SIZE + ClientUtilities.ConvertToD(vt), Colors.ForByte(c.BlockPaint)));
                                     if (ths.Key != null)
                                     {
                                         rh.THVs.Add(new Vector4((float)ths.Key[i].X, (float)ths.Key[i].Y, (float)ths.Key[i].Z, (float)ths.Key[i].W));
@@ -175,6 +175,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     for (int i = vecsi.Count - 1; i >= 0; i--)
                                     {
                                         Vector3 vt = new Vector3((float)(x + vecsi[i].X) * PosMultiplier, (float)(y + vecsi[i].Y) * PosMultiplier, (float)(z + vecsi[i].Z) * PosMultiplier);
+                                        rh.Vertices.Add(vt);
                                         int tx = tf + i;
                                         rh.Cols.Add(rh.Cols[tx]);
                                         rh.TCols.Add(rh.TCols[tx]);

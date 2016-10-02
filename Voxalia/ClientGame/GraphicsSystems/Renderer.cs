@@ -258,6 +258,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public Vector4 AdaptColor(Vector3 vt, System.Drawing.Color tcol)
         {
+            return AdaptColor(ClientUtilities.ConvertToD(vt), tcol);
+        }
+
+        public Vector4 AdaptColor(Vector3d vt, System.Drawing.Color tcol)
+        {
             if (tcol.A == 0)
             {
                 if (tcol.R == 127 && tcol.G == 0 && tcol.B == 127)

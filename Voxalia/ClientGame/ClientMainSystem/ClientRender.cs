@@ -838,7 +838,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                                     one = ((CharacterEntity)TheRegion.Joints[i].One).GetEyePosition() + new Location(0, 0, -0.3);
                                 }
                                 Location two = TheRegion.Joints[i].Two.GetPosition();
-                                Vector4 col = Rendering.AdaptColor(ClientUtilities.Convert((one + two) * 0.5), ((ConnectorBeam)TheRegion.Joints[i]).color);
+                                Vector4 col = Rendering.AdaptColor(ClientUtilities.ConvertD((one + two) * 0.5), ((ConnectorBeam)TheRegion.Joints[i]).color);
                                 Rendering.SetColor(col);
                                 Rendering.RenderLine(one, two);
                             }

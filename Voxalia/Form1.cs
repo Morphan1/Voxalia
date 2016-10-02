@@ -29,7 +29,6 @@ namespace VoxaliaLauncher
             catch (Exception ex)
             {
                 MessageBox.Show("Failed to update registry: " + ex.ToString());
-                // Do nothing.
             }
             InitializeComponent();
             UpdateLoginDataFromFile();
