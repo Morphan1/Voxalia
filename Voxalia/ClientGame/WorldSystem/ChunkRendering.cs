@@ -196,18 +196,29 @@ namespace Voxalia.ClientGame.WorldSystem
                                 }
                                 if (PosMultiplier == 1 && c.Material.GetPlant() != null && !zp.Material.RendersAtAll() && zp.Material.GetSolidity() == MaterialSolidity.NONSOLID)
                                 {
-                                    /*Location offset;
                                     if (BlockShapeRegistry.BSD[c.BlockData].Coll == null)
                                     {
+                                        // TODO: BSD-level precompute this?
+                                        Location offset;
                                         BEPUphysics.CollisionShapes.EntityShape es = BlockShapeRegistry.BSD[c.BlockData].GetShape(c.Damage, out offset, false);
                                         BlockShapeRegistry.BSD[c.BlockData].Coll = es.GetCollidableInstance();
+                                        BlockShapeRegistry.BSD[c.BlockData].Coll.LocalPosition = -offset.ToBVector();
                                     }
-                                    BEPUutilities.RayHit rayhit;
-                                    BlockShapeRegistry.BSD[c.BlockData].Coll.RayCast(new BEPUutilities.Ray(new BEPUutilities.Vector3(0, 0, 2), new BEPUutilities.Vector3(0, 0, -1)), 3, out rayhit);*/
                                     Location skylight = OwningRegion.GetLightAmount(new Location(WorldPosition.X * Chunk.CHUNK_SIZE + x + 0.5, WorldPosition.Y * Chunk.CHUNK_SIZE + y + 0.5,
                                         WorldPosition.Z * Chunk.CHUNK_SIZE + z + 1.0), Location.UnitZ, potentials);
-                                    poses.Add(new Vector3(x + 0.5f, y + 0.5f, z + 1));
-                                    colorses.Add(new Vector4((float)skylight.X, (float)skylight.Y, (float)skylight.Z, 1.0f));
+                                    for (int plx = 0; plx < 3; plx++)
+                                    {
+                                        for (int ply = 0; ply < 3; ply++)
+                                        {
+                                            BEPUutilities.RayHit rayhit;
+                                            if (!BlockShapeRegistry.BSD[c.BlockData].Coll.RayCast(new BEPUutilities.Ray(new BEPUutilities.Vector3(0.3333f * plx, 0.3333f * ply, 3), new BEPUutilities.Vector3(0, 0, -1)), 5, out rayhit))
+                                            {
+                                                rayhit.Location = new BEPUutilities.Vector3(0.3333 * plx, 0.3333 * ply, 1.0);
+                                            }
+                                            poses.Add(new Vector3(x + (float)rayhit.Location.X, y + (float)rayhit.Location.Y, z + (float)rayhit.Location.Z));
+                                            colorses.Add(new Vector4((float)skylight.X, (float)skylight.Y, (float)skylight.Z, 1.0f));
+                                        }
+                                    }
                                 }
                             }
                         }

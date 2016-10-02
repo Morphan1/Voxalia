@@ -4,6 +4,8 @@ layout (points) in;
 layout (triangle_strip, max_vertices = 4) out;
 
 layout (location = 1) uniform mat4 proj_matrix = mat4(1.0);
+// ...
+layout (location = 5) uniform vec3 wind = vec3(0.0);
 
 in struct vox_out
 {
@@ -26,9 +28,9 @@ void main()
 		return;
 	}
 	vec3 up = vec3(0.0, 0.0, 1.0);
-	vec3 right = cross(up, vec3(pos.x, pos.y, 0.0));
+	vec3 right = cross(up, vec3(pos.x, pos.y, 0.0)) * 0.1;
 	// First Vertex
-	gl_Position = proj_matrix * vec4(pos - (right + up) * 0.5, 1.0);
+	gl_Position = proj_matrix * vec4(pos - (right + up) * 0.5 + wind, 1.0);
 	fi.texcoord = vec2(0.0, 0.0);
 	EmitVertex();
 	// Second Vertex
@@ -36,7 +38,7 @@ void main()
 	fi.texcoord = vec2(0.0, 1.0);
 	EmitVertex();
 	// Third Vertex
-	gl_Position = proj_matrix * vec4(pos + (right + up) * 0.5, 1.0);
+	gl_Position = proj_matrix * vec4(pos + (right + up) * 0.5 + wind, 1.0);
 	fi.texcoord = vec2(1.0, 0.0);
 	EmitVertex();
 	// Fourth Vertex
