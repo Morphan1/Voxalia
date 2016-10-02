@@ -608,7 +608,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                 {
                                     CFrust = new Frustum(ClientUtilities.ConvertToD(Lights[i].InternalLights[x].GetMatrix()));
                                 }
-                                CameraPos = ClientUtilities.Convert(Lights[i].InternalLights[x].eye);
+                                CameraPos = ClientUtilities.ConvertD(Lights[i].InternalLights[x].eye);
                                 TheClient.s_shadowvox = TheClient.s_shadowvox.Bind();
                                 GL.UniformMatrix4(2, false, ref IdentityMatrix);
                                 Lights[i].InternalLights[x].SetProj();
@@ -843,10 +843,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                     continue;
                                 }
                                 Matrix4 smat = Lights[i].InternalLights[x].GetMatrix();
-                                Vector3 eyep = Lights[i].InternalLights[x].eye;
+                                Vector3d eyep = Lights[i].InternalLights[x].eye - ClientUtilities.ConvertD(CameraPos);
                                 Vector3 col = Lights[i].InternalLights[x].color * (float)maxrangemult;
                                 Matrix4 light_data = new Matrix4(
-                                    eyep.X, eyep.Y, eyep.Z, // light_pos
+                                    (float)eyep.X, (float)eyep.Y, (float)eyep.Z, // light_pos
                                     0.7f, // diffuse_albedo
                                     0.7f, // specular_albedo
                                     Lights[i].InternalLights[x] is LightOrtho ? 1.0f : 0.0f, // should_sqrt

@@ -1,4 +1,7 @@
-﻿using OpenTK;
+﻿using System;
+using OpenTK;
+using Voxalia.ClientGame.ClientMainSystem;
+using Voxalia.ClientGame.OtherSystems;
 
 namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 {
@@ -6,7 +9,10 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
     {
         public override OpenTK.Matrix4 GetMatrix()
         {
-            return Matrix4.LookAt(eye, target, up) * Matrix4.CreateOrthographic(FOV, FOV, 1f, maxrange);
+            Vector3d c = ClientUtilities.ConvertD(Client.Central.MainWorldView.CameraPos);
+            Vector3d e = eye - c;
+            Vector3d d = target - c;
+            return Matrix4.LookAt(new Vector3((float)e.X, (float)e.Y, (float)e.Z), new Vector3((float)d.X, (float)d.Y, (float)d.Z), up) * Matrix4.CreateOrthographic(FOV, FOV, 1f, maxrange);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             }
             InternalLights[0].transp = transp;
             Direction = dir;
-            InternalLights[0].Create(ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + dir), Width, Radius, ClientUtilities.Convert(Color));
+            InternalLights[0].Create(ClientUtilities.ConvertD(pos), ClientUtilities.ConvertD(pos + dir), Width, Radius, ClientUtilities.Convert(Color));
             MaxDistance = radius;
         }
 
@@ -44,8 +44,8 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
         {
             EyePos = pos;
             InternalLights[0].NeedsUpdate = true;
-            InternalLights[0].eye = ClientUtilities.Convert(EyePos);
-            InternalLights[0].target = ClientUtilities.Convert(EyePos + Direction);
+            InternalLights[0].eye = ClientUtilities.ConvertD(EyePos);
+            InternalLights[0].target = ClientUtilities.ConvertD(EyePos + Direction);
         }
     }
 }

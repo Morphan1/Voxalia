@@ -11,7 +11,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
 {
     class LightPoint: Light
     {
-        public void Setup(Vector3 pos, Vector3 targ, float fov, float max_range, Vector3 col)
+        public void Setup(Vector3d pos, Vector3d targ, float fov, float max_range, Vector3 col)
         {
             eye = pos;
             target = targ;

@@ -24,7 +24,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             for (int i = 0; i < 6; i++)
             {
                 Light li = new Light();
-                li.Create(ClientUtilities.Convert(pos), ClientUtilities.Convert(pos + Location.UnitX), 90f, Radius, ClientUtilities.Convert(Color));
+                li.Create(ClientUtilities.ConvertD(pos), ClientUtilities.ConvertD(pos + Location.UnitX), 90f, Radius, ClientUtilities.Convert(Color));
                 InternalLights.Add(li);
             }
             InternalLights[4].up = new Vector3(0, 1, 0);
@@ -44,14 +44,14 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
             for (int i = 0; i < 6; i++)
             {
                 InternalLights[i].NeedsUpdate = true;
-                InternalLights[i].eye = ClientUtilities.Convert(EyePos);
+                InternalLights[i].eye = ClientUtilities.ConvertD(EyePos);
             }
-            InternalLights[0].target = ClientUtilities.Convert(EyePos + new Location(1, 0, 0));
-            InternalLights[1].target = ClientUtilities.Convert(EyePos + new Location(-1, 0, 0));
-            InternalLights[2].target = ClientUtilities.Convert(EyePos + new Location(0, 1, 0));
-            InternalLights[3].target = ClientUtilities.Convert(EyePos + new Location(0, -1, 0));
-            InternalLights[4].target = ClientUtilities.Convert(EyePos + new Location(0, 0, 1));
-            InternalLights[5].target = ClientUtilities.Convert(EyePos + new Location(0, 0, -1));
+            InternalLights[0].target = ClientUtilities.ConvertD(EyePos + new Location(1, 0, 0));
+            InternalLights[1].target = ClientUtilities.ConvertD(EyePos + new Location(-1, 0, 0));
+            InternalLights[2].target = ClientUtilities.ConvertD(EyePos + new Location(0, 1, 0));
+            InternalLights[3].target = ClientUtilities.ConvertD(EyePos + new Location(0, -1, 0));
+            InternalLights[4].target = ClientUtilities.ConvertD(EyePos + new Location(0, 0, 1));
+            InternalLights[5].target = ClientUtilities.ConvertD(EyePos + new Location(0, 0, -1));
         }
     }
 }
