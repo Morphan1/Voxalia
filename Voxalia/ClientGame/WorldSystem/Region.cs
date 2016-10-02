@@ -489,7 +489,6 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             TheClient.Textures.GetTexture("blocks/transparent/tallgrass").Bind(); // TODO: Cache!
             GL.UniformMatrix4(1, false, ref TheClient.MainWorldView.PrimaryMatrix);
-            Matrix4 ident = Matrix4.Identity;
             GL.Uniform3(5, ClientUtilities.Convert(ActualWind));
             GL.Uniform1(6, (float)GlobalTickTimeLocal);
             foreach (Chunk chunk in chToRender)

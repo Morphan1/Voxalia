@@ -147,7 +147,7 @@ namespace VoxaliaLauncher
 
         private void playButton_Click(object sender, EventArgs e)
         {
-            Process p = Process.Start("Voxalia.exe");
+            Process.Start("Voxalia.exe");
             Thread.Sleep(1000);
             Close();
         }

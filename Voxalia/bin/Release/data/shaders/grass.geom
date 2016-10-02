@@ -28,7 +28,7 @@ void main()
 {
 	fi.color = f[0].color;
 	vec3 pos = gl_in[0].gl_Position.xyz;
-	if (dot(pos, pos) > (50.0 * 50.0))
+	if (dot(pos, pos) > (50.0 * 50.0)) // TODO: Configurable grass render range cap!
 	{
 		return;
 	}
