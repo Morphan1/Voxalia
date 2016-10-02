@@ -483,14 +483,18 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 TheClient.s_forw_grass = TheClient.s_forw_grass.Bind();
             }
+            else if (TheClient.MainWorldView.FBOid == FBOID.MAIN)
+            {
+                TheClient.s_fbo_grass = TheClient.s_fbo_grass.Bind();
+            }
             else
             {
                 return;
             }
             TheClient.Textures.GetTexture("blocks/transparent/tallgrass").Bind(); // TODO: Cache!
             GL.UniformMatrix4(1, false, ref TheClient.MainWorldView.PrimaryMatrix);
-            GL.Uniform3(5, ClientUtilities.Convert(ActualWind));
             GL.Uniform1(6, (float)GlobalTickTimeLocal);
+            GL.Uniform3(7, ClientUtilities.Convert(ActualWind));
             foreach (Chunk chunk in chToRender)
             {
                 if (chunk.Plant_VAO != -1)

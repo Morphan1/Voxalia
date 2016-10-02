@@ -1,5 +1,7 @@
 #version 430 core
 
+#define MCM_GEOM_ACTIVE 0
+
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 layout (location = 2) in vec2 texcoords;
@@ -16,26 +18,46 @@ out struct vox_out
 	vec2 texcoord;
 	vec4 color;
 	mat3 tbn;
+#if MCM_GEOM_ACTIVE
 } f;
+#else
+} fi;
+#endif
 
+#if MCM_GEOM_ACTIVE
+#else
 const int MAX_BONES = 200;
+#endif
 
 vec4 color_for(in vec4 pos, in vec4 colt);
 float snoise2(in vec3 v);
 
+#if MCM_GEOM_ACTIVE
+#else
 layout (location = 1) uniform mat4 proj_matrix = mat4(1.0);
+#endif
 layout (location = 2) uniform mat4 mv_matrix = mat4(1.0);
 layout (location = 3) uniform vec4 v_color = vec4(1.0);
 // ...
 layout (location = 6) uniform float time;
 // ...
+#if MCM_GEOM_ACTIVE
+#else
 layout (location = 40) uniform mat4 simplebone_matrix = mat4(1.0);
 layout (location = 41) uniform mat4 boneTrans[MAX_BONES];
+#endif
 
 void main()
 {
 	vec4 pos1;
 	vec4 norm1;
+#if MCM_GEOM_ACTIVE
+	pos1 = vec4(position, 1.0);
+	norm1 = vec4(normal, 1.0);
+	f.texcoord = texcoords;
+    f.color = color * v_color;
+	gl_Position = mv_matrix * vec4(pos1.xyz, 1.0);
+#else
 	float rem = 1.0 - (Weights[0] + Weights[1] + Weights[2] + Weights[3] + Weights2[0] + Weights2[1] + Weights2[2] + Weights2[3]);
 	mat4 BT = mat4(1.0);
 	if (rem < 0.99)
@@ -59,13 +81,10 @@ void main()
 	}
 	pos1 *= simplebone_matrix;
 	norm1 *= simplebone_matrix;
-	//pos1 = simplebone_matrix * pos1;
-	//norm1 = simplebone_matrix * norm1;
-	f.texcoord = texcoords;
-	f.position = mv_matrix * vec4(pos1.xyz, 1.0);
-	f.position /= f.position.w;
-	//vec4 norm1 = boneTransform * vec4(normal, 1.0);
-    f.color = color_for(f.position, color * v_color);
+	fi.texcoord = texcoords;
+	fi.position = mv_matrix * vec4(pos1.xyz, 1.0);
+	fi.position /= fi.position.w;
+    fi.color = color_for(fi.position, color * v_color);
 	gl_Position = proj_matrix * mv_matrix * vec4(pos1.xyz, 1.0);
 	mat4 mv_mat_simple = mv_matrix;
 	mv_mat_simple[3][0] = 0.0;
@@ -74,7 +93,8 @@ void main()
 	vec3 tf_normal = (mv_mat_simple * vec4(norm1.xyz, 0.0)).xyz; // TODO: Should BT be here?
 	vec3 tf_tangent = (mv_mat_simple * vec4(tangent, 0.0)).xyz; // TODO: Should BT be here?
 	vec3 tf_bitangent = (mv_mat_simple * vec4(cross(tangent, norm1.xyz), 0.0)).xyz; // TODO: Should BT be here?
-	f.tbn = transpose(mat3(tf_tangent, tf_bitangent, tf_normal)); // TODO: Neccessity of transpose()?
+	fi.tbn = transpose(mat3(tf_tangent, tf_bitangent, tf_normal)); // TODO: Neccessity of transpose()?
+#endif
 }
 
 const float min_cstrobe = 3.0 / 255.0;
