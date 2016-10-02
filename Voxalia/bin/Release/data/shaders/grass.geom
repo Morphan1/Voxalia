@@ -40,11 +40,11 @@ out struct vox_out
 float snoise(in vec3 v);
 float snoise2(in vec3 v);
 
-vec4 qfix(in vec4 pos, in vec3 right)
+vec4 qfix(in vec4 pos, in vec3 right, in vec3 pos_norm)
 {
 #if MCM_PRETTY
 	fi.position = pos;
-	vec3 tf_norm = normalize(pos.xyz);
+	vec3 tf_norm = pos_norm;
 	fi.tbn = transpose(mat3(right, cross(right, tf_norm), tf_norm)); // TODO: Neccessity of transpose()?
 #endif
 	return pos;
@@ -52,7 +52,6 @@ vec4 qfix(in vec4 pos, in vec3 right)
 
 void main()
 {
-	fi.color = f[0].color;
 	vec3 pos = gl_in[0].gl_Position.xyz;
 	if (dot(pos, pos) > (50.0 * 50.0)) // TODO: Configurable grass render range cap!
 	{
@@ -63,28 +62,30 @@ void main()
 	vec3 up = vec3(0.0, 0.0, 1.0);
 	vec3 right = cross(up, vec3(pos.x, pos.y, 0.0)) * 0.1;
 	vec3 nr = normalize(right);
+	vec3 pos_norm = normalize(pos.xyz + wnd);
+	fi.color = vec4(f[0].color.xyz * dot(pos_norm, vec3(0.0, 0.0, -1.0)) * 0.5 + 0.5, f[0].color.w);
 	// First Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right) * 0.5, 1.0), nr);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right) * 0.5, 1.0), nr, pos_norm);
 	fi.texcoord = vec2(0.0, 1.0);
 	EmitVertex();
 	// Second Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos + (right) * 0.5, 1.0), nr);
+	gl_Position = proj_matrix * qfix(vec4(pos + (right) * 0.5, 1.0), nr, pos_norm);
 	fi.texcoord = vec2(1.0, 1.0);
 	EmitVertex();
 	// Third Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right + up * 2.0) * 0.5 + wnd, 1.0), nr);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right + up * 2.0) * 0.5 + wnd, 1.0), nr, pos_norm);
 	fi.texcoord = vec2(0.0, 0.5);
 	EmitVertex();
 	// Forth Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos + (right + up * 2.0) * 0.5 + wnd, 1.0), nr);
+	gl_Position = proj_matrix * qfix(vec4(pos + (right + up * 2.0) * 0.5 + wnd, 1.0), nr, pos_norm);
 	fi.texcoord = vec2(1.0, 0.5);
 	EmitVertex();
 	// Fifth Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right + up * 4.0) * 0.5 + wnd * 2.0, 1.0), nr);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right + up * 4.0) * 0.5 + wnd * 2.0, 1.0), nr, pos_norm);
 	fi.texcoord = vec2(0.0, 0.0);
 	EmitVertex();
 	// Sixth Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos + (right + up * 4.0) * 0.5 + wnd * 2.0, 1.0), nr);
+	gl_Position = proj_matrix * qfix(vec4(pos + (right + up * 4.0) * 0.5 + wnd * 2.0, 1.0), nr, pos_norm);
 	fi.texcoord = vec2(1.0, 0.0);
 	EmitVertex();
 	EndPrimitive();
