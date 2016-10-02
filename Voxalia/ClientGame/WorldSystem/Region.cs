@@ -329,18 +329,27 @@ namespace Voxalia.ClientGame.WorldSystem
             Chunk chunk;
             if (LoadedChunks.TryGetValue(pos, out chunk))
             {
+                while (chunk.SucceededBy != null)
+                {
+                    chunk = chunk.SucceededBy;
+                }
                 // TODO: ?!?!?!?
                 if (chunk.PosMultiplier != posMult)
                 {
                     Chunk ch = chunk;
-                    LoadedChunks.Remove(pos);
                     chunk = new Chunk(posMult);
                     chunk.OwningRegion = this;
                     chunk.adding = ch.adding;
                     chunk.rendering = ch.rendering;
-                    chunk._VBO = ch._VBO;
+                    chunk._VBO = null;
                     chunk.WorldPosition = pos;
-                    LoadedChunks.Add(pos, chunk);
+                    ch.SucceededBy = chunk;
+                    chunk.OnRendered = () =>
+                    {
+                        LoadedChunks.Remove(pos);
+                        ch.Destroy();
+                        LoadedChunks.Add(pos, chunk);
+                    };
                 }
             }
             else
@@ -727,7 +736,7 @@ namespace Voxalia.ClientGame.WorldSystem
             while (true)
             {
                 Chunk ch = GetChunk(new Vector3i(XP, YP, ZP));
-                if (ch == null)
+                if (ch == null || ch.SucceededBy != null)
                 {
                     break;
                 }
@@ -801,7 +810,7 @@ namespace Voxalia.ClientGame.WorldSystem
             Location lit = Location.Zero;
             foreach (Chunk ch in potentials)
             {
-                if (ch == null)
+                if (ch == null || ch.SucceededBy != null)
                 {
                     continue;
                 }

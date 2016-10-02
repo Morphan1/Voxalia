@@ -99,7 +99,15 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                             break;
                         }
                         entry.Info(queue, "Plants: " + ch.Plant_C + ", generated as ID: " + ch.Plant_VAO);
-                        entry.Info(queue, "Chunk rendering as " + (ch._VBO == null ? "{NULL}" : ch._VBO._VAO.ToString()));
+                        int c = 0;
+                        foreach (Chunk chunk in TheClient.TheRegion.LoadedChunks.Values)
+                        {
+                            if (chunk._VBO != null && ch._VBO != null && chunk._VBO._VAO == ch._VBO._VAO)
+                            {
+                                c++;
+                            }
+                        }
+                        entry.Info(queue, "Chunk rendering as " + (ch._VBO == null ? "{NULL}" : ch._VBO._VAO.ToString()) + ", which is seen in " + c + " chunks!");
                         break;
                     }
                 default:

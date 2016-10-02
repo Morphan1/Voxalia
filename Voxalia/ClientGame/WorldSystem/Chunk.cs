@@ -40,6 +40,10 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void SetBlockAt(int x, int y, int z, BlockInternal mat)
         {
+            if (SucceededBy != null)
+            {
+                SucceededBy.SetBlockAt(x, y, z, mat);
+            }
             BlocksInternal[BlockIndex(x, y, z)] = mat;
         }
 
@@ -119,24 +123,28 @@ namespace Voxalia.ClientGame.WorldSystem
                 FCO = new FullChunkObject(WorldPosition.ToVector3() * CHUNK_SIZE, BlocksInternal);
                 FCO.CollisionRules.Group = CollisionUtil.WorldSolid;
                 OwningRegion.AddChunk(FCO);
+                IsAdded = true;
             }
         }
+
+        bool IsAdded = false;
 
         /// <summary>
         /// Sync only.
         /// </summary>
         public void Destroy()
         {
-            if (FCO != null)
+            if (FCO != null && IsAdded)
             {
                 OwningRegion.RemoveChunkQuiet(FCO);
+                IsAdded = false;
             }
             if (_VBO != null)
             {
                 VBO tV = _VBO;
                 lock (OwningRegion.TheClient.vbos)
                 {
-                    if (OwningRegion.TheClient.vbos.Count < 120)
+                    if (tV.generated && OwningRegion.TheClient.vbos.Count < 120)
                     {
                         OwningRegion.TheClient.vbos.Push(tV);
                     }

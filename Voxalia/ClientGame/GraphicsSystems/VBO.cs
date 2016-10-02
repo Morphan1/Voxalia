@@ -269,7 +269,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         bool tcols;
         bool bones;
 
-        Vector3[] verts = null;
+        public Vector3[] verts = null;
         public uint[] indices = null;
         Vector3[] normals = null;
         Vector3[] texts = null;

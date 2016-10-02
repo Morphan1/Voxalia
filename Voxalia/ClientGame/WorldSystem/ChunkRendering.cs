@@ -58,6 +58,11 @@ namespace Voxalia.ClientGame.WorldSystem
         /// </summary>
         public void MakeVBONow()
         {
+            if (SucceededBy != null)
+            {
+                SucceededBy.MakeVBONow();
+                return;
+            }
             if (rendering != null)
             {
                 ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(() => VBOHInternal());
@@ -91,6 +96,11 @@ namespace Voxalia.ClientGame.WorldSystem
         
         void VBOHInternal()
         {
+            if (SucceededBy != null)
+            {
+                SucceededBy.VBOHInternal();
+                return;
+            }
             try
             {
                 bool shaped = OwningRegion.TheClient.CVars.r_noblockshapes.ValueB;
@@ -269,20 +279,20 @@ namespace Voxalia.ClientGame.WorldSystem
                     inds[i] = i;
                 }
                 VBO tVBO;
-                lock (OwningRegion.TheClient.vbos)
-                {
-                    if (OwningRegion.TheClient.vbos.Count > 0)
-                    {
-                        tVBO = OwningRegion.TheClient.vbos.Pop();
-                    }
-                    else
-                    {
-                        tVBO = new VBO();
-                        tVBO.BufferMode = OpenTK.Graphics.OpenGL4.BufferUsageHint.StreamDraw;
-                    }
-                }
                 lock (locky)
                 {
+                    lock (OwningRegion.TheClient.vbos)
+                    {
+                        if (OwningRegion.TheClient.vbos.Count > 0)
+                        {
+                            tVBO = OwningRegion.TheClient.vbos.Pop();
+                        }
+                        else
+                        {
+                            tVBO = new VBO();
+                            tVBO.BufferMode = OpenTK.Graphics.OpenGL4.BufferUsageHint.StreamDraw;
+                        }
+                    }
                     tVBO.indices = inds;
                     tVBO.Vertices = rh.Vertices;
                     tVBO.Normals = rh.Norms;
@@ -314,6 +324,23 @@ namespace Voxalia.ClientGame.WorldSystem
                             tVBO.Destroy();
                         }
                         return;
+                    }
+                    lock (locky)
+                    {
+                        if (tVBO.verts == null)
+                        {
+                            SysConsole.Output(OutputType.WARNING, "Something went wrong! : tVBO.verts==null while rh.Vertice==" + (rh.Vertices == null ? "null" : rh.Vertices.Count + "_vertices"));
+                            // TODO: What even happened here?!
+                            tVBO.indices = inds;
+                            tVBO.Vertices = rh.Vertices;
+                            tVBO.Normals = rh.Norms;
+                            tVBO.TexCoords = rh.TCoords;
+                            tVBO.Colors = rh.Cols;
+                            tVBO.TCOLs = rh.TCols;
+                            tVBO.THVs = rh.THVs;
+                            tVBO.THWs = rh.THWs;
+                            tVBO.Tangents = rh.Tangs;
+                        }
                     }
                     VBO tV = _VBO;
                     if (tV != null)
@@ -364,6 +391,8 @@ namespace Voxalia.ClientGame.WorldSystem
                     GL.VertexAttribPointer(4, 4, VertexAttribPointerType.Float, false, 0, 0);
                     GL.EnableVertexAttribArray(4);
                     GL.BindBuffer(BufferTarget.ElementArrayBuffer, Plant_VBO_Ind);
+                    GL.BindVertexArray(0);
+                    OnRendered?.Invoke();
                 });
                 OwningRegion.DoneRendering(this);
             }
@@ -385,6 +414,10 @@ namespace Voxalia.ClientGame.WorldSystem
                 _VBO.Render(OwningRegion.TheClient.RenderTextures);
             }
         }
+
+        public Chunk SucceededBy = null;
+
+        public Action OnRendered = null;
     }
 
     public class ChunkRenderHelper
