@@ -70,14 +70,14 @@ namespace VoxaliaLauncher
 
         private void changeLogin_Click(object sender, EventArgs e)
         {
-            GlobalLoginAttempt(usernameBox.Text, passwordBox.Text);
+            GlobalLoginAttempt(usernameBox.Text, passwordBox.Text, tfaBox.Text);
         }
 
         public bool Trying = false;
 
         public const string GlobalServerAddress = "https://frenetic.xyz/";
 
-        public void GlobalLoginAttempt(string user, string pass)
+        public void GlobalLoginAttempt(string user, string pass, string tfa)
         {
             if (Trying)
             {
@@ -98,6 +98,7 @@ namespace VoxaliaLauncher
                         data["formtype"] = "login";
                         data["username"] = user;
                         data["password"] = pass;
+                        data["tfa_code"] = tfa;
                         data["session_id"] = "0";
                         byte[] response = wb.UploadValues(GlobalServerAddress + "account/micrologin", "POST", data);
                         string resp = encoding.GetString(response).Trim(' ', '\n', '\r', '\t');

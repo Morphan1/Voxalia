@@ -140,7 +140,6 @@
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\PingCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\ConnectCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\DisconnectCommand.cs" />
-    <Compile Include="ClientGame\CommandSystem\NetworkCommands\LoginCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\StartlocalserverCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\NetworkCommands\NetusageCommand.cs" />
     <Compile Include="ClientGame\CommandSystem\TagBases\AudioTagBase.cs" />

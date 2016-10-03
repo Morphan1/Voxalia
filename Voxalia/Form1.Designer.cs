@@ -38,6 +38,8 @@
             this.logoutButton = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tfaBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // loggedAs
@@ -51,7 +53,7 @@
             // 
             // changeLogin
             // 
-            this.changeLogin.Location = new System.Drawing.Point(439, 40);
+            this.changeLogin.Location = new System.Drawing.Point(602, 40);
             this.changeLogin.Name = "changeLogin";
             this.changeLogin.Size = new System.Drawing.Size(113, 23);
             this.changeLogin.TabIndex = 1;
@@ -115,9 +117,9 @@
             // progressBar1
             // 
             this.progressBar1.Enabled = false;
-            this.progressBar1.Location = new System.Drawing.Point(558, 44);
+            this.progressBar1.Location = new System.Drawing.Point(721, 44);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(371, 19);
+            this.progressBar1.Size = new System.Drawing.Size(208, 19);
             this.progressBar1.TabIndex = 8;
             // 
             // webBrowser1
@@ -134,11 +136,29 @@
             this.webBrowser1.WebBrowserShortcutsEnabled = false;
             this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser1_DocumentCompleted);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(440, 47);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(75, 13);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "TFA(Optional):";
+            // 
+            // tfaBox
+            // 
+            this.tfaBox.Location = new System.Drawing.Point(513, 42);
+            this.tfaBox.Name = "tfaBox";
+            this.tfaBox.Size = new System.Drawing.Size(83, 20);
+            this.tfaBox.TabIndex = 11;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(941, 598);
+            this.Controls.Add(this.tfaBox);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.logoutButton);
@@ -170,6 +190,8 @@
         private System.Windows.Forms.Button logoutButton;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.WebBrowser webBrowser1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tfaBox;
     }
 }
 

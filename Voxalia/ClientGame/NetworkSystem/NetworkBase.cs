@@ -82,49 +82,6 @@ namespace Voxalia.ClientGame.NetworkSystem
             }
         }
 
-        public void GlobalLoginAttempt(string user, string pass)
-        {
-            TheClient.Schedule.StartASyncTask(() =>
-            {
-                using (ShortWebClient wb = new ShortWebClient())
-                {
-                    try
-                    {
-                        NameValueCollection data = new NameValueCollection();
-                        data["formtype"] = "login";
-                        data["username"] = user;
-                        data["password"] = pass;
-                        data["session_id"] = "0";
-                        byte[] response = wb.UploadValues(Program.GlobalServerAddress + "account/micrologin", "POST", data);
-                        string resp = FileHandler.encoding.GetString(response).Trim(' ', '\n', '\r', '\t');
-                        if (resp.StartsWith("ACCEPT=") && resp.EndsWith(";"))
-                        {
-                            string key = resp.Substring("ACCEPT=".Length, resp.Length - 1 - "ACCEPT=".Length);
-                            TheClient.Schedule.ScheduleSyncTask(() =>
-                            {
-                                UIConsole.WriteLine("Login accepted!");
-                                Username = user;
-                                Key = key;
-                                System.IO.File.WriteAllText("logindata.dat", Username + "=" + key);
-                            });
-                        }
-                        else
-                        {
-                            TheClient.Schedule.ScheduleSyncTask(() =>
-                            {
-                                UIConsole.WriteLine("Login refused: " + resp);
-                            });
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        UIConsole.WriteLine("Login failed: " + ex.Message);
-                        SysConsole.Output("Connecting to global login server", ex);
-                    }
-                }
-            });
-        }
-
         public void Disconnect()
         {
             if (norep)
