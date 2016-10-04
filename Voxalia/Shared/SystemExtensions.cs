@@ -39,5 +39,12 @@ namespace Voxalia.Shared
             }
             return input.Substring(ind + match.Length);
         }
+
+        public static double NextGaussian(this Random input)
+        {
+            double u1 = input.NextDouble();
+            double u2 = input.NextDouble();
+            return Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
+        }
     }
 }

@@ -170,6 +170,7 @@
     <Compile Include="ClientGame\EntitySystem\CharacterEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\Entity.cs" />
     <Compile Include="ClientGame\EntitySystem\EntityAnimated.cs" />
+    <Compile Include="ClientGame\EntitySystem\FireEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\GenericCharacterEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\GlowstickEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\GrenadeEntity.cs" />

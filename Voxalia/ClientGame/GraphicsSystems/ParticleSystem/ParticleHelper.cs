@@ -152,5 +152,21 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                 + new Location(xoff, yoff, 0) * Math.Sqrt(1 - o.TTL / o.O_TTL) + nvel * (1 - o.TTL / o.O_TTL), (o) => size, (o) => 1, ttl, Location.One, Location.One, true, tex, 1);
             }
         }
+
+        public void FireBlue(Location pos)
+        {
+            Location colOne = new Location(0, 0, 1);
+            Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos, (o) => new Location(0.25f), (o) => 0, 2, colOne, colOne, true, SmokeT);
+        }
+
+        public void Fire(Location pos)
+        {
+            Location colOne = new Location(1, 0, 0);
+            Location colTwo = new Location(1, 1f, 0f);
+            Location temp = new Location(0, 0, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.33f);
+            ParticleEffect pe = Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL), (o) => new Location(0.5f), (o) => 0, 4, colOne, colTwo, true, SmokeT);
+            pe.UseColor3 = true;
+            pe.Color3 = Location.One;
+        }
     }
 }

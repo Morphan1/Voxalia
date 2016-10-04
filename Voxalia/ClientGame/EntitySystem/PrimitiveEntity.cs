@@ -14,7 +14,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
         }
 
-        public Location Gravity;
+        public Location Gravity = Location.Zero;
 
         public List<long> NoCollide = new List<long>(); // TODO: Populate me via packets
 

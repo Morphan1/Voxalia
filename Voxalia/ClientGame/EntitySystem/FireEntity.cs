@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Voxalia.ClientGame.WorldSystem;
+using Voxalia.Shared;
+
+namespace Voxalia.ClientGame.EntitySystem
+{
+    public class FireEntity : PrimitiveEntity
+    {
+        public Entity AttachedTo = null;
+
+        public FireEntity(Location spawn, Entity attached_to, Region tregion) : base(tregion, false)
+        {
+            AttachedTo = attached_to;
+            SetPosition(spawn);
+        }
+
+        public override void Destroy()
+        {
+            // No destroy calculations.
+        }
+
+        public Location RelSpot()
+        {
+            double x = Utilities.UtilRandom.NextDouble();
+            double y = Utilities.UtilRandom.NextDouble();
+            return GetPosition() + new Location(x, y, 1);
+        }
+
+        public override void Tick()
+        {
+            if (AttachedTo == null)
+            {
+                TheClient.Particles.FireBlue(RelSpot());
+                for (int i = 0; i < 3; i++) // TODO: CVar instead of 3?
+                {
+                    TheClient.Particles.Fire(RelSpot() + new Location(0, 0, 0.5));
+                }
+            }
+        }
+
+        public override void Render()
+        {
+            // Doesn't currently render on its own.
+        }
+
+        public override void Spawn()
+        {
+            // No spawn calculations.
+        }
+    }
+}

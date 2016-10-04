@@ -32,9 +32,15 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public Location Color2;
 
+        public Location Color3;
+
+        public bool UseColor3 = false;
+
         public Location MinLight = new Location(0, 0, 0);
 
         public Texture texture;
+
+        public Action OnDestroy = null;
 
         public ParticleEffect(Client tclient)
         {
@@ -47,14 +53,14 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             if (Fades)
             {
                 Alpha -= (float)TheClient.gDelta / O_TTL;
-                if (Alpha <= 0)
+                if (Alpha <= 0.01)
                 {
                     TTL = 0;
                     return;
                 }
             }
             float rel = TTL / O_TTL;
-            if (rel > 1 || rel <= 0)
+            if (rel >= 1 || rel <= 0)
             {
                 return;
             }
@@ -67,7 +73,22 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             light.Z = (float)Math.Max(light.Z, MinLight.Z);
             Vector4 scolor = new Vector4((float)Color.X * light.X, (float)Color.Y * light.Y, (float)Color.Z * light.Z, Alpha * light.W);
             Vector4 scolor2 = new Vector4((float)Color2.X * light.X, (float)Color2.Y * light.Y, (float)Color2.Z * light.Z, Alpha * light.W);
-            TheClient.Rendering.SetColor(scolor * rel + scolor2 * (1 - rel));
+            Vector4 scolor3 = new Vector4((float)Color3.X * light.X, (float)Color3.Y * light.Y, (float)Color3.Z * light.Z, Alpha * light.W);
+            if (UseColor3)
+            {
+                if (rel >= 0.5)
+                {
+                    TheClient.Rendering.SetColor(scolor * ((rel - 0.5f) * 2) + scolor2 * (1 - ((rel - 0.5f) * 2)));
+                }
+                else
+                {
+                    TheClient.Rendering.SetColor(scolor2 * rel * 2 + scolor3 * (1 - rel * 2));
+                }
+            }
+            else
+            {
+                TheClient.Rendering.SetColor(scolor * rel + scolor2 * (1 - rel));
+            }
             switch (Type)
             {
                 case ParticleEffectType.LINE:

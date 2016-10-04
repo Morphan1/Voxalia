@@ -11,6 +11,7 @@ using FreneticScript.TagHandlers;
 using Voxalia.Shared.Collision;
 using Voxalia.ClientGame.AudioSystem;
 using FreneticScript.TagHandlers.Objects;
+using Voxalia.ClientGame.EntitySystem;
 
 namespace Voxalia.ClientGame.CommandSystem.CommonCommands
 {
@@ -108,6 +109,13 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                             }
                         }
                         entry.Info(queue, "Chunk rendering as " + (ch._VBO == null ? "{NULL}" : ch._VBO._VAO.ToString()) + ", which is seen in " + c + " chunks!");
+                        break;
+                    }
+                case "igniteBlock":
+                    {
+                        Location pos = TheClient.Player.GetPosition().GetBlockLocation();
+                        FireEntity fe = new FireEntity(pos, null, TheClient.TheRegion);
+                        TheClient.TheRegion.SpawnEntity(fe);
                         break;
                     }
                 default:

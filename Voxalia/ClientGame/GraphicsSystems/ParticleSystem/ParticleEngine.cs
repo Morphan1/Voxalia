@@ -19,9 +19,12 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public List<ParticleEffect> ActiveEffects;
 
-        public void AddEffect(ParticleEffectType type, Func<ParticleEffect, Location> start, Func<ParticleEffect, Location> end, Func<ParticleEffect, float> fdata, float ttl, Location color, Location color2, bool fades, Texture texture, float salpha = 1)
+        public ParticleEffect AddEffect(ParticleEffectType type, Func<ParticleEffect, Location> start, Func<ParticleEffect, Location> end,
+            Func<ParticleEffect, float> fdata, float ttl, Location color, Location color2, bool fades, Texture texture, float salpha = 1)
         {
-            ActiveEffects.Add(new ParticleEffect(TheClient) { Type = type, Start = start, End = end, FData = fdata, TTL = ttl, O_TTL = ttl, Color = color, Color2 = color2, Alpha = salpha, Fades = fades, texture = texture });
+            ParticleEffect pe = new ParticleEffect(TheClient) { Type = type, Start = start, End = end, FData = fdata, TTL = ttl, O_TTL = ttl, Color = color, Color2 = color2, Alpha = salpha, Fades = fades, texture = texture };
+            ActiveEffects.Add(pe);
+            return pe;
         }
 
         public void Render()
@@ -32,6 +35,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                 ActiveEffects[i].Render();
                 if (ActiveEffects[i].TTL <= 0)
                 {
+                    ActiveEffects[i].OnDestroy?.Invoke();
                     ActiveEffects.RemoveAt(i--);
                 }
             }
