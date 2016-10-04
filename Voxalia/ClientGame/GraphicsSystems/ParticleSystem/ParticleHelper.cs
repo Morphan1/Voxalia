@@ -14,6 +14,12 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         Texture SmokeT;
 
+        Texture FlameLick;
+
+        Texture BlueFlameLick;
+
+        Texture WhiteFlameLick;
+
         Texture White;
 
         Texture White_Blur;
@@ -31,6 +37,9 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             White = TheClient.Textures.White;
             White_Blur = TheClient.Textures.GetTexture("common/white_blur");
             SmokeT = TheClient.Textures.GetTexture("effects/smoke/smoke1");
+            FlameLick = TheClient.Textures.GetTexture("effects/fire/flamelick01");
+            BlueFlameLick = TheClient.Textures.GetTexture("effects/fire/blueflamelick01");
+            WhiteFlameLick = TheClient.Textures.GetTexture("effects/fire/whiteflamelick01");
         }
 
         public void Sort()
@@ -155,16 +164,16 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public void FireBlue(Location pos)
         {
-            Location colOne = new Location(0, 0, 1);
-            Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos, (o) => new Location(0.25f), (o) => 0, 2, colOne, colOne, true, SmokeT);
+            Location temp = new Location(0, 0, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.033f);
+            Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL), (o) => new Location(0.25f), (o) => 0, 3, Location.One, Location.One, true, BlueFlameLick);
         }
 
         public void Fire(Location pos)
         {
-            Location colOne = new Location(1, 0, 0);
+            Location colOne = new Location(1, 0.25f, 0f);
             Location colTwo = new Location(1, 1f, 0f);
             Location temp = new Location(0, 0, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.33f);
-            ParticleEffect pe = Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL), (o) => new Location(0.5f), (o) => 0, 4, colOne, colTwo, true, SmokeT);
+            ParticleEffect pe = Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL), (o) => new Location(0.5f), (o) => 0, 4, colOne, colTwo, true, WhiteFlameLick);
             pe.UseColor3 = true;
             pe.Color3 = Location.One;
         }

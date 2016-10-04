@@ -34,7 +34,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             if (AttachedTo == null)
             {
-                TheClient.Particles.FireBlue(RelSpot());
+                TheClient.Particles.FireBlue(RelSpot() + new Location(0, 0, 0.3));
                 for (int i = 0; i < 3; i++) // TODO: CVar instead of 3?
                 {
                     TheClient.Particles.Fire(RelSpot() + new Location(0, 0, 0.5));

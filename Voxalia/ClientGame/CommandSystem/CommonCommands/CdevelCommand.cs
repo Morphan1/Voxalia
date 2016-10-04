@@ -113,7 +113,7 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                     }
                 case "igniteBlock":
                     {
-                        Location pos = TheClient.Player.GetPosition().GetBlockLocation();
+                        Location pos = TheClient.Player.GetPosition().GetUpperBlockBorder();
                         FireEntity fe = new FireEntity(pos, null, TheClient.TheRegion);
                         TheClient.TheRegion.SpawnEntity(fe);
                         break;
