@@ -168,12 +168,12 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL), (o) => new Location(0.25f), (o) => 0, 3, Location.One, Location.One, true, BlueFlameLick);
         }
 
-        public void Fire(Location pos)
+        public void Fire(Location pos, float sizemult)
         {
             Location colOne = new Location(1, 1f, 0f);
             Location colTwo = new Location(1, 0.25f, 0f);
-            Location temp = new Location(0, 0, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.33f);
-            ParticleEffect pe = Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL), (o) => new Location(0.5f), (o) => 0, 4, colOne, colTwo, true, WhiteFlameLick);
+            Location temp = new Location(0, 0, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.09f * sizemult);
+            ParticleEffect pe = Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL), (o) => new Location(0.5f), (o) => 0, sizemult, colOne, colTwo, true, WhiteFlameLick);
             pe.AltAlpha = ParticleEffect.FadeInOut;
         }
     }

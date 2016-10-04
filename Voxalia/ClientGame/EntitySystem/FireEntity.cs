@@ -30,14 +30,24 @@ namespace Voxalia.ClientGame.EntitySystem
             return GetPosition() + new Location(x, y, 1);
         }
 
+        const double maxDist = 9;
+
         public override void Tick()
         {
+            float size = 0.1f;
+            foreach (Entity entity in TheClient.TheRegion.Entities)
+            {
+                if (entity is FireEntity && entity.GetPosition().DistanceSquared(GetPosition()) < maxDist)
+                {
+                    size += 1;
+                }
+            }
             if (AttachedTo == null)
             {
                 //TheClient.Particles.FireBlue(RelSpot() + new Location(0, 0, 0.3));
                 for (int i = 0; i < 3; i++) // TODO: CVar instead of 3?
                 {
-                    TheClient.Particles.Fire(RelSpot() + new Location(0, 0, 0.5));
+                    TheClient.Particles.Fire(RelSpot() + new Location(0, 0, 0.5), size);
                 }
             }
         }
