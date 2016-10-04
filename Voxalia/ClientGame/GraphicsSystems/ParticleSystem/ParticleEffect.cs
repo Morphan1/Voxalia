@@ -19,6 +19,8 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
         public Func<ParticleEffect, Location> End;
 
         public Func<ParticleEffect, float> FData;
+
+        public int InternalParticleTextureID = -1;
         
         public float Alpha = 1;
 
@@ -61,10 +63,65 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
         {
             TheClient = tclient;
         }
+
+        double lTT = 0;
+
+        public Tuple<Location, Vector4> GetDetails()
+        {
+            if (lTT != TheClient.GlobalTickTimeLocal)
+            {
+                TTL -= (float)TheClient.gDelta;
+                lTT = TheClient.GlobalTickTimeLocal;
+            }
+            if (TTL <= 0)
+            {
+                return null;
+            }
+            if (AltAlpha != null)
+            {
+                Alpha = AltAlpha(this);
+                if (Alpha <= 0.01)
+                {
+                    return null;
+                }
+            }
+            else if (Fades)
+            {
+                Alpha -= (float)TheClient.gDelta / O_TTL;
+                if (Alpha <= 0.01)
+                {
+                    TTL = 0;
+                    return null;
+                }
+            }
+            float rel = TTL / O_TTL;
+            if (rel >= 1 || rel <= 0)
+            {
+                return null;
+            }
+            Location start = Start(this) + WindOffset;
+            if (BlowsInWind)
+            {
+                WindOffset += TheClient.TheRegion.ActualWind * SimplexNoiseInternal.Generate((start.X + TheClient.GlobalTickTimeLocal) * 0.2, (start.Y + TheClient.GlobalTickTimeLocal) * 0.2, start.Z * 0.2) * 0.1;
+            }
+            Location ligl = TheClient.TheRegion.GetLightAmount(start, Location.UnitZ, null);
+            Vector4 light = new Vector4((float)ligl.X, (float)ligl.Y, (float)ligl.Z, 1.0f);
+            light.X = (float)Math.Max(light.X, MinLight.X);
+            light.Y = (float)Math.Max(light.Y, MinLight.Y);
+            light.Z = (float)Math.Max(light.Z, MinLight.Z);
+            Vector4 scolor = new Vector4((float)Color.X * light.X, (float)Color.Y * light.Y, (float)Color.Z * light.Z, Alpha * light.W);
+            Vector4 scolor2 = new Vector4((float)Color2.X * light.X, (float)Color2.Y * light.Y, (float)Color2.Z * light.Z, Alpha * light.W);
+            Vector4 rcol = scolor * rel + scolor2 * (1 - rel);
+            return new Tuple<Location, Vector4>(start, rcol);
+        }
         
         public void Render()
         {
-            TTL -= (float)TheClient.gDelta;
+            if (lTT != TheClient.GlobalTickTimeLocal)
+            {
+                TTL -= (float)TheClient.gDelta;
+                lTT = TheClient.GlobalTickTimeLocal;
+            }
             if (TTL <= 0)
             {
                 return;

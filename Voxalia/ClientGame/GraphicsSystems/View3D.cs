@@ -1583,4 +1583,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
         FORWARD_TRANSP = 98,
         FORWARD_SOLID = 99,
     }
+
+    public static class FBOIDExtensions
+    {
+        public static bool IsMainTransp(this FBOID id)
+        {
+            return id == FBOID.TRANSP_LIT || id == FBOID.TRANSP_LIT_LL || id == FBOID.TRANSP_LL || id == FBOID.TRANSP_SHADOWS || id == FBOID.TRANSP_SHADOWS_LL || id == FBOID.TRANSP_UNLIT;
+        }
+    }
 }

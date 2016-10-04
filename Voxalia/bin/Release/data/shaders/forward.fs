@@ -3,6 +3,7 @@
 #define MCM_TRANSP 0
 #define MCM_VOX 0
 #define MCM_GEOM_ACTIVE 0
+#define MCM_NO_ALPHA_CAP 0
 
 #if MCM_VOX
 layout (binding = 0) uniform sampler2DArray s;
@@ -35,6 +36,8 @@ void main()
 	// TODO: Special color handlers?
 	col *= fi.tcol;
 #endif
+#if MCM_NO_ALPHA_CAP
+#else
 #if MCM_TRANSP
 	if (col.w * fi.color.w >= 0.99)
 	{
@@ -45,6 +48,7 @@ void main()
 	{
 		discard;
 	}
+#endif
 #endif
 	color = col * fi.color;
 }
