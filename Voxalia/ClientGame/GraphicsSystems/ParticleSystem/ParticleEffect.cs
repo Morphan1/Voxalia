@@ -40,6 +40,10 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public Action OnDestroy = null;
 
+        public bool BlowsInWind = true;
+
+        public Location WindOffset = Location.Zero;
+
         public static float FadeInOut(ParticleEffect pe)
         {
             float rel = pe.TTL / pe.O_TTL;
@@ -88,7 +92,11 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                 return;
             }
             texture.Bind();
-            Location start = Start(this);
+            Location start = Start(this) + WindOffset;
+            if (BlowsInWind)
+            {
+                WindOffset += TheClient.TheRegion.ActualWind * SimplexNoiseInternal.Generate((start.X + TheClient.GlobalTickTimeLocal) * 0.2, (start.Y + TheClient.GlobalTickTimeLocal) * 0.2, start.Z * 0.2) * 0.1;
+            }
             Location ligl = TheClient.TheRegion.GetLightAmount(start, Location.UnitZ, null);
             Vector4 light = new Vector4((float)ligl.X, (float)ligl.Y, (float)ligl.Z, 1.0f);
             light.X = (float)Math.Max(light.X, MinLight.X);
