@@ -118,6 +118,19 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                         TheClient.TheRegion.SpawnEntity(fe);
                         break;
                     }
+                case "torchBlocks":
+                    {
+                        Location pos = TheClient.Player.GetPosition().GetUpperBlockBorder();
+                        for (int x = -3; x <= 3; x++)
+                        {
+                            for (int y = -3; y <= 3; y++)
+                            {
+                                FireEntity fe = new FireEntity(pos + new Location(x, y, 0), null, TheClient.TheRegion);
+                                TheClient.TheRegion.SpawnEntity(fe);
+                            }
+                        }
+                        break;
+                    }
                 default:
                     ShowUsage(queue, entry);
                     break;

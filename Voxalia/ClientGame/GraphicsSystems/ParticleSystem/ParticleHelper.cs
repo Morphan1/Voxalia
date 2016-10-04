@@ -112,9 +112,10 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             double zoff = Utilities.UtilRandom.NextDouble() * spread - spread * 0.5;
             Location temp = new Location(xoff, yoff, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.33f + zoff);
             // TODO: Gravity directionalism fix.
-            Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL)
+            ParticleEffect pe = Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL)
                 + new Location(xoff, yoff, 0) * Math.Sqrt(1 - o.TTL / o.O_TTL) + vel * (1 - o.TTL / o.O_TTL),
                 (o) => new Location(1f), (o) => 0, 10, color, color, true, tex);
+            pe.AltAlpha = ParticleEffect.FadeInOut;
         }
 
         public void BigSmoke(Location pos, float spread, Location color) // TODO: Take a vel?
@@ -175,6 +176,13 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             Location temp = new Location(0, 0, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.09f * sizemult);
             ParticleEffect pe = Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL), (o) => new Location(0.5f), (o) => 0, sizemult, colOne, colTwo, true, WhiteFlameLick);
             pe.AltAlpha = ParticleEffect.FadeInOut;
+            pe.OnDestroy = (o) =>
+            {
+                if (Utilities.UtilRandom.Next(5) == 1)
+                {
+                    Smoke(o.Start(o) - new Location(0, 0, 1), 1, Location.One);
+                }
+            };
         }
     }
 }

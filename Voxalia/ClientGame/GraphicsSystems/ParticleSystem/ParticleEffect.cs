@@ -38,7 +38,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public Texture texture;
 
-        public Action OnDestroy = null;
+        public Action<ParticleEffect> OnDestroy = null;
 
         public bool BlowsInWind = true;
 

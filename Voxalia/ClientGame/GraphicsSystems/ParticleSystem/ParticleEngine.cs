@@ -35,7 +35,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                 ActiveEffects[i].Render();
                 if (ActiveEffects[i].TTL <= 0)
                 {
-                    ActiveEffects[i].OnDestroy?.Invoke();
+                    ActiveEffects[i].OnDestroy?.Invoke(ActiveEffects[i]);
                     ActiveEffects.RemoveAt(i--);
                 }
             }
