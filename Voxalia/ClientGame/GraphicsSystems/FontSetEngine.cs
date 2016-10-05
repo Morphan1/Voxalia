@@ -112,7 +112,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public static Color[] colors = new Color[] { 
             Color.FromArgb(0, 0, 0),      // 0  // 0 // Black
             Color.FromArgb(255, 0, 0),    // 1  // 1 // Red
-            Color.FromArgb(0,255,0),      // 2  // 2 // Green
+            Color.FromArgb(0, 255, 0),      // 2  // 2 // Green
             Color.FromArgb(255, 255, 0),  // 3  // 3 // Yellow
             Color.FromArgb(0, 0, 255),    // 4  // 4 // Blue
             Color.FromArgb(0, 255, 255),  // 5  // 5 // Cyan
