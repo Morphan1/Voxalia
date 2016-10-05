@@ -26,6 +26,12 @@
 	- The coolest build!
 	- The strongest character gear!
 	- Completion of all the available story lines!
+	- Or so many other possibilities...
+
+### Can we mod it?
+
+- Yup! You can use C# or FreneticScript to customize the game to any degree.
+- You can even modify the game's base code, it's all open source!
 
 ### Did you say "story lines"?
 
@@ -38,7 +44,7 @@
 
 ### Where can I get Voxalia?
 
-- Take to us! Check the contact page on the FreneticXYZ official website, and join us on IRC or Discord to get involved!
+- Talk to us! Check the contact page on the FreneticXYZ official website, and join us on IRC or Discord to get involved!
 - In the future, you'll be able to get the game without having to go through people, we have it this way only in early development.
 
 ### How do I get started once I have the game?
@@ -79,7 +85,7 @@
 
 - A simple yet powerful method of storing data and configuration values in a human-readable format.
 
-### No, what is FreneticDataSyntax *really?
+### No, what is FreneticDataSyntax *really*?
 
 - A drunken mistranslation of a YAML specification written in a foreign language.
 
