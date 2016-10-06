@@ -175,7 +175,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>A valid font object, or null if there was no match.</returns>
         public GLFont LoadFont(string name, bool bold, bool italic, int size)
         {
-            Font font = new Font(name, size, (bold ? FontStyle.Bold : 0) | (italic ? FontStyle.Italic : 0));
+            Font font = new Font(name, size / TheClient.DPIScale, (bold ? FontStyle.Bold : 0) | (italic ? FontStyle.Italic : 0));
             return new GLFont(font, this);
         }
 
@@ -244,7 +244,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
             Engine.Shaders.ColorMultShader.Bind();
             Name = font.Name;
-            Size = (int)font.Size;
+            Size = (int)(font.Size * eng.TheClient.DPIScale);
             Bold = font.Bold;
             Italic = font.Italic;
             Height = font.Height;

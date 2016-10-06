@@ -57,7 +57,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Network.SendMessage(channel, message);
         }
         
-        public void LoadFromYAML(FDSSection config)
+        public void LoadFromSaves(FDSSection config)
         {
             string world = config.GetString("world", null);
             if (world != null) // TODO: && worldIsValidAndLoaded
@@ -345,7 +345,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 if (dat != null)
                 {
                     PlayerConfig = new FDSSection(dat);
-                    LoadFromYAML(PlayerConfig);
+                    LoadFromSaves(PlayerConfig);
                 }
             }
             if (PlayerConfig == null)
