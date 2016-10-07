@@ -52,6 +52,48 @@ namespace Voxalia.ClientGame.WorldSystem
             }
             OwningRegion.NeedToRender(this);
         }
+        
+        public void CalcSkyLight(Chunk above)
+        {
+            if (CSize != CHUNK_SIZE)
+            {
+                for (int x = 0; x < CSize; x++)
+                {
+                    for (int y = 0; y < CSize; y++)
+                    {
+                        for (int z = 0; z < CSize; z++)
+                        {
+                            BlocksInternal[BlockIndex(x, y, z)].BlockLocalData = 255;
+                        }
+                    }
+                }
+                return;
+            }
+            for (int x = 0; x < CHUNK_SIZE; x++)
+            {
+                for (int y = 0; y < CHUNK_SIZE; y++)
+                {
+                    byte light = (above != null && above.CSize == CHUNK_SIZE) ? above.GetBlockAt(x, y, 0).BlockLocalData : (byte)255;
+                    for (int z = CHUNK_SIZE - 1; z >= 0; z--)
+                    {
+                        if (light > 0)
+                        {
+                            BlockInternal bi = GetBlockAt(x, y, z);
+                            if (bi.IsOpaque())
+                            {
+                                light = 0;
+                            }
+                            else
+                            {
+                                light = (byte)(light * (1.0 - bi.Material.GetLightDamage()));
+                            }
+                            // TODO: Shape damage as well!
+                        }
+                        BlocksInternal[BlockIndex(x, y, z)].BlockLocalData = light;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Internal region call only.
@@ -122,7 +164,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 Chunk c_xp = OwningRegion.GetChunk(WorldPosition + new Vector3i(1, 0, 0));
                 Chunk c_xm = OwningRegion.GetChunk(WorldPosition + new Vector3i(-1, 0, 0));
                 List<Chunk> potentials = new List<Chunk>() { this, c_zp, c_zm, c_yp, c_ym, c_xp, c_xm };
-                BlockInternal t_air = new BlockInternal((ushort)Material.STONE, 0, 0, 0);
+                BlockInternal t_air = new BlockInternal((ushort)Material.STONE, 0, 0, 255);
                 List<Vector3> poses = new List<Vector3>();
                 List<Vector4> colorses = new List<Vector4>();
                 for (int x = 0; x < CSize; x++)
@@ -165,7 +207,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     Vector3 nt = new Vector3((float)normsi[i].X, (float)normsi[i].Y, (float)normsi[i].Z);
                                     rh.Norms.Add(nt);
                                     rh.TCoords.Add(new Vector3((float)tci[i].X, (float)tci[i].Y, (float)tci[i].Z));
-                                    Location lcol = OwningRegion.GetLightAmount(ClientUtilities.Convert(vt) + WorldPosition.ToLocation() * CHUNK_SIZE, ClientUtilities.Convert(nt), potentials);
+                                    Location lcol = OwningRegion.GetLightAmountForSkyValue(ClientUtilities.Convert(vt) + WorldPosition.ToLocation() * CHUNK_SIZE, ClientUtilities.Convert(nt), potentials, zp.BlockLocalData / 255f);
                                     rh.Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
                                     rh.TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(ClientUtilities.ConvertD(WorldPosition.ToLocation()) * CHUNK_SIZE + ClientUtilities.ConvertToD(vt), Colors.ForByte(c.BlockPaint)));
                                     if (ths.Key != null)
@@ -213,8 +255,8 @@ namespace Voxalia.ClientGame.WorldSystem
                                         BlockShapeRegistry.BSD[c.BlockData].Coll = es.GetCollidableInstance();
                                         BlockShapeRegistry.BSD[c.BlockData].Coll.LocalPosition = -offset.ToBVector();
                                     }
-                                    Location skylight = OwningRegion.GetLightAmount(new Location(WorldPosition.X * Chunk.CHUNK_SIZE + x + 0.5, WorldPosition.Y * Chunk.CHUNK_SIZE + y + 0.5,
-                                        WorldPosition.Z * Chunk.CHUNK_SIZE + z + 1.0), Location.UnitZ, potentials);
+                                    Location skylight = OwningRegion.GetLightAmountForSkyValue(new Location(WorldPosition.X * Chunk.CHUNK_SIZE + x + 0.5, WorldPosition.Y * Chunk.CHUNK_SIZE + y + 0.5,
+                                        WorldPosition.Z * Chunk.CHUNK_SIZE + z + 1.0), Location.UnitZ, potentials, zp.BlockLocalData / 255f);
                                     for (int plx = 0; plx < 3; plx++)
                                     {
                                         for (int ply = 0; ply < 3; ply++)

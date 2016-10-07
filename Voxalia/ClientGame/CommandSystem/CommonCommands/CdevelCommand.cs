@@ -111,6 +111,12 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                         entry.Info(queue, "Chunk rendering as " + (ch._VBO == null ? "{NULL}" : ch._VBO._VAO.ToString()) + ", which is seen in " + c + " chunks!");
                         break;
                     }
+                case "blockInfo":
+                    {
+                        BlockInternal bi = TheClient.TheRegion.GetBlockInternal(TheClient.Player.GetPosition());
+                        entry.Info(queue, "BLOCK: Material=" + bi.Material + ", Shape=" + bi.BlockData + ", Damage=" + bi.Damage + ", Paint=" + bi.BlockPaint + ",Light=" + bi.BlockLocalData);
+                        break;
+                    }
                 case "igniteBlock":
                     {
                         Location pos = TheClient.Player.GetPosition().GetUpperBlockBorder();

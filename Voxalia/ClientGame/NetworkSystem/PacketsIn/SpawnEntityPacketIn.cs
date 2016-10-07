@@ -32,14 +32,6 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
                 }
                 e.EID = eid;
                 TheClient.TheRegion.SpawnEntity(e);
-                if (e is PhysicsEntity && (e as PhysicsEntity).GenBlockShadows)
-                {
-                    Chunk ch = TheClient.TheRegion.GetChunk(TheClient.TheRegion.ChunkLocFor(e.GetPosition()));
-                    if (ch != null)
-                    {
-                        ch.CreateVBO();
-                    }
-                }
                 return true;
             }
             return false;

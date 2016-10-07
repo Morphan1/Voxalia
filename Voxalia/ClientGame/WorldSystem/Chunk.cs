@@ -56,57 +56,6 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             return BlocksInternal[BlockIndex(x / PosMultiplier, y / PosMultiplier, z / PosMultiplier)];
         }
-
-        static Vector3i[] slocs = new Vector3i[] { new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0), new Vector3i(0, 1, 0),
-            new Vector3i(0, -1, 0), new Vector3i(0, 0, 1), new Vector3i(0, 0, -1) };
-
-        public void UpdateSurroundingsFully()
-        {
-            foreach (Vector3i loc in slocs)
-            {
-                Chunk ch = OwningRegion.GetChunk(WorldPosition + loc);
-                if (ch != null)
-                {
-                    OwningRegion.UpdateChunk(ch);
-                }
-            }
-        }
-
-        /*
-        public void CalculateLighting()
-        {
-            if (OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB)
-            {
-                for (int x = 0; x < CSize; x++)
-                {
-                    for (int y = 0; y < CSize; y++)
-                    {
-                        float light = 1f;
-                        for (int z = CSize - 1; z >= 0; z--)
-                        {
-                            BlocksInternal[BlockIndex(x, y, z)].BlockLocalData = (byte)(light * 255);
-                            BlockInternal bi = GetBlockAt(x, y, z);
-                            if (bi.IsOpaque())
-                            {
-                                light = 0;
-                            }
-                            if (((Material)bi.BlockMaterial).RendersAtAll())
-                            {
-                                light /= 1.8f;
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < BlocksInternal.Length; i++)
-                {
-                    BlocksInternal[i].BlockLocalData = 255;
-                }
-            }
-        }
-        */
         
         public FullChunkObject FCO = null;
         

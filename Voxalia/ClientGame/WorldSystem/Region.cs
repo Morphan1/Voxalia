@@ -231,6 +231,11 @@ namespace Voxalia.ClientGame.WorldSystem
                     Array.Copy(GenShadowCasters, neo, GenShadowCasters.Length);
                     neo[neo.Length - 1] = pe;
                     GenShadowCasters = neo;
+                    Chunk ch = TheClient.TheRegion.GetChunk(TheClient.TheRegion.ChunkLocFor(e.GetPosition()));
+                    if (ch != null)
+                    {
+                        ch.CreateVBO(); // TODO: nearby / all affected chunks!
+                    }
                 }
             }
             else if (e is PrimitiveEntity)
@@ -382,7 +387,7 @@ namespace Voxalia.ClientGame.WorldSystem
             Chunk ch = GetChunk(ChunkLocFor(pos));
             if (ch == null)
             {
-                return new BlockInternal((ushort)Material.AIR, 0, 0, 128);
+                return new BlockInternal((ushort)Material.AIR, 0, 0, 255);
             }
             int x = (int)Math.Floor(((int)Math.Floor(pos.X) - (int)ch.WorldPosition.X * Chunk.CHUNK_SIZE) / (float)ch.PosMultiplier);
             int y = (int)Math.Floor(((int)Math.Floor(pos.Y) - (int)ch.WorldPosition.Y * Chunk.CHUNK_SIZE) / (float)ch.PosMultiplier);
@@ -392,7 +397,21 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void Regen(Location pos, Chunk ch, int x = 1, int y = 1, int z = 1)
         {
-            UpdateChunk(ch);
+            Chunk tch = ch;
+            bool zupd = false;
+            if (z == tch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
+            {
+                ch = GetChunk(ChunkLocFor(pos) + new Vector3i(0, 0, 1));
+                if (ch != null)
+                {
+                    UpdateChunk(ch);
+                    zupd = true;
+                }
+            }
+            if (!zupd)
+            {
+                UpdateChunk(ch);
+            }
             if (x == 0 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
                 ch = GetChunk(ChunkLocFor(pos) + new Vector3i(-1, 0, 0));
@@ -409,15 +428,15 @@ namespace Voxalia.ClientGame.WorldSystem
                     UpdateChunk(ch);
                 }
             }
-            if (z == 0 || TheClient.CVars.r_chunkoverrender.ValueB)
+            /*if (z == 0 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
                 ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, -1)));
                 if (ch != null)
                 {
                     UpdateChunk(ch);
                 }
-            }
-            if (x == ch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
+            }*/
+            if (x == tch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
                 ch = GetChunk(ChunkLocFor(pos) + new Vector3i(1, 0, 0));
                 if (ch != null)
@@ -425,7 +444,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     UpdateChunk(ch);
                 }
             }
-            if (y == ch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
+            if (y == tch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
                 ch = GetChunk(ChunkLocFor(pos) + new Vector3i(0, 1, 0));
                 if (ch != null)
@@ -433,15 +452,6 @@ namespace Voxalia.ClientGame.WorldSystem
                     UpdateChunk(ch);
                 }
             }
-            if (z == ch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
-            {
-                ch = GetChunk(ChunkLocFor(pos) + new Vector3i(0, 0, 1));
-                if (ch != null)
-                {
-                    UpdateChunk(ch);
-                }
-            }
-            // TODO: Cascade downward for lighting updates?
         }
 
         public void SetBlockMaterial(Location pos, ushort mat, byte dat = 0, byte paint = 0, bool regen = true)
@@ -460,14 +470,40 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void UpdateChunk(Chunk ch)
         {
-            /*TheClient.Schedule.StartASyncTask(() =>
+            if (ch == null)
             {
-                ch.CalculateLighting();
-            });*/
+                return;
+            }
+            TheClient.Schedule.ScheduleSyncTask(() =>
+            {
+                Chunk above = null;
+                for (int i = 1; i < 5 && above == null; i++) // TODO: 5 -> View height limit
+                {
+                    above = GetChunk(ch.WorldPosition + new Vector3i(0, 0, i));
+                }
+                TheClient.Schedule.StartASyncTask(() =>
+                {
+                    LightForChunks(ch, above);
+                });
+            });
+        }
+
+        public void LightForChunks(Chunk ch, Chunk above)
+        {
+            // TODO: Prevent double-skylight-recalc
+            ch.CalcSkyLight(above);
             TheClient.Schedule.ScheduleSyncTask(() =>
             {
                 ch.AddToWorld();
                 ch.CreateVBO();
+                Chunk below = GetChunk(ch.WorldPosition + new Vector3i(0, 0, -1));
+                if (below != null)
+                {
+                    TheClient.Schedule.StartASyncTask(() =>
+                    {
+                        LightForChunks(below, ch);
+                    });
+                }
             });
         }
 
@@ -753,6 +789,11 @@ namespace Voxalia.ClientGame.WorldSystem
                 ZP++;
                 z = 0;
             }
+            return SkyMod(pos, norm, light);
+        }
+
+        Location SkyMod(Location pos, Location norm, float light)
+        {
             if (light > 0 && TheClient.CVars.r_treeshadows.ValueB)
             {
                 BoundingBox bb = new BoundingBox(pos.ToBVector(), (pos + new Location(1, 1, 500)).ToBVector());
@@ -829,6 +870,28 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
             }
             return lit;
+        }
+
+        public Location GetLightAmountForSkyValue(Location pos, Location norm, List<Chunk> potentials, float skyPrecalc)
+        {
+            if (potentials == null)
+            {
+                potentials = new List<Chunk>();
+                for (int x = -1; x <= 1; x++)
+                {
+                    for (int y = -1; y <= 1; y++)
+                    {
+                        for (int z = -1; z <= 1; z++)
+                        {
+                            potentials.Add(GetChunk(new Vector3i(x, y, z)));
+                        }
+                    }
+                }
+            }
+            Location amb = GetAmbient(pos);
+            Location sky = SkyMod(pos, norm, skyPrecalc);
+            Location blk = GetBlockLight(pos, norm, potentials);
+            return amb + sky + blk;
         }
 
         public Location GetLightAmount(Location pos, Location norm, List<Chunk> potentials)
