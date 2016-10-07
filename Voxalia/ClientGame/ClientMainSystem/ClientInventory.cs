@@ -190,7 +190,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 CInvMenu.TickAll();
                 MainItemView.CameraPos = -Forw * 10;
                 MainItemView.ForwardVec = Forw;
-                MainItemView.CameraUp = Location.UnitY;
+                MainItemView.CameraUp = () => Location.UnitY; // TODO: Should this really be Y? Probably not...
                 View3D temp = MainWorldView;
                 MainWorldView = MainItemView;
                 MainItemView.Render();

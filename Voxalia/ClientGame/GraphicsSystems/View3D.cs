@@ -365,7 +365,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             return temp;
         }
 
-        public Location CameraUp = Location.UnitZ;
+        public Func<Location> CameraUp = () => Location.UnitZ;
 
         public Location ambient;
 
@@ -458,7 +458,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 RenderPass_GBuffer();
                 RenderPass_Lights();
                 FinalHDRGrab();
-                PForward = ForwardVec + CameraPos;
+                PForward = CameraForward + CameraPos;
                 timer.Stop();
                 TotalTime = (double)timer.ElapsedMilliseconds / 1000f;
                 if (TotalTime > TotalSpikeTime)
@@ -473,6 +473,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
         }
 
+        public Location CameraForward = Location.UnitX;
+
         static Matrix4 IdentityMatrix = Matrix4.Identity;
 
         Location cameraBasePos;
@@ -483,11 +485,27 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         Location PForward = Location.Zero;
 
+        public Func<BEPUutilities.Quaternion> CameraModifier = () => BEPUutilities.Quaternion.Identity;
+
+        public Location CalcForward()
+        {
+            BEPUutilities.Quaternion cammod = CameraModifier();
+            Location camforward = ForwardVec;
+            camforward = new Location(BEPUutilities.Quaternion.Transform(camforward.ToBVector(), cammod));
+            return camforward;
+        }
+
         /// <summary>
         /// Set up the rendering engine.
         /// </summary>
         public void RenderPass_Setup()
         {
+            Location camup = CameraUp();
+            BEPUutilities.Quaternion cammod = CameraModifier();
+            Location camforward = ForwardVec;
+            camup = new Location(BEPUutilities.Quaternion.Transform(camup.ToBVector(), cammod));
+            camforward = new Location(BEPUutilities.Quaternion.Transform(camforward.ToBVector(), cammod));
+            CameraForward = camforward;
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, CurrentFBO);
             GL.DrawBuffer(CurrentFBO == 0 ? DrawBufferMode.Back : DrawBufferMode.ColorAttachment0);
             StandardBlend();
@@ -496,29 +514,29 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.ClearBuffer(ClearBuffer.Color, 0, ClearColor);
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
             cameraBasePos = CameraPos;
-            cameraAdjust = -ForwardVec.CrossProduct(CameraUp) * 0.25;
+            cameraAdjust = -camforward.CrossProduct(camup) * 0.25;
             SetViewport();
-            CameraTarget = CameraPos + ForwardVec;
+            CameraTarget = CameraPos + camforward;
             OffsetWorld = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos));
             Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
                 (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
             Location bx = TheClient.CVars.r_3d_enable.ValueB ? (cameraAdjust) : Location.Zero;
-            Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + ForwardVec), ClientUtilities.Convert(CameraUp));
+            Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + camforward), ClientUtilities.Convert(camup));
             PrimaryMatrix = view * proj;
             if (TheClient.CVars.r_3d_enable.ValueB)
             {
-                Matrix4 view2 = Matrix4.LookAt(ClientUtilities.Convert(-cameraAdjust), ClientUtilities.Convert(-cameraAdjust + ForwardVec), ClientUtilities.Convert(CameraUp));
+                Matrix4 view2 = Matrix4.LookAt(ClientUtilities.Convert(-cameraAdjust), ClientUtilities.Convert(-cameraAdjust + camforward), ClientUtilities.Convert(camup));
                 PrimaryMatrix_OffsetFor3D = view2 * proj;
             }
             Matrix4d projd = Matrix4d.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
                 (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
             Location bxd = TheClient.CVars.r_3d_enable.ValueB ? (CameraPos + cameraAdjust) : CameraPos;
-            Matrix4d viewd = Matrix4d.LookAt(ClientUtilities.ConvertD(bxd), ClientUtilities.ConvertD(bxd + ForwardVec), ClientUtilities.ConvertD(CameraUp));
+            Matrix4d viewd = Matrix4d.LookAt(ClientUtilities.ConvertD(bxd), ClientUtilities.ConvertD(bxd + camforward), ClientUtilities.ConvertD(camup));
             Matrix4d PrimaryMatrixd = viewd * projd;
             Matrix4d PrimaryMatrix_OffsetFor3Dd = Matrix4d.Identity;
             if (TheClient.CVars.r_3d_enable.ValueB)
             {
-                Matrix4d view2d = Matrix4d.LookAt(ClientUtilities.ConvertD(CameraPos - cameraAdjust), ClientUtilities.ConvertD(CameraPos - cameraAdjust + ForwardVec), ClientUtilities.ConvertD(CameraUp));
+                Matrix4d view2d = Matrix4d.LookAt(ClientUtilities.ConvertD(CameraPos - cameraAdjust), ClientUtilities.ConvertD(CameraPos - cameraAdjust + camforward), ClientUtilities.ConvertD(camup));
                 PrimaryMatrix_OffsetFor3Dd = view2d * projd;
             }
             camFrust = new Frustum(PrimaryMatrixd);

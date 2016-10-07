@@ -355,6 +355,20 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        public override void Solidify()
+        {
+            Flags |= YourStatusFlags.NON_SOLID;
+            SendStatus();
+            base.Solidify();
+        }
+
+        public override void Desolidify()
+        {
+            Flags &= ~YourStatusFlags.NON_SOLID;
+            SendStatus();
+            base.Desolidify();
+        }
+
         public void SetAnimation(string anim, byte mode)
         {
             if (mode == 0)

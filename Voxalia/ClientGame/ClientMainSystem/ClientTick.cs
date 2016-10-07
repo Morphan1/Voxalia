@@ -216,7 +216,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     TickWorld(Delta);
                     TickChatSystem();
                     TickInvMenu();
-                    Sounds.Update(MainWorldView.CameraPos, MainWorldView.CameraTarget - MainWorldView.CameraPos, MainWorldView.CameraUp, Player.GetVelocity(), Window.Focused);
+                    Sounds.Update(MainWorldView.CameraPos, MainWorldView.CameraTarget - MainWorldView.CameraPos, MainWorldView.CameraUp(), Player.GetVelocity(), Window.Focused);
                     CScreen.Tick();
                     Schedule.RunAllSyncTasks(0);
                     Player.PostTick();

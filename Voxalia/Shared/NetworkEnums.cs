@@ -10,7 +10,7 @@ namespace Voxalia.Shared
         NEEDS_RELOAD = 2,
         NO_ROTATE = 4,
         INSECURE_MOVEMENT = 8,
-        SIXTEEN = 16,
+        NON_SOLID = 16,
         THIRTYTWO = 32,
         SIXTYFOUR = 64,
         ONETWENTYEIGHT = 128

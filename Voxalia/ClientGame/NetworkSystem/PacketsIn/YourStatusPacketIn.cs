@@ -15,6 +15,14 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             TheClient.Player.Health = health;
             TheClient.Player.MaxHealth = maxhealth;
             TheClient.Player.ServerFlags = (YourStatusFlags)data[4 + 4];
+            if (TheClient.Player.ServerFlags.HasFlag(YourStatusFlags.NON_SOLID))
+            {
+                TheClient.Player.Desolidify();
+            }
+            else
+            {
+                TheClient.Player.Solidify();
+            }
             return true;
         }
     }

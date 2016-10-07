@@ -74,6 +74,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         
         void InitRendering()
         {
+            MainWorldView.CameraModifier = () => Player.GetRelativeQuaternion();
             ShadersCheck();
             View3D.CheckError("Load - Rendering - Shaders");
             generateMapHelpers();
@@ -334,7 +335,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 else
                 {
-                    CollisionResult cr = TheRegion.Collision.RayTrace(PlayerEyePosition, PlayerEyePosition - MainWorldView.ForwardVec * Player.ViewBackMod(), IgnorePlayer);
+                    CollisionResult cr = TheRegion.Collision.RayTrace(PlayerEyePosition, PlayerEyePosition - MainWorldView.CalcForward() * Player.ViewBackMod(), IgnorePlayer);
                     if (cr.Hit)
                     {
                         MainWorldView.CameraPos = cr.Position + cr.Normal * 0.05;

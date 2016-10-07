@@ -703,6 +703,15 @@ namespace Voxalia.ClientGame.EntitySystem
             NMTWOWorld.Remove(NMTWOCBody);
         }
 
+        public Quaternion GetRelativeQuaternion()
+        {
+            if (InVehicle && Vehicle != null && Vehicle is ModelEntity && (Vehicle as ModelEntity).Plane != null)
+            {
+                return Vehicle.GetOrientation();
+            }
+            return Quaternion.Identity;
+        }
+
         Location NMTWOGetPosition()
         {
             RigidTransform transf = new RigidTransform(Vector3.Zero, NMTWOCBody.Body.Orientation);

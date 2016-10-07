@@ -24,7 +24,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public override EntityType GetEntityType()
         {
-            return EntityType.HELICOPTER;
+            return EntityType.PLANE;
         }
 
         public override BsonDocument GetSaveData()
@@ -141,6 +141,18 @@ namespace Voxalia.ServerGame.EntitySystem
             ForwBack = character.YMove;
             RightLeft = character.XMove;
             FastOrSlow = character.SprintOrWalk;
+        }
+
+        public override void Accepted(CharacterEntity character, Seat seat)
+        {
+            base.Accepted(character, seat);
+            character.Desolidify();
+        }
+
+        public override void SeatKicked(CharacterEntity character, Seat seat)
+        {
+            base.SeatKicked(character, seat);
+            character.Solidify();
         }
     }
 }

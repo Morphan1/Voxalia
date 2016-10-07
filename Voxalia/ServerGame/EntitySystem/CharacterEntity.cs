@@ -138,6 +138,24 @@ namespace Voxalia.ServerGame.EntitySystem
             return Data;
         }
 
+        public virtual void Solidify()
+        {
+            CGroup = CollisionUtil.Character;
+            if (Body != null)
+            {
+                Body.CollisionInformation.CollisionRules.Group = CGroup;
+            }
+        }
+
+        public virtual void Desolidify()
+        {
+            CGroup = CollisionUtil.NonSolid;
+            if (Body != null)
+            {
+                Body.CollisionInformation.CollisionRules.Group = CGroup;
+            }
+        }
+
         /// <summary>
         /// The direction the character is currently facing, as Yaw/Pitch.
         /// </summary>

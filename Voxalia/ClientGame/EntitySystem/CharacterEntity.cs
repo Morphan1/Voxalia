@@ -39,6 +39,24 @@ namespace Voxalia.ClientGame.EntitySystem
         {
         }
 
+        public virtual void Solidify()
+        {
+            CGroup = CollisionUtil.Character;
+            if (Body != null)
+            {
+                Body.CollisionInformation.CollisionRules.Group = CGroup;
+            }
+        }
+
+        public virtual void Desolidify()
+        {
+            CGroup = CollisionUtil.NonSolid;
+            if (Body != null)
+            {
+                Body.CollisionInformation.CollisionRules.Group = CGroup;
+            }
+        }
+
         public bool IsTyping = false;
         
         public bool Upward = false;
