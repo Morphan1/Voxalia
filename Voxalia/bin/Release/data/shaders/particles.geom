@@ -59,7 +59,7 @@ void main()
 	vec3 pos_norm = normalize(pos.xyz);
 	fi.color = f[0].color;
 	// First Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right - up) * 0.5, 1.0), nr, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right + up) * 0.5, 1.0), nr, pos_norm);
 	fi.texcoord = vec2(0.0, 1.0);
 	EmitVertex();
 	// Second Vertex

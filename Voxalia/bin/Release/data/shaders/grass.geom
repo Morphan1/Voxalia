@@ -63,7 +63,7 @@ void main()
 	vec3 right = cross(up, vec3(pos.x, pos.y, 0.0)) * 0.1;
 	vec3 nr = normalize(right);
 	vec3 pos_norm = normalize(pos.xyz + wnd);
-	fi.color = vec4(f[0].color.xyz * dot(pos_norm, vec3(0.0, 0.0, -1.0)) * 0.5 + 0.5, f[0].color.w);
+	fi.color = vec4(f[0].color.xyz * dot(pos_norm, vec3(0.0, 0.0, -1.0)) * 0.5 + 0.5, 1.0) * f[0].color;
 	// First Vertex
 	gl_Position = proj_matrix * qfix(vec4(pos - (right) * 0.5, 1.0), nr, pos_norm);
 	fi.texcoord = vec2(0.0, 1.0);

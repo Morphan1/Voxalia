@@ -540,6 +540,7 @@ namespace Voxalia.ClientGame.WorldSystem
             GL.UniformMatrix4(1, false, ref TheClient.MainWorldView.PrimaryMatrix);
             GL.Uniform1(6, (float)GlobalTickTimeLocal);
             GL.Uniform3(7, ClientUtilities.Convert(ActualWind));
+            TheClient.Rendering.SetColor(GetSunAdjust());
             foreach (Chunk chunk in chToRender)
             {
                 if (chunk.Plant_VAO != -1)
@@ -565,9 +566,21 @@ namespace Voxalia.ClientGame.WorldSystem
             GL.LineWidth(1);
         }
 
+        public OpenTK.Vector4 GetSunAdjust()
+        {
+            if (TheClient.CVars.r_fast.ValueB || !TheClient.CVars.r_lighting.ValueB)
+            {
+                return new OpenTK.Vector4(TheClient.TheSun.InternalLights[0].color + TheClient.ThePlanet.InternalLights[0].color + TheClient.TheSunClouds.InternalLights[0].color, 1.0f);
+            }
+            else
+            {
+                return new OpenTK.Vector4(1f, 1f, 1f, 1f);
+            }
+        }
+
         public void Render()
         {
-            TheClient.Rendering.SetColor(Color4.White);
+            TheClient.Rendering.SetColor(GetSunAdjust());
             TheClient.Rendering.SetMinimumLight(0f);
             if (TheClient.RenderTextures)
             {
@@ -892,6 +905,11 @@ namespace Voxalia.ClientGame.WorldSystem
             Location sky = SkyMod(pos, norm, skyPrecalc);
             Location blk = GetBlockLight(pos, norm, potentials);
             return amb + sky + blk;
+        }
+
+        public OpenTK.Vector4 GetLightAmountAdjusted(Location pos, Location norm)
+        {
+            return new OpenTK.Vector4(ClientUtilities.Convert(GetLightAmount(pos, norm, null)), 1.0f) * GetSunAdjust();
         }
 
         public Location GetLightAmount(Location pos, Location norm, List<Chunk> potentials)

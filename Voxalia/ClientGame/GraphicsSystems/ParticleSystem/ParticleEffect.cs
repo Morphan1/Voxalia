@@ -154,7 +154,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             {
                 WindOffset += TheClient.TheRegion.ActualWind * SimplexNoiseInternal.Generate((start.X + TheClient.GlobalTickTimeLocal) * 0.2, (start.Y + TheClient.GlobalTickTimeLocal) * 0.2, start.Z * 0.2) * 0.1;
             }
-            Location ligl = TheClient.TheRegion.GetLightAmount(start, Location.UnitZ, null);
+            Vector4 ligl = TheClient.TheRegion.GetLightAmountAdjusted(start, Location.UnitZ);
             Vector4 light = new Vector4((float)ligl.X, (float)ligl.Y, (float)ligl.Z, 1.0f);
             light.X = (float)Math.Max(light.X, MinLight.X);
             light.Y = (float)Math.Max(light.Y, MinLight.Y);
