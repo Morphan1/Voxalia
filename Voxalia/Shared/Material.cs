@@ -48,10 +48,11 @@ namespace Voxalia.Shared
         LAVA = 35,
         DIRTY_WATER_FLOWING = 36,
         BRICKS = 37,
+        FIRE = 38,
         /// <summary>
         /// How many materials there are by default. Only for use with direct handling of this enumeration (shouldn't happen often.)
         /// </summary>
-        NUM_DEFAULT = 38,
+        NUM_DEFAULT = 39,
         /// <summary>
         /// How many materials there theoretically can be.
         /// </summary>
@@ -146,6 +147,9 @@ namespace Voxalia.Shared
                             break;
                         case "canrenderagainstself":
                             inf.CanRenderAgainstSelf = opt[1].ToLowerFast() == "true";
+                            break;
+                        case "spawntype":
+                            inf.SpawnType = (MaterialSpawnType)Enum.Parse(typeof(MaterialSpawnType), opt[1].ToUpperInvariant());
                             break;
                         case "hardness":
                             inf.Hardness = double.Parse(opt[1]);
@@ -360,6 +364,11 @@ namespace Voxalia.Shared
         public static string GetPlantDistant(this Material mat)
         {
             return ALL_MATS[(int)mat].PlantDistance;
+        }
+
+        public static MaterialSpawnType GetSpawnType(this Material mat)
+        {
+            return ALL_MATS[(int)mat].SpawnType;
         }
 
         public static Type MaterialType = typeof(Material);
@@ -613,9 +622,17 @@ namespace Voxalia.Shared
 
         public Material BigSpreadsAs = Material.AIR;
 
+        public MaterialSpawnType SpawnType = MaterialSpawnType.NONE;
+
         /// <summary>
         /// What plant texture to render in the distance as.
         /// </summary>
         public string PlantDistance = null;
+    }
+
+    public enum MaterialSpawnType : byte
+    {
+        NONE = 0,
+        FIRE = 1
     }
 }

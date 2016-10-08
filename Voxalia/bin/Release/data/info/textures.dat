@@ -41,6 +41,7 @@ HELLSTONE=blocks/solid/natural/hellstone$blocks/solid/natural/stone_norm&black*b
 LAVA=blocks/liquid/lava&white*black!blocks/liquid/lava_glow@black
 DIRTY_WATER_FLOWING=blocks/liquid/dirty_water$blocks/liquid/water_normal_1,blocks/liquid/water_normal_2,blocks/liquid/water_normal_3,blocks/liquid/water_normal_2%0.2
 BRICKS=blocks/solid/made/bricks$blocks/solid/made/bricks_norm
+fire=clear
 m8=blocks/solid/natural/grass_plains
 m7=blocks/solid/natural/wood_top
 m6=blocks/solid/special/db_ym,blocks/solid/special/db_exc%1.0$normal_def,blocks/solid/special/db_exc_normal%1.0&white,white*black,black!black,white@black,black%1.0

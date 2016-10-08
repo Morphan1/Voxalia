@@ -1,0 +1,12 @@
+Name=Fire
+Solidity=NONSOLID
+Opaque=false
+RendersAtAll=false
+FogAlpha=0
+BreakTime=Infinity
+LightDamage=0
+Breaker=NON_BREAKABLE
+BreaksFromOtherTools=false
+LightEmit=0.5,0.15,0.0
+LightEmitRange=10
+SpawnType=Fire

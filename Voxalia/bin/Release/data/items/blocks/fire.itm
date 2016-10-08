@@ -1,0 +1,10 @@
+type: block
+icon: render_block:self
+display: Fire
+description: Burns a fair bit!
+color: 1,1,1
+model: block
+bound: false
+datum: 38
+weight: 1
+volume: 1

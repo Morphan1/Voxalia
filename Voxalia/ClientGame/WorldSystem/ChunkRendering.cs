@@ -6,6 +6,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.OtherSystems;
 using Voxalia.Shared.Collision;
+using Voxalia.ClientGame.EntitySystem;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -23,16 +24,19 @@ namespace Voxalia.ClientGame.WorldSystem
         public int Plant_VBO_Col = -1;
         public int Plant_C;
 
+        public List<Entity> CreatedEnts = new List<Entity>();
+
         public void CreateVBO()
         {
-            if (Edited)
+            //if (Edited)
             {
-                Edited = false;
+                //Edited = false;
                 lock (Lits)
                 {
                     Lits.Clear();
                     if (CSize == CHUNK_SIZE)
                     {
+                        List<Entity> cents = new List<Entity>();
                         for (int x = 0; x < CHUNK_SIZE; x++)
                         {
                             for (int y = 0; y < CHUNK_SIZE; y++)
@@ -44,9 +48,26 @@ namespace Voxalia.ClientGame.WorldSystem
                                     {
                                         Lits.Add(new KeyValuePair<Vector3i, Material>(new Vector3i(x, y, z), bi.Material));
                                     }
+                                    MaterialSpawnType mst = bi.Material.GetSpawnType();
+                                    if (mst == MaterialSpawnType.FIRE)
+                                    {
+                                        cents.Add(new FireEntity(WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(x, y, z), null, OwningRegion));
+                                    }
                                 }
                             }
                         }
+                        OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
+                        {
+                            foreach (Entity e in CreatedEnts)
+                            {
+                                OwningRegion.Despawn(e);
+                            }
+                            CreatedEnts = cents;
+                            foreach (Entity e in cents)
+                            {
+                                OwningRegion.SpawnEntity(e);
+                            }
+                        });
                     }
                 }
             }

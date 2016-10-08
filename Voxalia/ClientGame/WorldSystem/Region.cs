@@ -398,19 +398,19 @@ namespace Voxalia.ClientGame.WorldSystem
         public void Regen(Location pos, Chunk ch, int x = 1, int y = 1, int z = 1)
         {
             Chunk tch = ch;
-            bool zupd = false;
+            //bool zupd = false;
             if (z == tch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
                 ch = GetChunk(ChunkLocFor(pos) + new Vector3i(0, 0, 1));
                 if (ch != null)
                 {
                     UpdateChunk(ch);
-                    zupd = true;
+                    //zupd = true;
                 }
             }
-            if (!zupd)
+            //if (!zupd)
             {
-                UpdateChunk(ch);
+                UpdateChunk(tch);
             }
             if (x == 0 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
