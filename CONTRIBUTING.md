@@ -1,7 +1,11 @@
 Contribution to Voxalia
 -----------------------
 
+## Issues
+
 See the [ISSUE_TEMPLATE](/ISSUE_TEMPLATE) file for details on posting issues.
+
+## Pull Requests
 
 For pull requests:
 - You MUST: own the code you submit OR it is MIT or compatible licensed.
@@ -14,6 +18,17 @@ For pull requests:
 	- If issues for it have been closed with a refusal statement, ensure you want to be making a PR at all before bothering with it. Generally, refused issues means PRs are also refused.
 		- The exception to this is when an issue is only partially related to what you're doing, or the issue was refused on grounds irrelevantized by your adaptation of it.
 			- In these cases, please open a new issue.
+
+## Code Style / Formatting
+
+- For the most part, format under standard Visual Studio rules.
+	- Spaces, not tabs.
+	- `void MyMethod(int input)`
+	- `{`
+	- `    DoSomething(input);`
+	- `}`
+- Don't use `var`, use explicit types always.
+- Don't delete the `using System;` line from the top.
 
 ## Mini-license pre-warning
 
