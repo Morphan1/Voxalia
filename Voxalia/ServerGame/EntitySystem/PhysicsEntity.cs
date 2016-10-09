@@ -358,6 +358,16 @@ namespace Voxalia.ServerGame.EntitySystem
         /// </summary>
         public virtual void DestroyBody()
         {
+            if (Seats != null)
+            {
+                foreach (Seat seat in Seats)
+                {
+                    if (seat.Sitter != null)
+                    {
+                        seat.Kick();
+                    }
+                }
+            }
             LVel = new Location(Body.LinearVelocity.X, Body.LinearVelocity.Y, Body.LinearVelocity.Z);
             AVel = new Location(Body.AngularVelocity.X, Body.AngularVelocity.Y, Body.AngularVelocity.Z);
             Friction = GetFriction();

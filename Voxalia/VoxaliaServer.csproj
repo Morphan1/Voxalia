@@ -171,6 +171,7 @@
     <Compile Include="ServerGame\ItemSystem\CommonItems\PushRayItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\SuctionRayItem.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\SunAnglerItem.cs" />
+    <Compile Include="ServerGame\ItemSystem\CommonItems\WingsItem.cs" />
     <Compile Include="ServerGame\ItemSystem\EntityInventory.cs" />
     <Compile Include="ServerGame\ItemSystem\CommonItems\FlashantilightItem.cs" />
     <Compile Include="ServerGame\ItemSystem\Inventory.cs" />

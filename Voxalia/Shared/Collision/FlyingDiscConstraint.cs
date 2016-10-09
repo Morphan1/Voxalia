@@ -45,6 +45,7 @@ namespace Voxalia.Shared.Collision
                 return;
             }
             // Note: Assuming Z is the axis of the flat plane of the disc.
+            // TODO: Don't assume this!
             Vector3 up = Quaternion.Transform(Vector3.UnitZ, Entity.Orientation);
             double projectedZVel = Vector3.Dot(entity.LinearVelocity + entity.Gravity ?? entity.Space.ForceUpdater.Gravity, up);
             double velLen = 1f - ((1f / Math.Max(entity.LinearVelocity.LengthSquared(), 1f)));

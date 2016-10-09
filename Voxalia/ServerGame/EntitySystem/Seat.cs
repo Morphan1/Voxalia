@@ -43,13 +43,10 @@ namespace Voxalia.ServerGame.EntitySystem
             Sitter.CurrentSeat = this;
             OldPosition = Sitter.GetPosition() - SeatHolder.GetPosition();
             Sitter.SetOrientation(SeatHolder.GetOrientation());
+            Sitter.SetPosition(SeatHolder.GetPosition() + PositionOffset);
             if (Sitter is PlayerEntity)
             {
                 ((PlayerEntity)Sitter).Teleport(SeatHolder.GetPosition() + PositionOffset); // TODO: Teleport method on all entities!
-            }
-            else
-            {
-                Sitter.SetPosition(SeatHolder.GetPosition() + PositionOffset);
             }
             double len = (double)PositionOffset.Length();
             js = new JointSlider(SeatHolder, sitter, PositionOffset / len);

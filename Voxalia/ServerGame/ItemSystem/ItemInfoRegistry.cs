@@ -14,7 +14,7 @@ namespace Voxalia.ServerGame.ItemSystem
         public ItemInfoRegistry()
         {
             Infos = new Dictionary<string, BaseItemInfo>();
-            // TODO: Organize - alphabetical?
+            // TODO: Organize - alphabetical? Maybe folders too.
             Register(new ExplodobowItem());
             Register(new BowItem());
             Register(new FlashLightItem());
@@ -48,6 +48,7 @@ namespace Voxalia.ServerGame.ItemSystem
             Register(new HatCannonItem());
             Register(new SuctionRayItem());
             Register(new PushRayItem());
+            Register(new WingsItem());
             Register(Generic = new GenericItem());
         }
 

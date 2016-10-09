@@ -334,6 +334,7 @@ namespace Voxalia.ServerGame.EntitySystem
             Items.GiveItem(TheServer.Items.GetItem("special/parachute", 1));
             Items.GiveItem(TheServer.Items.GetItem("special/jetpack", 1));
             Items.GiveItem(TheServer.Items.GetItem("useful/fuel", 100));
+            Items.GiveItem(TheServer.Items.GetItem("special/wings", 1));
             CGroup = CollisionUtil.Player;
             string nl = Name.ToLower();
             string fn = "server_player_saves/" + nl[0].ToString() + "/" + nl + ".plr";
@@ -1229,6 +1230,8 @@ namespace Voxalia.ServerGame.EntitySystem
         public BlockGroupEntity Pasting = null;
 
         public double PastingDist = 5;
+
+        public PlaneEntity Wings = null;
     }
 
     public class ChunkAwarenessInfo

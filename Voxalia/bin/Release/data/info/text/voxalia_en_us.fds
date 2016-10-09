@@ -51,6 +51,9 @@ items:
         parachute:
             display: Parachute
             description: For when you forgot to be careful!
+        wings:
+            display: Wings
+            description: Wee!
     tools:
         paintbrush:
             display: Paint Brush

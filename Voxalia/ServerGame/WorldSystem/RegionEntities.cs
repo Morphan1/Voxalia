@@ -107,6 +107,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 ((PhysicsEntity)e).ForceNetwork();
                 ((PhysicsEntity)e).SpawnBody();
+                ((PhysicsEntity)e).ForceNetwork();
             }
             else if (e is PrimitiveEntity)
             {

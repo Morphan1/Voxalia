@@ -1,0 +1,7 @@
+type: wings
+icon: items/special/wings_ico
+color: 1,1,1
+model: items/special/wings
+bound: false
+weight: 1
+volume: 15
