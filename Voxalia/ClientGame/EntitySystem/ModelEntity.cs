@@ -1,4 +1,4 @@
-//
+﻿//
 // This file is part of the game Voxalia, created by FreneticXYZ.
 // This code is Copyright (C) 2016 FreneticXYZ under the terms of the MIT license.
 // See README.md or LICENSE.txt for contents of the MIT license.
@@ -102,9 +102,10 @@ namespace Voxalia.ClientGame.EntitySystem
                 entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.PlanePilot.ItemRight ? 1 : 0) + (Plane.PlanePilot.ItemLeft ? -1 : 0)) * entity.Mass * 1.5 * Delta);
                 if (Plane.PlanePilot.YMove != 0.0)
                 {
-                    entity.ApplyImpulse(forward * 5 + entity.Position, up * Plane.PlanePilot.YMove * entity.Mass * 1.75f * Delta);
+                    double dotforw = BEPUutilities.Vector3.Dot(entity.LinearVelocity, forward);
+                    entity.ApplyImpulse(forward * 5 + entity.Position, up * Plane.PlanePilot.YMove * entity.Mass * 0.05 * Delta * dotforw);
                     // Rotate the entity pre-emptively, and re-apply the movement velocity in this new direction!
-                    double vellen = entity.LinearVelocity.Length();
+                    /*double vellen = entity.LinearVelocity.Length();
                     BEPUutilities.Vector3 normvel = entity.LinearVelocity / vellen;
                     BEPUutilities.Vector3 norm_vel_transf = BEPUutilities.Quaternion.Transform(normvel, BEPUutilities.Quaternion.Inverse(entity.Orientation)); // Probably just 1,0,0 on whichever axis... can be simplified!
                     BEPUutilities.Vector3 inc = entity.AngularVelocity * Delta * 0.5;
@@ -114,7 +115,7 @@ namespace Voxalia.ClientGame.EntitySystem
                     BEPUutilities.Quaternion.Add(ref orient, ref quat, out orient);
                     orient.Normalize();
                     entity.Orientation = orient;
-                    entity.LinearVelocity = BEPUutilities.Quaternion.Transform(norm_vel_transf, orient) * vellen;
+                    entity.LinearVelocity = BEPUutilities.Quaternion.Transform(norm_vel_transf, orient) * vellen;*/
                 }
                 // Apply air drag
                 Entity.ModifyLinearDamping(Plane.PlanePilot.SprintOrWalk < 0.0 ? 0.6 : 0.1); // TODO: arbitrary constant

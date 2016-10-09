@@ -1,4 +1,4 @@
-//
+﻿//
 // This file is part of the game Voxalia, created by FreneticXYZ.
 // This code is Copyright (C) 2016 FreneticXYZ under the terms of the MIT license.
 // See README.md or LICENSE.txt for contents of the MIT license.
@@ -117,9 +117,10 @@ namespace Voxalia.ServerGame.EntitySystem
                 entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.IRight ? 1 : 0) + (Plane.ILeft ? -1 : 0)) * entity.Mass * 1.5 * Delta);
                 if (Plane.ForwBack != 0.0)
                 {
-                    entity.ApplyImpulse(forward * 5 + entity.Position, up * Plane.ForwBack * entity.Mass * 1.75f * Delta);
+                    double dotforw = Vector3.Dot(entity.LinearVelocity, forward);
+                    entity.ApplyImpulse(forward * 5 + entity.Position, up * Plane.ForwBack * entity.Mass * 0.05 * Delta * dotforw);
                     // Rotate the entity pre-emptively, and re-apply the movement velocity in this new direction!
-                    double vellen = entity.LinearVelocity.Length();
+                    /*double vellen = entity.LinearVelocity.Length();
                     Vector3 normvel = entity.LinearVelocity / vellen;
                     Vector3 norm_vel_transf = Quaternion.Transform(normvel, Quaternion.Inverse(entity.Orientation)); // Probably just 1,0,0 on whichever axis... can be simplified!
                     Vector3 inc = entity.AngularVelocity * Delta * 0.5;
@@ -129,7 +130,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     Quaternion.Add(ref orient, ref quat, out orient);
                     orient.Normalize();
                     entity.Orientation = orient;
-                    entity.LinearVelocity = Quaternion.Transform(norm_vel_transf, orient) * vellen;
+                    entity.LinearVelocity = Quaternion.Transform(norm_vel_transf, orient) * vellen;*/
                 }
                 // Apply air drag
                 Entity.ModifyLinearDamping(Plane.FastOrSlow < 0.0 ? 0.6 : 0.1); // TODO: arbitrary constant
