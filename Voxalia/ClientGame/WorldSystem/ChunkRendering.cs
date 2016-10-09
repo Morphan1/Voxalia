@@ -143,18 +143,30 @@ namespace Voxalia.ClientGame.WorldSystem
         new Vector3i(-1, 1, 0), new Vector3i(0, -1, 1), new Vector3i(-1, 0, 1), new Vector3i(1, 1, 1), new Vector3i(-1, 1, 1), new Vector3i(1, -1, 1), new Vector3i(1, 1, -1), new Vector3i(-1, -1, 1),
         new Vector3i(-1, 1, -1), new Vector3i(1, -1, -1) };
 
-        BlockInternal GetMostSolid(Chunk c, int x, int y, int z)
+        BlockInternal GetLODRelative(Chunk c, int x, int y, int z)
         {
             if (c.PosMultiplier == PosMultiplier)
             {
                 return c.GetBlockAt(x, y, z);
             }
-            // TODO: better method here...
             if (c.PosMultiplier > PosMultiplier)
             {
                 return new BlockInternal((ushort)Material.STONE, 0, 0, 0);
             }
-            return BlockInternal.AIR;
+            for (int bx = 0; bx < PosMultiplier; bx++)
+            {
+                for (int by = 0; by < PosMultiplier; by++)
+                {
+                    for (int bz = 0; bz < PosMultiplier; bz++)
+                    {
+                        if (!c.GetBlockAt(x * PosMultiplier + bx, y * PosMultiplier + bx, z * PosMultiplier + bz).IsOpaque())
+                        {
+                            return BlockInternal.AIR;
+                        }
+                    }
+                }
+            }
+            return new BlockInternal((ushort)Material.STONE, 0, 0, 0);
         }
         
         void VBOHInternal()
@@ -197,12 +209,12 @@ namespace Voxalia.ClientGame.WorldSystem
                             BlockInternal c = GetBlockAt(x, y, z);
                             if ((c.Material).RendersAtAll())
                             {
-                                BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : (c_zp == null ? t_air : GetMostSolid(c_zp, x, y, z + 1 - CSize));
-                                BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : (c_zm == null ? t_air : GetMostSolid(c_zm, x, y, z - 1 + CSize));
-                                BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : (c_yp == null ? t_air : GetMostSolid(c_yp, x, y + 1 - CSize, z));
-                                BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : (c_ym == null ? t_air : GetMostSolid(c_ym, x, y - 1 + CSize, z));
-                                BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : (c_xp == null ? t_air : GetMostSolid(c_xp, x + 1 - CSize, y, z));
-                                BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : (c_xm == null ? t_air : GetMostSolid(c_xm, x - 1 + CSize, y, z));
+                                BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : (c_zp == null ? t_air : GetLODRelative(c_zp, x, y, z + 1 - CSize));
+                                BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : (c_zm == null ? t_air : GetLODRelative(c_zm, x, y, z - 1 + CSize));
+                                BlockInternal yp = y + 1 < CSize ? GetBlockAt(x, y + 1, z) : (c_yp == null ? t_air : GetLODRelative(c_yp, x, y + 1 - CSize, z));
+                                BlockInternal ym = y > 0 ? GetBlockAt(x, y - 1, z) : (c_ym == null ? t_air : GetLODRelative(c_ym, x, y - 1 + CSize, z));
+                                BlockInternal xp = x + 1 < CSize ? GetBlockAt(x + 1, y, z) : (c_xp == null ? t_air : GetLODRelative(c_xp, x + 1 - CSize, y, z));
+                                BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : (c_xm == null ? t_air : GetLODRelative(c_xm, x - 1 + CSize, y, z));
                                 bool rAS = !((Material)c.BlockMaterial).GetCanRenderAgainstSelf();
                                 bool pMatters = !c.IsOpaque();
                                 bool zps = (zp.IsOpaque() || (rAS && (zp.BlockMaterial == c.BlockMaterial && (pMatters || zp.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : zp.BlockData].OccupiesBOTTOM();
