@@ -767,13 +767,8 @@ namespace Voxalia.ClientGame.WorldSystem
             return false;
         }
 
-        public Location GetSkyLight(Location pos, Location norm)
+        public float GetSkyLightBase(Location pos)
         {
-            // TODO: Optimize this method!
-            if (norm.Z < -0.99)
-            {
-                return Location.Zero;
-            }
             pos.Z = pos.Z + 1;
             int XP = (int)Math.Floor(pos.X / Chunk.CHUNK_SIZE);
             int YP = (int)Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
@@ -781,6 +776,11 @@ namespace Voxalia.ClientGame.WorldSystem
             int x = (int)(Math.Floor(pos.X) - (XP * Chunk.CHUNK_SIZE));
             int y = (int)(Math.Floor(pos.Y) - (YP * Chunk.CHUNK_SIZE));
             int z = (int)(Math.Floor(pos.Z) - (ZP * Chunk.CHUNK_SIZE));
+            Chunk cht = GetChunk(new Vector3i(XP, YP, ZP));
+            if (cht != null)
+            {
+                return cht.GetBlockAtLOD(x, y, z).BlockLocalData / 255f;
+            }
             float light = 1f;
             while (true)
             {
@@ -794,7 +794,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     BlockInternal bi = ch.GetBlockAtLOD((int)x, (int)y, (int)z);
                     if (bi.IsOpaque())
                     {
-                        return Location.Zero;
+                        return 0f;
                     }
                     light -= (float)((Material)bi.BlockMaterial).GetLightDamage();
                     z++;
@@ -802,7 +802,16 @@ namespace Voxalia.ClientGame.WorldSystem
                 ZP++;
                 z = 0;
             }
-            return SkyMod(pos, norm, light);
+            return light;
+        }
+
+        public Location GetSkyLight(Location pos, Location norm)
+        {
+            if (norm.Z < -0.99)
+            {
+                return Location.Zero;
+            }
+            return SkyMod(pos, norm, GetSkyLightBase(pos));
         }
 
         Location SkyMod(Location pos, Location norm, float light)
