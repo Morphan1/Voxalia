@@ -126,14 +126,25 @@ namespace Voxalia.ClientGame.WorldSystem
                 SucceededBy.MakeVBONow();
                 return;
             }
+            Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, 1));
+            Chunk c_zm = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, -1));
+            Chunk c_yp = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 1, 0));
+            Chunk c_ym = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, -1, 0));
+            Chunk c_xp = OwningRegion.GetChunk(WorldPosition + new Vector3i(1, 0, 0));
+            Chunk c_xm = OwningRegion.GetChunk(WorldPosition + new Vector3i(-1, 0, 1));
+            Chunk c_zpxp = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 1, 1));
+            Chunk c_zpxm = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, -1, 1));
+            Chunk c_zpyp = OwningRegion.GetChunk(WorldPosition + new Vector3i(1, 0, 1));
+            Chunk c_zpym = OwningRegion.GetChunk(WorldPosition + new Vector3i(-1, 0, 1));
+            Action a = () => VBOHInternal(c_zp, c_zm, c_yp, c_ym, c_xp, c_xm, c_zpxp, c_zpxm, c_zpyp, c_zpym);
             if (rendering != null)
             {
-                ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(() => VBOHInternal());
+                ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(a);
                 rendering = rendering.ReplaceOrFollowWith(item);
             }
             else
             {
-                rendering = OwningRegion.TheClient.Schedule.StartASyncTask(() => VBOHInternal());
+                rendering = OwningRegion.TheClient.Schedule.StartASyncTask(a);
             }
         }
 
@@ -169,13 +180,8 @@ namespace Voxalia.ClientGame.WorldSystem
             return new BlockInternal((ushort)Material.STONE, 0, 0, 0);
         }
         
-        void VBOHInternal()
+        void VBOHInternal(Chunk c_zp, Chunk c_zm, Chunk c_yp, Chunk c_ym, Chunk c_xp, Chunk c_xm, Chunk c_zpxp, Chunk c_zpxm, Chunk c_zpyp, Chunk c_zpym)
         {
-            if (SucceededBy != null)
-            {
-                SucceededBy.VBOHInternal();
-                return;
-            }
             try
             {
                 bool shaped = OwningRegion.TheClient.CVars.r_noblockshapes.ValueB;
@@ -190,12 +196,6 @@ namespace Voxalia.ClientGame.WorldSystem
                     return;
                 }
                 //bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
-                Chunk c_zp = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, 1));
-                Chunk c_zm = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 0, -1));
-                Chunk c_yp = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, 1, 0));
-                Chunk c_ym = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, -1, 0));
-                Chunk c_xp = OwningRegion.GetChunk(WorldPosition + new Vector3i(1, 0, 0));
-                Chunk c_xm = OwningRegion.GetChunk(WorldPosition + new Vector3i(-1, 0, 0));
                 List<Chunk> potentials = new List<Chunk>() { this, c_zp, c_zm, c_yp, c_ym, c_xp, c_xm };
                 BlockInternal t_air = new BlockInternal((ushort)Material.STONE, 0, 0, 255);
                 List<Vector3> poses = new List<Vector3>();
@@ -227,6 +227,24 @@ namespace Voxalia.ClientGame.WorldSystem
                                 {
                                     continue;
                                 }
+                                BlockInternal zpyp;
+                                BlockInternal zpym;
+                                BlockInternal zpxp;
+                                BlockInternal zpxm;
+                                if (z + 1 >= CSize)
+                                {
+                                    zpyp = y + 1 < CSize ? (c_zp == null ? t_air : GetLODRelative(c_zp, x, y + 1, z + 1 - CSize)) : (c_zpyp == null ? t_air : GetLODRelative(c_zpyp, x, y + 1 - CSize, z + 1 - CSize));
+                                    zpym = y > 0 ? (c_zp == null ? t_air : GetLODRelative(c_zp, x, y - 1, z + 1 - CSize)) : (c_zpym == null ? t_air : GetLODRelative(c_zpym, x, y - 1 + CSize, z + 1 - CSize));
+                                    zpxp = x + 1 < CSize ? (c_zp == null ? t_air : GetLODRelative(c_zp, x + 1, y, z + 1 - CSize)) : (c_zpxp == null ? t_air : GetLODRelative(c_zpxp, x + 1 - CSize, y, z + 1 - CSize));
+                                    zpxm = x > 0 ? (c_zp == null ? t_air : GetLODRelative(c_zp, x - 1, y, z + 1 - CSize)) : (c_zpxm == null ? t_air : GetLODRelative(c_zpxm, x - 1 + CSize, y, z + 1 - CSize));
+                                }
+                                else
+                                {
+                                    zpyp = y + 1 < CSize ? GetBlockAt(x, y + 1, z + 1) : (c_yp == null ? t_air : GetLODRelative(c_yp, x, y + 1 - CSize, z + 1));
+                                    zpym = y > 0 ? GetBlockAt(x, y - 1, z + 1) : (c_ym == null ? t_air : GetLODRelative(c_ym, x, y - 1 + CSize, z + 1));
+                                    zpxp = x + 1 < CSize ? GetBlockAt(x + 1, y, z + 1) : (c_xp == null ? t_air : GetLODRelative(c_xp, x + 1 - CSize, y, z + 1));
+                                    zpxm = x > 0 ? GetBlockAt(x - 1, y, z + 1) : (c_xm == null ? t_air : GetLODRelative(c_xm, x - 1 + CSize, y, z + 1));
+                                }
                                 int index_bssd = (xps ? 1 : 0) | (xms ? 2 : 0) | (yps ? 4 : 0) | (yms ? 8 : 0) | (zps ? 16 : 0) | (zms ? 32 : 0);
                                 List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].BSSD.Verts[index_bssd];
                                 List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].BSSD.Norms[index_bssd];
@@ -240,7 +258,32 @@ namespace Voxalia.ClientGame.WorldSystem
                                     Vector3 nt = new Vector3((float)normsi[i].X, (float)normsi[i].Y, (float)normsi[i].Z);
                                     rh.Norms.Add(nt);
                                     rh.TCoords.Add(new Vector3((float)tci[i].X, (float)tci[i].Y, (float)tci[i].Z));
-                                    Location lcol = OwningRegion.GetLightAmountForSkyValue(ClientUtilities.Convert(vt) + WorldPosition.ToLocation() * CHUNK_SIZE, ClientUtilities.Convert(nt), potentials, zp.BlockLocalData / 255f);
+                                    byte reldat = 255;
+                                    if (nt.X > 0.6)
+                                    {
+                                        reldat = zpxp.BlockLocalData;
+                                    }
+                                    else if (nt.X < -0.6)
+                                    {
+                                        reldat = zpxm.BlockLocalData;
+                                    }
+                                    else if (nt.Y > 0.6)
+                                    {
+                                        reldat = zpyp.BlockLocalData;
+                                    }
+                                    else if (nt.Y < -0.6)
+                                    {
+                                        reldat = zpym.BlockLocalData;
+                                    }
+                                    else if (nt.Z < 0)
+                                    {
+                                        reldat = c.BlockLocalData;
+                                    }
+                                    else
+                                    {
+                                        reldat = zp.BlockLocalData;
+                                    }
+                                    Location lcol = OwningRegion.GetLightAmountForSkyValue(ClientUtilities.Convert(vt) + WorldPosition.ToLocation() * CHUNK_SIZE, ClientUtilities.Convert(nt), potentials, reldat / 255f);
                                     rh.Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
                                     rh.TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(ClientUtilities.ConvertD(WorldPosition.ToLocation()) * CHUNK_SIZE + ClientUtilities.ConvertToD(vt), Colors.ForByte(c.BlockPaint)));
                                     if (ths.Key != null)
