@@ -197,7 +197,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 //bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
                 List<Chunk> potentials = new List<Chunk>() { this, c_zp, c_zm, c_yp, c_ym, c_xp, c_xm };
-                BlockInternal t_air = new BlockInternal((ushort)Material.STONE, 0, 0, 255);
+                BlockInternal t_air = new BlockInternal((ushort)Material.AIR, 0, 0, 255);
                 List<Vector3> poses = new List<Vector3>();
                 List<Vector4> colorses = new List<Vector4>();
                 for (int x = 0; x < CSize; x++)

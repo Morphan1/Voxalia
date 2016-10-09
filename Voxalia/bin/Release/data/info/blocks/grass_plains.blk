@@ -4,3 +4,4 @@ BreakTime=1
 Breaker=SHOVEL
 Texture_TOP=m8
 Texture_BOTTOM=dirt
+Plant=blocks/transparent/tallgrass

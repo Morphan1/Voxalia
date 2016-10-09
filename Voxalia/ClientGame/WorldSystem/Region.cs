@@ -773,36 +773,18 @@ namespace Voxalia.ClientGame.WorldSystem
             int XP = (int)Math.Floor(pos.X / Chunk.CHUNK_SIZE);
             int YP = (int)Math.Floor(pos.Y / Chunk.CHUNK_SIZE);
             int ZP = (int)Math.Floor(pos.Z / Chunk.CHUNK_SIZE);
-            int x = (int)(Math.Floor(pos.X) - (XP * Chunk.CHUNK_SIZE));
-            int y = (int)(Math.Floor(pos.Y) - (YP * Chunk.CHUNK_SIZE));
-            int z = (int)(Math.Floor(pos.Z) - (ZP * Chunk.CHUNK_SIZE));
             Chunk cht = GetChunk(new Vector3i(XP, YP, ZP));
             if (cht != null)
             {
+                int x = (int)(Math.Floor(pos.X) - (XP * Chunk.CHUNK_SIZE));
+                int y = (int)(Math.Floor(pos.Y) - (YP * Chunk.CHUNK_SIZE));
+                int z = (int)(Math.Floor(pos.Z) - (ZP * Chunk.CHUNK_SIZE));
                 return cht.GetBlockAtLOD(x, y, z).BlockLocalData / 255f;
             }
-            float light = 1f;
-            while (true)
+            else
             {
-                Chunk ch = GetChunk(new Vector3i(XP, YP, ZP));
-                if (ch == null || ch.SucceededBy != null)
-                {
-                    break;
-                }
-                while (z < Chunk.CHUNK_SIZE)
-                {
-                    BlockInternal bi = ch.GetBlockAtLOD((int)x, (int)y, (int)z);
-                    if (bi.IsOpaque())
-                    {
-                        return 0f;
-                    }
-                    light -= (float)((Material)bi.BlockMaterial).GetLightDamage();
-                    z++;
-                }
-                ZP++;
-                z = 0;
+                return 1f;
             }
-            return light;
         }
 
         public Location GetSkyLight(Location pos, Location norm)

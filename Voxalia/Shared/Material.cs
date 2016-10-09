@@ -103,9 +103,6 @@ namespace Voxalia.Shared
                         case "plant":
                             inf.Plant = opt[1];
                             break;
-                        case "plantdistant":
-                            inf.PlantDistance = opt[1];
-                            break;
                         case "sound":
                             inf.Sound = (MaterialSound)Enum.Parse(typeof(MaterialSound), opt[1].ToUpperInvariant());
                             break;
@@ -355,15 +352,10 @@ namespace Voxalia.Shared
         {
             return ALL_MATS[(int)mat].LightEmitRange;
         }
-
+        
         public static string GetPlant(this Material mat)
         {
             return ALL_MATS[(int)mat].Plant;
-        }
-
-        public static string GetPlantDistant(this Material mat)
-        {
-            return ALL_MATS[(int)mat].PlantDistance;
         }
 
         public static MaterialSpawnType GetSpawnType(this Material mat)
@@ -614,20 +606,15 @@ namespace Voxalia.Shared
         /// How far this block should emit light.
         /// </summary>
         public double LightEmitRange = 0;
-
-        /// <summary>
-        /// What plant model to render for this material.
-        /// </summary>
-        public string Plant = null;
-
+        
         public Material BigSpreadsAs = Material.AIR;
 
         public MaterialSpawnType SpawnType = MaterialSpawnType.NONE;
 
         /// <summary>
-        /// What plant texture to render in the distance as.
+        /// What plant texture to render as.
         /// </summary>
-        public string PlantDistance = null;
+        public string Plant = null;
     }
 
     public enum MaterialSpawnType : byte

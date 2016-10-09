@@ -36,6 +36,7 @@ addrecipe type|display <{item[stick].with_count[5]}>
 	- This code may fire rapidly, and may fire when trying to merely populate a recipe list, not necessarily when actually crafted!
 
 Valid options for the first argument:
+
 - Strict: Exact match - every value must match!
 - List|Of|Items: all the specified values are required, plus the count always. (Never temperature!) Accepted:
 	- Type: The primary item type

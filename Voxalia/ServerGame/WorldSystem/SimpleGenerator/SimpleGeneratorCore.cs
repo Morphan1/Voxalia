@@ -199,6 +199,40 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
         private void PopulateInternal(int Seed, int seed2, int seed3, int seed4, int seed5, Chunk chunk)
         {
 #endif
+            if (chunk.OwningRegion.TheWorld.Flat)
+            {
+                if (chunk.WorldPosition.Z == 0)
+                {
+                    for (int i = 0; i < chunk.BlocksInternal.Length; i++)
+                    {
+                        chunk.BlocksInternal[i] = new BlockInternal((ushort)Material.STONE, 0, 0, 0);
+                    }
+                    for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
+                    {
+                        for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
+                        {
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, Chunk.CHUNK_SIZE - 1)] = new BlockInternal((ushort)Material.GRASS_PLAINS, 0, 0, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, Chunk.CHUNK_SIZE - 2)] = new BlockInternal((ushort)Material.DIRT, 0, 0, 0);
+                            chunk.BlocksInternal[chunk.BlockIndex(x, y, Chunk.CHUNK_SIZE - 3)] = new BlockInternal((ushort)Material.DIRT, 0, 0, 0);
+                        }
+                    }
+                }
+                else if (chunk.WorldPosition.Z < 0)
+                {
+                    for (int i = 0; i < chunk.BlocksInternal.Length; i++)
+                    {
+                        chunk.BlocksInternal[i] = new BlockInternal((ushort)Material.STONE, 0, 0, 0);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < chunk.BlocksInternal.Length; i++)
+                    {
+                        chunk.BlocksInternal[i] = BlockInternal.AIR;
+                    }
+                }
+                return;
+            }
             if (chunk.WorldPosition.Z > MaxNonAirHeight)
             {
                 for (int i = 0; i < chunk.BlocksInternal.Length; i++)

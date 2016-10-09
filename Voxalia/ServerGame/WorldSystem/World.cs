@@ -9,6 +9,7 @@ using System.Threading;
 using FreneticDataSyntax;
 using Voxalia.Shared;
 using System.Diagnostics;
+using FreneticScript;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -52,9 +53,11 @@ namespace Voxalia.ServerGame.WorldSystem
             Config.Set("general.name", Name);
             Config.Default("general.seed", Utilities.UtilRandom.Next(SeedMax) - SeedMax / 2);
             Config.Default("general.spawnpoint", new Location(0, 0, 50).ToString());
+            Config.Default("general.flat", "false");
             CFGEdited = true;
             Seed = Config.GetInt("general.seed", DefaultSeed).Value;
             SpawnPoint = Location.FromString(Config.GetString("general.spawnpoint", DefaultSpawnPoint));
+            Flat = Config.GetString("general.flat", "false").ToString().ToLowerFast() == "true";
             Random seedGen = new Random(Seed);// TODO: Own random method that doesn't depend on C# impl!
             Seed2 = (seedGen.Next(SeedMax) - SeedMax / 2);
             Seed3 = (seedGen.Next(SeedMax) - SeedMax / 2);
@@ -77,6 +80,8 @@ namespace Voxalia.ServerGame.WorldSystem
         public int Seed5;
 
         public Scheduler Schedule = new Scheduler();
+
+        public bool Flat = false;
 
         public void Start()
         {
