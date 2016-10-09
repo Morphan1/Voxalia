@@ -60,14 +60,6 @@ namespace Voxalia.ClientGame.EntitySystem
             }
         }
 
-        public float PlaneSlowStrength
-        {
-            get
-            {
-                return GetMass() * 6f;
-            }
-        }
-
         public PlaneMotionConstraint Plane = null;
 
         public PlayerEntity PlanePilot = null; // TODO: Character!
@@ -94,8 +86,11 @@ namespace Voxalia.ClientGame.EntitySystem
                 BEPUutilities.Vector3 side = BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitX, Entity.Orientation);
                 BEPUutilities.Vector3 up = BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitZ, Entity.Orientation);
                 // Engines!
-                BEPUutilities.Vector3 force = forward * (Plane.PlaneRegularStrength + (Plane.PlanePilot.SprintOrWalk < 0 ? Plane.PlaneSlowStrength : Plane.PlaneFastStrength) * Plane.PlanePilot.SprintOrWalk) * Delta;
-                entity.ApplyLinearImpulse(ref force);
+                if (Plane.PlanePilot.SprintOrWalk >= 0.0)
+                {
+                    BEPUutilities.Vector3 force = forward * (Plane.PlaneRegularStrength +  Plane.PlaneFastStrength) * Delta;
+                    entity.ApplyLinearImpulse(ref force);
+                }
                 entity.ApplyImpulse(side * 5 + entity.Position, up * -Plane.PlanePilot.XMove * entity.Mass * 1.5 * Delta);
                 entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.PlanePilot.ItemRight ? 1 : 0) + (Plane.PlanePilot.ItemLeft ? -1 : 0)) * entity.Mass * 1.5 * Delta);
                 if (Plane.PlanePilot.YMove != 0.0)
@@ -115,7 +110,7 @@ namespace Voxalia.ClientGame.EntitySystem
                     entity.LinearVelocity = BEPUutilities.Quaternion.Transform(norm_vel_transf, orient) * vellen;
                 }
                 // Apply air drag
-                Entity.ModifyLinearDamping(0.1); // TODO: arbitrary constant
+                Entity.ModifyLinearDamping(Plane.PlanePilot.SprintOrWalk < 0.0 ? 0.6 : 0.1); // TODO: arbitrary constant
                 Entity.ModifyAngularDamping(0.5); // TODO: arbitrary constant
                 // Ensure we're active if flying!
                 Entity.ActivityInformation.Activate();

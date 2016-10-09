@@ -67,15 +67,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 return GetMass() * 3f;
             }
         }
-
-        public double SlowStrength
-        {
-            get
-            {
-                return GetMass() * 6f;
-            }
-        }
-
+        
         public PlaneMotionConstraint Motion;
         
         // TODO: Plane-specific code?
@@ -109,8 +101,11 @@ namespace Voxalia.ServerGame.EntitySystem
                 Vector3 side = Quaternion.Transform(Vector3.UnitX, Entity.Orientation);
                 Vector3 up = Quaternion.Transform(Vector3.UnitZ, Entity.Orientation);
                 // Engines!
-                Vector3 force = forward * (Plane.RegularStrength + (Plane.FastOrSlow < 0 ? Plane.SlowStrength : Plane.FastStrength) * Plane.FastOrSlow) * Delta;
-                entity.ApplyLinearImpulse(ref force);
+                if (Plane.FastOrSlow >= 0.0)
+                {
+                    Vector3 force = forward * (Plane.RegularStrength + Plane.FastStrength) * Delta;
+                    entity.ApplyLinearImpulse(ref force);
+                }
                 entity.ApplyImpulse(side * 5 + entity.Position, up * -Plane.RightLeft * entity.Mass * 1.5 * Delta);
                 entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.IRight ? 1 : 0) + (Plane.ILeft ? -1 : 0)) * entity.Mass * 1.5 * Delta);
                 if (Plane.ForwBack != 0.0)
@@ -130,7 +125,7 @@ namespace Voxalia.ServerGame.EntitySystem
                     entity.LinearVelocity = Quaternion.Transform(norm_vel_transf, orient) * vellen;
                 }
                 // Apply air drag
-                Entity.ModifyLinearDamping(0.1); // TODO: arbitrary constant
+                Entity.ModifyLinearDamping(Plane.FastOrSlow < 0.0 ? 0.6 : 0.1); // TODO: arbitrary constant
                 Entity.ModifyAngularDamping(0.5); // TODO: arbitrary constant
                 // Ensure we're active if flying!
                 Entity.ActivityInformation.Activate();
