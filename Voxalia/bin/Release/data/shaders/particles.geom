@@ -54,24 +54,23 @@ void main()
 		return;
 	}
 	vec3 up = vec3(0.0, 0.0, 1.0);
-	vec3 right = cross(up, vec3(pos.x, pos.y, pos.z));
-	vec3 nr = normalize(right);
 	vec3 pos_norm = normalize(pos.xyz);
+	vec3 right = cross(up, pos_norm);
 	fi.color = f[0].color;
 	// First Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right + up) * 0.5, 1.0), nr, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right - up) * 0.5, 1.0), right, pos_norm);
 	fi.texcoord = vec2(0.0, 1.0);
 	EmitVertex();
 	// Second Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos + (right - up) * 0.5, 1.0), nr, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos + (right - up) * 0.5, 1.0), right, pos_norm);
 	fi.texcoord = vec2(1.0, 1.0);
 	EmitVertex();
 	// Third Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right + up) * 0.5, 1.0), nr, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right + up) * 0.5, 1.0), right, pos_norm);
 	fi.texcoord = vec2(0.0, 0.0);
 	EmitVertex();
 	// Forth Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos + (right + up) * 0.5, 1.0), nr, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos + (right + up) * 0.5, 1.0), right, pos_norm);
 	fi.texcoord = vec2(1.0, 0.0);
 	EmitVertex();
 	EndPrimitive();

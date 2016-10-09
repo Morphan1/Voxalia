@@ -60,8 +60,8 @@ void main()
 	float snz = snoise((pos + vec3(time, time, 0.0)) * 0.2);
 	vec3 wnd = wind * snz;
 	vec3 up = vec3(0.0, 0.0, 1.0);
-	vec3 right = cross(up, vec3(pos.x, pos.y, 0.0)) * 0.1;
-	vec3 nr = normalize(right);
+	vec3 right = cross(up, normalize(vec3(pos.x, pos.y, 0.0))) * 0.3;
+	vec3 nr = right * (1.0 / 0.3);
 	vec3 pos_norm = normalize(pos.xyz + wnd);
 	fi.color = vec4(f[0].color.xyz * dot(pos_norm, vec3(0.0, 0.0, -1.0)) * 0.5 + 0.5, 1.0) * f[0].color;
 	// First Vertex
@@ -73,7 +73,7 @@ void main()
 	fi.texcoord = vec2(1.0, 1.0);
 	EmitVertex();
 	// Third Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right + up * 2.0) * 0.5 + wnd, 1.0), nr, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right - up * 2.0) * 0.5 + wnd, 1.0), nr, pos_norm);
 	fi.texcoord = vec2(0.0, 0.5);
 	EmitVertex();
 	// Forth Vertex
@@ -81,7 +81,7 @@ void main()
 	fi.texcoord = vec2(1.0, 0.5);
 	EmitVertex();
 	// Fifth Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right + up * 4.0) * 0.5 + wnd * 2.0, 1.0), nr, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right - up * 4.0) * 0.5 + wnd * 2.0, 1.0), nr, pos_norm);
 	fi.texcoord = vec2(0.0, 0.0);
 	EmitVertex();
 	// Sixth Vertex
