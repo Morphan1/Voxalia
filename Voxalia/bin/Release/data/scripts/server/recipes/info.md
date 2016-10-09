@@ -3,6 +3,8 @@ Voxalia Recipes
 
 Recipes are defined like so:
 
+Note that `ITEM_NAME` should be replaced with a valid item type name for input, and `RESULT` replaced with a valid item type name for returning.
+
 ```
 addrecipe strict ITEM_NAME
 {
@@ -26,12 +28,12 @@ Can get fancy:
 ```
 addrecipe type|display <{item[stick].with_count[5]}>
 {
-	result = "<{var[USED_INPUT].get[1].with_count[1].with_display_name[Modded Stick]}>";
+	result = "<{var[used_input].get[1].with_count[1].with_display_name[Modded Stick]}>";
 }
 ```
 
 - Note that while you can execute code in the recipe block, it's recommended you do not do too much.
-	- This code may fire rapidly, and fires when trying to merely populate the recipe list, not necessarily when actually crafted!
+	- This code may fire rapidly, and may fire when trying to merely populate a recipe list, not necessarily when actually crafted!
 
 Valid options for the first argument:
 - Strict: Exact match - every value must match!
