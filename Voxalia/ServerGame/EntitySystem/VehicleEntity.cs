@@ -47,13 +47,29 @@ namespace Voxalia.ServerGame.EntitySystem
             Seats.Add(DriverSeat);
         }
 
-        public void StartUse(Entity user)
+        public double UseRelease = 0;
+
+        public override void Tick()
         {
-            if (user.CurrentSeat == DriverSeat)
+            if (UseRelease > 0)
+            {
+                UseRelease -= TheRegion.Delta;
+            }
+            else if (DriverSeat.Sitter != null && DriverSeat.Sitter is PlayerEntity && (DriverSeat.Sitter as PlayerEntity).Use)
             {
                 DriverSeat.Kick();
+                UseRelease = 0.5;
+            }
+            base.Tick();
+        }
+
+        public void StartUse(Entity user)
+        {
+            if (UseRelease > 0)
+            {
                 return;
             }
+            UseRelease = 0.5;
             DriverSeat.Accept((PhysicsEntity)user);
         }
 
