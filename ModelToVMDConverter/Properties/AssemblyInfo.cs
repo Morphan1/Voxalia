@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ModelToVMDConverter")]
-[assembly: AssemblyCopyright("Copyright © mcmonkey studios 2015")]
+[assembly: AssemblyCopyright("Copyright © FreneticXYZ 2015-2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
