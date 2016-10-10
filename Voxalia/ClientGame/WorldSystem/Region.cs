@@ -577,7 +577,10 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (TheClient.CVars.r_fast.ValueB || !TheClient.CVars.r_lighting.ValueB)
             {
-                return new OpenTK.Vector4(TheClient.TheSun.InternalLights[0].color + TheClient.ThePlanet.InternalLights[0].color + TheClient.TheSunClouds.InternalLights[0].color, 1.0f);
+                return new OpenTK.Vector4(TheClient.TheSun.InternalLights[0].color
+                    + TheClient.ThePlanet.InternalLights[0].color
+                    + (TheClient.CVars.r_cloudshadows.ValueB ? TheClient.TheSunClouds.InternalLights[0].color : new OpenTK.Vector3(0, 0, 0))
+                    + ClientUtilities.Convert(GetAmbient()), 1.0f);
             }
             else
             {
@@ -843,7 +846,7 @@ namespace Voxalia.ClientGame.WorldSystem
 
         const float SkyLightMod = 0.75f;
 
-        public Location GetAmbient(Location pos)
+        public Location GetAmbient()
         {
             return TheClient.BaseAmbient;
         }
@@ -899,7 +902,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                 }
             }
-            Location amb = GetAmbient(pos);
+            Location amb = GetAmbient();
             Location sky = SkyMod(pos, norm, skyPrecalc);
             Location blk = GetBlockLight(pos, norm, potentials);
             return amb + sky + blk;
@@ -926,7 +929,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                 }
             }
-            Location amb = GetAmbient(pos);
+            Location amb = GetAmbient();
             Location sky = GetSkyLight(pos, norm);
             Location blk = GetBlockLight(pos, norm, potentials);
             return amb + sky + blk;
