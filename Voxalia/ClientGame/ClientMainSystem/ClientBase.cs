@@ -309,6 +309,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Loading general graphics settings...");
             CVars.r_vsync.OnChanged += onVsyncChanged;
             onVsyncChanged(CVars.r_vsync, null);
+            CVars.r_cloudshadows.OnChanged += onCloudShadowChanged;
             View3D.CheckError("Load - General Graphics");
             SysConsole.Output(OutputType.INIT, "Loading UI engine...");
             UIConsole.InitConsole();

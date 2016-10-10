@@ -38,10 +38,10 @@ namespace Voxalia.ClientGame.CommandSystem
             r_dof_strength,
             r_maxfps,
             r_lightmaxdistance, r_fallbacklighting,
-            r_shadowquality, r_shadowblur, r_shadowpace, r_shadows,
+            r_shadowquality, r_shadowblur, r_shadowpace, r_shadows, r_cloudshadows,
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth, r_toonify, r_transplighting, r_transpshadows,
             r_3d_enable, r_fast, r_chunksatonce, r_chunkoverrender, r_transpll, r_noblockshapes, r_treeshadows,
-            r_godrays, r_hdr, r_extrasuns, r_chunkmarch, r_clouds, r_motionblur, r_plants;
+            r_godrays, r_hdr, r_chunkmarch, r_clouds, r_motionblur, r_plants;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect, a_echovolume;
@@ -94,6 +94,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric, "What factor to use for shadow blurring. Smaller = blurrier.");
             r_shadowpace = Register("r_shadowpace", "1", CVarFlag.Numeric, "How rapidly to rerender shadows, in frames.");
             r_shadows = Register("r_shadows", "false", CVarFlag.Boolean, "Whether to render shadows at all.");
+            r_cloudshadows = Register("r_cloudshadows", "false", CVarFlag.Boolean, "Whether to display shadows from clouds.");
             r_good_graphics = Register("r_good_graphics", "true", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use 'good' graphics."); // TODO: Callback to auto-set
             r_skybox = Register("r_skybox", "default", CVarFlag.ServerControl | CVarFlag.Textual, "What skybox to use.");
             r_blocktexturelinear = Register("r_blocktexturelinear", "true", CVarFlag.Boolean | CVarFlag.Delayed, "Whether block textures are to use a linear blur or nearest-pixel mode.");
@@ -110,7 +111,6 @@ namespace Voxalia.ClientGame.CommandSystem
             r_treeshadows = Register("r_treeshadows", "true", CVarFlag.Boolean, "Whether trees cast shadows.");
             r_godrays = Register("r_godrays", "true", CVarFlag.Boolean, "Whether to render GodRays (rays of light from the sun."); // TODO: Validate?
             r_hdr = Register("r_hdr", "true", CVarFlag.Boolean, "Whether to render with high dynamic range adjustments enabled.");
-            r_extrasuns = Register("r_extrasuns", "true", CVarFlag.Boolean, "Whether to include additional solar light sources alongside the main sun light."); // TODO: Callback to auto-set
             r_chunkmarch = Register("r_chunkmarch", "false", CVarFlag.Boolean, "Whether to use 'chunk marching' method to render chunks (if false, uses a generic loop).");
             r_clouds = Register("r_clouds", "true", CVarFlag.Boolean, "Whether to render clouds."); // TODO: Inform the server of this to reduce bandwidth.
             r_motionblur = Register("r_motionblur", "false", CVarFlag.Boolean, "Whether to blur the screen to better represent motion.");
