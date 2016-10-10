@@ -45,6 +45,11 @@ namespace Voxalia.Shared.Collision
 
         Vector3 cForce = Vector3.Zero;
 
+        /// <summary>
+        /// Is this a flying disc, or a plane's wings?
+        /// </summary>
+        public bool IsAPlane = false;
+
         public override void Update(double dt)
         {
             if (!Entity.ActivityInformation.IsActive)
@@ -55,8 +60,19 @@ namespace Voxalia.Shared.Collision
             // TODO: Don't assume this!
             Vector3 up = Quaternion.Transform(Vector3.UnitZ, Entity.Orientation);
             double projectedZVel = Vector3.Dot(entity.LinearVelocity + entity.Gravity ?? entity.Space.ForceUpdater.Gravity, up);
-            double velLen = 1f - ((1f / Math.Max(entity.LinearVelocity.LengthSquared(), 1f)));
-            cForce = up * (projectedZVel * -velLen * dt * 0.75f); // TODO: Arbitrary constant!
+            /*if (IsAPlane)
+            {
+                // Note: Assuming Y is the axis of the forward vector of the plane.
+                // TODO: Don't assume this!
+                Vector3 forw = Quaternion.Transform(Vector3.UnitY, Entity.Orientation);
+                double fspeed = Vector3.Dot(entity.LinearVelocity, forw) * 0.1;
+                cForce = ((fspeed - projectedZVel) * dt * 0.75) * up;
+            }
+            else*/
+            {
+                double velLen = 1f - ((1f / Math.Max(entity.LinearVelocity.LengthSquared(), 1f)));
+                cForce = up * (projectedZVel * -velLen * dt * 0.75); // TODO: Arbitrary constant!
+            }
         }
     }
 }

@@ -18,6 +18,7 @@ using Voxalia.ClientGame.OtherSystems;
 using BEPUutilities;
 using BEPUphysics.Constraints;
 using BEPUphysics.Constraints.SingleEntity;
+using Voxalia.ClientGame.JointSystem;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -49,6 +50,13 @@ namespace Voxalia.ClientGame.EntitySystem
             PlanePilot = pilot;
             Plane = new PlaneMotionConstraint(this);
             TheRegion.PhysicsWorld.Add(Plane);
+            foreach (InternalBaseJoint joint in Joints) // TODO: Just track this detail on the joint itself ffs
+            {
+                if (joint is JointFlyingDisc)
+                {
+                    ((FlyingDiscConstraint)((JointFlyingDisc)joint).CurrentJoint).IsAPlane = true;
+                }
+            }
         }
 
         public float PlaneFastStrength
@@ -98,25 +106,23 @@ namespace Voxalia.ClientGame.EntitySystem
                     BEPUutilities.Vector3 force = forward * (Plane.PlaneRegularStrength +  Plane.PlaneFastStrength) * Delta;
                     entity.ApplyLinearImpulse(ref force);
                 }
-                entity.ApplyImpulse(side * 5 + entity.Position, up * -Plane.PlanePilot.XMove * entity.Mass * 1.5 * Delta);
-                entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.PlanePilot.ItemRight ? 1 : 0) + (Plane.PlanePilot.ItemLeft ? -1 : 0)) * entity.Mass * 1.5 * Delta);
-                if (Plane.PlanePilot.YMove != 0.0)
-                {
-                    double dotforw = BEPUutilities.Vector3.Dot(entity.LinearVelocity, forward);
-                    entity.ApplyImpulse(forward * 5 + entity.Position, up * Plane.PlanePilot.YMove * entity.Mass * 0.05 * Delta * dotforw);
-                    // Rotate the entity pre-emptively, and re-apply the movement velocity in this new direction!
-                    /*double vellen = entity.LinearVelocity.Length();
-                    BEPUutilities.Vector3 normvel = entity.LinearVelocity / vellen;
-                    BEPUutilities.Vector3 norm_vel_transf = BEPUutilities.Quaternion.Transform(normvel, BEPUutilities.Quaternion.Inverse(entity.Orientation)); // Probably just 1,0,0 on whichever axis... can be simplified!
-                    BEPUutilities.Vector3 inc = entity.AngularVelocity * Delta * 0.5;
-                    BEPUutilities.Quaternion quat = new BEPUutilities.Quaternion(inc.X, inc.Y, inc.Z, 0);
-                    quat = quat * entity.Orientation;
-                    BEPUutilities.Quaternion orient = entity.Orientation;
-                    BEPUutilities.Quaternion.Add(ref orient, ref quat, out orient);
-                    orient.Normalize();
-                    entity.Orientation = orient;
-                    entity.LinearVelocity = BEPUutilities.Quaternion.Transform(norm_vel_transf, orient) * vellen;*/
-                }
+                double dotforw = BEPUutilities.Vector3.Dot(entity.LinearVelocity, forward);
+                entity.ApplyImpulse(side * 5 + entity.Position, up * -Plane.PlanePilot.XMove * entity.Mass * dotforw * 0.5 * Delta);
+                entity.ApplyImpulse(forward * 5 + entity.Position, side * ((Plane.PlanePilot.ItemRight ? 1 : 0) + (Plane.PlanePilot.ItemLeft ? -1 : 0)) * entity.Mass * dotforw * 0.5 * Delta);
+                entity.ApplyImpulse(forward * 5 + entity.Position, up * Plane.PlanePilot.YMove * entity.Mass * 0.5 * Delta * dotforw);
+                // Rotate the entity pre-emptively, and re-apply the movement velocity in this new direction!
+                double vellen = entity.LinearVelocity.Length();
+                BEPUutilities.Vector3 normvel = entity.LinearVelocity / vellen;
+                BEPUutilities.Vector3 norm_vel_transf = BEPUutilities.Quaternion.Transform(normvel, BEPUutilities.Quaternion.Inverse(entity.Orientation)); // Probably just 1,0,0 on whichever axis... can be simplified!
+                BEPUutilities.Vector3 inc = entity.AngularVelocity * Delta * 0.5;
+                BEPUutilities.Quaternion quat = new BEPUutilities.Quaternion(inc.X, inc.Y, inc.Z, 0);
+                quat = quat * entity.Orientation;
+                BEPUutilities.Quaternion orient = entity.Orientation;
+                BEPUutilities.Quaternion.Add(ref orient, ref quat, out orient);
+                orient.Normalize();
+                entity.Orientation = orient;
+                entity.LinearVelocity = BEPUutilities.Quaternion.Transform(norm_vel_transf, orient) * vellen;
+                entity.AngularVelocity *= 0.1;
                 // Apply air drag
                 Entity.ModifyLinearDamping(Plane.PlanePilot.SprintOrWalk < 0.0 ? 0.6 : 0.1); // TODO: arbitrary constant
                 Entity.ModifyAngularDamping(0.5); // TODO: arbitrary constant

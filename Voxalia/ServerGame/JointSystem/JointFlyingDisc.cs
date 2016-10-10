@@ -24,9 +24,11 @@ namespace Voxalia.ServerGame.JointSystem
             Two = e;
         }
 
+        public bool IsAPlane = false;
+
         public override SolverUpdateable GetBaseJoint()
         {
-            return new FlyingDiscConstraint(Ent1.Body);
+            return new FlyingDiscConstraint(Ent1.Body) { IsAPlane = IsAPlane };
         }
     }
 }
