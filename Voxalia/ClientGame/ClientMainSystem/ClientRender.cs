@@ -454,7 +454,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             skybox[4].Render(false);
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/yp").Bind();
             skybox[5].Render(false);
-            Rendering.SetColor(new Vector4(1, 1, 1, (float)Math.Max(Math.Min((SunAngle.Pitch - 70) / (-90), 1), 0)));
+            Rendering.SetColor(new Vector4(1, 1, 1, (float)Math.Max(Math.Min((SunAngle.Pitch - 70.0) / (-90.0), 1.0), 0.06)));
             scale = Matrix4.CreateScale(dist, dist, dist);
             GL.UniformMatrix4(2, false, ref scale);
             // TODO: Save textures!
