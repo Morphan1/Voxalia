@@ -149,7 +149,7 @@ void main()
 		|| fs.z < 0.0 || fs.z > 1.0)
 	{
 		fcolor += vec4(0.0, 0.0, 0.0, color.w);
-		return;
+		continue;
 	}
 #if MCM_GOOD_GRAPHICS
 	vec2 dz_duv;
@@ -197,7 +197,7 @@ void main()
 		|| fs.z < 0.0 || fs.z > 1.0)
 	{
 		fcolor += vec4(0.0, 0.0, 0.0, color.w);
-		return;
+		continue;
 	}
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
@@ -208,7 +208,7 @@ void main()
 	}
 #endif // lit
 #if MCM_GOOD_GRAPHICS
-    fcolor = vec4(desaturate(fcolor.xyz), fcolor.w); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
+    fcolor = vec4(desaturate(fcolor.xyz), 1.0); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
 #endif
 	fcolor = vec4(fcolor.xyz, tcolor.w * f.color.w);
 #if MCM_LL
