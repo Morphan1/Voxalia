@@ -5,6 +5,7 @@
 // If these are not available, see https://opensource.org/licenses/MIT
 //
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 using OpenTK;
@@ -13,6 +14,7 @@ using System.Drawing;
 using Voxalia.Shared;
 using Voxalia.ClientGame.ClientMainSystem;
 using FreneticScript;
+using System.Runtime.CompilerServices;
 
 namespace Voxalia.ClientGame.GraphicsSystems
 {
@@ -193,6 +195,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
             int ucolor = DefaultColor, int scolor = DefaultColor, int ocolor = DefaultColor, int hcolor = DefaultColor, int ecolor = DefaultColor,
             bool super = false, bool sub = false, bool flip = false, bool pseudo = false, bool jello = false, bool obfu = false, bool random = false, bool shadow = false, GLFont font = null)
         {
+            r_depth++;
+            if (r_depth >= 100 && Text != "{{Recursion error}}")
+            {
+                r_depth--;
+                DrawColoredText("{{Recursion error}}", Position);
+                return;
+            }
             Text = Text.Replace("^B", bcolor);
             string[] lines = Text.Replace('\r', ' ').Replace(' ', (char)0x00A0).Replace("^q", "\"").SplitFast('\n');
             int trans = (int)(255 * transmod);
@@ -512,6 +521,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             VBO.Build();
             VBO.Render();
             Engine.GLFonts.Shaders.ColorMultShader.Bind();
+            r_depth--;
         }
 
         public static string EscapeFancyText(string input)
@@ -633,16 +643,29 @@ namespace Voxalia.ClientGame.GraphicsSystems
             temp.Add(input.Substring(start, input.Length - start));
             return temp;
         }
-        
+
+        [ThreadStatic]
+        static int m_depth = 0;
+
+        [ThreadStatic]
+        static int r_depth = 0;
+
         public float MeasureFancyText(string line, out List<KeyValuePair<string, Rectangle2F>> links, string bcolor = "^r^7", bool bold = false, bool italic = false, bool sub = false, GLFont font = null)
         {
+            List<KeyValuePair<string, Rectangle2F>> tlinks = new List<KeyValuePair<string, Rectangle2F>>();
+            m_depth++;
+            if (m_depth >= 100)
+            {
+                m_depth--;
+                links = tlinks;
+                return font.MeasureString("{{Recursion error}}");
+            }
             float MeasWidth = 0;
             if (font == null)
             {
                 font = font_default;
             }
             int start = 0;
-            List<KeyValuePair<string, Rectangle2F>> tlinks = new List<KeyValuePair<string, Rectangle2F>>();
             line = line.Replace("^q", "\"").Replace("^B", bcolor);
             for (int x = 0; x < line.Length; x++)
             {
@@ -762,6 +785,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 }
             }
             links = tlinks;
+            m_depth--;
             return MeasWidth;
         }
 
