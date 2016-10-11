@@ -127,7 +127,7 @@ vec4 getColor(in vec2 pos, in float exposure, in float mblen) // Grab the color 
 	{
 		// TODO: Better variation to the blur effect?
 		vec2 psx = normalize(pos - vec2(0.5 + cos(time + renderhint.y), 0.5 + sin(time + renderhint.y))) * 0.02;
-		return getColorInt(pos + psx, exposure);
+		return getColorInt(pos + psx, exposure) * 0.5 + getColorInt(pos, exposure) * 0.5;
 	}
 #if MCM_MOTBLUR
 	vec4 bcol = vec4(0.0);
@@ -197,7 +197,8 @@ void main() // The central entry point of the shader. Handles everything!
 		vec4 SSR = raytrace(reflectionVector.xyz / reflectionVector.w, currDepth);
 		if (SSR.w > 0.0)
 		{
-			light_color = light_color * (1.0 - renderhint2.y) + SSR * renderhint2.y; // If we found a reflection, apply it at the strength specified.
+			float rhy = min(renderhint2.y, 1.0);
+			light_color = light_color * (1.0 - rhy) + SSR * rhy; // If we found a reflection, apply it at the strength specified.
 		}
 	}
 	light_color = vec4(desaturate(light_color.xyz), light_color.w); // Desaturate whatever color we've ended up with.
