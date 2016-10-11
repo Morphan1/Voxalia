@@ -851,6 +851,24 @@ namespace Voxalia.ClientGame.WorldSystem
             return TheClient.BaseAmbient;
         }
 
+        public OpenTK.Vector4 Regularize(OpenTK.Vector4 col)
+        {
+            if (col.X < 1.0 && col.Y < 1.0 && col.Z < 1.0)
+            {
+                return col;
+            }
+            return new OpenTK.Vector4(col.Xyz / Math.Max(col.X, Math.Max(col.Y, col.Z)), col.W);
+        }
+
+        public OpenTK.Vector4 RegularizeBig(OpenTK.Vector4 col, float cap)
+        {
+            if (col.X < cap && col.Y < cap && col.Z < cap)
+            {
+                return col;
+            }
+            return new OpenTK.Vector4((col.Xyz / Math.Max(col.X, Math.Max(col.Y, col.Z))) * cap, col.W);
+        }
+
         public Location Regularize(Location col)
         {
             if (col.X < 1.0 && col.Y < 1.0 && col.Z < 1.0)
@@ -858,6 +876,15 @@ namespace Voxalia.ClientGame.WorldSystem
                 return col;
             }
             return col / Math.Max(col.X, Math.Max(col.Y, col.Z));
+        }
+
+        public Location RegularizeBig(Location col, float cap)
+        {
+            if (col.X < cap && col.Y < cap && col.Z < cap)
+            {
+                return col;
+            }
+            return (col / Math.Max(col.X, Math.Max(col.Y, col.Z))) * cap;
         }
 
         public Location GetBlockLight(Location pos, Location norm, List<Chunk> potentials)
@@ -878,7 +905,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         // TODO: Apply normal vector stuff?
                         if (distsq < range * range)
                         {
-                            lit += pot.Value.GetLightEmit() * (range - Math.Sqrt(distsq));
+                            lit += pot.Value.GetLightEmit() * (range - Math.Sqrt(distsq)); // TODO: maybe apply normals?
                         }
                     }
                 }
@@ -891,13 +918,14 @@ namespace Voxalia.ClientGame.WorldSystem
             if (potentials == null)
             {
                 potentials = new List<Chunk>();
+                Vector3i pos_c = ChunkLocFor(pos);
                 for (int x = -1; x <= 1; x++)
                 {
                     for (int y = -1; y <= 1; y++)
                     {
                         for (int z = -1; z <= 1; z++)
                         {
-                            potentials.Add(GetChunk(new Vector3i(x, y, z)));
+                            potentials.Add(GetChunk(pos_c + new Vector3i(x, y, z)));
                         }
                     }
                 }
@@ -910,7 +938,12 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public OpenTK.Vector4 GetLightAmountAdjusted(Location pos, Location norm)
         {
-            return new OpenTK.Vector4(ClientUtilities.Convert(GetLightAmount(pos, norm, null)), 1.0f) * GetSunAdjust();
+            OpenTK.Vector4 vec = new OpenTK.Vector4(ClientUtilities.Convert(GetLightAmount(pos, norm, null)), 1.0f) * GetSunAdjust();
+            if (TheClient.CVars.r_fast.ValueB)
+            {
+                return Regularize(vec);
+            }
+            return RegularizeBig(vec, 5f);
         }
 
         public Location GetLightAmount(Location pos, Location norm, List<Chunk> potentials)
@@ -918,13 +951,14 @@ namespace Voxalia.ClientGame.WorldSystem
             if (potentials == null)
             {
                 potentials = new List<Chunk>();
+                Vector3i pos_c = ChunkLocFor(pos);
                 for (int x = -1; x <= 1; x++)
                 {
                     for (int y = -1; y <= 1; y++)
                     {
                         for (int z = -1; z <= 1; z++)
                         {
-                            potentials.Add(GetChunk(new Vector3i(x, y, z)));
+                            potentials.Add(GetChunk(pos_c + new Vector3i(x, y, z)));
                         }
                     }
                 }
@@ -932,6 +966,14 @@ namespace Voxalia.ClientGame.WorldSystem
             Location amb = GetAmbient();
             Location sky = GetSkyLight(pos, norm);
             Location blk = GetBlockLight(pos, norm, potentials);
+            if (TheClient.CVars.r_fast.ValueB)
+            {
+                blk = Regularize(blk);
+            }
+            else
+            {
+                blk = RegularizeBig(blk, 5);
+            }
             return amb + sky + blk;
         }
 

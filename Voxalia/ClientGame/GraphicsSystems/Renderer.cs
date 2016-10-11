@@ -335,6 +335,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             // TODO: Quaternion magic?
             Location relang = Utilities.VectorToAngles(pos - facing);
+            if (relang.IsInfinite() || relang.IsNaN())
+            {
+                throw new Exception("Unable to handle biilboard: relang=" + relang);
+            }
             Matrix4d mat = 
                 Matrix4d.Scale(ClientUtilities.ConvertD(scale))
                 * Matrix4d.CreateTranslation(-0.5f, -0.5f, 0f)
