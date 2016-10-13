@@ -153,6 +153,8 @@ namespace Voxalia.Shared
     {
         public const double SHRINK_CONSTANT = 0.9;
 
+        public double LightDamage = 1.0;
+
         public abstract List<Vector3> GetVertices(Vector3 blockPos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM);
 
         public abstract List<Vector3> GetNormals(Vector3 blockPos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM);

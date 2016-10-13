@@ -832,6 +832,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                 light -= 0.3f;
                                 if (light <= 0)
                                 {
+                                    light = 0;
                                     break;
                                 }
                             }

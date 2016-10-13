@@ -107,15 +107,15 @@ namespace Voxalia.ClientGame.WorldSystem
                         if (light > 0)
                         {
                             BlockInternal bi = GetBlockAt(x, y, z);
-                            if (bi.IsOpaque())
+                            double transc = Colors.AlphaForByte(bi.BlockPaint);
+                            if (bi.Material.IsOpaque())
                             {
-                                light = 0;
+                                light = (byte)(light * (1.0 - (BlockShapeRegistry.BSD[bi.BlockData].LightDamage * transc)));
                             }
                             else
                             {
-                                light = (byte)(light * (1.0 - bi.Material.GetLightDamage()));
+                                light = (byte)(light * (1.0 - (bi.Material.GetLightDamage() * transc)));
                             }
-                            // TODO: Shape damage as well!
                         }
                         BlocksInternal[BlockIndex(x, y, z)].BlockLocalData = light;
                     }

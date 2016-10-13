@@ -84,6 +84,23 @@ namespace Voxalia.Shared
 
         public static string[] KnownColorNamesArray = new string[64];
 
+        public static double AlphaForByte(byte input)
+        {
+            if (input >= TRANS1 && input < TRANS_BASE || input == TRANS_BASE + 1)
+            {
+                return 0.5;
+            }
+            else if (input == TRANS_BASE)
+            {
+                return 0.75;
+            }
+            else if (input == TRANS2)
+            {
+                return 0.25;
+            }
+            return 1.0;
+        }
+
         public static Color ForByte(byte input)
         {
             int baseinp = input;
@@ -115,6 +132,7 @@ namespace Voxalia.Shared
 
         public static int TRANS1;
         public static int TRANS2;
+        public static int TRANS_BASE;
         public static int M_BLUR;
 
         static int Register(string name, Color col)
@@ -168,7 +186,7 @@ namespace Voxalia.Shared
             Register("TRANSPARENT_MAGENTA", TRANSPARENT_MAGENTA);
             Register("TRANSPARENT_YELLOW", TRANSPARENT_YELLOW);
             Register("TRANSPARENT_CYAN", TRANSPARENT_CYAN);
-            Register("SLIGHTLY_TRANSPARENT", SLIGHTLY_TRANSPARENT);
+            TRANS_BASE = Register("SLIGHTLY_TRANSPARENT", SLIGHTLY_TRANSPARENT);
             Register("TRANSPARENT", TRANSPARENT);
             TRANS2 = Register("VERY_TRANSPARENT", VERY_TRANSPARENT);
             Register("LIGHT_STROBE_GREEN", LIGHT_STROBE_GREEN);
