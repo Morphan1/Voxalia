@@ -14,6 +14,7 @@ using BEPUphysics.BroadPhaseEntries;
 using Voxalia.Shared.Collision;
 using Voxalia.ClientGame.GraphicsSystems;
 using OpenTK.Graphics.OpenGL4;
+using System.Runtime.CompilerServices;
 
 namespace Voxalia.ClientGame.WorldSystem
 {
@@ -39,12 +40,14 @@ namespace Voxalia.ClientGame.WorldSystem
         }
 
         public BlockInternal[] BlocksInternal;
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int BlockIndex(int x, int y, int z)
         {
-            return z * CSize * CSize + y * CSize + x;
+            return z * (CSize * CSize) + y * CSize + x;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetBlockAt(int x, int y, int z, BlockInternal mat)
         {
             if (SucceededBy != null)
@@ -54,11 +57,13 @@ namespace Voxalia.ClientGame.WorldSystem
             BlocksInternal[BlockIndex(x, y, z)] = mat;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BlockInternal GetBlockAt(int x, int y, int z)
         {
             return BlocksInternal[BlockIndex(x, y, z)];
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BlockInternal GetBlockAtLOD(int x, int y, int z)
         {
             return BlocksInternal[BlockIndex(x / PosMultiplier, y / PosMultiplier, z / PosMultiplier)];

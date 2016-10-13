@@ -16,6 +16,7 @@ using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.EntitySystem;
 using System.Threading;
 using LiteDB;
+using System.Runtime.CompilerServices;
 
 namespace Voxalia.ServerGame.WorldSystem
 {
@@ -100,33 +101,30 @@ namespace Voxalia.ServerGame.WorldSystem
             }
             return mat;
         }
-        
+
         /// <summary>
         /// Asyncable (math only).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int BlockIndex(int x, int y, int z)
         {
-            return z * CHUNK_SIZE * CHUNK_SIZE + y * CHUNK_SIZE + x;
+            return z * (CHUNK_SIZE * CHUNK_SIZE) + y * CHUNK_SIZE + x;
         }
 
-        /// <summary>
-        /// Asyncable (Edit session).
-        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetBlockAt(int x, int y, int z, BlockInternal mat)
         {
             BlocksInternal[BlockIndex(x, y, z)] = mat;
         }
 
-        public double LastEdited = -1;
-
-        /// <summary>
-        /// Asyncable (Edit session).
-        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public BlockInternal GetBlockAt(int x, int y, int z)
         {
             return BlocksInternal[BlockIndex(x, y, z)];
         }
-        
+
+        public double LastEdited = -1;
+
         public FullChunkObject FCO = null;
 
         public void ChunkDetect()
