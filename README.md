@@ -11,7 +11,8 @@ Also used libraries:
 - Opus (network-ready voice compression)
 - csogg/csvorbis (.ogg audio file handling)
 - LiteDB (save file compression)
-- YAMLDotNet (used for FreneticScript data handling and some files in Voxalia's save structure)
+- FreneticDataSyntax (used for FreneticScript data handling and some files in Voxalia's save structure)
+- lz4net (general data compression)
 
 ## Windows Install Notes
 
