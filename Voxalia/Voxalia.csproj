@@ -87,6 +87,9 @@
     <Reference Include="LiteDB">
       <HintPath>LiteDB.dll</HintPath>
     </Reference>
+    <Reference Include="LZ4">
+      <HintPath>.\LZ4.dll</HintPath>
+    </Reference>
     <Reference Include="Open.Nat">
       <HintPath>Open.Nat.dll</HintPath>
     </Reference>

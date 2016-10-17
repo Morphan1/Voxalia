@@ -63,7 +63,7 @@ namespace Voxalia.ClientGame.NetworkSystem.PacketsIn
             byte[] reach = dr.ReadBytes((int)ChunkReachability.COUNT);
             int csize = Chunk.CHUNK_SIZE / posMult;
             byte[] data_unzipped = dr.ReadBytes(data.Length - 16);
-            byte[] data_orig = FileHandler.UnGZip(data_unzipped);
+            byte[] data_orig = FileHandler.Uncompress(data_unzipped);
             if (posMult == 1)
             {
                 if (data_orig.Length != Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE * 4)

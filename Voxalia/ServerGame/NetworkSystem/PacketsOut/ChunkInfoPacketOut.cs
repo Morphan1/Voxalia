@@ -64,7 +64,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 Utilities.IntToBytes((int)chunk.WorldPosition.Z).CopyTo(Data, 8);
                 return;
             }
-            byte[] gdata = FileHandler.GZip(data_orig);
+            byte[] gdata = FileHandler.Compress(data_orig);
             DataStream ds = new DataStream(gdata.Length + 16);
             DataWriter dw = new DataWriter(ds);
             dw.WriteInt((int)chunk.WorldPosition.X);

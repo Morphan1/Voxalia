@@ -12,6 +12,7 @@ using System.Linq;
 using System.IO;
 using System.IO.Compression;
 using FreneticScript;
+using LZ4;
 
 namespace Voxalia.Shared.Files
 {
@@ -371,6 +372,40 @@ namespace Voxalia.Shared.Files
         {
             string textoutput = ReadText(filename);
             WriteText(filename, textoutput + text);
+        }
+
+        /// <summary>
+        /// Compresses a byte array.
+        /// </summary>
+        /// <param name="input">Uncompressed data.</param>
+        /// <returns>Compressed data.</returns>
+        public static byte[] Compress(byte[] input)
+        {
+            MemoryStream memstream = new MemoryStream();
+            LZ4Stream lzstream = new LZ4Stream(memstream, LZ4StreamMode.Compress);
+            lzstream.Write(input, 0, input.Length);
+            lzstream.Close();
+            byte[] finaldata = memstream.ToArray();
+            memstream.Close();
+            return finaldata;
+        }
+
+        /// <summary>
+        /// Decompress a byte array.
+        /// </summary>
+        /// <param name="input">Compressed data.</param>
+        /// <returns>Uncompressed data.</returns>
+        public static byte[] Uncompress(byte[] input)
+        {
+            using (MemoryStream output = new MemoryStream())
+            {
+                MemoryStream memstream = new MemoryStream(input);
+                LZ4Stream LZStream = new LZ4Stream(memstream, LZ4StreamMode.Decompress);
+                LZStream.CopyTo(output);
+                LZStream.Close();
+                memstream.Close();
+                return output.ToArray();
+            }
         }
 
         /// <summary>

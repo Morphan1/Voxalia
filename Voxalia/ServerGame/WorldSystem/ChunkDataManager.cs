@@ -174,7 +174,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 return null;
             }
-            return FileHandler.UnGZip(doc["blocks"].AsBinary);
+            return FileHandler.Uncompress(doc["blocks"].AsBinary);
         }
 
         public void WriteLODChunkDetails(int x, int y, int z, byte[] LOD)
@@ -182,7 +182,7 @@ namespace Voxalia.ServerGame.WorldSystem
             BsonValue id = GetIDFor(x, y, z);
             BsonDocument newdoc = new BsonDocument();
             newdoc["_id"] = id;
-            newdoc["blocks"] = new BsonValue(FileHandler.GZip(LOD));
+            newdoc["blocks"] = new BsonValue(FileHandler.Compress(LOD));
             lock (LODLock)
             {
                 DBLODs.Delete(id);
@@ -241,7 +241,7 @@ namespace Voxalia.ServerGame.WorldSystem
             det.Z = z;
             det.Version = doc["version"].AsInt32;
             det.Flags = (ChunkFlags)doc["flags"].AsInt32;
-            det.Blocks = FileHandler.UnGZip(doc["blocks"].AsBinary);
+            det.Blocks = FileHandler.Uncompress(doc["blocks"].AsBinary);
             det.Reachables = doc["reach"].AsBinary;
             return det;
         }
@@ -253,7 +253,7 @@ namespace Voxalia.ServerGame.WorldSystem
             newdoc["_id"] = id;
             newdoc["version"] = new BsonValue(details.Version);
             newdoc["flags"] = new BsonValue((int)details.Flags);
-            newdoc["blocks"] = new BsonValue(FileHandler.GZip(details.Blocks));
+            newdoc["blocks"] = new BsonValue(FileHandler.Compress(details.Blocks));
             newdoc["reach"] = new BsonValue(details.Reachables);
             lock (FSLock)
             {

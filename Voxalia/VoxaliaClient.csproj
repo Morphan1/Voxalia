@@ -83,6 +83,10 @@
     <Reference Include="FreneticScript">
       <HintPath>FreneticScript.dll</HintPath>
     </Reference>
+    <Reference Include="LZ4, Version=1.0.10.93, Culture=neutral, PublicKeyToken=62e1b5ec1eec9bdd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\LZ4.dll</HintPath>
+    </Reference>
     <Reference Include="Open.Nat">
       <HintPath>Open.Nat.dll</HintPath>
     </Reference>
