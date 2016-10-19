@@ -75,7 +75,7 @@ namespace Voxalia.ServerGame.ItemSystem
                     Attributes.Add(cattrib, new TextTag(dr.ReadFullString()));
                 }
             }
-            Load(dr);
+            Load(dr, (b) => new ItemStack(b, tserver));
         }
         
         public double GetAttributeF(string attr, double def)
@@ -128,7 +128,12 @@ namespace Voxalia.ServerGame.ItemSystem
                     dw.WriteFullString(entry.Value.ToString());
                 }
             }
-            dw.WriteBytes(ToBytes());
+            WriteBasicBytes(dw);
+            dw.WriteInt(Components.Count);
+            foreach (ItemStack itb in Components)
+            {
+                dw.WriteFullBytes(itb.ServerBytes());
+            }
             dw.Flush();
             return data.ToArray();
         }
@@ -214,12 +219,24 @@ namespace Voxalia.ServerGame.ItemSystem
             return sb.ToString();
         }
 
+        public string ComponentEscapedString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{");
+            foreach (ItemStack itb in Components)
+            {
+                sb.Append(TagParser.Escape(itb.ToEscapedString()) + ";");
+            }
+            sb.Append("}");
+            return sb.ToString();
+        }
+
         public string ToEscapedString()
         {
             return TagParser.Escape(Name) + "[secondary=" + (SecondaryName == null ? "" : EscapeTagBase.Escape(SecondaryName)) + ";display=" + EscapeTagBase.Escape(DisplayName) + ";count=" + Count
                 + ";weight=" + Weight + ";volume=" + Volume + ";temperature=" + Temperature
                 + ";description=" + EscapeTagBase.Escape(Description) + ";texture=" + EscapeTagBase.Escape(GetTextureName()) + ";model=" + EscapeTagBase.Escape(GetModelName()) + ";bound=" + (IsBound ? "true": "false")
-                + ";drawcolor=" + new ColorTag(DrawColor).ToString() + ";datum=" + Datum + ";shared=" + SharedStr() + ";local=" + EscapedLocalStr() + "]";
+                + ";drawcolor=" + new ColorTag(DrawColor).ToString() + ";datum=" + Datum + ";shared=" + SharedStr() + ";local=" + EscapedLocalStr() + ";components=" + ComponentEscapedString() + "]";
         }
 
         public override string ToString()
@@ -271,6 +288,7 @@ namespace Voxalia.ServerGame.ItemSystem
             string display = "";
             string descrip = "";
             string model = "";
+            string components = "";
             bool bound = false;
             string shared = "";
             string local = "";
@@ -327,8 +345,12 @@ namespace Voxalia.ServerGame.ItemSystem
                     case "local":
                         local = tval;
                         break;
+                    case "components":
+                        components = tval;
+                        break;
                     default:
                         break; // Ignore errors as much as possible here.
+                        // TODO: Maybe actually just error?
                 }
             }
             ItemStack item = new ItemStack(name, secname, tserver, count, tex, display, descrip, color, model, bound, datum);
@@ -352,6 +374,15 @@ namespace Voxalia.ServerGame.ItemSystem
                 string content = dat.Substring(5);
                 TemplateObject togive = TOFor(tserver, type, content);
                 item.Attributes.Add(UnescapeTagBase.Unescape(pair.Key), togive);
+            }
+            string[] npairs = components.Substring(1, local.Length - 2).SplitFast(';', 2);
+            foreach (string pair in npairs)
+            {
+                string dat = UnescapeTagBase.Unescape(pair);
+                if (dat.Length > 0)
+                {
+                    item.Components.Add(FromString(tserver, dat));
+                }
             }
             return item;
         }
