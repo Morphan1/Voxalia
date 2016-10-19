@@ -137,6 +137,8 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public EntityCollidable ShadowCastShape;
 
+        public double ShadowRadiusSquaredXY;
+
         public EntityCollidable ShadowMainDupe;
 
         /// <summary>

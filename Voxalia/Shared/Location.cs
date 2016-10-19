@@ -207,6 +207,17 @@ namespace Voxalia.Shared
         }
 
         /// <summary>
+        /// Returns the flat (X/Y) linear distance of the vector location to another vector location, squared for efficiency.
+        /// </summary>
+        /// <returns>The squared distance.</returns>
+        public double DistanceSquared_Flat(Location two)
+        {
+            double x1 = X - two.X;
+            double y1 = Y - two.Y;
+            return x1 * x1 + y1 * y1;
+        }
+
+        /// <summary>
         /// Returns the full linear distance of the vector location to another vector location, squared for efficiency.
         /// </summary>
         /// <returns>The squared distance.</returns>

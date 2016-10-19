@@ -122,7 +122,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
             }
         }
-
+        
         /// <summary>
         /// Internal region call only.
         /// </summary>

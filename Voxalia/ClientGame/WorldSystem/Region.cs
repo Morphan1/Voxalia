@@ -820,8 +820,9 @@ namespace Voxalia.ClientGame.WorldSystem
                         {
                             continue;
                         }
-                        if (pe.GenBlockShadows)
+                        if (pe.GenBlockShadows && pe.GetPosition().DistanceSquared_Flat(pos) < pe.ShadowRadiusSquaredXY)
                         {
+                            light -= 0.2f;
                             if (pe.ShadowMainDupe.BoundingBox.Intersects(bb))
                             {
                                 light = 0;
@@ -829,7 +830,7 @@ namespace Voxalia.ClientGame.WorldSystem
                             }
                             if (pe.ShadowCastShape.BoundingBox.Intersects(bb))
                             {
-                                light -= 0.3f;
+                                light -= 0.15f;
                                 if (light <= 0)
                                 {
                                     light = 0;
