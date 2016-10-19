@@ -55,6 +55,16 @@ namespace Voxalia.Shared
         /// </summary>
         public List<ItemStackBase> Components = new List<ItemStackBase>();
 
+        /// <summary>
+        /// Whether this item should render when it is a component.
+        /// </summary>
+        public bool RenderAsComponent = true;
+
+        /// <summary>
+        /// Where, relative to an item, this component should render.
+        /// </summary>
+        public Location ComponentRenderOffset = Location.Zero;
+
         public void AddComponent(ItemStackBase item)
         {
             if (this == item || HasComponentDeep(item))
@@ -143,6 +153,10 @@ namespace Voxalia.Shared
             dw.WriteFullString(Description);
             dw.WriteFullString(GetTextureName());
             dw.WriteFullString(GetModelName());
+            dw.WriteByte((byte)(RenderAsComponent ? 1 : 0));
+            dw.WriteFloat((float)ComponentRenderOffset.X);
+            dw.WriteFloat((float)ComponentRenderOffset.Y);
+            dw.WriteFloat((float)ComponentRenderOffset.Z);
             dw.WriteInt(SharedAttributes.Count);
             foreach (KeyValuePair<string, TemplateObject> entry in SharedAttributes)
             {
@@ -224,6 +238,10 @@ namespace Voxalia.Shared
             string tex = dr.ReadFullString();
             SetModelName(dr.ReadFullString());
             SetTextureName(tex);
+            RenderAsComponent = dr.ReadByte() == 1;
+            ComponentRenderOffset.X = dr.ReadFloat();
+            ComponentRenderOffset.Y = dr.ReadFloat();
+            ComponentRenderOffset.Z = dr.ReadFloat();
             int attribs = dr.ReadInt();
             for (int i = 0; i < attribs; i++)
             {
@@ -292,7 +310,7 @@ namespace Voxalia.Shared
 
         public override string ToString()
         {
-            return Name + "[secondary=" + (SecondaryName == null ? "{NULL}" : SecondaryName) + ";display=" + DisplayName + ";count=" + Count
+            return Name + "[secondary=" + (SecondaryName == null ? "{NULL}" : SecondaryName) + ";display=" + DisplayName + ";count=" + Count + ";renderascomponent=" + RenderAsComponent + ";componentrenderoffset=" + ComponentRenderOffset.ToSimpleString()
                 + ";description=" + Description + ";texture=" + GetTextureName() + ";model=" + GetModelName() + ";weight=" + Weight + ";volume=" + Volume + ";temperature=" + Temperature
                 + ";drawcolor=" + DrawColor.R / 255f + "," + DrawColor.G / 255f + "," + DrawColor.B / 255f + "," + DrawColor.A / 255f + ";datum=" + Datum + ";shared=" + SharedStr() + ";components=" + ComponentString() + "]";
             // TODO: Shared color tag?

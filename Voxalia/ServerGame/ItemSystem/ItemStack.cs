@@ -234,7 +234,7 @@ namespace Voxalia.ServerGame.ItemSystem
         public string ToEscapedString()
         {
             return TagParser.Escape(Name) + "[secondary=" + (SecondaryName == null ? "" : EscapeTagBase.Escape(SecondaryName)) + ";display=" + EscapeTagBase.Escape(DisplayName) + ";count=" + Count
-                + ";weight=" + Weight + ";volume=" + Volume + ";temperature=" + Temperature
+                + ";weight=" + Weight + ";volume=" + Volume + ";temperature=" + Temperature + ";renderascomponent=" + (RenderAsComponent ? "true": "false") + ";componentrenderoffset=" + ComponentRenderOffset.ToSimpleString()
                 + ";description=" + EscapeTagBase.Escape(Description) + ";texture=" + EscapeTagBase.Escape(GetTextureName()) + ";model=" + EscapeTagBase.Escape(GetModelName()) + ";bound=" + (IsBound ? "true": "false")
                 + ";drawcolor=" + new ColorTag(DrawColor).ToString() + ";datum=" + Datum + ";shared=" + SharedStr() + ";local=" + EscapedLocalStr() + ";components=" + ComponentEscapedString() + "]";
         }
@@ -297,6 +297,8 @@ namespace Voxalia.ServerGame.ItemSystem
             int datum = 0;
             double temperature = 0;
             System.Drawing.Color color = System.Drawing.Color.White;
+            bool renderComp;
+            Location renderCompOffs;
             foreach (KeyValuePair<string, string> pair in pairs)
             {
                 string tkey = UnescapeTagBase.Unescape(pair.Key);
@@ -347,6 +349,12 @@ namespace Voxalia.ServerGame.ItemSystem
                         break;
                     case "components":
                         components = tval;
+                        break;
+                    case "renderascomponent":
+                        renderComp = tval.ToLowerFast() == "true";
+                        break;
+                    case "componentrenderoffset":
+                        renderCompOffs = Location.FromString(tval);
                         break;
                     default:
                         break; // Ignore errors as much as possible here.
