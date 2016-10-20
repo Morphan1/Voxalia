@@ -182,7 +182,7 @@ void main()
 	depth = depth / depth_count;
 #else // good graphics
 	float rd = texture(shadowtex, vec3(fs.x, fs.y, float(i))).r;
-	float depth = (rd >= (fs.z - 0.00001) ? 1.0 : 0.0);
+	float depth = (rd >= (fs.z - 0.001) ? 1.0 : 0.0);
 #endif // else-good graphics
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
