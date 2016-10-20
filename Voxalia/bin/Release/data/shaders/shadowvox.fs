@@ -17,5 +17,5 @@ void main()
 	{
 		discard;
 	}
-	color = (f_pos.z) / f_pos.w;
+	color = gl_FragCoord.z;
 }
