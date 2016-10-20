@@ -6,12 +6,13 @@
 //
 
 using System;
+using Voxalia.ClientGame.ClientMainSystem;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.UISystem.MenuSystem
 {
-    public class UITextLink : UIMenuItem
+    public class UITextLink : UIElement
     {
         public Action ClickedTask;
 
@@ -27,17 +28,14 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public bool Clicked = false;
 
-        public Func<float> XGet;
-
-        public Func<float> YGet;
-
         public FontSet TextFont;
 
         public Texture Icon;
 
         public System.Drawing.Color IconColor = System.Drawing.Color.White;
 
-        public UITextLink(Texture ico, string btext, string btexthover, string btextclick, Action clicked, Func<float> xer, Func<float> yer, FontSet font)
+        public UITextLink(Texture ico, string btext, string btexthover, string btextclick, FontSet font, Action clicked, UIAnchor anchor, Func<int> xOff, Func<int> yOff)
+            : base(anchor, () => 0, () => 0, xOff, yOff)
         {
             Icon = ico;
             ClickedTask = clicked;
@@ -45,28 +43,28 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             TextHover = btexthover;
             TextClick = btextclick;
             TextFont = font;
-            XGet = xer;
-            YGet = yer;
+            Width = () => font.MeasureFancyText(Text, BColor) + (Icon == null ? 0 : font.font_default.Height);
+            Height = () => TextFont.font_default.Height;
         }
 
-        public override void MouseEnter()
+        protected override void MouseEnter()
         {
             Hovered = true;
         }
 
-        public override void MouseLeave()
+        protected override void MouseLeave()
         {
             Hovered = false;
             Clicked = false;
         }
 
-        public override void MouseLeftDown()
+        protected override void MouseLeftDown()
         {
             Hovered = true;
             Clicked = true;
         }
 
-        public override void MouseLeftUp()
+        protected override void MouseLeftUp()
         {
             if (Clicked && Hovered)
             {
@@ -75,11 +73,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             Clicked = false;
         }
 
-        public override void Init()
-        {
-        }
-
-        public override void Render(double delta, int xoff, int yoff)
+        protected override void Render(double delta, int xoff, int yoff)
         {
             string tt = Text;
             if (Clicked)
@@ -95,43 +89,16 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                 float x = GetX() + xoff;
                 float y = GetY() + yoff;
                 Icon.Bind();
-                Menus.TheClient.Rendering.SetColor(IconColor);
-                Menus.TheClient.Rendering.RenderRectangle(x, y, x + TextFont.font_default.Height, y + TextFont.font_default.Height);
+                Client TheClient = GetClient();
+                TheClient.Rendering.SetColor(IconColor);
+                TheClient.Rendering.RenderRectangle(x, y, x + TextFont.font_default.Height, y + TextFont.font_default.Height);
                 TextFont.DrawColoredText(tt, new Location(x + TextFont.font_default.Height, y, 0), int.MaxValue, 1, false, BColor);
-                Menus.TheClient.Rendering.SetColor(OpenTK.Vector4.One);
+                TheClient.Rendering.SetColor(OpenTK.Vector4.One);
             }
             else
             {
                 TextFont.DrawColoredText(tt, new Location(GetX() + xoff, GetY() + yoff, 0), int.MaxValue, 1, false, BColor);
             }
-        }
-
-        public float GetWidth()
-        {
-            return TextFont.MeasureFancyText(Text, BColor) + (Icon == null ? 0 :  TextFont.font_default.Height);
-        }
-
-        public float GetHeight()
-        {
-            return TextFont.font_default.Height;
-        }
-
-        public float GetX()
-        {
-            return XGet.Invoke();
-        }
-
-        public float GetY()
-        {
-            return YGet.Invoke();
-        }
-
-        public override bool Contains(int x, int y)
-        {
-            float tx = GetX();
-            float ty = GetY();
-            return x > tx && x < tx + GetWidth()
-                && y > ty && y < ty + GetHeight();
         }
     }
 }

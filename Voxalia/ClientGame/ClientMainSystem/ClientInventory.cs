@@ -24,15 +24,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
 {
     public partial class Client
     {
-        public UIMenu InventoryMenu;
+        public UIScreen InventoryMenu;
         public UIScrollGroup UI_Inv_Items;
         public UITextBox UI_Inv_Filter;
 
-        public UIMenu EquipmentMenu;
+        public UIScreen EquipmentMenu;
 
-        public UIMenu BuilderItemsMenu;
+        public UIScreen BuilderItemsMenu;
 
-        public UIMenu CInvMenu = null;
+        public UIScreen CInvMenu = null;
 
         public View3D MainItemView = new View3D();
 
@@ -75,7 +75,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             FixInvRender();
             CInvMenu = null;
-            InventoryMenu = new UIMenu(this);
+            InventoryMenu = new UIScreen(this);
             UILabel inv_inventory = new UILabel("^(Inventory", () => 20, () => 20, FontSets.SlightlyBigger);
             UITextLink inv_equipment = new UITextLink(null, "Equipment", "^0^e^7Equipment", "^7^e^0Equipment", () =>
             {
@@ -97,7 +97,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             InventoryMenu.Add(UI_Inv_Filter);
             GenerateItemDescriptors();
             UpdateInventoryMenu();
-            EquipmentMenu = new UIMenu(this);
+            EquipmentMenu = new UIScreen(this);
             UITextLink equ_inventory = new UITextLink(null, "Inventory", "^0^e^7Inventory", "^7^e^0Inventory", () =>
             {
                 CInvMenu = InventoryMenu;
@@ -111,7 +111,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             EquipmentMenu.Add(equ_equipment);
             EquipmentMenu.Add(equ_builderitems);
             EquipmentMenu.Add(InventoryExitButton());
-            BuilderItemsMenu = new UIMenu(this);
+            BuilderItemsMenu = new UIScreen(this);
             UITextLink bui_inventory = new UITextLink(null, "Inventory", "^0^e^7Inventory", "^7^e^0Inventory", () =>
             {
                 CInvMenu = InventoryMenu;

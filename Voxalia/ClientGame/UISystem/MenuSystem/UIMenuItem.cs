@@ -9,7 +9,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 {
     public abstract class UIMenuItem
     {
-        public UIMenu Menus;
+        public UIScreen Menus;
 
         public abstract void MouseEnter();
 

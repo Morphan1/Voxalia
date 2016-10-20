@@ -18,13 +18,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
 {
     public class MainMenuScreen: Screen
     {
-        public UIMenu Menus;
+        public UIScreen Menus;
         
         public Texture Backg;
 
         public override void Init()
         {
-            Menus = new UIMenu(TheClient);
+            Menus = new UIScreen(TheClient);
             FontSet font = TheClient.FontSets.SlightlyBigger;
             UITextLink quit = new UITextLink(null, "^%Q^7uit", "^%Q^e^7uit", "^7^e^%Q^0uit", () => {
                 TheClient.Window.Close();

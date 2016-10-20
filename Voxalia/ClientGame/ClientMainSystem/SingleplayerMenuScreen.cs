@@ -20,11 +20,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
 {
     class SingleplayerMenuScreen: Screen
     {
-        public UIMenu Menus;
+        public UIScreen Menus;
 
         public override void Init()
         {
-            Menus = new UIMenu(TheClient);
+            Menus = new UIScreen(TheClient);
             Menus.Add(new UIMenuButton("ui/menus/buttons/basic", "Back", () => {
                 TheClient.ShowMainMenu();
             }, 10, TheClient.Window.Height - 100, 350, 70, TheClient.FontSets.SlightlyBigger));

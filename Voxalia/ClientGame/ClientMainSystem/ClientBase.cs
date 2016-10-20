@@ -26,6 +26,7 @@ using System.Threading;
 using System.Drawing;
 using FreneticScript;
 using Voxalia.Shared.Files;
+using Voxalia.ClientGame.UISystem.MenuSystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -48,6 +49,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// The primary running client.
         /// </summary>
         public static Client Central = null;
+
+        /// <summary>
+        /// The main UI controller for the client.
+        /// </summary>
+        public static UIScreen UI;
 
         /// <summary>
         /// How far away the client will render chunks.
@@ -312,6 +318,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CVars.r_cloudshadows.OnChanged += onCloudShadowChanged;
             View3D.CheckError("Load - General Graphics");
             SysConsole.Output(OutputType.INIT, "Loading UI engine...");
+            UI = new UIScreen(this);
             UIConsole.InitConsole();
             InitChatSystem();
             View3D.CheckError("Load - UI");

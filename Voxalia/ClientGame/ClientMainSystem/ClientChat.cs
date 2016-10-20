@@ -21,41 +21,41 @@ namespace Voxalia.ClientGame.ClientMainSystem
 {
     public partial class Client
     {
-        public UIMenu ChatMenu;
+        public UIGroup ChatMenu;
 
         public bool ChatVisible = false;
 
         public List<ChatMessage> ChatMessages = new List<ChatMessage>();
         
-        public UITextBox ChatBox;
+        public UIInputBox ChatBox;
 
-        public UIScrollGroup ChatScroller;
+        public UIScrollBox ChatScroller;
 
         public bool[] Channels;
 
         public void InitChatSystem()
         {
-            ChatMenu = new UIMenu(this);
             FontSet font = FontSets.Standard;
-            ChatBox = new UITextBox("", "Enter a /command or a chat message...", () => 30, () => Window.Height - (int)font.font_default.Height - 10 - UIBottomHeight, () => Window.Width - (30 * 2), font);
+            ChatBox = new UIInputBox("", "Enter a /command or a chat message...", font, UIAnchor.BOTTOM_LEFT, () => Window.Width - (30 * 2), () => 0, () => 0);
             ChatBox.EnterPressed = EnterChatMessage;
-            ChatMenu.Add(ChatBox);
             int minY = 10 + (int)font.font_default.Height;
-            ChatScroller = new UIScrollGroup(ChatBox.X, () => minY, ChatBox.Width, () => ChatBox.Y() - minY);
-            ChatMenu.Add(ChatScroller);
+            ChatScroller = new UIScrollBox(UIAnchor.TOP_LEFT, ChatBox.GetWidth, () => -minY, () => 0, () => minY);
+            ChatMenu = new UIGroup(UIAnchor.BOTTOM_LEFT, ChatBox.GetWidth, () => ChatBox.GetHeight() + ChatScroller.GetHeight(), () => 30, () => -10 - ((int)font.font_default.Height) - UIBottomHeight);
+            ChatMenu.AddChild(ChatBox);
+            ChatMenu.AddChild(ChatScroller);
             Channels = new bool[(int)TextChannel.COUNT];
-            Func<float> xer = () => 30;
+            Func<int> xer = () => 30;
             for (int i = 0; i < Channels.Length; i++)
             {
                 Channels[i] = true;
                 string n = ((TextChannel)i).ToString();
                 int len = (int)FontSets.Standard.MeasureFancyText(n);
                 UITextLink link = null;
-                Func<float> fxer = xer;
+                Func<int> fxer = xer;
                 int chan = i;
-                link = new UITextLink(null, "^r^t^0^h^o^2" + n, "^!^e^t^0^h^o^2" + n, "^2^e^t^0^h^o^0" + n, () => ToggleLink(link, n, chan), fxer, () => 10, FontSets.Standard);
+                link = new UITextLink(null, "^r^t^0^h^o^2" + n, "^!^e^t^0^h^o^2" + n, "^2^e^t^0^h^o^0" + n, FontSets.Standard, () => ToggleLink(link, n, chan), UIAnchor.TOP_LEFT, fxer, () => 10);
                 xer = () => fxer() + len + 10;
-                ChatMenu.Add(link);
+                ChatBox.AddChild(link);
             }
         }
 
@@ -111,15 +111,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     WVis = true;
                 }
                 ChatBox.Selected = true;
-                ChatMenu.TickAll();
-            }
-        }
-
-        public void RenderChatSystem()
-        {
-            if (ChatVisible)
-            {
-                ChatMenu.RenderAll(gDelta);
+                ChatMenu.FullTick(Delta);
             }
         }
 
@@ -165,15 +157,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
         
         public void UpdateChats()
         {
-            ChatScroller.Clear();
+            ChatScroller.RemoveAllChildren();
             float by = 0;
             for (int i = 0; i < ChatMessages.Count; i++)
             {
                 if (Channels[(int)ChatMessages[i].Channel])
                 {
                     by += FontSets.Standard.font_default.Height;
-                    float y = by;
-                    ChatScroller.Add(new UILabel(ChatMessages[i].Channel.ToString() + ": " + ChatMessages[i].Text, () => 0, () => y, FontSets.Standard, ChatScroller.MaxWidth));
+                    int y = (int)by;
+                    ChatScroller.AddChild(new UILabel(ChatMessages[i].Channel.ToString() + ": " + ChatMessages[i].Text, FontSets.Standard, UIAnchor.TOP_LEFT, () => 0, () => y, () => (int)ChatScroller.GetWidth()));
                 }
             }
         }
