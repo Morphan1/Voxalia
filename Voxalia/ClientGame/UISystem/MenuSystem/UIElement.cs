@@ -28,11 +28,11 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         public UIElement(UIAnchor anchor, Func<float> width, Func<float> height, Func<int> xOff, Func<int> yOff)
         {
             Children = new HashSet<UIElement>();
-            Anchor = anchor;
-            Width = width;
-            Height = height;
-            OffsetX = xOff;
-            OffsetY = yOff;
+            Anchor = anchor != null ? anchor : UIAnchor.TOP_LEFT;
+            Width = width != null ? width : () => 0;
+            Height = height != null ? height : () => 0;
+            OffsetX = xOff != null ? xOff : () => 0;
+            OffsetY = yOff != null ? yOff : () => 0;
         }
 
         public void AddChild(UIElement child)
@@ -77,7 +77,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public bool HasChild(UIElement element)
         {
-            return Children.Contains(element);
+            return Children.Contains(element) && !ToRemove.Contains(element);
         }
 
         public virtual Client GetClient()
@@ -87,12 +87,12 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public int GetX()
         {
-            return (Parent != null ? (int)Anchor.GetX(Parent) : 0) + OffsetX.Invoke();
+            return (Parent != null ? (int)Anchor.GetX(Parent) : 0) + OffsetX();
         }
 
         public int GetY()
         {
-            return (Parent != null ? (int)Anchor.GetY(Parent) : 0) + OffsetY.Invoke();
+            return (Parent != null ? (int)Anchor.GetY(Parent) : 0) + OffsetY();
         }
 
         public float GetWidth()

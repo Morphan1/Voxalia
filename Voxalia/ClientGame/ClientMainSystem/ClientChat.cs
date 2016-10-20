@@ -55,7 +55,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 xer = () => fxer() + len + 10;
                 ChatBox.AddChild(link);
             }
-            UI.AddChild(ChatMenu);
         }
 
         void EnterChatMessage()
@@ -128,6 +127,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (!IsChatVisible())
             {
                 KeyHandler.GetKBState();
+                UI.AddChild(ChatMenu);
                 FixMouse();
             }
         }
@@ -140,6 +140,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (IsChatVisible())
             {
                 KeyHandler.GetKBState();
+                UI.RemoveChild(ChatMenu);
                 WVis = false;
                 FixMouse();
             }

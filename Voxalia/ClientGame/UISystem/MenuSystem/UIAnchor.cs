@@ -18,6 +18,13 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             GetY = y;
         }
 
+        private static Func<UIElement, int> LEFT_X = (element) => 0;
+        private static Func<UIElement, int> CENTER_X = (element) => (int)(element.GetWidth() / 2);
+        private static Func<UIElement, int> RIGHT_X = (element) => (int)element.GetWidth();
+        private static Func<UIElement, int> TOP_Y = (element) => 0;
+        private static Func<UIElement, int> CENTER_Y = (element) => (int)(element.GetHeight() / 2);
+        private static Func<UIElement, int> BOTTOM_Y = (element) => (int)element.GetHeight();
+
         public static readonly UIAnchor TOP_LEFT = new UIAnchor(LEFT_X, TOP_Y);
         public static readonly UIAnchor TOP_CENTER = new UIAnchor(CENTER_X, TOP_Y);
         public static readonly UIAnchor TOP_RIGHT = new UIAnchor(RIGHT_X, TOP_Y);
@@ -27,12 +34,5 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         public static readonly UIAnchor BOTTOM_LEFT = new UIAnchor(LEFT_X, BOTTOM_Y);
         public static readonly UIAnchor BOTTOM_CENTER = new UIAnchor(CENTER_X, BOTTOM_Y);
         public static readonly UIAnchor BOTTOM_RIGHT = new UIAnchor(RIGHT_X, BOTTOM_Y);
-
-        private static Func<UIElement, int> LEFT_X = (element) => 0;
-        private static Func<UIElement, int> CENTER_X = (element) => (int)(element.GetWidth() / 2);
-        private static Func<UIElement, int> RIGHT_X = (element) => (int)element.GetWidth();
-        private static Func<UIElement, int> TOP_Y = (element) => 0;
-        private static Func<UIElement, int> CENTER_Y = (element) => (int)(element.GetHeight() / 2);
-        private static Func<UIElement, int> BOTTOM_Y = (element) => (int)element.GetHeight();
     }
 }
