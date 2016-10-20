@@ -552,23 +552,11 @@ namespace Voxalia.ClientGame.UISystem
         /// <summary>
         /// Checks whether the system is listening to keyboard input.
         /// </summary>
-        /// <returns>Whether the keyboard is useable.</returns>
+        /// <returns>Whether the keyboard is usable.</returns>
         public static bool IsValid()
         {
             return Client.Central.Window.Focused && !UIConsole.Open && !Client.Central.InvShown() && !Client.Central.ChatVisible;
         }
-
-        /*
-        /// <summary>
-        /// Checks whether a key is pressed down.
-        /// </summary>
-        /// <param name="key">The key to check.</param>
-        /// <returns>Whether it is down.</returns>
-        public static bool IsDown(Key key)
-        {
-            return IsValid() && CurrentKeyboard.IsKeyDown(key);
-        }
-        */
 
         /// <summary>
         /// Checks whether a key was just pressed this tick.
@@ -577,7 +565,6 @@ namespace Voxalia.ClientGame.UISystem
         /// <returns>Whether it was just pressed.</returns>
         public static bool IsPressed(Key key)
         {
-            //return IsValid() && CurrentKeyboard.IsKeyDown(key) && !PreviousKeyboard.IsKeyDown(key);
             return IsValid() && KeyPressList.Contains(key);
         }
 

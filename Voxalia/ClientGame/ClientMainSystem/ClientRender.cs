@@ -238,7 +238,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Shader s_fbo_grass;
         public Shader s_forw_particles;
         
-        public void sortEntities() // TODO: Maybe reverse ent order first, then this, to counteract existing reversal?
+        public void sortEntities()
         {
             TheRegion.Entities = TheRegion.Entities.OrderBy(o => (o.GetPosition().DistanceSquared(MainWorldView.CameraPos))).ToList();
         }
@@ -384,6 +384,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 MainWorldView.Headmat = TheRegion.GetBlockMaterial(MainWorldView.CameraPos);
                 MainWorldView.SunLoc = GetSunLocation();
                 MainWorldView.Render();
+                ReverseEntitiesOrder();
             }
             catch (Exception ex)
             {
