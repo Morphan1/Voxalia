@@ -688,7 +688,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     {
                         for (int j = 0; j < MoveDirs.Length; j++)
                         {
-                            if (BEPUutilities.Vector3.Dot(MoveDirs[j].ToVector3(), (TheClient.MainWorldView.CameraTarget - TheClient.MainWorldView.CameraPos).ToBVector()) < -0.8f) // TODO: Wut?
+                            if (BEPUutilities.Vector3.Dot(MoveDirs[j].ToVector3(), (TheClient.MainWorldView.CameraTarget - TheClient.MainWorldView.CameraPos).ToBVector()) < -0.8f) // TODO: what is this? Is it needed?
                             {
                                 continue;
                             }

@@ -45,7 +45,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.LightingSystem
         
         public virtual Matrix4 GetMatrix()
         {
-            Vector3d c = ClientUtilities.ConvertD(Client.Central.MainWorldView.CameraPos);
+            Vector3d c = ClientUtilities.ConvertD(Client.Central.MainWorldView.RenderRelative);
             Vector3d e = eye - c;
             Vector3d d = target - c;
             return Matrix4.LookAt(new Vector3((float)e.X, (float)e.Y, (float)e.Z), new Vector3((float)d.X, (float)d.Y, (float)d.Z), up) *

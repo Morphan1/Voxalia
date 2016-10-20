@@ -522,6 +522,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
             cameraBasePos = CameraPos;
             cameraAdjust = -camforward.CrossProduct(camup) * 0.25;
+            RenderRelative = CameraPos;
             SetViewport();
             CameraTarget = CameraPos + camforward;
             OffsetWorld = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos));
@@ -539,7 +540,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
             Location bxd = TheClient.CVars.r_3d_enable.ValueB ? (CameraPos + cameraAdjust) : CameraPos;
             Matrix4d viewd = Matrix4d.LookAt(ClientUtilities.ConvertD(bxd), ClientUtilities.ConvertD(bxd + camforward), ClientUtilities.ConvertD(camup));
-            Matrix4d PrimaryMatrixd = viewd * projd;
+            PrimaryMatrixd = viewd * projd;
             Matrix4d PrimaryMatrix_OffsetFor3Dd = Matrix4d.Identity;
             if (TheClient.CVars.r_3d_enable.ValueB)
             {
@@ -551,6 +552,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             CFrust = camFrust;
             CheckError("AfterSetup");
         }
+
+        public Matrix4d PrimaryMatrixd;
 
         /// <summary>
         /// Render everything as quickly as possible: a simple forward renderer.
@@ -593,6 +596,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.DrawBuffer(DrawBufferMode.Back);
             CheckError("AfterFast");
         }
+
+        public Location RenderRelative;
 
         /// <summary>
         /// Calculate shadow maps for the later (lighting) render passes.
@@ -1015,7 +1020,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.Uniform1(17, TheClient.CVars.r_zfar.ValueF);
             GL.Uniform4(18, new Vector4(ClientUtilities.Convert(Headmat.GetFogColor()), (float)Headmat.GetFogAlpha()));
             GL.Uniform1(19, DesaturationAmount);
-            GL.Uniform3(20, ClientUtilities.Convert(CameraPos));
+            GL.Uniform3(20, new Vector3(0, 0, 0));
             GL.Uniform3(21, DesaturationColor);
             GL.UniformMatrix4(22, false, ref PrimaryMatrix);
             GL.Uniform1(24, (float)Width);
