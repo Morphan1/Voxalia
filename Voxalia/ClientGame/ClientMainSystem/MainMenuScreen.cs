@@ -26,7 +26,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             Menus = new UIScreen(TheClient);
             FontSet font = TheClient.FontSets.SlightlyBigger;
-            UITextLink quit = new UITextLink(null, "^%Q^7uit", "^%Q^e^7uit", "^7^e^%Q^0uit", () => {
+            /*UITextLink quit = new UITextLink(null, "^%Q^7uit", "^%Q^e^7uit", "^7^e^%Q^0uit", () => {
                 TheClient.Window.Close();
             }, () => 600, () => 300, font);
             quit.XGet = () => TheClient.Window.Width - 100 - font.font_default.MeasureString("Singleplayer");
@@ -44,12 +44,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
             List<string> hints = TheClient.Languages.GetTextList(TheClient.Files, "voxalia", "hints.common");
             UILabel label = new UILabel("^0^e^7" + hints[Utilities.UtilRandom.Next(hints.Count)], () => 0,
                 () => TheClient.Window.Height - TheClient.Fonts.Standard.Height * 3, TheClient.FontSets.Standard, () => TheClient.Window.Width);
-            Menus.Add(label);
+            Menus.Add(label);*/
         }
 
         public override void Tick()
         {
-            Menus.TickAll();
+            //Menus.TickAll();
         }
 
         public override void SwitchTo()
@@ -59,14 +59,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public override void Render()
         {
-            TheClient.Establish2D();
+            /*TheClient.Establish2D();
             View3D.CheckError("2D-Menu");
             GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0.5f, 0.5f, 1 });
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1 });
             Backg.Bind();
             TheClient.Rendering.RenderRectangle(0, 0, TheClient.Window.Width, TheClient.Window.Height);
             Menus.RenderAll(TheClient.gDelta);
-            View3D.CheckError("Menu Complete");
+            View3D.CheckError("Menu Complete");*/
         }
     }
 }

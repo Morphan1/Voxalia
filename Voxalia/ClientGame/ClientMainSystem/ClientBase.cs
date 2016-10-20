@@ -349,8 +349,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CVars.a_music.OnChanged += onMusicChanged;
             CVars.a_echovolume.OnChanged += OnEchoVolumeChanged;
             OnEchoVolumeChanged(null, null);
-            SysConsole.Output(OutputType.INIT, "Preparing inventory...");
-            InitInventory();
+            //SysConsole.Output(OutputType.INIT, "Preparing inventory...");
+            //InitInventory();
             SysConsole.Output(OutputType.INIT, "Setting up screens...");
             TheMainMenuScreen = new MainMenuScreen() { TheClient = this };
             TheGameScreen = new GameScreen() { TheClient = this };
@@ -540,12 +540,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             GL.Viewport(0, 0, Window.Width, Window.Height);
             MainWorldView.Generate(this, Window.Width, Window.Height);
-            FixInvRender();
+            //FixInvRender();
         }
 
         public void FixMouse()
         {
-            if (CInvMenu != null || !Window.Focused || UIConsole.Open || ChatVisible || CScreen != TheGameScreen)
+            if (/*CInvMenu != null ||*/ !Window.Focused || UIConsole.Open || IsChatVisible() || CScreen != TheGameScreen)
             {
                 MouseHandler.ReleaseMouse();
             }

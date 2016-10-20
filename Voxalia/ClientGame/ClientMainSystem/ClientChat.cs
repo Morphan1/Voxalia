@@ -23,8 +23,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
     {
         public UIGroup ChatMenu;
 
-        public bool ChatVisible = false;
-
         public List<ChatMessage> ChatMessages = new List<ChatMessage>();
         
         public UIInputBox ChatBox;
@@ -57,6 +55,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 xer = () => fxer() + len + 10;
                 ChatBox.AddChild(link);
             }
+            UI.AddChild(ChatMenu);
         }
 
         void EnterChatMessage()
@@ -98,7 +97,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void TickChatSystem()
         {
-            if (ChatVisible)
+            if (IsChatVisible())
             {
                 if (OpenTK.Input.Keyboard.GetState().IsKeyDown(OpenTK.Input.Key.Escape)) // TODO: Better method for this!
                 {
@@ -111,7 +110,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     WVis = true;
                 }
                 ChatBox.Selected = true;
-                ChatMenu.FullTick(Delta);
             }
         }
 
@@ -127,9 +125,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void ShowChat()
         {
-            KeyHandler.GetKBState();
-            ChatVisible = true;
-            FixMouse();
+            if (!IsChatVisible())
+            {
+                KeyHandler.GetKBState();
+                FixMouse();
+            }
         }
 
         /// <summary>
@@ -137,10 +137,17 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// </summary>
         public void CloseChat()
         {
-            KeyHandler.GetKBState();
-            ChatVisible = false;
-            WVis = false;
-            FixMouse();
+            if (IsChatVisible())
+            {
+                KeyHandler.GetKBState();
+                WVis = false;
+                FixMouse();
+            }
+        }
+
+        public bool IsChatVisible()
+        {
+            return UI.HasChild(ChatMenu);
         }
 
         public void WriteMessage(TextChannel channel, string message)

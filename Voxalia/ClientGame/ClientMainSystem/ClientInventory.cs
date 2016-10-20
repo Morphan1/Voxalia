@@ -24,7 +24,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 {
     public partial class Client
     {
-        public UIScreen InventoryMenu;
+        /*public UIScreen InventoryMenu;
         public UIScrollGroup UI_Inv_Items;
         public UITextBox UI_Inv_Filter;
 
@@ -239,5 +239,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Textures.White.Bind();
             CInvMenu.RenderAll(gDelta);
         }
+        */
     }
 }

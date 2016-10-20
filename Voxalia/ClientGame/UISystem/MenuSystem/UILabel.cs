@@ -26,7 +26,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         public string BColor = "^r^7";
 
         public UILabel(string btext, FontSet font, UIAnchor anchor, Func<int> xOff, Func<int> yOff, Func<int> maxx = null)
-            : base(anchor, null, null, xOff, yOff)
+            : base(anchor, () => 0, () => 0, xOff, yOff)
         {
             Text = btext;
             TextFont = font;

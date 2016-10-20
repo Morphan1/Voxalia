@@ -962,7 +962,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 SetVox();
             }
             GL.Disable(EnableCap.CullFace);
-            if (CVars.u_showhud.ValueB && CInvMenu == null)
+            if (CVars.u_showhud.ValueB /*&& CInvMenu == null*/)
             {
                 if (!sub3d && CVars.u_showping.ValueB)
                 {
@@ -1079,8 +1079,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             if (!sub3d)
             {
-                RenderInvMenu();
-                RenderChatSystem();
+                UI.FullRender(gDelta, 0, 0);
+                //RenderInvMenu();
+                //RenderChatSystem();
             }
             if (sub3d)
             {

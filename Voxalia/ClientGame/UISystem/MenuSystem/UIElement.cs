@@ -10,8 +10,8 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
     public abstract class UIElement
     {
         protected HashSet<UIElement> Children;
-
-        public bool HoverInternal = false;
+        
+        public bool HoverInternal;
 
         public UIElement Parent
         {
@@ -73,6 +73,11 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             {
                 RemoveChild(child);
             }
+        }
+
+        public bool HasChild(UIElement element)
+        {
+            return Children.Contains(element);
         }
 
         public virtual Client GetClient()
@@ -140,13 +145,6 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             ToRemove.Clear();
             Tick(delta);
             TickChildren(delta);
-            if (!Parent.ToRemove.Contains(this))
-            {
-                int x = GetX();
-                int y = GetY();
-                Render(delta, x, y);
-                RenderChildren(delta, x, y);
-            }
         }
 
         protected virtual void Tick(double delta)
@@ -159,6 +157,17 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             {
                 element.Tick(delta);
                 element.TickChildren(delta);
+            }
+        }
+
+        public void FullRender(double delta, int xoff, int yoff)
+        {
+            if (Parent == null || !Parent.ToRemove.Contains(this))
+            {
+                int x = GetX();
+                int y = GetY();
+                Render(delta, x, y);
+                RenderChildren(delta, x, y);
             }
         }
 
