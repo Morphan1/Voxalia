@@ -28,7 +28,7 @@ namespace Voxalia.ClientGame.OtherSystems
             TheClient = tclient;
             DataStream ds = new DataStream(data);
             DataReader dr = new DataReader(ds);
-            Load(dr);
+            Load(dr, (b) => new ItemStack(tclient, b));
         }
 
         public ItemStack(Client tclient, string name)

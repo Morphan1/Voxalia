@@ -5,6 +5,7 @@
 // If these are not available, see https://opensource.org/licenses/MIT
 //
 
+using System;
 using System.Text;
 using System.Drawing;
 using System.Collections.Generic;
@@ -48,6 +49,47 @@ namespace Voxalia.Shared
         /// Any attributes shared between all users of the item.
         /// </summary>
         public Dictionary<string, TemplateObject> SharedAttributes = new Dictionary<string, TemplateObject>();
+
+        /// <summary>
+        /// All item stacks that make up this item.
+        /// </summary>
+        public List<ItemStackBase> Components = new List<ItemStackBase>();
+
+        /// <summary>
+        /// Whether this item should render when it is a component.
+        /// </summary>
+        public bool RenderAsComponent = true;
+
+        /// <summary>
+        /// Where, relative to an item, this component should render.
+        /// </summary>
+        public Location ComponentRenderOffset = Location.Zero;
+
+        public void AddComponent(ItemStackBase item)
+        {
+            if (this == item || HasComponentDeep(item))
+            {
+                // TODO: Error?
+                return;
+            }
+            Components.Add(item);
+        }
+
+        public bool HasComponentDeep(ItemStackBase item)
+        {
+            foreach (ItemStackBase itb in Components)
+            {
+                if (itb == item)
+                {
+                    return true;
+                }
+                if (item.HasComponentDeep(item))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         /// <summary>
         /// How many of this item there are.
@@ -97,10 +139,8 @@ namespace Voxalia.Shared
 
         public abstract void SetModelName(string name);
 
-        public byte[] ToBytes()
+        public void WriteBasicBytes(DataWriter dw)
         {
-            DataStream ds = new DataStream(1000);
-            DataWriter dw = new DataWriter(ds);
             dw.WriteInt(Count);
             dw.WriteInt(Datum);
             dw.WriteFloat((float)Weight);
@@ -113,6 +153,10 @@ namespace Voxalia.Shared
             dw.WriteFullString(Description);
             dw.WriteFullString(GetTextureName());
             dw.WriteFullString(GetModelName());
+            dw.WriteByte((byte)(RenderAsComponent ? 1 : 0));
+            dw.WriteFloat((float)ComponentRenderOffset.X);
+            dw.WriteFloat((float)ComponentRenderOffset.Y);
+            dw.WriteFloat((float)ComponentRenderOffset.Z);
             dw.WriteInt(SharedAttributes.Count);
             foreach (KeyValuePair<string, TemplateObject> entry in SharedAttributes)
             {
@@ -144,6 +188,18 @@ namespace Voxalia.Shared
                     dw.WriteFullString(entry.Value.ToString());
                 }
             }
+        }
+
+        public byte[] ToBytes()
+        {
+            DataStream ds = new DataStream(1000);
+            DataWriter dw = new DataWriter(ds);
+            WriteBasicBytes(dw);
+            dw.WriteInt(Components.Count);
+            foreach (ItemStackBase itb in Components)
+            {
+                dw.WriteFullBytes(itb.ToBytes());
+            }
             dw.Flush();
             return ds.ToArray();
         }
@@ -166,7 +222,7 @@ namespace Voxalia.Shared
             DrawColor = color;
         }
 
-        public void Load(DataReader dr)
+        public void Load(DataReader dr, Func<byte[], ItemStackBase> getItem)
         {
             Count = dr.ReadInt();
             Datum = dr.ReadInt();
@@ -182,6 +238,10 @@ namespace Voxalia.Shared
             string tex = dr.ReadFullString();
             SetModelName(dr.ReadFullString());
             SetTextureName(tex);
+            RenderAsComponent = dr.ReadByte() == 1;
+            ComponentRenderOffset.X = dr.ReadFloat();
+            ComponentRenderOffset.Y = dr.ReadFloat();
+            ComponentRenderOffset.Z = dr.ReadFloat();
             int attribs = dr.ReadInt();
             for (int i = 0; i < attribs; i++)
             {
@@ -203,6 +263,11 @@ namespace Voxalia.Shared
                 {
                     SharedAttributes.Add(cattrib, new TextTag(dr.ReadFullString()));
                 }
+            }
+            int comps = dr.ReadInt();
+            for (int i = 0; i < comps; i++)
+            {
+                Components.Add(getItem(dr.ReadFullBytes()));
             }
         }
         
@@ -231,11 +296,23 @@ namespace Voxalia.Shared
             return sb.ToString();
         }
 
+        public string ComponentString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{");
+            foreach (ItemStackBase itb in Components)
+            {
+                sb.Append(TagParser.Escape(itb.ToString()) + ";");
+            }
+            sb.Append("}");
+            return sb.ToString();
+        }
+
         public override string ToString()
         {
-            return Name + "[secondary=" + (SecondaryName == null ? "{NULL}" : SecondaryName) + ";display=" + DisplayName + ";count=" + Count
+            return Name + "[secondary=" + (SecondaryName == null ? "{NULL}" : SecondaryName) + ";display=" + DisplayName + ";count=" + Count + ";renderascomponent=" + RenderAsComponent + ";componentrenderoffset=" + ComponentRenderOffset.ToSimpleString()
                 + ";description=" + Description + ";texture=" + GetTextureName() + ";model=" + GetModelName() + ";weight=" + Weight + ";volume=" + Volume + ";temperature=" + Temperature
-                + ";drawcolor=" + DrawColor.R / 255f + "," + DrawColor.G / 255f + "," + DrawColor.B / 255f + "," + DrawColor.A / 255f + ";datum=" + Datum + ";shared=" + SharedStr() + "]";
+                + ";drawcolor=" + DrawColor.R / 255f + "," + DrawColor.G / 255f + "," + DrawColor.B / 255f + "," + DrawColor.A / 255f + ";datum=" + Datum + ";shared=" + SharedStr() + ";components=" + ComponentString() + "]";
             // TODO: Shared color tag?
         }
     }

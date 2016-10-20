@@ -329,6 +329,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.UniformMatrix4(2, false, ref mat);
             GL.BindVertexArray(Square._VAO);
             GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.BindVertexArray(0);
         }
 
         public void RenderBillboard(Location pos, Location scale, Location facing)
@@ -337,7 +338,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Location relang = Utilities.VectorToAngles(pos - facing);
             if (relang.IsInfinite() || relang.IsNaN())
             {
-                throw new Exception("Unable to handle biilboard: relang=" + relang);
+                throw new Exception("Unable to handle billboard: relang=" + relang);
             }
             Matrix4d mat = 
                 Matrix4d.Scale(ClientUtilities.ConvertD(scale))
@@ -348,6 +349,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Client.Central.MainWorldView.SetMatrix(2, mat); // TODO: Client reference!
             GL.BindVertexArray(Square._VAO);
             GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.BindVertexArray(0);
         }
         
         public void RenderBilboardLine(Location pos, Location p2, float width, Location facing)
@@ -372,6 +374,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Client.Central.MainWorldView.SetMatrix(2, mat);
             GL.BindVertexArray(Square._VAO);
             GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.BindVertexArray(0);
         }
     }
 }

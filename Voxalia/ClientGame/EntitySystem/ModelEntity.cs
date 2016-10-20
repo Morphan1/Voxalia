@@ -346,11 +346,15 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             if (GenBlockShadows)
             {
-                BoxShape bs = new BoxShape(ModelMax.X - ModelMin.X, ModelMax.Y - ModelMin.Y, ModelMax.Z - ModelMin.Z);
+                double tx = ModelMax.X - ModelMin.X;
+                double ty = ModelMax.Y - ModelMin.Y;
+                BoxShape bs = new BoxShape(tx, ty, ModelMax.Z - ModelMin.Z);
                 ShadowCastShape = bs.GetCollidableInstance();
                 ShadowCastShape.LocalPosition = (ModelMax + ModelMin) * 0.5f + Body.Position;
                 RigidTransform def = RigidTransform.Identity;
                 ShadowCastShape.UpdateBoundingBoxForTransform(ref def);
+                BEPUutilities.Vector3 size = ShadowCastShape.BoundingBox.Max - ShadowCastShape.BoundingBox.Min;
+                ShadowRadiusSquaredXY = size.X * size.X + size.Y * size.Y;
             }
         }
 

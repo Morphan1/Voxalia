@@ -383,8 +383,8 @@ namespace Voxalia.ServerGame.WorldSystem
                         if (!chunk.Flags.HasFlag(ChunkFlags.ISCUSTOM))
                         {
                             chunk.Flags &= ~ChunkFlags.POPULATING;
-                            return true;
                         }
+                        return true;
                     }
                 }
             }
