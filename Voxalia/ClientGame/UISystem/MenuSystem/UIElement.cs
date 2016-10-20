@@ -155,8 +155,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
             foreach (UIElement element in Children)
             {
-                element.Tick(delta);
-                element.TickChildren(delta);
+                element.FullTick(delta);
             }
         }
 
@@ -177,7 +176,10 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         protected virtual void RenderChildren(double delta, int xoff, int yoff)
         {
-
+            foreach (UIElement element in Children)
+            {
+                element.FullRender(delta, xoff, yoff);
+            }
         }
 
         public void MouseEnter(int x, int y)
