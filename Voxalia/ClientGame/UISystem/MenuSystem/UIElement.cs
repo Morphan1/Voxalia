@@ -163,8 +163,8 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
             if (Parent == null || !Parent.ToRemove.Contains(this))
             {
-                int x = GetX();
-                int y = GetY();
+                int x = GetX() + xoff;
+                int y = GetY() + yoff;
                 Render(delta, x, y);
                 RenderChildren(delta, x, y);
             }

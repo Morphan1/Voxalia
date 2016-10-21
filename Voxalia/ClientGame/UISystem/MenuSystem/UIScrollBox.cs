@@ -85,7 +85,8 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             Client TheClient = GetClient();
             GL.Enable(EnableCap.ScissorTest);
             GL.Scissor(x, TheClient.Window.Height - (y + h), w, h);
-            base.RenderChildren(delta, xoff, yoff - Scroll);
+            base.RenderChildren(delta, x, y - Scroll);
+            GL.Scissor(0, 0, TheClient.Window.Width, TheClient.Window.Height); // TODO: Bump around a stack, for embedded scroll groups?
             GL.Disable(EnableCap.ScissorTest);
         }
     }
