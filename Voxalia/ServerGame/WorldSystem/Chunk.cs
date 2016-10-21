@@ -413,7 +413,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 Reachability[i] = det.Reachables[i] == 1;
             }
-            if (ents.Blocks != null && ents.Blocks.Length > 0)
+            if (ents.Blocks != null && ents.Blocks.Length > 0 && entsToSpawn.Count == 0)
             {
                 BsonDocument bsd = BsonSerializer.Deserialize(ents.Blocks);
                 if (bsd.ContainsKey("list"))
