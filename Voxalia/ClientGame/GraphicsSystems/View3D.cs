@@ -1332,16 +1332,16 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 }
                 else
                 {
-                    Vector4 v = Vector4.Transform(new Vector4(ClientUtilities.Convert(SunLoc), 1f), PrimaryMatrix);
+                    Vector4d v = Vector4d.Transform(new Vector4d(ClientUtilities.ConvertD(SunLoc), 1.0), PrimaryMatrixd);
                     if (v.Z / v.W > 1.0f || v.Z / v.W < 0.0f)
                     {
                         GL.Uniform2(8, new Vector2(-10f, -10f));
                     }
                     else
                     {
-                        Vector2 lp1 = (v.Xy / v.W) * 0.5f + new Vector2(0.5f);
-                        GL.Uniform2(8, ref lp1);
-                        float lplenadj = (1f - Math.Min(lp1.Length, 1f)) * (0.99f - 0.6f) + 0.6f;
+                        Vector2d lp1 = (v.Xy / v.W) * 0.5f + new Vector2d(0.5f);
+                        GL.Uniform2(8, new Vector2((float)lp1.X, (float)lp1.Y));
+                        float lplenadj = (float)((1.0 - Math.Min(lp1.Length, 1.0)) * (0.99 - 0.6) + 0.6);
                         GL.Uniform1(12, 0.84f * lplenadj);
                     }
                 }
