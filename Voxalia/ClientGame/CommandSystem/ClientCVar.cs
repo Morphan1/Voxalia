@@ -120,7 +120,7 @@ namespace Voxalia.ClientGame.CommandSystem
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");
             a_globalvolume = Register("a_globalvolume", "1", CVarFlag.Numeric, "What volume all sounds should be.");
             a_globalpitch = Register("a_globalpitch", "1", CVarFlag.Numeric, "What pitch all sounds should be.");
-            a_music = Register("a_music", "music/epic/bcvoxalia", CVarFlag.Textual | CVarFlag.ServerControl, "What music should be played.");
+            a_music = Register("a_music", "music/epic/bcvoxalia_adventure", CVarFlag.Textual | CVarFlag.ServerControl, "What music should be played.");
             a_quietondeselect = Register("a_quietondeselect", "true", CVarFlag.Boolean, "Whether to quiet music when the window is deselected.");
             a_echovolume = Register("a_echovolume", "0", CVarFlag.Numeric, "What volume to echo microphone pickup at, for audio testing purposes. Specify 0 to not listen to the microphone at all.");
             // UI CVars
