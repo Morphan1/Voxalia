@@ -320,12 +320,14 @@ namespace Voxalia.ServerGame.OtherSystems
                     }
                 }
             }
+            tbmp.UnlockBits(bdat);
             sw.Stop();
             Timings_B += sw.ElapsedTicks / (double)Stopwatch.Frequency;
             sw.Reset();
             sw.Start();
             DataStream ds = new DataStream();
             tbmp.Save(ds, ImageFormat.Png);
+            tbmp.Dispose();
             sw.Stop();
             Timings_C += sw.ElapsedTicks / (double)Stopwatch.Frequency;
             sw.Reset();

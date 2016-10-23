@@ -224,12 +224,39 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public Bitmap Combine(Bitmap one, Bitmap two, Bitmap three, Bitmap four)
         {
             Bitmap combined = new Bitmap(TWidth, TWidth);
-            for (int x = 0; x < TWidth; x++)
+            // Surely there's a better way to do this!
+            unsafe
             {
-                for (int y = 0; y < TWidth; y++)
+                BitmapData bdat = combined.LockBits(new Rectangle(0, 0, combined.Width, combined.Height), ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                int stride = bdat.Stride;
+                byte* ptr = (byte*)bdat.Scan0;
+                BitmapData bdat1 = one.LockBits(new Rectangle(0, 0, one.Width, one.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                int stride1 = bdat1.Stride;
+                byte* ptr1 = (byte*)bdat1.Scan0;
+                BitmapData bdat2 = two.LockBits(new Rectangle(0, 0, two.Width, two.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                int stride2 = bdat2.Stride;
+                byte* ptr2 = (byte*)bdat2.Scan0;
+                BitmapData bdat3 = three.LockBits(new Rectangle(0, 0, three.Width, three.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                int stride3 = bdat3.Stride;
+                byte* ptr3 = (byte*)bdat3.Scan0;
+                BitmapData bdat4 = four.LockBits(new Rectangle(0, 0, four.Width, four.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                int stride4 = bdat4.Stride;
+                byte* ptr4 = (byte*)bdat4.Scan0;
+                for (int x = 0; x < TWidth; x++)
                 {
-                    combined.SetPixel(x, y, Color.FromArgb(Gray(four.GetPixel(x, y)), Gray(one.GetPixel(x, y)), Gray(two.GetPixel(x, y)), Gray(three.GetPixel(x, y))));
+                    for (int y = 0; y < TWidth; y++)
+                    {
+                        ptr[(x * 4) + y * stride + 0] = ptr4[(x * 4) + y * stride];
+                        ptr[(x * 4) + y * stride + 1] = ptr1[(x * 4) + y * stride];
+                        ptr[(x * 4) + y * stride + 2] = ptr2[(x * 4) + y * stride];
+                        ptr[(x * 4) + y * stride + 3] = ptr3[(x * 4) + y * stride];
+                    }
                 }
+                combined.UnlockBits(bdat);
+                one.UnlockBits(bdat1);
+                two.UnlockBits(bdat2);
+                three.UnlockBits(bdat3);
+                four.UnlockBits(bdat4);
             }
             return combined;
         }
