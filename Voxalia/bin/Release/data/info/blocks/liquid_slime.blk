@@ -11,3 +11,4 @@ SpeedMod=0.8
 SolidifiesInto=solid_slime
 Breaker=NON_BREAKABLE
 BreaksFromOtherTools=false
+TextureBasic=blocks/liquid/slime

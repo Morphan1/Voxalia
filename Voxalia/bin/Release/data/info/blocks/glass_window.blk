@@ -5,3 +5,4 @@ Hardness=5
 BreakTime=1
 Opaque=false
 LightDamage=0.05
+TextureBasic=blocks/transparent/glass_window

@@ -4,3 +4,4 @@ Sound=METAL
 Hardness=30
 BreakTime=5
 Breaker=PICKAXE
+TextureBasic=blocks/solid/metals/steel_solid

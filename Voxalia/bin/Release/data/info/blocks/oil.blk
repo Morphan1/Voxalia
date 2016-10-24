@@ -9,3 +9,4 @@ Spreads=true
 SpeedMod=0.7
 Breaker=NON_BREAKABLE
 BreaksFromOtherTools=false
+TextureBasic=blocks/liquid/oil&blocks/liquid/oil_spec_1,blocks/liquid/oil_spec_2,blocks/liquid/oil_spec_3,blocks/liquid/oil_spec_2*blocks/liquid/oil_spec_1,blocks/liquid/oil_spec_2,blocks/liquid/oil_spec_3,blocks/liquid/oil_spec_2!black,black,black,black@black,black,black,black%0.25

@@ -10,3 +10,4 @@ Spreads=true
 LightDamage=0.1
 Breaker=NON_BREAKABLE
 BreaksFromOtherTools=false
+TextureBasic=blocks/liquid/heavy_gas

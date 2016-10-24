@@ -6,3 +6,4 @@ FrictionMod=0.1
 Hardness=10
 BreakTime=1.5
 Breaker=PICKAXE
+TextureBasic=blocks/solid/natural/ice

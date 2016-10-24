@@ -9,3 +9,4 @@ Spreads=true
 SpeedMod=0.7
 Breaker=NON_BREAKABLE
 BreaksFromOtherTools=false
+TextureBasic=blocks/liquid/lava&white*black!blocks/liquid/lava_glow@black

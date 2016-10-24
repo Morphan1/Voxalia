@@ -27,6 +27,7 @@ namespace Voxalia.Shared
             FileHandler files = new FileHandler();
             files.Init();
             MaterialHelpers.Populate(files); // TODO: Non-static material helper data?
+            BlockShapeRegistry.Init();
             FullChunkObject.RegisterMe();
         }
     }

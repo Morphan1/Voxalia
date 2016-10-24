@@ -61,52 +61,38 @@ namespace Voxalia.ClientGame.GraphicsSystems
             TextureID = GL.GenTexture();
             TWidth = cvars.r_blocktexturewidth.ValueI;
             GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
-            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.TextureCount);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.Textures.Length);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)(cvars.r_blocktexturelinear.ValueB ? TextureMinFilter.Linear: TextureMinFilter.Nearest));
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)(cvars.r_blocktexturelinear.ValueB ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
             HelpTextureID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2DArray, HelpTextureID);
-            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.TextureCount);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.Textures.Length);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
             NormalTextureID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2DArray, NormalTextureID);
-            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.TextureCount);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.Textures.Length);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
             // TODO: Use normal.a!
-            string[] datums = TheClient.Files.ReadText("info/textures.dat").SplitFast('\n');
-            // TODO: Separate files for each texture detail!
-            List<MaterialTextureInfo> texs = new List<MaterialTextureInfo>(datums.Length);
-            IntTexs = new string[MaterialHelpers.TextureCount];
+            List<MaterialTextureInfo> texs = new List<MaterialTextureInfo>(MaterialHelpers.Textures.Length);
+            IntTexs = new string[MaterialHelpers.Textures.Length];
             //float time = 0;
-            for (int ia = 0; ia < datums.Length; ia++)
+            for (int ia = 0; ia < MaterialHelpers.Textures.Length; ia++)
             {
                 int i = ia;
-                if (datums[i].StartsWith("#") || datums[i].Length <= 1)
-                {
-                    continue;
-                }
                 // TODO: Make this saner, and don't allow entering a game until it's done maybe?
                 //TheClient.Schedule.ScheduleSyncTask(() =>
                 {
                     MaterialTextureInfo tex = new MaterialTextureInfo();
-                    string[] dets = datums[i].SplitFast('=');
-                    if (dets[0].StartsWith("m"))
-                    {
-                        tex.Mat = (Material)(MaterialHelpers.TextureCount - Utilities.StringToInt(dets[0].Substring(1)));
-                    }
-                    else
-                    {
-                        tex.Mat = MaterialHelpers.FromNameOrNumber(dets[0]);
-                    }
-                    string[] refrornot = dets[1].SplitFast('@');
+                    tex.Mat = (Material)i;
+                    string[] refrornot = MaterialHelpers.Textures[i].SplitFast('@');
                     if (refrornot.Length > 1)
                     {
                         string[] rorn = refrornot[1].SplitFast('%');

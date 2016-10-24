@@ -6,3 +6,4 @@ FogColor=0,1,0
 Hardness=5
 BreakTime=1
 SOUND=SLIME
+TextureBasic=blocks/liquid/slipgoo
