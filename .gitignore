@@ -34,3 +34,4 @@ logindata.dat
 *.mdb
 server_eid.txt
 LicenseInjector.exe
+logs/
