@@ -95,13 +95,14 @@ namespace Voxalia.Shared.Collision
                 low = new Vector3i(0, 0, CHUNK_SIZE);
                 high = new Vector3i(CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE);
             }
+            bool[] traced = new bool[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
             for (int x = low.X; x <= high.X; x++)
             {
                 for (int y = low.Y; y <= high.Y; y++)
                 {
                     for (int z = low.Z; z <= high.Z; z++)
                     {
-                        if (PointCanReach(new Vector3i(x, y, z), enorm))
+                        if (PointCanReach(new Vector3i(x, y, z), enorm, traced))
                         {
                             return true;
                         }
@@ -111,9 +112,8 @@ namespace Voxalia.Shared.Collision
             return false;
         }
 
-        public bool PointCanReach(Vector3i p, Vector3i enorm)
+        public bool PointCanReach(Vector3i p, Vector3i enorm, bool[] traced)
         {
-            bool[] traced = new bool[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
             Queue<Vector3i> toTrace = new Queue<Vector3i>();
             toTrace.Enqueue(p);
             while (toTrace.Count > 0)

@@ -129,7 +129,13 @@ namespace Voxalia.ServerGame.WorldSystem
 
         public void ChunkDetect()
         {
-            chunkAccessDetection = chunkAccessDetection == null ? OwningRegion.TheWorld.Schedule.StartASyncTask(DetectChunkAccess) : chunkAccessDetection.ReplaceOrFollowWith(OwningRegion.TheWorld.Schedule.AddASyncTask(DetectChunkAccess));
+            if (!Flags.HasFlag(ChunkFlags.NEEDS_DETECT))
+            {
+                DetectChunkAccess();
+                //chunkAccessDetection = chunkAccessDetection == null ? OwningRegion.TheWorld.Schedule.StartASyncTask(DetectChunkAccess)
+                //    : chunkAccessDetection.ReplaceOrFollowWith(OwningRegion.TheWorld.Schedule.AddASyncTask(DetectChunkAccess));
+                Flags &= ~ChunkFlags.NEEDS_DETECT;
+            }
         }
         
         /// <summary>
@@ -159,6 +165,7 @@ namespace Voxalia.ServerGame.WorldSystem
             FCO.CollisionRules.Group = CollisionUtil.WorldSolid;
             OwningRegion.AddChunk(FCO);
             OwningRegion.AddCloudsToNewChunk(this);
+            ChunkDetect();
         }
 
         public ASyncScheduleItem chunkAccessDetection = null;

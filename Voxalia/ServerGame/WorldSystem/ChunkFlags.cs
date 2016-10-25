@@ -17,6 +17,7 @@ namespace Voxalia.ServerGame.WorldSystem
     {
         NONE = 0,
         ISCUSTOM = 1,
-        POPULATING = 2
+        POPULATING = 2,
+        NEEDS_DETECT = 4
     }
 }
