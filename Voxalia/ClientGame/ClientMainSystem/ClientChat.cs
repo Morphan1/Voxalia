@@ -35,7 +35,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             FontSet font = FontSets.Standard;
             int minY = 10 + (int)font.font_default.Height;
-            ChatBox = new UIInputBox("", "Enter a /command or a chat message...", font, UIAnchor.BOTTOM_LEFT, () => Window.Width - (30 * 2), () => 0, () => -minY * 5);
+            ChatBox = new UIInputBox("", "Enter a /command or a chat message...", font, UIAnchor.BOTTOM_LEFT, () => Window.Width - (30 * 2), () => 0, () => 0);
             ChatBox.EnterPressed = EnterChatMessage;
             ChatScroller = new UIScrollBox(UIAnchor.TOP_LEFT, ChatBox.GetWidth, () => ChatMenu.GetHeight() - minY, () => 0, () => minY);
             ChatMenu = new UIGroup(UIAnchor.TOP_LEFT, ChatBox.GetWidth, () => Window.Height - minY - UIBottomHeight, () => 30, () => 0);

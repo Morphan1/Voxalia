@@ -87,12 +87,12 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public int GetX()
         {
-            return (Parent != null ? (int)Anchor.GetX(Parent) : 0) + OffsetX();
+            return (Parent != null ? (int)Anchor.GetX(this) : 0) + OffsetX();
         }
 
         public int GetY()
         {
-            return (Parent != null ? (int)Anchor.GetY(Parent) : 0) + OffsetY();
+            return (Parent != null ? (int)Anchor.GetY(this) : 0) + OffsetY();
         }
 
         public float GetWidth()
@@ -163,10 +163,8 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         {
             if (Parent == null || !Parent.ToRemove.Contains(this))
             {
-                int x = GetX() + xoff;
-                int y = GetY() + yoff;
-                Render(delta, x, y);
-                RenderChildren(delta, x, y);
+                Render(delta, xoff, yoff);
+                RenderChildren(delta, GetX() + xoff, GetY() + yoff);
             }
         }
 

@@ -153,6 +153,8 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             int x = GetX() + xoff;
             int y = GetY() + yoff;
             int w = (int)GetWidth();
+            SysConsole.Output(OutputType.DEBUG, "Pre-offset chat box: " + GetX() + "," + GetY());
+            SysConsole.Output(OutputType.DEBUG, "Chat box: " + x + "," + y);
             TheClient.Textures.White.Bind();
             TheClient.Rendering.SetColor(Color4.White);
             TheClient.Rendering.RenderRectangle(x - 1, y - 1, x + w + 1, y + Fonts.font_default.Height + 1);

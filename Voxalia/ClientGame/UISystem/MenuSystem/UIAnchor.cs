@@ -19,11 +19,11 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         }
 
         private static Func<UIElement, int> LEFT_X = (element) => 0;
-        private static Func<UIElement, int> CENTER_X = (element) => (int)(element.GetWidth() / 2);
-        private static Func<UIElement, int> RIGHT_X = (element) => (int)element.GetWidth();
+        private static Func<UIElement, int> CENTER_X = (element) => (int)(element.Parent.GetWidth() / 2 - element.GetWidth() / 2);
+        private static Func<UIElement, int> RIGHT_X = (element) => (int)(element.Parent.GetWidth() - element.GetWidth());
         private static Func<UIElement, int> TOP_Y = (element) => 0;
-        private static Func<UIElement, int> CENTER_Y = (element) => (int)(element.GetHeight() / 2);
-        private static Func<UIElement, int> BOTTOM_Y = (element) => (int)element.GetHeight();
+        private static Func<UIElement, int> CENTER_Y = (element) => (int)(element.Parent.GetHeight() / 2 - element.GetHeight() / 2);
+        private static Func<UIElement, int> BOTTOM_Y = (element) => (int)(element.Parent.GetHeight() - element.GetHeight());
 
         public static readonly UIAnchor TOP_LEFT = new UIAnchor(LEFT_X, TOP_Y);
         public static readonly UIAnchor TOP_CENTER = new UIAnchor(CENTER_X, TOP_Y);
