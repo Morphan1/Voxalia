@@ -75,17 +75,13 @@ namespace Voxalia.Shared
         
         public static void Populate(FileHandler files)
         {
-            if (Populated)
-            {
-                return;
-            }
-            Populated = true;
             List<string> fileList = files.ListFiles("info/blocks/");
+            List<MaterialInfo> allmats = new List<MaterialInfo>((int)Material.NUM_DEFAULT);
             foreach (string file in fileList)
             {
                 string f = file.ToLowerFast().After("/blocks/").Before(".blk");
                 Material mat;
-                if (TryGetFromNameOrNumber(f, out mat))
+                if (TryGetFromNameOrNumber(allmats, f, out mat))
                 {
                     continue;
                 }
@@ -203,18 +199,19 @@ namespace Voxalia.Shared
                             break;
                     }
                 }
-                while (ALL_MATS.Count <= (int)mat)
+                while (allmats.Count <= (int)mat)
                 {
-                    ALL_MATS.Add(null);
+                    allmats.Add(null);
                 }
-                ALL_MATS[(int)mat] = inf;
+                allmats[(int)mat] = inf;
             }
             int c = 0;
-            for (int i = 0; i < ALL_MATS.Count; i++)
+            Dictionary<string, int> TexturesToIDs = new Dictionary<string, int>();
+            for (int i = 0; i < allmats.Count; i++)
             {
                 for (int t = 0; t < (int)MaterialSide.COUNT; t++)
                 {
-                    string tex = ALL_MATS[i].Texture[t];
+                    string tex = allmats[i].Texture[t];
                     int res;
                     if (TexturesToIDs.ContainsKey(tex))
                     {
@@ -226,7 +223,7 @@ namespace Voxalia.Shared
                         res = c;
                         c++;
                     }
-                    ALL_MATS[i].TID[t] = res;
+                    allmats[i].TID[t] = res;
                 }
             }
             Textures = new string[c];
@@ -234,9 +231,12 @@ namespace Voxalia.Shared
             {
                 Textures[val.Value] = val.Key;
             }
+            lock (ALL_MATS)
+            {
+                SysConsole.Output(OutputType.INIT, "Loaded: " + allmats.Count + " materials!");
+                ALL_MATS = allmats;
+            }
         }
-
-        public static Dictionary<string, int> TexturesToIDs = new Dictionary<string, int>();
 
         public static string[] Textures;
         
@@ -382,12 +382,12 @@ namespace Voxalia.Shared
 
         public static Type MaterialType = typeof(Material);
 
-        public static bool TryGetFromNameOrNumber(string input, out Material mat)
+        public static bool TryGetFromNameOrNumber(List<MaterialInfo> matlist, string input, out Material mat)
         {
             ushort t;
             if (ushort.TryParse(input, out t))
             {
-                if (t >= ALL_MATS.Count || ALL_MATS[t] == null)
+                if (t >= matlist.Count || matlist[t] == null)
                 {
                     mat = Material.AIR;
                     return false;
@@ -397,9 +397,9 @@ namespace Voxalia.Shared
             }
             string inp = input.ToUpperInvariant();
             int hash = inp.GetHashCode();
-            for (t = 0; t < ALL_MATS.Count; t++)
+            for (t = 0; t < matlist.Count; t++)
             {
-                if (ALL_MATS[t] != null && ALL_MATS[t].NameHash == hash && ALL_MATS[t].Name == inp)
+                if (matlist[t] != null && matlist[t].NameHash == hash && matlist[t].Name == inp)
                 {
                     mat = (Material)t;
                     return true;
@@ -412,7 +412,7 @@ namespace Voxalia.Shared
         public static Material FromNameOrNumber(string input)
         {
             Material mat;
-            if (TryGetFromNameOrNumber(input, out mat))
+            if (TryGetFromNameOrNumber(ALL_MATS, input, out mat))
             {
                 return mat;
             }
