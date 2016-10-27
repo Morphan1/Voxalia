@@ -37,7 +37,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         UITextLink InventoryExitButton()
         {
-            return new UITextLink(null, "Exit", "^0^e^7Exit", "^7^e^0Exit", FontSets.SlightlyBigger, HideInventory, UIAnchor.BOTTOM_RIGHT, () => -(int)FontSets.SlightlyBigger.MeasureFancyText("Exit") - 20, () => -(int)FontSets.SlightlyBigger.font_default.Height - 20);
+            return new UITextLink(null, "Exit", "^0^e^7Exit", "^7^e^0Exit", FontSets.SlightlyBigger, HideInventory, UIAnchor.BOTTOM_RIGHT,
+                () => -(int)FontSets.SlightlyBigger.MeasureFancyText("Exit") - 20, () => -(int)FontSets.SlightlyBigger.font_default.Height - 20);
         }
 
         UIColoredBox InventoryBackground()
@@ -75,10 +76,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             FixInvRender();
             CInvMenu = null;
+            // Inventory Menu
             InventoryMenu = new UIGroup(UIAnchor.TOP_LEFT, TheGameScreen.GetWidth, TheGameScreen.GetHeight, () => 0, () => 0);
             UILabel inv_inventory = new UILabel("^(Inventory", FontSets.SlightlyBigger, UIAnchor.TOP_LEFT, () => 20, () => 20);
-            UITextLink inv_equipment = new UITextLink(null, "Equipment", "^0^e^7Equipment", "^7^e^0Equipment", FontSets.SlightlyBigger, () => SetCurrent(EquipmentMenu), UIAnchor.TOP_LEFT, () => (int)(inv_inventory.GetX() + inv_inventory.GetWidth()) + 20, () => inv_inventory.GetY());
-            UITextLink inv_builderitems = new UITextLink(null, "Builder Items", "^0^e^&7uilder Items", "^7^e^0Builder Items", FontSets.SlightlyBigger, () => SetCurrent(BuilderItemsMenu), UIAnchor.TOP_LEFT, () => (int)(inv_equipment.GetX() + inv_equipment.GetWidth()) + 20, () => inv_equipment.GetY());
+            UITextLink inv_equipment = new UITextLink(null, "Equipment", "^0^e^7Equipment", "^7^e^0Equipment", FontSets.SlightlyBigger,
+                () => SetCurrent(EquipmentMenu), UIAnchor.TOP_LEFT, () => (int)(inv_inventory.GetX() + inv_inventory.GetWidth()) + 20, () => inv_inventory.GetY());
+            UITextLink inv_builderitems = new UITextLink(null, "Builder-Items", "^0^e^&Builder-Items", "^7^e^0Builder-Items", FontSets.SlightlyBigger,
+                () => SetCurrent(BuilderItemsMenu), UIAnchor.TOP_LEFT, () => (int)(inv_equipment.GetX() + inv_equipment.GetWidth()) + 20, () => inv_equipment.GetY());
             InventoryMenu.AddChild(InventoryBackground());
             InventoryMenu.AddChild(inv_inventory);
             InventoryMenu.AddChild(inv_equipment);
@@ -92,18 +96,22 @@ namespace Voxalia.ClientGame.ClientMainSystem
             InventoryMenu.AddChild(UI_Inv_Filter);
             GenerateItemDescriptors();
             UpdateInventoryMenu();
+            // Equipment Menu
             EquipmentMenu = new UIGroup(UIAnchor.TOP_LEFT, TheGameScreen.GetWidth, TheGameScreen.GetHeight, () => 0, () => 0);
             UITextLink equ_inventory = new UITextLink(null, "Inventory", "^0^e^7Inventory", "^7^e^0Inventory", FontSets.SlightlyBigger, () => SetCurrent(InventoryMenu), UIAnchor.TOP_LEFT, () => 20, () => 20);
             UILabel equ_equipment = new UILabel("^(Equipment", FontSets.SlightlyBigger, UIAnchor.TOP_LEFT, () => (int)(equ_inventory.GetX() + equ_inventory.GetWidth()) + 20, () => equ_inventory.GetY());
-            UITextLink equ_builderitems = new UITextLink(null, "Builder Items", "^0^e^7Builder Items", "^7^e^0Builder Items", FontSets.SlightlyBigger, () => SetCurrent(BuilderItemsMenu), UIAnchor.TOP_LEFT, () => (int)(equ_equipment.GetX() + equ_equipment.GetWidth()) + 20, () => equ_equipment.GetY());
+            UITextLink equ_builderitems = new UITextLink(null, "Builder-Items", "^0^e^7Builder-Items", "^7^e^0Builder-Items", FontSets.SlightlyBigger,
+                () => SetCurrent(BuilderItemsMenu), UIAnchor.TOP_LEFT, () => (int)(equ_equipment.GetX() + equ_equipment.GetWidth()) + 20, () => equ_equipment.GetY());
             EquipmentMenu.AddChild(InventoryBackground());
             EquipmentMenu.AddChild(equ_inventory);
             EquipmentMenu.AddChild(equ_equipment);
             EquipmentMenu.AddChild(equ_builderitems);
             EquipmentMenu.AddChild(InventoryExitButton());
+            // Builder-Items Menu
             BuilderItemsMenu = new UIGroup(UIAnchor.TOP_LEFT, TheGameScreen.GetWidth, TheGameScreen.GetHeight, () => 0, () => 0);
             UITextLink bui_inventory = new UITextLink(null, "Inventory", "^0^e^7Inventory", "^7^e^0Inventory", FontSets.SlightlyBigger, () => SetCurrent(InventoryMenu), UIAnchor.TOP_LEFT, () => 20, () => 20);
-            UITextLink bui_equipment = new UITextLink(null, "Equipment", "^0^e^7Equipment", "^7^e^0Equipment", FontSets.SlightlyBigger, () => SetCurrent(EquipmentMenu), UIAnchor.TOP_LEFT, () => (int)(bui_inventory.GetX() + bui_inventory.GetWidth()) + 20, () => bui_inventory.GetY());
+            UITextLink bui_equipment = new UITextLink(null, "Equipment", "^0^e^7Equipment", "^7^e^0Equipment", FontSets.SlightlyBigger,
+                () => SetCurrent(EquipmentMenu), UIAnchor.TOP_LEFT, () => (int)(bui_inventory.GetX() + bui_inventory.GetWidth()) + 20, () => bui_inventory.GetY());
             UILabel bui_builderitems = new UILabel("^(Builder Items", FontSets.SlightlyBigger, UIAnchor.TOP_LEFT, () => (int)(bui_equipment.GetX() + bui_equipment.GetWidth()) + 20, () => bui_equipment.GetY());
             BuilderItemsMenu.AddChild(InventoryBackground());
             BuilderItemsMenu.AddChild(bui_inventory);
@@ -138,8 +146,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
         void GenerateItemDescriptors()
         {
             UI_Inv_Displayname = new UILabel("^B<Display name>", FontSets.SlightlyBigger, UIAnchor.CENTER_LEFT, () => 20 + ItemsListSize, () => 0, () => Window.Width - (20 + ItemsListSize));
-            UI_Inv_Description = new UILabel("^B<Description>", FontSets.Standard, UIAnchor.TOP_LEFT, () => 20 + ItemsListSize, () => (int)(UI_Inv_Displayname.GetY() + UI_Inv_Displayname.GetHeight()), () => (int)TheGameScreen.GetWidth() - (20 + ItemsListSize));
-            UI_Inv_Detail = new UILabel("^B<Detail>", FontSets.Standard, UIAnchor.TOP_LEFT, () => 20 + ItemsListSize, () => (int)(UI_Inv_Description.GetY() + UI_Inv_Description.GetHeight()), () => (int)TheGameScreen.GetWidth() - (20 + ItemsListSize));
+            UI_Inv_Description = new UILabel("^B<Description>", FontSets.Standard, UIAnchor.TOP_LEFT, () => 20 + ItemsListSize,
+                () => (int)(UI_Inv_Displayname.GetY() + UI_Inv_Displayname.GetHeight()), () => (int)TheGameScreen.GetWidth() - (20 + ItemsListSize));
+            UI_Inv_Detail = new UILabel("^B<Detail>", FontSets.Standard, UIAnchor.TOP_LEFT, () => 20 + ItemsListSize,
+                () => (int)(UI_Inv_Description.GetY() + UI_Inv_Description.GetHeight()), () => (int)TheGameScreen.GetWidth() - (20 + ItemsListSize));
             UI_Inv_Description.BColor = "^r^7^i";
             UI_Inv_Detail.BColor = "^r^7^l";
             InventoryMenu.AddChild(UI_Inv_Displayname);

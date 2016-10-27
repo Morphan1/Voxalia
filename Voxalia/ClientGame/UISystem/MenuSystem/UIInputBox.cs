@@ -120,7 +120,18 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                 if (!MultiLine && Text.Contains('\n'))
                 {
                     Text = Text.Substring(0, Text.IndexOf('\n'));
-                    EnterPressed();
+                    if (MaxCursor > Text.Length)
+                    {
+                        MaxCursor = Text.Length;
+                        if (MinCursor > MaxCursor)
+                        {
+                            MinCursor = MaxCursor;
+                        }
+                    }
+                    if (EnterPressed != null)
+                    {
+                        EnterPressed();
+                    }
                 }
                 if (TextModified != null)
                 {

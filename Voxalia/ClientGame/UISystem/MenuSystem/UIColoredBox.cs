@@ -5,18 +5,17 @@
 // If these are not available, see https://opensource.org/licenses/MIT
 //
 
-using OpenTK;
-using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Voxalia.ClientGame.ClientMainSystem;
+using OpenTK;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Voxalia.ClientGame.UISystem.MenuSystem
 {
-    // TODO: I have no idea if this is the right name for this class.
     public class UIColoredBox : UIElement
     {
         public Vector4 Color;
