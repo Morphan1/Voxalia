@@ -821,25 +821,21 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (light > 0 && TheClient.CVars.r_treeshadows.ValueB)
             {
-                BoundingBox bb = new BoundingBox(pos.ToBVector(), (pos + new Location(1, 1, 500)).ToBVector());
+                BoundingBox bb = new BoundingBox(pos.ToBVector(), (pos + new Location(1, 1, 300)).ToBVector());
                 if (GenShadowCasters != null)
                 {
                     for (int i = 0; i < GenShadowCasters.Length; i++)
                     {
                         PhysicsEntity pe = GenShadowCasters[i];
-                        if (pe == null) // Shouldn't happen.
-                        {
-                            continue;
-                        }
-                        if (pe.GenBlockShadows && pe.GetPosition().DistanceSquared_Flat(pos) < pe.ShadowRadiusSquaredXY)
+                        if (pe.GenBlockShadows && pe.ShadowCenter.DistanceSquared_Flat(pos) < pe.ShadowRadiusSquaredXY)
                         {
                             light -= 0.05f;
-                            if (pe.ShadowMainDupe.BoundingBox.Intersects(bb))
+                            if (pe.ShadowMainDupe.Intersects(bb))
                             {
                                 light = 0;
                                 break;
                             }
-                            if (pe.ShadowCastShape.BoundingBox.Intersects(bb))
+                            if (pe.ShadowCastShape.Intersects(bb))
                             {
                                 light -= 0.1f;
                             }

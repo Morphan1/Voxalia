@@ -19,6 +19,7 @@ using BEPUutilities;
 using BEPUphysics.Constraints;
 using BEPUphysics.Constraints.SingleEntity;
 using Voxalia.ClientGame.JointSystem;
+using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
@@ -349,11 +350,12 @@ namespace Voxalia.ClientGame.EntitySystem
                 double tx = ModelMax.X - ModelMin.X;
                 double ty = ModelMax.Y - ModelMin.Y;
                 BoxShape bs = new BoxShape(tx, ty, ModelMax.Z - ModelMin.Z);
-                ShadowCastShape = bs.GetCollidableInstance();
-                ShadowCastShape.LocalPosition = (ModelMax + ModelMin) * 0.5f + Body.Position;
+                EntityCollidable tempCast = bs.GetCollidableInstance();
+                tempCast.LocalPosition = (ModelMax + ModelMin) * 0.5f + Body.Position;
                 RigidTransform def = RigidTransform.Identity;
-                ShadowCastShape.UpdateBoundingBoxForTransform(ref def);
-                BEPUutilities.Vector3 size = ShadowCastShape.BoundingBox.Max - ShadowCastShape.BoundingBox.Min;
+                tempCast.UpdateBoundingBoxForTransform(ref def);
+                ShadowCastShape = tempCast.BoundingBox;
+                BEPUutilities.Vector3 size = ShadowCastShape.Max - ShadowCastShape.Min;
                 ShadowRadiusSquaredXY = size.X * size.X + size.Y * size.Y;
             }
         }

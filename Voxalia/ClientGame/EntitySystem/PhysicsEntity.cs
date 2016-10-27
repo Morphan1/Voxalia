@@ -131,15 +131,18 @@ namespace Voxalia.ClientGame.EntitySystem
                     TheRegion.PhysicsWorld.Add(joint.CurrentJoint);
                 }
             }
-            ShadowCastShape = Shape.GetCollidableInstance();
-            ShadowMainDupe = Shape.GetCollidableInstance();
+            ShadowCastShape = Shape.GetCollidableInstance().BoundingBox;
+            ShadowMainDupe = Shape.GetCollidableInstance().BoundingBox;
+            ShadowCenter = GetPosition();
         }
 
-        public EntityCollidable ShadowCastShape;
+        public BoundingBox ShadowCastShape;
 
         public double ShadowRadiusSquaredXY;
 
-        public EntityCollidable ShadowMainDupe;
+        public BoundingBox ShadowMainDupe;
+
+        public Location ShadowCenter;
 
         /// <summary>
         /// Destroys the body, removing it from the physics world.
