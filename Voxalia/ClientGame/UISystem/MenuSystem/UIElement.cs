@@ -190,7 +190,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public void MouseLeave(int x, int y)
         {
-            foreach (UIElement child in GetAllAt(x, y))
+            foreach (UIElement child in GetAllNotAt(x, y))
             {
                 child.MouseLeave();
             }
@@ -206,7 +206,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public void MouseLeftDownOutside(int x, int y)
         {
-            foreach (UIElement child in GetAllAt(x, y))
+            foreach (UIElement child in GetAllNotAt(x, y))
             {
                 child.MouseLeftDownOutside();
             }
@@ -250,6 +250,23 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             foreach (UIElement element in Children)
             {
                 if (element.Contains(x, y))
+                {
+                    found.Add(element);
+                }
+            }
+            return found;
+        }
+
+        protected virtual HashSet<UIElement> GetAllNotAt(int x, int y)
+        {
+            HashSet<UIElement> found = new HashSet<UIElement>();
+            if (!SelfContains(x, y))
+            {
+                found.Add(this);
+            }
+            foreach (UIElement element in Children)
+            {
+                if (!element.Contains(x, y))
                 {
                     found.Add(element);
                 }

@@ -53,34 +53,28 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                     {
                         element.HoverInternal = true;
                         element.MouseEnter(mX, mY);
-                        SysConsole.Output(OutputType.DEBUG, "Enter!");
                     }
                     if (mDown && !pDown)
                     {
                         element.MouseLeftDown(mX, mY);
-                        SysConsole.Output(OutputType.DEBUG, "LDown!");
                     }
                     else if (!mDown && pDown)
                     {
                         element.MouseLeftUp(mX, mY);
-                        SysConsole.Output(OutputType.DEBUG, "LUp!");
                     }
                 }
                 else if (element.HoverInternal)
                 {
+                    element.HoverInternal = false;
+                    element.MouseLeave(mX, mY);
                     if (mDown && !pDown)
                     {
                         element.MouseLeftDownOutside(mX, mY);
-                        SysConsole.Output(OutputType.DEBUG, "LDownOutside!");
                     }
-                    element.HoverInternal = false;
-                    element.MouseLeave(mX, mY);
-                    SysConsole.Output(OutputType.DEBUG, "Leave!");
                 }
                 else if (mDown && !pDown)
                 {
                     element.MouseLeftDownOutside(mX, mY);
-                    SysConsole.Output(OutputType.DEBUG, "LDownOutside!");
                 }
                 element.FullTick(TheClient.Delta);
             }
