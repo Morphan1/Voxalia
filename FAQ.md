@@ -45,6 +45,7 @@
 ### Where can I get Voxalia?
 
 - Talk to us! Check the contact page on the FreneticXYZ official website, and join us on IRC or Discord to get involved!
+- At this time, assets are being kept private to only people who've spoken directly with us about trying it out.
 - In the future, you'll be able to get the game without having to go through people, we have it this way only in early development.
 
 ### How do I get started once I have the game?
@@ -52,6 +53,15 @@
 - Once you have a valid FreneticXYZ account and a copy of the game, open the Launcher and login.
 - One day you'll be able to click a singleplayer button in the main menu and start up a story, but for now...
 	- run singleplayer.bat or .sh depending on your OS, and mess about in the sandbox environment.
+
+### Do I need to run the Voxalia server to play with friends?
+
+- No. Your friends can join your singleplayer game as well. (There may be additional steps in the future to open a singleplayer game fully.)
+
+### What ports do I need to forward to run a server?
+
+- By default, Voxalia singleplayer and server open up on port 28010. You can edit this in your launch command options (first argument is always the port).
+- Note that port forwarding is partially autoamted by the internals and it generally isn't required that you manually forward ports.
 
 ### How does Voxalia compare to similar games?
 
