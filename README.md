@@ -43,14 +43,8 @@ Also used libraries:
 
 ## Playing
 
-- Compile everything (see above)
-- Download the assets (included in public releases, or via the private repository)
-- Run `Voxalia.exe` by double clicking it on Windows, or via `$ mono Voxalia.exe` on Linux/Mac.
-- Open your console with the `tilde` key (the key next to the 1 key on standard US English QWERTY keyboards)
-- Type "`login <username> <password>`" (To get an account, register at http://frenetic.xyz/account/register )
-- Close Voxalia after it confirms login
-- Double click `singleplayer.bat` (Windows) or `singleplayer.sh` (Linux/Mac) to open that, then wait for it to load
-- You should now be in the game!
+- Please CONTACT US if you wish to play the game at this time.
+	- The game is not publicly available to play currently!
 
 ## Also Included
 
