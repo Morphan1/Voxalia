@@ -330,6 +330,39 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public double mapLastRendered = 0;
 
+        public void Render2DGame()
+        {
+            try
+            {
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
+                Establish2D();
+                if (CVars.r_3d_enable.ValueB)
+                {
+                    GL.Viewport(Window.Width / 2, 0, Window.Width / 2, Window.Height);
+                    Render2D(false);
+                    GL.Viewport(0, 0, Window.Width / 2, Window.Height);
+                    Render2D(false);
+                    GL.Viewport(0, 0, Window.Width, Window.Height);
+                }
+                else
+                {
+                    Render2D(false);
+                }
+                timer.Stop();
+                TWODTime = (double)timer.ElapsedMilliseconds / 1000f;
+                if (TWODTime > TWODSpikeTime)
+                {
+                    TWODSpikeTime = TWODTime;
+                }
+                timer.Reset();
+            }
+            catch (Exception ex)
+            {
+                SysConsole.Output("Rendering (2D)", ex);
+            }
+        }
+
         public void renderGame()
         {
             Stopwatch totalt = new Stopwatch();
@@ -387,35 +420,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 MainWorldView.SunLoc = GetSunLocation();
                 MainWorldView.Render();
                 ReverseEntitiesOrder();
-            }
-            catch (Exception ex)
-            {
-                SysConsole.Output("Rendering (2D)", ex);
-            }
-            try
-            {
-                Stopwatch timer = new Stopwatch();
-                timer.Start();
-                Establish2D();
-                if (CVars.r_3d_enable.ValueB)
-                {
-                    GL.Viewport(Window.Width / 2, 0, Window.Width / 2, Window.Height);
-                    //Render2D(false);
-                    GL.Viewport(0, 0, Window.Width / 2, Window.Height);
-                    //Render2D(false);
-                    GL.Viewport(0, 0, Window.Width, Window.Height);
-                }
-                else
-                {
-                    //Render2D(false);
-                }
-                timer.Stop();
-                TWODTime = (double)timer.ElapsedMilliseconds / 1000f;
-                if (TWODTime > TWODSpikeTime)
-                {
-                    TWODSpikeTime = TWODTime;
-                }
-                timer.Reset();
             }
             catch (Exception ex)
             {

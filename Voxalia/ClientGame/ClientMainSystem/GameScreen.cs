@@ -26,7 +26,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             TheClient.renderGame();
             TheClient.Establish2D();
-            TheClient.Render2D(false);
+            TheClient.Render2DGame();
         }
     }
 }
