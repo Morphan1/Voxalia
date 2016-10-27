@@ -35,14 +35,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             FontSet font = FontSets.Standard;
             int minY = 10 + (int)font.font_default.Height;
-            ChatBox = new UIInputBox("", "Enter a /command or a chat message...", font, UIAnchor.BOTTOM_LEFT, () => Window.Width - (30 * 2), () => 0, () => 0);
+            ChatMenu = new UIGroup(UIAnchor.TOP_CENTER, () => Window.Width, () => Window.Height - minY - UIBottomHeight, () => 0, () => 0);
+            ChatScroller = new UIScrollBox(UIAnchor.TOP_CENTER, () => ChatMenu.GetWidth() - (30 * 2), () => ChatMenu.GetHeight() - minY, () => 0, () => minY);
+            ChatBox = new UIInputBox("", "Enter a /command or a chat message...", font, UIAnchor.TOP_CENTER, ChatScroller.GetWidth, () => 0, () => (int)ChatScroller.GetHeight() + minY);
             ChatBox.EnterPressed = EnterChatMessage;
-            ChatScroller = new UIScrollBox(UIAnchor.TOP_LEFT, ChatBox.GetWidth, () => ChatMenu.GetHeight() - minY, () => 0, () => minY);
-            ChatMenu = new UIGroup(UIAnchor.TOP_LEFT, ChatBox.GetWidth, () => Window.Height - minY - UIBottomHeight, () => 30, () => 0);
             ChatMenu.AddChild(ChatBox);
             ChatMenu.AddChild(ChatScroller);
             Channels = new bool[(int)TextChannel.COUNT];
-            Func<int> xer = () => 0;
+            Func<int> xer = () => 30;
             for (int i = 0; i < Channels.Length; i++)
             {
                 Channels[i] = true;

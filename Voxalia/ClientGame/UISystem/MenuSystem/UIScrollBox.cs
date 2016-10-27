@@ -78,14 +78,12 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         protected override void RenderChildren(double delta, int xoff, int yoff)
         {
-            int x = GetX() + xoff;
-            int y = GetY() + yoff;
             int h = (int)GetHeight();
             int w = (int)GetWidth();
             Client TheClient = GetClient();
             GL.Enable(EnableCap.ScissorTest);
-            GL.Scissor(x, TheClient.Window.Height - (y + h), w, h);
-            base.RenderChildren(delta, x, y - Scroll);
+            GL.Scissor(xoff, TheClient.Window.Height - (yoff + h), w, h);
+            base.RenderChildren(delta, xoff, yoff - Scroll);
             GL.Scissor(0, 0, TheClient.Window.Width, TheClient.Window.Height); // TODO: Bump around a stack, for embedded scroll groups?
             GL.Disable(EnableCap.ScissorTest);
         }
