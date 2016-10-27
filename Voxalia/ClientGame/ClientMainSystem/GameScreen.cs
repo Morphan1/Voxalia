@@ -14,6 +14,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
     {
         public GameScreen(Client tclient) : base(tclient)
         {
+            ResetOnRender = false;
         }
 
         public override void SwitchTo()

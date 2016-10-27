@@ -19,6 +19,8 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
     {
         public Client TheClient;
 
+        protected bool ResetOnRender = true;
+
         public UIScreen(Client tclient) : base(UIAnchor.TOP_LEFT, () => 0, () => 0, () => 0, () => 0)
         {
             TheClient = tclient;
@@ -88,8 +90,11 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         protected override void RenderChildren(double delta, int xoff, int yoff)
         {
             TheClient.Establish2D();
-            GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0.5f, 0.5f, 1 });
-            GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1 });
+            if (ResetOnRender)
+            {
+                GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0.5f, 0.5f, 1 });
+                GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1 });
+            }
             base.RenderChildren(delta, xoff, yoff);
         }
 
