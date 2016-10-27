@@ -42,7 +42,6 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             HashSet<UIElement> found = new HashSet<UIElement>();
             if (SelfContains(x, y))
             {
-                found.Add(this);
                 x -= GetX();
                 y += Scroll - GetY();
                 foreach (UIElement element in Children)

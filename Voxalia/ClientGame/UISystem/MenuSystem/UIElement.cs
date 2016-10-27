@@ -215,41 +215,46 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public void MouseEnter(int x, int y)
         {
+            MouseEnter();
             foreach (UIElement child in GetAllAt(x, y))
             {
-                child.MouseEnter();
+                child.MouseEnter(x, y);
             }
         }
 
         public void MouseLeave(int x, int y)
         {
+            MouseLeave();
             foreach (UIElement child in GetAllNotAt(x, y))
             {
-                child.MouseLeave();
+                child.MouseLeave(x, y);
             }
         }
 
         public void MouseLeftDown(int x, int y)
         {
+            MouseLeftDown();
             foreach (UIElement child in GetAllAt(x, y))
             {
-                child.MouseLeftDown();
+                child.MouseLeftDown(x, y);
             }
         }
 
         public void MouseLeftDownOutside(int x, int y)
         {
+            MouseLeftDownOutside();
             foreach (UIElement child in GetAllNotAt(x, y))
             {
-                child.MouseLeftDownOutside();
+                child.MouseLeftDownOutside(x, y);
             }
         }
 
         public void MouseLeftUp(int x, int y)
         {
+            MouseLeftUp();
             foreach (UIElement child in GetAllAt(x, y))
             {
-                child.MouseLeftUp();
+                child.MouseLeftUp(x, y);
             }
         }
 
@@ -276,10 +281,6 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         protected virtual HashSet<UIElement> GetAllAt(int x, int y)
         {
             HashSet<UIElement> found = new HashSet<UIElement>();
-            if (SelfContains(x, y))
-            {
-                found.Add(this);
-            }
             foreach (UIElement element in Children)
             {
                 if (element.Contains(x, y))
@@ -293,10 +294,6 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         protected virtual HashSet<UIElement> GetAllNotAt(int x, int y)
         {
             HashSet<UIElement> found = new HashSet<UIElement>();
-            if (!SelfContains(x, y))
-            {
-                found.Add(this);
-            }
             foreach (UIElement element in Children)
             {
                 if (!element.Contains(x, y))

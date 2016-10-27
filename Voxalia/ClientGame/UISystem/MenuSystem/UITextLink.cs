@@ -40,6 +40,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             Icon = ico;
             ClickedTask = clicked;
             Text = btext;
+
             TextHover = btexthover;
             TextClick = btextclick;
             TextFont = font;
