@@ -88,9 +88,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
             InventoryMenu.AddChild(inv_equipment);
             InventoryMenu.AddChild(inv_builderitems);
             InventoryMenu.AddChild(InventoryExitButton());
-            Func<float> height = () => inv_inventory.GetY() + inv_inventory.GetHeight() + 20 + FontSets.Standard.font_default.Height + 20;
-            UI_Inv_Items = new UIScrollBox(UIAnchor.BOTTOM_LEFT, () => 20, height, () => ItemsListSize, () => -(int)height() - 20);
-            UI_Inv_Filter = new UIInputBox("", "Item Filter", FontSets.Standard, UIAnchor.TOP_LEFT, () => 20, () => (int)(inv_inventory.GetY() + inv_inventory.GetHeight() + 20), () => 200);
+            Func<int> height = () => inv_inventory.GetY() + (int)inv_inventory.GetHeight() + 20 + (int)FontSets.Standard.font_default.Height + 20;
+            UI_Inv_Items = new UIScrollBox(UIAnchor.TOP_LEFT, () => ItemsListSize, () => Window.Height - (height() + 20), () => 20, height);
+            UI_Inv_Filter = new UIInputBox("", "Item Filter", FontSets.Standard, UIAnchor.TOP_LEFT, () => ItemsListSize, () => 20, () => (int)(inv_inventory.GetY() + inv_inventory.GetHeight() + 20));
             UI_Inv_Filter.TextModified += (o, e) => UpdateInventoryMenu();
             InventoryMenu.AddChild(UI_Inv_Items);
             InventoryMenu.AddChild(UI_Inv_Filter);

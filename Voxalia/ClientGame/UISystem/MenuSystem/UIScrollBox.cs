@@ -78,9 +78,6 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             TheClient.Rendering.SetColor(new Vector4(0f, 0.5f, 0.5f, 0.3f));
             TheClient.Rendering.RenderRectangle(x, y, x + w, y + h);
             TheClient.Rendering.SetColor(new Vector4(1f));
-            GL.Enable(EnableCap.ScissorTest);
-            GL.Scissor(0, 0, TheClient.Window.Width, TheClient.Window.Height); // TODO: Bump around a stack, for embedded scroll groups?
-            GL.Disable(EnableCap.ScissorTest);
         }
 
         protected override void RenderChildren(double delta, int xoff, int yoff)
