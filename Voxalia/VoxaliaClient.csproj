@@ -126,7 +126,6 @@
     <Compile Include="ClientGame\ClientMainSystem\ClientTick.cs" />
     <Compile Include="ClientGame\ClientMainSystem\GameScreen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\MainMenuScreen.cs" />
-    <Compile Include="ClientGame\ClientMainSystem\Screen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\SingleplayerMenuScreen.cs" />
     <Compile Include="ClientGame\CommandSystem\ClientCommands.cs" />
     <Compile Include="ClientGame\CommandSystem\ClientCVar.cs" />
@@ -282,6 +281,8 @@
     <Compile Include="ClientGame\AudioSystem\TextToSpeech.cs" />
     <Compile Include="ClientGame\UISystem\GamePadHandler.cs" />
     <Compile Include="ClientGame\UISystem\KeyHandler.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIButton.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIImage.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIInputBox.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIAnchor.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIElement.cs" />

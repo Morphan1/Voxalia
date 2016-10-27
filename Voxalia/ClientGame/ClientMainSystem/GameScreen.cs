@@ -6,27 +6,22 @@
 //
 
 using Voxalia.ClientGame.UISystem;
+using Voxalia.ClientGame.UISystem.MenuSystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
-    public class GameScreen: Screen
+    public class GameScreen : UIScreen
     {
-        public override void Init()
+        public GameScreen(Client tclient) : base(tclient)
         {
-            // Do nothing, base init currently handles everything for some reason
-        }
-
-        public override void Tick()
-        {
-            // Do nothing, base tick currently handles everything for some reason
         }
 
         public override void SwitchTo()
         {
             MouseHandler.CaptureMouse();
         }
-
-        public override void Render()
+        
+        protected override void Render(double delta, int xoff, int yoff)
         {
             TheClient.renderGame();
         }

@@ -268,17 +268,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     {
                         Shaders.ColorMultShader.Bind();
                         GL.Uniform1(6, (float)GlobalTickTimeLocal);
-                        CScreen.Render();
                         if (CVars.r_3d_enable.ValueB)
                         {
                             GL.Viewport(Window.Width / 2, 0, Window.Width / 2, Window.Height);
+                            Render2D(false);
                             UIConsole.Draw();
                             GL.Viewport(0, 0, Window.Width / 2, Window.Height);
+                            Render2D(false);
                             UIConsole.Draw();
                             GL.Viewport(0, 0, Window.Width, Window.Height);
                         }
                         else
                         {
+                            Render2D(false);
                             UIConsole.Draw();
                         }
                     }
@@ -398,14 +400,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 if (CVars.r_3d_enable.ValueB)
                 {
                     GL.Viewport(Window.Width / 2, 0, Window.Width / 2, Window.Height);
-                    Render2D(false);
+                    //Render2D(false);
                     GL.Viewport(0, 0, Window.Width / 2, Window.Height);
-                    Render2D(false);
+                    //Render2D(false);
                     GL.Viewport(0, 0, Window.Width, Window.Height);
                 }
                 else
                 {
-                    Render2D(false);
+                    //Render2D(false);
                 }
                 timer.Stop();
                 TWODTime = (double)timer.ElapsedMilliseconds / 1000f;
@@ -1080,7 +1082,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             if (!sub3d)
             {
-                UI.FullRender(gDelta, 0, 0);
+                CScreen.FullRender(gDelta, 0, 0);
                 //RenderInvMenu();
                 //RenderChatSystem();
             }

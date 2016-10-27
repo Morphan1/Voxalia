@@ -51,11 +51,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public static Client Central = null;
 
         /// <summary>
-        /// The main UI controller for the client.
-        /// </summary>
-        public static UIScreen UI;
-
-        /// <summary>
         /// How far away the client will render chunks.
         /// TODO: Use/transmit this value!
         /// </summary>
@@ -101,9 +96,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Texture ItemFrame;
 
         /// <summary>
-        /// The current 'Screen' object.
+        /// The current 'UIScreen' object.
         /// </summary>
-        public Screen CScreen;
+        public UIScreen CScreen;
 
         public LanguageEngine Languages = new LanguageEngine();
 
@@ -318,8 +313,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CVars.r_cloudshadows.OnChanged += onCloudShadowChanged;
             View3D.CheckError("Load - General Graphics");
             SysConsole.Output(OutputType.INIT, "Loading UI engine...");
-            UI = new UIScreen(this);
-            UIConsole.InitConsole();
+            //CScreen = new UIScreen(this);
+            UIConsole.InitConsole(); // TODO: REMOVE THESE LINES
             InitChatSystem();
             View3D.CheckError("Load - UI");
             SysConsole.Output(OutputType.INIT, "Preparing rendering engine...");
@@ -349,15 +344,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CVars.a_music.OnChanged += onMusicChanged;
             CVars.a_echovolume.OnChanged += OnEchoVolumeChanged;
             OnEchoVolumeChanged(null, null);
-            //SysConsole.Output(OutputType.INIT, "Preparing inventory...");
-            //InitInventory();
             SysConsole.Output(OutputType.INIT, "Setting up screens...");
-            TheMainMenuScreen = new MainMenuScreen() { TheClient = this };
-            TheGameScreen = new GameScreen() { TheClient = this };
-            TheSingleplayerMenuScreen = new SingleplayerMenuScreen() { TheClient = this };
-            TheMainMenuScreen.Init();
-            TheGameScreen.Init();
-            TheSingleplayerMenuScreen.Init();
+            TheMainMenuScreen = new MainMenuScreen(this);
+            TheGameScreen = new GameScreen(this);
+            TheSingleplayerMenuScreen = new SingleplayerMenuScreen(this);
+            //SysConsole.Output(OutputType.INIT, "Preparing inventory...");
+            //InitInventory(); TODO
+            SysConsole.Output(OutputType.INIT, "Showing main menu...");
             ShowMainMenu();
             SysConsole.Output(OutputType.INIT, "Trying to grab RawGamePad...");
             try

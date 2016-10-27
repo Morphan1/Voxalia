@@ -223,9 +223,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     TickWorld(Delta);
                     TickChatSystem();
                     //TickInvMenu();
-                    UI.FullTick(Delta);
+                    CScreen.FullTick(Delta);
                     Sounds.Update(MainWorldView.CameraPos, MainWorldView.CameraTarget - MainWorldView.CameraPos, MainWorldView.CameraUp(), Player.GetVelocity(), Window.Focused);
-                    CScreen.Tick();
                     Schedule.RunAllSyncTasks(0);
                     Player.PostTick();
                     TheRegion.SolveJoints();

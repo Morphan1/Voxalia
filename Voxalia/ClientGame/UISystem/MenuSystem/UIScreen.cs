@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using Voxalia.ClientGame.ClientMainSystem;
 using OpenTK.Input;
 using System;
+using Voxalia.ClientGame.GraphicsSystems;
+using OpenTK.Graphics.OpenGL4;
+using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.UISystem.MenuSystem
 {
@@ -16,9 +19,11 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
     {
         public Client TheClient;
 
-        public UIScreen(Client tclient) : base(UIAnchor.TOP_LEFT, () => tclient.Window.Width, () => tclient.Window.Height, () => 0, () => 0)
+        public UIScreen(Client tclient) : base(UIAnchor.TOP_LEFT, () => 0, () => 0, () => 0, () => 0)
         {
             TheClient = tclient;
+            Width = () => Parent == null ? TheClient.Window.Width : Parent.GetWidth();
+            Height = () => Parent == null ? TheClient.Window.Height : Parent.GetHeight();
         }
 
         public override Client GetClient()
@@ -30,6 +35,11 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         protected override void TickChildren(double delta)
         {
+            if (Parent != null)
+            {
+                base.TickChildren(delta);
+                return;
+            }
             int mX = MouseHandler.MouseX();
             int mY = MouseHandler.MouseY();
             bool mDown = MouseHandler.CurrentMouse.IsButtonDown(MouseButton.Left);
@@ -41,28 +51,50 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                     {
                         element.HoverInternal = true;
                         element.MouseEnter(mX, mY);
+                        SysConsole.Output(OutputType.DEBUG, "Enter!");
                     }
                     if (mDown && !pDown)
                     {
                         element.MouseLeftDown(mX, mY);
+                        SysConsole.Output(OutputType.DEBUG, "LDown!");
+                    }
+                    else if (!mDown && pDown)
+                    {
+                        element.MouseLeftUp(mX, mY);
+                        SysConsole.Output(OutputType.DEBUG, "LUp!");
                     }
                 }
                 else if (element.HoverInternal)
                 {
-                    element.HoverInternal = false;
-                    element.MouseLeave(mX, mY);
                     if (mDown && !pDown)
                     {
                         element.MouseLeftDownOutside(mX, mY);
+                        SysConsole.Output(OutputType.DEBUG, "LDownOutside!");
                     }
+                    element.HoverInternal = false;
+                    element.MouseLeave(mX, mY);
+                    SysConsole.Output(OutputType.DEBUG, "Leave!");
                 }
                 else if (mDown && !pDown)
                 {
                     element.MouseLeftDownOutside(mX, mY);
+                    SysConsole.Output(OutputType.DEBUG, "LDownOutside!");
                 }
                 element.FullTick(TheClient.Delta);
             }
             pDown = mDown;
+        }
+
+        protected override void RenderChildren(double delta, int xoff, int yoff)
+        {
+            TheClient.Establish2D();
+            GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0.5f, 0.5f, 1 });
+            GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1 });
+            base.RenderChildren(delta, xoff, yoff);
+        }
+
+        public virtual void SwitchTo()
+        {
         }
     }
 }

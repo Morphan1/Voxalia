@@ -127,7 +127,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (!IsChatVisible())
             {
                 KeyHandler.GetKBState();
-                UI.AddChild(ChatMenu);
+                TheGameScreen.AddChild(ChatMenu);
                 FixMouse();
             }
         }
@@ -140,7 +140,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             if (IsChatVisible())
             {
                 KeyHandler.GetKBState();
-                UI.RemoveChild(ChatMenu);
+                TheGameScreen.RemoveChild(ChatMenu);
                 WVis = false;
                 FixMouse();
             }
@@ -148,7 +148,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public bool IsChatVisible()
         {
-            return UI.HasChild(ChatMenu);
+            return TheGameScreen.HasChild(ChatMenu);
         }
 
         public void WriteMessage(TextChannel channel, string message)
