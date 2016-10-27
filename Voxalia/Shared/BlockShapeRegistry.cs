@@ -192,13 +192,13 @@ namespace Voxalia.Shared
             }
         }
 
-        public List<Vector3> GetTCoordsQuick(int index, Material mat)
+        public Vector3[] GetTCoordsQuick(int index, Material mat)
         {
-            List<Vector3> tmp = BSSD.TCrds[index];
-            List<Vector3> vecs = new List<Vector3>(tmp.Count + 1);
-            for (int i = 0; i < tmp.Count; i++)
+            List<Vector3> set = BSSD.TCrds[index];
+            Vector3[] vecs = new Vector3[set.Count];
+            for (int i = 0; i < set.Count; i++)
             {
-                Vector3 temp = tmp[i];
+                Vector3 temp = set[i];
                 for (int z = 0; z < 6; z++)
                 {
                     if (temp.Z == Material.DEBUG.TextureID((MaterialSide)z))
@@ -206,7 +206,7 @@ namespace Voxalia.Shared
                         temp.Z = mat.TextureID((MaterialSide)z);
                     }
                 }
-                vecs.Add(temp);
+                vecs[i] = temp;
             }
             return vecs;
         }
