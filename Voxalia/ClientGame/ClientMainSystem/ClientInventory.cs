@@ -165,7 +165,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             InvCurrent = item;
             UI_Inv_Displayname.Text = "^B" + item.DisplayName;
             UI_Inv_Description.Text = "^r^7" + item.Name + (item.SecondaryName != null && item.SecondaryName.Length > 0 ? " [" + item.SecondaryName + "]" : "") + "\n>^B" + item.Description;
-            UI_Inv_Detail.Text = "^BCount: " + item.Count + ", ColorCode: " + item.DrawColor + ", Texture: " + (item.Tex != null ? item.Tex.Name: "{NULL}")
+            UI_Inv_Detail.Text = "^BCount: " + item.Count + ", Color: " + item.DrawColor + ", Texture: " + (item.Tex != null ? item.Tex.Name: "{NULL}")
                 + ", Model: " + (item.Mod != null ? item.Mod.Name : "{NULL}") + ", Shared attributes: "+  item.SharedStr();
         }
 
@@ -184,7 +184,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     string name = Items[i].DisplayName;
                     UITextLink p = prev;
                     int x = i;
-                    UITextLink neo = new UITextLink(Items[i].Tex, name, pref1 + name, pref2 + name, FontSets.Standard, () => InventorySelectItem(x + 1), UIAnchor.TOP_LEFT, () => p.GetX(), () => (int)(p.GetY() + p.GetHeight()));
+                    UITextLink neo = new UITextLink(Items[i].Tex, name, pref1 + name, pref2 + name, FontSets.Standard, () => InventorySelectItem(x + 1), UIAnchor.TOP_LEFT, p.GetX, () => (int)(p.GetY() + p.GetHeight()));
                     neo.IconColor = Items[i].DrawColor;
                     UI_Inv_Items.AddChild(neo);
                     prev = neo;

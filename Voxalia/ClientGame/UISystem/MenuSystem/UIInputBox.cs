@@ -103,6 +103,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                     MinCursor = max;
                     MaxCursor = min;
                 }
+                bool modified = false;
                 KeyHandlerState khs = KeyHandler.GetKBState();
                 if (khs.InitBS > 0)
                 {
@@ -110,12 +111,14 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                     Text = Text.Substring(0, end) + Text.Substring(MaxCursor);
                     MinCursor = end;
                     MaxCursor = end;
+                    modified = true;
                 }
                 if (khs.KeyboardString.Length > 0)
                 {
                     Text = Text.Substring(0, MinCursor) + khs.KeyboardString + Text.Substring(MaxCursor);
                     MinCursor = MinCursor + khs.KeyboardString.Length;
                     MaxCursor = MinCursor;
+                    modified = true;
                 }
                 if (!MultiLine && Text.Contains('\n'))
                 {
@@ -128,12 +131,13 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                             MinCursor = MaxCursor;
                         }
                     }
+                    modified = true;
                     if (EnterPressed != null)
                     {
                         EnterPressed();
                     }
                 }
-                if (TextModified != null)
+                if (modified && TextModified != null)
                 {
                     TextModified.Invoke(this, null);
                 }

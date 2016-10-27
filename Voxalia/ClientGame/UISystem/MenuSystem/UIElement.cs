@@ -16,7 +16,11 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 {
     public abstract class UIElement
     {
-        protected HashSet<UIElement> Children;
+        /// <summary>
+        /// Do not access directly, except for debugging.
+        /// TODO: Why is this a HashSet?
+        /// </summary>
+        public HashSet<UIElement> Children;
         
         public bool HoverInternal;
 
@@ -139,7 +143,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
         private HashSet<UIElement> ToAdd = new HashSet<UIElement>();
         private HashSet<UIElement> ToRemove = new HashSet<UIElement>();
 
-        public void FullTick(double delta)
+        public void CheckChildren()
         {
             foreach (UIElement element in ToAdd)
             {
@@ -166,6 +170,11 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             }
             ToAdd.Clear();
             ToRemove.Clear();
+        }
+
+        public void FullTick(double delta)
+        {
+            CheckChildren();
             Tick(delta);
             TickChildren(delta);
         }
@@ -197,6 +206,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         protected virtual void RenderChildren(double delta, int xoff, int yoff)
         {
+            CheckChildren();
             foreach (UIElement element in Children)
             {
                 element.FullRender(delta, xoff, yoff);
