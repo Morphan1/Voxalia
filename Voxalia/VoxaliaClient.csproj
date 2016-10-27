@@ -283,6 +283,7 @@
     <Compile Include="ClientGame\UISystem\GamePadHandler.cs" />
     <Compile Include="ClientGame\UISystem\KeyHandler.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIButton.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIColoredBox.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIImage.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIInputBox.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UIAnchor.cs" />

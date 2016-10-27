@@ -222,7 +222,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     Commands.Tick();
                     TickWorld(Delta);
                     TickChatSystem();
-                    //TickInvMenu();
+                    TickInvMenu();
                     CScreen.FullTick(Delta);
                     Sounds.Update(MainWorldView.CameraPos, MainWorldView.CameraTarget - MainWorldView.CameraPos, MainWorldView.CameraUp(), Player.GetVelocity(), Window.Focused);
                     Schedule.RunAllSyncTasks(0);
@@ -280,7 +280,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public void Resetregion()
         {
             Items.Clear();
-            //UpdateInventoryMenu();
+            UpdateInventoryMenu();
             QuickBarPos = 0;
             BuildWorld();
         }

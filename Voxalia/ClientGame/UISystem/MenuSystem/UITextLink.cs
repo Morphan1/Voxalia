@@ -78,12 +78,10 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             string tt = Text;
             if (Clicked)
             {
-                SysConsole.Output(OutputType.DEBUG, "TextClick!");
                 tt = TextClick;
             }
             else if (Hovered)
             {
-                SysConsole.Output(OutputType.DEBUG, "TextHover!");
                 tt = TextHover;
             }
             if (Icon != null)

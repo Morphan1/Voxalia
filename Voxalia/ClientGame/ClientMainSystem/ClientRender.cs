@@ -965,7 +965,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 SetVox();
             }
             GL.Disable(EnableCap.CullFace);
-            if (CVars.u_showhud.ValueB /*&& CInvMenu == null*/)
+            if (CVars.u_showhud.ValueB && !InvShown())
             {
                 if (!sub3d && CVars.u_showping.ValueB)
                 {

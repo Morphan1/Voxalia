@@ -41,10 +41,12 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             {
                 throw new Exception("Tried to add a child that already has a parent!");
             }
-            if (Children.Add(child))
+            if (!Children.Contains(child))
             {
-                child.Parent = this;
-                child.Init();
+                if (!ToAdd.Add(child))
+                {
+                    throw new Exception("Tried to add a child twice!");
+                }
             }
             else
             {
@@ -127,10 +129,23 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                 && y > lowY && y < highY;
         }
 
+        private HashSet<UIElement> ToAdd = new HashSet<UIElement>();
         private HashSet<UIElement> ToRemove = new HashSet<UIElement>();
 
         public void FullTick(double delta)
         {
+            foreach (UIElement element in ToAdd)
+            {
+                if (Children.Add(element))
+                {
+                    element.Parent = this;
+                    element.Init();
+                }
+                else
+                {
+                    throw new Exception("Failed to add a child!");
+                }
+            }
             foreach (UIElement element in ToRemove)
             {
                 if (Children.Remove(element))
@@ -142,6 +157,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                     throw new Exception("Failed to remove a child!");
                 }
             }
+            ToAdd.Clear();
             ToRemove.Clear();
             Tick(delta);
             TickChildren(delta);

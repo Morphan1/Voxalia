@@ -321,8 +321,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CVars.r_cloudshadows.OnChanged += onCloudShadowChanged;
             View3D.CheckError("Load - General Graphics");
             SysConsole.Output(OutputType.INIT, "Loading UI engine...");
-            //CScreen = new UIScreen(this);
-            UIConsole.InitConsole(); // TODO: REMOVE THESE LINES
+            UIConsole.InitConsole(); // TODO: make this non-static
             InitChatSystem();
             View3D.CheckError("Load - UI");
             SysConsole.Output(OutputType.INIT, "Preparing rendering engine...");
@@ -356,8 +355,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheMainMenuScreen = new MainMenuScreen(this);
             TheGameScreen = new GameScreen(this);
             TheSingleplayerMenuScreen = new SingleplayerMenuScreen(this);
-            //SysConsole.Output(OutputType.INIT, "Preparing inventory...");
-            //InitInventory(); TODO
+            SysConsole.Output(OutputType.INIT, "Preparing inventory...");
+            InitInventory();
             SysConsole.Output(OutputType.INIT, "Showing main menu...");
             ShowMainMenu();
             SysConsole.Output(OutputType.INIT, "Trying to grab RawGamePad...");
@@ -541,12 +540,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
         {
             GL.Viewport(0, 0, Window.Width, Window.Height);
             MainWorldView.Generate(this, Window.Width, Window.Height);
-            //FixInvRender();
+            FixInvRender();
         }
 
         public void FixMouse()
         {
-            if (/*CInvMenu != null ||*/ !Window.Focused || UIConsole.Open || IsChatVisible() || CScreen != TheGameScreen)
+            if (InvShown() || !Window.Focused || UIConsole.Open || IsChatVisible() || CScreen != TheGameScreen)
             {
                 MouseHandler.ReleaseMouse();
             }
