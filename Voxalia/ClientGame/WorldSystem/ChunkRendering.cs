@@ -559,14 +559,14 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public ChunkRenderHelper()
         {
-            Vertices = new List<Vector3>(CSize * CSize * CSize * 6);
-            TCoords = new List<Vector3>(CSize * CSize * CSize * 6);
-            Norms = new List<Vector3>(CSize * CSize * CSize * 6);
-            Cols = new List<Vector4>(CSize * CSize * CSize * 6);
-            TCols = new List<Vector4>(CSize * CSize * CSize * 6);
-            THVs = new List<Vector4>(CSize * CSize * CSize * 6);
-            THWs = new List<Vector4>(CSize * CSize * CSize * 6);
-            Tangs = new List<Vector3>(CSize * CSize * CSize * 6);
+            Vertices = new List<Vector3>(CSize * CSize * CSize);
+            TCoords = new List<Vector3>(CSize * CSize * CSize);
+            Norms = new List<Vector3>(CSize * CSize * CSize);
+            Cols = new List<Vector4>(CSize * CSize * CSize);
+            TCols = new List<Vector4>(CSize * CSize * CSize);
+            THVs = new List<Vector4>(CSize * CSize * CSize);
+            THWs = new List<Vector4>(CSize * CSize * CSize);
+            Tangs = new List<Vector3>(CSize * CSize * CSize);
     }
         public List<Vector3> Vertices;
         public List<Vector3> TCoords;
