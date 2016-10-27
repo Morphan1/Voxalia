@@ -127,7 +127,6 @@
     <Compile Include="ClientGame\ClientMainSystem\ClientTick.cs" />
     <Compile Include="ClientGame\ClientMainSystem\GameScreen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\MainMenuScreen.cs" />
-    <Compile Include="ClientGame\ClientMainSystem\Screen.cs" />
     <Compile Include="ClientGame\ClientMainSystem\SingleplayerMenuScreen.cs" />
     <Compile Include="ClientGame\CommandSystem\ClientCommands.cs" />
     <Compile Include="ClientGame\CommandSystem\ClientCVar.cs" />
@@ -283,14 +282,17 @@
     <Compile Include="ClientGame\AudioSystem\TextToSpeech.cs" />
     <Compile Include="ClientGame\UISystem\GamePadHandler.cs" />
     <Compile Include="ClientGame\UISystem\KeyHandler.cs" />
-    <Compile Include="ClientGame\UISystem\MenuSystem\UIItemGroup.cs" />
-    <Compile Include="ClientGame\UISystem\MenuSystem\UIMenu.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIButton.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIColoredBox.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIImage.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIInputBox.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIAnchor.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIElement.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIGroup.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIScreen.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UILabel.cs" />
-    <Compile Include="ClientGame\UISystem\MenuSystem\UIScrollGroup.cs" />
-    <Compile Include="ClientGame\UISystem\MenuSystem\UITextBox.cs" />
+    <Compile Include="ClientGame\UISystem\MenuSystem\UIScrollBox.cs" />
     <Compile Include="ClientGame\UISystem\MenuSystem\UITextLink.cs" />
-    <Compile Include="ClientGame\UISystem\MenuSystem\UIMenuButton.cs" />
-    <Compile Include="ClientGame\UISystem\MenuSystem\UIMenuItem.cs" />
     <Compile Include="ClientGame\AudioSystem\MicrophoneHandler.cs" />
     <Compile Include="ClientGame\UISystem\MouseHandler.cs" />
     <Compile Include="ClientGame\UISystem\RawGamePad.cs" />
@@ -337,6 +339,7 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -9,16 +9,13 @@ using System;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.Shared;
 using OpenTK;
+using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.UISystem.MenuSystem
 {
-    public class UILabel : UIMenuItem
+    public class UILabel : UIElement
     {
         public string Text;
-        
-        public Func<float> XGet;
-
-        public Func<float> YGet;
 
         public FontSet TextFont;
 
@@ -28,36 +25,17 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public string BColor = "^r^7";
 
-        public UILabel(string btext, Func<float> xer, Func<float> yer, FontSet font, Func<int> maxx = null)
+        public UILabel(string btext, FontSet font, UIAnchor anchor, Func<int> xOff, Func<int> yOff, Func<int> maxx = null)
+            : base(anchor, () => 0, () => 0, xOff, yOff)
         {
             Text = btext;
             TextFont = font;
-            XGet = xer;
-            YGet = yer;
+            Width = () => (float)TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text, BColor).X;
+            Height = () => (float)TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text, BColor).Y;
             MaxX = maxx;
         }
 
-        public override void MouseEnter()
-        {
-        }
-
-        public override void MouseLeave()
-        {
-        }
-
-        public override void MouseLeftDown()
-        {
-        }
-
-        public override void MouseLeftUp()
-        {
-        }
-
-        public override void Init()
-        {
-        }
-
-        public override void Render(double delta, int xoff, int yoff)
+        protected override void Render(double delta, int xoff, int yoff)
         {
             string tex = MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text;
             float bx = GetX() + xoff;
@@ -65,42 +43,12 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             if (BackColor.W > 0)
             {
                 Location meas = TextFont.MeasureFancyLinesOfText(tex);
-                Menus.TheClient.Rendering.SetColor(BackColor);
-                Menus.TheClient.Rendering.RenderRectangle(bx, by, bx + (float)meas.X, by + (float)meas.Y);
-                Menus.TheClient.Rendering.SetColor(Vector4.One);
+                Client TheClient = GetClient();
+                TheClient.Rendering.SetColor(BackColor);
+                TheClient.Rendering.RenderRectangle(bx, by, bx + (float)meas.X, by + (float)meas.Y);
+                TheClient.Rendering.SetColor(Vector4.One);
             }
             TextFont.DrawColoredText(tex, new Location(bx, by, 0), int.MaxValue, 1, false, BColor);
-        }
-
-        public float GetWidth()
-        {
-            Location size = TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text, BColor);
-            return (float)size.X;
-        }
-
-        public float GetHeight()
-        {
-            Location size = TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text, BColor);
-            return (float)size.Y;
-        }
-
-        public float GetX()
-        {
-            return XGet.Invoke();
-        }
-
-        public float GetY()
-        {
-            return YGet.Invoke();
-        }
-
-        public override bool Contains(int x, int y)
-        {
-            float tx = GetX();
-            float ty = GetY();
-            Location size = TextFont.MeasureFancyLinesOfText(MaxX != null ? TextFont.SplitAppropriately(Text, MaxX()) : Text, BColor);
-            return x > tx && x < tx + size.X
-                && y > ty && y < ty + size.Y;
         }
     }
 }

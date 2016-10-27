@@ -1,4 +1,4 @@
-//
+﻿//
 // This file is part of the game Voxalia, created by FreneticXYZ.
 // This code is Copyright (C) 2016 FreneticXYZ under the terms of the MIT license.
 // See README.md or LICENSE.txt for contents of the MIT license.
@@ -14,70 +14,39 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using Voxalia.ClientGame.GraphicsSystems;
 using Voxalia.Shared;
+using Voxalia.ClientGame.ClientMainSystem;
 
 namespace Voxalia.ClientGame.UISystem.MenuSystem
 {
-    public class UITextBox : UIMenuItem
+    public class UIInputBox : UIElement
     {
-        public Func<int> X;
-
-        public Func<int> Y;
-
-        public string Info;
-
         public string Text;
-
-        public Func<int> Width;
-
+        public string Info;
         public FontSet Fonts;
 
         public bool Selected = false;
-
         public bool MultiLine = false;
-
         public int MinCursor = 0;
-
         public int MaxCursor = 0;
-        
-        public UITextBox(string def, string info, Func<int> x, Func<int> y, Func<int> width, FontSet fonts)
+
+        public UIInputBox(string text, string info, FontSet fonts, UIAnchor anchor, Func<float> width, Func<int> xOff, Func<int> yOff)
+            : base(anchor, width, () => fonts.font_default.Height, xOff, yOff)
         {
-            Text = def;
+            Text = text;
             Info = info;
-            X = x;
-            Y = y;
-            Width = width;
             Fonts = fonts;
-        }
-
-        public override bool Contains(int x, int y)
-        {
-            int mx = X();
-            int my = Y();
-            return x >= mx && x <= mx + Width() && y >= my && y <= my + Fonts.font_default.Height;
-        }
-
-        public override void Init()
-        {
-        }
-
-        public override void MouseEnter()
-        {
-        }
-
-        public override void MouseLeave()
-        {
         }
 
         public bool MDown = false;
 
         public int MStart = 0;
 
-        public override void MouseLeftDown()
+        protected override void MouseLeftDown()
         {
             MDown = true;
             Selected = true;
             /* KeyHandlerState khs = */KeyHandler.GetKBState();
-            int xs = X();
+            int xs = GetX();
             for (int i = 0; i < Text.Length; i++)
             {
                 if (xs + Fonts.MeasureFancyText(Text.Substring(0, i)) > MouseHandler.MouseX())
@@ -93,20 +62,20 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             MStart = Text.Length;
         }
 
-        public override void MouseLeftDownOutside()
+        protected override void MouseLeftDownOutside()
         {
             Selected = false;
         }
 
-        public override void MouseLeftUp()
+        protected override void MouseLeftUp()
         {
             AdjustMax();
             MDown = false;
         }
 
-        public void AdjustMax()
+        protected void AdjustMax()
         {
-            int xs = X();
+            int xs = GetX();
             for (int i = 0; i < Text.Length; i++)
             {
                 if (xs + Fonts.MeasureFancyText(Text.Substring(0, i)) > MouseHandler.MouseX())
@@ -119,7 +88,7 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
             MaxCursor = Text.Length;
         }
 
-        public override void Tick(double delta)
+        protected override void Tick(double delta)
         {
             if (MDown)
             {
@@ -164,12 +133,13 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
 
         public Action EnterPressed;
 
-        public override void Render(double delta, int xoff, int yoff)
+        protected override void Render(double delta, int xoff, int yoff)
         {
             string typed = Text;
             int c = 0;
             int cmax = 0;
-            if (!Menus.TheClient.CVars.u_colortyping.ValueB)
+            Client TheClient = GetClient();
+            if (!TheClient.CVars.u_colortyping.ValueB)
             {
                 for (int i = 0; i < typed.Length && i < MinCursor; i++)
                 {
@@ -187,24 +157,24 @@ namespace Voxalia.ClientGame.UISystem.MenuSystem
                 }
                 typed = typed.Replace("^", "^^n");
             }
-            int x = X() + xoff;
-            int y = Y() + yoff;
-            int w = Width();
-            Menus.TheClient.Textures.White.Bind();
-            Menus.TheClient.Rendering.SetColor(Color4.White);
-            Menus.TheClient.Rendering.RenderRectangle(x - 1, y - 1, x + w + 1, y + Fonts.font_default.Height + 1);
+            int x = GetX() + xoff;
+            int y = GetY() + yoff;
+            int w = (int)GetWidth();
+            TheClient.Textures.White.Bind();
+            TheClient.Rendering.SetColor(Color4.White);
+            TheClient.Rendering.RenderRectangle(x - 1, y - 1, x + w + 1, y + Fonts.font_default.Height + 1);
             GL.Enable(EnableCap.ScissorTest);
-            GL.Scissor(x, Menus.TheClient.Window.Height - (y + (int)Fonts.font_default.Height), w, (int)Fonts.font_default.Height);
+            GL.Scissor(x, TheClient.Window.Height - (y + (int)Fonts.font_default.Height), w, (int)Fonts.font_default.Height);
             if (Selected)
             {
                 float textw = Fonts.MeasureFancyText(typed.Substring(0, MinCursor + c));
                 float textw2 = Fonts.MeasureFancyText(typed.Substring(0, MaxCursor + cmax));
-                Menus.TheClient.Rendering.SetColor(new Color4(0f, 0.2f, 1f, 0.5f));
-                Menus.TheClient.Rendering.RenderRectangle(x + textw, y, x + textw2 + 1, y + Fonts.font_default.Height);
+                TheClient.Rendering.SetColor(new Color4(0f, 0.2f, 1f, 0.5f));
+                TheClient.Rendering.RenderRectangle(x + textw, y, x + textw2 + 1, y + Fonts.font_default.Height);
             }
-            Menus.TheClient.Rendering.SetColor(Color4.White);
-            Fonts.DrawColoredText((typed.Length == 0 ? ("^)^i" + Info): ("^0" + typed)), new Location(x, y, 0));
-            GL.Scissor(0, 0, Menus.TheClient.Window.Width, Menus.TheClient.Window.Height); // TODO: Bump around a stack, for embedded scroll groups?
+            TheClient.Rendering.SetColor(Color4.White);
+            Fonts.DrawColoredText((typed.Length == 0 ? ("^)^i" + Info) : ("^0" + typed)), new Location(x, y, 0));
+            GL.Scissor(0, 0, TheClient.Window.Width, TheClient.Window.Height); // TODO: Bump around a stack, for embedded scroll groups?
             GL.Disable(EnableCap.ScissorTest);
         }
     }

@@ -26,6 +26,7 @@ using System.Threading;
 using System.Drawing;
 using FreneticScript;
 using Voxalia.Shared.Files;
+using Voxalia.ClientGame.UISystem.MenuSystem;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -95,9 +96,9 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public Texture ItemFrame;
 
         /// <summary>
-        /// The current 'Screen' object.
+        /// The current 'UIScreen' object.
         /// </summary>
-        public Screen CScreen;
+        public UIScreen CScreen;
 
         public LanguageEngine Languages = new LanguageEngine();
 
@@ -320,7 +321,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CVars.r_cloudshadows.OnChanged += onCloudShadowChanged;
             View3D.CheckError("Load - General Graphics");
             SysConsole.Output(OutputType.INIT, "Loading UI engine...");
-            UIConsole.InitConsole();
+            UIConsole.InitConsole(); // TODO: make this non-static
             InitChatSystem();
             View3D.CheckError("Load - UI");
             SysConsole.Output(OutputType.INIT, "Preparing rendering engine...");
@@ -350,15 +351,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
             CVars.a_music.OnChanged += onMusicChanged;
             CVars.a_echovolume.OnChanged += OnEchoVolumeChanged;
             OnEchoVolumeChanged(null, null);
+            SysConsole.Output(OutputType.INIT, "Setting up screens...");
+            TheMainMenuScreen = new MainMenuScreen(this);
+            TheGameScreen = new GameScreen(this);
+            TheSingleplayerMenuScreen = new SingleplayerMenuScreen(this);
             SysConsole.Output(OutputType.INIT, "Preparing inventory...");
             InitInventory();
-            SysConsole.Output(OutputType.INIT, "Setting up screens...");
-            TheMainMenuScreen = new MainMenuScreen() { TheClient = this };
-            TheGameScreen = new GameScreen() { TheClient = this };
-            TheSingleplayerMenuScreen = new SingleplayerMenuScreen() { TheClient = this };
-            TheMainMenuScreen.Init();
-            TheGameScreen.Init();
-            TheSingleplayerMenuScreen.Init();
+            SysConsole.Output(OutputType.INIT, "Showing main menu...");
             ShowMainMenu();
             SysConsole.Output(OutputType.INIT, "Trying to grab RawGamePad...");
             try
@@ -546,7 +545,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void FixMouse()
         {
-            if (CInvMenu != null || !Window.Focused || UIConsole.Open || ChatVisible || CScreen != TheGameScreen)
+            if (InvShown() || !Window.Focused || UIConsole.Open || IsChatVisible() || CScreen != TheGameScreen)
             {
                 MouseHandler.ReleaseMouse();
             }

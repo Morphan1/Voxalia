@@ -21,41 +21,39 @@ namespace Voxalia.ClientGame.ClientMainSystem
 {
     public partial class Client
     {
-        public UIMenu ChatMenu;
-
-        public bool ChatVisible = false;
+        public UIGroup ChatMenu;
 
         public List<ChatMessage> ChatMessages = new List<ChatMessage>();
         
-        public UITextBox ChatBox;
+        public UIInputBox ChatBox;
 
-        public UIScrollGroup ChatScroller;
+        public UIScrollBox ChatScroller;
 
         public bool[] Channels;
 
         public void InitChatSystem()
         {
-            ChatMenu = new UIMenu(this);
             FontSet font = FontSets.Standard;
-            ChatBox = new UITextBox("", "Enter a /command or a chat message...", () => 30, () => Window.Height - (int)font.font_default.Height - 10 - UIBottomHeight, () => Window.Width - (30 * 2), font);
-            ChatBox.EnterPressed = EnterChatMessage;
-            ChatMenu.Add(ChatBox);
             int minY = 10 + (int)font.font_default.Height;
-            ChatScroller = new UIScrollGroup(ChatBox.X, () => minY, ChatBox.Width, () => ChatBox.Y() - minY);
-            ChatMenu.Add(ChatScroller);
+            ChatMenu = new UIGroup(UIAnchor.TOP_CENTER, () => Window.Width, () => Window.Height - minY - UIBottomHeight, () => 0, () => 0);
+            ChatScroller = new UIScrollBox(UIAnchor.TOP_CENTER, () => ChatMenu.GetWidth() - (30 * 2), () => ChatMenu.GetHeight() - minY, () => 0, () => minY);
+            ChatBox = new UIInputBox("", "Enter a /command or a chat message...", font, UIAnchor.TOP_CENTER, ChatScroller.GetWidth, () => 0, () => (int)ChatScroller.GetHeight() + minY);
+            ChatBox.EnterPressed = EnterChatMessage;
+            ChatMenu.AddChild(ChatBox);
+            ChatMenu.AddChild(ChatScroller);
             Channels = new bool[(int)TextChannel.COUNT];
-            Func<float> xer = () => 30;
+            Func<int> xer = () => 30;
             for (int i = 0; i < Channels.Length; i++)
             {
                 Channels[i] = true;
                 string n = ((TextChannel)i).ToString();
                 int len = (int)FontSets.Standard.MeasureFancyText(n);
                 UITextLink link = null;
-                Func<float> fxer = xer;
+                Func<int> fxer = xer;
                 int chan = i;
-                link = new UITextLink(null, "^r^t^0^h^o^2" + n, "^!^e^t^0^h^o^2" + n, "^2^e^t^0^h^o^0" + n, () => ToggleLink(link, n, chan), fxer, () => 10, FontSets.Standard);
+                link = new UITextLink(null, "^r^t^0^h^o^2" + n, "^!^e^t^0^h^o^2" + n, "^2^e^t^0^h^o^0" + n, FontSets.Standard, () => ToggleLink(link, n, chan), UIAnchor.TOP_LEFT, fxer, () => 10);
                 xer = () => fxer() + len + 10;
-                ChatMenu.Add(link);
+                ChatMenu.AddChild(link);
             }
         }
 
@@ -98,7 +96,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void TickChatSystem()
         {
-            if (ChatVisible)
+            if (IsChatVisible())
             {
                 if (OpenTK.Input.Keyboard.GetState().IsKeyDown(OpenTK.Input.Key.Escape)) // TODO: Better method for this!
                 {
@@ -111,15 +109,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     WVis = true;
                 }
                 ChatBox.Selected = true;
-                ChatMenu.TickAll();
-            }
-        }
-
-        public void RenderChatSystem()
-        {
-            if (ChatVisible)
-            {
-                ChatMenu.RenderAll(gDelta);
             }
         }
 
@@ -135,9 +124,12 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void ShowChat()
         {
-            KeyHandler.GetKBState();
-            ChatVisible = true;
-            FixMouse();
+            if (!IsChatVisible())
+            {
+                KeyHandler.GetKBState();
+                TheGameScreen.AddChild(ChatMenu);
+                FixMouse();
+            }
         }
 
         /// <summary>
@@ -145,10 +137,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
         /// </summary>
         public void CloseChat()
         {
-            KeyHandler.GetKBState();
-            ChatVisible = false;
-            WVis = false;
-            FixMouse();
+            if (IsChatVisible())
+            {
+                KeyHandler.GetKBState();
+                TheGameScreen.RemoveChild(ChatMenu);
+                WVis = false;
+                FixMouse();
+            }
+        }
+
+        public bool IsChatVisible()
+        {
+            return TheGameScreen.HasChild(ChatMenu);
         }
 
         public void WriteMessage(TextChannel channel, string message)
@@ -165,15 +165,15 @@ namespace Voxalia.ClientGame.ClientMainSystem
         
         public void UpdateChats()
         {
-            ChatScroller.Clear();
+            ChatScroller.RemoveAllChildren();
             float by = 0;
             for (int i = 0; i < ChatMessages.Count; i++)
             {
                 if (Channels[(int)ChatMessages[i].Channel])
                 {
                     by += FontSets.Standard.font_default.Height;
-                    float y = by;
-                    ChatScroller.Add(new UILabel(ChatMessages[i].Channel.ToString() + ": " + ChatMessages[i].Text, () => 0, () => y, FontSets.Standard, ChatScroller.MaxWidth));
+                    int y = (int)by;
+                    ChatScroller.AddChild(new UILabel(ChatMessages[i].Channel.ToString() + ": " + ChatMessages[i].Text, FontSets.Standard, UIAnchor.TOP_LEFT, () => 0, () => y, () => (int)ChatScroller.GetWidth()));
                 }
             }
         }
