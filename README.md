@@ -60,13 +60,14 @@ Also used libraries:
 
 ### Licensing pre-note:
 
-This is an open source project, provided entirely freely, for everyone to use and contribute to.
-
-If you make any changes that could benefit the community as a whole, please contribute upstream.
+- This is an open source project, provided entirely freely, for everyone to use and contribute to.
+- If you make any changes that could benefit the community as a whole, please contribute upstream.
+- Also, please do not claim or sell the game (or any substantial portion of it) as your own.
+	- You are, of course, still free to include small snippets of code from this game in your own projects.
 
 ### The short of the license is:
 
-You can do basically whatever you want, except you may not hold any developer liable for what you do with the software.
+- You can do basically whatever you want (within reason), except you may not hold any developer liable for what you do with the software.
 
 ### The long version of the license follows:
 
