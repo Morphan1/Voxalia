@@ -25,6 +25,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
         protected override void Render(double delta, int xoff, int yoff)
         {
             TheClient.renderGame();
+            TheClient.Establish2D();
+            TheClient.Render2D(false);
         }
     }
 }

@@ -271,16 +271,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         if (CVars.r_3d_enable.ValueB)
                         {
                             GL.Viewport(Window.Width / 2, 0, Window.Width / 2, Window.Height);
-                            Render2D(false);
+                            CScreen.FullRender(gDelta, 0, 0);
                             UIConsole.Draw();
                             GL.Viewport(0, 0, Window.Width / 2, Window.Height);
-                            Render2D(false);
+                            CScreen.FullRender(gDelta, 0, 0);
                             UIConsole.Draw();
                             GL.Viewport(0, 0, Window.Width, Window.Height);
                         }
                         else
                         {
-                            Render2D(false);
+                            CScreen.FullRender(gDelta, 0, 0);
                             UIConsole.Draw();
                         }
                     }
@@ -1079,12 +1079,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         RenderCompassCoord(new Vector4d(-1, -1, 0, 0), "SW");
                     }
                 }
-            }
-            if (!sub3d)
-            {
-                CScreen.FullRender(gDelta, 0, 0);
-                //RenderInvMenu();
-                //RenderChatSystem();
             }
             if (sub3d)
             {
