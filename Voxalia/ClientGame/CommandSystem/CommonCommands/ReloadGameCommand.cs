@@ -10,6 +10,7 @@ using Voxalia.ClientGame.WorldSystem;
 using Voxalia.ClientGame.ClientMainSystem;
 using OpenTK;
 using FreneticScript;
+using Voxalia.Shared;
 
 namespace Voxalia.ClientGame.CommandSystem.CommonCommands
 {
@@ -35,6 +36,17 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
             string arg = entry.GetArgument(queue, 0).ToLowerFast();
             bool success = false;
             bool is_all = arg == "all";
+            if (arg == "blocks" || is_all)
+            {
+                success = true;
+                MaterialHelpers.Populate(TheClient.Files);
+                TheClient.TBlock.Generate(TheClient, TheClient.CVars, TheClient.Textures);
+                TheClient.TheRegion.RenderingNow.Clear();
+                foreach (Chunk chunk in TheClient.TheRegion.LoadedChunks.Values)
+                {
+                    chunk.OwningRegion.UpdateChunk(chunk);
+                }
+            }
             if (arg == "chunks" || is_all)
             {
                 success = true;

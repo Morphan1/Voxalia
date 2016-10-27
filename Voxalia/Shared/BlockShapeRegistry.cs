@@ -32,8 +32,15 @@ namespace Voxalia.Shared
         /// </summary>
         public static Dictionary<string, int> BSD_Names = new Dictionary<string, int>();
 
-        static BlockShapeRegistry() // TODO: Init method rather than this thing
+        static bool inited = false;
+
+        public static void Init()
         {
+            if (inited)
+            {
+                return;
+            }
+            inited = true;
             for (int i = 0; i < 256; i++)
             {
                 BSD[i] = new BSD0();

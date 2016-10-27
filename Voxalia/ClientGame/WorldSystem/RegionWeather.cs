@@ -200,7 +200,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     GL.EnableVertexAttribArray(8);
                     GL.BindBuffer(BufferTarget.ElementArrayBuffer, Cl_VBO_Ind);
                 }
-                ReClouds = false;
+                //ReClouds = false;
             }
             TheClient.SetEnts();
             TheClient.Textures.GetTexture("effects/clouds/cloud1").Bind(); // TODO: Cache!

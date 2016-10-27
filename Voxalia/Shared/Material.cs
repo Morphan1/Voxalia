@@ -71,23 +71,17 @@ namespace Voxalia.Shared
     /// </summary>
     public static class MaterialHelpers
     {
-        public static int TextureCount = 5;
-
         public static bool Populated = false;
         
         public static void Populate(FileHandler files)
         {
-            if (Populated)
-            {
-                return;
-            }
-            Populated = true;
             List<string> fileList = files.ListFiles("info/blocks/");
+            List<MaterialInfo> allmats = new List<MaterialInfo>((int)Material.NUM_DEFAULT);
             foreach (string file in fileList)
             {
                 string f = file.ToLowerFast().After("/blocks/").Before(".blk");
                 Material mat;
-                if (TryGetFromNameOrNumber(f, out mat))
+                if (TryGetFromNameOrNumber(allmats, f, out mat))
                 {
                     continue;
                 }
@@ -173,67 +167,78 @@ namespace Voxalia.Shared
                         case "bigspreadsas":
                             inf.BigSpreadsAs = (Material)Enum.Parse(typeof(Material), opt[1].ToUpperInvariant());
                             break;
+                        case "texturebasic":
+                            for (int t = 0; t < (int)MaterialSide.COUNT; t++)
+                            {
+                                if (inf.Texture[t] == null)
+                                {
+                                    inf.Texture[t] = opt[1].ToLowerFast();
+                                }
+                            }
+                            break;
                         case "texture_top":
-                            inf.TID[(int)MaterialSide.TOP] = ParseTID(opt[1]);
+                            inf.Texture[(int)MaterialSide.TOP] = opt[1].ToLowerFast();
                             break;
                         case "texture_bottom":
-                            inf.TID[(int)MaterialSide.BOTTOM] = ParseTID(opt[1]);
+                            inf.Texture[(int)MaterialSide.BOTTOM] = opt[1].ToLowerFast();
                             break;
                         case "texture_xp":
-                            inf.TID[(int)MaterialSide.XP] = ParseTID(opt[1]);
+                            inf.Texture[(int)MaterialSide.XP] = opt[1].ToLowerFast();
                             break;
                         case "texture_xm":
-                            inf.TID[(int)MaterialSide.XM] = ParseTID(opt[1]);
+                            inf.Texture[(int)MaterialSide.XM] = opt[1].ToLowerFast();
                             break;
                         case "texture_yp":
-                            inf.TID[(int)MaterialSide.YP] = ParseTID(opt[1]);
+                            inf.Texture[(int)MaterialSide.YP] = opt[1].ToLowerFast();
                             break;
                         case "texture_ym":
-                            inf.TID[(int)MaterialSide.YM] = ParseTID(opt[1]);
+                            inf.Texture[(int)MaterialSide.YM] = opt[1].ToLowerFast();
                             break;
                         default:
-                            throw new Exception("Invalid option: " + opt[0]);
+                            SysConsole.Output(OutputType.WARNING, "Invalid material option: " + opt[0]);
+                            break;
                     }
                 }
-                while (ALL_MATS.Count <= (int)mat)
+                while (allmats.Count <= (int)mat)
                 {
-                    ALL_MATS.Add(null);
+                    allmats.Add(null);
                 }
-                ALL_MATS[(int)mat] = inf;
-                TextureCount++;
+                allmats[(int)mat] = inf;
             }
-            TextureCount += TMC;
-            for (int i = 0; i < ALL_MATS.Count; i++)
+            int c = 0;
+            Dictionary<string, int> TexturesToIDs = new Dictionary<string, int>();
+            for (int i = 0; i < allmats.Count; i++)
             {
-                if (ALL_MATS[i] != null)
+                for (int t = 0; t < (int)MaterialSide.COUNT; t++)
                 {
-                    for (int s = 0; s < (int)MaterialSide.COUNT; s++)
+                    string tex = allmats[i].Texture[t];
+                    int res;
+                    if (TexturesToIDs.ContainsKey(tex))
                     {
-                        if (ALL_MATS[i].TID[s] > short.MaxValue)
-                        {
-                            ALL_MATS[i].TID[s] = TextureCount - (ALL_MATS[i].TID[s] - short.MaxValue);
-                        }
+                        res = TexturesToIDs[tex];
                     }
+                    else
+                    {
+                        TexturesToIDs[tex] = c;
+                        res = c;
+                        c++;
+                    }
+                    allmats[i].TID[t] = res;
                 }
             }
-        }
-
-        static int TMC = 0;
-
-        static int ParseTID(string str)
-        {
-            int min;
-            if (str.StartsWith("m") && int.TryParse(str.Substring(1), out min))
+            Textures = new string[c];
+            foreach (KeyValuePair<string, int> val in TexturesToIDs)
             {
-                if (TMC < min)
-                {
-                    TMC = min;
-                }
-                return short.MaxValue + min;
+                Textures[val.Value] = val.Key;
             }
-            Material mat = (Material)Enum.Parse(typeof(Material), str.ToUpperInvariant());
-            return (int)mat;
+            lock (ALL_MATS)
+            {
+                SysConsole.Output(OutputType.INIT, "Loaded: " + allmats.Count + " materials!");
+                ALL_MATS = allmats;
+            }
         }
+
+        public static string[] Textures;
         
         /// <summary>
         /// All material data known to this engine.
@@ -263,6 +268,11 @@ namespace Voxalia.Shared
         public static bool GetBreaksFromOtherTools(this Material mat)
         {
             return ALL_MATS[(int)mat].BreaksFromOtherTools;
+        }
+
+        public static string Texture(this Material mat, MaterialSide side)
+        {
+            return ALL_MATS[(int)mat].Texture[(int)side];
         }
 
         public static int TextureID(this Material mat, MaterialSide side)
@@ -372,12 +382,12 @@ namespace Voxalia.Shared
 
         public static Type MaterialType = typeof(Material);
 
-        public static bool TryGetFromNameOrNumber(string input, out Material mat)
+        public static bool TryGetFromNameOrNumber(List<MaterialInfo> matlist, string input, out Material mat)
         {
             ushort t;
             if (ushort.TryParse(input, out t))
             {
-                if (t >= ALL_MATS.Count || ALL_MATS[t] == null)
+                if (t >= matlist.Count || matlist[t] == null)
                 {
                     mat = Material.AIR;
                     return false;
@@ -387,9 +397,9 @@ namespace Voxalia.Shared
             }
             string inp = input.ToUpperInvariant();
             int hash = inp.GetHashCode();
-            for (t = 0; t < ALL_MATS.Count; t++)
+            for (t = 0; t < matlist.Count; t++)
             {
-                if (ALL_MATS[t] != null && ALL_MATS[t].NameHash == hash && ALL_MATS[t].Name == inp)
+                if (matlist[t] != null && matlist[t].NameHash == hash && matlist[t].Name == inp)
                 {
                     mat = (Material)t;
                     return true;
@@ -402,7 +412,7 @@ namespace Voxalia.Shared
         public static Material FromNameOrNumber(string input)
         {
             Material mat;
-            if (TryGetFromNameOrNumber(input, out mat))
+            if (TryGetFromNameOrNumber(ALL_MATS, input, out mat))
             {
                 return mat;
             }
@@ -580,7 +590,12 @@ namespace Voxalia.Shared
         public bool Spreads = false;
         
         /// <summary>
-        /// The texture IDs for this material.
+        /// The textures for this material.
+        /// </summary>
+        public string[] Texture = new string[(int)MaterialSide.COUNT];
+
+        /// <summary>
+        /// Texture IDs for this material: to be populated.
         /// </summary>
         public int[] TID = new int[(int)MaterialSide.COUNT];
 

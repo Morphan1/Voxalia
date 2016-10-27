@@ -4,3 +4,4 @@ Sound=SNOW
 BreakTime=0.5
 Breaker=SHOVEL
 BreaksInto=snow_liquid
+TextureBasic=blocks/solid/natural/snow

@@ -4,3 +4,4 @@ Sound=STONE
 Hardness=20
 BreakTime=2
 Breaker=PICKAXE
+TextureBasic=blocks/solid/natural/hellstone$blocks/solid/natural/stone_norm&black*black!black@black

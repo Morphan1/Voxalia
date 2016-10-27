@@ -630,6 +630,17 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                 }
             }
+            else if (TheClient.MainWorldView.FBOid == FBOID.SHADOWS)
+            {
+                foreach (Chunk ch in LoadedChunks.Values)
+                {
+                    BEPUutilities.Vector3 min = ch.WorldPosition.ToVector3() * Chunk.CHUNK_SIZE;
+                    if (TheClient.MainWorldView.CFrust == null || TheClient.MainWorldView.CFrust.ContainsBox(min, min + new BEPUutilities.Vector3(Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE, Chunk.CHUNK_SIZE)))
+                    {
+                        ch.Render();
+                    }
+                }
+            }
             else
             {
                 foreach (Chunk ch in chToRender)
@@ -688,7 +699,7 @@ namespace Voxalia.ClientGame.WorldSystem
                     {
                         for (int j = 0; j < MoveDirs.Length; j++)
                         {
-                            if (BEPUutilities.Vector3.Dot(MoveDirs[j].ToVector3(), (TheClient.MainWorldView.CameraTarget - TheClient.MainWorldView.CameraPos).ToBVector()) < -0.8f) // TODO: Wut?
+                            if (BEPUutilities.Vector3.Dot(MoveDirs[j].ToVector3(), (TheClient.MainWorldView.CameraTarget - TheClient.MainWorldView.CameraPos).ToBVector()) < -0.8f) // TODO: what is this? Is it needed?
                             {
                                 continue;
                             }
@@ -822,7 +833,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         }
                         if (pe.GenBlockShadows && pe.GetPosition().DistanceSquared_Flat(pos) < pe.ShadowRadiusSquaredXY)
                         {
-                            light -= 0.2f;
+                            light -= 0.05f;
                             if (pe.ShadowMainDupe.BoundingBox.Intersects(bb))
                             {
                                 light = 0;
@@ -830,12 +841,12 @@ namespace Voxalia.ClientGame.WorldSystem
                             }
                             if (pe.ShadowCastShape.BoundingBox.Intersects(bb))
                             {
-                                light -= 0.15f;
-                                if (light <= 0)
-                                {
-                                    light = 0;
-                                    break;
-                                }
+                                light -= 0.1f;
+                            }
+                            if (light <= 0)
+                            {
+                                light = 0;
+                                break;
                             }
                         }
                     }

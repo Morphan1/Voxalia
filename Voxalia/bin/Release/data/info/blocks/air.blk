@@ -7,3 +7,4 @@ BreakTime=Infinity
 LightDamage=0
 Breaker=NON_BREAKABLE
 BreaksFromOtherTools=false
+TextureBasic=blocks/cracks

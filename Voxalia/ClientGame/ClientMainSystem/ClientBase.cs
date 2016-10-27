@@ -269,14 +269,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Window generated!");
             DPIScale = Window.Width / CVars.r_width.ValueF;
             SysConsole.Output(OutputType.INIT, "DPIScale is " + DPIScale + "!");
-            SysConsole.Output(OutputType.INIT, "Loading textures...");
+            SysConsole.Output(OutputType.INIT, "Loading base textures...");
             PreInitRendering();
             Textures = new TextureEngine();
             Textures.InitTextureSystem(this);
             ItemFrame = Textures.GetTexture("ui/hud/item_frame");
-            TBlock = new TextureBlock();
-            TBlock.Generate(this, CVars, Textures);
-            View3D.CheckError("Load - Textures");
             SysConsole.Output(OutputType.INIT, "Loading shaders...");
             Shaders = new ShaderEngine();
             GLVendor = GL.GetString(StringName.Vendor);
@@ -293,6 +290,20 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             Shaders.InitShaderSystem(this);
             View3D.CheckError("Load - Shaders");
+            SysConsole.Output(OutputType.INIT, "Loading rendering helper...");
+            Rendering = new Renderer(Textures, Shaders);
+            Rendering.Init();
+            SysConsole.Output(OutputType.INIT, "Preparing load screen...");
+            Texture load_screen = Textures.GetTexture("ui/menus/loadscreen");
+            load_screen.Bind();
+            Shaders.ColorMultShader.Bind();
+            Establish2D();
+            Rendering.RenderRectangle(0, 0, Window.Width, Window.Height);
+            Window.SwapBuffers();
+            SysConsole.Output(OutputType.INIT, "Loading block textures...");
+            TBlock = new TextureBlock();
+            TBlock.Generate(this, CVars, Textures);
+            View3D.CheckError("Load - Textures");
             SysConsole.Output(OutputType.INIT, "Loading fonts...");
             Fonts = new GLFontEngine(Shaders);
             Fonts.Init(this);
@@ -304,9 +315,6 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SysConsole.Output(OutputType.INIT, "Loading model engine...");
             Models = new ModelEngine();
             Models.Init(Animations, this);
-            SysConsole.Output(OutputType.INIT, "Loading rendering helper...");
-            Rendering = new Renderer(Textures, Shaders);
-            Rendering.Init();
             SysConsole.Output(OutputType.INIT, "Loading general graphics settings...");
             CVars.r_vsync.OnChanged += onVsyncChanged;
             onVsyncChanged(CVars.r_vsync, null);

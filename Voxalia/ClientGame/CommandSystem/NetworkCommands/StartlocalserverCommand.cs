@@ -63,6 +63,7 @@ namespace Voxalia.ClientGame.CommandSystem.NetworkCommands
                 }
                 catch (Exception ex)
                 {
+                    Utilities.CheckException(ex);
                     SysConsole.Output("Running local server", ex);
                 }
             });

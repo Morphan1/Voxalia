@@ -45,6 +45,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AssemblyName>VoxaliaClientGame</AssemblyName>
     <DefineConstants>WINDOWS</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'zDebug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>

@@ -3,3 +3,4 @@ Sound=STONE
 Hardness=15
 BreakTime=1.5
 Breaker=PICKAXE
+TextureBasic=blocks/solid/natural/sandstone

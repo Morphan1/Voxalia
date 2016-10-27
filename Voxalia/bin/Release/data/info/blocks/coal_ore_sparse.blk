@@ -3,3 +3,4 @@ Sound=STONE
 Hardness=15
 BreakTime=3
 Breaker=PICKAXE
+TextureBasic=blocks/solid/ore/coal_ore_sparse

@@ -61,6 +61,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             TheRegion.BuildWorld();
             Player = new PlayerEntity(TheRegion);
             TheRegion.SpawnEntity(Player);
+            onCloudShadowChanged(null, null);
         }
 
         public void onCloudShadowChanged(object obj, EventArgs e)

@@ -61,52 +61,38 @@ namespace Voxalia.ClientGame.GraphicsSystems
             TextureID = GL.GenTexture();
             TWidth = cvars.r_blocktexturewidth.ValueI;
             GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
-            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.TextureCount);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.Textures.Length);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)(cvars.r_blocktexturelinear.ValueB ? TextureMinFilter.Linear: TextureMinFilter.Nearest));
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)(cvars.r_blocktexturelinear.ValueB ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
             HelpTextureID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2DArray, HelpTextureID);
-            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.TextureCount);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.Textures.Length);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
             NormalTextureID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2DArray, NormalTextureID);
-            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.TextureCount);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TWidth, TWidth, MaterialHelpers.Textures.Length);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
             // TODO: Use normal.a!
-            string[] datums = TheClient.Files.ReadText("info/textures.dat").SplitFast('\n');
-            // TODO: Separate files for each texture detail!
-            List<MaterialTextureInfo> texs = new List<MaterialTextureInfo>(datums.Length);
-            IntTexs = new string[MaterialHelpers.TextureCount];
+            List<MaterialTextureInfo> texs = new List<MaterialTextureInfo>(MaterialHelpers.Textures.Length);
+            IntTexs = new string[MaterialHelpers.Textures.Length];
             //float time = 0;
-            for (int ia = 0; ia < datums.Length; ia++)
+            for (int ia = 0; ia < MaterialHelpers.Textures.Length; ia++)
             {
                 int i = ia;
-                if (datums[i].StartsWith("#") || datums[i].Length <= 1)
-                {
-                    continue;
-                }
                 // TODO: Make this saner, and don't allow entering a game until it's done maybe?
                 //TheClient.Schedule.ScheduleSyncTask(() =>
                 {
                     MaterialTextureInfo tex = new MaterialTextureInfo();
-                    string[] dets = datums[i].SplitFast('=');
-                    if (dets[0].StartsWith("m"))
-                    {
-                        tex.Mat = (Material)(MaterialHelpers.TextureCount - Utilities.StringToInt(dets[0].Substring(1)));
-                    }
-                    else
-                    {
-                        tex.Mat = MaterialHelpers.FromNameOrNumber(dets[0]);
-                    }
-                    string[] refrornot = dets[1].SplitFast('@');
+                    tex.Mat = (Material)i;
+                    string[] refrornot = MaterialHelpers.Textures[i].SplitFast('@');
                     if (refrornot.Length > 1)
                     {
                         string[] rorn = refrornot[1].SplitFast('%');
@@ -224,12 +210,39 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public Bitmap Combine(Bitmap one, Bitmap two, Bitmap three, Bitmap four)
         {
             Bitmap combined = new Bitmap(TWidth, TWidth);
-            for (int x = 0; x < TWidth; x++)
+            // Surely there's a better way to do this!
+            unsafe
             {
-                for (int y = 0; y < TWidth; y++)
+                BitmapData bdat = combined.LockBits(new Rectangle(0, 0, combined.Width, combined.Height), ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                int stride = bdat.Stride;
+                byte* ptr = (byte*)bdat.Scan0;
+                BitmapData bdat1 = one.LockBits(new Rectangle(0, 0, one.Width, one.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                int stride1 = bdat1.Stride;
+                byte* ptr1 = (byte*)bdat1.Scan0;
+                BitmapData bdat2 = two.LockBits(new Rectangle(0, 0, two.Width, two.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                int stride2 = bdat2.Stride;
+                byte* ptr2 = (byte*)bdat2.Scan0;
+                BitmapData bdat3 = three.LockBits(new Rectangle(0, 0, three.Width, three.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                int stride3 = bdat3.Stride;
+                byte* ptr3 = (byte*)bdat3.Scan0;
+                BitmapData bdat4 = four.LockBits(new Rectangle(0, 0, four.Width, four.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                int stride4 = bdat4.Stride;
+                byte* ptr4 = (byte*)bdat4.Scan0;
+                for (int x = 0; x < TWidth; x++)
                 {
-                    combined.SetPixel(x, y, Color.FromArgb(Gray(four.GetPixel(x, y)), Gray(one.GetPixel(x, y)), Gray(two.GetPixel(x, y)), Gray(three.GetPixel(x, y))));
+                    for (int y = 0; y < TWidth; y++)
+                    {
+                        ptr[(x * 4) + y * stride + 0] = ptr4[(x * 4) + y * stride];
+                        ptr[(x * 4) + y * stride + 1] = ptr1[(x * 4) + y * stride];
+                        ptr[(x * 4) + y * stride + 2] = ptr2[(x * 4) + y * stride];
+                        ptr[(x * 4) + y * stride + 3] = ptr3[(x * 4) + y * stride];
+                    }
                 }
+                combined.UnlockBits(bdat);
+                one.UnlockBits(bdat1);
+                two.UnlockBits(bdat2);
+                three.UnlockBits(bdat3);
+                four.UnlockBits(bdat4);
             }
             return combined;
         }

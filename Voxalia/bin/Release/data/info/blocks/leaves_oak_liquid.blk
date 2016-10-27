@@ -10,3 +10,4 @@ Spreads=true
 SolidifiesInto=leaves_oak_solid
 Breaker=NON_BREAKABLE
 BreaksFromOtherTools=false
+TextureBasic=blocks/transparent/leaves_basic1

@@ -3,3 +3,4 @@ Sound=CLAY
 Hardness=5
 BreakTime=1
 Breaker=SHOVEL
+TextureBasic=blocks/solid/made/color

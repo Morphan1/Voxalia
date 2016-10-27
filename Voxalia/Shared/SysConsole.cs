@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using Voxalia.Shared.Files;
 
 namespace Voxalia.Shared
 {
@@ -52,12 +54,24 @@ namespace Voxalia.Shared
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Preparing console...");
-            Console.WriteLine("Starting system...");
             ConsoleLock = new Object();
             WriteLock = new Object();
             ConsoleOutputThread = new Thread(new ThreadStart(ConsoleLoop));
             //Program.ThreadsToClose.Add(ConsoleOutputThread);
             ConsoleOutputThread.Start();
+            try
+            {
+                DateTime DT = DateTime.Now;
+                string logfolder = Environment.CurrentDirectory + "/logs/" + DT.Year + "/" + DT.Month + "/";
+                string logfile = logfolder + DT.Day + "_" + Process.GetCurrentProcess().Id + ".log";
+                Directory.CreateDirectory(logfolder);
+                FSOUT = File.OpenWrite(logfile);
+            }
+            catch (Exception ex)
+            {
+                Output(OutputType.WARNING, "Unable to open log file, will not log for this session!");
+                Output("Loading Log File", ex);
+            }
             Output(OutputType.INIT, "Console prepared...");
             Output(OutputType.INIT, "Test colors: ^r^7Text Colors: ^0^h^1^^n1 ^!^^n! ^2^^n2 ^@^^n@ ^3^^n3 ^#^^n# ^4^^n4 ^$^^n$ ^5^^n5 ^%^^n% ^6^^n6 ^-^^n- ^7^^n7 ^&^^n& ^8^^n8 ^*^^** ^9^^n9 ^(^^n( ^&^h^0^^n0^h ^)^^n) ^a^^na ^A^^nA\n" +
                             "^r^7Text styles: ^b^^nb is bold,^r ^i^^ni is italic,^r ^u^^nu is underline,^r ^s^^ns is strike-through,^r ^O^^nO is overline,^r ^7^h^0^^nh is highlight,^r^7 ^j^^nj is jello (AKA jiggle),^r " +
@@ -65,6 +79,8 @@ namespace Voxalia.Shared
                             "^^nS is ^SSuperScript^r, ^^nl is ^lSubScript (AKA Lower-Text)^r, ^h^8^d^^nd is Drop-Shadow,^r^7 ^f^^nf is flip,^r ^^nr is regular text, ^^nq is a ^qquote^q, ^^nn is nothing (escape-symbol),^r " +
                             "and ^^nB is base-colors.");
         }
+
+        static FileStream FSOUT = null;
 
         static void ConsoleLoop()
         {
@@ -108,8 +124,8 @@ namespace Voxalia.Shared
             Console.Title = Title;
         }
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        // [System.Runtime.InteropServices.DllImport("user32.dll")]
+        // static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         /// <summary>
         /// Hides the system console from view.
@@ -157,6 +173,12 @@ namespace Voxalia.Shared
         static void WriteInternal(string text, string bcolor)
         {
             text = text.Replace("^B", bcolor);
+            if (FSOUT != null)
+            {
+                byte[] b = FileHandler.encoding.GetBytes(text);
+                FSOUT.Write(b, 0, b.Length);
+                FSOUT.Flush(); // TODO: Flush(true)?
+            }
             Console.SetCursorPosition(0, Console.CursorTop);
             StringBuilder outme = new StringBuilder();
             for (int i = 0; i < text.Length; i++)

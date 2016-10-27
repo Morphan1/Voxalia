@@ -148,7 +148,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.DeleteFramebuffer(hdrfbo);
                 GL.DeleteTexture(hdrtex);
                 GL.DeleteFramebuffers(LIGHTS_MAX, fbo_shadow);
-                GL.DeleteTexture(fbo_shadow_depth);
+                GL.DeleteTextures(LIGHTS_MAX, fbo_shadow_depth);
                 GL.DeleteTexture(fbo_shadow_tex);
             }
             CheckError("Load - View3D - Light - Deletes");
@@ -214,15 +214,15 @@ namespace Voxalia.ClientGame.GraphicsSystems
             for (int i = 0; i < LIGHTS_MAX; i++)
             {
                 fbo_shadow[i] = GL.GenFramebuffer();
-                fbo_shadow_depth = GL.GenTexture();
-                GL.BindTexture(TextureTarget.Texture2D, fbo_shadow_depth);
+                fbo_shadow_depth[i] = GL.GenTexture();
+                GL.BindTexture(TextureTarget.Texture2D, fbo_shadow_depth[i]);
                 GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32, sq, sq, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow[i]);
-                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, fbo_shadow_depth, 0);
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, fbo_shadow_depth[i], 0);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow[i]);
                 GL.FramebufferTextureLayer(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, fbo_shadow_tex, 0, i);
@@ -234,7 +234,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         int[] fbo_shadow = new int[LIGHTS_MAX];
         int fbo_shadow_tex = -1;
-        int fbo_shadow_depth = -1;
+        int[] fbo_shadow_depth = new int[LIGHTS_MAX];
 
         int hdrfbo;
         int hdrtex;
@@ -522,6 +522,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
             cameraBasePos = CameraPos;
             cameraAdjust = -camforward.CrossProduct(camup) * 0.25;
+            RenderRelative = CameraPos;
             SetViewport();
             CameraTarget = CameraPos + camforward;
             OffsetWorld = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos));
@@ -539,7 +540,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
             Location bxd = TheClient.CVars.r_3d_enable.ValueB ? (CameraPos + cameraAdjust) : CameraPos;
             Matrix4d viewd = Matrix4d.LookAt(ClientUtilities.ConvertD(bxd), ClientUtilities.ConvertD(bxd + camforward), ClientUtilities.ConvertD(camup));
-            Matrix4d PrimaryMatrixd = viewd * projd;
+            PrimaryMatrixd = viewd * projd;
             Matrix4d PrimaryMatrix_OffsetFor3Dd = Matrix4d.Identity;
             if (TheClient.CVars.r_3d_enable.ValueB)
             {
@@ -551,6 +552,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             CFrust = camFrust;
             CheckError("AfterSetup");
         }
+
+        public Matrix4d PrimaryMatrixd;
 
         /// <summary>
         /// Render everything as quickly as possible: a simple forward renderer.
@@ -594,6 +597,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             CheckError("AfterFast");
         }
 
+        public Location RenderRelative;
+
         /// <summary>
         /// Calculate shadow maps for the later (lighting) render passes.
         /// </summary>
@@ -610,6 +615,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 LightsC = 0;
                 Location campos = CameraPos;
                 int n = 0;
+                Frustum tcf = CFrust;
                 for (int i = 0; i < Lights.Count; i++)
                 {
                     if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos.ToBVector(), Lights[i].MaxDistance))
@@ -677,6 +683,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                 }
                 complete:
+                CFrust = tcf;
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, CurrentFBO);
                 GL.DrawBuffer(CurrentFBO == 0 ? DrawBufferMode.Back : DrawBufferMode.ColorAttachment0);
                 CameraPos = campos;
@@ -877,7 +884,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                     Lights[i].InternalLights[x] is LightOrtho ? 1.0f : 0.0f, // should_sqrt
                                     col.X, col.Y, col.Z, // light_color
                                     Lights[i].InternalLights[x] is LightOrtho ? LightMaximum : (Lights[i].InternalLights[0].maxrange <= 0 ? LightMaximum : Lights[i].InternalLights[0].maxrange), // light_radius
-                                    (float)CameraPos.X, (float)CameraPos.Y, (float)CameraPos.Z, // eye_pos
+                                    0f, 0f, 0f, // eye_pos
                                     Lights[i] is SpotLight ? 1.0f : 0.0f, // light_type
                                     1f / ShadowTexSize(), // tex_size
                                     0.0f // Unused.
@@ -1015,7 +1022,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.Uniform1(17, TheClient.CVars.r_zfar.ValueF);
             GL.Uniform4(18, new Vector4(ClientUtilities.Convert(Headmat.GetFogColor()), (float)Headmat.GetFogAlpha()));
             GL.Uniform1(19, DesaturationAmount);
-            GL.Uniform3(20, ClientUtilities.Convert(CameraPos));
+            GL.Uniform3(20, new Vector3(0, 0, 0));
             GL.Uniform3(21, DesaturationColor);
             GL.UniformMatrix4(22, false, ref PrimaryMatrix);
             GL.Uniform1(24, (float)Width);
@@ -1325,16 +1332,16 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 }
                 else
                 {
-                    Vector4 v = Vector4.Transform(new Vector4(ClientUtilities.Convert(SunLoc), 1f), PrimaryMatrix);
+                    Vector4d v = Vector4d.Transform(new Vector4d(ClientUtilities.ConvertD(SunLoc), 1.0), PrimaryMatrixd);
                     if (v.Z / v.W > 1.0f || v.Z / v.W < 0.0f)
                     {
                         GL.Uniform2(8, new Vector2(-10f, -10f));
                     }
                     else
                     {
-                        Vector2 lp1 = (v.Xy / v.W) * 0.5f + new Vector2(0.5f);
-                        GL.Uniform2(8, ref lp1);
-                        float lplenadj = (1f - Math.Min(lp1.Length, 1f)) * (0.99f - 0.6f) + 0.6f;
+                        Vector2d lp1 = (v.Xy / v.W) * 0.5f + new Vector2d(0.5f);
+                        GL.Uniform2(8, new Vector2((float)lp1.X, (float)lp1.Y));
+                        float lplenadj = (float)((1.0 - Math.Min(lp1.Length, 1.0)) * (0.99 - 0.6) + 0.6);
                         GL.Uniform1(12, 0.84f * lplenadj);
                     }
                 }
@@ -1467,12 +1474,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             matxyz[3, 1] = (float)ambient.Y;
                             matxyz[3, 2] = (float)ambient.Z;
                             Matrix4 matabc = new Matrix4(Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero);
-                            matabc[0, 0] = (float)CameraPos.X;
-                            matabc[0, 1] = (float)CameraPos.Y;
-                            matabc[0, 2] = (float)CameraPos.Z;
-                            matabc[1, 0] = (float)Lights[i].EyePos.X;
-                            matabc[1, 1] = (float)Lights[i].EyePos.Y;
-                            matabc[1, 2] = (float)Lights[i].EyePos.Z;
+                            matabc[0, 0] = 0f;
+                            matabc[0, 1] = 0f;
+                            matabc[0, 2] = 0f;
+                            matabc[1, 0] = (float)(Lights[i].EyePos.X - CameraPos.X);
+                            matabc[1, 1] = (float)(Lights[i].EyePos.Y - CameraPos.Y);
+                            matabc[1, 2] = (float)(Lights[i].EyePos.Z - CameraPos.Z);
                             matabc[2, 0] = MainEXP;
                             matabc[0, 3] = Lights[i].InternalLights[x].color.X;
                             matabc[2, 1] = Lights[i].InternalLights[x].color.Y;

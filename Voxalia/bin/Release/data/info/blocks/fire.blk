@@ -10,3 +10,4 @@ BreaksFromOtherTools=false
 LightEmit=0.5,0.15,0.0
 LightEmitRange=10
 SpawnType=Fire
+TextureBasic=clear

@@ -240,7 +240,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         
         public void sortEntities()
         {
-            TheRegion.Entities = TheRegion.Entities.OrderBy(o => (o.GetPosition().DistanceSquared(MainWorldView.CameraPos))).ToList();
+            TheRegion.Entities = TheRegion.Entities.OrderBy(o => (o.GetPosition().DistanceSquared(MainWorldView.RenderRelative))).ToList();
         }
 
         public void ReverseEntitiesOrder()
@@ -383,7 +383,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 sortEntities();
                 Particles.Sort();
-                MainWorldView.Headmat = TheRegion.GetBlockMaterial(MainWorldView.CameraPos);
+                MainWorldView.Headmat = TheRegion.GetBlockMaterial(PlayerEyePosition);
                 MainWorldView.SunLoc = GetSunLocation();
                 MainWorldView.Render();
                 ReverseEntitiesOrder();
@@ -1069,14 +1069,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         Rendering.SetColor(Color4.Gray);
                         Rendering.RenderRectangle(66, Window.Height - (32 + 30), Window.Width - 66, Window.Height - 34);
                         Rendering.SetColor(Color4.White);
-                        RenderCompassCoord(Vector4.UnitY, "N");
-                        RenderCompassCoord(-Vector4.UnitY, "S");
-                        RenderCompassCoord(Vector4.UnitX, "E");
-                        RenderCompassCoord(-Vector4.UnitX, "W");
-                        RenderCompassCoord(new Vector4(1, 1, 0, 0), "NE");
-                        RenderCompassCoord(new Vector4(1, -1, 0, 0), "SE");
-                        RenderCompassCoord(new Vector4(-1, 1, 0, 0), "NW");
-                        RenderCompassCoord(new Vector4(-1, -1, 0, 0), "SW");
+                        RenderCompassCoord(Vector4d.UnitY, "N");
+                        RenderCompassCoord(-Vector4d.UnitY, "S");
+                        RenderCompassCoord(Vector4d.UnitX, "E");
+                        RenderCompassCoord(-Vector4d.UnitX, "W");
+                        RenderCompassCoord(new Vector4d(1, 1, 0, 0), "NE");
+                        RenderCompassCoord(new Vector4d(1, -1, 0, 0), "SE");
+                        RenderCompassCoord(new Vector4d(-1, 1, 0, 0), "NW");
+                        RenderCompassCoord(new Vector4d(-1, -1, 0, 0), "SW");
                     }
                 }
             }
@@ -1092,11 +1092,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
         }
 
-        public void RenderCompassCoord(Vector4 rel, string dir)
+        public void RenderCompassCoord(Vector4d rel, string dir)
         {
-            Vector4 camp = new Vector4(ClientUtilities.Convert(MainWorldView.CameraPos), 1f);
-            Vector4 north = Vector4.Transform(camp + rel * 10, MainWorldView.PrimaryMatrix);
-            float northOnScreen = north.X / north.W;
+            Vector4d camp = new Vector4d(ClientUtilities.ConvertD(PlayerEyePosition), 1.0);
+            Vector4d north = Vector4d.Transform(camp + rel * 10, MainWorldView.PrimaryMatrixd);
+            double northOnScreen = north.X / north.W;
             if (north.Z <= 0 && northOnScreen < 0)
             {
                 northOnScreen = -1f;

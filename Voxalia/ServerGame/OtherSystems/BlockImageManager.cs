@@ -320,12 +320,14 @@ namespace Voxalia.ServerGame.OtherSystems
                     }
                 }
             }
+            tbmp.UnlockBits(bdat);
             sw.Stop();
             Timings_B += sw.ElapsedTicks / (double)Stopwatch.Frequency;
             sw.Reset();
             sw.Start();
             DataStream ds = new DataStream();
             tbmp.Save(ds, ImageFormat.Png);
+            tbmp.Dispose();
             sw.Stop();
             Timings_C += sw.ElapsedTicks / (double)Stopwatch.Frequency;
             sw.Reset();
@@ -342,25 +344,12 @@ namespace Voxalia.ServerGame.OtherSystems
 
         public void Init(Server tserver)
         {
-            MaterialImages = new MaterialImage[MaterialHelpers.TextureCount];
-            string[] texs = tserver.Files.ReadText("info/textures.dat").SplitFast('\n');
-            for (int i = 0; i < texs.Length; i++)
+            // TODO: v0.1.0 texture config update!
+            MaterialImages = new MaterialImage[MaterialHelpers.Textures.Length];
+            for (int i = 0; i < MaterialImages.Length; i++)
             {
-                if (texs[i].StartsWith("#") || texs[i].Length <= 1)
-                {
-                    continue;
-                }
-                string[] dat = texs[i].SplitFast('=');
-                Material mat;
-                if (dat[0].StartsWith("m"))
-                {
-                    mat = (Material)(MaterialHelpers.TextureCount - Utilities.StringToInt(dat[0].Substring(1)));
-                }
-                else
-                {
-                    mat = MaterialHelpers.FromNameOrNumber(dat[0]);
-                }
-                string actualtexture = "textures/" + dat[1].Before(",").Before("&").Before("$").Before("@")+ ".png";
+                string tex = MaterialHelpers.Textures[i];
+                string actualtexture = "textures/" + tex.Before(",").Before("&").Before("$").Before("@")+ ".png";
                 try
                 {
                     Bitmap bmp1 = new Bitmap(tserver.Files.ReadToStream(actualtexture));
@@ -375,16 +364,16 @@ namespace Voxalia.ServerGame.OtherSystems
                             img.Colors[x, y] = bmp2.GetPixel(x, y);
                         }
                     }
-                    MaterialImages[(int)mat] = img;
+                    MaterialImages[i] = img;
                     bmp2.Dispose();
                 }
                 catch (Exception ex)
                 {
                     Utilities.CheckException(ex);
-                    SysConsole.Output("loading texture for '" + dat[0] + "': '" + actualtexture + "'", ex);
+                    SysConsole.Output("loading texture for " + i + ": '" + actualtexture + "'", ex);
                 }
             }
-            SysConsole.Output(OutputType.INIT, "Loaded " + texs.Length + " textures!");
+            SysConsole.Output(OutputType.INIT, "Loaded " + MaterialImages.Length + " textures!");
         }
     }
 }
