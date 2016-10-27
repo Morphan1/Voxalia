@@ -35,49 +35,43 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void CreateVBO()
         {
-            //if (Edited)
+            List<KeyValuePair<Vector3i, Material>> tLits = new List<KeyValuePair<Vector3i, Material>>();
+            if (CSize == CHUNK_SIZE)
             {
-                //Edited = false;
-                lock (Lits)
+                List<Entity> cents = new List<Entity>();
+                for (int x = 0; x < CHUNK_SIZE; x++)
                 {
-                    Lits.Clear();
-                    if (CSize == CHUNK_SIZE)
+                    for (int y = 0; y < CHUNK_SIZE; y++)
                     {
-                        List<Entity> cents = new List<Entity>();
-                        for (int x = 0; x < CHUNK_SIZE; x++)
+                        for (int z = 0; z < CHUNK_SIZE; z++)
                         {
-                            for (int y = 0; y < CHUNK_SIZE; y++)
+                            BlockInternal bi = GetBlockAt(x, y, z);
+                            if (bi.Material.GetLightEmitRange() > 0)
                             {
-                                for (int z = 0; z < CHUNK_SIZE; z++)
-                                {
-                                    BlockInternal bi = GetBlockAt(x, y, z);
-                                    if (bi.Material.GetLightEmitRange() > 0)
-                                    {
-                                        Lits.Add(new KeyValuePair<Vector3i, Material>(new Vector3i(x, y, z), bi.Material));
-                                    }
-                                    MaterialSpawnType mst = bi.Material.GetSpawnType();
-                                    if (mst == MaterialSpawnType.FIRE)
-                                    {
-                                        cents.Add(new FireEntity(WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(x, y, z - 1), null, OwningRegion));
-                                    }
-                                }
+                                tLits.Add(new KeyValuePair<Vector3i, Material>(new Vector3i(x, y, z), bi.Material));
+                            }
+                            MaterialSpawnType mst = bi.Material.GetSpawnType();
+                            if (mst == MaterialSpawnType.FIRE)
+                            {
+                                cents.Add(new FireEntity(WorldPosition.ToLocation() * Chunk.CHUNK_SIZE + new Location(x, y, z - 1), null, OwningRegion));
                             }
                         }
-                        OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
-                        {
-                            foreach (Entity e in CreatedEnts)
-                            {
-                                OwningRegion.Despawn(e);
-                            }
-                            CreatedEnts = cents;
-                            foreach (Entity e in cents)
-                            {
-                                OwningRegion.SpawnEntity(e);
-                            }
-                        });
                     }
                 }
+                OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
+                {
+                    foreach (Entity e in CreatedEnts)
+                    {
+                        OwningRegion.Despawn(e);
+                    }
+                    CreatedEnts = cents;
+                    foreach (Entity e in cents)
+                    {
+                        OwningRegion.SpawnEntity(e);
+                    }
+                });
             }
+            Lits = tLits;
             OwningRegion.NeedToRender(this);
         }
         
@@ -143,7 +137,22 @@ namespace Voxalia.ClientGame.WorldSystem
             Chunk c_zpxm = OwningRegion.GetChunk(WorldPosition + new Vector3i(0, -1, 1));
             Chunk c_zpyp = OwningRegion.GetChunk(WorldPosition + new Vector3i(1, 0, 1));
             Chunk c_zpym = OwningRegion.GetChunk(WorldPosition + new Vector3i(-1, 0, 1));
-            Action a = () => VBOHInternal(c_zp, c_zm, c_yp, c_ym, c_xp, c_xm, c_zpxp, c_zpxm, c_zpyp, c_zpym);
+            List<Chunk> potentials = new List<Chunk>();
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    for (int z = -1; z <= 1; z++)
+                    {
+                        Chunk tch = OwningRegion.GetChunk(WorldPosition + new Vector3i(x, y, z));
+                        if (tch != null)
+                        {
+                            potentials.Add(tch);
+                        }
+                    }
+                }
+            }
+            Action a = () => VBOHInternal(c_zp, c_zm, c_yp, c_ym, c_xp, c_xm, c_zpxp, c_zpxm, c_zpyp, c_zpym, potentials);
             if (rendering != null)
             {
                 ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(a);
@@ -187,7 +196,7 @@ namespace Voxalia.ClientGame.WorldSystem
             return new BlockInternal((ushort)Material.STONE, 0, 0, 0);
         }
         
-        void VBOHInternal(Chunk c_zp, Chunk c_zm, Chunk c_yp, Chunk c_ym, Chunk c_xp, Chunk c_xm, Chunk c_zpxp, Chunk c_zpxm, Chunk c_zpyp, Chunk c_zpym)
+        void VBOHInternal(Chunk c_zp, Chunk c_zm, Chunk c_yp, Chunk c_ym, Chunk c_xp, Chunk c_xm, Chunk c_zpxp, Chunk c_zpxm, Chunk c_zpyp, Chunk c_zpym, List<Chunk> potentials)
         {
             try
             {
@@ -202,8 +211,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     return;
                 }
-                //bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB;
-                List<Chunk> potentials = new List<Chunk>() { this, c_zp, c_zm, c_yp, c_ym, c_xp, c_xm };
+                //bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB
                 BlockInternal t_air = new BlockInternal((ushort)Material.AIR, 0, 0, 255);
                 List<Vector3> poses = new List<Vector3>();
                 List<Vector4> colorses = new List<Vector4>();

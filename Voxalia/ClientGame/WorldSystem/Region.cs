@@ -901,21 +901,14 @@ namespace Voxalia.ClientGame.WorldSystem
             Location lit = Location.Zero;
             foreach (Chunk ch in potentials)
             {
-                if (ch == null || ch.SucceededBy != null)
+                foreach (KeyValuePair<Vector3i, Material> pot in ch.Lits)
                 {
-                    continue;
-                }
-                lock (ch.Lits)
-                {
-                    foreach (KeyValuePair<Vector3i, Material> pot in ch.Lits)
+                    double distsq = (pot.Key.ToLocation() + ch.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE).DistanceSquared(pos);
+                    double range = pot.Value.GetLightEmitRange();
+                    // TODO: Apply normal vector stuff?
+                    if (distsq < range * range)
                     {
-                        double distsq = (pot.Key.ToLocation() + ch.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE).DistanceSquared(pos);
-                        double range = pot.Value.GetLightEmitRange();
-                        // TODO: Apply normal vector stuff?
-                        if (distsq < range * range)
-                        {
-                            lit += pot.Value.GetLightEmit() * (range - Math.Sqrt(distsq)); // TODO: maybe apply normals?
-                        }
+                        lit += pot.Value.GetLightEmit() * (range - Math.Sqrt(distsq)); // TODO: maybe apply normals?
                     }
                 }
             }
@@ -934,7 +927,11 @@ namespace Voxalia.ClientGame.WorldSystem
                     {
                         for (int z = -1; z <= 1; z++)
                         {
-                            potentials.Add(GetChunk(pos_c + new Vector3i(x, y, z)));
+                            Chunk tch = GetChunk(pos_c + new Vector3i(x, y, z));
+                            if (tch != null)
+                            {
+                                potentials.Add(tch);
+                            }
                         }
                     }
                 }
@@ -967,7 +964,11 @@ namespace Voxalia.ClientGame.WorldSystem
                     {
                         for (int z = -1; z <= 1; z++)
                         {
-                            potentials.Add(GetChunk(pos_c + new Vector3i(x, y, z)));
+                            Chunk tch = GetChunk(pos_c + new Vector3i(x, y, z));
+                            if (tch != null)
+                            {
+                                potentials.Add(tch);
+                            }
                         }
                     }
                 }

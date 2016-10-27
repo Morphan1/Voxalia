@@ -194,10 +194,11 @@ namespace Voxalia.Shared
 
         public List<Vector3> GetTCoordsQuick(int index, Material mat)
         {
-            List<Vector3> vecs = new List<Vector3>(BSSD.TCrds[index]);
-            for (int i = 0; i < vecs.Count; i++)
+            List<Vector3> tmp = BSSD.TCrds[index];
+            List<Vector3> vecs = new List<Vector3>(tmp.Count + 1);
+            for (int i = 0; i < tmp.Count; i++)
             {
-                Vector3 temp = vecs[i];
+                Vector3 temp = tmp[i];
                 for (int z = 0; z < 6; z++)
                 {
                     if (temp.Z == Material.DEBUG.TextureID((MaterialSide)z))
@@ -205,7 +206,7 @@ namespace Voxalia.Shared
                         temp.Z = mat.TextureID((MaterialSide)z);
                     }
                 }
-                vecs[i] = temp;
+                vecs.Add(temp);
             }
             return vecs;
         }
