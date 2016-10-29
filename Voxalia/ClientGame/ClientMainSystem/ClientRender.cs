@@ -982,7 +982,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 {
                     FontSets.Standard.DrawColoredText(FontSets.Standard.SplitAppropriately("^!^e^7gFPS(calc): " + (1f / gDelta) + ", gFPS(actual): " + gFPS
                         + "\nHeld Item: " + GetItemForSlot(QuickBarPos).ToString()
-                        + "\nTimes -> Phyiscs: " + TheRegion.PhysTime.ToString(timeformat) + ", Shadows: " + MainWorldView.ShadowTime.ToString(timeformat)
+                        + "\nTimes -> Physics: " + TheRegion.PhysTime.ToString(timeformat) + ", Shadows: " + MainWorldView.ShadowTime.ToString(timeformat)
                         + ", FBO: " + MainWorldView.FBOTime.ToString(timeformat) + ", Lights: " + MainWorldView.LightsTime.ToString(timeformat) + ", 2D: " + TWODTime.ToString(timeformat)
                         + ", Tick: " + TickTime.ToString(timeformat) + ", Finish: " + FinishTime.ToString(timeformat) + ", Total: " + TotalTime.ToString(timeformat)
                         + "\nSpike Times -> Shadows: " + MainWorldView.ShadowSpikeTime.ToString(timeformat)
