@@ -69,7 +69,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                     }
                     else
                     {
-                        ActiveEffects[i].Render(); // TODO: Deprecate / remove / fully replace!
+                        ActiveEffects[i].Render(); // TODO: Deprecate / remove / fully replace!?
                     }
                     if (ActiveEffects[i].TTL <= 0)
                     {

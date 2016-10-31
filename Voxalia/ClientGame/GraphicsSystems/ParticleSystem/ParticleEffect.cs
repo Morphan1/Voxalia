@@ -51,6 +51,8 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public Location WindOffset = Location.Zero;
 
+        public float MinimumLight = 0f;
+
         public static float FadeInOut(ParticleEffect pe)
         {
             float rel = pe.TTL / pe.O_TTL;
@@ -158,7 +160,10 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             Vector4 light = TheClient.TheRegion.GetLightAmountAdjusted(start, Location.UnitZ);
             Vector4 scolor = new Vector4((float)Color.X * light.X, (float)Color.Y * light.Y, (float)Color.Z * light.Z, Alpha * light.W);
             Vector4 scolor2 = new Vector4((float)Color2.X * light.X, (float)Color2.Y * light.Y, (float)Color2.Z * light.Z, Alpha * light.W);
-            TheClient.Rendering.SetColor(scolor * rel + scolor2 * (1 - rel));
+            Vector4 rcol = scolor * rel + scolor2 * (1 - rel);
+            rcol = Vector4.Max(rcol, new Vector4(MinimumLight, MinimumLight, MinimumLight, 0f));
+            TheClient.Rendering.SetColor(rcol);
+            TheClient.Rendering.SetMinimumLight(MinimumLight);
             switch (Type)
             {
                 case ParticleEffectType.LINE:
