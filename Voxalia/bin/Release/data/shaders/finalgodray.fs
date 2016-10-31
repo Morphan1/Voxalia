@@ -126,7 +126,19 @@ vec4 getColor(in vec2 pos, in float exposure, in float mblen) // Grab the color 
 	if (renderhint.y > 0.01) // If blurring is enabled.
 	{
 		// TODO: Better variation to the blur effect?
-		vec2 psx = normalize(pos - vec2(0.5 + cos(time + renderhint.y), 0.5 + sin(time + renderhint.y))) * 0.02;
+		float depthBasic = linearizeDepth(texture(depthtex, pos).x);
+		float tried = 1.0;
+		vec2 psx = vec2(0.0);
+		while (tried > 0.1)
+		{
+			psx = normalize(pos - vec2(0.5 + cos(time + renderhint.y), 0.5 + sin(time + renderhint.y))) * 0.02 * tried;
+			float depthNew = linearizeDepth(texture(depthtex, pos + psx).z);
+			if (depthNew > depthBasic)
+			{
+				break;
+			}
+			tried *= 0.75;
+		}
 		return getColorInt(pos + psx, exposure) * 0.5 + getColorInt(pos, exposure) * 0.5;
 	}
 #if MCM_MOTBLUR
