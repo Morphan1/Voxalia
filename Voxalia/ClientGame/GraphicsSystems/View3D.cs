@@ -620,17 +620,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     if (Lights[i] is SkyLight || camFrust == null || camFrust.ContainsSphere(Lights[i].EyePos.ToBVector(), Lights[i].MaxDistance))
                     {
-                        if (Lights[i] is SkyLight || Lights[i].EyePos.DistanceSquared(CameraPos) <
+                        if (Lights[i] is SkyLight || Lights[i].EyePos.DistanceSquared(campos) <
                             TheClient.CVars.r_lightmaxdistance.ValueD * TheClient.CVars.r_lightmaxdistance.ValueD + Lights[i].MaxDistance * Lights[i].MaxDistance * 6)
                         {
                             LightsC++;
                             for (int x = 0; x < Lights[i].InternalLights.Count; x++)
                             {
-                                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow[n]);
                                 if (Lights[i].InternalLights[x].color.LengthSquared <= 0.01)
                                 {
                                     continue;
                                 }
+                                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo_shadow[n]);
                                 if (Lights[i].InternalLights[x] is LightOrtho)
                                 {
                                     CFrust = null;
@@ -641,7 +641,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                 }
                                 CameraPos = ClientUtilities.ConvertD(Lights[i].InternalLights[x].eye);
                                 TheClient.s_shadowvox = TheClient.s_shadowvox.Bind();
-                                GL.UniformMatrix4(2, false, ref IdentityMatrix);
+                                SetMatrix(2, Matrix4d.Identity);
                                 Lights[i].InternalLights[x].SetProj();
                                 if (Lights[i].InternalLights[x] is LightOrtho)
                                 {
@@ -654,7 +654,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                                 GL.Uniform1(4, Lights[i].InternalLights[x].transp ? 1.0f : 0.0f);
                                 FBOid = FBOID.SHADOWS;
                                 TheClient.s_shadow = TheClient.s_shadow.Bind();
-                                GL.UniformMatrix4(2, false, ref IdentityMatrix);
+                                SetMatrix(2, Matrix4d.Identity);
                                 if (Lights[i].InternalLights[x] is LightOrtho)
                                 {
                                     GL.Uniform1(3, 1.0f);

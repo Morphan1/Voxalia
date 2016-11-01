@@ -40,10 +40,10 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 TheSun.Destroy();
                 MainWorldView.Lights.Remove(TheSun);
-                ThePlanet.Destroy();
-                MainWorldView.Lights.Remove(ThePlanet);
                 TheSunClouds.Destroy();
                 MainWorldView.Lights.Remove(TheSunClouds);
+                ThePlanet.Destroy();
+                MainWorldView.Lights.Remove(ThePlanet);
             }
             // TODO: DESTROY OLD REGION!
             // TODO: Radius -> max view rad * 2
@@ -106,7 +106,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 TheSunClouds.Reposition(TheSun.EyePos);
                 PlanetDir = Utilities.ForwardVector_Deg(PlanetAngle.Yaw, PlanetAngle.Pitch);
                 ThePlanet.Direction = PlanetDir;
-                TheSunClouds.Reposition(Player.GetPosition().GetBlockLocation() - ThePlanet.Direction * 30 * 6);
+                ThePlanet.Reposition(Player.GetPosition().GetBlockLocation() - ThePlanet.Direction * 30 * 6);
                 Quaternion diff;
                 Vector3 tsd = TheSun.Direction.ToBVector();
                 Vector3 tpd = PlanetDir.ToBVector();
@@ -118,13 +118,13 @@ namespace Voxalia.ClientGame.ClientMainSystem
                         (float)Math.Min(SunLightDef.Y * (PlanetSunDist / 20), 1), (float)Math.Min(SunLightDef.Z * (PlanetSunDist / 60), 1));
                     TheSunClouds.InternalLights[0].color = new OpenTK.Vector3((float)Math.Min(CloudSunLightDef.X * (PlanetSunDist / 15), 1),
                         (float)Math.Min(CloudSunLightDef.Y * (PlanetSunDist / 20), 1), (float)Math.Min(CloudSunLightDef.Z * (PlanetSunDist / 60), 1));
-                    ThePlanet.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
+                    //ThePlanet.InternalLights[0].color = new OpenTK.Vector3(0, 0, 0);
                 }
                 else
                 {
                     TheSun.InternalLights[0].color = ClientUtilities.Convert(SunLightDef);
                     TheSunClouds.InternalLights[0].color = ClientUtilities.Convert(CloudSunLightDef);
-                    ThePlanet.InternalLights[0].color = ClientUtilities.Convert(PlanetLightDef * Math.Min((PlanetSunDist / 180f), 1f));
+                    //ThePlanet.InternalLights[0].color = ClientUtilities.Convert(PlanetLightDef * Math.Min((PlanetSunDist / 180f), 1f));
                 }
                 PlanetLight = PlanetSunDist / 180f;
                 if (SunAngle.Pitch < 10 && SunAngle.Pitch > -30)
