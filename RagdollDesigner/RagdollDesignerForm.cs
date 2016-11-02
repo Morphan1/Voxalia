@@ -25,6 +25,9 @@ namespace RagdollDesigner
         {
             Designer = rd;
             InitializeComponent();
+            MainLoop = new Timer();
+            MainLoop.Interval = 16;
+            MainLoop.Tick += MainLoop_Tick;
             Size size = panel1.Size;
             Point position = panel1.Location;
             panel1.Hide();
@@ -38,13 +41,14 @@ namespace RagdollDesigner
         private void GLCont_Load(object sender, EventArgs e)
         {
             GL.Viewport(GLCont.DisplayRectangle);
-            MainLoop = new Timer();
-            MainLoop.Interval = 16;
-            MainLoop.Tick += MainLoop_Tick;
+            MainLoop.Start();
         }
 
         private void MainLoop_Tick(object sender, EventArgs e)
         {
+            GLCont.MakeCurrent();
+            GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0, 0, 0, 1 });
+            GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1 });
             GLCont.SwapBuffers();
         }
     }
