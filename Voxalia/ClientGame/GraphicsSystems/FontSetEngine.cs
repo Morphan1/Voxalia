@@ -531,6 +531,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         TextVBO VBO;
 
+        const double RAND_DIV = 40.0;
+
         /// <summary>
         /// Semi-internal rendering of text strings.
         /// </summary>
@@ -559,7 +561,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     Color tcol = ColorFor(color, trans);
                     if (random)
                     {
-                        tcol = ColorFor(Utilities.UtilRandom.Next(colors.Length), trans);
+                        double tempR = SimplexNoise.Generate((X + nX) / RAND_DIV + Client.Central.GlobalTickTimeLocal * 0.4, Y / RAND_DIV);
+                        double tempG = SimplexNoise.Generate((X + nX) / RAND_DIV + Client.Central.GlobalTickTimeLocal * 0.4, Y / RAND_DIV + 7.6f);
+                        double tempB = SimplexNoise.Generate((X + nX) / RAND_DIV + Client.Central.GlobalTickTimeLocal * 0.4, Y / RAND_DIV + 18.42f);
+                        tcol = Color.FromArgb((int)(tempR * 255), (int)(tempG * 255), (int)(tempB * 255));
                     }
                     else if (pseudo)
                     {
