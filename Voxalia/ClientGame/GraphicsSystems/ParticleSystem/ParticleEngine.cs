@@ -67,7 +67,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                         if (dets != null)
                         {
                             pos.Add(ClientUtilities.Convert(dets.Item1 - TheClient.MainWorldView.CameraPos));
-                            col.Add(dets.Item2);
+                            col.Add(Vector4.Min(dets.Item2, Vector4.One)); // NOTE: Min here is only for FORWARD mode, to prevent light > 1.0
                             tcs.Add(dets.Item3);
                         }
                     }

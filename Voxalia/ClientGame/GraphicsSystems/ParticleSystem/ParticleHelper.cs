@@ -178,17 +178,17 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public void Fire(Location pos, float sizemult)
         {
-            Location colOne = new Location(1.0, 1.0, 0);
-            Location colTwo = new Location(1.0, 0.75, 0.0);
+            Location colOne = new Location(3.0, 3.0, 0);
+            Location colTwo = new Location(3.0, 2.0, 0.0);
             Location temp = new Location(0, 0, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.09f * sizemult);
             ParticleEffect pe = Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL),
-                (o) => new Location((o.TTL / o.O_TTL) * sizemult * 2.0f), (o) => 0, sizemult, colOne, colTwo, true, WhiteFlameLick);
+                (o) => new Location((o.TTL / o.O_TTL) * 2.0f), (o) => 0, sizemult, colOne, colTwo, true, WhiteFlameLick);
             pe.AltAlpha = ParticleEffect.FadeInOut;
             pe.OnDestroy = (o) =>
             {
                 if (Utilities.UtilRandom.Next(5) == 1)
                 {
-                    //Smoke(o.Start(o) - new Location(0, 0, 1), 1, Location.One);
+                    Smoke(o.Start(o) - new Location(0, 0, 1), 1, Location.One);
                 }
             };
         }

@@ -64,19 +64,19 @@ void main()
 	vec3 right = cross(up, pos_norm);
 	fi.color = f[0].color;
 	// First Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right - up) * scale, 1.0), right, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right) * scale, 1.0), right, pos_norm);
 	fi.texcoord = vec2(0.0, 1.0);
 	EmitVertex();
 	// Second Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos + (right - up) * scale, 1.0), right, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos + (right) * scale, 1.0), right, pos_norm);
 	fi.texcoord = vec2(1.0, 1.0);
 	EmitVertex();
 	// Third Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right + up) * scale, 1.0), right, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right - up * 2.0) * scale, 1.0), right, pos_norm);
 	fi.texcoord = vec2(0.0, 0.0);
 	EmitVertex();
 	// Forth Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos + (right + up) * scale, 1.0), right, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos + (right + up * 2.0) * scale, 1.0), right, pos_norm);
 	fi.texcoord = vec2(1.0, 0.0);
 	EmitVertex();
 	EndPrimitive();
