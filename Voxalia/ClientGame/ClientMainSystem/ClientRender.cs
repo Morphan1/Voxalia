@@ -22,6 +22,7 @@ using System.Diagnostics;
 using FreneticScript;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.ClientGame.EntitySystem;
+using Voxalia.Shared.Files;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -85,6 +86,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             ShadersCheck();
             View3D.CheckError("Load - Rendering - Shaders");
             generateMapHelpers();
+            GenerateGrassHelpers();
             View3D.CheckError("Load - Rendering - Map");
             MainWorldView.ShadowingAllowed = true;
             MainWorldView.ShadowTexSize = () => CVars.r_shadowquality.ValueI;
@@ -195,7 +197,69 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
-        
+
+        public const int GRASS_TEX_COUNT = 32; // TODO: Manageable
+
+        public int GrassTextureWidth = 256;
+
+        public int GrassTextureID = -1;
+
+        public double[] GrassLastTexUse = new double[GRASS_TEX_COUNT];
+
+        public Dictionary<string, int> GrassTextureLocations = new Dictionary<string, int>();
+
+        public int[] GrassMatSet;
+
+        public void GenerateGrassHelpers()
+        {
+            GrassMatSet = new int[MaterialHelpers.ALL_MATS.Count];
+            GrassTextureID = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2DArray, GrassTextureID);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, GrassTextureWidth, GrassTextureWidth, GRASS_TEX_COUNT);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            for (int i = 0; i < GRASS_TEX_COUNT; i++)
+            {
+                GrassLastTexUse[i] = 0;
+            }
+            GrassTextureLocations.Clear();
+            for (int i = 0; i < MaterialHelpers.ALL_MATS.Count; i++)
+            {
+                string pl = ((Material)i).GetPlant();
+                if (pl != null)
+                {
+                    GrassMatSet[i] = GetGrassTextureID(FileHandler.CleanFileName(pl));
+                }
+                else
+                {
+                    GrassMatSet[i] = -1;
+                }
+            }
+        }
+
+        public int GetGrassTextureID(string f)
+        {
+            int temp;
+            if (GrassTextureLocations.TryGetValue(f, out temp))
+            {
+                return temp;
+            }
+            for (int i = 0; i < GRASS_TEX_COUNT; i++)
+            {
+                if (GrassLastTexUse[i] == 0)
+                {
+                    GrassLastTexUse[i] = GlobalTickTimeLocal;
+                    GrassTextureLocations[f] = i;
+                    Textures.LoadTextureIntoArray(f, i, GrassTextureWidth);
+                    return i;
+                }
+            }
+            // TODO: Delete any unused entry findable in favor of this new one.
+            return 0;
+        }
+
         VBO[] skybox;
 
         public Shader s_shadow;

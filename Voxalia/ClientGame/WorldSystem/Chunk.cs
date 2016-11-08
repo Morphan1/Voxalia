@@ -127,6 +127,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 GL.DeleteBuffer(Plant_VBO_Pos);
                 GL.DeleteBuffer(Plant_VBO_Col);
                 GL.DeleteBuffer(Plant_VBO_Ind);
+                GL.DeleteBuffer(Plant_VBO_Tcs);
                 Plant_VAO = -1;
             }
         }

@@ -543,7 +543,14 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 return;
             }
-            TheClient.Textures.GetTexture("blocks/transparent/tallgrass").Bind(); // TODO: Cache!
+            GL.ActiveTexture(TextureUnit.Texture3);
+            GL.BindTexture(TextureTarget.Texture2DArray, 0);
+            GL.ActiveTexture(TextureUnit.Texture2);
+            GL.BindTexture(TextureTarget.Texture2DArray, 0);
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2DArray, 0);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2DArray, TheClient.GrassTextureID);
             GL.UniformMatrix4(1, false, ref TheClient.MainWorldView.PrimaryMatrix);
             GL.Uniform1(6, (float)GlobalTickTimeLocal);
             GL.Uniform3(7, ClientUtilities.Convert(ActualWind));

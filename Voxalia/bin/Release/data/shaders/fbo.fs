@@ -2,21 +2,33 @@
 
 #define MCM_TRANSP_ALLOWED 0
 #define MCM_REFRACT 0
+#define MCM_GEOM_ACTIVE 0
 
+#if MCM_GEOM_ACTIVE
+layout (binding = 0) uniform sampler2DArray s;
+layout (binding = 1) uniform sampler2DArray normal_tex;
+layout (binding = 2) uniform sampler2DArray spec;
+layout (binding = 3) uniform sampler2DArray refl;
+#else
 layout (binding = 0) uniform sampler2D s;
 layout (binding = 1) uniform sampler2D normal_tex;
 layout (binding = 2) uniform sampler2D spec;
 layout (binding = 3) uniform sampler2D refl;
+#endif
 
 // ...
 layout (location = 5) uniform float minimum_light = 0.0;
 // ...
 layout (location = 9) uniform float refract_eta = 0.0;
 
-in struct vox_out
+in struct vox_fout
 {
 	vec4 position;
+#if MCM_GEOM_ACTIVE
+	vec3 texcoord;
+#else
 	vec2 texcoord;
+#endif
 	vec4 color;
 	mat3 tbn;
 } fi;

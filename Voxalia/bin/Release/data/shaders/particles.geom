@@ -20,15 +20,15 @@ in struct vox_out
 #endif
 } f[1];
 
-out struct vox_out
+out struct vox_fout
 {
 #if MCM_PRETTY
 	vec4 position;
-	vec2 texcoord;
+	vec3 texcoord;
 	vec4 color;
 	mat3 tbn;
 #else
-	vec2 texcoord;
+	vec3 texcoord;
 	vec4 color;
 #endif
 } fi;
@@ -60,24 +60,24 @@ void main()
 		up = vec3(0.0, 1.0, 0.0);
 	}
 	float scale = f[0].texcoord.x * 0.5;
-	// TODO: float rotation = f[0].texcoord.y;
+	float tid = f[0].texcoord.y;
 	vec3 right = cross(up, pos_norm);
 	fi.color = f[0].color;
 	// First Vertex
 	gl_Position = proj_matrix * qfix(vec4(pos - (right) * scale, 1.0), right, pos_norm);
-	fi.texcoord = vec2(0.0, 1.0);
+	fi.texcoord = vec3(0.0, 1.0, tid);
 	EmitVertex();
 	// Second Vertex
 	gl_Position = proj_matrix * qfix(vec4(pos + (right) * scale, 1.0), right, pos_norm);
-	fi.texcoord = vec2(1.0, 1.0);
+	fi.texcoord = vec3(1.0, 1.0, tid);
 	EmitVertex();
 	// Third Vertex
 	gl_Position = proj_matrix * qfix(vec4(pos - (right - up * 2.0) * scale, 1.0), right, pos_norm);
-	fi.texcoord = vec2(0.0, 0.0);
+	fi.texcoord = vec3(0.0, 0.0, tid);
 	EmitVertex();
 	// Forth Vertex
 	gl_Position = proj_matrix * qfix(vec4(pos + (right + up * 2.0) * scale, 1.0), right, pos_norm);
-	fi.texcoord = vec2(1.0, 0.0);
+	fi.texcoord = vec3(1.0, 0.0, tid);
 	EmitVertex();
 	EndPrimitive();
 }

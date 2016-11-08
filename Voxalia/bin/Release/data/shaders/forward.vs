@@ -22,7 +22,11 @@ layout (location = 8) in vec4 BoneID2;
 #endif
 #endif
 
+#if MCM_GEOM_ACTIVE
 out struct vox_out
+#else
+out struct vox_fout
+#endif
 {
 #if MCM_VOX
 	vec3 texcoord;

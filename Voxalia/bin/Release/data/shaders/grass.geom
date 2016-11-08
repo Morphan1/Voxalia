@@ -24,15 +24,15 @@ in struct vox_out
 #endif
 } f[1];
 
-out struct vox_out
+out struct vox_fout
 {
 #if MCM_PRETTY
 	vec4 position;
-	vec2 texcoord;
+	vec3 texcoord;
 	vec4 color;
 	mat3 tbn;
 #else
-	vec2 texcoord;
+	vec3 texcoord;
 	vec4 color;
 #endif
 } fi;
@@ -63,30 +63,32 @@ void main()
 	vec3 right = cross(up, normalize(vec3(pos.x, pos.y, 0.0))) * 0.3;
 	vec3 nr = right * (1.0 / 0.3);
 	vec3 pos_norm = normalize(pos.xyz + wnd);
+	float scale = f[0].texcoord.x * 0.5;
+	float tid = f[0].texcoord.y;
 	fi.color = vec4(f[0].color.xyz * dot(pos_norm, vec3(0.0, 0.0, -1.0)) * 0.5 + 0.5, 1.0) * f[0].color;
 	// First Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right) * 0.5, 1.0), nr, pos_norm);
-	fi.texcoord = vec2(0.0, 1.0);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right) * scale, 1.0), nr, pos_norm);
+	fi.texcoord = vec3(0.0, 1.0, tid);
 	EmitVertex();
 	// Second Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos + (right) * 0.5, 1.0), nr, pos_norm);
-	fi.texcoord = vec2(1.0, 1.0);
+	gl_Position = proj_matrix * qfix(vec4(pos + (right) * scale, 1.0), nr, pos_norm);
+	fi.texcoord = vec3(1.0, 1.0, tid);
 	EmitVertex();
 	// Third Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right - up * 2.0) * 0.5 + wnd, 1.0), nr, pos_norm);
-	fi.texcoord = vec2(0.0, 0.5);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right - up * 2.0) * scale + wnd, 1.0), nr, pos_norm);
+	fi.texcoord = vec3(0.0, 0.5, tid);
 	EmitVertex();
 	// Forth Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos + (right + up * 2.0) * 0.5 + wnd, 1.0), nr, pos_norm);
-	fi.texcoord = vec2(1.0, 0.5);
+	gl_Position = proj_matrix * qfix(vec4(pos + (right + up * 2.0) * scale + wnd, 1.0), nr, pos_norm);
+	fi.texcoord = vec3(1.0, 0.5, tid);
 	EmitVertex();
 	// Fifth Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right - up * 4.0) * 0.5 + wnd * 2.0, 1.0), nr, pos_norm);
-	fi.texcoord = vec2(0.0, 0.0);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right - up * 4.0) * scale + wnd * 2.0, 1.0), nr, pos_norm);
+	fi.texcoord = vec3(0.0, 0.0, tid);
 	EmitVertex();
 	// Sixth Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos + (right + up * 4.0) * 0.5 + wnd * 2.0, 1.0), nr, pos_norm);
-	fi.texcoord = vec2(1.0, 0.0);
+	gl_Position = proj_matrix * qfix(vec4(pos + (right + up * 4.0) * scale + wnd * 2.0, 1.0), nr, pos_norm);
+	fi.texcoord = vec3(1.0, 0.0, tid);
 	EmitVertex();
 	EndPrimitive();
 }

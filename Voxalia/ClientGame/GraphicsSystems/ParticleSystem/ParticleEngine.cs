@@ -14,6 +14,8 @@ using OpenTK.Graphics;
 using System.Linq;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 {
@@ -28,6 +30,16 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
         public int Part_VBO_Tcs = -1;
         public int Part_C;
 
+        public const int TEX_COUNT = 64; // TODO: Manageable
+
+        public int TextureWidth = 256;
+
+        public int TextureID = -1;
+
+        public double[] LastTexUse = new double[TEX_COUNT];
+
+        public Dictionary<string, int> TextureLocations = new Dictionary<string, int>();
+
         public ParticleEngine(Client tclient)
         {
             TheClient = tclient;
@@ -38,6 +50,40 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             Part_VBO_Col = GL.GenBuffer();
             Part_VBO_Tcs = GL.GenBuffer();
             Part_C = 0;
+            TextureID = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TextureWidth, TextureWidth, TEX_COUNT);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            for (int i = 0; i < TEX_COUNT; i++)
+            {
+                LastTexUse[i] = 0;
+            }
+            TextureLocations.Clear();
+        }
+
+        public int GetTextureID(string f)
+        {
+            int temp;
+            if (TextureLocations.TryGetValue(f, out temp))
+            {
+                return temp;
+            }
+            for (int i = 0; i < TEX_COUNT; i++)
+            {
+                if (LastTexUse[i] == 0)
+                {
+                    LastTexUse[i] = TheClient.GlobalTickTimeLocal;
+                    TextureLocations[f] = i;
+                    GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
+                    TheClient.Textures.LoadTextureIntoArray(f, i, TextureWidth);
+                    return i;
+                }
+            }
+            // TODO: Delete any unused entry findable in favor of this new one.
+            return 0;
         }
 
         public List<ParticleEffect> ActiveEffects;
@@ -85,7 +131,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                 GL.UniformMatrix4(1, false, ref TheClient.MainWorldView.PrimaryMatrix);
                 Matrix4 ident = Matrix4.Identity;
                 GL.UniformMatrix4(2, false, ref ident);
-                TheClient.Textures.GetTexture("effects/fire/whiteflamelick01").Bind(); // TODO: Texture2DArray!
+                GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
                 Vector3[] posset = pos.ToArray();
                 Vector4[] colorset = col.ToArray();
                 Vector2[] texcoords = tcs.ToArray();

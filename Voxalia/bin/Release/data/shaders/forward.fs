@@ -8,12 +8,16 @@
 #if MCM_VOX
 layout (binding = 0) uniform sampler2DArray s;
 #else
+#if MCM_GEOM_ACTIVE
+layout (binding = 0) uniform sampler2DArray s;
+#else
 layout (binding = 0) uniform sampler2D s;
+#endif
 #endif
 
 // ...
 
-in struct vox_out
+in struct vox_fout
 {
 #if MCM_VOX
 	vec3 texcoord;
@@ -22,7 +26,11 @@ in struct vox_out
 	vec4 thv;
 	vec4 thw;
 #else
+#if MCM_GEOM_ACTIVE
+	vec3 texcoord;
+#else
 	vec2 texcoord;
+#endif
 #endif
 	vec4 color;
 } fi;

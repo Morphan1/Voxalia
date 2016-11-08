@@ -45,6 +45,8 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
         
         public Texture texture;
 
+        public int TID = -1;
+
         public Action<ParticleEffect> OnDestroy = null;
 
         public bool BlowsInWind = true;
@@ -116,8 +118,11 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             Vector4 scolor2 = new Vector4((float)Color2.X * light.X, (float)Color2.Y * light.Y, (float)Color2.Z * light.Z, Alpha * light.W);
             Vector4 rcol = scolor * rel + scolor2 * (1 - rel);
             float scale = (float)End(this).X;
-            // TODO: Rotation!
-            return new Tuple<Location, Vector4, Vector2>(start, rcol, new Vector2(scale, 0));
+            if (TID == -1)
+            {
+                TID = TheClient.Particles.Engine.GetTextureID(texture.Name);
+            }
+            return new Tuple<Location, Vector4, Vector2>(start, rcol, new Vector2(scale, TID));
         }
         
         public void Render()
