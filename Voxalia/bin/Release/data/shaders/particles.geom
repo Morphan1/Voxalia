@@ -59,22 +59,24 @@ void main()
 	{
 		up = vec3(0.0, 1.0, 0.0);
 	}
+	float scale = f[0].texcoord.x * 0.5;
+	// TODO: float rotation = f[0].texcoord.y;
 	vec3 right = cross(up, pos_norm);
 	fi.color = f[0].color;
 	// First Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right - up) * 0.5, 1.0), right, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right - up) * scale, 1.0), right, pos_norm);
 	fi.texcoord = vec2(0.0, 1.0);
 	EmitVertex();
 	// Second Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos + (right - up) * 0.5, 1.0), right, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos + (right - up) * scale, 1.0), right, pos_norm);
 	fi.texcoord = vec2(1.0, 1.0);
 	EmitVertex();
 	// Third Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos - (right + up) * 0.5, 1.0), right, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos - (right + up) * scale, 1.0), right, pos_norm);
 	fi.texcoord = vec2(0.0, 0.0);
 	EmitVertex();
 	// Forth Vertex
-	gl_Position = proj_matrix * qfix(vec4(pos + (right + up) * 0.5, 1.0), right, pos_norm);
+	gl_Position = proj_matrix * qfix(vec4(pos + (right + up) * scale, 1.0), right, pos_norm);
 	fi.texcoord = vec2(1.0, 0.0);
 	EmitVertex();
 	EndPrimitive();

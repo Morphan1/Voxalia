@@ -73,7 +73,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         double lTT = 0;
 
-        public Tuple<Location, Vector4> GetDetails()
+        public Tuple<Location, Vector4, Vector2> GetDetails()
         {
             if (lTT != TheClient.GlobalTickTimeLocal)
             {
@@ -115,7 +115,9 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             Vector4 scolor = new Vector4((float)Color.X * light.X, (float)Color.Y * light.Y, (float)Color.Z * light.Z, Alpha * light.W);
             Vector4 scolor2 = new Vector4((float)Color2.X * light.X, (float)Color2.Y * light.Y, (float)Color2.Z * light.Z, Alpha * light.W);
             Vector4 rcol = scolor * rel + scolor2 * (1 - rel);
-            return new Tuple<Location, Vector4>(start, rcol);
+            float scale = (float)End(this).X;
+            // TODO: Rotation!
+            return new Tuple<Location, Vector4, Vector2>(start, rcol, new Vector2(scale, 0));
         }
         
         public void Render()

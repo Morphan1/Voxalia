@@ -348,14 +348,14 @@ namespace Voxalia.ClientGame.WorldSystem
                                     }
                                     Location skylight = OwningRegion.GetLightAmountForSkyValue(new Location(WorldPosition.X * Chunk.CHUNK_SIZE + x + 0.5, WorldPosition.Y * Chunk.CHUNK_SIZE + y + 0.5,
                                         WorldPosition.Z * Chunk.CHUNK_SIZE + z + 1.0), Location.UnitZ, potentials, zp.BlockLocalData / 255f);
-                                    for (int plx = 0; plx < 3; plx++)
+                                    for (int plx = 1; plx < 4; plx++)
                                     {
                                         for (int ply = 0; ply < 3; ply++)
                                         {
                                             BEPUutilities.RayHit rayhit;
                                             if (!BlockShapeRegistry.BSD[c.BlockData].Coll.RayCast(new BEPUutilities.Ray(new BEPUutilities.Vector3(0.3333f * plx, 0.3333f * ply, 3), new BEPUutilities.Vector3(0, 0, -1)), 5, out rayhit))
                                             {
-                                                rayhit.Location = new BEPUutilities.Vector3(0.3333 * plx, 0.3333 * ply, 1.0);
+                                                rayhit.Location = new BEPUutilities.Vector3(0.33333 * plx + 0.01, 0.33333 * ply + 0.01, 1.0);
                                             }
                                             poses.Add(new Vector3(x + (float)rayhit.Location.X, y + (float)rayhit.Location.Y, z + (float)rayhit.Location.Z));
                                             colorses.Add(new Vector4((float)skylight.X, (float)skylight.Y, (float)skylight.Z, 1.0f));
