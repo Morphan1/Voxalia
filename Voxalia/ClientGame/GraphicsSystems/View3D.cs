@@ -522,12 +522,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.ClearBuffer(ClearBuffer.Depth, 0, new float[] { 1.0f });
             cameraBasePos = CameraPos;
             cameraAdjust = -camforward.CrossProduct(camup) * 0.25;
+            if (TheClient.VR != null)
+            {
+                cameraAdjust = -cameraAdjust;
+            }
             RenderRelative = CameraPos;
             SetViewport();
             CameraTarget = CameraPos + camforward;
             OffsetWorld = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos));
-            /*if (TheClient.VR != null)
+            if (TheClient.VR != null)
             {
+                /*
                 Matrix4 proj = TheClient.VR.GetProjection(true, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
                 Matrix4 view = TheClient.VR.Eye(true);
                 PrimaryMatrix = view * proj;
@@ -540,8 +545,24 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 PrimaryMatrix_OffsetFor3Dd = new Matrix4d(PrimaryMatrix_OffsetFor3D.M11, PrimaryMatrix_OffsetFor3D.M12, PrimaryMatrix_OffsetFor3D.M13, PrimaryMatrix_OffsetFor3D.M14, PrimaryMatrix_OffsetFor3D.M21, PrimaryMatrix_OffsetFor3D.M22, PrimaryMatrix_OffsetFor3D.M23, PrimaryMatrix_OffsetFor3D.M24,
                     PrimaryMatrix_OffsetFor3D.M31, PrimaryMatrix.M32, PrimaryMatrix_OffsetFor3D.M33, PrimaryMatrix_OffsetFor3D.M34, PrimaryMatrix_OffsetFor3D.M41, PrimaryMatrix_OffsetFor3D.M42, PrimaryMatrix_OffsetFor3D.M43, PrimaryMatrix_OffsetFor3D.M44)
                     * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(CameraPos));
+                */
+                Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
+                    (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
+                Location bx = cameraAdjust;
+                Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + camforward), ClientUtilities.Convert(camup));
+                PrimaryMatrix = view * proj;
+                Matrix4 view2 = Matrix4.LookAt(ClientUtilities.Convert(-cameraAdjust), ClientUtilities.Convert(-cameraAdjust + camforward), ClientUtilities.Convert(camup));
+                PrimaryMatrix_OffsetFor3D = view2 * proj;
+                Matrix4d projd = Matrix4d.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
+                    (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
+                Location bxd = CameraPos + cameraAdjust;
+                Matrix4d viewd = Matrix4d.LookAt(ClientUtilities.ConvertD(bxd), ClientUtilities.ConvertD(bxd + camforward), ClientUtilities.ConvertD(camup));
+                PrimaryMatrixd = viewd * projd;
+                PrimaryMatrix_OffsetFor3Dd = Matrix4d.Identity;
+                Matrix4d view2d = Matrix4d.LookAt(ClientUtilities.ConvertD(CameraPos - cameraAdjust), ClientUtilities.ConvertD(CameraPos - cameraAdjust + camforward), ClientUtilities.ConvertD(camup));
+                PrimaryMatrix_OffsetFor3Dd = view2d * projd;
             }
-            else*/
+            else
             {
                 Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
                     (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
@@ -593,7 +614,26 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.UniformMatrix4(2, false, ref IdentityMatrix);
             GL.Uniform1(6, (float)TheClient.GlobalTickTimeLocal);
             TheClient.Rendering.SetColor(Color4.White);
-            Render3D(this);
+            if (TheClient.CVars.r_3d_enable.ValueB || TheClient.VR != null)
+            {
+                GL.Viewport(Width / 2, 0, Width / 2, Height);
+                Render3D(this);
+                CFrust = cf2;
+                GL.Viewport(0, 0, Width / 2, Height);
+                CameraPos = cameraBasePos - cameraAdjust;
+                TheClient.s_forw_vox = TheClient.s_forw_vox.Bind();
+                GL.UniformMatrix4(1, false, ref PrimaryMatrix_OffsetFor3D);
+                TheClient.s_forw = TheClient.s_forw.Bind();
+                GL.UniformMatrix4(1, false, ref PrimaryMatrix_OffsetFor3D);
+                Render3D(this);
+                GL.Viewport(0, 0, Width, Height);
+                CameraPos = cameraBasePos + cameraAdjust;
+                CFrust = camFrust;
+            }
+            else
+            {
+                Render3D(this);
+            }
             FBOid = FBOID.FORWARD_TRANSP;
             TheClient.s_forw_vox_trans.Bind();
             GL.UniformMatrix4(1, false, ref PrimaryMatrix);
@@ -610,7 +650,26 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 PostFirstRender();
             }
             GL.DepthMask(false);
-            Render3D(this);
+            if (TheClient.CVars.r_3d_enable.ValueB || TheClient.VR != null)
+            {
+                GL.Viewport(Width / 2, 0, Width / 2, Height);
+                Render3D(this);
+                CFrust = cf2;
+                GL.Viewport(0, 0, Width / 2, Height);
+                CameraPos = cameraBasePos - cameraAdjust;
+                TheClient.s_forw_vox_trans = TheClient.s_forw_vox_trans.Bind();
+                GL.UniformMatrix4(1, false, ref PrimaryMatrix_OffsetFor3D);
+                TheClient.s_forw_trans = TheClient.s_forw_trans.Bind();
+                GL.UniformMatrix4(1, false, ref PrimaryMatrix_OffsetFor3D);
+                Render3D(this);
+                GL.Viewport(0, 0, Width, Height);
+                CameraPos = cameraBasePos + cameraAdjust;
+                CFrust = camFrust;
+            }
+            else
+            {
+                Render3D(this);
+            }
             GL.DepthMask(true);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.DrawBuffer(DrawBufferMode.Back);
