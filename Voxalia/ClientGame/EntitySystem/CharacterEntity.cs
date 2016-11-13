@@ -291,6 +291,12 @@ namespace Voxalia.ClientGame.EntitySystem
             return GetPosition();
         }
 
+        public Location GetBasicEyePos()
+        {
+            Location renderrelpos = GetWeldSpot();
+            return renderrelpos + new Location(0, 0, CBHHeight * (CBody.StanceManager.CurrentStance == Stance.Standing ? 1.8 : 1.5));
+        }
+
         public Location GetEyePosition()
         {
             Location renderrelpos = GetWeldSpot();

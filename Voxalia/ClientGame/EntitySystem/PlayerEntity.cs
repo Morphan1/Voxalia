@@ -779,6 +779,10 @@ namespace Voxalia.ClientGame.EntitySystem
                 TheClient.Rendering.RenderLine(ServerLocation, renderrelpos);
                 TheClient.Rendering.RenderLineBox(ServerLocation + new Location(-0.2), ServerLocation + new Location(0.2));
             }
+            if (TheClient.VR != null)
+            {
+                return;
+            }
             OpenTK.Matrix4d mat = OpenTK.Matrix4d.Scale(1.5f)
                 * OpenTK.Matrix4d.CreateRotationZ((Direction.Yaw * Utilities.PI180))
                 * PlayerAngleMat
@@ -857,6 +861,10 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Location GetCameraPosition()
         {
+            if (TheClient.VR != null)
+            {
+                return GetBasicEyePos();
+            }
             if (!InVehicle || Vehicle == null || TheClient.CVars.g_firstperson.ValueB)
             {
                 return GetEyePosition();

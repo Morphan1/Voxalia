@@ -532,37 +532,16 @@ namespace Voxalia.ClientGame.GraphicsSystems
             OffsetWorld = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos));
             if (TheClient.VR != null)
             {
-                /*
-                Matrix4 proj = TheClient.VR.GetProjection(true, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
-                Matrix4 view = TheClient.VR.Eye(true);
-                PrimaryMatrix = view * proj;
-                Matrix4 proj2 = TheClient.VR.GetProjection(false, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
-                Matrix4 view2 = TheClient.VR.Eye(false);
-                PrimaryMatrix_OffsetFor3D = view2 * proj2;
-                PrimaryMatrixd = new Matrix4d(PrimaryMatrix.M11, PrimaryMatrix.M12, PrimaryMatrix.M13, PrimaryMatrix.M14, PrimaryMatrix.M21, PrimaryMatrix.M22, PrimaryMatrix.M23, PrimaryMatrix.M24,
-                    PrimaryMatrix.M31, PrimaryMatrix.M32, PrimaryMatrix.M33, PrimaryMatrix.M34, PrimaryMatrix.M41, PrimaryMatrix.M42, PrimaryMatrix.M43, PrimaryMatrix.M44)
-                    * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(CameraPos));
-                PrimaryMatrix_OffsetFor3Dd = new Matrix4d(PrimaryMatrix_OffsetFor3D.M11, PrimaryMatrix_OffsetFor3D.M12, PrimaryMatrix_OffsetFor3D.M13, PrimaryMatrix_OffsetFor3D.M14, PrimaryMatrix_OffsetFor3D.M21, PrimaryMatrix_OffsetFor3D.M22, PrimaryMatrix_OffsetFor3D.M23, PrimaryMatrix_OffsetFor3D.M24,
-                    PrimaryMatrix_OffsetFor3D.M31, PrimaryMatrix.M32, PrimaryMatrix_OffsetFor3D.M33, PrimaryMatrix_OffsetFor3D.M34, PrimaryMatrix_OffsetFor3D.M41, PrimaryMatrix_OffsetFor3D.M42, PrimaryMatrix_OffsetFor3D.M43, PrimaryMatrix_OffsetFor3D.M44)
-                    * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(CameraPos));
-                */
                 Matrix4 proj = TheClient.VR.GetProjection(false, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
                 proj.Transpose();
-                //Location bx = cameraAdjust;
-                Matrix4 view = TheClient.VR.Eye(false); // Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + camforward), ClientUtilities.Convert(camup));
+                Matrix4 view = TheClient.VR.Eye(false);
                 PrimaryMatrix = view * proj;
                 Matrix4 proj2 = TheClient.VR.GetProjection(true, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
                 proj2.Transpose();
-                Matrix4 view2 = TheClient.VR.Eye(true); // Matrix4.LookAt(ClientUtilities.Convert(-cameraAdjust), ClientUtilities.Convert(-cameraAdjust + camforward), ClientUtilities.Convert(camup));
+                Matrix4 view2 = TheClient.VR.Eye(true);
                 PrimaryMatrix_OffsetFor3D = view2 * proj2;
-                Matrix4d projd = Matrix4d.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
-                    (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
-                Location bxd = CameraPos + cameraAdjust;
-                Matrix4d viewd = Matrix4d.LookAt(ClientUtilities.ConvertD(bxd), ClientUtilities.ConvertD(bxd + camforward), ClientUtilities.ConvertD(camup));
-                PrimaryMatrixd = viewd * projd;
-                PrimaryMatrix_OffsetFor3Dd = Matrix4d.Identity;
-                Matrix4d view2d = Matrix4d.LookAt(ClientUtilities.ConvertD(CameraPos - cameraAdjust), ClientUtilities.ConvertD(CameraPos - cameraAdjust + camforward), ClientUtilities.ConvertD(camup));
-                PrimaryMatrix_OffsetFor3Dd = view2d * projd;
+                PrimaryMatrixd = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos)) * ClientUtilities.ConvertToD(view) * ClientUtilities.ConvertToD(proj);
+                PrimaryMatrix_OffsetFor3Dd = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos)) * ClientUtilities.ConvertToD(view2) * ClientUtilities.ConvertToD(proj2);
             }
             else
             {

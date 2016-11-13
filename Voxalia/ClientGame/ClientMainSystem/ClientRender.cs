@@ -447,7 +447,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 MainWorldView.ForwardVec = Player.ForwardVector();
                 // Frustum cf1 = null;
-                if (CVars.g_firstperson.ValueB)
+                if (CVars.g_firstperson.ValueB || VR != null)
                 {
                     MainWorldView.CameraPos = PlayerEyePosition;
                 }
