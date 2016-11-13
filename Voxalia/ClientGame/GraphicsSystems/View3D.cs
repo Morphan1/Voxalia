@@ -546,13 +546,15 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     PrimaryMatrix_OffsetFor3D.M31, PrimaryMatrix.M32, PrimaryMatrix_OffsetFor3D.M33, PrimaryMatrix_OffsetFor3D.M34, PrimaryMatrix_OffsetFor3D.M41, PrimaryMatrix_OffsetFor3D.M42, PrimaryMatrix_OffsetFor3D.M43, PrimaryMatrix_OffsetFor3D.M44)
                     * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(CameraPos));
                 */
-                Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
-                    (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
-                Location bx = cameraAdjust;
-                Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + camforward), ClientUtilities.Convert(camup));
+                Matrix4 proj = TheClient.VR.GetProjection(false, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
+                proj.Transpose();
+                //Location bx = cameraAdjust;
+                Matrix4 view = TheClient.VR.Eye(false); // Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + camforward), ClientUtilities.Convert(camup));
                 PrimaryMatrix = view * proj;
-                Matrix4 view2 = Matrix4.LookAt(ClientUtilities.Convert(-cameraAdjust), ClientUtilities.Convert(-cameraAdjust + camforward), ClientUtilities.Convert(camup));
-                PrimaryMatrix_OffsetFor3D = view2 * proj;
+                Matrix4 proj2 = TheClient.VR.GetProjection(true, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
+                proj2.Transpose();
+                Matrix4 view2 = TheClient.VR.Eye(true); // Matrix4.LookAt(ClientUtilities.Convert(-cameraAdjust), ClientUtilities.Convert(-cameraAdjust + camforward), ClientUtilities.Convert(camup));
+                PrimaryMatrix_OffsetFor3D = view2 * proj2;
                 Matrix4d projd = Matrix4d.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
                     (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
                 Location bxd = CameraPos + cameraAdjust;

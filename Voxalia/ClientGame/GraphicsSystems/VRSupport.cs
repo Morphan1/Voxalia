@@ -52,6 +52,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 throw new Exception("Failed to start VR: Invalid render target size!");
             }
+            TheClient.MainWorldView.Generate(TheClient, (int)w, (int)h);
             TheClient.MainWorldView.GenerateFBO();
             SysConsole.Output(OutputType.INFO, "Switching to VR mode!");
             Compositor = OpenVR.Compositor;
