@@ -12,15 +12,17 @@ out float color;
 
 void main()
 {
-	float tmax = 0.0;
+	float tcur = 0.0;
+	float px = 0;
 	vec2 jump = SPREAD / u_screensize;
 	for (float x = 0.0; x < (1.0 / SPREAD); x += jump.x)
 	{
 		for (float y = 0.0; y < (1.0 / SPREAD); y += jump.y)
 		{
 			vec3 col = texture(lighttex, f_scrpos + vec2(x, y)).xyz;
-			tmax = max(tmax, max(col.x, max(col.y, col.z)));
+			tcur += max(col.x, max(col.y, col.z));
+			px++;
 		}
 	}
-	color = tmax;
+	color = tcur / px;
 }

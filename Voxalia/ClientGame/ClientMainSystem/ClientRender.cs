@@ -790,6 +790,30 @@ namespace Voxalia.ClientGame.ClientMainSystem
         }
 
         public double RainCylPos = 0;
+        
+        public void RenderVR()
+        {
+            if (VR == null)
+            {
+                return;
+            }
+            SetEnts();
+            Textures.White.Bind();
+            Rendering.SetMinimumLight(1);
+            // TODO: Special dynamic controller models!
+            if (VR.Left != null)
+            {
+                Matrix4 pos = Matrix4.CreateScale(0.1f) * VR.Left.Position;
+                GL.UniformMatrix4(2, false, ref pos);
+                Models.Cube.Draw();
+            }
+            if (VR.Right != null)
+            {
+                Matrix4 pos = Matrix4.CreateScale(0.1f) * VR.Right.Position;
+                GL.UniformMatrix4(2, false, ref pos);
+                Models.Cube.Draw();
+            }
+        }
 
         public void Render3D(View3D view)
         {
@@ -917,6 +941,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.LineWidth(1);
                 Rendering.SetColor(Color4.White);
             }
+            RenderVR();
             Textures.White.Bind();
             Rendering.SetMinimumLight(1);
             TheRegion.RenderEffects();
