@@ -63,7 +63,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public Matrix4 Eye(bool lefteye)
         {
             HmdMatrix34_t temp = VR.GetEyeToHeadTransform(lefteye ? EVREye.Eye_Left : EVREye.Eye_Right);
-            return headMat * new Matrix4(temp.m0, temp.m1, temp.m2, temp.m3, temp.m4, temp.m5, temp.m6, temp.m7, temp.m8, temp.m9, temp.m10, temp.m11, 0, 0, 0, 1);
+            Matrix4 eye = new Matrix4(temp.m0, temp.m1, temp.m2, temp.m3, temp.m4, temp.m5, temp.m6, temp.m7, temp.m8, temp.m9, temp.m10, temp.m11, 0, 0, 0, 1);
+            eye.Transpose();
+            return headMat * eye;
         }
 
         public Matrix4 GetProjection(bool lefteye, float znear, float zfar)
@@ -93,15 +95,17 @@ namespace Voxalia.ClientGame.GraphicsSystems
             {
                 HmdMatrix34_t tmat = rposes[OpenVR.k_unTrackedDeviceIndex_Hmd].mDeviceToAbsoluteTracking;
                 headMat = new Matrix4(tmat.m0, tmat.m1, tmat.m2, tmat.m3, tmat.m4, tmat.m5, tmat.m6, tmat.m7, tmat.m8, tmat.m9, tmat.m10, tmat.m11, 0, 0, 0, 1);
+                headMat.Transpose();
+                headMat.Invert();
                 headMat = Matrix4.CreateRotationX((float)(Math.PI * -0.5)) * headMat;
             }
             if (merr != EVRCompositorError.None)
             {
-                SysConsole.Output(OutputType.INFO, "Posing error: " + merr);
+                SysConsole.Output(OutputType.WARNING, "Posing error: " + merr);
             }
             if (!Compositor.CanRenderScene())
             {
-                SysConsole.Output(OutputType.INFO, "Can't render VR scene!");
+                SysConsole.Output(OutputType.WARNING, "Can't render VR scene!");
             }
             Texture_t left = new Texture_t();
             left.eColorSpace = EColorSpace.Auto;
@@ -115,7 +119,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             EVRCompositorError lerr = Compositor.Submit(EVREye.Eye_Left, ref left, ref bounds, EVRSubmitFlags.Submit_Default);
             if (lerr != EVRCompositorError.None)
             {
-                SysConsole.Output(OutputType.INFO, "Left eye error: " + lerr);
+                SysConsole.Output(OutputType.WARNING, "Left eye error: " + lerr);
             }
             Texture_t right = new Texture_t();
             right.eColorSpace = EColorSpace.Auto;
@@ -129,7 +133,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             EVRCompositorError rerr = Compositor.Submit(EVREye.Eye_Right, ref right, ref rbounds, EVRSubmitFlags.Submit_Default);
             if (rerr != EVRCompositorError.None)
             {
-                SysConsole.Output(OutputType.INFO, "Right eye error: " + rerr);
+                SysConsole.Output(OutputType.WARNING, "Right eye error: " + rerr);
             }
         }
     }

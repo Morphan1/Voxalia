@@ -416,7 +416,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public int LightsC = 0;
 
-        public float[] ClearColor = new float[] { 0f, 1f, 1f, 0f };
+        public float[] ClearColor = new float[] { 0f, 1f, 1f, 1f };
 
         public static void CheckError(string loc)
         {
@@ -545,8 +545,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             else
             {
-                Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
-                    (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
+                Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF), (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
                 Location bx = TheClient.CVars.r_3d_enable.ValueB ? (cameraAdjust) : Location.Zero;
                 Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + camforward), ClientUtilities.Convert(camup));
                 PrimaryMatrix = view * proj;
