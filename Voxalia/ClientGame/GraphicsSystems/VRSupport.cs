@@ -94,7 +94,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             HmdMatrix34_t tmat = vrpose.mDeviceToAbsoluteTracking;
             Matrix4 resp = new Matrix4(tmat.m0, tmat.m1, tmat.m2, tmat.m3, tmat.m4, tmat.m5, tmat.m6, tmat.m7, tmat.m8, tmat.m9, tmat.m10, tmat.m11, 0, 0, 0, 1);
             resp.Transpose();
-            resp = resp * Matrix4.CreateScale(1.5f);
+            resp = Matrix4.CreateScale(1.5f) * resp * Matrix4.CreateRotationX((float)(Math.PI * 0.5));
             VRController res = new VRController();
             res.Position = resp;
             res.Axes[0] = new Vector2(vrcont.rAxis0.x, vrcont.rAxis0.y);
@@ -127,7 +127,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 headMat = new Matrix4(tmat.m0, tmat.m1, tmat.m2, tmat.m3, tmat.m4, tmat.m5, tmat.m6, tmat.m7, tmat.m8, tmat.m9, tmat.m10, tmat.m11, 0, 0, 0, 1);
                 headMat.Transpose();
                 headMat.Invert();
-                headMat = Matrix4.CreateRotationX((float)(Math.PI * -0.5)) * headMat * Matrix4.CreateScale(0.75f); // TODO: 1.5 -> Cvar?
+                headMat = Matrix4.CreateRotationX((float)(Math.PI * -0.5)) * headMat * Matrix4.CreateScale(0.75f); // TODO: (1.0/1.5)=0.75 -> Cvar?
             }
             if (merr != EVRCompositorError.None)
             {
