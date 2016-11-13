@@ -63,12 +63,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public Matrix4 Eye(bool lefteye)
         {
             HmdMatrix34_t temp = VR.GetEyeToHeadTransform(lefteye ? EVREye.Eye_Left : EVREye.Eye_Right);
-            return new Matrix4(temp.m0, temp.m1, temp.m2, temp.m3, temp.m4, temp.m5, temp.m6, temp.m7, temp.m8, temp.m9, temp.m10, temp.m11, 0, 0, 0, 1);
+            return headMat * new Matrix4(temp.m0, temp.m1, temp.m2, temp.m3, temp.m4, temp.m5, temp.m6, temp.m7, temp.m8, temp.m9, temp.m10, temp.m11, 0, 0, 0, 1);
         }
 
         public Matrix4 GetProjection(bool lefteye, float znear, float zfar)
         {
-            HmdMatrix44_t temp = VR.GetProjectionMatrix(lefteye ? EVREye.Eye_Left : EVREye.Eye_Right, znear, zfar, EGraphicsAPIConvention.API_OpenGL);
+            HmdMatrix44_t temp = VR.GetProjectionMatrix(lefteye ? EVREye.Eye_Left : EVREye.Eye_Right, znear, zfar, EGraphicsAPIConvention.API_DirectX);
             return new Matrix4(temp.m0, temp.m1, temp.m2, temp.m3, temp.m4, temp.m5, temp.m6, temp.m7, temp.m8, temp.m9, temp.m10, temp.m11, temp.m12, temp.m13, temp.m14, temp.m15);
         }
 
@@ -76,6 +76,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
         {
             OpenVR.Shutdown();
         }
+
+        Matrix4 headMat = Matrix4.LookAt(Vector3.Zero, Vector3.UnitY, Vector3.UnitZ);
 
         public void Submit()
         {
@@ -87,6 +89,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
             TrackedDevicePose_t[] rposes = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
             TrackedDevicePose_t[] gposes = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
             EVRCompositorError merr = Compositor.WaitGetPoses(rposes, gposes);
+            if (rposes[OpenVR.k_unTrackedDeviceIndex_Hmd].bPoseIsValid)
+            {
+                HmdMatrix34_t tmat = rposes[OpenVR.k_unTrackedDeviceIndex_Hmd].mDeviceToAbsoluteTracking;
+                headMat = new Matrix4(tmat.m0, tmat.m1, tmat.m2, tmat.m3, tmat.m4, tmat.m5, tmat.m6, tmat.m7, tmat.m8, tmat.m9, tmat.m10, tmat.m11, 0, 0, 0, 1);
+                headMat = Matrix4.CreateRotationX((float)(Math.PI * -0.5)) * headMat;
+            }
             if (merr != EVRCompositorError.None)
             {
                 SysConsole.Output(OutputType.INFO, "Posing error: " + merr);
