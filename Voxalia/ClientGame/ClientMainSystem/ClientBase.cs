@@ -104,6 +104,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public float DPIScale = 1f;
 
+        public VRSupport VR;
+
         /// <summary>
         /// Start up and run the server.
         /// </summary>
@@ -125,8 +127,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             Commands.ExecuteCommands(args);
             SysConsole.Output(OutputType.INIT, "Generating window...");
-            Window = new GameWindow(CVars.r_width.ValueI, CVars.r_height.ValueI, new GraphicsMode(24, 24, 0, 0), Program.GameName + " v" + Program.GameVersion,
-                GameWindowFlags.Default, DisplayDevice.Default, 4, 3, GraphicsContextFlags.ForwardCompatible);
+            DisplayDevice dd = DisplayDevice.Default;
+            Window = new GameWindow(CVars.r_width.ValueI, CVars.r_height.ValueI, new GraphicsMode(24, 24, 0, 0), Program.GameName + " v" + Program.GameVersion, GameWindowFlags.Default, dd, 4, 3, GraphicsContextFlags.ForwardCompatible);
             Window.Location = new Point(0, 0);
             Window.WindowState = CVars.r_fullscreen.ValueB ? WindowState.Fullscreen : WindowState.Normal;
             Window.Load += new EventHandler<EventArgs>(Window_Load);
@@ -148,6 +150,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            if (VR != null)
+            {
+                VR.Stop();
+                VR = null;
+            }
             Sounds.StopAll();
             if (RawGamePad != null)
             {

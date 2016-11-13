@@ -332,7 +332,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     {
                         Shaders.ColorMultShader.Bind();
                         GL.Uniform1(6, (float)GlobalTickTimeLocal);
-                        if (CVars.r_3d_enable.ValueB)
+                        if (CVars.r_3d_enable.ValueB || VR != null)
                         {
                             GL.Viewport(Window.Width / 2, 0, Window.Width / 2, Window.Height);
                             CScreen.FullRender(gDelta, 0, 0);
@@ -372,7 +372,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 timer.Start();
                 View3D.CheckError("Finish");
+                if (VR != null)
+                {
+                    Shaders.ColorMultShader.Bind();
+                    GL.UniformMatrix4(1, false, ref MainWorldView.SimpleOrthoMatrix);
+                    GL.UniformMatrix4(2, false, ref View3D.IdentityMatrix);
+                    GL.BindTexture(TextureTarget.Texture2D, MainWorldView.CurrentFBOTexture);
+                    Rendering.RenderRectangle(-1, -1, 1, 1);
+                }
                 Window.SwapBuffers();
+                if (VR != null)
+                {
+                    VR.Submit();
+                }
                 timer.Stop();
                 FinishTime = (double)timer.ElapsedMilliseconds / 1000f;
                 if (FinishTime > FinishSpikeTime)
@@ -401,7 +413,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
                 Establish2D();
-                if (CVars.r_3d_enable.ValueB)
+                if (CVars.r_3d_enable.ValueB || VR != null)
                 {
                     GL.Viewport(Window.Width / 2, 0, Window.Width / 2, Window.Height);
                     Render2D(false);
