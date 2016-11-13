@@ -97,7 +97,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 headMat = new Matrix4(tmat.m0, tmat.m1, tmat.m2, tmat.m3, tmat.m4, tmat.m5, tmat.m6, tmat.m7, tmat.m8, tmat.m9, tmat.m10, tmat.m11, 0, 0, 0, 1);
                 headMat.Transpose();
                 headMat.Invert();
-                headMat = Matrix4.CreateRotationX((float)(Math.PI * -0.5)) * headMat;
+                headMat = Matrix4.CreateRotationX((float)(Math.PI * -0.5)) * headMat * Matrix4.CreateScale(1.5f); // TODO: 1.5 -> Cvar?
             }
             if (merr != EVRCompositorError.None)
             {
