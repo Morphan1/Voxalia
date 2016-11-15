@@ -51,7 +51,7 @@ namespace Voxalia.ClientGame.CommandSystem
             u_highlight_targetblock, u_highlight_placeblock, u_showping,
             u_debug, u_showmap, u_showrangefinder, u_showcompass,
             u_colortyping;
-
+        
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
         /// </summary>
