@@ -524,7 +524,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             cameraAdjust = -camforward.CrossProduct(camup) * 0.25;
             if (TheClient.VR != null)
             {
-                cameraAdjust = -cameraAdjust;
+                //cameraAdjust = -cameraAdjust;
+                cameraAdjust = Location.Zero;
             }
             RenderRelative = CameraPos;
             SetViewport();
@@ -532,13 +533,13 @@ namespace Voxalia.ClientGame.GraphicsSystems
             OffsetWorld = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos));
             if (TheClient.VR != null)
             {
-                Matrix4 proj = TheClient.VR.GetProjection(false, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
+                Matrix4 proj = TheClient.VR.GetProjection(true, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
                 proj.Transpose();
-                Matrix4 view = TheClient.VR.Eye(false);
+                Matrix4 view = TheClient.VR.Eye(true);
                 PrimaryMatrix = view * proj;
-                Matrix4 proj2 = TheClient.VR.GetProjection(true, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
+                Matrix4 proj2 = TheClient.VR.GetProjection(false, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
                 proj2.Transpose();
-                Matrix4 view2 = TheClient.VR.Eye(true);
+                Matrix4 view2 = TheClient.VR.Eye(false);
                 PrimaryMatrix_OffsetFor3D = view2 * proj2;
                 PrimaryMatrixd = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos)) * ClientUtilities.ConvertToD(view) * ClientUtilities.ConvertToD(proj);
                 PrimaryMatrix_OffsetFor3Dd = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos)) * ClientUtilities.ConvertToD(view2) * ClientUtilities.ConvertToD(proj2);

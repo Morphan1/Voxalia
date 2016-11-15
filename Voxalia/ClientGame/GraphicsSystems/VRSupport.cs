@@ -65,7 +65,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             HmdMatrix34_t temp = VR.GetEyeToHeadTransform(lefteye ? EVREye.Eye_Left : EVREye.Eye_Right);
             Matrix4 eye = new Matrix4(temp.m0, temp.m1, temp.m2, temp.m3, temp.m4, temp.m5, temp.m6, temp.m7, temp.m8, temp.m9, temp.m10, temp.m11, 0, 0, 0, 1);
             eye.Transpose();
-            return headMat * eye;
+            return headMat * eye * Matrix4.CreateScale(1.5f);
         }
 
         public Matrix4 GetProjection(bool lefteye, float znear, float zfar)
@@ -127,7 +127,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 headMat = new Matrix4(tmat.m0, tmat.m1, tmat.m2, tmat.m3, tmat.m4, tmat.m5, tmat.m6, tmat.m7, tmat.m8, tmat.m9, tmat.m10, tmat.m11, 0, 0, 0, 1);
                 headMat.Transpose();
                 headMat.Invert();
-                headMat = Matrix4.CreateRotationX((float)(Math.PI * -0.5)) * headMat * Matrix4.CreateScale(0.75f); // TODO: (1.0/1.5)=0.75 -> Cvar?
+                headMat = Matrix4.CreateRotationX((float)(Math.PI * -0.5)) * headMat * Matrix4.CreateScale(0.66666f); // TODO: (1.0/1.5)=0.66666 -> Cvar?
             }
             if (merr != EVRCompositorError.None)
             {
@@ -184,7 +184,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public override string ToString()
         {
-            return Position + ",,, " + Axes[0] + ", " + Axes[1] + ", " + Axes[2] + ", " + Axes[3] + ", " + Axes[4] + ", " + Touched + ",,, " + Pressed;
+            return Axes[0] + ", " + Axes[1] + ", " + Axes[2] + ", " + Axes[3] + ", " + Axes[4] + ", " + Touched + ",,, " + Pressed;
         }
     }
 
@@ -205,7 +205,21 @@ namespace Voxalia.ClientGame.GraphicsSystems
         TEN_TWENTY_FOUR = 1024,
         TWENTY_FOURTY_EIGHTY = 2048,
         FOURTY_NINETY_SIX = 4096,
-        EIGHTY_ONE_NINETY_TWO = 8192
+        EIGHTY_ONE_NINETY_TWO = 8192,
+        N__ONE = 1 * 16384,
+        N__TWO = 2 * 16384,
+        N__FOUR = 4 * 16384,
+        N__EIGHT = 8 * 16384,
+        N__SIXTEEN = 16 * 16384,
+        N__THIRTY_TWO = 32 * 16384,
+        N__SIXTY_FOUR = 64 * 16384,
+        N__ONE_TWENTY_EIGHT = 128 * 16384,
+        N__TWO_FIFTY_SIX = 256 * 16384,
+        N__FIVE_TWELVE = 512 * 16384,
+        N__TEN_TWENTY_FOUR = 1024 * 16384,
+        N__TWENTY_FOURTY_EIGHTY = 2048 * 16384,
+        N__FOURTY_NINETY_SIX = 4096 * 16384,
+        N__EIGHTY_ONE_NINETY_TWO = 8192 * 16384
         // maybe that's enough?
     }
 }
