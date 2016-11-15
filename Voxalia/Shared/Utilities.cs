@@ -499,7 +499,7 @@ namespace Voxalia.Shared
                 double pitch;
                 if (input.X != 0)
                 {
-                    yaw = (Math.Atan2(input.Y, input.X) * 180 / Math.PI) + 180;
+                    yaw = (Math.Atan2(input.Y, input.X) * (180.0 / Math.PI)) + 180.0;
                 }
                 else if (input.Y > 0)
                 {
@@ -509,7 +509,7 @@ namespace Voxalia.Shared
                 {
                     yaw = 270;
                 }
-                pitch = (Math.Atan2(input.Z, Math.Sqrt(input.X * input.X + input.Y * input.Y)) * 180 / Math.PI);
+                pitch = (Math.Atan2(input.Z, Math.Sqrt(input.X * input.X + input.Y * input.Y)) * (180.0 / Math.PI));
                 while (pitch < -180)
                 {
                     pitch += 360;

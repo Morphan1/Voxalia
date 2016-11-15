@@ -808,6 +808,22 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Matrix4 pos = Matrix4.CreateScale(0.66666f) * VR.Left.Position;
                 GL.UniformMatrix4(2, false, ref pos);
                 tmod.Draw();
+                // TEMPORARY
+                Quaternion oquat = VR.Left.Position.ExtractRotation(true);
+                BEPUutilities.Quaternion quat = new BEPUutilities.Quaternion(oquat.X, oquat.Y, oquat.Z, oquat.W);
+                BEPUutilities.Vector3 face = BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitZ, quat);
+                Vector3 forw = -ClientUtilities.Convert(new Location(face));
+                Vector3 ospot = VR.Left.Position.ExtractTranslation();
+                Vector3 goal = ospot + forw * 0.5f;
+                Matrix4 trans = Matrix4.CreateTranslation(goal);
+                GL.UniformMatrix4(2, false, ref trans);
+                tmod.Draw();
+                Textures.White.Bind();
+                Rendering.SetColor(Color4.Red);
+                GL.LineWidth(3);
+                Rendering.RenderLine(MainWorldView.CameraPos + ClientUtilities.Convert(ospot), MainWorldView.CameraPos + ClientUtilities.Convert(goal));
+                GL.LineWidth(1);
+                Rendering.SetColor(Color4.White);
             }
             if (VR.Right != null)
             {

@@ -81,7 +81,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
             OpenVR.Shutdown();
         }
 
-        Matrix4 headMat = Matrix4.LookAt(Vector3.Zero, Vector3.UnitY, Vector3.UnitZ);
+        public Matrix4 HeadMatRot = Matrix4.Identity;
+
+        public Matrix4 BasicHeadMat = Matrix4.Identity;
+
+        public Matrix4 headMat = Matrix4.LookAt(Vector3.Zero, Vector3.UnitY, Vector3.UnitZ);
 
         public VRController GetController(bool left)
         {
@@ -128,7 +132,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 HmdMatrix34_t tmat = rposes[OpenVR.k_unTrackedDeviceIndex_Hmd].mDeviceToAbsoluteTracking;
                 headMat = new Matrix4(tmat.m0, tmat.m1, tmat.m2, tmat.m3, tmat.m4, tmat.m5, tmat.m6, tmat.m7, tmat.m8, tmat.m9, tmat.m10, tmat.m11, 0, 0, 0, 1);
                 headMat.Transpose();
-                headMat = Matrix4.CreateScale(1.5f) * headMat * Matrix4.CreateRotationX((float)(Math.PI * 0.5)); // TODO: 1.5 -> Cvar?
+                HeadMatRot = headMat * Matrix4.CreateRotationX((float)(Math.PI * 0.5));
+                BasicHeadMat = Matrix4.CreateScale(1.5f) * HeadMatRot; // TODO: 1.5 -> Cvar?
+                headMat = BasicHeadMat;
                 headMat.Invert();
             }
             if (merr != EVRCompositorError.None)
@@ -137,8 +143,6 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             Left = GetController(true);
             Right = GetController(false);
-            SysConsole.Output(OutputType.DEBUG, "Left: " + Left);
-            SysConsole.Output(OutputType.DEBUG, "Right: " + Right);
             if (!Compositor.CanRenderScene())
             {
                 SysConsole.Output(OutputType.WARNING, "Can't render VR scene!");
@@ -176,6 +180,26 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
     public class VRController
     {
+        public const int AXIS_TRACKPAD = 0;
+
+        public const int AXIS_TRIGGER = 1;
+
+        public Vector2 TrackPad
+        {
+            get
+            {
+                return Axes[AXIS_TRACKPAD];
+            }
+        }
+
+        public float Trigger
+        {
+            get
+            {
+                return Axes[AXIS_TRIGGER].X;
+            }
+        }
+
         public Matrix4 Position;
 
         public Vector2[] Axes = new Vector2[5];
@@ -193,35 +217,85 @@ namespace Voxalia.ClientGame.GraphicsSystems
     [Flags]
     public enum VRButtons : ulong
     {
+        /// <summary>
+        /// No buttons down.
+        /// </summary>
         NONE = 0,
-        ONE = 1,
-        TWO = 2,
-        FOUR = 4,
-        EIGHT = 8,
-        SIXTEEN = 16,
-        THIRTY_TWO = 32,
-        SIXTY_FOUR = 64,
-        ONE_TWENTY_EIGHT = 128,
-        TWO_FIFTY_SIX = 256,
-        FIVE_TWELVE = 512,
-        TEN_TWENTY_FOUR = 1024,
-        TWENTY_FOURTY_EIGHTY = 2048,
-        FOURTY_NINETY_SIX = 4096,
-        EIGHTY_ONE_NINETY_TWO = 8192,
-        N__ONE = 1 * 16384,
-        N__TWO = 2 * 16384,
-        N__FOUR = 4 * 16384,
-        N__EIGHT = 8 * 16384,
-        N__SIXTEEN = 16 * 16384,
-        N__THIRTY_TWO = 32 * 16384,
-        N__SIXTY_FOUR = 64 * 16384,
-        N__ONE_TWENTY_EIGHT = 128 * 16384,
-        N__TWO_FIFTY_SIX = 256 * 16384,
-        N__FIVE_TWELVE = 512 * 16384,
-        N__TEN_TWENTY_FOUR = 1024 * 16384,
-        N__TWENTY_FOURTY_EIGHTY = 2048 * 16384,
-        N__FOURTY_NINETY_SIX = 4096 * 16384,
-        N__EIGHTY_ONE_NINETY_TWO = 8192 * 16384
-        // maybe that's enough?
+        __A__ONE = 1,
+        /// <summary>
+        /// The menu button.
+        /// </summary>
+        MENU_BUTTON = 2,
+        /// <summary>
+        /// The side grip.
+        /// </summary>
+        SIDE_GRIP = 4,
+        __A__EIGHT = 8,
+        __A__SIXTEEN = 16,
+        __A__THIRTY_TWO = 32,
+        __A__SIXTY_FOUR = 64,
+        __A__ONE_TWENTY_EIGHT = 128,
+        __A__TWO_FIFTY_SIX = 256,
+        __A__FIVE_TWELVE = 512,
+        __A__TEN_TWENTY_FOUR = 1024,
+        __A__TWENTY_FOURTY_EIGHTY = 2048,
+        __A__FOURTY_NINETY_SIX = 4096,
+        __A__EIGHTY_ONE_NINETY_TWO = 8192,
+        __N__ONE = 1 * 16384,
+        __N__TWO = 2 * 16384,
+        __N__FOUR = 4 * 16384,
+        __N__EIGHT = 8 * 16384,
+        __N__SIXTEEN = 16 * 16384,
+        __N__THIRTY_TWO = 32 * 16384,
+        __N__SIXTY_FOUR = 64 * 16384,
+        __N__ONE_TWENTY_EIGHT = 128 * 16384,
+        __N__TWO_FIFTY_SIX = 256 * 16384,
+        __N__FIVE_TWELVE = 512 * 16384,
+        __N__TEN_TWENTY_FOUR = 1024 * 16384,
+        __N__TWENTY_FOURTY_EIGHTY = 2048 * 16384,
+        __N__FOURTY_NINETY_SIX = 4096 * 16384,
+        __N__EIGHTY_ONE_NINETY_TWO = 8192 * 16384,
+        __U__ONE = 1 * 16384 * 16384ul,
+        __U__TWO = 2 * 16384 * 16384ul,
+        __U__FOUR = 4 * 16384 * 16384ul,
+        __U__EIGHT = 8 * 16384 * 16384ul,
+        /// <summary>
+        /// The track pad.
+        /// </summary>
+        TRACKPAD = 16 * 16384 * 16384ul,
+        /// <summary>
+        /// The trigger.
+        /// </summary>
+        TRIGGER = 32 * 16384 * 16384ul,
+        __U__SIXTY_FOUR = 64 * 16384 * 16384ul,
+        __U__ONE_TWENTY_EIGHT = 128 * 16384 * 16384ul,
+        __U__TWO_FIFTY_SIX = 256 * 16384 * 16384ul,
+        __U__FIVE_TWELVE = 512 * 16384 * 16384ul,
+        __U__TEN_TWENTY_FOUR = 1024 * 16384 * 16384ul,
+        __U__TWENTY_FOURTY_EIGHTY = 2048 * 16384 * 16384ul,
+        __U__FOURTY_NINETY_SIX = 4096 * 16384 * 16384ul,
+        __U__EIGHTY_ONE_NINETY_TWO = 8192 * 16384 * 16384ul,
+        __V__ONE = 1 * 16384 * 16384ul * 16384ul,
+        __V__TWO = 2 * 16384 * 16384ul * 16384ul,
+        __V__FOUR = 4 * 16384 * 16384ul * 16384ul,
+        __V__EIGHT = 8 * 16384 * 16384ul * 16384ul,
+        __V__SIXTEEN = 16 * 16384 * 16384ul * 16384ul,
+        __V__THIRTY_TWO = 32 * 16384 * 16384ul * 16384ul,
+        __V__SIXTY_FOUR = 64 * 16384 * 16384ul * 16384ul,
+        __V__ONE_TWENTY_EIGHT = 128 * 16384 * 16384ul * 16384ul,
+        __V__TWO_FIFTY_SIX = 256 * 16384 * 16384ul * 16384ul,
+        __V__FIVE_TWELVE = 512 * 16384 * 16384ul * 16384ul,
+        __V__TEN_TWENTY_FOUR = 1024 * 16384 * 16384ul * 16384ul,
+        __V__TWENTY_FOURTY_EIGHTY = 2048 * 16384 * 16384ul * 16384ul,
+        __V__FOURTY_NINETY_SIX = 4096 * 16384 * 16384ul * 16384ul,
+        __V__EIGHTY_ONE_NINETY_TWO = 8192 * 16384 * 16384ul * 16384ul,
+        __Z__ONE = 1 * 16384 * 16384ul * 16384ul * 16384ul,
+        __Z__TWO = 2 * 16384 * 16384ul * 16384ul * 16384ul,
+        __Z__FOUR = 4 * 16384 * 16384ul * 16384ul * 16384ul,
+        __Z__EIGHT = 8 * 16384 * 16384ul * 16384ul * 16384ul,
+        __Z__SIXTEEN = 16 * 16384 * 16384ul * 16384ul * 16384ul,
+        __Z__THIRTY_TWO = 32 * 16384 * 16384ul * 16384ul * 16384ul,
+        __Z__SIXTY_FOUR = 64 * 16384 * 16384ul * 16384ul * 16384ul,
+        __Z__ONE_TWENTY_EIGHT = 128 * 16384 * 16384ul * 16384ul * 16384ul
     }
 }

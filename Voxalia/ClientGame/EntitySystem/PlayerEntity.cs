@@ -625,6 +625,14 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 Direction.Pitch = -89.9f;
             }
+            if (TheClient.VR != null)
+            {
+                OpenTK.Quaternion oquat = TheClient.VR.HeadMatRot.ExtractRotation(true);
+                Quaternion quat = new Quaternion(oquat.X, oquat.Y, oquat.Z, oquat.W);
+                Vector3 face = -Quaternion.Transform(Vector3.UnitZ, quat);
+                Direction = Utilities.VectorToAngles(new Location(face));
+                //OpenTK.Vector3 headSpot = TheClient.VR.BasicHeadMat.ExtractTranslation();
+            }
             TryToJump();
             UpdateLocalMovement();
             SetMoveSpeed(CBody, lUIS);
