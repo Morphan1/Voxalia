@@ -800,18 +800,20 @@ namespace Voxalia.ClientGame.ClientMainSystem
             SetEnts();
             Textures.White.Bind();
             Rendering.SetMinimumLight(1);
+            Model tmod = Models.GetModel("vr/controller/vive"); // TODO: Store the model in a var somewhere?
+            tmod.LoadSkin(Textures);
             // TODO: Special dynamic controller models!
             if (VR.Left != null)
             {
-                Matrix4 pos = Matrix4.CreateScale(0.1f) * VR.Left.Position;
+                Matrix4 pos = VR.Left.Position;
                 GL.UniformMatrix4(2, false, ref pos);
-                Models.Cube.Draw();
+                tmod.Draw();
             }
             if (VR.Right != null)
             {
-                Matrix4 pos = Matrix4.CreateScale(0.1f) * VR.Right.Position;
+                Matrix4 pos = VR.Right.Position;
                 GL.UniformMatrix4(2, false, ref pos);
-                Models.Cube.Draw();
+                tmod.Draw();
             }
         }
 
