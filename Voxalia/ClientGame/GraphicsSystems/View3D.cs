@@ -796,11 +796,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.Viewport(0, 0, Width / 2, Height);
                 CameraPos = cameraBasePos - cameraAdjust;
                 TheClient.s_fbov = TheClient.s_fbov.Bind();
-                GL.UniformMatrix4(1, false, ref PrimaryMatrix);
+                GL.UniformMatrix4(1, false, ref PrimaryMatrix_OffsetFor3D);
                 TheClient.s_fbot = TheClient.s_fbot.Bind();
-                GL.UniformMatrix4(1, false, ref PrimaryMatrix);
+                GL.UniformMatrix4(1, false, ref PrimaryMatrix_OffsetFor3D);
                 TheClient.s_fbo = TheClient.s_fbo.Bind();
-                GL.UniformMatrix4(1, false, ref PrimaryMatrix);
+                GL.UniformMatrix4(1, false, ref PrimaryMatrix_OffsetFor3D);
                 Render3D(this);
                 GL.Viewport(0, 0, Width, Height);
                 CameraPos = cameraBasePos + cameraAdjust;
