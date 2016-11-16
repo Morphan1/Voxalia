@@ -811,8 +811,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 // TEMPORARY
                 Quaternion oquat = VR.Left.Position.ExtractRotation(true);
                 BEPUutilities.Quaternion quat = new BEPUutilities.Quaternion(oquat.X, oquat.Y, oquat.Z, oquat.W);
-                BEPUutilities.Vector3 face = BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitZ, quat);
-                Vector3 forw = -ClientUtilities.Convert(new Location(face));
+                BEPUutilities.Vector3 face = -BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitZ, quat);
+                Vector3 forw = ClientUtilities.Convert(new Location(face));
                 Vector3 ospot = VR.Left.Position.ExtractTranslation();
                 Vector3 goal = ospot + forw * 0.5f;
                 Matrix4 trans = Matrix4.CreateTranslation(goal);

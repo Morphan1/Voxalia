@@ -632,6 +632,23 @@ namespace Voxalia.ClientGame.EntitySystem
                 Vector3 face = -Quaternion.Transform(Vector3.UnitZ, quat);
                 Direction = Utilities.VectorToAngles(new Location(face));
                 //OpenTK.Vector3 headSpot = TheClient.VR.BasicHeadMat.ExtractTranslation();
+                if (TheClient.VR.Left != null && TheClient.VR.Left.Trigger > 0.01f)
+                {
+                    OpenTK.Quaternion loquat = TheClient.VR.Left.Position.ExtractRotation(true);
+                    Quaternion lquat = new Quaternion(loquat.X, loquat.Y, loquat.Z, loquat.W);
+                    Vector3 lforw = -Quaternion.Transform(Vector3.UnitZ, lquat);
+                    Location ldir = Utilities.VectorToAngles(new Location(lforw));
+                    double goalyaw = ldir.Yaw - Direction.Yaw;
+                    Vector2 resmove = new Vector2(Math.Sin(goalyaw * Utilities.PI180), Math.Cos(goalyaw * Utilities.PI180));
+                    double len = resmove.Length();
+                    SprintOrWalk = (float)(len * 2.0 - 1.0);
+                    if (len > 1.0)
+                    {
+                        resmove /= len;
+                    }
+                    XMove = -(float)resmove.X;
+                    YMove = (float)resmove.Y;
+                }
             }
             TryToJump();
             UpdateLocalMovement();
