@@ -91,6 +91,7 @@
     <Compile Include="PriorityQueue\SimplePriorityQueue.cs" />
     <Compile Include="Shared\BFrustum.cs" />
     <Compile Include="Shared\BlockInternal.cs" />
+    <Compile Include="Shared\Catmull.cs" />
     <Compile Include="Shared\Collision\FlyingDiscConstraint.cs" />
     <Compile Include="Shared\Collision\MCCMCCPairHandler.cs" />
     <Compile Include="Shared\Collision\Vector2i.cs" />
