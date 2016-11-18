@@ -145,7 +145,7 @@ namespace Voxalia.ServerGame.EntitySystem
                 Matrix m4 = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (double)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
                     * head.GetBoneTotalMatrix(0, adjs) * (rotforw * Matrix.CreateTranslation(new Vector3(0, 0, 0.2f)));
                 m4.Transpose();
-                return GetPosition() + new Location(m4.Translation) * 1.5f;// TODO: Match clientside ray trace?
+                return GetPosition() + new Location(m4.Translation) * 1.5f;
             }
             else
             {

@@ -794,11 +794,11 @@ namespace Voxalia.ClientGame.EntitySystem
             return GetPosition();
         }
 
+        // TODO: Merge with base.Render() as much as possible!
         public override void Render()
         {
             Location renderrelpos = GetWeldSpot();
             TheClient.SetEnts();
-            // TODO: Merge with base.Render() as much as possible!
             if (TheClient.CVars.n_debugmovement.ValueB)
             {
                 TheClient.Rendering.RenderLine(ServerLocation, renderrelpos);

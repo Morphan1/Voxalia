@@ -1083,6 +1083,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.Uniform1(16, TheClient.CVars.r_znear.ValueF);
             GL.Uniform1(17, TheClient.CVars.r_zfar.ValueF);
             GL.Uniform4(18, new Vector4(ClientUtilities.Convert(Headmat.GetFogColor()), (float)Headmat.GetFogAlpha()));
+            // TODO: If thick fog, blur the environment? Or some similar head-in-a-block effect!
             GL.Uniform1(19, DesaturationAmount);
             GL.Uniform3(20, new Vector3(0, 0, 0));
             GL.Uniform3(21, DesaturationColor);

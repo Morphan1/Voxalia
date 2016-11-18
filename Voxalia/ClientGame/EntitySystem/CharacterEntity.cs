@@ -310,16 +310,7 @@ namespace Voxalia.ClientGame.EntitySystem
                 Matrix m4 = Matrix.CreateFromQuaternion(Quaternion.CreateFromAxisAngle(Vector3.UnitZ, (float)((-Direction.Yaw + 270) * Utilities.PI180) % 360f))
                     * head.GetBoneTotalMatrix(0, adjs) * (rotforw * Matrix.CreateTranslation(new Vector3(0, 0, 0.2f)));
                 m4.Transpose();
-                Location end = renderrelpos + new Location(m4.Translation) * 1.5f;
-                start.Z = end.Z; // FUTURE: Maybe handle player rotation?
-                double len = (end - start).Length();
-                Location normdir = (end - start) / len;
-                RayCastResult rcr;
-                if (TheRegion.SpecialCaseRayTrace(start, normdir, (float)len, MaterialSolidity.FULLSOLID, IgnoreThis, out rcr))
-                {
-                    return new Location(rcr.HitData.Location + rcr.HitData.Normal * 0.2f);
-                }
-                return end;
+                return renderrelpos + new Location(m4.Translation) * 1.5f;
             }
             else
             {

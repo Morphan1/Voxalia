@@ -215,6 +215,8 @@ void main() // The central entry point of the shader. Handles everything!
 	}
 	light_color = vec4(desaturate(light_color.xyz), light_color.w); // Desaturate whatever color we've ended up with.
 #endif
+	// Temporary fog placeholder code
+	light_color.xyz = light_color.xyz * (1.0 - fogCol.w) + fogCol.xyz * fogCol.w;
 #if MCM_LIGHTS
 	// HDR/bloom is available to all!
 	vec3 basecol = texture(lighttex, f_texcoord).xyz * HDR_Div; // The base pixel color is our current pixel's color, without regularization.

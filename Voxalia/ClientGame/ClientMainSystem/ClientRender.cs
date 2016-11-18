@@ -496,7 +496,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 sortEntities();
                 Particles.Sort();
-                MainWorldView.Headmat = TheRegion.GetBlockMaterial(PlayerEyePosition);
+                MainWorldView.Headmat = TheRegion.GetBlockMaterial(MainWorldView.CameraPos);
                 MainWorldView.SunLoc = GetSunLocation();
                 MainWorldView.Render();
                 ReverseEntitiesOrder();
