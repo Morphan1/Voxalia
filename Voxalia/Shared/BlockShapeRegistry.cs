@@ -248,14 +248,48 @@ namespace Voxalia.Shared
                     ps.Add(t, new Point(BSSD.Verts[0][i]));
                 }
             }
-            SysConsole.Output(OutputType.INFO, "Try " + this);
             for (int i = 0; i < BSSD.Verts[0].Count; i += 3)
             {
                 Point a = ps[new Location(BSSD.Verts[0][i])];
                 Point b = ps[new Location(BSSD.Verts[0][i + 1])];
                 Point c = ps[new Location(BSSD.Verts[0][i + 2])];
-                Face f = new Face(new Edge(a, b), new Edge(b, c), new Edge(c, a));
-                p.AddFace(f);
+                if (i + 3 < BSSD.Verts[0].Count)
+                {
+                    Point a2 = ps[new Location(BSSD.Verts[0][i + 3])];
+                    Point b2 = ps[new Location(BSSD.Verts[0][i + 4])];
+                    Point c2 = ps[new Location(BSSD.Verts[0][i + 5])];
+                    bool ac = a2 == a || a2 == b || a2 == c;
+                    bool bc = b2 == a || b2 == b || b2 == c;
+                    bool cc = c2 == a || c2 == b || c2 == c;
+                    if (ac && bc && cc)
+                    {
+                        SysConsole.Output(OutputType.WARNING, this + " has weird setup: " + a + ", " + b + ", " + c);
+                        p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, c));
+                    }
+                    else if (ac && cc)
+                    {
+                        p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, c, b2));
+                        i += 3;
+                    }
+                    else if (ac && bc)
+                    {
+                        p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, c, c2));
+                        i += 3;
+                    }
+                    else if (bc && cc)
+                    {
+                        p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, c, a2));
+                        i += 3;
+                    }
+                    else
+                    {
+                        p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, c));
+                    }
+                }
+                else
+                {
+                    p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, c));
+                }
             }
             CatmullClarkSubdivider cmcs = new CatmullClarkSubdivider();
             Shape res = cmcs.Subdivide(p);
@@ -269,12 +303,7 @@ namespace Voxalia.Shared
                     vecs.Add(face.AllPoints[i].Position);
                     norms.Add(face.Normal);
                     Tcs.Add(new Vector3(0, 0, BSSD.TCrds[0][0].Z));
-                    norms.Add(face.Normal);
-                    Tcs.Add(new Vector3(0, 0, BSSD.TCrds[0][0].Z));
                 }
-                vecs.Add(face.AllPoints[2].Position);
-                vecs.Add(face.AllPoints[3].Position);
-                vecs.Add(face.AllPoints[0].Position);
             }
             BSSD = new BlockShapeSubDetails();
             Vector3[] tcrds = Tcs.ToArray();

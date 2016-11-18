@@ -28,7 +28,7 @@ namespace Voxalia.Shared.ModelManagement
         {
             if (Faces.Any(f => f.IsMatchFor(face)))
             {
-                throw new InvalidOperationException("There is allready such a face in the shape!");
+                throw new InvalidOperationException("There is already such a face in the shape!");
             }
             Faces.Add(face);
             return face;
@@ -250,37 +250,6 @@ namespace Voxalia.Shared.ModelManagement
                 return Points[1];
             }
         }
-
-        public override bool Equals(object obj)
-        {
-            return obj is Edge && this == (obj as Edge);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public static bool operator ==(Edge v1, Edge v2)
-        {
-            bool v1n = ReferenceEquals(v1, null);
-            bool v2n = ReferenceEquals(v2, null);
-            if (v1n && v2n)
-            {
-                return true;
-            }
-            if (v1n || v2n)
-            {
-                return false;
-            }
-            return v1.IsMatchFor(v2.Points[0], v2.Points[1]);
-        }
-
-        public static bool operator !=(Edge v1, Edge v2)
-        {
-            return !(v1 == v2);
-        }
-
     }
 
     public class CatmullClarkSubdivider
@@ -462,9 +431,12 @@ namespace Voxalia.Shared.ModelManagement
             //   (c, edge_pointca, face_pointabc, edge_pointbc)
             Point facePoint = face.FacePoint;
 
-            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, a, face.Edges[0].EdgePoint, facePoint, face.Edges[2].EdgePoint));
-            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, b, face.Edges[1].EdgePoint, facePoint, face.Edges[0].EdgePoint));
-            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, c, face.Edges[2].EdgePoint, facePoint, face.Edges[1].EdgePoint));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, a, face.Edges[0].EdgePoint, facePoint));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, b, face.Edges[1].EdgePoint, facePoint));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, c, face.Edges[2].EdgePoint, facePoint));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, facePoint, face.Edges[2].EdgePoint, a));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, facePoint, face.Edges[0].EdgePoint, b));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, facePoint, face.Edges[1].EdgePoint, c));
 
             SubdivisionUtilities.VerifyThatThereAreNoEdgeDuplicates(existingEdges);
         }
@@ -485,10 +457,14 @@ namespace Voxalia.Shared.ModelManagement
 
             Point facePoint = face.FacePoint;
 
-            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, a, face.Edges[0].EdgePoint, facePoint, face.Edges[3].EdgePoint));
-            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, b, face.Edges[1].EdgePoint, facePoint, face.Edges[0].EdgePoint));
-            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, c, face.Edges[2].EdgePoint, facePoint, face.Edges[1].EdgePoint));
-            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, d, face.Edges[3].EdgePoint, facePoint, face.Edges[2].EdgePoint));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, a, face.Edges[0].EdgePoint, facePoint));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, b, face.Edges[1].EdgePoint, facePoint));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, c, face.Edges[2].EdgePoint, facePoint));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, d, face.Edges[3].EdgePoint, facePoint));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, facePoint, face.Edges[3].EdgePoint, a));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, facePoint, face.Edges[0].EdgePoint, b));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, facePoint, face.Edges[1].EdgePoint, c));
+            subdivided.Faces.Add(SubdivisionUtilities.CreateFaceF(existingEdges, facePoint, face.Edges[2].EdgePoint, d));
 
             SubdivisionUtilities.VerifyThatThereAreNoEdgeDuplicates(existingEdges);
         }
