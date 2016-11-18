@@ -111,13 +111,27 @@ namespace Voxalia.Shared
             BSD[127] = new BSD52a127(0f, 1f, 1f);
             // ...
             // Final setup
+            int[] DB_TID = MaterialHelpers.ALL_MATS[(int)Material.DEBUG].TID;
+            int lim = 0;
+            for (int i = 0; i < DB_TID.Length; i++)
+            {
+                if (DB_TID[i] > lim)
+                {
+                    lim = DB_TID[i];
+                }
+            }
+            int[] rlok = new int[lim + 1];
+            for (int i = 0; i < DB_TID.Length; i++)
+            {
+                rlok[DB_TID[i]] = i;
+            }
             for (int i = 0; i < 256; i++)
             {
                 if (i > 0 && BSD[i] is BSD0)
                 {
                     continue;
                 }
-                BSD[i].Preparse();
+                BSD[i].Preparse(rlok);
             }
         }
 
@@ -150,7 +164,7 @@ namespace Voxalia.Shared
     {
         public List<Vector3>[] Verts = new List<Vector3>[64];
         public List<Vector3>[] Norms = new List<Vector3>[64];
-        public List<Vector3>[] TCrds = new List<Vector3>[64];
+        public Vector3[][] TCrds = new Vector3[64][];
     }
 
     /// <summary>
@@ -182,30 +196,31 @@ namespace Voxalia.Shared
 
         public BlockShapeSubDetails BSSD = new BlockShapeSubDetails();
 
-        public void Preparse()
+        public void Preparse(int[] rlok)
         {
+            DB_RLOK = rlok;
             for (int i = 0; i < 64; i++)
             {
                 BSSD.Verts[i] = GetVertices(Vector3.Zero, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
                 BSSD.Norms[i] = GetNormals(Vector3.Zero, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
-                BSSD.TCrds[i] = GetTCoords(Vector3.Zero, Material.DEBUG, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
+                BSSD.TCrds[i] = GetTCoords(Vector3.Zero, Material.DEBUG, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32).ToArray();
             }
         }
 
+        private int[] DB_RLOK;
+
         public Vector3[] GetTCoordsQuick(int index, Material mat)
         {
-            List<Vector3> set = BSSD.TCrds[index];
-            Vector3[] vecs = new Vector3[set.Count];
-            for (int i = 0; i < set.Count; i++)
+            // NOTE: This method is called very often by the client. Any optimization here will be very useful!
+            Vector3[] set = BSSD.TCrds[index];
+            int len = set.Length;
+            Vector3[] vecs = new Vector3[len];
+            Vector3 temp;
+            int[] helper = MaterialHelpers.ALL_MATS[(int)mat].TID;
+            for (int i = 0; i < len; i++)
             {
-                Vector3 temp = set[i];
-                for (int z = 0; z < 6; z++)
-                {
-                    if (temp.Z == Material.DEBUG.TextureID((MaterialSide)z))
-                    {
-                        temp.Z = mat.TextureID((MaterialSide)z);
-                    }
-                }
+                temp = set[i];
+                temp.Z = helper[DB_RLOK[(int)temp.Z]];
                 vecs[i] = temp;
             }
             return vecs;

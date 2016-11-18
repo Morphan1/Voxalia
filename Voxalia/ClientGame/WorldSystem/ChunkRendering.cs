@@ -47,7 +47,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         for (int z = 0; z < CHUNK_SIZE; z++)
                         {
                             BlockInternal bi = GetBlockAt(x, y, z);
-                            if (bi.Material.GetLightEmitRange() > 0)
+                            if (bi.Material.GetLightEmitRange() > 0.01)
                             {
                                 tLits.Add(new KeyValuePair<Vector3i, Material>(new Vector3i(x, y, z), bi.Material));
                             }

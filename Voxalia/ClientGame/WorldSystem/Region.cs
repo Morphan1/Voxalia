@@ -831,7 +831,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 BoundingBox bb = new BoundingBox(pos.ToBVector(), (pos + new Location(1, 1, 300)).ToBVector());
                 if (GenShadowCasters != null)
                 {
-                    for (int i = 0; i < GenShadowCasters.Length; i++)
+                    for (int i = 0; i < GenShadowCasters.Length; i++) // TODO: Accelerate somehow! This is too slow!
                     {
                         PhysicsEntity pe = GenShadowCasters[i];
                         if (pe.GenBlockShadows && pe.ShadowCenter.DistanceSquared_Flat(pos) < pe.ShadowRadiusSquaredXY)
