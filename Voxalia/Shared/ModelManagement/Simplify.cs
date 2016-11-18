@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BEPUutilities;
 
-namespace Voxalia.Shared
+namespace Voxalia.Shared.ModelManagement
 {
     // this class is to simplify some things from the original C++ code to work easier in C#
     public class ListHelper<T>

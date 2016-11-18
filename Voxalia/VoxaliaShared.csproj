@@ -91,7 +91,7 @@
     <Compile Include="PriorityQueue\SimplePriorityQueue.cs" />
     <Compile Include="Shared\BFrustum.cs" />
     <Compile Include="Shared\BlockInternal.cs" />
-    <Compile Include="Shared\Catmull.cs" />
+    <Compile Include="Shared\ModelManagement\Catmull.cs" />
     <Compile Include="Shared\Collision\FlyingDiscConstraint.cs" />
     <Compile Include="Shared\Collision\MCCMCCPairHandler.cs" />
     <Compile Include="Shared\Collision\Vector2i.cs" />
@@ -163,7 +163,7 @@
     <Compile Include="Shared\SystemExtensions.cs" />
     <Compile Include="Shared\Utilities.cs" />
     <Compile Include="Shared\Files\ZipStorer.cs" />
-    <Compile Include="Shared\Simplify.cs" />
+    <Compile Include="Shared\ModelManagement\Simplify.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

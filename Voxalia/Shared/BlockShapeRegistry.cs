@@ -14,6 +14,7 @@ using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.CollisionShapes;
 using BEPUutilities;
 using FreneticScript;
+using Voxalia.Shared.ModelManagement;
 
 namespace Voxalia.Shared
 {
@@ -196,6 +197,8 @@ namespace Voxalia.Shared
 
         public BlockShapeSubDetails BSSD = new BlockShapeSubDetails();
 
+        public BlockDamage DamageMode = BlockDamage.NONE;
+
         public void Preparse(int[] rlok)
         {
             DB_RLOK = rlok;
@@ -205,7 +208,85 @@ namespace Voxalia.Shared
                 BSSD.Norms[i] = GetNormals(Vector3.Zero, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
                 BSSD.TCrds[i] = GetTCoords(Vector3.Zero, Material.DEBUG, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32).ToArray();
             }
+            Damaged = new BlockShapeDetails[4];
+            BlockShapeDetails prev = this;
+            Damaged[0] = this;
+            for (int i = 1; i < Damaged.Length; i++)
+            {
+                Damaged[i] = (BlockShapeDetails)prev.MemberwiseClone();
+                Damaged[i].DamageMode = (BlockDamage)i;
+                Damaged[i].Damage();
+                prev = Damaged[i];
+            }
         }
+
+        private void Damage()
+        {
+            if (!CanSubdiv)
+            {
+                return;
+            }
+            if ((int)DamageMode > 1)
+            {
+                return; // Placeholder until simplify is added.
+            }
+            Subdivide();
+        }
+
+        public bool CanSubdiv = true;
+
+        private void Subdivide()
+        {
+            // TODO: Save TCs and work with them properly.
+            Shape p = new Shape();
+            Dictionary<Location, Point> ps = new Dictionary<Location, Point>();
+            for (int i = 0; i < BSSD.Verts[0].Count; i++)
+            {
+                Location t = new Location(BSSD.Verts[0][i]);
+                if (!ps.ContainsKey(t))
+                {
+                    ps.Add(t, new Point(BSSD.Verts[0][i]));
+                }
+            }
+            SysConsole.Output(OutputType.INFO, "Try " + this);
+            for (int i = 0; i < BSSD.Verts[0].Count; i += 3)
+            {
+                Point a = ps[new Location(BSSD.Verts[0][i])];
+                Point b = ps[new Location(BSSD.Verts[0][i + 1])];
+                Point c = ps[new Location(BSSD.Verts[0][i + 2])];
+                Face f = new Face(new Edge(a, b), new Edge(b, c), new Edge(c, a));
+                p.AddFace(f);
+            }
+            CatmullClarkSubdivider cmcs = new CatmullClarkSubdivider();
+            Shape res = cmcs.Subdivide(p);
+            List<Vector3> vecs = new List<Vector3>();
+            List<Vector3> norms = new List<Vector3>();
+            List<Vector3> Tcs = new List<Vector3>();
+            foreach (Face face in res.Faces)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    vecs.Add(face.AllPoints[i].Position);
+                    norms.Add(face.Normal);
+                    Tcs.Add(new Vector3(0, 0, BSSD.TCrds[0][0].Z));
+                    norms.Add(face.Normal);
+                    Tcs.Add(new Vector3(0, 0, BSSD.TCrds[0][0].Z));
+                }
+                vecs.Add(face.AllPoints[2].Position);
+                vecs.Add(face.AllPoints[3].Position);
+                vecs.Add(face.AllPoints[0].Position);
+            }
+            BSSD = new BlockShapeSubDetails();
+            Vector3[] tcrds = Tcs.ToArray();
+            for (int i = 0; i < BSSD.Verts.Length; i++)
+            {
+                BSSD.Verts[i] = vecs;
+                BSSD.Norms[i] = norms;
+                BSSD.TCrds[i] = tcrds;
+            }
+        }
+
+        public BlockShapeDetails[] Damaged;
 
         private int[] DB_RLOK;
 

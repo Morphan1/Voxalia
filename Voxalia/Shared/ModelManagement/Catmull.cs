@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using BEPUutilities;
 
-namespace Subdivision.Core
+namespace Voxalia.Shared.ModelManagement
 {
-    // This code found online at https://lotsacode.wordpress.com/2013/04/10/catmull-clark-surface-subdivider-in-c/ , and has a link to its own references below...
+    // This code found online at https://lotsacode.wordpress.com/2013/04/10/catmull-clark-surface-subdivider-in-c/ - and has a link to its own references below...
     
     public class Shape
     {
@@ -250,6 +250,37 @@ namespace Subdivision.Core
                 return Points[1];
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Edge && this == (obj as Edge);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public static bool operator ==(Edge v1, Edge v2)
+        {
+            bool v1n = ReferenceEquals(v1, null);
+            bool v2n = ReferenceEquals(v2, null);
+            if (v1n && v2n)
+            {
+                return true;
+            }
+            if (v1n || v2n)
+            {
+                return false;
+            }
+            return v1.IsMatchFor(v2.Points[0], v2.Points[1]);
+        }
+
+        public static bool operator !=(Edge v1, Edge v2)
+        {
+            return !(v1 == v2);
+        }
+
     }
 
     public class CatmullClarkSubdivider
