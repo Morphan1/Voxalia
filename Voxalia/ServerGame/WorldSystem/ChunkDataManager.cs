@@ -85,9 +85,10 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             BsonValue id = GetIDFor(x, y, 0);
             BsonDocument newdoc = new BsonDocument();
-            newdoc["_id"] = id;
-            newdoc["min"] = new BsonValue(min);
-            newdoc["max"] = new BsonValue(max);
+            Dictionary<string, BsonValue> tbs = newdoc.RawValue;
+            tbs["_id"] = id;
+            tbs["min"] = new BsonValue(min);
+            tbs["max"] = new BsonValue(max);
             lock (IMGLock)
             {
                 DBMaxes.Delete(id);
@@ -127,8 +128,9 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             BsonValue id = GetIDFor(x, y, z);
             BsonDocument newdoc = new BsonDocument();
-            newdoc["_id"] = id;
-            newdoc["image"] = new BsonValue(data);
+            Dictionary<string, BsonValue> tbs = newdoc.RawValue;
+            tbs["_id"] = id;
+            tbs["image"] = new BsonValue(data);
             lock (IMGLock)
             {
                 DBImages2.Delete(id);
@@ -140,8 +142,9 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             BsonValue id = GetIDFor(x, y, z);
             BsonDocument newdoc = new BsonDocument();
-            newdoc["_id"] = id;
-            newdoc["image"] = new BsonValue(data);
+            Dictionary<string, BsonValue> tbs = newdoc.RawValue;
+            tbs["_id"] = id;
+            tbs["image"] = new BsonValue(data);
             lock (IMGLock)
             {
                 DBImages.Delete(id);
@@ -181,8 +184,9 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             BsonValue id = GetIDFor(x, y, z);
             BsonDocument newdoc = new BsonDocument();
-            newdoc["_id"] = id;
-            newdoc["blocks"] = new BsonValue(FileHandler.Compress(LOD));
+            Dictionary<string, BsonValue> tbs = newdoc.RawValue;
+            tbs["_id"] = id;
+            tbs["blocks"] = new BsonValue(FileHandler.Compress(LOD));
             lock (LODLock)
             {
                 DBLODs.Delete(id);
@@ -214,9 +218,10 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             BsonValue id = GetIDFor(details.X, details.Y, details.Z);
             BsonDocument newdoc = new BsonDocument();
-            newdoc["_id"] = id;
-            newdoc["version"] = new BsonValue(details.Version);
-            newdoc["entities"] = new BsonValue(/*FileHandler.GZip(*/details.Blocks/*)*/);
+            Dictionary<string, BsonValue> tbs = newdoc.RawValue;
+            tbs["_id"] = id;
+            tbs["version"] = new BsonValue(details.Version);
+            tbs["entities"] = new BsonValue(/*FileHandler.GZip(*/details.Blocks/*)*/);
             lock (EntLock)
             {
                 DBEnts.Delete(id);
@@ -250,11 +255,12 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             BsonValue id = GetIDFor(details.X, details.Y, details.Z);
             BsonDocument newdoc = new BsonDocument();
-            newdoc["_id"] = id;
-            newdoc["version"] = new BsonValue(details.Version);
-            newdoc["flags"] = new BsonValue((int)details.Flags);
-            newdoc["blocks"] = new BsonValue(FileHandler.Compress(details.Blocks));
-            newdoc["reach"] = new BsonValue(details.Reachables);
+            Dictionary<string, BsonValue> tbs = newdoc.RawValue;
+            tbs["_id"] = id;
+            tbs["version"] = new BsonValue(details.Version);
+            tbs["flags"] = new BsonValue((int)details.Flags);
+            tbs["blocks"] = new BsonValue(FileHandler.Compress(details.Blocks));
+            tbs["reach"] = new BsonValue(details.Reachables);
             lock (FSLock)
             {
                 DBChunks.Delete(id);
