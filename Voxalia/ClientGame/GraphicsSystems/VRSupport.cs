@@ -72,7 +72,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             HmdMatrix34_t temp = VR.GetEyeToHeadTransform(lefteye ? EVREye.Eye_Left : EVREye.Eye_Right);
             Matrix4 eye = new Matrix4(temp.m0, temp.m1, temp.m2, temp.m3, temp.m4, temp.m5, temp.m6, temp.m7, temp.m8, temp.m9, temp.m10, temp.m11, 0, 0, 0, 1);
             eye.Transpose();
-            return headMat * eye * Matrix4.CreateScale(1.5f);
+            eye = eye.ClearTranslation() * Matrix4.CreateTranslation(eye.ExtractTranslation() * (1.5f * TheClient.CVars.r_vrscale.ValueF));
+            return headMat * eye;
         }
 
         public Matrix4 GetProjection(bool lefteye, float znear, float zfar)
@@ -89,9 +90,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         }
 
         public Matrix4 HeadMatRot = Matrix4.Identity;
-
-        public Matrix4 BasicHeadMat = Matrix4.Identity;
-
+        
         public Matrix4 headMat = Matrix4.LookAt(Vector3.Zero, Vector3.UnitY, Vector3.UnitZ);
 
         public VRController GetController(bool left)
@@ -107,7 +106,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             HmdMatrix34_t tmat = vrpose.mDeviceToAbsoluteTracking;
             Matrix4 resp = new Matrix4(tmat.m0, tmat.m1, tmat.m2, tmat.m3, tmat.m4, tmat.m5, tmat.m6, tmat.m7, tmat.m8, tmat.m9, tmat.m10, tmat.m11, 0, 0, 0, 1);
             resp.Transpose();
-            resp = Matrix4.CreateScale(1.5f) * resp * Matrix4.CreateRotationX((float)(Math.PI * 0.5));
+            resp = resp.ClearTranslation() * Matrix4.CreateTranslation(resp.ExtractTranslation() * (1.5f * TheClient.CVars.r_vrscale.ValueF));
+            resp = resp * Matrix4.CreateRotationX((float)(Math.PI * 0.5));
             VRController res = new VRController();
             res.Position = resp;
             res.Axes[0] = new Vector2(vrcont.rAxis0.x, vrcont.rAxis0.y);
@@ -140,8 +140,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 headMat = new Matrix4(tmat.m0, tmat.m1, tmat.m2, tmat.m3, tmat.m4, tmat.m5, tmat.m6, tmat.m7, tmat.m8, tmat.m9, tmat.m10, tmat.m11, 0, 0, 0, 1);
                 headMat.Transpose();
                 HeadMatRot = headMat * Matrix4.CreateRotationX((float)(Math.PI * 0.5));
-                BasicHeadMat = Matrix4.CreateScale(1.5f) * HeadMatRot; // TODO: 1.5 -> Cvar?
-                headMat = BasicHeadMat;
+                headMat = headMat * Matrix4.CreateRotationX((float)(Math.PI * 0.5));
+                headMat = headMat.ClearTranslation() * Matrix4.CreateTranslation(headMat.ExtractTranslation() * (1.5f * TheClient.CVars.r_vrscale.ValueF));
                 headMat.Invert();
             }
             if (merr != EVRCompositorError.None)
