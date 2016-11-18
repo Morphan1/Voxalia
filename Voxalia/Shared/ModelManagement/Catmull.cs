@@ -80,7 +80,7 @@ namespace Voxalia.Shared.ModelManagement
             //return Edges.SelectMany(e => e.Points).Distinct().ToList();
             List<Point> points = new List<Point>();
             // The edges were added in order, but we don't know if the points within the edges are in order. 
-            // Therefore we look at the previous edge to figoure out which point has allready been visited
+            // Therefore we look at the previous edge to figure out which point has already been visited
 
             Edge previous = Edges.First();
             foreach (Edge current in Edges.Skip(1).Take(Edges.Count - 2))
@@ -108,7 +108,7 @@ namespace Voxalia.Shared.ModelManagement
             Vector3 v1 = points[0].Position;
             Vector3 v2 = points[1].Position;
             Vector3 v3 = points[2].Position;
-            Vector3 t = Vector3.Cross(v2 - v1, v3 - v1);
+            Vector3 t = -Vector3.Cross(v2 - v1, v3 - v1);
             t.Normalize();
             return t;
         }
@@ -164,7 +164,7 @@ namespace Voxalia.Shared.ModelManagement
             List<Vector3> normals = faces.Select(f => f.Normal).ToList();
             Vector3 avg = CatmullClarkSubdivider.Average(normals);
             avg.Normalize();
-            return avg; ;
+            return avg;
         }
 
         private List<Face> GetAllFaces()
@@ -220,7 +220,7 @@ namespace Voxalia.Shared.ModelManagement
         {
             if (Faces.Contains(face))
             {
-                throw new InvalidOperationException("Edge allready contains face!");
+                throw new InvalidOperationException("Edge already contains face!");
             }
             Faces.Add(face);
         }

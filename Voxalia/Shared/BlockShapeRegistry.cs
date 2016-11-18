@@ -261,6 +261,10 @@ namespace Voxalia.Shared
                     bool ac = a2 == a || a2 == b || a2 == c;
                     bool bc = b2 == a || b2 == b || b2 == c;
                     bool cc = c2 == a || c2 == b || c2 == c;
+                    if (this is BSD0)
+                    {
+                        SysConsole.Output(OutputType.DEBUG, ac + ", " + bc + ", " + cc);
+                    }
                     if (ac && bc && cc)
                     {
                         SysConsole.Output(OutputType.WARNING, this + " has weird setup: " + a + ", " + b + ", " + c);
@@ -268,7 +272,7 @@ namespace Voxalia.Shared
                     }
                     else if (ac && cc)
                     {
-                        p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, c, b2));
+                        p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, b2, c));
                         i += 3;
                     }
                     else if (ac && bc)
