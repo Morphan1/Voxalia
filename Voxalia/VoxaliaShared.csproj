@@ -114,6 +114,8 @@
     <Compile Include="Shared\Collision\ReusableGenericCollidable.cs" />
     <Compile Include="Shared\Collision\Vector3i.cs" />
     <Compile Include="Shared\LanguageEngine.cs" />
+    <Compile Include="Shared\LockedLinkedList\LockedLinkedList.cs" />
+    <Compile Include="Shared\LockedLinkedList\LockedLinkedListNode.cs" />
     <Compile Include="Shared\Model3D.cs" />
     <Compile Include="Shared\Collision\AABB.cs" />
     <Compile Include="Shared\AnimationEngine.cs" />
