@@ -107,10 +107,14 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
                 GL.ReadBuffer(ReadBufferMode.None);
                 float exp = FindExp(rd);
-                exp = Math.Max(Math.Min(exp, 3.0f), 0.33f);
+                exp = Math.Max(Math.Min(exp, 4.0f), 0.25f);
                 exp = 1.0f / exp;
                 float stepUp = (float)TheClient.gDelta * 0.05f;
                 float stepDown = stepUp * 5.0f;
+                float relative = Math.Abs(MainEXP - exp);
+                float modder = 4f * relative;
+                stepUp *= modder;
+                stepDown *= modder;
                 if (exp > MainEXP + stepUp)
                 {
                     MainEXP += stepUp;
@@ -1075,7 +1079,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BlendFuncSeparate(1, BlendingFactorSrc.SrcColor, BlendingFactorDest.Zero, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.Zero);
             GL.Uniform3(8, ClientUtilities.Convert(TheClient.CameraFinalTarget));
             GL.Uniform1(9, TheClient.CVars.r_dof_strength.ValueF);
-            GL.Uniform1(10, MainEXP);
+            GL.Uniform1(10, MainEXP * TheClient.CVars.r_exposure.ValueF);
             GL.Uniform1(16, TheClient.CVars.r_znear.ValueF);
             GL.Uniform1(17, TheClient.CVars.r_zfar.ValueF);
             GL.Uniform4(18, new Vector4(ClientUtilities.Convert(Headmat.GetFogColor()), (float)Headmat.GetFogAlpha()));
@@ -1384,7 +1388,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 TheClient.s_godray = TheClient.s_godray.Bind();
                 GL.UniformMatrix4(1, false, ref SimpleOrthoMatrix);
                 GL.UniformMatrix4(2, false, ref IdentityMatrix);
-                GL.Uniform1(6, MainEXP);
+                GL.Uniform1(6, MainEXP * TheClient.CVars.r_exposure.ValueF);
                 GL.Uniform1(7, Width / (float)Height);
                 if (SunLoc.IsNaN())
                 {
@@ -1540,7 +1544,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             matabc[1, 0] = (float)(Lights[i].EyePos.X - CameraPos.X);
                             matabc[1, 1] = (float)(Lights[i].EyePos.Y - CameraPos.Y);
                             matabc[1, 2] = (float)(Lights[i].EyePos.Z - CameraPos.Z);
-                            matabc[2, 0] = MainEXP;
+                            matabc[2, 0] = MainEXP * TheClient.CVars.r_exposure.ValueF;
                             matabc[0, 3] = Lights[i].InternalLights[x].color.X;
                             matabc[2, 1] = Lights[i].InternalLights[x].color.Y;
                             matabc[2, 2] = Lights[i].InternalLights[x].color.Z;

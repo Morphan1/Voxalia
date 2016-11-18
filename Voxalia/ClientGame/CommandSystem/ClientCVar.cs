@@ -41,7 +41,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality, r_shadowblur, r_shadowpace, r_shadows, r_cloudshadows,
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth, r_toonify, r_transplighting, r_transpshadows,
             r_3d_enable, r_fast, r_chunksatonce, r_chunkoverrender, r_transpll, r_noblockshapes, r_treeshadows,
-            r_godrays, r_hdr, r_chunkmarch, r_clouds, r_motionblur, r_plants;
+            r_godrays, r_hdr, r_chunkmarch, r_clouds, r_motionblur, r_plants, r_exposure;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect, a_echovolume;
@@ -109,12 +109,13 @@ namespace Voxalia.ClientGame.CommandSystem
             r_transpll = Register("r_transpll", "false", CVarFlag.Boolean, "Whether to use GPU linked lists when rendering transparent objects.");
             r_noblockshapes = Register("r_noblockshapes", "false", CVarFlag.Boolean, "Whether block shapes are disabled or not.");
             r_treeshadows = Register("r_treeshadows", "true", CVarFlag.Boolean, "Whether trees cast shadows.");
-            r_godrays = Register("r_godrays", "true", CVarFlag.Boolean, "Whether to render GodRays (rays of light from the sun."); // TODO: Validate?
+            r_godrays = Register("r_godrays", "true", CVarFlag.Boolean, "Whether to render GodRays (rays of light from the sun.");
             r_hdr = Register("r_hdr", "true", CVarFlag.Boolean, "Whether to render with high dynamic range adjustments enabled.");
             r_chunkmarch = Register("r_chunkmarch", "false", CVarFlag.Boolean, "Whether to use 'chunk marching' method to render chunks (if false, uses a generic loop).");
             r_clouds = Register("r_clouds", "true", CVarFlag.Boolean, "Whether to render clouds."); // TODO: Inform the server of this to reduce bandwidth.
             r_motionblur = Register("r_motionblur", "false", CVarFlag.Boolean, "Whether to blur the screen to better represent motion.");
             r_plants = Register("r_plants", "true", CVarFlag.Boolean, "Whether to render small plants around the view.");
+            r_exposure = Register("r_exposure", "1.5", CVarFlag.Numeric, "What value to scale the lighting by.");
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "0.5", CVarFlag.Numeric, "What volume the music should be.");
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");
