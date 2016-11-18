@@ -185,11 +185,8 @@ void main() // The central entry point of the shader. Handles everything!
 	//vec4 renderhint = texture(renderhinttex, f_texcoord);
 	vec3 renderhint2 = texture(renderhint2tex, f_texcoord).xyz;
 	float dist = linearizeDepth(texture(depthtex, f_texcoord).r); // This is useful for both fog and reflection, so grab it here.
-	// TODO: Fix fog!
-	/*
-	float fogMod = -dist * fogCol.w; // exp( ) ? Original code had exp() and no linearize on the dist value. But that stopped working, and I don't know why.
-	light_color = vec4(light_color.xyz * (1.0 - fogMod) + fogCol.xyz * fogMod, 1.0);
-	*/
+	float fogMod = dist * exp(fogCol.w) * fogCol.w;
+	light_color.xyz = light_color.xyz * (1.0 - fogMod) + fogCol.xyz * fogMod;
 	if (dot(renderhint2, renderhint2) > 0.99) // Apply refraction if set. This is set by having a strong renderhint2 value that has a length-squared of at least 1.0!
 	{
 		vec3 viewDir = texture(positiontex, f_texcoord).xyz - eye_position;
@@ -215,8 +212,6 @@ void main() // The central entry point of the shader. Handles everything!
 	}
 	light_color = vec4(desaturate(light_color.xyz), light_color.w); // Desaturate whatever color we've ended up with.
 #endif
-	// Temporary fog placeholder code
-	light_color.xyz = light_color.xyz * (1.0 - fogCol.w) + fogCol.xyz * fogCol.w;
 #if MCM_LIGHTS
 	// HDR/bloom is available to all!
 	vec3 basecol = texture(lighttex, f_texcoord).xyz * HDR_Div; // The base pixel color is our current pixel's color, without regularization.
