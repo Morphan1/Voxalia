@@ -36,6 +36,7 @@ layout (location = 24) uniform float width = 1280.0; // How wide the screen is.
 layout (location = 25) uniform float height = 720.0; // How tall the screen is.
 layout (location = 26) uniform float time = 0.0; // A timer value, in seconds. Simply used for things that move.
 layout (location = 27) uniform vec2 mot_blur = vec2(0.0); // How much motion blur to apply, and in what direction.
+layout (location = 28) uniform float do_grayscale = 0.0; // Whether to gray-scale the view.
 
 const float HDR_Mod = 5.0; // How much to multiply all lights by to ensure lighting colors are quality.
 const float HDR_Div = (1.0 / HDR_Mod); // The inverse of HDR_Mod, for quick calculation.
@@ -222,4 +223,9 @@ void main() // The central entry point of the shader. Handles everything!
 	bloom = vec4(0.0);
 #endif
 	color = light_color; // Finally, 'return' (assign the base color value).
+	if (do_grayscale > 0.5) // TODO: define rather than var?
+	{
+		// TODO: Add this effect to transparency shaders?
+		color.xyz = vec3((light_color.x + light_color.y + light_color.z) * 0.3333);
+	}
 }

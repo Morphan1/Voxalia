@@ -41,7 +41,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_shadowquality, r_shadowblur, r_shadowpace, r_shadows, r_cloudshadows,
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth, r_toonify, r_transplighting, r_transpshadows,
             r_3d_enable, r_fast, r_chunksatonce, r_chunkoverrender, r_transpll, r_noblockshapes, r_treeshadows,
-            r_godrays, r_hdr, r_chunkmarch, r_clouds, r_motionblur, r_plants, r_exposure;
+            r_godrays, r_hdr, r_chunkmarch, r_clouds, r_motionblur, r_plants, r_exposure, r_grayscale;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect, a_echovolume;
@@ -116,6 +116,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_motionblur = Register("r_motionblur", "false", CVarFlag.Boolean, "Whether to blur the screen to better represent motion.");
             r_plants = Register("r_plants", "true", CVarFlag.Boolean, "Whether to render small plants around the view.");
             r_exposure = Register("r_exposure", "1.5", CVarFlag.Numeric, "What value to scale the lighting by.");
+            r_grayscale = Register("r_grayscale", "false", CVarFlag.Boolean, "Whether to grayscale the view.");
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "0.5", CVarFlag.Numeric, "What volume the music should be.");
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");

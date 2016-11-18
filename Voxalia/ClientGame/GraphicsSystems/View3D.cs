@@ -1100,6 +1100,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             GL.Uniform2(27, ref rel);
             pfRes = v2;
+            GL.Uniform1(28, TheClient.CVars.r_grayscale.ValueB ? 1f : 0f);
             GL.ActiveTexture(TextureUnit.Texture3);
             GL.BindTexture(TextureTarget.Texture2D, RS4P.DepthTexture);
             GL.ActiveTexture(TextureUnit.Texture4);
