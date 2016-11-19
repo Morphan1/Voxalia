@@ -20,9 +20,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
         Texture[] Explosion;
 
         Texture SmokeT;
-
-        Texture FlameLick;
-
+        
         Texture BlueFlameLick;
 
         Texture WhiteFlameLick;
@@ -44,7 +42,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             White = TheClient.Textures.White;
             White_Blur = TheClient.Textures.GetTexture("common/white_blur");
             SmokeT = TheClient.Textures.GetTexture("effects/smoke/smoke1");
-            FlameLick = TheClient.Textures.GetTexture("effects/fire/flamelick01");
+            //FlameLick = TheClient.Textures.GetTexture("effects/fire/flamelick01");
             BlueFlameLick = TheClient.Textures.GetTexture("effects/fire/blueflamelick01");
             WhiteFlameLick = TheClient.Textures.GetTexture("effects/fire/whiteflamelick01");
         }

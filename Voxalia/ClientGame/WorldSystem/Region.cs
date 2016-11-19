@@ -488,6 +488,19 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     above = GetChunk(ch.WorldPosition + new Vector3i(0, 0, i));
                 }
+                DoNotRenderYet(ch);
+                for (int i = 1; i > 5; i++) // TODO: 5 -> View height limit
+                {
+                    Chunk below = GetChunk(ch.WorldPosition + new Vector3i(0, 0, -i));
+                    if (below != null)
+                    {
+                        DoNotRenderYet(below);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
                 TheClient.Schedule.StartASyncTask(() =>
                 {
                     LightForChunks(ch, above);
@@ -1046,6 +1059,17 @@ namespace Voxalia.ClientGame.WorldSystem
                 if (!NeedsRendering.Contains(ch.WorldPosition))
                 {
                     NeedsRendering.Enqueue(ch.WorldPosition, (ch.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE).DistanceSquared(TheClient.Player.GetPosition()));
+                }
+            }
+        }
+
+        public void DoNotRenderYet(Chunk ch)
+        {
+            lock (RenderingNow)
+            {
+                while (NeedsRendering.Contains(ch.WorldPosition))
+                {
+                    NeedsRendering.Remove(ch.WorldPosition);
                 }
             }
         }

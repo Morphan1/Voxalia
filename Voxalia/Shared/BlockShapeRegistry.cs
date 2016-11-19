@@ -216,8 +216,17 @@ namespace Voxalia.Shared
                 Damaged[i] = (BlockShapeDetails)prev.MemberwiseClone();
                 Damaged[i].DamageMode = (BlockDamage)i;
                 Damaged[i].Damage();
+                Damaged[i].FinishParse();
                 prev = Damaged[i];
             }
+        }
+
+        public void FinishParse()
+        {
+            Location offset;
+            BEPUphysics.CollisionShapes.EntityShape es = GetShape(DamageMode, out offset, false);
+            Coll = es.GetCollidableInstance();
+            Coll.LocalPosition = -offset.ToBVector();
         }
 
         private void Damage()
@@ -261,10 +270,6 @@ namespace Voxalia.Shared
                     bool ac = a2 == a || a2 == b || a2 == c;
                     bool bc = b2 == a || b2 == b || b2 == c;
                     bool cc = c2 == a || c2 == b || c2 == c;
-                    if (this is BSD0)
-                    {
-                        SysConsole.Output(OutputType.DEBUG, ac + ", " + bc + ", " + cc);
-                    }
                     if (ac && bc && cc)
                     {
                         SysConsole.Output(OutputType.WARNING, this + " has weird setup: " + a + ", " + b + ", " + c);
@@ -367,6 +372,10 @@ namespace Voxalia.Shared
 
         public virtual EntityShape GetShape(BlockDamage damage, out Location offset, bool shrink)
         {
+            if (damage != DamageMode)
+            {
+                return Damaged[(int)damage].GetShape(damage, out offset, shrink);
+            }
             if ((shrink ? ShrunkBlockShapeCache : BlockShapeCache) != null)
             {
                 offset = (shrink ? ShrunkOffsetCache : OffsetCache);

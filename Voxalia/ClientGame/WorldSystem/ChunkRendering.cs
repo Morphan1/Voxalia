@@ -153,7 +153,9 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                 }
             }
-            Action a = () => VBOHInternal(c_zp, c_zm, c_yp, c_ym, c_xp, c_xm, c_zpxp, c_zpxm, c_zpyp, c_zpym, potentials);
+            bool plants = PosMultiplier == 1 && OwningRegion.TheClient.CVars.r_plants.ValueB;
+            bool shaped = OwningRegion.TheClient.CVars.r_noblockshapes.ValueB;
+            Action a = () => VBOHInternal(c_zp, c_zm, c_yp, c_ym, c_xp, c_xm, c_zpxp, c_zpxm, c_zpyp, c_zpym, potentials, plants, shaped);
             if (rendering != null)
             {
                 ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(a);
@@ -197,11 +199,10 @@ namespace Voxalia.ClientGame.WorldSystem
             return new BlockInternal((ushort)Material.STONE, 0, 0, 0);
         }
         
-        void VBOHInternal(Chunk c_zp, Chunk c_zm, Chunk c_yp, Chunk c_ym, Chunk c_xp, Chunk c_xm, Chunk c_zpxp, Chunk c_zpxm, Chunk c_zpyp, Chunk c_zpym, List<Chunk> potentials)
+        void VBOHInternal(Chunk c_zp, Chunk c_zm, Chunk c_yp, Chunk c_ym, Chunk c_xp, Chunk c_xm, Chunk c_zpxp, Chunk c_zpxm, Chunk c_zpyp, Chunk c_zpym, List<Chunk> potentials, bool plants, bool shaped)
         {
             try
             {
-                bool shaped = OwningRegion.TheClient.CVars.r_noblockshapes.ValueB;
                 Object locky = new Object();
                 ChunkRenderHelper rh;
                 lock (locky)
@@ -212,7 +213,6 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     return;
                 }
-                //bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB
                 BlockInternal t_air = new BlockInternal((ushort)Material.AIR, 0, 0, 255);
                 List<Vector3> poses = new List<Vector3>();
                 List<Vector4> colorses = new List<Vector4>();
@@ -338,16 +338,8 @@ namespace Voxalia.ClientGame.WorldSystem
                                         }
                                     }
                                 }
-                                if (PosMultiplier == 1 && c.Material.GetPlant() != null && !zp.Material.RendersAtAll() && zp.Material.GetSolidity() == MaterialSolidity.NONSOLID)
+                                if (plants && c.Material.GetPlant() != null && !zp.Material.IsOpaque() && zp.Material.GetSolidity() == MaterialSolidity.NONSOLID)
                                 {
-                                    if (BlockShapeRegistry.BSD[c.BlockData].Coll == null)
-                                    {
-                                        // TODO: BSD-level precompute this?
-                                        Location offset;
-                                        BEPUphysics.CollisionShapes.EntityShape es = BlockShapeRegistry.BSD[c.BlockData].GetShape(c.Damage, out offset, false);
-                                        BlockShapeRegistry.BSD[c.BlockData].Coll = es.GetCollidableInstance();
-                                        BlockShapeRegistry.BSD[c.BlockData].Coll.LocalPosition = -offset.ToBVector();
-                                    }
                                     Location skylight = OwningRegion.GetLightAmountForSkyValue(new Location(WorldPosition.X * Chunk.CHUNK_SIZE + x + 0.5, WorldPosition.Y * Chunk.CHUNK_SIZE + y + 0.5,
                                         WorldPosition.Z * Chunk.CHUNK_SIZE + z + 1.0), Location.UnitZ, potentials, zp.BlockLocalData / 255f);
                                     for (int plx = 1; plx < 4; plx++)

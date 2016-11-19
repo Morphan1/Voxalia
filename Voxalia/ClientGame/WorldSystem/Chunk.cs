@@ -75,11 +75,7 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void AddToWorld()
         {
-            if (FCO != null)
-            {
-                return;
-            }
-            if (CSize == CHUNK_SIZE)
+            if (FCO == null && CSize == CHUNK_SIZE)
             {
                 FCO = new FullChunkObject(WorldPosition.ToVector3() * CHUNK_SIZE, BlocksInternal);
                 FCO.CollisionRules.Group = CollisionUtil.WorldSolid;

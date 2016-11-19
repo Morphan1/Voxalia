@@ -37,7 +37,7 @@ namespace Voxalia.ClientGame.CommandSystem
             r_fov, r_znear, r_zfar,
             r_dof_strength,
             r_maxfps,
-            r_lightmaxdistance, r_fallbacklighting,
+            r_lightmaxdistance,
             r_shadowquality, r_shadowblur, r_shadowpace, r_shadows, r_cloudshadows,
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth, r_toonify, r_transplighting, r_transpshadows,
             r_3d_enable, r_fast, r_chunksatonce, r_chunkoverrender, r_transpll, r_noblockshapes, r_treeshadows,
@@ -89,7 +89,6 @@ namespace Voxalia.ClientGame.CommandSystem
             r_dof_strength = Register("r_dof_strength", "4", CVarFlag.Numeric, "How strong the Depth Of Field effect should be.");
             r_maxfps = Register("r_maxfps", "60", CVarFlag.Numeric | CVarFlag.Delayed, "What the FPS cap should be.");
             r_lightmaxdistance = Register("r_lightmaxdistance", "35", CVarFlag.Numeric, "How far away a light can be from the camera before it is disabled.");
-            r_fallbacklighting = Register("r_fallbacklighting", "true", CVarFlag.Boolean, "Whether to calculate fallback block lighting (Requires chunk reload).");
             r_shadowquality = Register("r_shadowquality", "1024", CVarFlag.Numeric, "What texture size to use for shadow maps.");
             r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric, "What factor to use for shadow blurring. Smaller = blurrier.");
             r_shadowpace = Register("r_shadowpace", "1", CVarFlag.Numeric, "How rapidly to rerender shadows, in frames.");
