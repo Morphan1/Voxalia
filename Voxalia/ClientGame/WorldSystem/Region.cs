@@ -874,7 +874,7 @@ namespace Voxalia.ClientGame.WorldSystem
         static Location SunLightPathNegative = new Location(0, 0, 1);
 
         const float SkyLightMod = 0.75f;
-
+        
         public Location GetAmbient()
         {
             return TheClient.BaseAmbient;
@@ -939,6 +939,7 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (potentials == null)
             {
+                SysConsole.Output(OutputType.WARNING, "Region - GetLightAmountForSkyValue : null potentials! Correcting...");
                 potentials = new List<Chunk>();
                 Vector3i pos_c = ChunkLocFor(pos);
                 for (int x = -1; x <= 1; x++)
@@ -959,7 +960,9 @@ namespace Voxalia.ClientGame.WorldSystem
             Location amb = GetAmbient();
             Location sky = SkyMod(pos, norm, skyPrecalc);
             Location blk = GetBlockLight(pos, norm, potentials);
-            return amb + sky + blk;
+            Location res;
+            Location.AddThree(ref amb, ref sky, ref blk, out res);
+            return res;
         }
 
         public OpenTK.Vector4 GetLightAmountAdjusted(Location pos, Location norm)

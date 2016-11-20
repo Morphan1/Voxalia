@@ -7,6 +7,7 @@
 
 using System;
 using FreneticScript;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Voxalia.Shared
@@ -561,7 +562,16 @@ namespace Voxalia.Shared
         /// <returns>The samallest coordinate.</returns>
         public double SmallestValue()
         {
-            return Math.Max(Math.Max(X, Y), Z);
+            return Math.Min(Math.Min(X, Y), Z);
+        }
+
+        /// <summary>
+        /// Accelerated method of adding 3 locations together, for debug reasons.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddThree(ref Location l1, ref Location l2, ref Location l3, out Location l4)
+        {
+            l4 = new Location(l1.X + l2.X + l3.X, l1.Y + l2.Y + l3.Y, l1.Z + l2.Z + l3.Z);
         }
     }
 }
