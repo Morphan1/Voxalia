@@ -370,8 +370,8 @@ namespace Voxalia.ClientGame.WorldSystem
                     Vector3 dt1 = rh.TCoords[i + 1] - t1;
                     Vector3 dt2 = rh.TCoords[i + 2] - t1;
                     Vector3 tangent = (dv1 * dt2.Y - dv2 * dt1.Y) / (dt1.X * dt2.Y - dt1.Y * dt2.X);
-                    Vector3 normal = rh.Norms[i];
-                    tangent = (tangent - normal * Vector3.Dot(normal, tangent)).Normalized(); // TODO: Necessity of this correction?
+                    //Vector3 normal = rh.Norms[i];
+                    //tangent = (tangent - normal * Vector3.Dot(normal, tangent)).Normalized(); // TODO: Necessity of this correction?
                     rh.Tangs.Add(tangent);
                     rh.Tangs.Add(tangent);
                     rh.Tangs.Add(tangent);
