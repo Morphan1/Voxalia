@@ -585,7 +585,15 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         iX = Utilities.UtilRandom.Next(-1, 1);
                         iY = Utilities.UtilRandom.Next(-1, 1);
                     }
-                    font.DrawSingleCharacter(chr, X + iX + nX, Y + iY, flip, VBO, new Vector4((float)tcol.R / 255f, (float)tcol.G / 255f, (float)tcol.B / 255f, (float)tcol.A / 255f));
+                    Vector4 col = new Vector4((float)tcol.R / 255f, (float)tcol.G / 255f, (float)tcol.B / 255f, (float)tcol.A / 255f);
+                    if (flip)
+                    {
+                        font.DrawSingleCharacterFlipped(chr, X + iX + nX, Y + iY, VBO, col);
+                    }
+                    else
+                    {
+                        font.DrawSingleCharacter(chr, X + iX + nX, Y + iY, VBO, col);
+                    }
                     nX += font.RectForSymbol(text[z]).Width;
                 }
                 return nX;
@@ -843,8 +851,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="c">The color to use.</param>
         public void DrawRectangle(float X, float Y, float width, float height, GLFont font, Color c)
         {
-            VBO.AddQuad(new Vector2(X, Y), new Vector2(X + width, Y + height),
-                new Vector2(2f / Engine.GLFonts.bwidth, 2f / Engine.GLFonts.bheight), new Vector2(4f / Engine.GLFonts.bwidth, 4f / Engine.GLFonts.bheight),
+            VBO.AddQuad(X, Y,X + width, Y + height, 2f / Engine.GLFonts.bwidth, 2f / Engine.GLFonts.bheight, 4f / Engine.GLFonts.bwidth, 4f / Engine.GLFonts.bheight,
                 new Vector4((float)c.R / 255f, (float)c.G / 255f, (float)c.B / 255f, (float)c.A / 255f), font.TexZ);
         }
 

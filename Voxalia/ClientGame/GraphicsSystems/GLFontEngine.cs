@@ -284,7 +284,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         X = 6;
                     }
                     gfx.DrawString(chr, font, brush, new PointF(X, Y), sf);
-                    CharacterLocations.Add(new RectangleF(X, Y, nwidth, Height));
+                    RectangleF rect = new RectangleF(X, Y, nwidth, Height);
+                    CharacterLocations.Add(rect);
+                    if (chr[0] < 128)
+                    {
+                        ASCIILocs[chr[0]] = rect;
+                    }
                     X += nwidth + 8f;
                 }
             }
@@ -306,6 +311,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             Engine.Fonts.Remove(this);
         }
 
+        private RectangleF[] ASCIILocs = new RectangleF[128];
+
         /// <summary>
         /// Gets the location of a symbol.
         /// </summary>
@@ -313,7 +320,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <returns>A rectangle containing the precise location of a symbol.</returns>
         public RectangleF RectForSymbol(char symbol)
         {
-            // TODO: This is eating power. Add special cases for common symbols!
+            if (symbol < 128)
+            {
+                return ASCIILocs[symbol];
+            }
             int loc = Characters.IndexOf(symbol);
             if (loc < 0)
             {
@@ -331,23 +341,26 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="X">The X location to draw it at.</param>
         /// <param name="Y">The Y location to draw it at.</param>
         /// <returns>The length of the character in pixels.</returns>
-        public float DrawSingleCharacter(char symbol, float X, float Y, bool flip, TextVBO vbo, Vector4 color)
+        public float DrawSingleCharacter(char symbol, float X, float Y, TextVBO vbo, Vector4 color)
         {
             RectangleF rec = RectForSymbol(symbol);
-            if (flip)
-            {
-                vbo.AddQuad(new Vector2(X, Y),
-                    new Vector2(X + rec.Width, Y + rec.Height),
-                    new Vector2(rec.X / Engine.bwidth, (rec.Y + rec.Height) / Engine.bheight),
-                    new Vector2((rec.X + rec.Width) / Engine.bwidth, rec.Y / Engine.bheight), color, TexZ);
-            }
-            else
-            {
-                vbo.AddQuad(new Vector2(X, Y),
-                    new Vector2(X + rec.Width, Y + rec.Height),
-                    new Vector2(rec.X / Engine.bwidth, rec.Y / Engine.bwidth),
-                    new Vector2((rec.X + rec.Width) / Engine.bheight, (rec.Y + rec.Height) / Engine.bheight), color, TexZ);
-            }
+            vbo.AddQuad(X, Y, X + rec.Width, Y + rec.Height, rec.X / Engine.bwidth, rec.Y / Engine.bwidth,
+                (rec.X + rec.Width) / Engine.bheight, (rec.Y + rec.Height) / Engine.bheight, color, TexZ);
+            return rec.Width;
+        }
+
+        /// <summary>
+        /// Draws a single symbol at a specified location, flipped.
+        /// </summary>
+        /// <param name="symbol">The symbol to draw..</param>
+        /// <param name="X">The X location to draw it at.</param>
+        /// <param name="Y">The Y location to draw it at.</param>
+        /// <returns>The length of the character in pixels.</returns>
+        public float DrawSingleCharacterFlipped(char symbol, float X, float Y, TextVBO vbo, Vector4 color)
+        {
+            RectangleF rec = RectForSymbol(symbol);
+            vbo.AddQuad(X, Y, X + rec.Width, Y + rec.Height, rec.X / Engine.bwidth, rec.Y / Engine.bwidth,
+                (rec.X + rec.Width) / Engine.bheight, (rec.Y + rec.Height) / Engine.bheight, color, TexZ);
             return rec.Width;
         }
 
@@ -361,20 +374,37 @@ namespace Voxalia.ClientGame.GraphicsSystems
         public float DrawString(string str, float X, float Y, Vector4 color, TextVBO vbo, bool flip = false)
         {
             float nX = 0;
-            for (int i = 0; i < str.Length; i++)
+            if (flip)
             {
-                if (str[i] == '\n')
+                for (int i = 0; i < str.Length; i++)
                 {
-                    Y += Height;
-                    nX = 0;
+                    if (str[i] == '\n')
+                    {
+                        Y += Height;
+                        nX = 0;
+                    }
+                    nX += DrawSingleCharacterFlipped(str[i], X + nX, Y, vbo, color);
                 }
-                nX += DrawSingleCharacter(str[i], X + nX, Y, flip, vbo, color);
+            }
+            else
+            {
+                for (int i = 0; i < str.Length; i++)
+                {
+                    if (str[i] == '\n')
+                    {
+                        Y += Height;
+                        nX = 0;
+                    }
+                    nX += DrawSingleCharacter(str[i], X + nX, Y, vbo, color);
+                }
             }
             return nX;
         }
 
         /// <summary>
         /// Measures the drawn length of a string.
+        /// For monospaced fonts, this is (characterCount * width).
+        /// This code assumes non-monospaced, and as such, grabs the width of each character before reading it.
         /// </summary>
         /// <param name="str">The string to measure.</param>
         /// <returns>The length of the string.</returns>
