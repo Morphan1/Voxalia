@@ -79,6 +79,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.CullFace(CullFaceMode.Front);
         }
 
+        public float MaximumStraightBlockDistance()
+        {
+            return (CVars.r_renderdist.ValueI + 3) * Chunk.CHUNK_SIZE;
+        }
+
+        public float ZFar()
+        {
+            return MaximumStraightBlockDistance() * 2;
+        }
+
         public View3D MainWorldView = new View3D();
         
         void InitRendering()
@@ -514,12 +524,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
         }
 
-        float dist2 = 1900; // TODO: (View rad + 2) * CHUNK_SIZE ? Or base off ZFAR?
-        public float dist = 1700;
+        public float GetSecondSkyDistance()
+        {
+            return MaximumStraightBlockDistance() * 1.1f;
+        }
         
+        public float GetSkyDistance()
+        {
+            return MaximumStraightBlockDistance();
+        }
+
         public Location GetSunLocation()
         {
-            return MainWorldView.CameraPos + TheSun.Direction * -(dist * 0.96f);
+            return MainWorldView.CameraPos + TheSun.Direction * -(GetSkyDistance() * 0.96f);
         }
 
         public void RenderSkybox()
@@ -527,7 +544,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Rendering.SetMinimumLight(1);
             GL.Disable(EnableCap.CullFace);
             Rendering.SetColor(Color4.White);
-            Matrix4 scale = Matrix4.CreateScale(dist2, dist2, dist2);
+            Matrix4 scale = Matrix4.CreateScale(GetSecondSkyDistance());
             GL.UniformMatrix4(2, false, ref scale);
             // TODO: Save textures!
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/bottom").Bind();
@@ -543,7 +560,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/yp").Bind();
             skybox[5].Render(false);
             Rendering.SetColor(new Vector4(1, 1, 1, (float)Math.Max(Math.Min((SunAngle.Pitch - 70.0) / (-90.0), 1.0), 0.06)));
-            scale = Matrix4.CreateScale(dist, dist, dist);
+            scale = Matrix4.CreateScale(GetSkyDistance());
             GL.UniformMatrix4(2, false, ref scale);
             // TODO: Save textures!
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/bottom").Bind();
@@ -559,19 +576,22 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/yp").Bind();
             skybox[5].Render(false);
             Rendering.SetColor(new Vector4(ClientUtilities.Convert(Location.One * SunLightModDirect), 1));
+            float zf = ZFar();
+            float spf = zf * 0.17f;
             Textures.GetTexture("skies/sun").Bind(); // TODO: Store var!
-            Matrix4 rot = Matrix4.CreateTranslation(-150f, -150f, 0f)
+            Matrix4 rot = Matrix4.CreateTranslation(-spf * 0.5f, -spf * 0.5f, 0f)
                 * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + SunAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(TheSun.Direction * -(dist * 0.96f)));
-            Rendering.RenderRectangle(0, 0, 300, 300, rot); // TODO: Adjust scale based on view rad
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(TheSun.Direction * -(GetSkyDistance() * 0.96f)));
+            Rendering.RenderRectangle(0, 0, spf, spf, rot); // TODO: Adjust scale based on view rad
             Textures.GetTexture("skies/planet").Bind(); // TODO: Store var!
+            float ppf = zf * 0.40f;
             Rendering.SetColor(new Color4(PlanetLight, PlanetLight, PlanetLight, 1));
-            rot = Matrix4.CreateTranslation(-450f, -450f, 0f)
+            rot = Matrix4.CreateTranslation(-ppf * 0.5f, -ppf * 0.5f, 0f)
                 * Matrix4.CreateRotationY((float)((-PlanetAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + PlanetAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(PlanetDir * -(dist * 0.8f)));
-            Rendering.RenderRectangle(0, 0, 900, 900, rot);
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(PlanetDir * -(GetSkyDistance() * 0.8f)));
+            Rendering.RenderRectangle(0, 0, ppf, ppf, rot);
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.Enable(EnableCap.CullFace);
             Matrix4 ident = Matrix4.Identity;

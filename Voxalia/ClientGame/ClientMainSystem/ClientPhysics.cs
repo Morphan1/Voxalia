@@ -36,6 +36,18 @@ namespace Voxalia.ClientGame.ClientMainSystem
 
         public void BuildWorld()
         {
+            // TODO: DESTROY OLD REGION!
+            BuildLightsForWorld();
+            TheRegion = new Region();
+            TheRegion.TheClient = this;
+            TheRegion.BuildWorld();
+            Player = new PlayerEntity(TheRegion);
+            TheRegion.SpawnEntity(Player);
+        }
+
+        // TODO: Call this whenenver render distance changes!
+        public void BuildLightsForWorld()
+        {
             if (TheSun != null)
             {
                 TheSun.Destroy();
@@ -45,22 +57,14 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 ThePlanet.Destroy();
                 MainWorldView.Lights.Remove(ThePlanet);
             }
-            // TODO: DESTROY OLD REGION!
-            // TODO: Radius -> max view rad * 2
-            // TODO: Size -> max view rad * 2 + 30 * 2
-            TheSun = new SkyLight(Location.Zero, Chunk.CHUNK_SIZE * 30, SunLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35, false);
+            TheSun = new SkyLight(Location.Zero, MaximumStraightBlockDistance() * 2, SunLightDef, new Location(0, 0, -1), MaximumStraightBlockDistance() * 2 + Chunk.CHUNK_SIZE * 2, false);
             MainWorldView.Lights.Add(TheSun);
             // TODO: Separate cloud quality CVar?
-            TheSunClouds = new SkyLight(Location.Zero, Chunk.CHUNK_SIZE * 30, CloudSunLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35, true);
+            TheSunClouds = new SkyLight(Location.Zero, MaximumStraightBlockDistance() * 2, CloudSunLightDef, new Location(0, 0, -1), MaximumStraightBlockDistance() * 2 + Chunk.CHUNK_SIZE * 2, true);
             MainWorldView.Lights.Add(TheSunClouds);
             // TODO: Separate planet quality CVar?
-            ThePlanet = new SkyLight(Location.Zero, Chunk.CHUNK_SIZE * 30, PlanetLightDef, new Location(0, 0, -1), Chunk.CHUNK_SIZE * 35, false);
+            ThePlanet = new SkyLight(Location.Zero, MaximumStraightBlockDistance() * 2, PlanetLightDef, new Location(0, 0, -1), MaximumStraightBlockDistance() * 2 + Chunk.CHUNK_SIZE * 2, false);
             MainWorldView.Lights.Add(ThePlanet);
-            TheRegion = new Region();
-            TheRegion.TheClient = this;
-            TheRegion.BuildWorld();
-            Player = new PlayerEntity(TheRegion);
-            TheRegion.SpawnEntity(Player);
             onCloudShadowChanged(null, null);
         }
 

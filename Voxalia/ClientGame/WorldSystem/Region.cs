@@ -502,7 +502,6 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void LightForChunks(Chunk ch, Chunk above)
         {
-            // TODO: Prevent double-skylight-recalc
             ch.CalcSkyLight(above);
             TheClient.Schedule.ScheduleSyncTask(() =>
             {

@@ -537,10 +537,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
             OffsetWorld = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos));
             if (TheClient.VR != null)
             {
-                Matrix4 proj = TheClient.VR.GetProjection(true, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
+                Matrix4 proj = TheClient.VR.GetProjection(true, TheClient.CVars.r_znear.ValueF, TheClient.ZFar());
                 Matrix4 view = TheClient.VR.Eye(true);
                 PrimaryMatrix = view * proj;
-                Matrix4 proj2 = TheClient.VR.GetProjection(false, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF);
+                Matrix4 proj2 = TheClient.VR.GetProjection(false, TheClient.CVars.r_znear.ValueF, TheClient.ZFar());
                 Matrix4 view2 = TheClient.VR.Eye(false);
                 PrimaryMatrix_OffsetFor3D = view2 * proj2;
                 PrimaryMatrixd = Matrix4d.CreateTranslation(ClientUtilities.ConvertD(-CameraPos)) * ClientUtilities.ConvertToD(view) * ClientUtilities.ConvertToD(proj);
@@ -548,7 +548,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             }
             else
             {
-                Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF), (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
+                Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
+                    (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.ZFar()); // TODO: View3D-level vars?
                 Location bx = TheClient.CVars.r_3d_enable.ValueB ? (cameraAdjust) : Location.Zero;
                 Matrix4 view = Matrix4.LookAt(ClientUtilities.Convert(bx), ClientUtilities.Convert(bx + camforward), ClientUtilities.Convert(camup));
                 PrimaryMatrix = view * proj;
@@ -558,7 +559,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     PrimaryMatrix_OffsetFor3D = view2 * proj;
                 }
                 Matrix4d projd = Matrix4d.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(TheClient.CVars.r_fov.ValueF),
-                    (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.CVars.r_zfar.ValueF); // TODO: View3D-level vars?
+                    (float)Width / (float)Height, TheClient.CVars.r_znear.ValueF, TheClient.ZFar()); // TODO: View3D-level vars?
                 Location bxd = TheClient.CVars.r_3d_enable.ValueB ? (CameraPos + cameraAdjust) : CameraPos;
                 Matrix4d viewd = Matrix4d.LookAt(ClientUtilities.ConvertD(bxd), ClientUtilities.ConvertD(bxd + camforward), ClientUtilities.ConvertD(camup));
                 PrimaryMatrixd = viewd * projd;
@@ -1081,7 +1082,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.Uniform1(9, TheClient.CVars.r_dof_strength.ValueF);
             GL.Uniform1(10, MainEXP * TheClient.CVars.r_exposure.ValueF);
             GL.Uniform1(16, TheClient.CVars.r_znear.ValueF);
-            GL.Uniform1(17, TheClient.CVars.r_zfar.ValueF);
+            GL.Uniform1(17, TheClient.ZFar());
             GL.Uniform4(18, new Vector4(ClientUtilities.Convert(Headmat.GetFogColor()), (float)Headmat.GetFogAlpha()));
             // TODO: If thick fog, blur the environment? Or some similar head-in-a-block effect!
             GL.Uniform1(19, DesaturationAmount);
@@ -1412,8 +1413,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                 }
                 GL.Uniform1(14, TheClient.CVars.r_znear.ValueF);
-                GL.Uniform1(15, TheClient.CVars.r_zfar.ValueF);
-                GL.Uniform1(16, TheClient.dist); // TODO: Local controlled variable.
+                GL.Uniform1(15, TheClient.ZFar());
+                GL.Uniform1(16, TheClient.GetSkyDistance()); // TODO: Local controlled variable.
                 TranspBlend();
                 TheClient.Rendering.RenderRectangle(-1, -1, 1, 1);
                 StandardBlend();
