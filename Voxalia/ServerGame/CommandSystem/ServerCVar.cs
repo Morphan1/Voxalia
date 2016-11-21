@@ -50,7 +50,7 @@ namespace Voxalia.ServerGame.CommandSystem
             g_fps = Register("g_fps", "30", CVarFlag.Numeric, "What framerate to use.");
             g_maxheight = Register("g_maxheight", "5000", CVarFlag.Numeric, "What the highest possible Z coordinate should be (for building)."); // TODO: Also per-world?
             g_minheight = Register("g_minheight", "-5000", CVarFlag.Numeric, "What the lowest possible Z coordinate should be (for building)."); // TODO: Also per-world?
-            g_maxdist = Register("g_maxdist", "1000000000", CVarFlag.Numeric, "How far on the X or Y axis a player may travel from the origin."); // TODO: Also per-world?
+            g_maxdist = Register("g_maxdist", "500000000", CVarFlag.Numeric, "How far on the X or Y axis a player may travel from the origin."); // TODO: Also per-world?
             g_renderblocks = Register("g_renderblocks", "false", CVarFlag.Boolean, "Whether to render blocks for mapping purposes."); // TODO: Also per-world?
             // Network CVars
             n_verifyip = Register("n_verifyip", "true", CVarFlag.Boolean, "Whether to verify connecting users' IP addresses with the global server. Disabling this may help allow LAN connections.");
