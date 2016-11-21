@@ -34,7 +34,7 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public List<Entity> CreatedEnts = new List<Entity>();
 
-        public void CreateVBO()
+        public bool CreateVBO()
         {
             List<KeyValuePair<Vector3i, Material>> tLits = new List<KeyValuePair<Vector3i, Material>>();
             if (CSize == CHUNK_SIZE)
@@ -73,7 +73,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 });
             }
             Lits = tLits;
-            OwningRegion.NeedToRender(this);
+            return OwningRegion.NeedToRender(this);
         }
         
         public void CalcSkyLight(Chunk above)

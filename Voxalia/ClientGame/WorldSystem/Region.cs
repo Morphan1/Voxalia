@@ -507,7 +507,10 @@ namespace Voxalia.ClientGame.WorldSystem
             TheClient.Schedule.ScheduleSyncTask(() =>
             {
                 ch.AddToWorld();
-                ch.CreateVBO();
+                if (!ch.CreateVBO())
+                {
+                    return;
+                }
                 Chunk below = GetChunk(ch.WorldPosition + new Vector3i(0, 0, -1));
                 if (below != null)
                 {
@@ -1047,14 +1050,16 @@ namespace Voxalia.ClientGame.WorldSystem
         /// Do not call directly, use Chunk.CreateVBO().
         /// </summary>
         /// <param name="ch"></param>
-        public void NeedToRender(Chunk ch)
+        public bool NeedToRender(Chunk ch)
         {
             lock (RenderingNow)
             {
                 if (!NeedsRendering.Contains(ch.WorldPosition))
                 {
                     NeedsRendering.Enqueue(ch.WorldPosition, (ch.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE).DistanceSquared(TheClient.Player.GetPosition()));
+                    return true;
                 }
+                return false;
             }
         }
 
