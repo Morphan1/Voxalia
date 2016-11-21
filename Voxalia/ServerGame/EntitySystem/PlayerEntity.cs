@@ -938,7 +938,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Location posClamp(Location pos)
         {
-            int maxdist = Math.Abs(TheServer.CVars.g_maxdist.ValueI);
+            double maxdist = Math.Abs(TheServer.CVars.g_maxdist.ValueD);
             pos.X = Clamp(pos.X, -maxdist, maxdist);
             pos.Y = Clamp(pos.Y, -maxdist, maxdist);
             pos.Z = Clamp(pos.Z, -maxdist, maxdist);
@@ -1183,7 +1183,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool CanReach(Location pos)
         {
-            int maxdist = Math.Abs(TheServer.CVars.g_maxdist.ValueI);
+            double maxdist = Math.Abs(TheServer.CVars.g_maxdist.ValueD);
             return Math.Abs(pos.X) < maxdist && Math.Abs(pos.Y) < maxdist && Math.Abs(pos.Z) < maxdist;
         }
 
