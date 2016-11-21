@@ -163,6 +163,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             if (LocalServer != null)
             {
+                // TODO: ManualReset object?
                 Object tlock = new Object();
                 bool done = false;
                 LocalServer.ShutDown(() => { lock (tlock) { done = true; } });

@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using OpenTK;
 using OpenTK.Graphics;
@@ -30,7 +31,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
     {
         public double gDelta = 0;
 
-        public Stack<VBO> vbos = new Stack<VBO>(200);
+        public ConcurrentStack<VBO> vbos = new ConcurrentStack<VBO>(); // TODO: Is tracking this actually helpful?
 
         public Stack<ChunkRenderHelper> RenderHelpers = new Stack<ChunkRenderHelper>(200);
 

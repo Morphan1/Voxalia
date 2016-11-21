@@ -134,6 +134,9 @@ namespace Voxalia.ServerGame.WorldSystem
         public void Shutdown()
         {
             Database.Dispose();
+            LODsDatabase.Dispose();
+            EntsDatabase.Dispose();
+            ImageDatabase.Dispose();
         }
 
         public BsonValue GetIDFor(int x, int y, int z)

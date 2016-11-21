@@ -203,16 +203,8 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             try
             {
-                Object locky = new Object();
                 ChunkRenderHelper rh;
-                lock (locky)
-                {
-                    rh = new ChunkRenderHelper();
-                }
-                if (DENIED)
-                {
-                    return;
-                }
+                rh = new ChunkRenderHelper();
                 BlockInternal t_air = new BlockInternal((ushort)Material.AIR, 0, 0, 255);
                 List<Vector3> poses = new List<Vector3>();
                 List<Vector4> colorses = new List<Vector4>();
@@ -378,26 +370,23 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 if (rh.Vertices.Count == 0)
                 {
-                    OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
+                    if (_VBO != null)
                     {
-                        if (_VBO != null)
+                        VBO tV = _VBO;
+                        if (OwningRegion.TheClient.vbos.Count < MAX_VBOS_REMEMBERED)
                         {
-                            VBO tV = _VBO;
-                            lock (OwningRegion.TheClient.vbos)
-                            {
-                                if (OwningRegion.TheClient.vbos.Count < 40)
-                                {
-                                    OwningRegion.TheClient.vbos.Push(tV);
-                                }
-                                else
-                                {
-                                    tV.Destroy();
-                                }
-                            }
+                            OwningRegion.TheClient.vbos.Push(tV);
                         }
-                        IsAir = true;
-                        _VBO = null;
-                    });
+                        else
+                        {
+                            OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
+                            {
+                                tV.Destroy();
+                            });
+                        }
+                    }
+                    IsAir = true;
+                    _VBO = null;
                     OwningRegion.DoneRendering(this);
                     return;
                 }
@@ -407,35 +396,24 @@ namespace Voxalia.ClientGame.WorldSystem
                     inds[i] = i;
                 }
                 VBO tVBO;
-                lock (locky)
+                if (!OwningRegion.TheClient.vbos.TryPop(out tVBO))
                 {
-                    lock (OwningRegion.TheClient.vbos)
-                    {
-                        if (OwningRegion.TheClient.vbos.Count > 0)
-                        {
-                            tVBO = OwningRegion.TheClient.vbos.Pop();
-                        }
-                        else
-                        {
-                            tVBO = new VBO();
-                            //tVBO.BufferMode = OpenTK.Graphics.OpenGL4.BufferUsageHint.StreamDraw;
-                        }
-                    }
-                    tVBO.indices = inds;
-                    tVBO.Vertices = rh.Vertices;
-                    tVBO.Normals = rh.Norms;
-                    tVBO.TexCoords = rh.TCoords;
-                    tVBO.Colors = rh.Cols;
-                    tVBO.TCOLs = rh.TCols;
-                    tVBO.THVs = rh.THVs;
-                    tVBO.THWs = rh.THWs;
-                    tVBO.Tangents = rh.Tangs;
-                    tVBO.BoneWeights = null;
-                    tVBO.BoneIDs = null;
-                    tVBO.BoneWeights2 = null;
-                    tVBO.BoneIDs2 = null;
-                    tVBO.oldvert();
+                    tVBO = new VBO();
                 }
+                tVBO.indices = inds;
+                tVBO.Vertices = rh.Vertices;
+                tVBO.Normals = rh.Norms;
+                tVBO.TexCoords = rh.TCoords;
+                tVBO.Colors = rh.Cols;
+                tVBO.TCOLs = rh.TCols;
+                tVBO.THVs = rh.THVs;
+                tVBO.THWs = rh.THWs;
+                tVBO.Tangents = rh.Tangs;
+                tVBO.BoneWeights = null;
+                tVBO.BoneIDs = null;
+                tVBO.BoneWeights2 = null;
+                tVBO.BoneIDs2 = null;
+                tVBO.oldvert();
                 Vector3[] posset = poses.ToArray();
                 Vector4[] colorset = colorses.ToArray();
                 Vector2[] texcoordsset = tcses.ToArray();
@@ -446,60 +424,21 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                 {
-                    if (DENIED)
-                    {
-                        if (tVBO.generated)
-                        {
-                            tVBO.Destroy();
-                        }
-                        return;
-                    }
-                    lock (locky)
-                    {
-                        if (tVBO.verts == null)
-                        {
-                            SysConsole.Output(OutputType.WARNING, "Something went wrong! : tVBO.verts==null while rh.Vertice==" + (rh.Vertices == null ? "null" : rh.Vertices.Count + "_vertices"));
-                            // TODO: What even happened here?!
-                            tVBO.indices = inds;
-                            tVBO.Vertices = rh.Vertices;
-                            tVBO.Normals = rh.Norms;
-                            tVBO.TexCoords = rh.TCoords;
-                            tVBO.Colors = rh.Cols;
-                            tVBO.TCOLs = rh.TCols;
-                            tVBO.THVs = rh.THVs;
-                            tVBO.THWs = rh.THWs;
-                            tVBO.Tangents = rh.Tangs;
-                        }
-                    }
                     VBO tV = _VBO;
                     if (tV != null)
                     {
-                        lock (OwningRegion.TheClient.vbos)
+                        if (OwningRegion.TheClient.vbos.Count < MAX_VBOS_REMEMBERED)
                         {
-                            if (OwningRegion.TheClient.vbos.Count < 40)
-                            {
-                                OwningRegion.TheClient.vbos.Push(tV);
-                            }
-                            else
-                            {
-                                tV.Destroy();
-                            }
+                            OwningRegion.TheClient.vbos.Push(tV);
                         }
-                    }
-                    if (DENIED)
-                    {
-                        if (tVBO.generated)
+                        else
                         {
-                            tVBO.Destroy();
+                            tV.Destroy();
                         }
-                        return;
                     }
                     _VBO = tVBO;
-                    lock (locky)
-                    {
-                        tVBO.GenerateOrUpdate();
-                        tVBO.CleanLists();
-                    }
+                    tVBO.GenerateOrUpdate();
+                    tVBO.CleanLists();
                     DestroyPlants();
                     Plant_VAO = GL.GenVertexArray();
                     Plant_VBO_Ind = GL.GenBuffer();
@@ -537,6 +476,8 @@ namespace Voxalia.ClientGame.WorldSystem
                 OwningRegion.DoneRendering(this);
             }
         }
+        
+        public const int MAX_VBOS_REMEMBERED = 40; // TODO: Is this number good? Should this functionality exist at all?
 
         public bool IsAir = false;
         

@@ -131,6 +131,5 @@ namespace Voxalia.ClientGame.WorldSystem
         public bool LOADING = false;
         public bool PROCESSED = false;
         public bool PRED = false;
-        public bool DENIED = false;
     }
 }
