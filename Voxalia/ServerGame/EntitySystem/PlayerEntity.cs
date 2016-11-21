@@ -80,13 +80,10 @@ namespace Voxalia.ServerGame.EntitySystem
             base.SetHealth(config.GetFloat("health", 100).Value);
             if (config.GetString("flying", "false").ToLowerFast() == "true") // TODO: ReadBoolean?
             {
-                base.Fly();
-                //Network.SendPacket(new FlagEntityPacketOut(this, EntityFlag.FLYING, 1));
-                //Network.SendPacket(new FlagEntityPacketOut(this, EntityFlag.MASS, 0));
-            }
-            else
-            {
-                base.Unfly();
+                TheRegion.TheWorld.Schedule.ScheduleSyncTask(() =>
+                {
+                    Fly();
+                }, 0.1);
             }
             SetVelocity(Location.FromString(config.GetString("velocity", "0,0,0")));
             SetPosition(Location.FromString(config.GetString("position", TheRegion.TheWorld.SpawnPoint.ToString())));
