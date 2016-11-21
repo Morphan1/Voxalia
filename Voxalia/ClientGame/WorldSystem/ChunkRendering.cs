@@ -209,6 +209,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 List<Vector3> poses = new List<Vector3>();
                 List<Vector4> colorses = new List<Vector4>();
                 List<Vector2> tcses = new List<Vector2>();
+                Vector3d wp = ClientUtilities.ConvertD(WorldPosition.ToLocation()) * CHUNK_SIZE;
                 for (int x = 0; x < CSize; x++)
                 {
                     for (int y = 0; y < CSize; y++)
@@ -216,7 +217,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         for (int z = 0; z < CSize; z++)
                         {
                             BlockInternal c = GetBlockAt(x, y, z);
-                            if ((c.Material).RendersAtAll())
+                            if (c.Material.RendersAtAll())
                             {
                                 BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : (c_zp == null ? t_air : GetLODRelative(c_zp, x, y, z + 1 - CSize));
                                 BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : (c_zm == null ? t_air : GetLODRelative(c_zm, x, y, z - 1 + CSize));
@@ -294,7 +295,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     }
                                     Location lcol = OwningRegion.GetLightAmountForSkyValue(ClientUtilities.Convert(vt) + WorldPosition.ToLocation() * CHUNK_SIZE, ClientUtilities.Convert(nt), potentials, reldat / 255f);
                                     rh.Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
-                                    rh.TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(ClientUtilities.ConvertD(WorldPosition.ToLocation()) * CHUNK_SIZE + ClientUtilities.ConvertToD(vt), Colors.ForByte(c.BlockPaint)));
+                                    rh.TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(wp + ClientUtilities.ConvertToD(vt), Colors.ForByte(c.BlockPaint)));
                                     if (ths.Key != null)
                                     {
                                         rh.THVs.Add(new Vector4((float)ths.Key[i].X, (float)ths.Key[i].Y, (float)ths.Key[i].Z, (float)ths.Key[i].W));
@@ -302,8 +303,8 @@ namespace Voxalia.ClientGame.WorldSystem
                                     }
                                     else
                                     {
-                                        rh.THVs.Add(new Vector4(0, 0, 0, 0));
-                                        rh.THWs.Add(new Vector4(0, 0, 0, 0));
+                                        rh.THVs.Add(Vector4.Zero);
+                                        rh.THWs.Add(Vector4.Zero);
                                     }
                                 }
                                 if (!c.IsOpaque() && BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].BackTextureAllowed)
@@ -325,8 +326,8 @@ namespace Voxalia.ClientGame.WorldSystem
                                         }
                                         else
                                         {
-                                            rh.THVs.Add(new Vector4(0, 0, 0, 0));
-                                            rh.THWs.Add(new Vector4(0, 0, 0, 0));
+                                            rh.THVs.Add(Vector4.Zero);
+                                            rh.THWs.Add(Vector4.Zero);
                                         }
                                     }
                                 }
