@@ -76,6 +76,10 @@ namespace Voxalia.ClientGame.EntitySystem
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 }
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, GLFBO);
+                if (!TheClient.MainWorldView.BufferDontTouch)
+                {
+                    GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
+                }
                 GL.Disable(EnableCap.DepthTest);
                 GL.Disable(EnableCap.CullFace);
                 GL.Viewport(0, 0, (int)size.X, (int)size.Y);
@@ -86,6 +90,10 @@ namespace Voxalia.ClientGame.EntitySystem
                 TheClient.MainWorldView.SetViewPort();
                 GL.Enable(EnableCap.DepthTest);
                 GL.Enable(EnableCap.CullFace);
+                if (!TheClient.MainWorldView.BufferDontTouch)
+                {
+                    GL.DrawBuffer(TheClient.MainWorldView.BufferMode);
+                }
             }
             NeedsRender = true; // TEMP.
             TheClient.isVox = true;

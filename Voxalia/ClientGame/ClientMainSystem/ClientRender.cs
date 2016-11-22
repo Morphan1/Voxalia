@@ -727,6 +727,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             isVox = false;
             if (MainWorldView.FBOid == FBOID.MAIN)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -735,6 +737,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.REFRACT)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -743,6 +747,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.TRANSP_UNLIT)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -751,6 +757,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.TRANSP_LIT)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -759,6 +767,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.TRANSP_SHADOWS)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -767,6 +777,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.TRANSP_LL)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -775,6 +787,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.TRANSP_LIT_LL)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -783,6 +797,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.TRANSP_SHADOWS_LL)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);

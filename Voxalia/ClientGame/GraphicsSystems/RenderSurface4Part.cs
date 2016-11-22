@@ -82,7 +82,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (uint)TextureWrapMode.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (uint)TextureWrapMode.ClampToEdge);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment4, TextureTarget.Texture2D, Rh2Texture, 0);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            Client.Central.MainWorldView.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
         public void Destroy()
@@ -98,8 +98,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public void Bind()
         {
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
-            GL.Viewport(0, 0, Width, Height);
+            Client.Central.MainWorldView.BufferDontTouch = true;
+            Client.Central.MainWorldView.BindFramebuffer(FramebufferTarget.Framebuffer, (int)fbo);
+            Client.Central.MainWorldView.Viewport(0, 0, Width, Height);
             GL.DrawBuffers(6, new DrawBuffersEnum[] { DrawBuffersEnum.ColorAttachment0, DrawBuffersEnum.ColorAttachment1,
                 DrawBuffersEnum.ColorAttachment2, DrawBuffersEnum.ColorAttachment3, DrawBuffersEnum.ColorAttachment4, DrawBuffersEnum.ColorAttachment5 });
             GL.ClearBuffer(ClearBuffer.Color, 0, new float[] { 0f, 0f, 0f, 0f });
@@ -116,9 +117,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         public void Unbind()
         {
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-            GL.Viewport(0, 0, Client.Central.MainWorldView.Width, Client.Central.MainWorldView.Height);
+            Client.Central.MainWorldView.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            Client.Central.MainWorldView.Viewport(0, 0, Client.Central.MainWorldView.Width, Client.Central.MainWorldView.Height);
             GL.DrawBuffer(DrawBufferMode.Back);
+            Client.Central.MainWorldView.BufferDontTouch = false;
         }
     }
 }
