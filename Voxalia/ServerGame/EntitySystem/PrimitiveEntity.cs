@@ -12,6 +12,7 @@ using Voxalia.ServerGame.NetworkSystem.PacketsOut;
 using Voxalia.ServerGame.WorldSystem;
 using Voxalia.Shared.Collision;
 using Voxalia.ServerGame.NetworkSystem;
+using LiteDB;
 
 namespace Voxalia.ServerGame.EntitySystem
 {
@@ -198,22 +199,42 @@ namespace Voxalia.ServerGame.EntitySystem
             Angles = quat;
         }
 
-        /// <summary>
-        /// Gets the binary save data for a generic physics entity, used as part of the save procedure for a physics entity.
-        /// Returns 52 bytes currently.
-        /// </summary>
-        /// <returns>The binary data.</returns>
-        public byte[] GetPrimitiveBytes()
+        public void ApplyPrimitiveSaveData(BsonDocument doc)
         {
-            byte[] bytes = new byte[24 + 24 + 4 + 4 + 4 + 4 + 24];
-            GetPosition().ToDoubleBytes().CopyTo(bytes, 0);
-            GetVelocity().ToDoubleBytes().CopyTo(bytes, 24);
-            Utilities.FloatToBytes((float)Angles.X).CopyTo(bytes, 24 + 24);
-            Utilities.FloatToBytes((float)Angles.Y).CopyTo(bytes, 24 + 24 + 4);
-            Utilities.FloatToBytes((float)Angles.Z).CopyTo(bytes, 24 + 24 + 4 + 4);
-            Utilities.FloatToBytes((float)Angles.W).CopyTo(bytes, 24 + 24 + 4 + 4 + 4);
-            Gravity.ToDoubleBytes().CopyTo(bytes, 24 + 24 + 4 + 4 + 4 + 4);
-            return bytes;
+            Position = Location.FromDoubleBytes(doc["prim_pos"].AsBinary, 0);
+            Velocity = Location.FromDoubleBytes(doc["prim_vel"].AsBinary, 0);
+            Scale = Location.FromDoubleBytes(doc["prim_scale"].AsBinary, 0);
+            Gravity = Location.FromDoubleBytes(doc["prim_grav"].AsBinary, 0);
+            double x = doc["prim_ang_x"].AsDouble;
+            double y = doc["prim_ang_y"].AsDouble;
+            double z = doc["prim_ang_z"].AsDouble;
+            double w = doc["prim_ang_w"].AsDouble;
+            SetOrientation(new BEPUutilities.Quaternion(x, y, z, w));
+            foreach (BsonValue bsv in doc["prim_noco"].AsArray)
+            {
+                NoCollide.Add(bsv.AsInt64);
+            }
+        }
+
+        public override BsonDocument GetSaveData()
+        {
+            BsonDocument doc = new BsonDocument();
+            doc["prim_pos"] = Position.ToDoubleBytes();
+            doc["prim_vel"] = Velocity.ToDoubleBytes();
+            doc["prim_scale"] = Scale.ToDoubleBytes();
+            doc["prim_grav"] = Gravity.ToDoubleBytes();
+            BEPUutilities.Quaternion quat = GetOrientation();
+            doc["prim_ang_x"] = (double)quat.X;
+            doc["prim_ang_y"] = (double)quat.Y;
+            doc["prim_ang_z"] = (double)quat.Z;
+            doc["prim_ang_w"] = (double)quat.W;
+            BsonArray b = new BsonArray();
+            foreach (long l in NoCollide)
+            {
+                b.Add(l);
+            }
+            doc["prim_noco"] = b;
+            return doc;
         }
     }
 }

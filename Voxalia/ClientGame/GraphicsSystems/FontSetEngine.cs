@@ -198,8 +198,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             r_depth++;
             if (r_depth >= 100 && Text != "{{Recursion error}}")
             {
-                r_depth--;
                 DrawColoredText("{{Recursion error}}", Position);
+                r_depth--;
                 return;
             }
             Text = Text.Replace("^B", bcolor);

@@ -14,7 +14,7 @@ using System;
 
 namespace Voxalia.ClientGame.EntitySystem
 {
-    public abstract class PrimitiveEntity: Entity
+    public abstract class PrimitiveEntity : Entity
     {
         public PrimitiveEntity(Region tregion, bool cast_shadows)
             : base(tregion, true, cast_shadows)
@@ -93,5 +93,7 @@ namespace Voxalia.ClientGame.EntitySystem
         {
             Velocity = vel;
         }
+
+        public const int PrimitiveNetDataLength = 24 + 24 + 16 + 24 + 24 + 4;
     }
 }

@@ -136,7 +136,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
             // Clean up
             GL.BindVertexArray(0);
         }
-
+        
         /// <summary>
         /// Renders the internal VBO to screen.
         /// </summary>

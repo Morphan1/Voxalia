@@ -265,7 +265,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             EntityConstructors[NetworkEntityType.BLOCK_ITEM] = new BlockItemEntityConstructor();
             EntityConstructors[NetworkEntityType.STATIC_BLOCK] = new StaticBlockEntityConstructor();
             EntityConstructors[NetworkEntityType.MODEL] = new ModelEntityConstructor();
-            
+            EntityConstructors[NetworkEntityType.HOVER_MESSAGE] = new HoverMessageEntityConstructor();
         }
 
 

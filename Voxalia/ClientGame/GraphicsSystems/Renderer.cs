@@ -332,8 +332,23 @@ namespace Voxalia.ClientGame.GraphicsSystems
             GL.BindVertexArray(0);
         }
 
-        public void RenderBillboard(Location pos, Location scale, Location facing)
+        public void RenderBillboard(Location center, Location scale, Location facing, float pzr = 0f)
         {
+            Location lookdir = (facing - center).Normalize();
+            Location right = lookdir.CrossProduct(Location.UnitZ); // TODO: Camera up vector!
+            Location updir = right.CrossProduct(lookdir);
+            Matrix4d mat = Matrix4d.CreateTranslation(-0.5f, -0.5f, 0f) * Matrix4d.Scale((float)scale.X, (float)scale.Y, (float)scale.Z);
+            Matrix4d m2 = new Matrix4d(right.X, updir.X, lookdir.X, center.X,
+                right.Y, updir.Y, lookdir.Y, center.Y,
+                right.Z, updir.Z, lookdir.Z, center.Z,
+                0, 0, 0, 1);
+            m2.Transpose();
+            mat *= m2;
+            Client.Central.MainWorldView.SetMatrix(2, mat);
+            GL.BindVertexArray(Square._VAO);
+            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.BindVertexArray(0);
+            /*
             // TODO: Quaternion magic?
             Location relang = Utilities.VectorToAngles(pos - facing);
             if (relang.IsInfinite() || relang.IsNaN())
@@ -345,11 +360,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 * Matrix4d.CreateTranslation(-0.5f, -0.5f, 0f)
                 * Matrix4d.CreateRotationY((float)((relang.Y - 90) * Utilities.PI180))
                 * Matrix4d.CreateRotationZ((float)(relang.Z * Utilities.PI180))
-                * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(pos));
+                * Matrix4d.CreateTranslation(ClientUtilities.ConvertD(pos + new Location(scale.X * 0.5, scale.Y * 0.5, 0.0)));
             Client.Central.MainWorldView.SetMatrix(2, mat); // TODO: Client reference!
             GL.BindVertexArray(Square._VAO);
             GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, IntPtr.Zero);
             GL.BindVertexArray(0);
+            */
         }
         
         public void RenderBilboardLine(Location pos, Location p2, float width, Location facing)

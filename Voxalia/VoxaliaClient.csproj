@@ -178,6 +178,7 @@
     <Compile Include="ClientGame\EntitySystem\GenericCharacterEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\GlowstickEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\GrenadeEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\HoverMessageEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\ModelEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PlayerEntity.cs" />

@@ -321,6 +321,13 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 entry.Player.PlayerConfig.Set("web.passcode", Utilities.HashQuick(entry.Player.Name.ToLowerFast(), entry.InputArguments[1]));
                 entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Set.");
             }
+            else if (arg0 == "spawnMessage" && entry.InputArguments.Count > 1)
+            {
+                string mes = entry.InputArguments[1].Replace("\\n", "\n");
+                HoverMessageEntity hme = new HoverMessageEntity(entry.Player.TheRegion, mes);
+                hme.Position = entry.Player.GetEyePosition();
+                entry.Player.TheRegion.SpawnEntity(hme);
+            }
             else if (arg0 == "chunkTimes")
             {
                 foreach (Tuple<string, double> time in entry.Player.TheRegion.Generator.GetTimings())
