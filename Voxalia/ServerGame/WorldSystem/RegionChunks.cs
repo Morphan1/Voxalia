@@ -364,15 +364,29 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (allowFile)
                 {
-                    ChunkDetails dat;
+                    ChunkDetails dat = null;
                     lock (chunk.GetLocker())
                     {
-                        dat = ChunkManager.GetChunkDetails((int)chunk.WorldPosition.X, (int)chunk.WorldPosition.Y, (int)chunk.WorldPosition.Z);
+                        try
+                        {
+                            dat = ChunkManager.GetChunkDetails((int)chunk.WorldPosition.X, (int)chunk.WorldPosition.Y, (int)chunk.WorldPosition.Z);
+                        }
+                        catch (Exception ex)
+                        {
+                            SysConsole.Output("Reading chunk " + chunk.WorldPosition, ex);
+                        }
                     }
-                    ChunkDetails ents;
+                    ChunkDetails ents = null;
                     lock (chunk.GetLocker())
                     {
-                        ents = ChunkManager.GetChunkEntities((int)chunk.WorldPosition.X, (int)chunk.WorldPosition.Y, (int)chunk.WorldPosition.Z);
+                        try
+                        {
+                            ents = ChunkManager.GetChunkEntities((int)chunk.WorldPosition.X, (int)chunk.WorldPosition.Y, (int)chunk.WorldPosition.Z);
+                        }
+                        catch (Exception ex)
+                        {
+                            SysConsole.Output("Reading chunk " + chunk.WorldPosition, ex);
+                        }
                     }
                     if (dat != null)
                     {
@@ -385,7 +399,10 @@ namespace Voxalia.ServerGame.WorldSystem
                         {
                             chunk.Flags &= ~ChunkFlags.POPULATING;
                         }
-                        return true;
+                        if (!chunk.Flags.HasFlag(ChunkFlags.POPULATING))
+                        {
+                            return true;
+                        }
                     }
                 }
             }
