@@ -480,11 +480,11 @@ namespace Voxalia.ServerGame.EntitySystem
             }
             PreFlyOrient = GetOrientation();
             PreFlyMass = GetMass();
-            CBody.Body.LocalInertiaTensorInverse = new Matrix3x3();
+            CBody.Body.LocalInertiaTensor = new Matrix3x3();
             IsFlying = true;
             SetMass(0);
             CBody.Body.AngularVelocity = Vector3.Zero;
-            CBody.Body.LocalInertiaTensorInverse = new Matrix3x3();
+            CBody.Body.LocalInertiaTensor = new Matrix3x3();
         }
 
         public virtual void Unfly()
@@ -493,12 +493,12 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return;
             }
-            CBody.Body.LocalInertiaTensorInverse = new Matrix3x3();
+            CBody.Body.LocalInertiaTensor = new Matrix3x3();
             SetMass(PreFlyMass);
             IsFlying = false;
             CBody.Body.Orientation = PreFlyOrient;
             CBody.Body.AngularVelocity = Vector3.Zero;
-            CBody.Body.LocalInertiaTensorInverse = new Matrix3x3();
+            CBody.Body.LocalInertiaTensor = new Matrix3x3();
         }
 
         public Stance DesiredStance = Stance.Standing;
