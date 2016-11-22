@@ -11,4 +11,4 @@ LightDamage=0.28
 SpeedMod=0.3
 Breaker=NON_BREAKABLE
 BreaksFromOtherTools=false
-TextureBasic=blocks/liquid/water$blocks/liquid/water_normal_1,blocks/liquid/water_normal_2,blocks/liquid/water_normal_3,blocks/liquid/water_normal_2%0.2
+TextureBasic=blocks/liquid/water$blocks/liquid/water_normal_1,blocks/liquid/water_normal_2,blocks/liquid/water_normal_3,blocks/liquid/water_normal_2%0.2&white*black!black@black

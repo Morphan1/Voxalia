@@ -1532,6 +1532,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             matxyz[0, 3] = 0.7f;
                             // TODO: Specular Albedo
                             matxyz[1, 0] = 0.7f;
+                            matxyz[1, 1] = 0.7f;
+                            matxyz[1, 2] = 0.7f;
                             matxyz[1, 3] = (Lights[i] is SpotLight) ? 1f : 0f;
                             matxyz[2, 0] = (Lights[i].InternalLights[x] is LightOrtho) ? 1f : 0f;
                             matxyz[2, 1] = 1f / TheClient.CVars.r_shadowquality.ValueI;
@@ -1544,9 +1546,9 @@ namespace Voxalia.ClientGame.GraphicsSystems
                             matabc[0, 0] = 0f;
                             matabc[0, 1] = 0f;
                             matabc[0, 2] = 0f;
-                            matabc[1, 0] = (float)(Lights[i].EyePos.X - CameraPos.X);
-                            matabc[1, 1] = (float)(Lights[i].EyePos.Y - CameraPos.Y);
-                            matabc[1, 2] = (float)(Lights[i].EyePos.Z - CameraPos.Z);
+                            matabc[1, 0] = (float)(Lights[i].EyePos.X - RenderRelative.X);
+                            matabc[1, 1] = (float)(Lights[i].EyePos.Y - RenderRelative.Y);
+                            matabc[1, 2] = (float)(Lights[i].EyePos.Z - RenderRelative.Z);
                             matabc[2, 0] = MainEXP * TheClient.CVars.r_exposure.ValueF;
                             matabc[0, 3] = Lights[i].InternalLights[x].color.X;
                             matabc[2, 1] = Lights[i].InternalLights[x].color.Y;

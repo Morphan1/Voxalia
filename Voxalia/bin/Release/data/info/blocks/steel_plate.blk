@@ -4,4 +4,4 @@ Sound=METAL
 Hardness=40
 BreakTime=5
 Breaker=PICKAXE
-TextureBasic=blocks/solid/metals/steel_plate
+TextureBasic=blocks/solid/metals/steel_plate&white*black!black@black
