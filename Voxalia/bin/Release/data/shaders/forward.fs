@@ -59,5 +59,5 @@ void main()
 #endif
 #endif
 	color = col * fi.color;
-	color.xyz *= min(max(dot(fi.norm, vec3(0.0, 0.0, -1.0)), 0.5), 1.0);
+	color.xyz *= min(max(dot(-fi.norm, vec3(0.0, 0.0, -1.0)), 0.5), 1.0);
 }

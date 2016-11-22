@@ -69,19 +69,25 @@ layout (location = 41) uniform mat4 boneTrans[MAX_BONES];
 
 void main()
 {
+	mat4 mv_mat_simple = mv_matrix;
+	mv_mat_simple[3][0] = 0.0;
+	mv_mat_simple[3][1] = 0.0;
+	mv_mat_simple[3][2] = 0.0;
 #if MCM_VOX
 	vec4 vpos = vec4(position, 1.0);
 	fi.texcoord = texcoords;
 	fi.tcol = color_for(vpos, tcol);
 	fi.thv = thv;
 	fi.thw = thw;
-	fi.norm = normal;
+	vec4 normo = mv_mat_simple * vec4(normal, 1.0);
+	fi.norm = normo.xyz;
     fi.color = color_for(mv_matrix * vpos, color * v_color);
 	gl_Position = proj_matrix * mv_matrix * vpos;
 #else // MCM_VOX
 #if MCM_GEOM_ACTIVE
 	f.texcoord = texcoords.xy;
-	f.norm = normal;
+	vec4 normo = mv_mat_simple * vec4(normal, 1.0);
+	f.norm = normo.xyz;
 	f.color = color * v_color;
 	gl_Position = mv_matrix * vec4(position, 1.0);
 #else // MCM_GEOM_ACTIVE
@@ -111,7 +117,7 @@ void main()
 	}
 	pos1 *= simplebone_matrix;
 	norm1 *= simplebone_matrix;
-	vec4 fnorm = mv_matrix * norm1;
+	vec4 fnorm = mv_mat_simple * norm1;
 	fi.norm = fnorm.xyz / fnorm.w;
     fi.color = color_for(mv_matrix * vec4(pos1.xyz, 1.0), color * v_color);
 	gl_Position = proj_matrix * mv_matrix * vec4(pos1.xyz, 1.0);
