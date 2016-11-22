@@ -107,12 +107,12 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, 0);
                 GL.ReadBuffer(ReadBufferMode.None);
                 float exp = FindExp(rd);
-                exp = Math.Max(Math.Min(exp, 4.0f), 0.25f);
+                exp = Math.Max(Math.Min(exp, 3.0f), 0.33333f);
                 exp = 1.0f / exp;
                 float stepUp = (float)TheClient.gDelta * 0.05f;
                 float stepDown = stepUp * 5.0f;
                 float relative = Math.Abs(MainEXP - exp);
-                float modder = 4f * relative;
+                float modder = 3f * relative;
                 stepUp *= modder;
                 stepDown *= modder;
                 if (exp > MainEXP + stepUp)
