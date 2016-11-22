@@ -28,10 +28,10 @@ out struct vox_out
 out struct vox_fout
 #endif
 {
+	vec3 norm;
 #if MCM_VOX
 	vec3 texcoord;
 	vec4 tcol;
-	mat3 tbn;
 	vec4 thv;
 	vec4 thw;
 #else
@@ -69,28 +69,29 @@ layout (location = 41) uniform mat4 boneTrans[MAX_BONES];
 
 void main()
 {
-	vec4 pos1;
-	vec4 norm1;
 #if MCM_VOX
+	vec4 vpos = vec4(position, 1.0);
 	fi.texcoord = texcoords;
-	pos1 = vec4(position, 1.0);
-	fi.tcol = color_for(pos1, tcol);
+	fi.tcol = color_for(vpos, tcol);
 	fi.thv = thv;
 	fi.thw = thw;
-#else
+	fi.norm = normal;
+    fi.color = color_for(mv_matrix * vpos, color * v_color);
+	gl_Position = proj_matrix * mv_matrix * vpos;
+#else // MCM_VOX
 #if MCM_GEOM_ACTIVE
 	f.texcoord = texcoords.xy;
-#else
+	f.norm = normal;
+	f.color = color * v_color;
+	gl_Position = mv_matrix * vec4(position, 1.0);
+#else // MCM_GEOM_ACTIVE
+	vec4 pos1;
+	vec4 norm1;
 	fi.texcoord = texcoords.xy;
-#endif
-#if MCM_GEOM_ACTIVE
-	pos1 = vec4(position, 1.0);
-	norm1 = vec4(normal, 1.0);
-#else
-	float rem = 1.0 - (Weights[0] + Weights[1] + Weights[2] + Weights[3] + Weights2[0] + Weights2[1] + Weights2[2] + Weights2[3]);
-	mat4 BT = mat4(1.0);
-	if (rem < 0.99)
+	float rem = Weights[0] + Weights[1] + Weights[2] + Weights[3] + Weights2[0] + Weights2[1] + Weights2[2] + Weights2[3];
+	if (rem > 0.01)
 	{
+		mat4 BT = mat4(1.0);
 		BT = boneTrans[int(BoneID[0])] * Weights[0];
 		BT += boneTrans[int(BoneID[1])] * Weights[1];
 		BT += boneTrans[int(BoneID[2])] * Weights[2];
@@ -99,7 +100,7 @@ void main()
 		BT += boneTrans[int(BoneID2[1])] * Weights2[1];
 		BT += boneTrans[int(BoneID2[2])] * Weights2[2];
 		BT += boneTrans[int(BoneID2[3])] * Weights2[3];
-		BT += mat4(1.0) * rem;
+		BT += mat4(1.0) * (1.0 - rem);
 		pos1 = vec4(position, 1.0) * BT;
 		norm1 = vec4(normal, 1.0) * BT;
 	}
@@ -110,15 +111,12 @@ void main()
 	}
 	pos1 *= simplebone_matrix;
 	norm1 *= simplebone_matrix;
-#endif
-#endif
-#if MCM_GEOM_ACTIVE
-	f.color = color * v_color;
-	gl_Position = mv_matrix * vec4(pos1.xyz, 1.0);
-#else
+	vec4 fnorm = mv_matrix * norm1;
+	fi.norm = fnorm.xyz / fnorm.w;
     fi.color = color_for(mv_matrix * vec4(pos1.xyz, 1.0), color * v_color);
 	gl_Position = proj_matrix * mv_matrix * vec4(pos1.xyz, 1.0);
-#endif
+#endif // else - MCM_GEOM_ACTIVE
+#endif // else - MCM_VOX
 }
 
 const float min_cstrobe = 3.0 / 255.0;

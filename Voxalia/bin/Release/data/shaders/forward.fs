@@ -19,10 +19,10 @@ layout (binding = 0) uniform sampler2D s;
 
 in struct vox_fout
 {
+	vec3 norm;
 #if MCM_VOX
 	vec3 texcoord;
 	vec4 tcol;
-	mat3 tbn;
 	vec4 thv;
 	vec4 thw;
 #else
@@ -59,4 +59,5 @@ void main()
 #endif
 #endif
 	color = col * fi.color;
+	color.xyz *= min(max(dot(fi.norm, vec3(0.0, 0.0, -1.0)), 0.5), 1.0);
 }
