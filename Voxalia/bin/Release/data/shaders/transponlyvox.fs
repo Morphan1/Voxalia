@@ -98,6 +98,7 @@ void main()
 	vec4 color = tcolor;
 	fcolor = color;
 	float opacity_mod = 1.0;
+	vec3 eye_rel = normalize(f.position.xyz);
 #if MCM_LIT
 	fcolor = vec4(0.0);
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - 1.0;
@@ -119,7 +120,6 @@ void main()
 	float light_min = clamp(minimum_light + dets.a, 0.0, 1.0);
 	color = vec4(color.xyz * f.color.xyz, color.w);
 	vec4 bambient = (vec4(light_details[3][0], light_details[3][1], light_details[3][2], 1.0) + vec4(light_min, light_min, light_min, 0.0)) / lightc;
-	vec3 eye_pos = vec3(light_details2[0][0], light_details2[0][1], light_details2[0][2]);
 	vec3 light_pos = vec3(light_details2[1][0], light_details2[1][1], light_details2[1][2]);
 	float exposure = light_details2[2][0];
 	vec3 light_color = vec3(light_details2[0][3], light_details2[2][1], light_details2[2][2]);
@@ -188,7 +188,6 @@ void main()
 #endif // else-good graphics
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 eye_rel = normalize(f.position.xyz - eye_pos);
 	float powered = pow(max(dot(reflect(L, N), eye_rel), 0.0), 128.0);
 	vec3 specular = vec3(powered * specular_albedo * spec);
 	fcolor += vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
@@ -205,21 +204,20 @@ void main()
 	}
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 eye_rel = normalize(f.position.xyz - eye_pos);
 	float powered = pow(max(dot(reflect(L, N), eye_rel), 0.0), 128.0);
 	vec3 specular = vec3(powered * specular_albedo * spec);
 	fcolor += vec4((bambient * color + (vec4(1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten)).xyz, color.w);
 #endif // else-shadows
+	}
+#endif // lit
 	if (rhBlur > 0.0)
 	{
 		vec3 nflat = normalize(f.tbn * vec3(0.0, 0.0, 1.0));
-		float water_side = -dot(eye_rel, nflat) * rhBlur;
-		opacity_mod = 1.0 / (0.5 + water_side);
+		float water_side = min(-dot(eye_rel, nflat), 0.2) * rhBlur;
+		opacity_mod = 1.0 / (0.6 + water_side);
 		//fcolor.xyz += tcolor.xyz * opacity_mod;
 	}
-	}
-#endif // lit
 #if MCM_GOOD_GRAPHICS
     fcolor = vec4(desaturate(fcolor.xyz), 1.0); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
 #endif
