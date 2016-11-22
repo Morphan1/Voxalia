@@ -185,7 +185,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (!Tickers[i].Removed && Tickers[i] is PhysicsEntity)
                 {
-                    ((PhysicsEntity)Tickers[i]).PreTick();
+                    (Tickers[i] as PhysicsEntity).PreTick();
                 }
             }
             for (int i = 0; i < Tickers.Count; i++)
@@ -199,7 +199,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (!Tickers[i].Removed && Tickers[i] is PhysicsEntity)
                 {
-                    ((PhysicsEntity)Tickers[i]).EndTick();
+                    (Tickers[i] as PhysicsEntity).EndTick();
                 }
             }
             for (int i = 0; i < DespawnQuick.Count; i++)

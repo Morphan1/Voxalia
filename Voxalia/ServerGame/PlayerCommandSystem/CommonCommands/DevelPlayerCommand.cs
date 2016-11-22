@@ -74,6 +74,10 @@ namespace Voxalia.ServerGame.PlayerCommandSystem.CommonCommands
                 entry.Player.ViewRadExtra5 = 0;
                 entry.Player.ViewRadExtra5Height = 0;
             }
+            else if (arg0 == "countEnts")
+            {
+                entry.Player.SendMessage(TextChannel.COMMAND_RESPONSE, "Ents: " + entry.Player.TheRegion.Entities.Count);
+            }
             else if (arg0 == "fly")
             {
                 if (entry.Player.IsFlying)

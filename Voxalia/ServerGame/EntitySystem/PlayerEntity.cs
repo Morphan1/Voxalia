@@ -1070,7 +1070,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool ShouldSeePositionPreviously(Location pos)
         {
-            if (pos.IsNaN() || lPos.IsNaN())
+            if (pos.IsNaN())
             {
                 return false;
             }
@@ -1146,6 +1146,11 @@ namespace Voxalia.ServerGame.EntitySystem
         {
             return ChunksAwareOf.ContainsKey(cpos);
         }
+
+        /// <summary>
+        /// This is a temporary lazy way of tracking known entities to prevent double-spawning.
+        /// </summary>
+        public HashSet<long> Known = new HashSet<long>(); // TODO: Scrap this, use CanSeePreviously, etc.
 
         public override void EndTick()
         {
