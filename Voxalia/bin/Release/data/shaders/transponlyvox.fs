@@ -62,9 +62,10 @@ void main()
 	vec4 tcolor = texture(tex, f.texcoord);
 	vec4 dets = texture(htex, f.texcoord);
     float spec = dets.r; // TODO: Refract / reflect?
+	float rhBlur = 0.0;
 	if (f.tcol.w == 0.0 && f.tcol.x == 0.0 && f.tcol.z == 0.0 && f.tcol.y > 0.3 && f.tcol.y < 0.7)
 	{
-		// float rhBlur = (f.tcol.y - 0.31) * ((1.0 / 0.38) * (3.14159 * 2.0));
+		rhBlur = (f.tcol.y - 0.31) * ((1.0 / 0.38) * (3.14159 * 2.0));
 	}
 	else if (f.tcol.w == 0.0 && f.tcol.x > 0.3 && f.tcol.x < 0.7 && f.tcol.y > 0.3 && f.tcol.y < 0.7 && f.tcol.z > 0.3 && f.tcol.z < 0.7)
 	{
@@ -90,12 +91,13 @@ void main()
 	{
 		discard;
 	}
-    if (tcolor.w * f.color.w < 0.01)
+    if (tcolor.w * f.color.w < 0.01 && rhBlur == 0.0)
     {
         discard;
     }
 	vec4 color = tcolor;
 	fcolor = color;
+	float opacity_mod = 1.0;
 #if MCM_LIT
 	fcolor = vec4(0.0);
 	vec3 norms = texture(normal_tex, f.texcoord).xyz * 2.0 - 1.0;
@@ -186,7 +188,9 @@ void main()
 #endif // else-good graphics
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f.position.xyz - eye_pos)), 0.0), 128.0) * specular_albedo * spec);
+	vec3 eye_rel = normalize(f.position.xyz - eye_pos);
+	float powered = pow(max(dot(reflect(L, N), eye_rel), 0.0), 128.0);
+	vec3 specular = vec3(powered * specular_albedo * spec);
 	fcolor += vec4((bambient * color + (vec4(depth, depth, depth, 1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten * depth)).xyz, color.w);
 #else // shadows
@@ -201,16 +205,25 @@ void main()
 	}
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);
-	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(f.position.xyz - eye_pos)), 0.0), 128.0) * specular_albedo * spec);
+	vec3 eye_rel = normalize(f.position.xyz - eye_pos);
+	float powered = pow(max(dot(reflect(L, N), eye_rel), 0.0), 128.0);
+	vec3 specular = vec3(powered * specular_albedo * spec);
 	fcolor += vec4((bambient * color + (vec4(1.0) * atten * (diffuse * vec4(light_color, 1.0)) * color) +
 		(vec4(min(specular, 1.0), 0.0) * vec4(light_color, 1.0) * atten)).xyz, color.w);
 #endif // else-shadows
+	if (rhBlur > 0.0)
+	{
+		vec3 nflat = normalize(f.tbn * vec3(0.0, 0.0, 1.0));
+		float water_side = -dot(eye_rel, nflat) * rhBlur;
+		opacity_mod = 1.0 / (0.5 + water_side);
+		//fcolor.xyz += tcolor.xyz * opacity_mod;
+	}
 	}
 #endif // lit
 #if MCM_GOOD_GRAPHICS
     fcolor = vec4(desaturate(fcolor.xyz), 1.0); // TODO: Make available to all, not just good graphics only! Or a separate CVar!
 #endif
-	fcolor = vec4(fcolor.xyz, tcolor.w * f.color.w);
+	fcolor = vec4(fcolor.xyz, tcolor.w * f.color.w * opacity_mod);
 #if MCM_LL
 	uint page = 0;
 	uint frag = 0;
