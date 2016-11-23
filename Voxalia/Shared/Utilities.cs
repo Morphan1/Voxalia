@@ -25,7 +25,20 @@ namespace Voxalia.Shared
         /// <summary>
         /// A static random object for all non-determistic objects to use.
         /// </summary>
-        public static Random UtilRandom = new Random();
+        public static MTRandom UtilRandom
+        {
+            get
+            {
+                if (intRandom == null)
+                {
+                    intRandom = new MTRandom();
+                }
+                return intRandom;
+            }
+        }
+
+        [ThreadStatic]
+        private static MTRandom intRandom = new MTRandom();
 
         public static SHA512Managed sha512 = new SHA512Managed();
 

@@ -152,6 +152,7 @@
     <Compile Include="Shared\Location.cs" />
     <Compile Include="Shared\Material.cs" />
     <Compile Include="Shared\ModelHandler.cs" />
+    <Compile Include="Shared\MTRandom.cs" />
     <Compile Include="Shared\PingInfo.cs" />
     <Compile Include="Shared\Plane.cs" />
     <Compile Include="Shared\Program.cs" />
