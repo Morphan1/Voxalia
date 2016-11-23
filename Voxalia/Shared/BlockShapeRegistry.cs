@@ -208,6 +208,7 @@ namespace Voxalia.Shared
                 BSSD.Norms[i] = GetNormals(Vector3.Zero, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
                 BSSD.TCrds[i] = GetTCoords(Vector3.Zero, Material.DEBUG, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32).ToArray();
             }
+            FinishParse();
             Damaged = new BlockShapeDetails[4];
             BlockShapeDetails prev = this;
             Damaged[0] = this;
