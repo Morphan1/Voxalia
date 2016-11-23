@@ -12,23 +12,27 @@ namespace Voxalia.Shared
     /// </summary>
     public class MTRandom
     {
-        private const ulong n = 624;
-
         private const ulong lower_mask = 0x7FFFFFFF;
 
         private const ulong upper_mask = ~lower_mask;
 
-        private ulong[] mt = new ulong[n];
+        private ulong[] mt;
 
         private ulong index;
 
         public MTRandom()
-            : this((ulong)DateTime.UtcNow.ToBinary())
+            : this(624, (ulong)DateTime.UtcNow.ToBinary())
         {
         }
 
         public MTRandom(ulong seed)
+            : this(624, seed)
         {
+        }
+
+        public MTRandom(ulong n, ulong seed)
+        {
+            mt = new ulong[n];
             index = n;
             mt[0] = seed;
             for (ulong i = 1; i < n; i++)
@@ -59,6 +63,7 @@ namespace Voxalia.Shared
 
         public ulong NextUL()
         {
+            ulong n = (ulong)mt.Length;
             if (index >= n)
             {
                 for (ulong i = 0; i < n; i++)

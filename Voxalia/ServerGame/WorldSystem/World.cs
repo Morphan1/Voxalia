@@ -65,7 +65,7 @@ namespace Voxalia.ServerGame.WorldSystem
             Seed = Config.GetInt("general.seed", DefaultSeed).Value;
             SpawnPoint = Location.FromString(Config.GetString("general.spawnpoint", DefaultSpawnPoint));
             Flat = Config.GetString("general.flat", "false").ToString().ToLowerFast() == "true";
-            Random seedGen = new Random(Seed);// TODO: Own random method that doesn't depend on C# impl!
+            MTRandom seedGen = new MTRandom(39, (ulong)Seed);
             Seed2 = (seedGen.Next(SeedMax) - SeedMax / 2);
             Seed3 = (seedGen.Next(SeedMax) - SeedMax / 2);
             Seed4 = (seedGen.Next(SeedMax) - SeedMax / 2);
