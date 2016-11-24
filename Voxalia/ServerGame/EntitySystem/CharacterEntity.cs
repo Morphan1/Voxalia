@@ -470,7 +470,7 @@ namespace Voxalia.ServerGame.EntitySystem
         public bool IsFlying = false;
         public double PreFlyMass = 0;
 
-        public Quaternion PreFlyOrient = Quaternion.Identity; // TODO: Safer default value!
+        public static readonly Quaternion PreFlyOrient = Quaternion.CreateFromAxisAngle(Vector3.UnitX, Math.PI * 0.5);
 
         public virtual void Fly()
         {
@@ -478,13 +478,11 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return;
             }
-            PreFlyOrient = GetOrientation();
+            //PreFlyOrient = GetOrientation();
             PreFlyMass = GetMass();
-            CBody.Body.LocalInertiaTensor = new Matrix3x3();
             IsFlying = true;
             SetMass(0);
             CBody.Body.AngularVelocity = Vector3.Zero;
-            CBody.Body.LocalInertiaTensor = new Matrix3x3();
         }
 
         public virtual void Unfly()
@@ -493,12 +491,12 @@ namespace Voxalia.ServerGame.EntitySystem
             {
                 return;
             }
-            CBody.Body.LocalInertiaTensor = new Matrix3x3();
             SetMass(PreFlyMass);
             IsFlying = false;
+            CBody.Body.LocalInertiaTensorInverse = new Matrix3x3();
+            SysConsole.Output(OutputType.INFO, "PFI: " + PreFlyOrient);
             CBody.Body.Orientation = PreFlyOrient;
             CBody.Body.AngularVelocity = Vector3.Zero;
-            CBody.Body.LocalInertiaTensor = new Matrix3x3();
         }
 
         public Stance DesiredStance = Stance.Standing;

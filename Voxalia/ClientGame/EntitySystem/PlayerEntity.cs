@@ -41,7 +41,7 @@ namespace Voxalia.ClientGame.EntitySystem
     {
         public YourStatusFlags ServerFlags = YourStatusFlags.NONE;
 
-        public Quaternion PreFlyOrient = Quaternion.Identity; // TODO: Safer default value!
+        public static readonly Quaternion PreFlyOrient = Quaternion.CreateFromAxisAngle(Vector3.UnitX, Math.PI * 0.5);
 
         public void Fly()
         {
@@ -51,13 +51,9 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             IsFlying = true;
             PreFlyMass = GetMass();
-            PreFlyOrient = GetOrientation();
-            CBody.Body.LocalInertiaTensor = new Matrix3x3();
-            NMTWOCBody.Body.LocalInertiaTensor = new Matrix3x3();
+            //PreFlyOrient = GetOrientation();
             SetMass(0);
             NMTWOCBody.Body.Mass = 0;
-            CBody.Body.LocalInertiaTensor = new Matrix3x3();
-            NMTWOCBody.Body.LocalInertiaTensor = new Matrix3x3();
             CBody.Body.AngularVelocity = Vector3.Zero;
             NMTWOCBody.Body.AngularVelocity = Vector3.Zero;
         }
@@ -69,12 +65,10 @@ namespace Voxalia.ClientGame.EntitySystem
                 return;
             }
             IsFlying = false;
-            CBody.Body.LocalInertiaTensor = new Matrix3x3();
-            NMTWOCBody.Body.LocalInertiaTensor = new Matrix3x3();
             SetMass(PreFlyMass);
+            CBody.Body.LocalInertiaTensorInverse = new Matrix3x3();
+            NMTWOCBody.Body.LocalInertiaTensorInverse = new Matrix3x3();
             NMTWOCBody.Body.Mass = PreFlyMass;
-            CBody.Body.LocalInertiaTensor = new Matrix3x3();
-            NMTWOCBody.Body.LocalInertiaTensor = new Matrix3x3();
             CBody.Body.Orientation = PreFlyOrient;
             CBody.Body.AngularVelocity = Vector3.Zero;
             NMTWOCBody.Body.Orientation = PreFlyOrient;
