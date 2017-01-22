@@ -31,6 +31,7 @@ namespace Voxalia.Shared
         PAINT_BOMB = 15,
         MUSIC_BLOCK = 16,
         HELICOPTER = 17,
-        PLANE = 18
+        PLANE = 18,
+        HOVER_MESSAGE = 19
     }
 }

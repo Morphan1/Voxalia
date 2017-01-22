@@ -198,8 +198,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
             r_depth++;
             if (r_depth >= 100 && Text != "{{Recursion error}}")
             {
-                r_depth--;
                 DrawColoredText("{{Recursion error}}", Position);
+                r_depth--;
                 return;
             }
             Text = Text.Replace("^B", bcolor);
@@ -531,6 +531,8 @@ namespace Voxalia.ClientGame.GraphicsSystems
 
         TextVBO VBO;
 
+        const double RAND_DIV = 40.0;
+
         /// <summary>
         /// Semi-internal rendering of text strings.
         /// </summary>
@@ -559,7 +561,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     Color tcol = ColorFor(color, trans);
                     if (random)
                     {
-                        tcol = ColorFor(Utilities.UtilRandom.Next(colors.Length), trans);
+                        double tempR = SimplexNoise.Generate((X + nX) / RAND_DIV + Client.Central.GlobalTickTimeLocal * 0.4, Y / RAND_DIV);
+                        double tempG = SimplexNoise.Generate((X + nX) / RAND_DIV + Client.Central.GlobalTickTimeLocal * 0.4, Y / RAND_DIV + 7.6f);
+                        double tempB = SimplexNoise.Generate((X + nX) / RAND_DIV + Client.Central.GlobalTickTimeLocal * 0.4, Y / RAND_DIV + 18.42f);
+                        tcol = Color.FromArgb((int)(tempR * 255), (int)(tempG * 255), (int)(tempB * 255));
                     }
                     else if (pseudo)
                     {
@@ -580,7 +585,15 @@ namespace Voxalia.ClientGame.GraphicsSystems
                         iX = Utilities.UtilRandom.Next(-1, 1);
                         iY = Utilities.UtilRandom.Next(-1, 1);
                     }
-                    font.DrawSingleCharacter(chr, X + iX + nX, Y + iY, flip, VBO, new Vector4((float)tcol.R / 255f, (float)tcol.G / 255f, (float)tcol.B / 255f, (float)tcol.A / 255f));
+                    Vector4 col = new Vector4((float)tcol.R / 255f, (float)tcol.G / 255f, (float)tcol.B / 255f, (float)tcol.A / 255f);
+                    if (flip)
+                    {
+                        font.DrawSingleCharacterFlipped(chr, X + iX + nX, Y + iY, VBO, col);
+                    }
+                    else
+                    {
+                        font.DrawSingleCharacter(chr, X + iX + nX, Y + iY, VBO, col);
+                    }
                     nX += font.RectForSymbol(text[z]).Width;
                 }
                 return nX;
@@ -838,8 +851,7 @@ namespace Voxalia.ClientGame.GraphicsSystems
         /// <param name="c">The color to use.</param>
         public void DrawRectangle(float X, float Y, float width, float height, GLFont font, Color c)
         {
-            VBO.AddQuad(new Vector2(X, Y), new Vector2(X + width, Y + height),
-                new Vector2(2f / Engine.GLFonts.bwidth, 2f / Engine.GLFonts.bheight), new Vector2(4f / Engine.GLFonts.bwidth, 4f / Engine.GLFonts.bheight),
+            VBO.AddQuad(X, Y,X + width, Y + height, 2f / Engine.GLFonts.bwidth, 2f / Engine.GLFonts.bheight, 4f / Engine.GLFonts.bwidth, 4f / Engine.GLFonts.bheight,
                 new Vector4((float)c.R / 255f, (float)c.G / 255f, (float)c.B / 255f, (float)c.A / 255f), font.TexZ);
         }
 

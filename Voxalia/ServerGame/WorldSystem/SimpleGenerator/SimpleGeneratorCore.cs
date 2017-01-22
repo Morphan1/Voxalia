@@ -406,7 +406,8 @@ namespace Voxalia.ServerGame.WorldSystem.SimpleGenerator
                         Stopwatch sw = new Stopwatch();
                         sw.Start();
 #endif
-                        Random spotr = new Random((int)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000)); // TODO: Improve!
+                        // TODO: Scrap this or change the logic?
+                        MTRandom spotr = new MTRandom(39, (ulong)(SimplexNoise.Generate(seed2 + cx, Seed + cy) * 1000 * 1000)); // TODO: Improve!
                         if (spotr.Next(300) == 1) // TODO: Efficiency! // TODO: Biome based chance!
                         {
                             // TODO: Different trees per biome!

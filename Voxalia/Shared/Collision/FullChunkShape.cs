@@ -34,27 +34,39 @@ namespace Voxalia.Shared.Collision
 
         public static Vector3i[] ReachStarts = new Vector3i[]
         {
-            new Vector3i(0, 0, 1),
-            new Vector3i(0, 0, 1),
-            new Vector3i(0, 0, 1),
-            new Vector3i(0, 0, 1),
-            new Vector3i(0, 0, 1),
-            new Vector3i(1, 0, 0),
-            new Vector3i(1, 0, 0),
-            new Vector3i(1, 0, 0),
-            new Vector3i(0, 1, 0)
+            new Vector3i(0, 0, 1),//ZP_ZM = 0,
+            new Vector3i(0, 0, 1),//ZP_XP = 1,
+            new Vector3i(0, 0, 1),//ZP_YP = 2,
+            new Vector3i(0, 0, 1),//ZP_XM = 3,
+            new Vector3i(0, 0, 1),//ZP_YM = 4,
+            new Vector3i(0, 0, 1),//ZM_XP = 5,
+            new Vector3i(0, 0, -1),//ZM_YP = 6,
+            new Vector3i(0, 0, -1),//ZM_XM = 7,
+            new Vector3i(0, 0, -1),//ZM_YM = 8,
+            new Vector3i(1, 0, 0),//XP_YP = 9,
+            new Vector3i(1, 0, 0),//XP_YM = 10,
+            new Vector3i(1, 0, 0),//XP_XM = 11,
+            new Vector3i(-1, 0, 0),//XM_YP = 12,
+            new Vector3i(-1, 0, 0),//XM_YM = 13,
+            new Vector3i(0, 1, 0)//YP_YM = 14
         };
         public static Vector3i[] ReachEnds = new Vector3i[]
         {
-            new Vector3i(0, 0, -1),
-            new Vector3i(-1, 0, 0),
-            new Vector3i(1, 0, 0),
-            new Vector3i(0, 1, 0),
-            new Vector3i(0, -1, 0),
-            new Vector3i(-1, 0, 0),
-            new Vector3i(0, 1, 0),
-            new Vector3i(0, -1, 0),
-            new Vector3i(0, -1, 0)
+            new Vector3i(0, 0, -1),//ZP_ZM = 0,
+            new Vector3i(1, 0, 0),//ZP_XP = 1,
+            new Vector3i(0, 1, 0),//ZP_YP = 2,
+            new Vector3i(-1, 0, 0),//ZP_XM = 3,
+            new Vector3i(0, -1, 0),//ZP_YM = 4,
+            new Vector3i(1, 0, 0),//ZM_XP = 5,
+            new Vector3i(0, 1, 0),//ZM_YP = 6,
+            new Vector3i(-1, 0, 0),//ZM_XM = 7,
+            new Vector3i(0, -1, 0),//ZM_YM = 8,
+            new Vector3i(0, 1, 0),//XP_YP = 9,
+            new Vector3i(0, -1, 0),//XP_YM = 10,
+            new Vector3i(-1, 0, 0),//XP_XM = 11,
+            new Vector3i(0, 1, 0),//XM_YP = 12,
+            new Vector3i(0, -1, 0),//XM_YM = 13,
+            new Vector3i(0, -1, 0)//YP_YM = 14
         };
 
         static Vector3i[] MoveDirs = new Vector3i[] { new Vector3i(-1, 0, 0), new Vector3i(1, 0, 0),
@@ -96,11 +108,11 @@ namespace Voxalia.Shared.Collision
                 high = new Vector3i(CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE);
             }
             bool[] traced = new bool[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
-            for (int x = low.X; x <= high.X; x++)
+            for (int x = low.X; x < high.X; x++)
             {
-                for (int y = low.Y; y <= high.Y; y++)
+                for (int y = low.Y; y < high.Y; y++)
                 {
-                    for (int z = low.Z; z <= high.Z; z++)
+                    for (int z = low.Z; z < high.Z; z++)
                     {
                         if (PointCanReach(new Vector3i(x, y, z), enorm, traced))
                         {
@@ -119,7 +131,6 @@ namespace Voxalia.Shared.Collision
             while (toTrace.Count > 0)
             {
                 Vector3i tp = toTrace.Dequeue();
-                traced[BlockIndex(tp.X, tp.Y, tp.Z)] = true;
                 for (int i = 0; i < MoveDirs.Length; i++)
                 {
                     Vector3i np = tp + MoveDirs[i];
@@ -133,9 +144,12 @@ namespace Voxalia.Shared.Collision
                         }
                         continue;
                     }
-                    if (!traced[BlockIndex(tp.X, tp.Y, tp.Z)] && !Blocks[BlockIndex(np.X, np.Y, np.Z)].IsOpaque())
+                    int id = BlockIndex(np.X, np.Y, np.Z);
+                    int id2 = BlockIndex(tp.X, tp.Y, tp.Z);
+                    if (!traced[BlockIndex(tp.X, tp.Y, tp.Z)] && !Blocks[id].IsOpaque())
                     {
                         toTrace.Enqueue(np);
+                        traced[id] = true;
                     }
                 }
             }

@@ -90,7 +90,7 @@ void main()
 	if (minimum_light > 0.99)
 	{
 		fcolor += vec4(color.xyz / lightc, color.w);
-		return;
+		continue;
 	}
 	vec4 bambient = (vec4(light_details[3][0], light_details[3][1], light_details[3][2], 1.0)
 		+ vec4(minimum_light, minimum_light, minimum_light, 0.0)) / lightc;
@@ -125,8 +125,8 @@ void main()
 		|| fs.y < 0.0 || fs.y > 1.0
 		|| fs.z < 0.0 || fs.z > 1.0)
 	{
-		fcolor += vec4(0.0, 0.0, 0.0, color.w);
-		return;
+		//fcolor += vec4(0.0, 0.0, 0.0, color.w);
+		continue;
 	}
 #if MCM_GOOD_GRAPHICS
 	vec2 dz_duv;
@@ -174,7 +174,7 @@ void main()
 		|| fs.z < 0.0 || fs.z > 1.0)
 	{
 		fcolor += vec4(0.0, 0.0, 0.0, color.w);
-		return;
+		continue;
 	}
 	vec3 L = light_path / light_length;
 	vec4 diffuse = vec4(max(dot(N, -L), 0.0) * diffuse_albedo, 1.0);

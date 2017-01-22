@@ -297,8 +297,8 @@ namespace Voxalia.ServerGame.ItemSystem
             int datum = 0;
             double temperature = 0;
             System.Drawing.Color color = System.Drawing.Color.White;
-            bool renderComp;
-            Location renderCompOffs;
+            bool renderComp = true;
+            Location renderCompOffs = Location.Zero;
             foreach (KeyValuePair<string, string> pair in pairs)
             {
                 string tkey = UnescapeTagBase.Unescape(pair.Key);
@@ -392,6 +392,8 @@ namespace Voxalia.ServerGame.ItemSystem
                     item.Components.Add(FromString(tserver, dat));
                 }
             }
+            item.RenderAsComponent = renderComp;
+            item.ComponentRenderOffset = renderCompOffs;
             return item;
         }
 

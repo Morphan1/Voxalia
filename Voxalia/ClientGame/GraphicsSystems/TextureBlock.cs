@@ -232,10 +232,10 @@ namespace Voxalia.ClientGame.GraphicsSystems
                 {
                     for (int y = 0; y < TWidth; y++)
                     {
-                        ptr[(x * 4) + y * stride + 0] = ptr4[(x * 4) + y * stride];
-                        ptr[(x * 4) + y * stride + 1] = ptr1[(x * 4) + y * stride];
-                        ptr[(x * 4) + y * stride + 2] = ptr2[(x * 4) + y * stride];
-                        ptr[(x * 4) + y * stride + 3] = ptr3[(x * 4) + y * stride];
+                        ptr[(x * 4) + y * stride + 0] = ptr1[(x * 4) + y * stride];
+                        ptr[(x * 4) + y * stride + 1] = ptr2[(x * 4) + y * stride];
+                        ptr[(x * 4) + y * stride + 2] = ptr3[(x * 4) + y * stride];
+                        ptr[(x * 4) + y * stride + 3] = ptr4[(x * 4) + y * stride];
                     }
                 }
                 combined.UnlockBits(bdat);

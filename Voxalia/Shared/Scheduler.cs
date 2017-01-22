@@ -9,67 +9,52 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
+using Voxalia.Shared.LockedLinkedList;
 
 namespace Voxalia.Shared
 {
     public class Scheduler
     {
-        public LinkedList<SyncScheduleItem> Tasks = new LinkedList<SyncScheduleItem>();
-
-        Object Locker = new Object();
-
+        public LockedLinkedList<SyncScheduleItem> Tasks = new LockedLinkedList<SyncScheduleItem>();
+        
         public SyncScheduleItem GetSyncTask(Action act, double delay = 0)
         {
             return new SyncScheduleItem() { MyAction = act, Time = delay, OwningEngine = this };
         }
 
-        public void DescheduleSyncTask(SyncScheduleItem item)
-        {
-            lock (Locker)
-            {
-                Tasks.Remove(item);
-            }
-        }
-
         public SyncScheduleItem ScheduleSyncTask(Action act, double delay = 0)
         {
             SyncScheduleItem item = new SyncScheduleItem() { MyAction = act, Time = delay, OwningEngine = this };
-            lock (Locker)
-            {
-                Tasks.AddLast(item);
-            }
+            Tasks.AddAtEnd(item);
             return item;
         }
 
         public void RunAllSyncTasks(double time)
         {
-            lock (Locker)
+            LockedLinkedListNode<SyncScheduleItem> node = Tasks.First;
+            while (node != null)
             {
-                LinkedListNode<SyncScheduleItem> node = Tasks.First;
-                while (node != null)
+                node.Data.Time -= time;
+                if (node.Data.Time > 0)
                 {
-                    node.Value.Time -= time;
-                    if (node.Value.Time > 0)
-                    {
-                        node = node.Next;
-                        continue;
-                    }
-                    try
-                    {
-                        node.Value.MyAction.Invoke();
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex is ThreadAbortException)
-                        {
-                            throw ex;
-                        }
-                        SysConsole.Output("Handling sync task", ex);
-                    }
-                    LinkedListNode<SyncScheduleItem> torem = node;
                     node = node.Next;
-                    Tasks.Remove(torem); // TODO: Why would this error around shutdown time?
+                    continue;
                 }
+                try
+                {
+                    node.Data.MyAction.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    if (ex is ThreadAbortException)
+                    {
+                        throw ex;
+                    }
+                    SysConsole.Output("Handling sync task", ex);
+                }
+                LockedLinkedListNode<SyncScheduleItem> torem = node;
+                node = node.Next;
+                Tasks.Remove(torem);
             }
         }
 

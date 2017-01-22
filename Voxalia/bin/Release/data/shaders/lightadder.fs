@@ -30,6 +30,7 @@ out vec4 color; // The color to add to the lighting texture
 
 void main() // Let's put all code in main, why not...
 {
+	//color = texture(shadowtex, vec3(f.texcoord, 2.0));return;
 	vec3 res_color = vec3(0.0);
 	float aff = 0.0;
 	// Gather all the texture information.
@@ -126,10 +127,10 @@ void main() // Let's put all code in main, why not...
 #endif
 	vec3 L = light_path / light_length; // Get the light's movement direction as a vector
 	vec3 diffuse = max(dot(N, -L), 0.0) * vec3(diffuse_albedo) * HDR_Mod; // Find out how much diffuse light to apply
-	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), (200.0 / 1000.0) * 1000.0) * specular_albedo * renderhint.x) * HDR_Mod; // Find out how much specular light to apply.
+	vec3 specular = vec3(pow(max(dot(reflect(L, N), normalize(position - eye_pos)), 0.0), 200.0) * specular_albedo * renderhint.x) * HDR_Mod; // Find out how much specular light to apply.
 	res_color += (vec3(depth, depth, depth) * atten * (diffuse * light_color) * diffuset.xyz) + (min(specular, 1.0) * light_color * atten * depth); // Put it all together now.
 	aff += atten;
 	}
 	res_color += (ambient + vec3(renderhint.z)) * HDR_Mod * diffuset.xyz; // Add ambient light.
-	color = vec4(res_color, diffuset.w + aff + renderhint.z); // I don't know why alpha value this became necessary.
+	color = vec4(res_color, diffuset.w + aff + renderhint.z); // I don't know why this alpha value became necessary.
 }

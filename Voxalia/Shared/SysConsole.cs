@@ -62,8 +62,8 @@ namespace Voxalia.Shared
             try
             {
                 DateTime DT = DateTime.Now;
-                string logfolder = Environment.CurrentDirectory + "/logs/" + DT.Year + "/" + DT.Month + "/";
-                string logfile = logfolder + DT.Day + "_" + Process.GetCurrentProcess().Id + ".log";
+                string logfolder = Environment.CurrentDirectory + "/logs/" + Utilities.Pad(DT.Year.ToString(), '0', 4) + "/" + Utilities.Pad(DT.Month.ToString(), '0', 2) + "/";
+                string logfile = logfolder + Utilities.Pad(DT.Day.ToString(), '0', 2) + "_" + Utilities.Pad(DT.Hour.ToString(), '0', 2) + "_" + Utilities.Pad(DT.Minute.ToString(), '0', 2) + "_" + Process.GetCurrentProcess().Id + ".log";
                 Directory.CreateDirectory(logfolder);
                 FSOUT = File.OpenWrite(logfile);
             }

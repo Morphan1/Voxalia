@@ -12,6 +12,14 @@ namespace Voxalia.Shared
 {
     /// <summary>
     /// Internal representation of a single block's data.
+    /// Structure:
+    /// 14 bits: Material
+    /// 2 bits: block damage
+    /// 8 bits: shape ('data')
+    /// 6 bits: paint
+    /// 1 bit: blockShareTexture
+    /// 1 bit: --UNUSED--
+    /// 8 bits: local data
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack=1)]
     public struct BlockInternal
@@ -124,11 +132,11 @@ namespace Voxalia.Shared
         {
             get
             {
-                return (byte)(_BlockPaintInternal & 127);
+                return (byte)(_BlockPaintInternal & 63);
             }
             set
             {
-                _BlockPaintInternal = (byte)(value | (BlockShareTex ? 128 : 0));
+                _BlockPaintInternal = (byte)(value | (BlockShareTex ? 64 : 0));
             }
         }
 
@@ -140,11 +148,11 @@ namespace Voxalia.Shared
         {
             get
             {
-                return (_BlockPaintInternal & 128) == 128;
+                return (_BlockPaintInternal & 64) == 64;
             }
             set
             {
-                _BlockPaintInternal = (byte)(BlockPaint | (value ? 128 : 0));
+                _BlockPaintInternal = (byte)(BlockPaint | (value ? 64 : 0));
             }
         }
         

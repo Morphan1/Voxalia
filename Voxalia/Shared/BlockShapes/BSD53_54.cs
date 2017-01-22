@@ -23,6 +23,7 @@ namespace Voxalia.Shared.BlockShapes
             UpperCoordinate = high;
             ZTop = zhigh;
             BackTextureAllowed = false;
+            CanSubdiv = false;
         }
         
         public override List<Vector3> GetVertices(Vector3 pos, bool XP, bool XM, bool YP, bool YM, bool TOP, bool BOTTOM)

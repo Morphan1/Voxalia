@@ -41,6 +41,8 @@ namespace Voxalia.ClientGame.EntitySystem
     {
         public YourStatusFlags ServerFlags = YourStatusFlags.NONE;
 
+        public static readonly Quaternion PreFlyOrient = Quaternion.CreateFromAxisAngle(Vector3.UnitX, Math.PI * 0.5);
+
         public void Fly()
         {
             if (IsFlying)
@@ -49,8 +51,11 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             IsFlying = true;
             PreFlyMass = GetMass();
+            //PreFlyOrient = GetOrientation();
             SetMass(0);
             NMTWOCBody.Body.Mass = 0;
+            CBody.Body.AngularVelocity = Vector3.Zero;
+            NMTWOCBody.Body.AngularVelocity = Vector3.Zero;
         }
 
         public void Unfly()
@@ -61,7 +66,13 @@ namespace Voxalia.ClientGame.EntitySystem
             }
             IsFlying = false;
             SetMass(PreFlyMass);
+            CBody.Body.LocalInertiaTensorInverse = new Matrix3x3();
+            NMTWOCBody.Body.LocalInertiaTensorInverse = new Matrix3x3();
             NMTWOCBody.Body.Mass = PreFlyMass;
+            CBody.Body.Orientation = PreFlyOrient;
+            CBody.Body.AngularVelocity = Vector3.Zero;
+            NMTWOCBody.Body.Orientation = PreFlyOrient;
+            NMTWOCBody.Body.AngularVelocity = Vector3.Zero;
         }
 
         public Location ServerLocation = new Location(0, 0, 0);
@@ -625,6 +636,31 @@ namespace Voxalia.ClientGame.EntitySystem
             {
                 Direction.Pitch = -89.9f;
             }
+            if (TheClient.VR != null)
+            {
+                OpenTK.Quaternion oquat = TheClient.VR.HeadMatRot.ExtractRotation(true);
+                Quaternion quat = new Quaternion(oquat.X, oquat.Y, oquat.Z, oquat.W);
+                Vector3 face = -Quaternion.Transform(Vector3.UnitZ, quat);
+                Direction = Utilities.VectorToAngles(new Location(face));
+                //OpenTK.Vector3 headSpot = TheClient.VR.BasicHeadMat.ExtractTranslation();
+                if (TheClient.VR.Left != null && TheClient.VR.Left.Trigger > 0.01f)
+                {
+                    OpenTK.Quaternion loquat = TheClient.VR.Left.Position.ExtractRotation(true);
+                    Quaternion lquat = new Quaternion(loquat.X, loquat.Y, loquat.Z, loquat.W);
+                    Vector3 lforw = -Quaternion.Transform(Vector3.UnitZ, lquat);
+                    Location ldir = Utilities.VectorToAngles(new Location(lforw));
+                    double goalyaw = ldir.Yaw - Direction.Yaw;
+                    Vector2 resmove = new Vector2(Math.Sin(goalyaw * Utilities.PI180), Math.Cos(goalyaw * Utilities.PI180));
+                    double len = resmove.Length();
+                    SprintOrWalk = (float)(len * 2.0 - 1.0);
+                    if (len > 1.0)
+                    {
+                        resmove /= len;
+                    }
+                    XMove = -(float)resmove.X;
+                    YMove = (float)resmove.Y;
+                }
+            }
             TryToJump();
             UpdateLocalMovement();
             SetMoveSpeed(CBody, lUIS);
@@ -769,15 +805,19 @@ namespace Voxalia.ClientGame.EntitySystem
             return GetPosition();
         }
 
+        // TODO: Merge with base.Render() as much as possible!
         public override void Render()
         {
             Location renderrelpos = GetWeldSpot();
             TheClient.SetEnts();
-            // TODO: Merge with base.Render() as much as possible!
             if (TheClient.CVars.n_debugmovement.ValueB)
             {
                 TheClient.Rendering.RenderLine(ServerLocation, renderrelpos);
                 TheClient.Rendering.RenderLineBox(ServerLocation + new Location(-0.2), ServerLocation + new Location(0.2));
+            }
+            if (TheClient.VR != null)
+            {
+                return;
             }
             OpenTK.Matrix4d mat = OpenTK.Matrix4d.Scale(1.5f)
                 * OpenTK.Matrix4d.CreateRotationZ((Direction.Yaw * Utilities.PI180))
@@ -857,6 +897,10 @@ namespace Voxalia.ClientGame.EntitySystem
 
         public Location GetCameraPosition()
         {
+            if (TheClient.VR != null)
+            {
+                return GetBasicEyePos();
+            }
             if (!InVehicle || Vehicle == null || TheClient.CVars.g_firstperson.ValueB)
             {
                 return GetEyePosition();

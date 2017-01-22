@@ -14,6 +14,7 @@ using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.CollisionShapes;
 using BEPUutilities;
 using FreneticScript;
+using Voxalia.Shared.ModelManagement;
 
 namespace Voxalia.Shared
 {
@@ -111,13 +112,27 @@ namespace Voxalia.Shared
             BSD[127] = new BSD52a127(0f, 1f, 1f);
             // ...
             // Final setup
+            int[] DB_TID = MaterialHelpers.ALL_MATS[(int)Material.DEBUG].TID;
+            int lim = 0;
+            for (int i = 0; i < DB_TID.Length; i++)
+            {
+                if (DB_TID[i] > lim)
+                {
+                    lim = DB_TID[i];
+                }
+            }
+            int[] rlok = new int[lim + 1];
+            for (int i = 0; i < DB_TID.Length; i++)
+            {
+                rlok[DB_TID[i]] = i;
+            }
             for (int i = 0; i < 256; i++)
             {
                 if (i > 0 && BSD[i] is BSD0)
                 {
                     continue;
                 }
-                BSD[i].Preparse();
+                BSD[i].Preparse(rlok);
             }
         }
 
@@ -150,7 +165,7 @@ namespace Voxalia.Shared
     {
         public List<Vector3>[] Verts = new List<Vector3>[64];
         public List<Vector3>[] Norms = new List<Vector3>[64];
-        public List<Vector3>[] TCrds = new List<Vector3>[64];
+        public Vector3[][] TCrds = new Vector3[64][];
     }
 
     /// <summary>
@@ -182,30 +197,150 @@ namespace Voxalia.Shared
 
         public BlockShapeSubDetails BSSD = new BlockShapeSubDetails();
 
-        public void Preparse()
+        public BlockDamage DamageMode = BlockDamage.NONE;
+
+        public void Preparse(int[] rlok)
         {
+            DB_RLOK = rlok;
             for (int i = 0; i < 64; i++)
             {
                 BSSD.Verts[i] = GetVertices(Vector3.Zero, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
                 BSSD.Norms[i] = GetNormals(Vector3.Zero, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
-                BSSD.TCrds[i] = GetTCoords(Vector3.Zero, Material.DEBUG, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32);
+                BSSD.TCrds[i] = GetTCoords(Vector3.Zero, Material.DEBUG, (i & 1) == 1, (i & 2) == 2, (i & 4) == 4, (i & 8) == 8, (i & 16) == 16, (i & 32) == 32).ToArray();
+            }
+            FinishParse();
+            Damaged = new BlockShapeDetails[4];
+            BlockShapeDetails prev = this;
+            Damaged[0] = this;
+            for (int i = 1; i < Damaged.Length; i++)
+            {
+                Damaged[i] = (BlockShapeDetails)prev.MemberwiseClone();
+                Damaged[i].DamageMode = (BlockDamage)i;
+                Damaged[i].Damage();
+                Damaged[i].FinishParse();
+                prev = Damaged[i];
             }
         }
 
-        public Vector3[] GetTCoordsQuick(int index, Material mat)
+        public void FinishParse()
         {
-            List<Vector3> set = BSSD.TCrds[index];
-            Vector3[] vecs = new Vector3[set.Count];
-            for (int i = 0; i < set.Count; i++)
+            Location offset;
+            BEPUphysics.CollisionShapes.EntityShape es = GetShape(DamageMode, out offset, false);
+            Coll = es.GetCollidableInstance();
+            Coll.LocalPosition = -offset.ToBVector();
+        }
+
+        private void Damage()
+        {
+            if (!CanSubdiv)
             {
-                Vector3 temp = set[i];
-                for (int z = 0; z < 6; z++)
+                return;
+            }
+            if ((int)DamageMode > 1)
+            {
+                return; // Placeholder until simplify is added.
+            }
+            Subdivide();
+        }
+
+        public bool CanSubdiv = true;
+
+        private void Subdivide()
+        {
+            // TODO: Save TCs and work with them properly.
+            Shape p = new Shape();
+            Dictionary<Location, Point> ps = new Dictionary<Location, Point>();
+            for (int i = 0; i < BSSD.Verts[0].Count; i++)
+            {
+                Location t = new Location(BSSD.Verts[0][i]);
+                if (!ps.ContainsKey(t))
                 {
-                    if (temp.Z == Material.DEBUG.TextureID((MaterialSide)z))
+                    ps.Add(t, new Point(BSSD.Verts[0][i]));
+                }
+            }
+            for (int i = 0; i < BSSD.Verts[0].Count; i += 3)
+            {
+                Point a = ps[new Location(BSSD.Verts[0][i])];
+                Point b = ps[new Location(BSSD.Verts[0][i + 1])];
+                Point c = ps[new Location(BSSD.Verts[0][i + 2])];
+                if (i + 3 < BSSD.Verts[0].Count)
+                {
+                    Point a2 = ps[new Location(BSSD.Verts[0][i + 3])];
+                    Point b2 = ps[new Location(BSSD.Verts[0][i + 4])];
+                    Point c2 = ps[new Location(BSSD.Verts[0][i + 5])];
+                    bool ac = a2 == a || a2 == b || a2 == c;
+                    bool bc = b2 == a || b2 == b || b2 == c;
+                    bool cc = c2 == a || c2 == b || c2 == c;
+                    if (ac && bc && cc)
                     {
-                        temp.Z = mat.TextureID((MaterialSide)z);
+                        SysConsole.Output(OutputType.WARNING, this + " has weird setup: " + a + ", " + b + ", " + c);
+                        p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, c));
+                    }
+                    else if (ac && cc)
+                    {
+                        p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, b2, c));
+                        i += 3;
+                    }
+                    else if (ac && bc)
+                    {
+                        p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, c, c2));
+                        i += 3;
+                    }
+                    else if (bc && cc)
+                    {
+                        p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, c, a2));
+                        i += 3;
+                    }
+                    else
+                    {
+                        p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, c));
                     }
                 }
+                else
+                {
+                    p.AddFace(SubdivisionUtilities.CreateFaceF(p.AllEdges, a, b, c));
+                }
+            }
+            CatmullClarkSubdivider cmcs = new CatmullClarkSubdivider();
+            Shape res = cmcs.Subdivide(p);
+            List<Vector3> vecs = new List<Vector3>();
+            List<Vector3> norms = new List<Vector3>();
+            List<Vector3> Tcs = new List<Vector3>();
+            foreach (Face face in res.Faces)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    vecs.Add(face.AllPoints[i].Position);
+                    norms.Add(face.Normal);
+                    Tcs.Add(new Vector3(0, 0, BSSD.TCrds[0][0].Z));
+                }
+            }
+            BSSD = new BlockShapeSubDetails();
+            Vector3[] tcrds = Tcs.ToArray();
+            for (int i = 0; i < BSSD.Verts.Length; i++)
+            {
+                BSSD.Verts[i] = vecs;
+                BSSD.Norms[i] = norms;
+                BSSD.TCrds[i] = tcrds;
+            }
+        }
+
+        public BlockShapeDetails[] Damaged;
+
+        private int[] DB_RLOK;
+
+        public Vector3[] GetTCoordsQuick(int index, Material mat)
+        {
+            // NOTE: This method is called very often by the client. Any optimization here will be very useful!
+            Vector3[] set = BSSD.TCrds[index];
+            int len = set.Length;
+            Vector3[] vecs = new Vector3[len];
+            Vector3 temp;
+            int[] helper = MaterialHelpers.ALL_MATS[(int)mat].TID;
+            for (int i = 0; i < len; i++)
+            {
+                temp = set[i];
+                temp.Z = helper[DB_RLOK[(int)temp.Z]];
                 vecs[i] = temp;
             }
             return vecs;
@@ -238,6 +373,10 @@ namespace Voxalia.Shared
 
         public virtual EntityShape GetShape(BlockDamage damage, out Location offset, bool shrink)
         {
+            if (damage != DamageMode)
+            {
+                return Damaged[(int)damage].GetShape(damage, out offset, shrink);
+            }
             if ((shrink ? ShrunkBlockShapeCache : BlockShapeCache) != null)
             {
                 offset = (shrink ? ShrunkOffsetCache : OffsetCache);

@@ -12,7 +12,11 @@ layout (location = 6) in vec4 BoneID;
 layout (location = 7) in vec4 Weights2;
 layout (location = 8) in vec4 BoneID2;
 
+#if MCM_GEOM_ACTIVE
 out struct vox_out
+#else
+out struct vox_fout
+#endif
 {
 	vec4 position;
 	vec2 texcoord;

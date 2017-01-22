@@ -4,6 +4,7 @@ Sound=METAL
 Solidity=GAS
 Opaque=false
 FogColor=0.8,0.8,0.8
+FogAlpha=0.5
 BreakTime=0.2
 LightDamage=0.1
 Breaker=NON_BREAKABLE

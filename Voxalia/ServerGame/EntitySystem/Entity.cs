@@ -124,6 +124,11 @@ namespace Voxalia.ServerGame.EntitySystem
             Removed = true;
             TheRegion.DespawnQuick.Add(this);
         }
+
+        public override string ToString()
+        {
+            return "{Entity of type " + GetEntityType() + "/" + GetNetType() + " at " + GetPosition() + " with ID " + EID + "}";
+        }
     }
 
     public abstract class EntityConstructor

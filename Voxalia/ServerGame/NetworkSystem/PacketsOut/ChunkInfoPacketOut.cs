@@ -29,7 +29,7 @@ namespace Voxalia.ServerGame.NetworkSystem.PacketsOut
                 data_orig = new byte[chunk.BlocksInternal.Length * 4];
                 for (int x = 0; x < chunk.BlocksInternal.Length; x++)
                 {
-                    ushort mat = chunk.BlocksInternal[x].BlockMaterial;
+                    ushort mat = chunk.BlocksInternal[x]._BlockMaterialInternal;
                     if (mat != 0)
                     {
                         isAir = false;

@@ -37,7 +37,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
         public string QuickItemUseType;
 
         public Object TickLock = new Object();
-        
+
         /// <summary>
         /// Returns an item in the quick bar.
         /// Can return air.
@@ -149,19 +149,26 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 Schedule.StartASyncTask(SaveCFG);
             }
-            MainWorldView.ShadowSpikeTime = 0;
-            TickSpikeTime = 0;
-            MainWorldView.FBOSpikeTime = 0;
-            MainWorldView.LightsSpikeTime = 0;
-            FinishSpikeTime = 0;
-            TWODSpikeTime = 0;
-            TotalSpikeTime = 0;
+            ops_spike++;
+            if (ops_spike >= 5)
+            {
+                ops_spike = 0;
+                MainWorldView.ShadowSpikeTime = 0;
+                TickSpikeTime = 0;
+                MainWorldView.FBOSpikeTime = 0;
+                MainWorldView.LightsSpikeTime = 0;
+                FinishSpikeTime = 0;
+                TWODSpikeTime = 0;
+                TotalSpikeTime = 0;
+            }
             for (int i = 0; i < (int)NetUsageType.COUNT; i++)
             {
                 Network.UsagesLastSecond[i] = Network.UsagesThisSecond[i];
                 Network.UsagesThisSecond[i] = 0;
             }
         }
+
+        int ops_spike = 0;
 
         Object saveLock = new Object();
 

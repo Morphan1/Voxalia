@@ -132,8 +132,6 @@ namespace Voxalia.ServerGame.WorldSystem
             if (!Flags.HasFlag(ChunkFlags.NEEDS_DETECT))
             {
                 DetectChunkAccess();
-                //chunkAccessDetection = chunkAccessDetection == null ? OwningRegion.TheWorld.Schedule.StartASyncTask(DetectChunkAccess)
-                //    : chunkAccessDetection.ReplaceOrFollowWith(OwningRegion.TheWorld.Schedule.AddASyncTask(DetectChunkAccess));
                 Flags &= ~ChunkFlags.NEEDS_DETECT;
             }
         }
@@ -192,7 +190,7 @@ namespace Voxalia.ServerGame.WorldSystem
         {
             BsonDocument full = new BsonDocument();
             List<BsonValue> ents = new List<BsonValue>();
-            long ts = DateTime.UtcNow.Subtract(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks / TimeSpan.TicksPerSecond; // Seconds after January 1st, 2000.
+            long ts = DateTime.UtcNow.Subtract(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks / TimeSpan.TicksPerSecond; // Seconds after Midnight, January 1st, 2000 (UTC).
             for (int i = 0; i < OwningRegion.Entities.Count; i++)
             {
                 if (OwningRegion.Entities[i].CanSave && Contains(OwningRegion.Entities[i].GetPosition()))

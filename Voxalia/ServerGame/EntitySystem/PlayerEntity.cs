@@ -80,13 +80,10 @@ namespace Voxalia.ServerGame.EntitySystem
             base.SetHealth(config.GetFloat("health", 100).Value);
             if (config.GetString("flying", "false").ToLowerFast() == "true") // TODO: ReadBoolean?
             {
-                base.Fly();
-                //Network.SendPacket(new FlagEntityPacketOut(this, EntityFlag.FLYING, 1));
-                //Network.SendPacket(new FlagEntityPacketOut(this, EntityFlag.MASS, 0));
-            }
-            else
-            {
-                base.Unfly();
+                TheRegion.TheWorld.Schedule.ScheduleSyncTask(() =>
+                {
+                    Fly();
+                }, 0.1);
             }
             SetVelocity(Location.FromString(config.GetString("velocity", "0,0,0")));
             SetPosition(Location.FromString(config.GetString("position", TheRegion.TheWorld.SpawnPoint.ToString())));
@@ -938,7 +935,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public Location posClamp(Location pos)
         {
-            int maxdist = Math.Abs(TheServer.CVars.g_maxdist.ValueI);
+            double maxdist = Math.Abs(TheServer.CVars.g_maxdist.ValueD);
             pos.X = Clamp(pos.X, -maxdist, maxdist);
             pos.Y = Clamp(pos.Y, -maxdist, maxdist);
             pos.Z = Clamp(pos.Z, -maxdist, maxdist);
@@ -1073,7 +1070,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool ShouldSeePositionPreviously(Location pos)
         {
-            if (pos.IsNaN() || lPos.IsNaN())
+            if (pos.IsNaN())
             {
                 return false;
             }
@@ -1150,6 +1147,11 @@ namespace Voxalia.ServerGame.EntitySystem
             return ChunksAwareOf.ContainsKey(cpos);
         }
 
+        /// <summary>
+        /// This is a temporary lazy way of tracking known entities to prevent double-spawning.
+        /// </summary>
+        public HashSet<long> Known = new HashSet<long>(); // TODO: Scrap this, use CanSeePreviously, etc.
+
         public override void EndTick()
         {
             if (UpdateLoadPos)
@@ -1183,7 +1185,7 @@ namespace Voxalia.ServerGame.EntitySystem
 
         public bool CanReach(Location pos)
         {
-            int maxdist = Math.Abs(TheServer.CVars.g_maxdist.ValueI);
+            double maxdist = Math.Abs(TheServer.CVars.g_maxdist.ValueD);
             return Math.Abs(pos.X) < maxdist && Math.Abs(pos.Y) < maxdist && Math.Abs(pos.Z) < maxdist;
         }
 

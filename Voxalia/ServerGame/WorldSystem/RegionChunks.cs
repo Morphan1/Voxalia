@@ -211,9 +211,14 @@ namespace Voxalia.ServerGame.WorldSystem
             Chunk chunk;
             if (LoadedChunks.TryGetValue(cpos, out chunk))
             {
-                while (chunk.LoadSchedule != null)
+                bool pass = false;
+                while (!pass)
                 {
-                    Thread.Sleep(1); // TODO: Handle loading a loading chunk more cleanly.
+                    lock (chunk.GetLocker())
+                    {
+                        pass = chunk.LoadSchedule == null;
+                    }
+                    Thread.Sleep(1); // TODO: Handle loading a still-populating chunk more cleanly.
                 }
                 if (chunk.Flags.HasFlag(ChunkFlags.ISCUSTOM))
                 {
@@ -251,9 +256,12 @@ namespace Voxalia.ServerGame.WorldSystem
                 chunk.LoadSchedule = TheWorld.Schedule.StartASyncTask(() =>
                 {
                     chunk.UnloadTimer = 0;
-                    PopulateChunk(chunk, false, false, true);
+                    PopulateChunk(chunk, false, false);
                     chunk.UnloadTimer = 0;
-                    chunk.LoadSchedule = null;
+                    lock (chunk.GetLocker())
+                    {
+                        chunk.LoadSchedule = null;
+                    }
                     TheWorld.Schedule.ScheduleSyncTask(() =>
                     {
                         chunk.UnloadTimer = 0;
@@ -267,21 +275,11 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 LoadedChunks.Remove(chunk.WorldPosition);
                 ChunkManager.ClearChunkDetails(chunk.WorldPosition);
-                SysConsole.Output(OutputType.ERROR, "non-custom chunk was still loading when grabbed: " + chunk.WorldPosition);
+                SysConsole.Output(OutputType.ERROR, "Non-custom chunk was still loading when grabbed: " + chunk.WorldPosition);
             }
-            chunk.LoadSchedule = TheWorld.Schedule.StartASyncTask(() =>
-            {
-                chunk.UnloadTimer = 0;
-                PopulateChunk(chunk, true, false, true);
-                chunk.UnloadTimer = 0;
-                chunk.LoadSchedule = null;
-                TheWorld.Schedule.ScheduleSyncTask(() =>
-                {
-                    chunk.UnloadTimer = 0;
-                    chunk.AddToWorld();
-                    callback.Invoke(chunk);
-                });
-            });
+            // Chunk is already loaded. Don't touch it!
+            chunk.UnloadTimer = 0;
+            callback.Invoke(chunk);
         }
         
         public void LoadChunk_Background(Vector3i cpos, Action<Chunk> callback = null)
@@ -293,8 +291,13 @@ namespace Voxalia.ServerGame.WorldSystem
                 {
                     TheWorld.Schedule.StartASyncTask(() =>
                     {
-                        while (chunk.LoadSchedule != null)
+                        bool pass = false;
+                        while (!pass)
                         {
+                            lock (chunk.GetLocker())
+                            {
+                                pass = chunk.LoadSchedule == null;
+                            }
                             Thread.Sleep(1); // TODO: Handle loading a loading chunk more cleanly.
                         }
                         TheWorld.Schedule.ScheduleSyncTask(() =>
@@ -316,8 +319,11 @@ namespace Voxalia.ServerGame.WorldSystem
             chunk.LoadSchedule = TheWorld.Schedule.StartASyncTask(() =>
             {
                 chunk.UnloadTimer = 0;
-                PopulateChunk(chunk, true, false, true);
-                chunk.LoadSchedule = null;
+                PopulateChunk(chunk, true, false);
+                lock (chunk.GetLocker())
+                {
+                    chunk.LoadSchedule = null;
+                }
                 TheWorld.Schedule.ScheduleSyncTask(() =>
                 {
                     chunk.UnloadTimer = 0;
@@ -358,21 +364,35 @@ namespace Voxalia.ServerGame.WorldSystem
         public BlockPopulator Generator = new SimpleGeneratorCore();
         public BiomeGenerator BiomeGen = new SimpleBiomeGenerator();
 
-        public bool PopulateChunk(Chunk chunk, bool allowFile, bool fileOnly = false, bool async = false)
+        public bool PopulateChunk(Chunk chunk, bool allowFile, bool fileOnly = false)
         {
             try
             {
                 if (allowFile)
                 {
-                    ChunkDetails dat;
+                    ChunkDetails dat = null;
                     lock (chunk.GetLocker())
                     {
-                        dat = ChunkManager.GetChunkDetails((int)chunk.WorldPosition.X, (int)chunk.WorldPosition.Y, (int)chunk.WorldPosition.Z);
+                        try
+                        {
+                            dat = ChunkManager.GetChunkDetails((int)chunk.WorldPosition.X, (int)chunk.WorldPosition.Y, (int)chunk.WorldPosition.Z);
+                        }
+                        catch (Exception ex)
+                        {
+                            SysConsole.Output("Reading chunk " + chunk.WorldPosition, ex);
+                        }
                     }
-                    ChunkDetails ents;
+                    ChunkDetails ents = null;
                     lock (chunk.GetLocker())
                     {
-                        ents = ChunkManager.GetChunkEntities((int)chunk.WorldPosition.X, (int)chunk.WorldPosition.Y, (int)chunk.WorldPosition.Z);
+                        try
+                        {
+                            ents = ChunkManager.GetChunkEntities((int)chunk.WorldPosition.X, (int)chunk.WorldPosition.Y, (int)chunk.WorldPosition.Z);
+                        }
+                        catch (Exception ex)
+                        {
+                            SysConsole.Output("Reading chunk " + chunk.WorldPosition, ex);
+                        }
                     }
                     if (dat != null)
                     {
@@ -385,7 +405,10 @@ namespace Voxalia.ServerGame.WorldSystem
                         {
                             chunk.Flags &= ~ChunkFlags.POPULATING;
                         }
-                        return true;
+                        if (!chunk.Flags.HasFlag(ChunkFlags.POPULATING))
+                        {
+                            return true;
+                        }
                     }
                 }
             }

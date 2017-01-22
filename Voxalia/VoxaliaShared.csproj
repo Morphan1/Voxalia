@@ -91,6 +91,7 @@
     <Compile Include="PriorityQueue\SimplePriorityQueue.cs" />
     <Compile Include="Shared\BFrustum.cs" />
     <Compile Include="Shared\BlockInternal.cs" />
+    <Compile Include="Shared\ModelManagement\Catmull.cs" />
     <Compile Include="Shared\Collision\FlyingDiscConstraint.cs" />
     <Compile Include="Shared\Collision\MCCMCCPairHandler.cs" />
     <Compile Include="Shared\Collision\Vector2i.cs" />
@@ -114,6 +115,8 @@
     <Compile Include="Shared\Collision\ReusableGenericCollidable.cs" />
     <Compile Include="Shared\Collision\Vector3i.cs" />
     <Compile Include="Shared\LanguageEngine.cs" />
+    <Compile Include="Shared\LockedLinkedList\LockedLinkedList.cs" />
+    <Compile Include="Shared\LockedLinkedList\LockedLinkedListNode.cs" />
     <Compile Include="Shared\Model3D.cs" />
     <Compile Include="Shared\Collision\AABB.cs" />
     <Compile Include="Shared\AnimationEngine.cs" />
@@ -149,6 +152,7 @@
     <Compile Include="Shared\Location.cs" />
     <Compile Include="Shared\Material.cs" />
     <Compile Include="Shared\ModelHandler.cs" />
+    <Compile Include="Shared\MTRandom.cs" />
     <Compile Include="Shared\PingInfo.cs" />
     <Compile Include="Shared\Plane.cs" />
     <Compile Include="Shared\Program.cs" />
@@ -160,6 +164,7 @@
     <Compile Include="Shared\SystemExtensions.cs" />
     <Compile Include="Shared\Utilities.cs" />
     <Compile Include="Shared\Files\ZipStorer.cs" />
+    <Compile Include="Shared\ModelManagement\Simplify.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

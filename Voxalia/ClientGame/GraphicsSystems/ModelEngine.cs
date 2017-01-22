@@ -180,12 +180,11 @@ namespace Voxalia.ClientGame.GraphicsSystems
                     }
                     else
                     {
-                        BEPUutilities.Vector2 texCoord = mesh.TexCoords[i];
-                        modmesh.vbo.TexCoords.Add(new Vector3((float)texCoord.X, 1 - (float)texCoord.Y, 0));
+                        modmesh.vbo.TexCoords.Add(new Vector3((float)mesh.TexCoords[i].X, 1 - (float)mesh.TexCoords[i].Y, 0));
                     }
                     if (!hasn)
                     {
-                        modmesh.vbo.Normals.Add(new Vector3(0, 0, 1));
+                        modmesh.vbo.Normals.Add(new Vector3(0f, 0f, 1f));
                     }
                     else
                     {

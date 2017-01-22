@@ -36,6 +36,7 @@ layout (location = 24) uniform float width = 1280.0; // How wide the screen is.
 layout (location = 25) uniform float height = 720.0; // How tall the screen is.
 layout (location = 26) uniform float time = 0.0; // A timer value, in seconds. Simply used for things that move.
 layout (location = 27) uniform vec2 mot_blur = vec2(0.0); // How much motion blur to apply, and in what direction.
+layout (location = 28) uniform float do_grayscale = 0.0; // Whether to gray-scale the view.
 
 const float HDR_Mod = 5.0; // How much to multiply all lights by to ensure lighting colors are quality.
 const float HDR_Div = (1.0 / HDR_Mod); // The inverse of HDR_Mod, for quick calculation.
@@ -126,7 +127,19 @@ vec4 getColor(in vec2 pos, in float exposure, in float mblen) // Grab the color 
 	if (renderhint.y > 0.01) // If blurring is enabled.
 	{
 		// TODO: Better variation to the blur effect?
-		vec2 psx = normalize(pos - vec2(0.5 + cos(time + renderhint.y), 0.5 + sin(time + renderhint.y))) * 0.02;
+		float depthBasic = linearizeDepth(texture(depthtex, pos).x);
+		float tried = 1.0;
+		vec2 psx = vec2(0.0);
+		while (tried > 0.1)
+		{
+			psx = normalize(pos - vec2(0.5 + cos(time + renderhint.y), 0.5 + sin(time + renderhint.y))) * 0.02 * tried;
+			float depthNew = linearizeDepth(texture(depthtex, pos + psx).z);
+			if (depthNew > depthBasic)
+			{
+				break;
+			}
+			tried *= 0.75;
+		}
 		return getColorInt(pos + psx, exposure) * 0.5 + getColorInt(pos, exposure) * 0.5;
 	}
 #if MCM_MOTBLUR
@@ -173,11 +186,8 @@ void main() // The central entry point of the shader. Handles everything!
 	//vec4 renderhint = texture(renderhinttex, f_texcoord);
 	vec3 renderhint2 = texture(renderhint2tex, f_texcoord).xyz;
 	float dist = linearizeDepth(texture(depthtex, f_texcoord).r); // This is useful for both fog and reflection, so grab it here.
-	// TODO: Fix fog!
-	/*
-	float fogMod = -dist * fogCol.w; // exp( ) ? Original code had exp() and no linearize on the dist value. But that stopped working, and I don't know why.
-	light_color = vec4(light_color.xyz * (1.0 - fogMod) + fogCol.xyz * fogMod, 1.0);
-	*/
+	float fogMod = dist * exp(fogCol.w) * fogCol.w;
+	light_color.xyz = light_color.xyz * (1.0 - fogMod) + fogCol.xyz * fogMod;
 	if (dot(renderhint2, renderhint2) > 0.99) // Apply refraction if set. This is set by having a strong renderhint2 value that has a length-squared of at least 1.0!
 	{
 		vec3 viewDir = texture(positiontex, f_texcoord).xyz - eye_position;
@@ -213,4 +223,9 @@ void main() // The central entry point of the shader. Handles everything!
 	bloom = vec4(0.0);
 #endif
 	color = light_color; // Finally, 'return' (assign the base color value).
+	if (do_grayscale > 0.5) // TODO: define rather than var?
+	{
+		// TODO: Add this effect to transparency shaders?
+		color.xyz = vec3((light_color.x + light_color.y + light_color.z) * 0.3333);
+	}
 }

@@ -19,6 +19,7 @@ using Voxalia.Shared.Collision;
 using Voxalia.ClientGame.AudioSystem;
 using FreneticScript.TagHandlers.Objects;
 using Voxalia.ClientGame.EntitySystem;
+using Voxalia.ClientGame.GraphicsSystems;
 
 namespace Voxalia.ClientGame.CommandSystem.CommonCommands
 {
@@ -142,6 +143,21 @@ namespace Voxalia.ClientGame.CommandSystem.CommonCommands
                                 TheClient.TheRegion.SpawnEntity(fe);
                             }
                         }
+                        break;
+                    }
+                case "lateVR":
+                    {
+                        if (!VRSupport.Available())
+                        {
+                            entry.Info(queue, "Can't load VR. Not available!");
+                            break;
+                        }
+                        if (TheClient.VR != null)
+                        {
+                            entry.Info(queue, "Can't load VR. Already loaded!");
+                            break;
+                        }
+                        TheClient.VR = VRSupport.TryInit(TheClient);
                         break;
                     }
                 default:

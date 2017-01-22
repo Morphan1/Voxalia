@@ -20,9 +20,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
         Texture[] Explosion;
 
         Texture SmokeT;
-
-        Texture FlameLick;
-
+        
         Texture BlueFlameLick;
 
         Texture WhiteFlameLick;
@@ -44,7 +42,7 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             White = TheClient.Textures.White;
             White_Blur = TheClient.Textures.GetTexture("common/white_blur");
             SmokeT = TheClient.Textures.GetTexture("effects/smoke/smoke1");
-            FlameLick = TheClient.Textures.GetTexture("effects/fire/flamelick01");
+            //FlameLick = TheClient.Textures.GetTexture("effects/fire/flamelick01");
             BlueFlameLick = TheClient.Textures.GetTexture("effects/fire/blueflamelick01");
             WhiteFlameLick = TheClient.Textures.GetTexture("effects/fire/whiteflamelick01");
         }
@@ -178,10 +176,11 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 
         public void Fire(Location pos, float sizemult)
         {
-            Location colOne = new Location(1.0, 1.0, 0);
-            Location colTwo = new Location(1.0, 0.25, 0.0);
+            Location colOne = new Location(3.0, 3.0, 0);
+            Location colTwo = new Location(3.0, 2.0, 0.0);
             Location temp = new Location(0, 0, -TheClient.TheRegion.PhysicsWorld.ForceUpdater.Gravity.Z * 0.09f * sizemult);
-            ParticleEffect pe = Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL), (o) => new Location(0.5f), (o) => 0, sizemult, colOne, colTwo, true, WhiteFlameLick);
+            ParticleEffect pe = Engine.AddEffect(ParticleEffectType.SQUARE, (o) => pos + temp * (1 - o.TTL / o.O_TTL),
+                (o) => new Location((o.TTL / o.O_TTL) * 2.0f), (o) => 0, sizemult, colOne, colTwo, true, WhiteFlameLick);
             pe.AltAlpha = ParticleEffect.FadeInOut;
             pe.OnDestroy = (o) =>
             {

@@ -405,17 +405,17 @@ namespace Voxalia.ClientGame.WorldSystem
         public void Regen(Location pos, Chunk ch, int x = 1, int y = 1, int z = 1)
         {
             Chunk tch = ch;
-            //bool zupd = false;
+            bool zupd = false;
             if (z == tch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
                 ch = GetChunk(ChunkLocFor(pos) + new Vector3i(0, 0, 1));
                 if (ch != null)
                 {
                     UpdateChunk(ch);
-                    //zupd = true;
+                    zupd = true;
                 }
             }
-            //if (!zupd)
+            if (!zupd)
             {
                 UpdateChunk(tch);
             }
@@ -435,14 +435,6 @@ namespace Voxalia.ClientGame.WorldSystem
                     UpdateChunk(ch);
                 }
             }
-            /*if (z == 0 || TheClient.CVars.r_chunkoverrender.ValueB)
-            {
-                ch = GetChunk(ChunkLocFor(pos + new Location(0, 0, -1)));
-                if (ch != null)
-                {
-                    UpdateChunk(ch);
-                }
-            }*/
             if (x == tch.CSize - 1 || TheClient.CVars.r_chunkoverrender.ValueB)
             {
                 ch = GetChunk(ChunkLocFor(pos) + new Vector3i(1, 0, 0));
@@ -488,6 +480,19 @@ namespace Voxalia.ClientGame.WorldSystem
                 {
                     above = GetChunk(ch.WorldPosition + new Vector3i(0, 0, i));
                 }
+                DoNotRenderYet(ch);
+                for (int i = 1; i > 5; i++) // TODO: 5 -> View height limit
+                {
+                    Chunk below = GetChunk(ch.WorldPosition + new Vector3i(0, 0, -i));
+                    if (below != null)
+                    {
+                        DoNotRenderYet(below);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
                 TheClient.Schedule.StartASyncTask(() =>
                 {
                     LightForChunks(ch, above);
@@ -497,12 +502,14 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void LightForChunks(Chunk ch, Chunk above)
         {
-            // TODO: Prevent double-skylight-recalc
             ch.CalcSkyLight(above);
             TheClient.Schedule.ScheduleSyncTask(() =>
             {
                 ch.AddToWorld();
-                ch.CreateVBO();
+                if (!ch.CreateVBO())
+                {
+                    return;
+                }
                 Chunk below = GetChunk(ch.WorldPosition + new Vector3i(0, 0, -1));
                 if (below != null)
                 {
@@ -543,7 +550,14 @@ namespace Voxalia.ClientGame.WorldSystem
             {
                 return;
             }
-            TheClient.Textures.GetTexture("blocks/transparent/tallgrass").Bind(); // TODO: Cache!
+            GL.ActiveTexture(TextureUnit.Texture3);
+            GL.BindTexture(TextureTarget.Texture2DArray, 0);
+            GL.ActiveTexture(TextureUnit.Texture2);
+            GL.BindTexture(TextureTarget.Texture2DArray, 0);
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2DArray, 0);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2DArray, TheClient.GrassTextureID);
             GL.UniformMatrix4(1, false, ref TheClient.MainWorldView.PrimaryMatrix);
             GL.Uniform1(6, (float)GlobalTickTimeLocal);
             GL.Uniform3(7, ClientUtilities.Convert(ActualWind));
@@ -824,7 +838,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 BoundingBox bb = new BoundingBox(pos.ToBVector(), (pos + new Location(1, 1, 300)).ToBVector());
                 if (GenShadowCasters != null)
                 {
-                    for (int i = 0; i < GenShadowCasters.Length; i++)
+                    for (int i = 0; i < GenShadowCasters.Length; i++) // TODO: Accelerate somehow! This is too slow!
                     {
                         PhysicsEntity pe = GenShadowCasters[i];
                         if (pe.GenBlockShadows && pe.ShadowCenter.DistanceSquared_Flat(pos) < pe.ShadowRadiusSquaredXY)
@@ -854,7 +868,7 @@ namespace Voxalia.ClientGame.WorldSystem
         static Location SunLightPathNegative = new Location(0, 0, 1);
 
         const float SkyLightMod = 0.75f;
-
+        
         public Location GetAmbient()
         {
             return TheClient.BaseAmbient;
@@ -919,6 +933,7 @@ namespace Voxalia.ClientGame.WorldSystem
         {
             if (potentials == null)
             {
+                SysConsole.Output(OutputType.WARNING, "Region - GetLightAmountForSkyValue : null potentials! Correcting...");
                 potentials = new List<Chunk>();
                 Vector3i pos_c = ChunkLocFor(pos);
                 for (int x = -1; x <= 1; x++)
@@ -939,7 +954,9 @@ namespace Voxalia.ClientGame.WorldSystem
             Location amb = GetAmbient();
             Location sky = SkyMod(pos, norm, skyPrecalc);
             Location blk = GetBlockLight(pos, norm, potentials);
-            return amb + sky + blk;
+            Location res;
+            Location.AddThree(ref amb, ref sky, ref blk, out res);
+            return res;
         }
 
         public OpenTK.Vector4 GetLightAmountAdjusted(Location pos, Location norm)
@@ -1032,13 +1049,26 @@ namespace Voxalia.ClientGame.WorldSystem
         /// Do not call directly, use Chunk.CreateVBO().
         /// </summary>
         /// <param name="ch"></param>
-        public void NeedToRender(Chunk ch)
+        public bool NeedToRender(Chunk ch)
         {
             lock (RenderingNow)
             {
                 if (!NeedsRendering.Contains(ch.WorldPosition))
                 {
                     NeedsRendering.Enqueue(ch.WorldPosition, (ch.WorldPosition.ToLocation() * Chunk.CHUNK_SIZE).DistanceSquared(TheClient.Player.GetPosition()));
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public void DoNotRenderYet(Chunk ch)
+        {
+            lock (RenderingNow)
+            {
+                while (NeedsRendering.Contains(ch.WorldPosition))
+                {
+                    NeedsRendering.Remove(ch.WorldPosition);
                 }
             }
         }

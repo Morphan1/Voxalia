@@ -14,6 +14,8 @@ using OpenTK.Graphics;
 using System.Linq;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
 {
@@ -25,7 +27,18 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
         public int Part_VBO_Pos = -1;
         public int Part_VBO_Ind = -1;
         public int Part_VBO_Col = -1;
+        public int Part_VBO_Tcs = -1;
         public int Part_C;
+
+        public const int TEX_COUNT = 64; // TODO: Manageable
+
+        public int TextureWidth = 256;
+
+        public int TextureID = -1;
+
+        public double[] LastTexUse = new double[TEX_COUNT];
+
+        public Dictionary<string, int> TextureLocations = new Dictionary<string, int>();
 
         public ParticleEngine(Client tclient)
         {
@@ -35,7 +48,42 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             Part_VBO_Pos = GL.GenBuffer();
             Part_VBO_Ind = GL.GenBuffer();
             Part_VBO_Col = GL.GenBuffer();
+            Part_VBO_Tcs = GL.GenBuffer();
             Part_C = 0;
+            TextureID = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, TextureWidth, TextureWidth, TEX_COUNT);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            for (int i = 0; i < TEX_COUNT; i++)
+            {
+                LastTexUse[i] = 0;
+            }
+            TextureLocations.Clear();
+        }
+
+        public int GetTextureID(string f)
+        {
+            int temp;
+            if (TextureLocations.TryGetValue(f, out temp))
+            {
+                return temp;
+            }
+            for (int i = 0; i < TEX_COUNT; i++)
+            {
+                if (LastTexUse[i] == 0)
+                {
+                    LastTexUse[i] = TheClient.GlobalTickTimeLocal;
+                    TextureLocations[f] = i;
+                    GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
+                    TheClient.Textures.LoadTextureIntoArray(f, i, TextureWidth);
+                    return i;
+                }
+            }
+            // TODO: Delete any unused entry findable in favor of this new one.
+            return 0;
         }
 
         public List<ParticleEffect> ActiveEffects;
@@ -56,15 +104,17 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
             {
                 List<Vector3> pos = new List<Vector3>();
                 List<Vector4> col = new List<Vector4>();
+                List<Vector2> tcs = new List<Vector2>(0);
                 for (int i = 0; i < ActiveEffects.Count; i++)
                 {
                     if (ActiveEffects[i].Type == ParticleEffectType.SQUARE)
                     {
-                        Tuple<Location, Vector4> dets = ActiveEffects[i].GetDetails();
+                        Tuple<Location, Vector4, Vector2> dets = ActiveEffects[i].GetDetails();
                         if (dets != null)
                         {
                             pos.Add(ClientUtilities.Convert(dets.Item1 - TheClient.MainWorldView.CameraPos));
-                            col.Add(dets.Item2);
+                            col.Add(Vector4.Min(dets.Item2, Vector4.One)); // NOTE: Min here is only for FORWARD mode, to prevent light > 1.0
+                            tcs.Add(dets.Item3);
                         }
                     }
                     else
@@ -81,9 +131,10 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                 GL.UniformMatrix4(1, false, ref TheClient.MainWorldView.PrimaryMatrix);
                 Matrix4 ident = Matrix4.Identity;
                 GL.UniformMatrix4(2, false, ref ident);
-                TheClient.Textures.GetTexture("effects/fire/whiteflamelick01").Bind(); // TODO: Texture2DArray!
+                GL.BindTexture(TextureTarget.Texture2DArray, TextureID);
                 Vector3[] posset = pos.ToArray();
                 Vector4[] colorset = col.ToArray();
+                Vector2[] texcoords = tcs.ToArray();
                 uint[] posind = new uint[posset.Length];
                 for (uint i = 0; i < posind.Length; i++)
                 {
@@ -92,6 +143,8 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                 Part_C = posind.Length;
                 GL.BindBuffer(BufferTarget.ArrayBuffer, Part_VBO_Pos);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(posset.Length * OpenTK.Vector3.SizeInBytes), posset, BufferUsageHint.StaticDraw);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, Part_VBO_Tcs);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(texcoords.Length * OpenTK.Vector2.SizeInBytes), texcoords, BufferUsageHint.StaticDraw);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, Part_VBO_Col);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(colorset.Length * OpenTK.Vector4.SizeInBytes), colorset, BufferUsageHint.StaticDraw);
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, Part_VBO_Ind);
@@ -102,6 +155,9 @@ namespace Voxalia.ClientGame.GraphicsSystems.ParticleSystem
                     GL.BindBuffer(BufferTarget.ArrayBuffer, Part_VBO_Pos);
                     GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
                     GL.EnableVertexAttribArray(0);
+                    GL.BindBuffer(BufferTarget.ArrayBuffer, Part_VBO_Tcs);
+                    GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, 0, 0);
+                    GL.EnableVertexAttribArray(2);
                     GL.BindBuffer(BufferTarget.ArrayBuffer, Part_VBO_Col);
                     GL.VertexAttribPointer(4, 4, VertexAttribPointerType.Float, false, 0, 0);
                     GL.EnableVertexAttribArray(4);

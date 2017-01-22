@@ -29,11 +29,12 @@ namespace Voxalia.ClientGame.WorldSystem
         public int Plant_VBO_Pos = -1;
         public int Plant_VBO_Ind = -1;
         public int Plant_VBO_Col = -1;
+        public int Plant_VBO_Tcs = -1;
         public int Plant_C;
 
         public List<Entity> CreatedEnts = new List<Entity>();
 
-        public void CreateVBO()
+        public bool CreateVBO()
         {
             List<KeyValuePair<Vector3i, Material>> tLits = new List<KeyValuePair<Vector3i, Material>>();
             if (CSize == CHUNK_SIZE)
@@ -46,7 +47,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         for (int z = 0; z < CHUNK_SIZE; z++)
                         {
                             BlockInternal bi = GetBlockAt(x, y, z);
-                            if (bi.Material.GetLightEmitRange() > 0)
+                            if (bi.Material.GetLightEmitRange() > 0.01)
                             {
                                 tLits.Add(new KeyValuePair<Vector3i, Material>(new Vector3i(x, y, z), bi.Material));
                             }
@@ -72,7 +73,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 });
             }
             Lits = tLits;
-            OwningRegion.NeedToRender(this);
+            return OwningRegion.NeedToRender(this);
         }
         
         public void CalcSkyLight(Chunk above)
@@ -152,7 +153,9 @@ namespace Voxalia.ClientGame.WorldSystem
                     }
                 }
             }
-            Action a = () => VBOHInternal(c_zp, c_zm, c_yp, c_ym, c_xp, c_xm, c_zpxp, c_zpxm, c_zpyp, c_zpym, potentials);
+            bool plants = PosMultiplier == 1 && OwningRegion.TheClient.CVars.r_plants.ValueB;
+            bool shaped = OwningRegion.TheClient.CVars.r_noblockshapes.ValueB;
+            Action a = () => VBOHInternal(c_zp, c_zm, c_yp, c_ym, c_xp, c_xm, c_zpxp, c_zpxm, c_zpyp, c_zpym, potentials, plants, shaped);
             if (rendering != null)
             {
                 ASyncScheduleItem item = OwningRegion.TheClient.Schedule.AddASyncTask(a);
@@ -196,25 +199,17 @@ namespace Voxalia.ClientGame.WorldSystem
             return new BlockInternal((ushort)Material.STONE, 0, 0, 0);
         }
         
-        void VBOHInternal(Chunk c_zp, Chunk c_zm, Chunk c_yp, Chunk c_ym, Chunk c_xp, Chunk c_xm, Chunk c_zpxp, Chunk c_zpxm, Chunk c_zpyp, Chunk c_zpym, List<Chunk> potentials)
+        void VBOHInternal(Chunk c_zp, Chunk c_zm, Chunk c_yp, Chunk c_ym, Chunk c_xp, Chunk c_xm, Chunk c_zpxp, Chunk c_zpxm, Chunk c_zpyp, Chunk c_zpym, List<Chunk> potentials, bool plants, bool shaped)
         {
             try
             {
-                bool shaped = OwningRegion.TheClient.CVars.r_noblockshapes.ValueB;
-                Object locky = new Object();
                 ChunkRenderHelper rh;
-                lock (locky)
-                {
-                    rh = new ChunkRenderHelper();
-                }
-                if (DENIED)
-                {
-                    return;
-                }
-                //bool light = OwningRegion.TheClient.CVars.r_fallbacklighting.ValueB
+                rh = new ChunkRenderHelper();
                 BlockInternal t_air = new BlockInternal((ushort)Material.AIR, 0, 0, 255);
                 List<Vector3> poses = new List<Vector3>();
                 List<Vector4> colorses = new List<Vector4>();
+                List<Vector2> tcses = new List<Vector2>();
+                Vector3d wp = ClientUtilities.ConvertD(WorldPosition.ToLocation()) * CHUNK_SIZE;
                 for (int x = 0; x < CSize; x++)
                 {
                     for (int y = 0; y < CSize; y++)
@@ -222,7 +217,7 @@ namespace Voxalia.ClientGame.WorldSystem
                         for (int z = 0; z < CSize; z++)
                         {
                             BlockInternal c = GetBlockAt(x, y, z);
-                            if ((c.Material).RendersAtAll())
+                            if (c.Material.RendersAtAll())
                             {
                                 BlockInternal zp = z + 1 < CSize ? GetBlockAt(x, y, z + 1) : (c_zp == null ? t_air : GetLODRelative(c_zp, x, y, z + 1 - CSize));
                                 BlockInternal zm = z > 0 ? GetBlockAt(x, y, z - 1) : (c_zm == null ? t_air : GetLODRelative(c_zm, x, y, z - 1 + CSize));
@@ -232,12 +227,12 @@ namespace Voxalia.ClientGame.WorldSystem
                                 BlockInternal xm = x > 0 ? GetBlockAt(x - 1, y, z) : (c_xm == null ? t_air : GetLODRelative(c_xm, x - 1 + CSize, y, z));
                                 bool rAS = !((Material)c.BlockMaterial).GetCanRenderAgainstSelf();
                                 bool pMatters = !c.IsOpaque();
-                                bool zps = (zp.IsOpaque() || (rAS && (zp.BlockMaterial == c.BlockMaterial && (pMatters || zp.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : zp.BlockData].OccupiesBOTTOM();
-                                bool zms = (zm.IsOpaque() || (rAS && (zm.BlockMaterial == c.BlockMaterial && (pMatters || zm.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : zm.BlockData].OccupiesTOP();
-                                bool xps = (xp.IsOpaque() || (rAS && (xp.BlockMaterial == c.BlockMaterial && (pMatters || xp.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : xp.BlockData].OccupiesXM();
-                                bool xms = (xm.IsOpaque() || (rAS && (xm.BlockMaterial == c.BlockMaterial && (pMatters || xm.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : xm.BlockData].OccupiesXP();
-                                bool yps = (yp.IsOpaque() || (rAS && (yp.BlockMaterial == c.BlockMaterial && (pMatters || yp.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : yp.BlockData].OccupiesYM();
-                                bool yms = (ym.IsOpaque() || (rAS && (ym.BlockMaterial == c.BlockMaterial && (pMatters || ym.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : ym.BlockData].OccupiesYP();
+                                bool zps = (zp.DamageData == 0) && (zp.IsOpaque() || (rAS && (zp.BlockMaterial == c.BlockMaterial && (pMatters || zp.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : zp.BlockData].OccupiesBOTTOM();
+                                bool zms = (zm.DamageData == 0) && (zm.IsOpaque() || (rAS && (zm.BlockMaterial == c.BlockMaterial && (pMatters || zm.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : zm.BlockData].OccupiesTOP();
+                                bool xps = (xp.DamageData == 0) && (xp.IsOpaque() || (rAS && (xp.BlockMaterial == c.BlockMaterial && (pMatters || xp.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : xp.BlockData].OccupiesXM();
+                                bool xms = (xm.DamageData == 0) && (xm.IsOpaque() || (rAS && (xm.BlockMaterial == c.BlockMaterial && (pMatters || xm.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : xm.BlockData].OccupiesXP();
+                                bool yps = (yp.DamageData == 0) && (yp.IsOpaque() || (rAS && (yp.BlockMaterial == c.BlockMaterial && (pMatters || yp.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : yp.BlockData].OccupiesYM();
+                                bool yms = (ym.DamageData == 0) && (ym.IsOpaque() || (rAS && (ym.BlockMaterial == c.BlockMaterial && (pMatters || ym.BlockPaint == c.BlockPaint)))) && BlockShapeRegistry.BSD[shaped ? 0 : ym.BlockData].OccupiesYP();
                                 if (zps && zms && xps && xms && yps && yms)
                                 {
                                     continue;
@@ -261,9 +256,9 @@ namespace Voxalia.ClientGame.WorldSystem
                                     zpxm = x > 0 ? GetBlockAt(x - 1, y, z + 1) : (c_xm == null ? t_air : GetLODRelative(c_xm, x - 1 + CSize, y, z + 1));
                                 }
                                 int index_bssd = (xps ? 1 : 0) | (xms ? 2 : 0) | (yps ? 4 : 0) | (yms ? 8 : 0) | (zps ? 16 : 0) | (zms ? 32 : 0);
-                                List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].BSSD.Verts[index_bssd];
-                                List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].BSSD.Norms[index_bssd];
-                                BEPUutilities.Vector3[] tci = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].GetTCoordsQuick(index_bssd, c.Material);
+                                List<BEPUutilities.Vector3> vecsi = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].Damaged[shaped ? 0 : c.DamageData].BSSD.Verts[index_bssd];
+                                List<BEPUutilities.Vector3> normsi = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].Damaged[shaped ? 0 : c.DamageData].BSSD.Norms[index_bssd];
+                                BEPUutilities.Vector3[] tci = BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].Damaged[shaped ? 0 : c.DamageData].GetTCoordsQuick(index_bssd, c.Material);
                                 KeyValuePair<List<BEPUutilities.Vector4>, List<BEPUutilities.Vector4>> ths = !c.BlockShareTex ? default(KeyValuePair<List<BEPUutilities.Vector4>, List<BEPUutilities.Vector4>>) :
                                     BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].GetStretchData(new BEPUutilities.Vector3(x, y, z), vecsi, xp, xm, yp, ym, zp, zm, xps, xms, yps, yms, zps, zms);
                                 for (int i = 0; i < vecsi.Count; i++)
@@ -300,7 +295,7 @@ namespace Voxalia.ClientGame.WorldSystem
                                     }
                                     Location lcol = OwningRegion.GetLightAmountForSkyValue(ClientUtilities.Convert(vt) + WorldPosition.ToLocation() * CHUNK_SIZE, ClientUtilities.Convert(nt), potentials, reldat / 255f);
                                     rh.Cols.Add(new Vector4((float)lcol.X, (float)lcol.Y, (float)lcol.Z, 1));
-                                    rh.TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(ClientUtilities.ConvertD(WorldPosition.ToLocation()) * CHUNK_SIZE + ClientUtilities.ConvertToD(vt), Colors.ForByte(c.BlockPaint)));
+                                    rh.TCols.Add(OwningRegion.TheClient.Rendering.AdaptColor(wp + ClientUtilities.ConvertToD(vt), Colors.ForByte(c.BlockPaint)));
                                     if (ths.Key != null)
                                     {
                                         rh.THVs.Add(new Vector4((float)ths.Key[i].X, (float)ths.Key[i].Y, (float)ths.Key[i].Z, (float)ths.Key[i].W));
@@ -308,8 +303,8 @@ namespace Voxalia.ClientGame.WorldSystem
                                     }
                                     else
                                     {
-                                        rh.THVs.Add(new Vector4(0, 0, 0, 0));
-                                        rh.THWs.Add(new Vector4(0, 0, 0, 0));
+                                        rh.THVs.Add(Vector4.Zero);
+                                        rh.THWs.Add(Vector4.Zero);
                                     }
                                 }
                                 if (!c.IsOpaque() && BlockShapeRegistry.BSD[shaped ? 0 : c.BlockData].BackTextureAllowed)
@@ -331,34 +326,27 @@ namespace Voxalia.ClientGame.WorldSystem
                                         }
                                         else
                                         {
-                                            rh.THVs.Add(new Vector4(0, 0, 0, 0));
-                                            rh.THWs.Add(new Vector4(0, 0, 0, 0));
+                                            rh.THVs.Add(Vector4.Zero);
+                                            rh.THWs.Add(Vector4.Zero);
                                         }
                                     }
                                 }
-                                if (PosMultiplier == 1 && c.Material.GetPlant() != null && !zp.Material.RendersAtAll() && zp.Material.GetSolidity() == MaterialSolidity.NONSOLID)
+                                if (plants && c.Material.GetPlant() != null && !zp.Material.IsOpaque() && zp.Material.GetSolidity() == MaterialSolidity.NONSOLID)
                                 {
-                                    if (BlockShapeRegistry.BSD[c.BlockData].Coll == null)
-                                    {
-                                        // TODO: BSD-level precompute this?
-                                        Location offset;
-                                        BEPUphysics.CollisionShapes.EntityShape es = BlockShapeRegistry.BSD[c.BlockData].GetShape(c.Damage, out offset, false);
-                                        BlockShapeRegistry.BSD[c.BlockData].Coll = es.GetCollidableInstance();
-                                        BlockShapeRegistry.BSD[c.BlockData].Coll.LocalPosition = -offset.ToBVector();
-                                    }
                                     Location skylight = OwningRegion.GetLightAmountForSkyValue(new Location(WorldPosition.X * Chunk.CHUNK_SIZE + x + 0.5, WorldPosition.Y * Chunk.CHUNK_SIZE + y + 0.5,
                                         WorldPosition.Z * Chunk.CHUNK_SIZE + z + 1.0), Location.UnitZ, potentials, zp.BlockLocalData / 255f);
-                                    for (int plx = 0; plx < 3; plx++)
+                                    for (int plx = 1; plx < 4; plx++)
                                     {
                                         for (int ply = 0; ply < 3; ply++)
                                         {
                                             BEPUutilities.RayHit rayhit;
                                             if (!BlockShapeRegistry.BSD[c.BlockData].Coll.RayCast(new BEPUutilities.Ray(new BEPUutilities.Vector3(0.3333f * plx, 0.3333f * ply, 3), new BEPUutilities.Vector3(0, 0, -1)), 5, out rayhit))
                                             {
-                                                rayhit.Location = new BEPUutilities.Vector3(0.3333 * plx, 0.3333 * ply, 1.0);
+                                                rayhit.Location = new BEPUutilities.Vector3(0.33333 * plx + 0.01, 0.33333 * ply + 0.01, 1.0);
                                             }
                                             poses.Add(new Vector3(x + (float)rayhit.Location.X, y + (float)rayhit.Location.Y, z + (float)rayhit.Location.Z));
                                             colorses.Add(new Vector4((float)skylight.X, (float)skylight.Y, (float)skylight.Z, 1.0f));
+                                            tcses.Add(new Vector2(1, OwningRegion.TheClient.GrassMatSet[(int)c.Material])); // TODO: 1 -> custom per-mat scaling!
                                         }
                                     }
                                 }
@@ -375,34 +363,31 @@ namespace Voxalia.ClientGame.WorldSystem
                     Vector3 dt1 = rh.TCoords[i + 1] - t1;
                     Vector3 dt2 = rh.TCoords[i + 2] - t1;
                     Vector3 tangent = (dv1 * dt2.Y - dv2 * dt1.Y) / (dt1.X * dt2.Y - dt1.Y * dt2.X);
-                    Vector3 normal = rh.Norms[i];
-                    tangent = (tangent - normal * Vector3.Dot(normal, tangent)).Normalized(); // TODO: Necessity of this correction?
+                    //Vector3 normal = rh.Norms[i];
+                    //tangent = (tangent - normal * Vector3.Dot(normal, tangent)).Normalized(); // TODO: Necessity of this correction?
                     rh.Tangs.Add(tangent);
                     rh.Tangs.Add(tangent);
                     rh.Tangs.Add(tangent);
                 }
                 if (rh.Vertices.Count == 0)
                 {
-                    OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
+                    if (_VBO != null)
                     {
-                        if (_VBO != null)
+                        VBO tV = _VBO;
+                        if (OwningRegion.TheClient.vbos.Count < MAX_VBOS_REMEMBERED)
                         {
-                            VBO tV = _VBO;
-                            lock (OwningRegion.TheClient.vbos)
-                            {
-                                if (OwningRegion.TheClient.vbos.Count < 40)
-                                {
-                                    OwningRegion.TheClient.vbos.Push(tV);
-                                }
-                                else
-                                {
-                                    tV.Destroy();
-                                }
-                            }
+                            OwningRegion.TheClient.vbos.Push(tV);
                         }
-                        IsAir = true;
-                        _VBO = null;
-                    });
+                        else
+                        {
+                            OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
+                            {
+                                tV.Destroy();
+                            });
+                        }
+                    }
+                    IsAir = true;
+                    _VBO = null;
                     OwningRegion.DoneRendering(this);
                     return;
                 }
@@ -412,37 +397,27 @@ namespace Voxalia.ClientGame.WorldSystem
                     inds[i] = i;
                 }
                 VBO tVBO;
-                lock (locky)
+                if (!OwningRegion.TheClient.vbos.TryPop(out tVBO))
                 {
-                    lock (OwningRegion.TheClient.vbos)
-                    {
-                        if (OwningRegion.TheClient.vbos.Count > 0)
-                        {
-                            tVBO = OwningRegion.TheClient.vbos.Pop();
-                        }
-                        else
-                        {
-                            tVBO = new VBO();
-                            //tVBO.BufferMode = OpenTK.Graphics.OpenGL4.BufferUsageHint.StreamDraw;
-                        }
-                    }
-                    tVBO.indices = inds;
-                    tVBO.Vertices = rh.Vertices;
-                    tVBO.Normals = rh.Norms;
-                    tVBO.TexCoords = rh.TCoords;
-                    tVBO.Colors = rh.Cols;
-                    tVBO.TCOLs = rh.TCols;
-                    tVBO.THVs = rh.THVs;
-                    tVBO.THWs = rh.THWs;
-                    tVBO.Tangents = rh.Tangs;
-                    tVBO.BoneWeights = null;
-                    tVBO.BoneIDs = null;
-                    tVBO.BoneWeights2 = null;
-                    tVBO.BoneIDs2 = null;
-                    tVBO.oldvert();
+                    tVBO = new VBO();
                 }
+                tVBO.indices = inds;
+                tVBO.Vertices = rh.Vertices;
+                tVBO.Normals = rh.Norms;
+                tVBO.TexCoords = rh.TCoords;
+                tVBO.Colors = rh.Cols;
+                tVBO.TCOLs = rh.TCols;
+                tVBO.THVs = rh.THVs;
+                tVBO.THWs = rh.THWs;
+                tVBO.Tangents = rh.Tangs;
+                tVBO.BoneWeights = null;
+                tVBO.BoneIDs = null;
+                tVBO.BoneWeights2 = null;
+                tVBO.BoneIDs2 = null;
+                tVBO.oldvert();
                 Vector3[] posset = poses.ToArray();
                 Vector4[] colorset = colorses.ToArray();
+                Vector2[] texcoordsset = tcses.ToArray();
                 uint[] posind = new uint[posset.Length];
                 for (uint i = 0; i < posind.Length; i++)
                 {
@@ -450,68 +425,32 @@ namespace Voxalia.ClientGame.WorldSystem
                 }
                 OwningRegion.TheClient.Schedule.ScheduleSyncTask(() =>
                 {
-                    if (DENIED)
-                    {
-                        if (tVBO.generated)
-                        {
-                            tVBO.Destroy();
-                        }
-                        return;
-                    }
-                    lock (locky)
-                    {
-                        if (tVBO.verts == null)
-                        {
-                            SysConsole.Output(OutputType.WARNING, "Something went wrong! : tVBO.verts==null while rh.Vertice==" + (rh.Vertices == null ? "null" : rh.Vertices.Count + "_vertices"));
-                            // TODO: What even happened here?!
-                            tVBO.indices = inds;
-                            tVBO.Vertices = rh.Vertices;
-                            tVBO.Normals = rh.Norms;
-                            tVBO.TexCoords = rh.TCoords;
-                            tVBO.Colors = rh.Cols;
-                            tVBO.TCOLs = rh.TCols;
-                            tVBO.THVs = rh.THVs;
-                            tVBO.THWs = rh.THWs;
-                            tVBO.Tangents = rh.Tangs;
-                        }
-                    }
                     VBO tV = _VBO;
                     if (tV != null)
                     {
-                        lock (OwningRegion.TheClient.vbos)
+                        if (OwningRegion.TheClient.vbos.Count < MAX_VBOS_REMEMBERED)
                         {
-                            if (OwningRegion.TheClient.vbos.Count < 40)
-                            {
-                                OwningRegion.TheClient.vbos.Push(tV);
-                            }
-                            else
-                            {
-                                tV.Destroy();
-                            }
+                            OwningRegion.TheClient.vbos.Push(tV);
                         }
-                    }
-                    if (DENIED)
-                    {
-                        if (tVBO.generated)
+                        else
                         {
-                            tVBO.Destroy();
+                            tV.Destroy();
                         }
-                        return;
                     }
                     _VBO = tVBO;
-                    lock (locky)
-                    {
-                        tVBO.GenerateOrUpdate();
-                        tVBO.CleanLists();
-                    }
+                    tVBO.GenerateOrUpdate();
+                    tVBO.CleanLists();
                     DestroyPlants();
                     Plant_VAO = GL.GenVertexArray();
                     Plant_VBO_Ind = GL.GenBuffer();
                     Plant_VBO_Pos = GL.GenBuffer();
                     Plant_VBO_Col = GL.GenBuffer();
+                    Plant_VBO_Tcs = GL.GenBuffer();
                     Plant_C = posind.Length;
                     GL.BindBuffer(BufferTarget.ArrayBuffer, Plant_VBO_Pos);
                     GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(posset.Length * OpenTK.Vector3.SizeInBytes), posset, BufferUsageHint.StaticDraw);
+                    GL.BindBuffer(BufferTarget.ArrayBuffer, Plant_VBO_Tcs);
+                    GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(texcoordsset.Length * OpenTK.Vector2.SizeInBytes), texcoordsset, BufferUsageHint.StaticDraw);
                     GL.BindBuffer(BufferTarget.ArrayBuffer, Plant_VBO_Col);
                     GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(colorset.Length * OpenTK.Vector4.SizeInBytes), colorset, BufferUsageHint.StaticDraw);
                     GL.BindBuffer(BufferTarget.ElementArrayBuffer, Plant_VBO_Ind);
@@ -520,6 +459,9 @@ namespace Voxalia.ClientGame.WorldSystem
                     GL.BindBuffer(BufferTarget.ArrayBuffer, Plant_VBO_Pos);
                     GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
                     GL.EnableVertexAttribArray(0);
+                    GL.BindBuffer(BufferTarget.ArrayBuffer, Plant_VBO_Tcs);
+                    GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, 0, 0);
+                    GL.EnableVertexAttribArray(2);
                     GL.BindBuffer(BufferTarget.ArrayBuffer, Plant_VBO_Col);
                     GL.VertexAttribPointer(4, 4, VertexAttribPointerType.Float, false, 0, 0);
                     GL.EnableVertexAttribArray(4);
@@ -535,6 +477,8 @@ namespace Voxalia.ClientGame.WorldSystem
                 OwningRegion.DoneRendering(this);
             }
         }
+        
+        public const int MAX_VBOS_REMEMBERED = 40; // TODO: Is this number good? Should this functionality exist at all?
 
         public bool IsAir = false;
         

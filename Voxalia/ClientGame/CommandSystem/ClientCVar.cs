@@ -34,14 +34,14 @@ namespace Voxalia.ClientGame.CommandSystem
 
         // Renderer CVars
         public CVar r_fullscreen, r_width, r_height, r_vsync, r_lighting, r_renderwireframe,
-            r_fov, r_znear, r_zfar,
+            r_fov, r_znear, r_renderdist,
             r_dof_strength,
             r_maxfps,
-            r_lightmaxdistance, r_fallbacklighting,
+            r_lightmaxdistance,
             r_shadowquality, r_shadowblur, r_shadowpace, r_shadows, r_cloudshadows,
             r_good_graphics, r_skybox, r_lensflare, r_blocktexturelinear, r_blocktexturewidth, r_toonify, r_transplighting, r_transpshadows,
             r_3d_enable, r_fast, r_chunksatonce, r_chunkoverrender, r_transpll, r_noblockshapes, r_treeshadows,
-            r_godrays, r_hdr, r_chunkmarch, r_clouds, r_motionblur, r_plants;
+            r_godrays, r_hdr, r_chunkmarch, r_clouds, r_motionblur, r_plants, r_exposure, r_grayscale, r_vrscale;
 
         // Audio CVars
         public CVar a_musicvolume, a_musicpitch, a_globalvolume, a_globalpitch, a_music, a_quietondeselect, a_echovolume;
@@ -51,7 +51,7 @@ namespace Voxalia.ClientGame.CommandSystem
             u_highlight_targetblock, u_highlight_placeblock, u_showping,
             u_debug, u_showmap, u_showrangefinder, u_showcompass,
             u_colortyping;
-
+        
         /// <summary>
         /// Prepares the CVar system, generating default CVars.
         /// </summary>
@@ -80,16 +80,15 @@ namespace Voxalia.ClientGame.CommandSystem
             r_fullscreen = Register("r_fullscreen", "false", CVarFlag.Boolean | CVarFlag.Delayed, "Whether to use fullscreen mode.");
             r_width = Register("r_width", "1280", CVarFlag.Numeric | CVarFlag.Delayed, "What width the window should be.");
             r_height = Register("r_height", "720", CVarFlag.Numeric | CVarFlag.Delayed, "What height the window should be.");
-            r_vsync = Register("r_vsync", "true", CVarFlag.Boolean, "Whether to use vertical synchronization mode.");
+            r_vsync = Register("r_vsync", "false", CVarFlag.Boolean, "Whether to use vertical synchronization mode.");
             r_lighting = Register("r_lighting", "true", CVarFlag.Boolean, "Whether to enable 3D lighting (Otherwise, use FullBright).");
             r_renderwireframe = Register("r_renderwireframe", "false", CVarFlag.Boolean, "Whether to render a wireframe.");
             r_fov = Register("r_fov", "70", CVarFlag.Numeric, "What Field of Vision range value to use.");
             r_znear = Register("r_znear", "0.1", CVarFlag.Numeric, "How close the near plane should be to the camera.");
-            r_zfar = Register("r_zfar", "3500", CVarFlag.Numeric, "How far the far plane should be from the camera.");
+            r_renderdist = Register("r_renderdist", "3", CVarFlag.Numeric, "The maximum distance, in chunks, a chunk can be from you for it to render.");
             r_dof_strength = Register("r_dof_strength", "4", CVarFlag.Numeric, "How strong the Depth Of Field effect should be.");
             r_maxfps = Register("r_maxfps", "60", CVarFlag.Numeric | CVarFlag.Delayed, "What the FPS cap should be.");
             r_lightmaxdistance = Register("r_lightmaxdistance", "35", CVarFlag.Numeric, "How far away a light can be from the camera before it is disabled.");
-            r_fallbacklighting = Register("r_fallbacklighting", "true", CVarFlag.Boolean, "Whether to calculate fallback block lighting (Requires chunk reload).");
             r_shadowquality = Register("r_shadowquality", "1024", CVarFlag.Numeric, "What texture size to use for shadow maps.");
             r_shadowblur = Register("r_shadowblur", "0.25", CVarFlag.Numeric, "What factor to use for shadow blurring. Smaller = blurrier.");
             r_shadowpace = Register("r_shadowpace", "1", CVarFlag.Numeric, "How rapidly to rerender shadows, in frames.");
@@ -109,12 +108,15 @@ namespace Voxalia.ClientGame.CommandSystem
             r_transpll = Register("r_transpll", "false", CVarFlag.Boolean, "Whether to use GPU linked lists when rendering transparent objects.");
             r_noblockshapes = Register("r_noblockshapes", "false", CVarFlag.Boolean, "Whether block shapes are disabled or not.");
             r_treeshadows = Register("r_treeshadows", "true", CVarFlag.Boolean, "Whether trees cast shadows.");
-            r_godrays = Register("r_godrays", "true", CVarFlag.Boolean, "Whether to render GodRays (rays of light from the sun."); // TODO: Validate?
+            r_godrays = Register("r_godrays", "true", CVarFlag.Boolean, "Whether to render GodRays (rays of light from the sun.");
             r_hdr = Register("r_hdr", "true", CVarFlag.Boolean, "Whether to render with high dynamic range adjustments enabled.");
             r_chunkmarch = Register("r_chunkmarch", "false", CVarFlag.Boolean, "Whether to use 'chunk marching' method to render chunks (if false, uses a generic loop).");
             r_clouds = Register("r_clouds", "true", CVarFlag.Boolean, "Whether to render clouds."); // TODO: Inform the server of this to reduce bandwidth.
             r_motionblur = Register("r_motionblur", "false", CVarFlag.Boolean, "Whether to blur the screen to better represent motion.");
             r_plants = Register("r_plants", "true", CVarFlag.Boolean, "Whether to render small plants around the view.");
+            r_exposure = Register("r_exposure", "1.5", CVarFlag.Numeric, "What value to scale the lighting by.");
+            r_grayscale = Register("r_grayscale", "false", CVarFlag.Boolean, "Whether to grayscale the view.");
+            r_vrscale = Register("r_vrscale", "1", CVarFlag.Numeric, "What scale to put everything at in VR mode.");
             // Audio CVars
             a_musicvolume = Register("a_musicvolume", "0.5", CVarFlag.Numeric, "What volume the music should be.");
             a_musicpitch = Register("a_musicpitch", "1", CVarFlag.Numeric, "What pitch the music should be.");

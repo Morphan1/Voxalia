@@ -201,7 +201,8 @@ namespace Voxalia.Shared
         BLOCK_GROUP = 6,
         BLOCK_ITEM = 7,
         STATIC_BLOCK = 8,
-        MODEL = 9
+        MODEL = 9,
+        HOVER_MESSAGE = 10
     }
 
     public enum TextChannel : byte

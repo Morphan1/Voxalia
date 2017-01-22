@@ -101,12 +101,14 @@ namespace Voxalia.ServerGame.WorldSystem
             PhysicsWorld.DuringForcesUpdateables.Add(new LiquidVolume(this));
             PhysicsWorld.TimeStepSettings.TimeStepDuration = 1f / TheServer.CVars.g_fps.ValueF;
             Collision = new CollisionUtil(PhysicsWorld);
+            // TODO: Perhaps these should be on the server level, not region?
             EntityConstructors.Add(EntityType.ITEM, new ItemEntityConstructor());
             EntityConstructors.Add(EntityType.BLOCK_ITEM, new BlockItemEntityConstructor());
             EntityConstructors.Add(EntityType.GLOWSTICK, new GlowstickEntityConstructor());
             EntityConstructors.Add(EntityType.MODEL, new ModelEntityConstructor());
             EntityConstructors.Add(EntityType.SMOKE_GRENADE, new SmokeGrenadeEntityConstructor());
             EntityConstructors.Add(EntityType.MUSIC_BLOCK, new MusicBlockEntityConstructor());
+            EntityConstructors.Add(EntityType.HOVER_MESSAGE, new HoverMessageEntityConstructor());
             ChunkManager = new ChunkDataManager();
             ChunkManager.Init(this);
             //LoadRegion(new Location(-MaxViewRadiusInChunks * 30), new Location(MaxViewRadiusInChunks * 30), true);
@@ -183,7 +185,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (!Tickers[i].Removed && Tickers[i] is PhysicsEntity)
                 {
-                    ((PhysicsEntity)Tickers[i]).PreTick();
+                    (Tickers[i] as PhysicsEntity).PreTick();
                 }
             }
             for (int i = 0; i < Tickers.Count; i++)
@@ -197,7 +199,7 @@ namespace Voxalia.ServerGame.WorldSystem
             {
                 if (!Tickers[i].Removed && Tickers[i] is PhysicsEntity)
                 {
-                    ((PhysicsEntity)Tickers[i]).EndTick();
+                    (Tickers[i] as PhysicsEntity).EndTick();
                 }
             }
             for (int i = 0; i < DespawnQuick.Count; i++)

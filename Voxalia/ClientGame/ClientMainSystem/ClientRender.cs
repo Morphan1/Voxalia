@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using OpenTK;
 using OpenTK.Graphics;
@@ -22,6 +23,7 @@ using System.Diagnostics;
 using FreneticScript;
 using Voxalia.ClientGame.WorldSystem;
 using Voxalia.ClientGame.EntitySystem;
+using Voxalia.Shared.Files;
 
 namespace Voxalia.ClientGame.ClientMainSystem
 {
@@ -29,7 +31,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
     {
         public double gDelta = 0;
 
-        public Stack<VBO> vbos = new Stack<VBO>(200);
+        public ConcurrentStack<VBO> vbos = new ConcurrentStack<VBO>(); // TODO: Is tracking this actually helpful?
 
         public Stack<ChunkRenderHelper> RenderHelpers = new Stack<ChunkRenderHelper>(200);
 
@@ -77,6 +79,16 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.CullFace(CullFaceMode.Front);
         }
 
+        public float MaximumStraightBlockDistance()
+        {
+            return (CVars.r_renderdist.ValueI + 3) * Chunk.CHUNK_SIZE;
+        }
+
+        public float ZFar()
+        {
+            return MaximumStraightBlockDistance() * 2;
+        }
+
         public View3D MainWorldView = new View3D();
         
         void InitRendering()
@@ -85,6 +97,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             ShadersCheck();
             View3D.CheckError("Load - Rendering - Shaders");
             generateMapHelpers();
+            GenerateGrassHelpers();
             View3D.CheckError("Load - Rendering - Map");
             MainWorldView.ShadowingAllowed = true;
             MainWorldView.ShadowTexSize = () => CVars.r_shadowquality.ValueI;
@@ -195,7 +208,69 @@ namespace Voxalia.ClientGame.ClientMainSystem
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
-        
+
+        public const int GRASS_TEX_COUNT = 32; // TODO: Manageable
+
+        public int GrassTextureWidth = 256;
+
+        public int GrassTextureID = -1;
+
+        public double[] GrassLastTexUse = new double[GRASS_TEX_COUNT];
+
+        public Dictionary<string, int> GrassTextureLocations = new Dictionary<string, int>();
+
+        public int[] GrassMatSet;
+
+        public void GenerateGrassHelpers()
+        {
+            GrassMatSet = new int[MaterialHelpers.ALL_MATS.Count];
+            GrassTextureID = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2DArray, GrassTextureID);
+            GL.TexStorage3D(TextureTarget3d.Texture2DArray, 1, SizedInternalFormat.Rgba8, GrassTextureWidth, GrassTextureWidth, GRASS_TEX_COUNT);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            for (int i = 0; i < GRASS_TEX_COUNT; i++)
+            {
+                GrassLastTexUse[i] = 0;
+            }
+            GrassTextureLocations.Clear();
+            for (int i = 0; i < MaterialHelpers.ALL_MATS.Count; i++)
+            {
+                string pl = ((Material)i).GetPlant();
+                if (pl != null)
+                {
+                    GrassMatSet[i] = GetGrassTextureID(FileHandler.CleanFileName(pl));
+                }
+                else
+                {
+                    GrassMatSet[i] = -1;
+                }
+            }
+        }
+
+        public int GetGrassTextureID(string f)
+        {
+            int temp;
+            if (GrassTextureLocations.TryGetValue(f, out temp))
+            {
+                return temp;
+            }
+            for (int i = 0; i < GRASS_TEX_COUNT; i++)
+            {
+                if (GrassLastTexUse[i] == 0)
+                {
+                    GrassLastTexUse[i] = GlobalTickTimeLocal;
+                    GrassTextureLocations[f] = i;
+                    Textures.LoadTextureIntoArray(f, i, GrassTextureWidth);
+                    return i;
+                }
+            }
+            // TODO: Delete any unused entry findable in favor of this new one.
+            return 0;
+        }
+
         VBO[] skybox;
 
         public Shader s_shadow;
@@ -268,7 +343,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                     {
                         Shaders.ColorMultShader.Bind();
                         GL.Uniform1(6, (float)GlobalTickTimeLocal);
-                        if (CVars.r_3d_enable.ValueB)
+                        if (CVars.r_3d_enable.ValueB || VR != null)
                         {
                             GL.Viewport(Window.Width / 2, 0, Window.Width / 2, Window.Height);
                             CScreen.FullRender(gDelta, 0, 0);
@@ -308,7 +383,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 timer.Start();
                 View3D.CheckError("Finish");
+                if (VR != null)
+                {
+                    Shaders.ColorMultShader.Bind();
+                    GL.UniformMatrix4(1, false, ref MainWorldView.SimpleOrthoMatrix);
+                    GL.UniformMatrix4(2, false, ref View3D.IdentityMatrix);
+                    GL.BindTexture(TextureTarget.Texture2D, MainWorldView.CurrentFBOTexture);
+                    Rendering.RenderRectangle(-1, -1, 1, 1);
+                }
                 Window.SwapBuffers();
+                if (VR != null)
+                {
+                    VR.Submit();
+                }
                 timer.Stop();
                 FinishTime = (double)timer.ElapsedMilliseconds / 1000f;
                 if (FinishTime > FinishSpikeTime)
@@ -337,7 +424,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
                 Establish2D();
-                if (CVars.r_3d_enable.ValueB)
+                if (CVars.r_3d_enable.ValueB || VR != null)
                 {
                     GL.Viewport(Window.Width / 2, 0, Window.Width / 2, Window.Height);
                     Render2D(false);
@@ -371,7 +458,11 @@ namespace Voxalia.ClientGame.ClientMainSystem
             {
                 MainWorldView.ForwardVec = Player.ForwardVector();
                 // Frustum cf1 = null;
-                if (CVars.g_firstperson.ValueB)
+                if (VR != null)
+                {
+                    MainWorldView.CameraPos = Player.GetPosition();
+                }
+                else if (CVars.g_firstperson.ValueB)
                 {
                     MainWorldView.CameraPos = PlayerEyePosition;
                 }
@@ -416,7 +507,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 }
                 sortEntities();
                 Particles.Sort();
-                MainWorldView.Headmat = TheRegion.GetBlockMaterial(PlayerEyePosition);
+                MainWorldView.Headmat = TheRegion.GetBlockMaterial(MainWorldView.CameraPos);
                 MainWorldView.SunLoc = GetSunLocation();
                 MainWorldView.Render();
                 ReverseEntitiesOrder();
@@ -433,12 +524,19 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
         }
 
-        float dist2 = 1900; // TODO: (View rad + 2) * CHUNK_SIZE ? Or base off ZFAR?
-        public float dist = 1700;
+        public float GetSecondSkyDistance()
+        {
+            return MaximumStraightBlockDistance() * 1.1f;
+        }
         
+        public float GetSkyDistance()
+        {
+            return MaximumStraightBlockDistance();
+        }
+
         public Location GetSunLocation()
         {
-            return MainWorldView.CameraPos + TheSun.Direction * -(dist * 0.96f);
+            return MainWorldView.CameraPos + TheSun.Direction * -(GetSkyDistance() * 0.96f);
         }
 
         public void RenderSkybox()
@@ -446,7 +544,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Rendering.SetMinimumLight(1);
             GL.Disable(EnableCap.CullFace);
             Rendering.SetColor(Color4.White);
-            Matrix4 scale = Matrix4.CreateScale(dist2, dist2, dist2);
+            Matrix4 scale = Matrix4.CreateScale(GetSecondSkyDistance());
             GL.UniformMatrix4(2, false, ref scale);
             // TODO: Save textures!
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/bottom").Bind();
@@ -462,7 +560,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "_night/yp").Bind();
             skybox[5].Render(false);
             Rendering.SetColor(new Vector4(1, 1, 1, (float)Math.Max(Math.Min((SunAngle.Pitch - 70.0) / (-90.0), 1.0), 0.06)));
-            scale = Matrix4.CreateScale(dist, dist, dist);
+            scale = Matrix4.CreateScale(GetSkyDistance());
             GL.UniformMatrix4(2, false, ref scale);
             // TODO: Save textures!
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/bottom").Bind();
@@ -478,19 +576,22 @@ namespace Voxalia.ClientGame.ClientMainSystem
             Textures.GetTexture("skies/" + CVars.r_skybox.Value + "/yp").Bind();
             skybox[5].Render(false);
             Rendering.SetColor(new Vector4(ClientUtilities.Convert(Location.One * SunLightModDirect), 1));
+            float zf = ZFar();
+            float spf = zf * 0.17f;
             Textures.GetTexture("skies/sun").Bind(); // TODO: Store var!
-            Matrix4 rot = Matrix4.CreateTranslation(-150f, -150f, 0f)
+            Matrix4 rot = Matrix4.CreateTranslation(-spf * 0.5f, -spf * 0.5f, 0f)
                 * Matrix4.CreateRotationY((float)((-SunAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + SunAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(TheSun.Direction * -(dist * 0.96f)));
-            Rendering.RenderRectangle(0, 0, 300, 300, rot); // TODO: Adjust scale based on view rad
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(TheSun.Direction * -(GetSkyDistance() * 0.96f)));
+            Rendering.RenderRectangle(0, 0, spf, spf, rot); // TODO: Adjust scale based on view rad
             Textures.GetTexture("skies/planet").Bind(); // TODO: Store var!
+            float ppf = zf * 0.40f;
             Rendering.SetColor(new Color4(PlanetLight, PlanetLight, PlanetLight, 1));
-            rot = Matrix4.CreateTranslation(-450f, -450f, 0f)
+            rot = Matrix4.CreateTranslation(-ppf * 0.5f, -ppf * 0.5f, 0f)
                 * Matrix4.CreateRotationY((float)((-PlanetAngle.Pitch - 90f) * Utilities.PI180))
                 * Matrix4.CreateRotationZ((float)((180f + PlanetAngle.Yaw) * Utilities.PI180))
-                * Matrix4.CreateTranslation(ClientUtilities.Convert(PlanetDir * -(dist * 0.8f)));
-            Rendering.RenderRectangle(0, 0, 900, 900, rot);
+                * Matrix4.CreateTranslation(ClientUtilities.Convert(PlanetDir * -(GetSkyDistance() * 0.8f)));
+            Rendering.RenderRectangle(0, 0, ppf, ppf, rot);
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.Enable(EnableCap.CullFace);
             Matrix4 ident = Matrix4.Identity;
@@ -626,6 +727,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             isVox = false;
             if (MainWorldView.FBOid == FBOID.MAIN)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -634,6 +737,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.REFRACT)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -642,6 +747,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.TRANSP_UNLIT)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -650,6 +757,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.TRANSP_LIT)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -658,6 +767,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.TRANSP_SHADOWS)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -666,6 +777,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.TRANSP_LL)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -674,6 +787,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.TRANSP_LIT_LL)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -682,6 +797,8 @@ namespace Voxalia.ClientGame.ClientMainSystem
             }
             else if (MainWorldView.FBOid == FBOID.TRANSP_SHADOWS_LL)
             {
+                GL.ActiveTexture(TextureUnit.Texture2);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture1);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -710,6 +827,48 @@ namespace Voxalia.ClientGame.ClientMainSystem
         }
 
         public double RainCylPos = 0;
+        
+        public void RenderVR()
+        {
+            if (VR == null)
+            {
+                return;
+            }
+            SetEnts();
+            Textures.White.Bind();
+            Rendering.SetMinimumLight(1);
+            Model tmod = Models.GetModel("vr/controller/vive"); // TODO: Store the model in a var somewhere?
+            tmod.LoadSkin(Textures);
+            // TODO: Special dynamic controller models!
+            if (VR.Left != null)
+            {
+                Matrix4 pos = Matrix4.CreateScale(0.66666f) * VR.Left.Position;
+                GL.UniformMatrix4(2, false, ref pos);
+                tmod.Draw();
+                // TEMPORARY
+                Quaternion oquat = VR.Left.Position.ExtractRotation(true);
+                BEPUutilities.Quaternion quat = new BEPUutilities.Quaternion(oquat.X, oquat.Y, oquat.Z, oquat.W);
+                BEPUutilities.Vector3 face = -BEPUutilities.Quaternion.Transform(BEPUutilities.Vector3.UnitZ, quat);
+                Vector3 forw = ClientUtilities.Convert(new Location(face));
+                Vector3 ospot = VR.Left.Position.ExtractTranslation();
+                Vector3 goal = ospot + forw * 0.5f;
+                Matrix4 trans = Matrix4.CreateTranslation(goal);
+                GL.UniformMatrix4(2, false, ref trans);
+                tmod.Draw();
+                Textures.White.Bind();
+                Rendering.SetColor(Color4.Red);
+                GL.LineWidth(3);
+                Rendering.RenderLine(MainWorldView.CameraPos + ClientUtilities.Convert(ospot), MainWorldView.CameraPos + ClientUtilities.Convert(goal));
+                GL.LineWidth(1);
+                Rendering.SetColor(Color4.White);
+            }
+            if (VR.Right != null)
+            {
+                Matrix4 pos = Matrix4.CreateScale(0.66666f) * VR.Right.Position;
+                GL.UniformMatrix4(2, false, ref pos);
+                tmod.Draw();
+            }
+        }
 
         public void Render3D(View3D view)
         {
@@ -837,6 +996,7 @@ namespace Voxalia.ClientGame.ClientMainSystem
                 GL.LineWidth(1);
                 Rendering.SetColor(Color4.White);
             }
+            RenderVR();
             Textures.White.Bind();
             Rendering.SetMinimumLight(1);
             TheRegion.RenderEffects();

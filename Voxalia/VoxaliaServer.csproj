@@ -113,6 +113,7 @@
     <Compile Include="ServerGame\EntitySystem\CharacterEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\Entity.cs" />
     <Compile Include="ServerGame\EntitySystem\EntityDamageable.cs" />
+    <Compile Include="ServerGame\EntitySystem\HoverMessageEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\PlaneEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\HelicopterEntity.cs" />
     <Compile Include="ServerGame\EntitySystem\HumanoidEntity.cs" />

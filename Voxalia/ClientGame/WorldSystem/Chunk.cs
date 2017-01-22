@@ -75,11 +75,7 @@ namespace Voxalia.ClientGame.WorldSystem
 
         public void AddToWorld()
         {
-            if (FCO != null)
-            {
-                return;
-            }
-            if (CSize == CHUNK_SIZE)
+            if (FCO == null && CSize == CHUNK_SIZE)
             {
                 FCO = new FullChunkObject(WorldPosition.ToVector3() * CHUNK_SIZE, BlocksInternal);
                 FCO.CollisionRules.Group = CollisionUtil.WorldSolid;
@@ -127,6 +123,7 @@ namespace Voxalia.ClientGame.WorldSystem
                 GL.DeleteBuffer(Plant_VBO_Pos);
                 GL.DeleteBuffer(Plant_VBO_Col);
                 GL.DeleteBuffer(Plant_VBO_Ind);
+                GL.DeleteBuffer(Plant_VBO_Tcs);
                 Plant_VAO = -1;
             }
         }
@@ -134,6 +131,5 @@ namespace Voxalia.ClientGame.WorldSystem
         public bool LOADING = false;
         public bool PROCESSED = false;
         public bool PRED = false;
-        public bool DENIED = false;
     }
 }

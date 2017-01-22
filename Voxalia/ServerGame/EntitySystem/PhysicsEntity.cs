@@ -224,6 +224,8 @@ namespace Voxalia.ServerGame.EntitySystem
             }
         }
 
+        bool wasEverVis = false;
+
         void NetworkTick()
         {
             if (NetworkMe)
@@ -258,9 +260,10 @@ namespace Voxalia.ServerGame.EntitySystem
                         continue;
                     }
                     bool shouldseec = player.ShouldSeePosition(pos);
-                    bool shouldseel = player.ShouldSeePositionPreviously(lPos);
+                    bool shouldseel = player.Known.Contains(EID); // player.ShouldSeePositionPreviously(lPos) && wasEverVis;
                     if (shouldseec && !shouldseel)
                     {
+                        player.Known.Add(EID);
                         player.Network.SendPacket(GetSpawnPacket());
                         foreach (InternalBaseJoint joint in Joints)
                         {
@@ -273,11 +276,14 @@ namespace Voxalia.ServerGame.EntitySystem
                     if (shouldseel && !shouldseec)
                     {
                         player.Network.SendPacket(new DespawnEntityPacketOut(EID));
+                        player.Known.Remove(EID);
                     }
                     if (sme && shouldseec)
                     {
                         player.Network.SendPacket(physupd);
                     }
+                    // TODO
+                    /*
                     if (!shouldseec)
                     {
                         bool shouldseelongc = player.ShouldLoadPosition(pos);
@@ -295,7 +301,9 @@ namespace Voxalia.ServerGame.EntitySystem
                             player.Network.SendPacket(new DespawnEntityPacketOut(EID));
                         }
                     }
+                    */
                 }
+                wasEverVis = true;
             }
         }
 

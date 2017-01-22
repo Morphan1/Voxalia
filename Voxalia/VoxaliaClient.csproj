@@ -178,6 +178,7 @@
     <Compile Include="ClientGame\EntitySystem\GenericCharacterEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\GlowstickEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\GrenadeEntity.cs" />
+    <Compile Include="ClientGame\EntitySystem\HoverMessageEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\ModelEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PhysicsEntity.cs" />
     <Compile Include="ClientGame\EntitySystem\PlayerEntity.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="ClientGame\GraphicsSystems\TextVBO.cs" />
     <Compile Include="ClientGame\GraphicsSystems\VBO.cs" />
     <Compile Include="ClientGame\GraphicsSystems\View3D.cs" />
+    <Compile Include="ClientGame\GraphicsSystems\VRSupport.cs" />
     <Compile Include="ClientGame\JointSystem\BaseFJoint.cs" />
     <Compile Include="ClientGame\JointSystem\BaseJoint.cs" />
     <Compile Include="ClientGame\JointSystem\ConnectorBeam.cs" />
@@ -303,6 +305,7 @@
     <Compile Include="ClientGame\WorldSystem\LiquidVolume.cs" />
     <Compile Include="ClientGame\WorldSystem\Region.cs" />
     <Compile Include="ClientGame\WorldSystem\RegionWeather.cs" />
+    <Compile Include="openvr_api.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -339,7 +342,14 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="openvr_api.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="openvr_api.pdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
